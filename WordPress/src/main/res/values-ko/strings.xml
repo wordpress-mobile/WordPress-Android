@@ -45,7 +45,7 @@ Language: ko_KR
     <string name="continue_google_button_suffix">Google로 계속하기</string>
     <string name="login_or">또는</string>
     <string name="reset_your_password">비밀번호 재설정하기</string>
-    <string name="login_promo_title_37_percent">웹의 37%가 워드프레스로 만들어졌습니다.</string>
+    <string name="login_promo_title_37_percent">웹의 37\%가 워드프레스로 만들어졌습니다.</string>
     <string name="login_promo_text_unlock_the_power">가장 유연한 웹사이트 제작 도구의 능력을 직접 경험해보세요.</string>
     <string name="send_link_by_email">이메일로 링크 보내기</string>
     <string name="create_account">계정 만들기</string>

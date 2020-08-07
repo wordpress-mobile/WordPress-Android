@@ -51,7 +51,7 @@ Language: id
     <string name="create_account">Buat akun</string>
     <string name="send_link_by_email">Kirim tautan lewat email</string>
     <string name="login_promo_text_unlock_the_power">Kenali kekuatan dari pembuat situs web yang paling andal.</string>
-    <string name="login_promo_title_37_percent">37% dari situs web dikembangkan dari WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% dari situs web dikembangkan dari WordPress.</string>
     <string name="reset_your_password">Reset kata sandi</string>
     <string name="reader_error_generic_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda. Kesan pertama sangat berarti!</string>

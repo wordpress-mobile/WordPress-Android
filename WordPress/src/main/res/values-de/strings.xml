@@ -51,7 +51,7 @@ Language: de
     <string name="create_account">Konto erstellen</string>
     <string name="send_link_by_email">Link per E-Mail senden</string>
     <string name="login_promo_text_unlock_the_power">Nutze alle Vorteile des flexibelsten Website-Baukastens.</string>
-    <string name="login_promo_title_37_percent">37 % des Webs wurde mit WordPress erstellt.</string>
+    <string name="login_promo_title_37_percent">37\% des Webs wurde mit WordPress erstellt.</string>
     <string name="reset_your_password">Dein Passwort zurücksetzen</string>
     <string name="reader_error_generic_title">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt. Erste Eindrücke zählen!</string>

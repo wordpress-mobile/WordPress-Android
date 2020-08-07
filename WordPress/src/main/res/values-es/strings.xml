@@ -51,7 +51,7 @@ Language: es
     <string name="create_account">Crear una cuenta</string>
     <string name="send_link_by_email">Enviar el enlace por correo electrónico</string>
     <string name="login_promo_text_unlock_the_power">Desbloquea el poder del creador de webs más flexible.</string>
-    <string name="login_promo_title_37_percent">El 37 % de la web está creada con WordPress.</string>
+    <string name="login_promo_title_37_percent">El 37\% de la web está creada con WordPress.</string>
     <string name="reset_your_password">Restablecer tu contraseña</string>
     <string name="reader_error_generic_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dale a tu sitio un nombre que refleje su personalidad y temática. ¡Las primeras impresiones cuentan!</string>

@@ -49,7 +49,6 @@ Language: tr
     <string name="create_account">Hesap oluştur</string>
     <string name="get_started">Başlayın</string>
     <string name="check_email">E-postayı kontrol et</string>
-    <string name="login_promo_title_37_percent">Web\'in %37\'si WordPress üzerine kurulmuştur.</string>
     <string name="send_link_by_email">Bağlantıyı e-postayla gönder</string>
     <string name="or_type_your_password">Veya parolanızı yazın</string>
     <string name="enter_email_to_continue_wordpress_com">Giriş yapmak veya bir WordPress.com hesabı oluşturmak için e-posta adresinizi girin.</string>

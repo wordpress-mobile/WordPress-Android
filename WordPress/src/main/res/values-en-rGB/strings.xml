@@ -51,7 +51,7 @@ Language: en_GB
     <string name="create_account">Create account</string>
     <string name="send_link_by_email">Send link by email</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
-    <string name="login_promo_title_37_percent">37% of the web is built on WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% of the web is built on WordPress.</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="reader_error_generic_title">There was a problem handling the request. Please try again later.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
