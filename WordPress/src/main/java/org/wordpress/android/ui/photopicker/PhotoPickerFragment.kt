@@ -35,8 +35,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequ
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Hide
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -128,27 +126,23 @@ class PhotoPickerFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
+        var isShowingActionMode = false
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             it?.let { uiState ->
                 uiState.photoListUiModel?.let(this::setupPhotoList)
                 uiState.bottomBarUiModel?.let(this::setupBottomBar)
-                uiState.softAskViewUiModel?.let(this::setupSoftAskView)
+                uiState.softAskViewUiModel.let(this::setupSoftAskView)
                 uiState.fabUiModel?.let(this::setupFab)
+                if (uiState.actionModeUiModel != null && !isShowingActionMode) {
+                    isShowingActionMode = true
+                    (activity as AppCompatActivity).startSupportActionMode(
+                            PhotoPickerActionModeCallback(
+                                    viewModel
+                            )
+                    )
+                }
             }
         })
-
-        var isShowingActionMode = false
-        viewModel.onShowActionMode.observe(viewLifecycleOwner, Observer { showActionMode ->
-            if (showActionMode && !isShowingActionMode) {
-                isShowingActionMode = true
-                (activity as AppCompatActivity).startSupportActionMode(
-                        PhotoPickerActionModeCallback(
-                                viewModel
-                        )
-                )
-            }
-        }
-        )
 
         viewModel.onNavigateToPreview.observe(viewLifecycleOwner, Observer
         {
@@ -203,23 +197,20 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private fun setupSoftAskView(uiModel: SoftAskViewUiModel?) {
-        when (uiModel) {
-            is Show -> {
-                soft_ask_view.title.text = Html.fromHtml(uiModel.label)
-                soft_ask_view.button.setText(uiModel.allowId.stringRes)
-                soft_ask_view.button.setOnClickListener {
-                    if (uiModel.isAlwaysDenied) {
-                        WPPermissionUtils.showAppSettings(requireActivity())
-                    } else {
-                        requestStoragePermission()
-                    }
+        if (uiModel != null) {
+            soft_ask_view.title.text = Html.fromHtml(uiModel.label)
+            soft_ask_view.button.setText(uiModel.allowId.stringRes)
+            soft_ask_view.button.setOnClickListener {
+                if (uiModel.isAlwaysDenied) {
+                    WPPermissionUtils.showAppSettings(requireActivity())
+                } else {
+                    requestStoragePermission()
                 }
-                soft_ask_view.visibility = View.VISIBLE
             }
-            is Hide -> {
-                if (soft_ask_view.visibility == View.VISIBLE) {
-                    AniUtils.fadeOut(soft_ask_view, MEDIUM)
-                }
+            soft_ask_view.visibility = View.VISIBLE
+        } else {
+            if (soft_ask_view.visibility == View.VISIBLE) {
+                AniUtils.fadeOut(soft_ask_view, MEDIUM)
             }
         }
     }

@@ -24,21 +24,21 @@ class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel)
     ): Boolean {
         lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
-        viewModel.actionModeUiModel.observe(this, Observer { uiModel ->
-            if (uiModel.showConfirmAction && menu.size() == 0) {
-                val inflater = actionMode.menuInflater
-                inflater.inflate(R.menu.photo_picker_action_mode, menu)
-            }
-
-            if (uiModel.actionModeTitle is UiStringText) {
-                actionMode.title = uiModel.actionModeTitle.text
-            } else if (uiModel.actionModeTitle is UiStringRes) {
-                actionMode.setTitle(uiModel.actionModeTitle.stringRes)
-            }
-        })
-        viewModel.onShowActionMode.observe(this, Observer {
-            if (it == false) {
+        viewModel.uiState.observe(this, Observer { uiState ->
+            val uiModel = uiState.actionModeUiModel
+            if (uiModel == null) {
                 actionMode.finish()
+            } else {
+                if (uiModel.showConfirmAction && menu.size() == 0) {
+                    val inflater = actionMode.menuInflater
+                    inflater.inflate(R.menu.photo_picker_action_mode, menu)
+                }
+
+                if (uiModel.actionModeTitle is UiStringText) {
+                    actionMode.title = uiModel.actionModeTitle.text
+                } else if (uiModel.actionModeTitle is UiStringRes) {
+                    actionMode.setTitle(uiModel.actionModeTitle.stringRes)
+                }
             }
         })
         return true
