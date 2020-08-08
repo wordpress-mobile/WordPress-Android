@@ -712,6 +712,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().setContent(postContent);
     }
 
+    public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
+        getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
+    }
+
     public void onToggleHtmlMode() {
         if (!isAdded()) {
             return;

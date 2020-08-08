@@ -10,6 +10,7 @@ import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
+import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
@@ -204,5 +205,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void updateTheme(Bundle editorTheme) {
         mWPAndroidGlueCode.updateTheme(editorTheme);
+    }
+
+    public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
+        GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
+        mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
     }
 }

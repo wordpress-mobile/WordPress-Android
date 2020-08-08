@@ -374,6 +374,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
+    private boolean mIsJetpackSsoEnabled;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -438,6 +439,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
 
             mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
+            // initialize settings with locally cached values, fetch remote on first pass
+            mSiteSettings.init(true);
         }
 
         // Check whether to show the visual editor
@@ -646,7 +649,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onFetchError(Exception error) { }
 
     @Override
-    public void onSettingsUpdated() { }
+    public void onSettingsUpdated() {
+        // Let's hold the value in local variable as listener is too noisy
+        if (mIsJetpackSsoEnabled != mSiteSettings.isJetpackSsoEnabled()) {
+            mIsJetpackSsoEnabled = mSiteSettings.isJetpackSsoEnabled();
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment)mEditorFragment)
+                        .updateCapabilities(getGutenbergPropsBuilder());
+            }
+        }
+    }
 
     @Override
     public void onSettingsSaved() { }
@@ -1989,32 +2001,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
-                        String postType = mIsPage ? "page" : "post";
-                        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
-                        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
-
-                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-                        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
-
-                        // The Unsupported Block Editor is disabled for all self-hosted non-jetpack sites
-                        // The option is disabled on Self-hosted sites because they can have their web editor
-                        // to be set to classic and then the fallback will not work.
-                        // We disable in Jetpack site because we don't have the self-hosted site's credentials
-                        // which are required for us to be able to fetch the site's authentication cookie.
-                        boolean isJetpackSSOEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
-                        boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled)
-                                && "gutenberg".equals(mSite.getWebEditor());
-
-                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
-                        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
-                        GutenbergPropsBuilder gutenbergPropsBuilder = new GutenbergPropsBuilder(
-                                enableMentions,
-                                isUnsupportedBlockEditorEnabled,
-                                wpcomLocaleSlug,
-                                postType,
-                                themeBundle
-                        );
+                        GutenbergPropsBuilder gutenbergPropsBuilder = getGutenbergPropsBuilder();
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
@@ -2026,7 +2015,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
-                                isSiteUsingWpComRestApi,
+                                mSite.isUsingWpComRestApi(),
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
                                 gutenbergPropsBuilder
@@ -2078,6 +2067,37 @@ public class EditPostActivity extends LocaleAwareActivity implements
         public int getCount() {
             return NUM_PAGES_EDITOR;
         }
+    }
+
+    private GutenbergPropsBuilder getGutenbergPropsBuilder() {
+
+        String postType = mIsPage ? "page" : "post";
+        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
+        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
+        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
+
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
+        // The Unsupported Block Editor is disabled for all self-hosted non-jetpack sites
+        // The option is disabled on Self-hosted sites because they can have their web editor
+        // to be set to classic and then the fallback will not work.
+        // We disable in Jetpack site because we don't have the self-hosted site's credentials
+        // which are required for us to be able to fetch the site's authentication cookie.
+        boolean isJetpackSSOEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
+        boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
+        boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled)
+                && "gutenberg".equals(mSite.getWebEditor());
+
+        return new GutenbergPropsBuilder(
+                enableMentions,
+                isUnsupportedBlockEditorEnabled,
+                wpcomLocaleSlug,
+                postType,
+                themeBundle
+        );
     }
 
     // Moved from EditPostContentFragment
