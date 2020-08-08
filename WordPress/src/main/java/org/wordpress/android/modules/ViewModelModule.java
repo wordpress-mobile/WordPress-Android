@@ -52,6 +52,7 @@ import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewMode
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -285,6 +286,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(WPMainActivityViewModel.class)
     abstract ViewModel wpMainActivityViewModel(WPMainActivityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ModalLayoutPickerViewModel.class)
+    abstract ViewModel mlpViewModel(ModalLayoutPickerViewModel viewModel);
 
     @Binds
     @IntoMap
