@@ -656,7 +656,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mIsJetpackSsoEnabled != mSiteSettings.isJetpackSsoEnabled()) {
             mIsJetpackSsoEnabled = mSiteSettings.isJetpackSsoEnabled();
             if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment)mEditorFragment)
+                ((GutenbergEditorFragment) mEditorFragment)
                         .updateCapabilities(getGutenbergPropsBuilder());
             }
         }
@@ -2072,7 +2072,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
-
         String postType = mIsPage ? "page" : "post";
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
@@ -2092,7 +2091,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
         boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled)
                 && "gutenberg".equals(mSite.getWebEditor());
-        
+
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
