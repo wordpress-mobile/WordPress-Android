@@ -2092,8 +2092,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
         boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled)
                 && "gutenberg".equals(mSite.getWebEditor());
-
-
+        
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
