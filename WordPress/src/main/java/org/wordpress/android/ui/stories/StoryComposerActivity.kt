@@ -335,7 +335,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // TODO will implement when we support StoryPost editing
         // updateAndSavePostAsync(listener)
         // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
-        listener?.onPostUpdatedFromUI()
+        listener?.onPostUpdatedFromUI(null)
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
