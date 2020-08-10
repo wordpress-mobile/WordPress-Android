@@ -213,7 +213,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
             }
         }
         assertThat(viewModel.numSelected()).isEqualTo(selectedItems.size)
-        assertThat(viewModel.selectedURIs()).containsAll(selectedItems.map { it.uri })
+        assertThat(viewModel.selectedURIs()).isEqualTo(selectedItems.map { it.uri })
     }
 
     private suspend fun setupViewModel(
