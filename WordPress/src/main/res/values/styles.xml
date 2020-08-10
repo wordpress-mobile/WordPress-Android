@@ -219,18 +219,12 @@
         <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
     </style>
 
-    <style name="FilteredRecyclerViewSpinner.WordPress" parent="DropDownNav.WordPress">
-        <item name="android:background">@android:color/transparent</item>
-    </style>
-
     <style name="FilteredRecyclerViewFilterTextView">
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:paddingBottom">@dimen/margin_medium</item>
-        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
-        <item name="android:paddingStart">10dp</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="textColor">@android:color/white</item>
+        <item name="textColor">?attr/colorOnSurface</item>
         <item name="textColorHint">@color/hint_text</item>
     </style>
 

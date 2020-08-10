@@ -6,11 +6,9 @@
     style="@style/FilteredRecyclerViewFilterTextView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:drawableEnd="@drawable/ic_dropdown_primary_30_24dp"
-    android:drawableRight="@drawable/ic_dropdown_primary_30_24dp"
     android:textAlignment="viewStart"
     android:gravity="start"
-    android:textColor="@android:color/white"
+    android:textColor="?attr/colorOnSurface"
     tools:ignore="RtlHardcoded"
     tools:text="spinner item" >
 </org.wordpress.android.widgets.WPTextView>

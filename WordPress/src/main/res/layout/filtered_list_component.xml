@@ -15,20 +15,19 @@
             android:id="@+id/toolbar_with_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/tab_bottom_divider"
             android:focusableInTouchMode="true"
+            app:contentInsetStart="0dp"
             app:layout_scrollFlags="scroll"
-             android:background="@drawable/tab_bottom_divider"
             app:theme="@style/WordPress.ActionBar">
 
             <Spinner
                 android:id="@+id/filter_spinner"
-                style="@style/FilteredRecyclerViewSpinner.WordPress"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:overlapAnchor="false"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
-
                 tools:ignore="UnusedAttribute" />
 
         </com.google.android.material.appbar.MaterialToolbar>

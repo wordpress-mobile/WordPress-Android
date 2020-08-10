@@ -368,7 +368,6 @@ public class CommentsListFragment extends Fragment {
             }
         });
 
-        mFilteredCommentsView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
         mFilteredCommentsView.setToolbarLeftAndRightPadding(
                 getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
                 getResources().getDimensionPixelSize(R.dimen.margin_none));

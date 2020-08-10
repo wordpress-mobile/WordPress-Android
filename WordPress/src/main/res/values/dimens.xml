@@ -111,7 +111,7 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
-    <dimen name="margin_filter_spinner">64dp</dimen>
+    <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
     <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
