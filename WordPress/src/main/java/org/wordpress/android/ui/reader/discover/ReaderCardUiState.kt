@@ -41,7 +41,7 @@ sealed class ReaderCardUiState {
         val moreMenuItems: List<SecondaryAction>,
         val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
-        val onItemRendered: (Long, Long) -> Unit,
+        val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (Long, Long, View) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {

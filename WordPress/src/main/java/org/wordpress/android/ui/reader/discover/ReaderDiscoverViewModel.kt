@@ -29,10 +29,12 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+const val INITIATE_LOAD_MORE_OFFSET = 3
+
 class ReaderDiscoverViewModel @Inject constructor(
-    private val readerDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -62,8 +64,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val photonWidth: Int = 500
     private val photonHeight: Int = 500
 
-    private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
-
     fun start() {
         if (isStarted) return
         isStarted = true
@@ -76,7 +76,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.value = LoadingUiState
 
         // Get the correct repository
-        readerDiscoverDataProvider = readerDiscoverDataProviderFactory.create()
         readerDiscoverDataProvider.start()
 
         // Listen to changes to the discover feed
@@ -91,7 +90,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
                                 onButtonClicked = this::onButtonClicked,
-                                onItemClicked = this::onItemClicked,
+                                onItemClicked = this::onPostItemClicked,
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
                                 onMoreButtonClicked = this::onMoreButtonClicked,
@@ -100,7 +99,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onTagItemClicked = this::onTagItemClicked,
                                 postListType = TAG_FOLLOWED
                         )
-                    }
+                    },
+                    swipeToRefreshIsRefreshing = false
             )
         }
 
@@ -148,12 +148,23 @@ class ReaderDiscoverViewModel @Inject constructor(
         _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
-    private fun onItemClicked(postId: Long, blogId: Long) {
+    private fun onPostItemClicked(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnItemClicked")
     }
 
-    private fun onItemRendered(postId: Long, blogId: Long) {
-        AppLog.d(T.READER, "OnItemRendered")
+    private fun onItemRendered(itemUiState: ReaderCardUiState) {
+        initiateLoadMoreIfNecessary(itemUiState)
+    }
+
+    private fun initiateLoadMoreIfNecessary(item: ReaderCardUiState) {
+        (uiState.value as? ContentUiState)?.cards?.let {
+            val closeToEndIndex = it.size - INITIATE_LOAD_MORE_OFFSET
+            if (closeToEndIndex > 0) {
+                val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
+                // TODO malinjir we might want to show some kind of progress indicator when the request is in progress
+                if (isCardCloseToEnd) launch(bgDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
+            }
+        }
     }
 
     private fun onDiscoverClicked(postId: Long, blogId: Long) {
@@ -183,11 +194,25 @@ class ReaderDiscoverViewModel @Inject constructor(
         readerDiscoverDataProvider.stop()
     }
 
+    fun swipeToRefresh() {
+        launch {
+            (uiState.value as ContentUiState).copy(swipeToRefreshIsRefreshing = true)
+            readerDiscoverDataProvider.refreshCards()
+        }
+    }
+
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
-        val progressVisibility: Boolean = false
+        val progressVisibility: Boolean = false,
+        val swipeToRefreshEnabled: Boolean = false
     ) {
-        data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
+        open val swipeToRefreshIsRefreshing: Boolean = false
+
+        data class ContentUiState(
+            val cards: List<ReaderCardUiState>,
+            override val swipeToRefreshIsRefreshing: Boolean
+        ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
+
         object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
     }

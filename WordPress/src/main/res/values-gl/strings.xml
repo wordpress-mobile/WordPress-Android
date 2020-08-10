@@ -8,6 +8,7 @@ Language: gl_ES
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">Dalle ao teu sitio un nome que reflicte a súa personalidade e temática. As primeiras impresións contan!</string>
     <string name="quick_start_list_update_site_title_title">Configura o título do teu sitio</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
     <string name="gutenberg_native_remove_block">Eliminar bloque</string>
@@ -24,7 +25,6 @@ Language: gl_ES
     <string name="gutenberg_native_dismiss">Rexeitar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Non establecido</string>
     <string name="prepublishing_tags_description">As etiquetas axudan aos lectores dicíndolles de que se trata a entrada.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Engadir etiquetas</string>
     <string name="prepublishing_nudges_back_button">Volver</string>
     <string name="prepublishing_nudges_home_save_button">Gardar agora</string>
@@ -249,7 +249,6 @@ Language: gl_ES
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Lenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar o vídeo</string>
-    <string name="gutenberg_native_edit_media">Editar os medios</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Toca dúas veces para seleccionar o deseño</string>
     <string name="gutenberg_native_add_a_shortcode">Engadir un shortcode…</string>
     <string name="post_list_author">Autor da entrada</string>
@@ -297,7 +296,6 @@ Language: gl_ES
     <string name="login_discovery_error_http_auth">Non puidemos acceder ao teu sitio porque necesita &lt;b>identificación HTTP&lt;/b>. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_discovery_error_xmlrpc">Non puidemos acceder no teu sitio ao &lt;b>arquivo XMLRCP&lt;/b>. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_site_credentials_magic_link_label">Xa case estamos! Só necesitamos verificar o teu enderezo de correo electrónico conectado a Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Acceder coas credenciais do sitio</string>
     <string name="enter_credentials_for_site">Accede coas credenciais do teu sitio %1$s</string>
     <string name="send_verification_email">Enviar o correo electrónico de verificación</string>
     <string name="my_site_bottom_sheet_add_page">Páxina do sitio</string>
@@ -368,7 +366,6 @@ Language: gl_ES
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toca dúas veces para editar este valor</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toca dúas veces para cambiar o valor usando o control deslizante</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toca dúas veces para engadir un bloque</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toca dúas veces e mantén para editar</string>
     <string name="gutenberg_native_current_value_is_s">O valor actual é %s</string>
     <string name="gutenberg_native_content">Contido…</string>
     <string name="gutenberg_native_choose_from_device">Elixir desde o dispositivo</string>
@@ -487,7 +484,6 @@ Language: gl_ES
     <string name="post_notification_off">Desactivados</string>
     <string name="post_settings_add_to_calendar">Engadir ao calendario</string>
     <string name="post_settings_notification">Aviso</string>
-    <string name="post_settings_time_and_date">Hora e data</string>
     <string name="login_need_help_finding_connected_email">Necesitas axuda para encontrar o correo electrónico co que te conectaches?</string>
     <string name="enter_wordpress_site">A web neste enderezo non é un sitio WordPress. Para conectarnos a el, o sitio debe ter instalado WordPress.</string>
     <string name="login_invalid_site_url">Por favor, introduce un enderezo completo dunha web, como exemplo.gal.</string>
@@ -1200,7 +1196,6 @@ Language: gl_ES
     <string name="signup_updating_account">Actualizando conta…</string>
     <string name="signup_terms_of_service_text">Ao rexistrarte aceptas os nosos %1$sTermos do servizo%2$s.</string>
     <string name="signup_magic_link_progress">Enviando correo</string>
-    <string name="signup_magic_link_message">Enviámosche un enlace máxico de rexistro! Revisa o teu correo neste dispositivo, e toca o enlace no correo para finalizar o rexistro.</string>
     <string name="signup_magic_link_error_button_positive">Reintentar</string>
     <string name="signup_magic_link_error_button_negative">Cerrar</string>
     <string name="signup_magic_link_error">Houbo algún problema ao enviar o correo electrónico. Podes reintentalo agora ou pechar e intentalo máis tarde.</string>
@@ -1208,7 +1203,6 @@ Language: gl_ES
     <string name="signup_epilogue_hint_password_detail">Sempre podes acceder cun enlace máxico coma o que acabas de usar, pero tamén podes configurar un contrasinal se o prefires.</string>
     <string name="signup_epilogue_hint_password">Contrasinal (opcional)</string>
     <string name="signup_epilogue_hint_display">Nome a amosar</string>
-    <string name="signup_epilogue_heading">Nova conta</string>
     <string name="signup_epilogue_error_button_positive">Reintentar</string>
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houbo algún problema ao actualizar a túa conta. Podes reintentalo ou reverter os teus cambios para continuar.</string>
@@ -1317,7 +1311,6 @@ Language: gl_ES
     <string name="notification_login_title_success">Conectado!</string>
     <string name="login_error_generic_start">Non se puido iniciar o acceso desde Google.</string>
     <string name="login_empty_password">Por favor, introduce un contrasinal</string>
-    <string name="login_text_otp_another">Mándame outro código.</string>
     <string name="enter_verification_code_sms">Enviamos unha mensaxe de texto ao número de teléfono terminado en %s. Por favor, introduce o código de verificación do SMS.</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">Queda 1 arquivo</string>
@@ -1385,7 +1378,6 @@ Language: gl_ES
     <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="connect_site">Conectar o sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibración do dispositivo</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Elixe son</string>
@@ -1429,7 +1421,6 @@ Language: gl_ES
     <string name="connection_to_server_lost">Perdeuse a conexión co servidor</string>
     <string name="login_epilogue_mysites_other">Os meus sitios</string>
     <string name="login_epilogue_mysites_one">O meu sitio</string>
-    <string name="login_logged_in_as">Conectado como</string>
     <string name="login_email_client_not_found">Non se puido detectar un cliente de correo electrónico</string>
     <string name="login_empty_2fa">Por favor, introduce un código de verificación</string>
     <string name="login_empty_username">Por favor, introduce un nome de usuario</string>
@@ -1442,26 +1433,16 @@ Language: gl_ES
     <string name="login_site_address_help">Necesitas axuda para encontrar o enderezo do teu sitio?</string>
     <string name="login_site_address">Enderezo do sitio</string>
     <string name="enter_site_address">Introduce o enderezo do sitio WordPress co que che gustaría conectar.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Xa estás conectado a WordPress.com</string>
     <string name="login_continue">Continuar</string>
-    <string name="connect_more">Conectar outro sitio</string>
     <string name="enter_wpcom_password">Introduce o teu contrasinal de WordPress.com</string>
     <string name="login_magic_link_email_requesting">Solicitando o correo electrónico de acceso</string>
-    <string name="login_magic_links_sent_label">O teu enlace máxico está en camiño! Revisa o teu correo electrónico neste dispositivo e pulsa o enlace que hai no correo electrónico que recibiches de WordPress.com.</string>
-    <string name="login_magic_links_label">Enviarémosche por correo electrónico un enlace máxico que te conectará ao instante, sen ter que introducir contrasinal. Caza e non picotees máis!</string>
     <string name="password_incorrect">Parece que este contrasinal é incorrecto. Por favor, volve a comprobar a túa información e inténtao de novo.</string>
     <string name="requesting_otp">Solicitando un código de verificación por SMS.</string>
-    <string name="login_text_otp">Envíame un código en texto no seu lugar.</string>
     <string name="enter_verification_code">Case o temos! Por favor, introduce un código de verificación desde a túa aplicación Authenticator.</string>
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Seguinte</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando un enderezo de correo electrónico para xestionar todos os teus sitios WordPress.</string>
-    <string name="login_promo_text_jetpack">Xestiona o teu sitio con Jetpack instalado sobre a marcha - tes WordPress no teu petos.</string>
-    <string name="login_promo_text_notifications">Os teus avisos viaxan contigo - ve os comentarios e «gústame» a medida que ocorran.</string>
-    <string name="login_promo_text_anytime">Revisa os teus sitios favoritos e únete á conversa en calquera sitio, en calquera momento.</string>
-    <string name="login_promo_text_realtime">Observa a lectores de todo o mundo lendo e interactuando co teu sitio - en tempo real.</string>
-    <string name="login_promo_text_onthego">Publica desde o parque. Bloguea desde o autobús. Comenta desde o café. WordPress está onde ti vas.</string>
     <string name="image_optimization_promo_desc">A optimización da imaxe reduce as imaxes para que suban máis rápido.\n\nPodes cambiar isto en calquera momento nos axustes do sitio.</string>
     <string name="image_optimization_promo_title">Activar optimización da imaxe?</string>
     <string name="leave_off">Deter</string>

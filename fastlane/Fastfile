@@ -290,7 +290,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, prerelease: true)
     end
   end
 
@@ -321,7 +321,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, prerelease: true)
     end
   end
 
@@ -357,6 +357,33 @@ ENV["HAS_ALPHA_VERSION"]="true"
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
+  end
+
+  #####################################################################################
+  # upload_and_replace_screenshots_in_play_store
+  # -----------------------------------------------------------------------------------
+  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
+  # Store and replaces the existing ones.
+  # If a locale doesn't have any screenshots, it'll be skipped.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
+  #
+  # Example:
+  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
+  #####################################################################################
+  desc "Upload Screenshots to Play Store and Replaces the existing ones"
+  lane :upload_and_replace_screenshots_in_play_store do | options |
+    upload_to_play_store(
+      package_name: 'org.wordpress.android',
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: false,
+      json_key: './google-upload-credentials.json',
+    )
   end
 
   #####################################################################################
@@ -598,12 +625,14 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   private_lane :create_gh_release do | options |
+    set_prerelease_flag = options["prerelease"].nil? ? false : options["prerelease"]
     version = options[:version]
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(version)
     create_release(repository:GHHELPER_REPO, 
       version: version["name"], 
       release_notes_file_path:release_notes_path,
+      prerelease: set_prerelease_flag,
       release_assets:"#{apk_file_path},#{aab_file_path}"
     )
   end

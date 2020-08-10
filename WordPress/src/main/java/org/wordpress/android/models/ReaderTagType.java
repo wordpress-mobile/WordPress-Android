@@ -6,7 +6,8 @@ public enum ReaderTagType {
     BOOKMARKED,
     CUSTOM_LIST,
     SEARCH,
-    INTERESTS;
+    INTERESTS,
+    DISCOVER_POST_CARDS;
 
     private static final int INT_DEFAULT = 0;
     private static final int INT_FOLLOWED = 1;
@@ -15,6 +16,7 @@ public enum ReaderTagType {
     private static final int INT_SEARCH = 4;
     private static final int INT_BOOKMARKED = 5;
     private static final int INT_INTERESTS = 6;
+    private static final int INT_DISCOVER_POST_CARDS = 7;
 
 
     public static ReaderTagType fromInt(int value) {
@@ -29,6 +31,8 @@ public enum ReaderTagType {
                 return BOOKMARKED;
             case INT_INTERESTS:
                 return INTERESTS;
+            case INT_DISCOVER_POST_CARDS:
+                return DISCOVER_POST_CARDS;
             default:
                 return DEFAULT;
         }
@@ -46,6 +50,8 @@ public enum ReaderTagType {
                 return INT_BOOKMARKED;
             case INTERESTS:
                 return INT_INTERESTS;
+            case DISCOVER_POST_CARDS:
+                return INT_DISCOVER_POST_CARDS;
             case DEFAULT:
             default:
                 return INT_DEFAULT;
