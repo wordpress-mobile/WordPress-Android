@@ -26,7 +26,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var uriWrapper: UriWrapper
+    @Mock lateinit var uriWrapper1: UriWrapper
+    @Mock lateinit var uriWrapper2: UriWrapper
     private lateinit var viewModel: PhotoPickerViewModel
     private var uiModels = mutableListOf<PhotoPickerUiModel>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
@@ -46,8 +47,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper
         )
         uiModels.clear()
-        firstItem = PhotoPickerItem(1, uriWrapper, false)
-        secondItem = PhotoPickerItem(2, uriWrapper, false)
+        firstItem = PhotoPickerItem(1, uriWrapper1, false)
+        secondItem = PhotoPickerItem(2, uriWrapper2, false)
     }
 
     @Test
