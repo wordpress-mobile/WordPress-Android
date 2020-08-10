@@ -259,7 +259,15 @@ public class MediaStore extends Store {
                 String[] splitMsg = message.split("\\|", 2);
 
                 if (null != splitMsg && splitMsg.length > 1) {
-                    return splitMsg[1];
+                    String userMessage = splitMsg[1];
+                    String suffix = " Back";
+
+                    // Remove the final " Back" if present
+                    if (userMessage.endsWith(suffix)) {
+                        userMessage = userMessage.substring(0, userMessage.length() - suffix.length());
+                    }
+
+                    return userMessage;
                 } else {
                     return message;
                 }
