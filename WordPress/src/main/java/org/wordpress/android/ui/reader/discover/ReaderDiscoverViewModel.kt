@@ -92,6 +92,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onMoreButtonClicked = this::onMoreButtonClicked,
                                 onVideoOverlayClicked = this::onVideoOverlayClicked,
                                 onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                onTagItemClicked = this::onTagItemClicked,
                                 postListType = TAG_FOLLOWED
                         )
                     }
@@ -135,6 +136,11 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
         // TODO malinjir implement action
+    }
+
+    private fun onTagItemClicked(tagSlug: String) {
+        // TODO ashiagr implement action
+        AppLog.d(T.READER, "onTagItemClicked $tagSlug")
     }
 
     private fun onItemClicked(postId: Long, blogId: Long) {

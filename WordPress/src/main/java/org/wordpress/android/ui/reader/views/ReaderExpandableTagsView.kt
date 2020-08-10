@@ -43,7 +43,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         layoutDirection = View.LAYOUT_DIRECTION_LOCALE
     }
 
-    fun updateTagsUi(tags: List<TagUiState>) {
+    fun updateUi(tags: List<TagUiState>) {
         removeAllViews()
         addOverflowIndicatorChip()
         addTagChips(tags)
@@ -64,7 +64,10 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             chip.tag = tag.slug
             chip.text = tag.title
             chip.maxWidth = tag.maxWidth
-            chip.setOnClickListener { // TODO - set click listener
+            tag.onClick?.let { onClick ->
+                chip.setOnClickListener {
+                    onClick.invoke(tag.slug)
+                }
             }
             addView(chip, index)
         }

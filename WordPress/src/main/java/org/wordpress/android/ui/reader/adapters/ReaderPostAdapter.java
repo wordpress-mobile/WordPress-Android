@@ -73,6 +73,7 @@ import javax.inject.Inject;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
 
@@ -470,6 +471,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
 
+        Function1<String, Unit> onTagItemClicked = (tagSlug) -> {
+            // noop
+            return Unit.INSTANCE;
+        };
+
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiState(
                         post,
@@ -483,7 +489,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onDiscoverSectionClicked,
                         onMoreButtonClicked,
                         onVideoOverlayClicked,
-                        onPostHeaderClicked
+                        onPostHeaderClicked,
+                        onTagItemClicked
                 );
         holder.onBind(uiState);
     }

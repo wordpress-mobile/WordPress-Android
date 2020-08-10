@@ -22,12 +22,14 @@ class ReaderPostTagsUiStateBuilder @Inject constructor(
         }
 
     fun mapPostTagsToTagUiStates(
-        post: ReaderPost
+        post: ReaderPost,
+        onClick: (String) -> Unit
     ): List<TagUiState> {
         return post.tags.map {
             TagUiState(
                 title = it.tagTitle,
                 slug = it.tagSlug,
+                onClick = onClick,
                 maxWidth = maxWidthForChip
             )
         }

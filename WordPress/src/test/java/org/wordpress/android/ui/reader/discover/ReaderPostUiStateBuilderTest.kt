@@ -777,7 +777,8 @@ class ReaderPostUiStateBuilderTest {
                 onDiscoverSectionClicked = mock(),
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
-                onPostHeaderViewClicked = mock()
+                onPostHeaderViewClicked = mock(),
+                onTagItemClicked = mock()
         )
     }
 

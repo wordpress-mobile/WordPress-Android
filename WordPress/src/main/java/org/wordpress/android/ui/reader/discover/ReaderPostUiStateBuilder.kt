@@ -63,7 +63,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onDiscoverSectionClicked: (Long, Long) -> Unit,
         onMoreButtonClicked: (Long, Long, View) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
-        onPostHeaderViewClicked: (Long, Long) -> Unit
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onTagItemClicked: (String) -> Unit
     ): ReaderPostUiState {
         return ReaderPostUiState(
                 postId = post.postId,
@@ -74,7 +75,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 blogName = buildBlogName(post),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
-                tagItems = buildTagItems(post),
+                tagItems = buildTagItems(post, onTagItemClicked),
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
@@ -131,7 +132,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildExpandedTagsViewVisibility(post: ReaderPost) =
             appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty()
 
-    private fun buildTagItems(post: ReaderPost) = readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post)
+    private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
+            readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
 
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
