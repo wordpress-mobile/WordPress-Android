@@ -450,7 +450,11 @@ class PhotoPickerViewModel @Inject constructor(
                         appName
                 )
             }
-            val allowId = if (softAskRequest.isAlwaysDenied) R.string.button_edit_permissions else R.string.photo_picker_soft_ask_allow
+            val allowId = if (softAskRequest.isAlwaysDenied) {
+                R.string.button_edit_permissions
+            } else {
+                R.string.photo_picker_soft_ask_allow
+            }
             return SoftAskViewUiModel(label, UiStringRes(allowId), softAskRequest.isAlwaysDenied)
         } else {
             return null
