@@ -38,7 +38,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiMode
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PopupMenuUiModel.PopupMenuItem
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -52,7 +51,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.distinct
-import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -79,40 +77,35 @@ class PhotoPickerViewModel @Inject constructor(
     private val _selectedIds = MutableLiveData<List<Long>>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
-    private val _softAskViewModel = MutableLiveData<SoftAskViewUiModel>()
+    private val _softAskRequest = MutableLiveData<SoftAskRequest>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
     val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
 
-    val onShowActionMode: LiveData<Boolean> = _selectedIds.map { selectedIds ->
-        !selectedIds.isNullOrEmpty()
-    }
     val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
-
-    val actionModeUiModel: LiveData<ActionModeUiModel> = _selectedIds.map { selectedIds ->
-        buildActionModeUiModel(selectedIds)
-    }
 
     val selectedIds: LiveData<List<Long>> = _selectedIds
 
     val uiState: LiveData<PhotoPickerUiState> = merge(
             _photoPickerItems.distinct(),
             _selectedIds.distinct(),
-            _softAskViewModel
-    ) { photoPickerItems, selectedIds, softAskViewUiModel ->
+            _softAskRequest
+    ) { photoPickerItems, selectedIds, softAskRequest ->
         PhotoPickerUiState(
                 buildPhotoPickerUiModel(photoPickerItems, selectedIds),
                 buildBottomBar(
                         photoPickerItems,
                         selectedIds,
-                        softAskViewUiModel is Show
+                        softAskRequest?.show == true
                 ),
-                softAskViewUiModel,
+                buildSoftAskView(softAskRequest),
                 FabUiModel(browserType.isWPStoriesPicker) {
                     clickIcon(WP_STORIES_CAPTURE)
-                })
+                },
+                buildActionModeUiModel(selectedIds)
+        )
     }
 
     var lastTappedIcon: PhotoPickerIcon? = null
@@ -166,6 +159,9 @@ class PhotoPickerViewModel @Inject constructor(
         selectedIds: List<Long>?
     ): ActionModeUiModel? {
         val numSelected = selectedIds?.size ?: 0
+        if (numSelected == 0) {
+            return null
+        }
         val title: UiString? = when {
             numSelected == 0 -> null
             browserType.canMultiselect() -> {
@@ -181,7 +177,10 @@ class PhotoPickerViewModel @Inject constructor(
                 }
             }
         }
-        return ActionModeUiModel(title, showConfirmAction = !browserType.isGutenbergPicker)
+        return ActionModeUiModel(
+                title,
+                showConfirmAction = !browserType.isGutenbergPicker
+        )
     }
 
     private fun buildBottomBar(
@@ -255,7 +254,8 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun selectedURIs(): List<UriWrapper> {
-        return uiState.value?.photoListUiModel?.items?.mapNotNull { if (it.isSelected) it.uri else null } ?: listOf()
+        val items = uiState.value?.photoListUiModel?.items
+        return _selectedIds.value?.mapNotNull { id -> items?.find { it.id == id }?.uri } ?: listOf()
     }
 
     private fun toggleItem(id: Long, canMultiselect: Boolean) {
@@ -424,17 +424,19 @@ class PhotoPickerViewModel @Inject constructor(
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {
         if (permissionsHandler.hasStoragePermission()) {
-            showSoftAskView(show = false, isAlwaysDenied = isAlwaysDenied)
+            _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
             if (_photoPickerItems.value.isNullOrEmpty()) {
                 refreshData(false)
             }
-        } else showSoftAskView(show = true, isAlwaysDenied = isAlwaysDenied)
+        } else {
+            _softAskRequest.value = SoftAskRequest(show = true, isAlwaysDenied = isAlwaysDenied)
+        }
     }
 
-    private fun showSoftAskView(show: Boolean, isAlwaysDenied: Boolean) {
-        if (show) {
+    private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel? {
+        if (softAskRequest != null && softAskRequest.show) {
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
-            val label = if (isAlwaysDenied) {
+            val label = if (softAskRequest.isAlwaysDenied) {
                 val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
                         context,
                         permission.WRITE_EXTERNAL_STORAGE
@@ -449,10 +451,14 @@ class PhotoPickerViewModel @Inject constructor(
                         appName
                 )
             }
-            val allowId = if (isAlwaysDenied) R.string.button_edit_permissions else R.string.photo_picker_soft_ask_allow
-            _softAskViewModel.value = Show(label, UiStringRes(allowId), isAlwaysDenied)
-        } else if (_softAskViewModel.value is Show) {
-            _softAskViewModel.value = SoftAskViewUiModel.Hide
+            val allowId = if (softAskRequest.isAlwaysDenied) {
+                R.string.button_edit_permissions
+            } else {
+                R.string.photo_picker_soft_ask_allow
+            }
+            return SoftAskViewUiModel(label, UiStringRes(allowId), softAskRequest.isAlwaysDenied)
+        } else {
+            return null
         }
     }
 
@@ -460,7 +466,8 @@ class PhotoPickerViewModel @Inject constructor(
         val photoListUiModel: PhotoListUiModel? = null,
         val bottomBarUiModel: BottomBarUiModel? = null,
         val softAskViewUiModel: SoftAskViewUiModel? = null,
-        val fabUiModel: FabUiModel? = null
+        val fabUiModel: FabUiModel? = null,
+        val actionModeUiModel: ActionModeUiModel? = null
     )
 
     data class PhotoListUiModel(
@@ -483,14 +490,14 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    sealed class SoftAskViewUiModel {
-        data class Show(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean) : SoftAskViewUiModel()
-        object Hide : SoftAskViewUiModel()
-    }
+    data class SoftAskViewUiModel(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean)
 
     data class FabUiModel(val show: Boolean, val action: () -> Unit)
 
-    data class ActionModeUiModel(val actionModeTitle: UiString? = null, val showConfirmAction: Boolean = false)
+    data class ActionModeUiModel(
+        val actionModeTitle: UiString? = null,
+        val showConfirmAction: Boolean = false
+    )
 
     data class IconClickEvent(val icon: PhotoPickerIcon, val allowMultipleSelection: Boolean)
 
@@ -501,4 +508,6 @@ class PhotoPickerViewModel @Inject constructor(
     data class PopupMenuUiModel(val view: ViewWrapper, val items: List<PopupMenuItem>) {
         data class PopupMenuItem(val title: UiStringRes, val action: () -> Unit)
     }
+
+    data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)
 }

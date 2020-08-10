@@ -22,7 +22,6 @@ import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PI
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiState
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -35,7 +34,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    @Mock lateinit var uriWrapper: UriWrapper
+    @Mock lateinit var uriWrapper1: UriWrapper
+    @Mock lateinit var uriWrapper2: UriWrapper
     @Mock lateinit var permissionsHandler: PermissionsHandler
     @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Mock lateinit var context: Context
@@ -64,8 +64,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 resourceProvider
         )
         uiStates.clear()
-        firstItem = PhotoPickerItem(1, uriWrapper, false)
-        secondItem = PhotoPickerItem(2, uriWrapper, false)
+        firstItem = PhotoPickerItem(1, uriWrapper1, false)
+        secondItem = PhotoPickerItem(2, uriWrapper2, false)
     }
 
     @Test
@@ -153,7 +153,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `selects two items with multi selection available`() = test {
-        setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType, true)
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType)
 
         viewModel.refreshData(false)
 
@@ -257,18 +258,15 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
             }
         }
         assertThat(viewModel.numSelected()).isEqualTo(selectedItems.size)
-        assertThat(viewModel.selectedURIs()).containsAll(selectedItems.map { it.uri })
+        assertThat(viewModel.selectedURIs()).isEqualTo(selectedItems.map { it.uri })
     }
 
     private fun assertSoftAskUiModelVisible() {
-        uiStates.last().apply {
-            assertThat(this.softAskViewUiModel).isNotNull()
-            assertThat(this.softAskViewUiModel is Show).isTrue()
-            (this.softAskViewUiModel as Show).apply {
-                assertThat(allowId).isEqualTo(UiStringRes(R.string.photo_picker_soft_ask_allow))
-                assertThat(isAlwaysDenied).isEqualTo(false)
-                assertThat(label).isEqualTo("Soft ask label")
-            }
+        uiStates.last().softAskViewUiModel?.apply {
+            assertThat(this).isNotNull()
+            assertThat(this.allowId).isEqualTo(UiStringRes(R.string.photo_picker_soft_ask_allow))
+            assertThat(this.isAlwaysDenied).isEqualTo(false)
+            assertThat(this.label).isEqualTo("Soft ask label")
         }
     }
 
