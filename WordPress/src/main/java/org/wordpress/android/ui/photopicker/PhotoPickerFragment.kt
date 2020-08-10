@@ -26,6 +26,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
@@ -129,11 +130,11 @@ class PhotoPickerFragment : Fragment() {
         var isShowingActionMode = false
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             it?.let { uiState ->
-                uiState.photoListUiModel?.let(this::setupPhotoList)
-                uiState.bottomBarUiModel?.let(this::setupBottomBar)
-                uiState.softAskViewUiModel.let(this::setupSoftAskView)
-                uiState.fabUiModel?.let(this::setupFab)
-                if (uiState.actionModeUiModel != null && !isShowingActionMode) {
+                setupPhotoList(uiState.photoListUiModel)
+                setupBottomBar(uiState.bottomBarUiModel)
+                setupSoftAskView(uiState.softAskViewUiModel)
+                uiState.fabUiModel.let(this::setupFab)
+                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
                             PhotoPickerActionModeCallback(
@@ -196,35 +197,40 @@ class PhotoPickerFragment : Fragment() {
         viewModel.start(selectedIds, browserType, lastTappedIcon, site)
     }
 
-    private fun setupSoftAskView(uiModel: SoftAskViewUiModel?) {
-        if (uiModel != null) {
-            soft_ask_view.title.text = Html.fromHtml(uiModel.label)
-            soft_ask_view.button.setText(uiModel.allowId.stringRes)
-            soft_ask_view.button.setOnClickListener {
-                if (uiModel.isAlwaysDenied) {
-                    WPPermissionUtils.showAppSettings(requireActivity())
-                } else {
-                    requestStoragePermission()
+    private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
+        when (uiModel) {
+            is SoftAskViewUiModel.Visible -> {
+                soft_ask_view.title.text = Html.fromHtml(uiModel.label)
+                soft_ask_view.button.setText(uiModel.allowId.stringRes)
+                soft_ask_view.button.setOnClickListener {
+                    if (uiModel.isAlwaysDenied) {
+                        WPPermissionUtils.showAppSettings(requireActivity())
+                    } else {
+                        requestStoragePermission()
+                    }
                 }
+                soft_ask_view.visibility = View.VISIBLE
             }
-            soft_ask_view.visibility = View.VISIBLE
-        } else {
-            if (soft_ask_view.visibility == View.VISIBLE) {
-                AniUtils.fadeOut(soft_ask_view, MEDIUM)
+            is SoftAskViewUiModel.Hidden -> {
+                if (soft_ask_view.visibility == View.VISIBLE) {
+                    AniUtils.fadeOut(soft_ask_view, MEDIUM)
+                }
             }
         }
     }
 
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
-        if (recycler.adapter == null) {
-            recycler.adapter = PhotoPickerAdapter(
-                    imageManager
-            )
+        if (uiModel is PhotoListUiModel.Data) {
+            if (recycler.adapter == null) {
+                recycler.adapter = PhotoPickerAdapter(
+                        imageManager
+                )
+            }
+            val adapter = recycler.adapter as PhotoPickerAdapter
+            val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+            adapter.loadData(uiModel.items)
+            recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
         }
-        val adapter = recycler.adapter as PhotoPickerAdapter
-        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
-        adapter.loadData(uiModel.items)
-        recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     private fun setupFab(fabUiModel: FabUiModel) {

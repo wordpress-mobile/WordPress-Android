@@ -115,7 +115,7 @@ class PhotoPickerViewModel @Inject constructor(
     private fun buildPhotoPickerUiModel(
         data: List<PhotoPickerItem>?,
         selectedIds: List<Long>?
-    ): PhotoListUiModel? {
+    ): PhotoListUiModel {
         var isVideoSelected = false
         return if (data != null) {
             val uiItems = data.map {
@@ -144,23 +144,18 @@ class PhotoPickerViewModel @Inject constructor(
                     )
                 }
             }
-            val count = selectedIds?.size ?: 0
-            PhotoListUiModel(
-                    uiItems,
-                    count,
-                    isVideoSelected
-            )
+            PhotoListUiModel.Data(uiItems)
         } else {
-            null
+            PhotoListUiModel.Empty
         }
     }
 
     private fun buildActionModeUiModel(
         selectedIds: List<Long>?
-    ): ActionModeUiModel? {
+    ): ActionModeUiModel {
         val numSelected = selectedIds?.size ?: 0
         if (numSelected == 0) {
-            return null
+            return ActionModeUiModel.Hidden
         }
         val title: UiString? = when {
             numSelected == 0 -> null
@@ -177,7 +172,7 @@ class PhotoPickerViewModel @Inject constructor(
                 }
             }
         }
-        return ActionModeUiModel(
+        return ActionModeUiModel.Visible(
                 title,
                 showConfirmAction = !browserType.isGutenbergPicker
         )
@@ -254,7 +249,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun selectedURIs(): List<UriWrapper> {
-        val items = uiState.value?.photoListUiModel?.items
+        val items = (uiState.value?.photoListUiModel as? PhotoListUiModel.Data)?.items
         return _selectedIds.value?.mapNotNull { id -> items?.find { it.id == id }?.uri } ?: listOf()
     }
 
@@ -433,7 +428,7 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel? {
+    private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
         if (softAskRequest != null && softAskRequest.show) {
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
@@ -456,25 +451,26 @@ class PhotoPickerViewModel @Inject constructor(
             } else {
                 R.string.photo_picker_soft_ask_allow
             }
-            return SoftAskViewUiModel(label, UiStringRes(allowId), softAskRequest.isAlwaysDenied)
+            return SoftAskViewUiModel.Visible(label, UiStringRes(allowId), softAskRequest.isAlwaysDenied)
         } else {
-            return null
+            return SoftAskViewUiModel.Hidden
         }
     }
 
     data class PhotoPickerUiState(
-        val photoListUiModel: PhotoListUiModel? = null,
-        val bottomBarUiModel: BottomBarUiModel? = null,
-        val softAskViewUiModel: SoftAskViewUiModel? = null,
-        val fabUiModel: FabUiModel? = null,
-        val actionModeUiModel: ActionModeUiModel? = null
+        val photoListUiModel: PhotoListUiModel,
+        val bottomBarUiModel: BottomBarUiModel,
+        val softAskViewUiModel: SoftAskViewUiModel,
+        val fabUiModel: FabUiModel,
+        val actionModeUiModel: ActionModeUiModel
     )
 
-    data class PhotoListUiModel(
-        val items: List<PhotoPickerUiItem>,
-        val count: Int = 0,
-        val isVideoSelected: Boolean = false
-    )
+    sealed class PhotoListUiModel {
+        data class Data(val items: List<PhotoPickerUiItem>) :
+                PhotoListUiModel()
+
+        object Empty : PhotoListUiModel()
+    }
 
     data class BottomBarUiModel(
         val type: BottomBar,
@@ -490,14 +486,23 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    data class SoftAskViewUiModel(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean)
+    sealed class SoftAskViewUiModel {
+        data class Visible(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean) :
+                SoftAskViewUiModel()
+
+        object Hidden : SoftAskViewUiModel()
+    }
 
     data class FabUiModel(val show: Boolean, val action: () -> Unit)
 
-    data class ActionModeUiModel(
-        val actionModeTitle: UiString? = null,
-        val showConfirmAction: Boolean = false
-    )
+    sealed class ActionModeUiModel {
+        data class Visible(
+            val actionModeTitle: UiString? = null,
+            val showConfirmAction: Boolean = false
+        ) : ActionModeUiModel()
+
+        object Hidden : ActionModeUiModel()
+    }
 
     data class IconClickEvent(val icon: PhotoPickerIcon, val allowMultipleSelection: Boolean)
 

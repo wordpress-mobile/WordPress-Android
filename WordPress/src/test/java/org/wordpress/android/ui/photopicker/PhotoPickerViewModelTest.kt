@@ -201,11 +201,11 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     }
 
     private fun selectItem(position: Int) {
-        uiStates.last().photoListUiModel!!.items[position].toggleAction.toggle()
+        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
     }
 
     private fun clickItem(position: Int) {
-        uiStates.last().photoListUiModel!!.items[position].clickAction.click()
+        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].clickAction.click()
     }
 
     private fun assertUiModel(
@@ -215,9 +215,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     ) {
         uiStates.last().apply {
             assertThat(this.photoListUiModel).isNotNull()
-            this.photoListUiModel!!.apply {
-                assertThat(this.count).isEqualTo(selectedItems.size)
-                assertThat(this.isVideoSelected).isFalse()
+            (uiStates.last().photoListUiModel as PhotoListUiModel.Data).apply {
                 assertThat(this.items).hasSize(domainItems.size)
                 domainItems.forEachIndexed { index, photoPickerItem ->
                     val isSelected = selectedItems.any { it.id == photoPickerItem.id }
@@ -255,7 +253,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(1)
     }
 
-    private fun PhotoListUiModel.assertSelection(
+    private fun PhotoListUiModel.Data.assertSelection(
         position: Int,
         isSelected: Boolean,
         isMultiSelection: Boolean = false,
