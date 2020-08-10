@@ -63,7 +63,7 @@ class ReaderDiscoverViewModelTest {
         whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
+                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())

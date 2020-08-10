@@ -767,6 +767,7 @@ class ReaderPostUiStateBuilderTest {
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
                 post = post,
+                isDiscover = false,
                 photonWidth = 0,
                 photonHeight = 0,
                 postListType = postListType,

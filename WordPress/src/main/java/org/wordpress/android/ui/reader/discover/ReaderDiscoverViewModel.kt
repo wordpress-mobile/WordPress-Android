@@ -86,6 +86,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     posts.cards.filterIsInstance<ReaderPostCard>().map {
                         postUiStateBuilder.mapPostToUiState(
                                 post = it.post,
+                                isDiscover = true,
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,

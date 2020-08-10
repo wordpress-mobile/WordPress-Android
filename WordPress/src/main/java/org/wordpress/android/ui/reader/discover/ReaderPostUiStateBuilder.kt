@@ -51,6 +51,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
         post: ReaderPost,
+        isDiscover: Boolean = false, // set to true for new discover tab
         photonWidth: Int,
         photonHeight: Int,
             // TODO malinjir try to refactor/remove this parameter
@@ -81,7 +82,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
                 featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
-                expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post),
+                expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 featuredImageVisibility = buildFeaturedImageVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
@@ -128,9 +129,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
             post.takeIf { post.cardType == VIDEO }
                     ?.let { post.featuredVideo }
 
-    // TODO: ashiagr - update condition for discover tab post
-    private fun buildExpandedTagsViewVisibility(post: ReaderPost) =
-            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty()
+    private fun buildExpandedTagsViewVisibility(post: ReaderPost, isDiscover: Boolean) =
+            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty() && isDiscover
 
     private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
             readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)

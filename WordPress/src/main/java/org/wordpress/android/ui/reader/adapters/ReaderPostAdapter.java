@@ -479,6 +479,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiState(
                         post,
+                        false,
                         mPhotonWidth,
                         mPhotonHeight,
                         postListType,
