@@ -2911,7 +2911,6 @@
     <string name="dialog_discard_story_ok_button">Discard</string>
     <string name="pref_camera_selection">pref_camera_selection</string>
     <string name="pref_flash_mode_selection">pref_flash_mode_selection</string>
-    <string name="pref_key_send_crash">pref_key_send_crash</string>
     <string name="story_saving_untitled">Untitled</string>
     <string name="story_saving_title">Saving "%1$s"…</string>
     <string name="story_saving_title_several">several stories</string>
