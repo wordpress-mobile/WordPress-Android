@@ -98,7 +98,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun selectedURIs(): List<UriWrapper> {
-        return data.value?.items?.mapNotNull { if (it.isSelected) it.uri else null } ?: listOf()
+        return _selectedIds.value?.mapNotNull { id -> _data.value?.find { it.id == id }?.uri } ?: listOf()
     }
 
     private fun toggleItem(id: Long, canMultiselect: Boolean) {
