@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import org.wordpress.android.R
 import org.wordpress.android.R.id
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -25,19 +26,21 @@ class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel)
         lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         viewModel.uiState.observe(this, Observer { uiState ->
-            val uiModel = uiState.actionModeUiModel
-            if (uiModel == null) {
-                actionMode.finish()
-            } else {
-                if (uiModel.showConfirmAction && menu.size() == 0) {
-                    val inflater = actionMode.menuInflater
-                    inflater.inflate(R.menu.photo_picker_action_mode, menu)
+            when (val uiModel = uiState.actionModeUiModel) {
+                is ActionModeUiModel.Hidden -> {
+                    actionMode.finish()
                 }
+                is ActionModeUiModel.Visible -> {
+                    if (uiModel.showConfirmAction && menu.size() == 0) {
+                        val inflater = actionMode.menuInflater
+                        inflater.inflate(R.menu.photo_picker_action_mode, menu)
+                    }
 
-                if (uiModel.actionModeTitle is UiStringText) {
-                    actionMode.title = uiModel.actionModeTitle.text
-                } else if (uiModel.actionModeTitle is UiStringRes) {
-                    actionMode.setTitle(uiModel.actionModeTitle.stringRes)
+                    if (uiModel.actionModeTitle is UiStringText) {
+                        actionMode.title = uiModel.actionModeTitle.text
+                    } else if (uiModel.actionModeTitle is UiStringRes) {
+                        actionMode.setTitle(uiModel.actionModeTitle.stringRes)
+                    }
                 }
             }
         })
