@@ -108,9 +108,8 @@
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/wpColorText</item>
     </style>
 
     <style name="ReaderTextView.Interests.Header" parent="ReaderTextView.Interests.Title">

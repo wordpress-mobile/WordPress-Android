@@ -1,0 +1,4 @@
+15.4:
+<b>Enhetlig inloggning och registrering:</b> Nu finns båda funktionerna på samma sida och inloggningen sker automatiskt om du fortsätter med WordPress. Renare design där varje sida visar huvudåtgärden tydligare.
+
+<b>Förbättringar i blockredigeraren:</b> Nytt socialt block för länkning till dina profiler på sociala nätverk. Blocket ”Media och text” har fler redigeringsmöjligheter. Platshållaren i omslagsblocket låter nu användaren starta med en bakgrundsfärg.

@@ -49,6 +49,7 @@
     <dimen name="media_settings_margin_tablet_large">96dp</dimen>
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
+    <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
@@ -534,5 +535,16 @@
     <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
     <dimen name="story_thumbnail_margin">6dp</dimen>
     <dimen name="thumbnail_background_margin">10dp</dimen>
+
+    <!-- Modal Layout Picker Styles -->
+    <dimen name="mlp_header_scroll_snap_threshold">24dp</dimen>
+    <dimen name="mlp_layouts_handle_margin_bottom">8dp</dimen>
+    <dimen name="mlp_layouts_row_height">150dp</dimen>
+    <dimen name="mlp_layouts_title_start_margin">15dp</dimen>
+    <dimen name="mlp_bottom_shadow_height">5dp</dimen>
+    <dimen name="mlp_bottom_shadow_height_overlap">-5dp</dimen>
+    <dimen name="mlp_bottom_button_vertical_margin">16dp</dimen>
+    <dimen name="mlp_bottom_button_horizontal_margin">20dp</dimen>
+    <dimen name="mlp_categories_row_height">52dp</dimen>
 
 </resources>
