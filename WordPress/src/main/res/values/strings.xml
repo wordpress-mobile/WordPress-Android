@@ -1740,7 +1740,7 @@
     <string name="reader_label_followed_blog">Site followed</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
-    <string name="reader_label_follow_count">%,d followers</string>
+    <string name="reader_label_follow_count">%,d Followers</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>

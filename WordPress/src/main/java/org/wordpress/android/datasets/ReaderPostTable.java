@@ -1146,4 +1146,18 @@ public class ReaderPostTable {
     private static ReaderBlogIdPostIdList getBookmarkedPostIds() {
         return getBlogIdPostIdsWithTagType(ReaderTagType.BOOKMARKED, 99999);
     }
+
+    /**
+     * getBlogIdForFeed is a helper method that will query the post table for a post with the requested
+     * feedId. It will return a limit of 1
+     * @param feedId
+     * @return The associated blogId
+     */
+    public static Long getBlogIdForFeed(long feedId) {
+        ReaderPost post = getPost("feed_id=?", new String[]{Long.toString(feedId)}, true);
+        if (post != null) {
+            return post.blogId;
+        }
+        return 0L;
+    }
 }

@@ -1,113 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_blog_info"
+    style="@style/ReaderCardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_blog_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="@dimen/card_elevation"
-        android:orientation="vertical"
-        android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large"
-        android:paddingEnd="@dimen/reader_card_content_padding"
-        android:paddingBottom="@dimen/margin_large">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/image_blavatar"
-            style="@style/ReaderImageView.Avatar"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
-            android:contentDescription="@null"
-            android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_blog_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/follow_button"
-            android:layout_toEndOf="@+id/image_blavatar"
-            android:gravity="start"
-            android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            tools:text="Loading..." />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_domain"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_blog_name"
-            android:layout_toStartOf="@+id/follow_button"
-            android:layout_toEndOf="@+id/image_blavatar"
-            android:gravity="start"
-            android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceCaption"
-            tools:text="text_domain" />
-
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/reader_follow_button_padding"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
+            app:layout_constraintBottom_toTopOf="@+id/text_blog_description"
+            app:layout_constraintStart_toStartOf="@+id/text_blog_description"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
 
-    </RelativeLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_blavatar"
+                style="@style/ReaderImageView.Avatar.ExtraLarge"
+                android:layout_marginEnd="@dimen/reader_site_header_avatar_margin_end"
+                android:padding="@dimen/reader_site_header_avatar_padding"
+                android:contentDescription="@null"
+                android:background="@drawable/bg_oval_stroke_placeholder_1dp"
+                android:src="@drawable/bg_oval_placeholder_globe_no_border_24dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/margin_extra_large">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_blog_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/reader_card_content_padding"
-            android:layout_marginEnd="@dimen/reader_card_content_padding"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:ellipsize="end"
-            android:fontFamily="serif"
-            android:gravity="center"
-            android:maxLines="3"
-            android:textAppearance="?attr/textAppearanceBody2"
-            tools:text="text_description" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:orientation="horizontal">
-
-            <View
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_blog_name"
+                style="@style/ReaderTextView.Site.Header.Title"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/image_blavatar"
+                tools:text="Pain in The Bud" />
 
-            <org.wordpress.android.widgets.WPTextView
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_domain"
+                style="@style/ReaderTextView.Site.Header.Caption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_blog_name"
+                android:layout_toEndOf="@+id/image_blavatar"
+                android:paddingBottom="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_none"
+                tools:text="www.sitedomainurl.com" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_blog_follow_count"
+                style="@style/ReaderTextView.Site.Header.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceCaption"
-                tools:text="12 followers" />
+                android:layout_below="@+id/follow_button"
+                android:layout_toEndOf="@+id/image_blavatar"
+                tools:text="52 followers" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="?android:attr/listDivider" />
-        </LinearLayout>
+            <org.wordpress.android.ui.reader.views.ReaderFollowButton
+                android:id="@+id/follow_button"
+                style="@style/Reader.Follow.Button.New"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_domain"
+                android:layout_toEndOf="@+id/image_blavatar"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </RelativeLayout>
 
-    </LinearLayout>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_blog_description"
+            style="@style/ReaderTextView.Site.Header.Body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="3"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="@dimen/margin_extra_large"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+            tools:text="Chronicling the adventures of Buddy the Cat and his various criminal activities" />
 
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
