@@ -10,6 +10,8 @@ import androidx.core.view.NestedScrollingChild3
 import androidx.core.view.NestedScrollingChildHelper
 import org.wordpress.android.R
 
+// Coordinator Layout that can be nested inside another Coordinator Layout and propagate
+// its scroll state to it
 // https://stackoverflow.com/a/37660246/569430
 class NestedCoordinatorLayout @JvmOverloads constructor(
     context: Context,
@@ -30,7 +32,8 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         helper.isNestedScrollingEnabled = enabled
     }
 
-    override fun hasNestedScrollingParent(type: Int): Boolean = helper.hasNestedScrollingParent(type)
+    override fun hasNestedScrollingParent(type: Int): Boolean =
+            helper.hasNestedScrollingParent(type)
 
     override fun hasNestedScrollingParent(): Boolean = helper.hasNestedScrollingParent()
 
@@ -72,18 +75,36 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         consumed: IntArray
     ) {
         dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null, type)
-        super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type, consumed)
+        super.onNestedScroll(
+                target,
+                dxConsumed,
+                dyConsumed,
+                dxUnconsumed,
+                dyUnconsumed,
+                type,
+                consumed
+        )
     }
 
     override fun onNestedScroll(
-        target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int,
-        dyUnconsumed: Int, type: Int
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int
     ) {
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type)
         dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null, type)
     }
 
-    override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int) {
+    override fun onNestedScroll(
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int
+    ) {
         super.onNestedScroll(target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed)
         dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null)
     }
@@ -103,12 +124,18 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         return dispatchNestedPreFling(velocityX, velocityY) || superResult
     }
 
-    override fun onNestedFling(target: View, velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
+    override fun onNestedFling(
+        target: View,
+        velocityX: Float,
+        velocityY: Float,
+        consumed: Boolean
+    ): Boolean {
         val superResult = super.onNestedFling(target, velocityX, velocityY, consumed)
         return dispatchNestedFling(velocityX, velocityY, consumed) || superResult
     }
 
-    override fun startNestedScroll(axes: Int, type: Int): Boolean = helper.startNestedScroll(axes, type)
+    override fun startNestedScroll(axes: Int, type: Int): Boolean =
+            helper.startNestedScroll(axes, type)
 
     override fun startNestedScroll(axes: Int): Boolean = helper.startNestedScroll(axes)
 
@@ -129,30 +156,68 @@ class NestedCoordinatorLayout @JvmOverloads constructor(
         type: Int,
         consumed: IntArray
     ) {
-        helper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type, consumed)
+        helper.dispatchNestedScroll(
+                dxConsumed,
+                dyConsumed,
+                dxUnconsumed,
+                dyUnconsumed,
+                offsetInWindow,
+                type,
+                consumed
+        )
     }
 
     override fun dispatchNestedScroll(
-        dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
-        offsetInWindow: IntArray?, type: Int
-    ): Boolean = helper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type)
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        offsetInWindow: IntArray?,
+        type: Int
+    ): Boolean = helper.dispatchNestedScroll(
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow,
+            type
+    )
 
     override fun dispatchNestedScroll(
-        dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int,
-        dyUnconsumed: Int, offsetInWindow: IntArray?
-    ): Boolean = helper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        offsetInWindow: IntArray?
+    ): Boolean = helper.dispatchNestedScroll(
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            offsetInWindow
+    )
 
     override fun dispatchNestedPreScroll(
-        dx: Int, dy: Int, consumed: IntArray?,
-        offsetInWindow: IntArray?, type: Int
+        dx: Int,
+        dy: Int,
+        consumed: IntArray?,
+        offsetInWindow: IntArray?,
+        type: Int
     ): Boolean = helper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type)
 
-    override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?): Boolean =
-            helper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
+    override fun dispatchNestedPreScroll(
+        dx: Int,
+        dy: Int,
+        consumed: IntArray?,
+        offsetInWindow: IntArray?
+    ): Boolean = helper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
 
     override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean =
             helper.dispatchNestedPreFling(velocityX, velocityY)
 
-    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean =
-            helper.dispatchNestedFling(velocityX, velocityY, consumed)
+    override fun dispatchNestedFling(
+        velocityX: Float,
+        velocityY: Float,
+        consumed: Boolean
+    ): Boolean = helper.dispatchNestedFling(velocityX, velocityY, consumed)
 }
