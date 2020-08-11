@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -67,6 +69,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     private RecyclerView mFeaturedPluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
+    private AppBarLayout mAppBar;
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
@@ -83,6 +86,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
         mFeaturedPluginsRecycler = findViewById(R.id.featured_plugins_recycler);
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
+        mAppBar = findViewById(R.id.appbar_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -227,6 +231,17 @@ public class PluginBrowserActivity extends LocaleAwareActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            mAppBar.post(() -> {
+                mAppBar.setLiftOnScrollTargetViewId(R.id.scroll_view);
+                mAppBar.requestLayout();
+            });
+        }
+        super.onBackPressed();
+    }
+
     private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
                                                   @Nullable ListState<ImmutablePluginModel> listState) {
         if (listState == null) {
@@ -285,6 +300,10 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     private void showListFragment(@NonNull PluginListType listType) {
+        mAppBar.post(() -> {
+            mAppBar.setLiftOnScrollTargetViewId(R.id.recycler);
+            mAppBar.requestLayout();
+        });
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.fragment_container, listFragment, PluginListFragment.TAG)
