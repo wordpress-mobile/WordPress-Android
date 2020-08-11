@@ -115,6 +115,7 @@
 
     <style name="ReaderTextView.Interests.Header" parent="ReaderTextView.Interests.Title">
         <item name="android:layout_margin">@dimen/margin_extra_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
 
     <style name="ReaderTextView.Interests.ListItem.Text" parent="ReaderTextView">
