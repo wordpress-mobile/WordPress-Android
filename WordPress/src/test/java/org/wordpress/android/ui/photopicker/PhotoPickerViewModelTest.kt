@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.media.MediaBrowserType.EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_MEDIA_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
@@ -282,6 +283,18 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         selectItem(1)
 
         assertActionModeVisible(UiStringText("2 selected"))
+    }
+
+    @Test
+    fun `action mode shows confirmation action in EDITOR PICKER`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(firstItem, secondItem), EDITOR_PICKER)
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(UiStringText("1 selected"), showConfirmationAction = true)
     }
 
     private fun selectItem(position: Int) {
