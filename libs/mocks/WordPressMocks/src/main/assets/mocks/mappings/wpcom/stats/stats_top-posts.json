@@ -9,18 +9,8 @@
             "date": "{{now format='yyyy-MM-dd'}}",
             "days": {
                 "{{now format='yyyy-MM-dd'}}": {
-                    "postviews": [
-                        {
-                            "id": 0,
-                            "href": "https://e2eflowtestingmobile.wordpress.com/",
-                            "date": null,
-                            "title": "Home page / Archives",
-                            "type": "homepage",
-                            "views": 183,
-                            "video_play": false
-                        }
-                    ],
-                    "total_views": 183
+                    "postviews": [],
+                    "total_views": 0
                 }
             },
             "period": "day"

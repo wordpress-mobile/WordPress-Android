@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-06 18:54:13+0000
+Translation-Revision-Date: 2020-07-24 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Unggah gambar, atau pilih gambar dari penyimpanan media, untuk logo situs Anda</string>
-    <string name="gutenberg_native_site_tagline">Slogan Situs</string>
-    <string name="gutenberg_native_site_logo_settings">Pengaturan Logo Situs</string>
-    <string name="gutenberg_native_site_logo">Logo Situs</string>
-    <string name="gutenberg_native_site_icon">Ikon Situs</string>
-    <string name="gutenberg_native_show_a_site_logo">Tampilkan logo situs</string>
-    <string name="gutenberg_native_replace_video">Ganti video</string>
-    <string name="gutenberg_native_replace_image_or_video">Ganti gambar atau video</string>
-    <string name="gutenberg_native_open_the_block_list_view">Buka tampilan daftar blok.</string>
-    <string name="gutenberg_native_media_preview">Pratinjau media</string>
-    <string name="gutenberg_native_image_width">Lebar gambar</string>
-    <string name="gutenberg_native_description">deskripsi</string>
-    <string name="gutenberg_native_delete_site_logo">Hapus Logo Situs</string>
-    <string name="gutenberg_native_coordinated_universal_time">Coordinated Universal Time</string>
-    <string name="gutenberg_native_convert_to_blocks">Konversi ke blok</string>
-    <string name="gutenberg_native_choose_video">Pilih video</string>
-    <string name="gutenberg_native_choose_image_or_video">Pilih gambar atau video</string>
-    <string name="gutenberg_native_choose_image">Pilih gambar</string>
-    <string name="gutenberg_native_child_blocks">Blok Turunan</string>
-    <string name="gutenberg_native_block_removed">Blok dihapus</string>
-    <string name="gutenberg_native_base">Basis</string>
-    <string name="content_description_logo">Logo WordPress</string>
-    <string name="enter_your_site_address">Masukkan alamat situs Anda</string>
-    <string name="continue_with_wpcom">Lanjutkan dengan WordPress.com</string>
-    <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
-    <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
-    <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
-    <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi Magic Link untuk membuat akun WordPress.com baru.</string>
-    <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
-    <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi Magic Link untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
-    <string name="enter_account_info_for_site">Masukkan informasi akun Anda untuk %1$s.</string>
-    <string name="login_or">atau</string>
-    <string name="continue_google_button_suffix">Lanjutkan dengan Google</string>
-    <string name="login_find_your_site_adress">Temukan alamat situs Anda</string>
-    <string name="login_done">Selesai</string>
-    <string name="magic_link_not_seeing_email_message">Tidak melihat emailnya? Periksa folder Email Spam atau Sampah.</string>
-    <string name="login_magic_links_sent_label">Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
-    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan ajaib yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi.</string>
-    <string name="check_email">Periksa email</string>
-    <string name="get_started">Memulai</string>
-    <string name="enter_email_to_continue_wordpress_com">Masukkan alamat email Anda untuk login atau membuat akun WordPress.com.</string>
-    <string name="or_type_your_password">Atau ketik kata sandi Anda</string>
-    <string name="create_account">Buat akun</string>
-    <string name="send_link_by_email">Kirim tautan lewat email</string>
-    <string name="login_promo_text_unlock_the_power">Kenali kekuatan dari pembuat situs web yang paling andal.</string>
-    <string name="login_promo_title_37_percent">37\% dari situs web dikembangkan dari WordPress.</string>
-    <string name="reset_your_password">Reset kata sandi</string>
-    <string name="reader_error_generic_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda. Kesan pertama sangat berarti!</string>
     <string name="quick_start_list_update_site_title_title">Atur judul situs Anda</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b>%1$s&lt;/b> untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="gutenberg_native_s_block_options">%s pilihan blok</string>
     <string name="gutenberg_native_remove_block">Hapus blok</string>
@@ -71,6 +22,7 @@ Language: id
     <string name="gutenberg_native_block_copied">Blok disalin</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Judul Situs hanya dapat diubah oleh pengguna yang berperan sebagai administrator.</string>
     <string name="my_site_title_changer_dialog_hint">Judul Situs ditampilkan di bilah judul perambah web dan ditampilkan pada header sebagian besar tema.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">Topik</string>
     <string name="error_update_site_title_network">Tidak dapat memperbarui judul situs. Periksa koneksi jaringan Anda dan coba lagi.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Perubahan yang belum disimpan</string>
@@ -94,7 +46,7 @@ Language: id
     <string name="gutenberg_native_dismiss">Tutup</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
     <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Tanggal Publikasi</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publikasikan</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tambahkan Tag</string>
     <string name="prepublishing_nudges_back_button">Kembali</string>
     <string name="prepublishing_nudges_home_save_button">Simpan Sekarang</string>
@@ -328,6 +280,7 @@ Language: id
     <string name="reader_filter_cta">Penyaring</string>
     <string name="gutenberg_native_video_caption_s">Keterangan video. %s</string>
     <string name="gutenberg_native_edit_video">Sunting video</string>
+    <string name="gutenberg_native_edit_media">Sunting media</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Ketuk dua kali untuk memilih tata letak</string>
     <string name="gutenberg_native_add_a_shortcode">Tambahkan shortcode…</string>
     <string name="post_list_author">Penulis pos</string>
@@ -375,7 +328,7 @@ Language: id
     <string name="login_discovery_error_http_auth">Kami tidak dapat mengakses situs Anda akrena hal ini membutuhkan &lt;b>Autentikasi HTTP&lt;/b>. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
     <string name="login_discovery_error_xmlrpc">Kami tidak dapat mengakses &lt;b>file XMLRPC&lt;/b> situs Anda. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
     <string name="login_site_credentials_magic_link_label">Hampir selesai! Kami hanya perlu memverifikasi alamat email Anda yang terhubung dengan Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Login dengan kredensial situs.</string>
+    <string name="enter_site_credentials_instead">Login dengan kredensial situs</string>
     <string name="enter_credentials_for_site">Login dengan kredensial situs %1$s</string>
     <string name="send_verification_email">Kirim email verifikasi</string>
     <string name="my_site_bottom_sheet_add_page">Halaman situs</string>
@@ -448,6 +401,7 @@ Language: id
     <string name="gutenberg_native_double_tap_to_edit_this_value">Ketuk dua kali untuk menyunting nilai ini</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Ketuk dua kali untuk mengubah nilai menggunakan slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Ketuk dua kali untuk menambahkan blok</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Ketuk dua kali dan tahan untuk menyunting</string>
     <string name="gutenberg_native_current_value_is_s">Nilai saat ini adalah %s</string>
     <string name="gutenberg_native_content">Konten…</string>
     <string name="gutenberg_native_choose_from_device">Pilih dari perangkat</string>
@@ -566,7 +520,7 @@ Language: id
     <string name="post_notification_off">Nonaktif</string>
     <string name="post_settings_add_to_calendar">Tambahkan ke kalender</string>
     <string name="post_settings_notification">Pemberitahuan</string>
-    <string name="post_settings_time_and_date">Tanggal dan Waktu</string>
+    <string name="post_settings_time_and_date">Waktu dan Tanggal</string>
     <string name="login_need_help_finding_connected_email">Perlu bantuan untuk menemukan email yang terhubung dengan Anda?</string>
     <string name="enter_wordpress_site">Situs web di alamat ini bukan situs WordPress. Agar kami dapat terhubung ke situs tersebut, situs harus menggunakan WordPress.</string>
     <string name="login_invalid_site_url">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
@@ -1270,6 +1224,7 @@ Language: id
     <string name="signup_updating_account">Memperbarui akun…</string>
     <string name="signup_terms_of_service_text">Dengan mendaftar, berarti Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
     <string name="signup_magic_link_progress">Mengirim email</string>
+    <string name="signup_magic_link_message">Kami mengirimkan tautan pendaftaran tanpa kata sandi kepada Anda! Periksa email Anda di perangkat ini, dan ketuk tautan pada email untuk menyelesaikan pendaftaran.</string>
     <string name="signup_magic_link_error_button_positive">Coba lagi</string>
     <string name="signup_magic_link_error_button_negative">Tutup</string>
     <string name="signup_magic_link_error">Ada beberapa masalah saat mengirim email. Anda dapat mencoba lagi sekarang atau menutupnya dan mencoba lagi nanti.</string>
@@ -1277,6 +1232,7 @@ Language: id
     <string name="signup_epilogue_hint_password_detail">Anda dapat login dengan tautan tanpa kata sandi kapan saja seperti yang Anda lakukan sebelumnya, tetapi Anda juga dapat menyiapkan kata sandi jika ingin.</string>
     <string name="signup_epilogue_hint_password">Kata Sandi (opsional)</string>
     <string name="signup_epilogue_hint_display">Nama Tampilan</string>
+    <string name="signup_epilogue_heading">Akun baru</string>
     <string name="signup_epilogue_error_button_positive">Coba lagi</string>
     <string name="signup_epilogue_error_button_negative">Kembalikan</string>
     <string name="signup_epilogue_error_generic">Ada beberapa masalah saat memperbarui akun. Anda dapat mencoba lagi atau mengembalikan perubahan untuk melanjutkan.</string>
@@ -1384,7 +1340,7 @@ Language: id
     <string name="notification_login_title_success">Sudah login!</string>
     <string name="login_error_generic_start">Login Google tidak dapat dimulai.</string>
     <string name="login_empty_password">Masukkan kata sandi</string>
-    <string name="login_text_otp_another">Kirimi saya kode baru</string>
+    <string name="login_text_otp_another">Kirimi saya kode baru.</string>
     <string name="enter_verification_code_sms">Kami mengirimkan SMS ke nomor ponsel yang berakhiran %s. Masukkan kode verifikasi yang tercantum di SMS tersebut.</string>
     <string name="image_size">Ukuran</string>
     <string name="uploading_subtitle_media_only_one">1 file tersisa</string>
@@ -1452,7 +1408,7 @@ Language: id
     <string name="media_edit_filename_caption">Nama File</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
-    <string name="connect_site">Hubungkan situs</string>
+    <string name="connect_site">Hubungkan Situs</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Kedipkan cahaya</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Getarkan perangkat</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Pilih suara</string>
@@ -1496,6 +1452,7 @@ Language: id
     <string name="connection_to_server_lost">Koneksi ke server hilang</string>
     <string name="login_epilogue_mysites_other">Situs saya</string>
     <string name="login_epilogue_mysites_one">Situs saya</string>
+    <string name="login_logged_in_as">Sudah login sebagai</string>
     <string name="login_email_client_not_found">Tidak dapat mendeteksi aplikasi klien email Anda</string>
     <string name="login_empty_2fa">Masukkan kode verifikasi</string>
     <string name="login_empty_username">Masukkan nama pengguna</string>
@@ -1507,14 +1464,17 @@ Language: id
     <string name="login_site_address_help_title">Apa alamat situs saya?</string>
     <string name="login_site_address_help">Perlu bantuan untuk menemukan alamat situs Anda?</string>
     <string name="login_site_address">Alamat situs</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Sudah login ke WordPress.com</string>
     <string name="login_continue">Lanjutkan</string>
-    <string name="connect_more">Hubungkan situs lainnya</string>
+    <string name="connect_more">Hubungkan Situs Lainnya</string>
     <string name="enter_wpcom_password">Masukkan kata sandi WordPress.com Anda.</string>
     <string name="login_magic_link_email_requesting">Meminta email login</string>
+    <string name="login_magic_links_sent_label">Tautan ajaib Anda segera tiba! Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
+    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan ajaib yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi. Tak perlu lagi repot mengetik!</string>
     <string name="password_incorrect">Sepertinya kata sandi ini salah. Periksa lagi informasi Anda dan coba lagi.</string>
     <string name="requesting_otp">Meminta kode verifikasi melalui SMS.</string>
-    <string name="login_text_otp">Kirimi saya kode saja</string>
+    <string name="login_text_otp">Kirimi saya kode saja.</string>
     <string name="enter_verification_code">Hampir selesai! Masukkan kode verifikasi dari aplikasi Pengautentikasi.</string>
     <string name="open_mail">Buka email</string>
     <string name="next">Selanjutnya</string>

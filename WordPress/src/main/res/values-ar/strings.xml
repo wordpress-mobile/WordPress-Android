@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-01 08:44:51+0000
+Translation-Revision-Date: 2020-07-24 08:47:28+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">رفع صورة، أو اختيار صورة من مكتبة الوسائط الخاصة بك، لتكن شعار موقعك.</string>
-    <string name="gutenberg_native_site_tagline">سطر وصف الموقع</string>
-    <string name="gutenberg_native_site_logo_settings">إعدادات شعار الموقع</string>
-    <string name="gutenberg_native_site_logo">شعار الموقع</string>
-    <string name="gutenberg_native_site_icon">أيقونة الموقع</string>
-    <string name="gutenberg_native_show_a_site_logo">عرض شعار الموقع</string>
-    <string name="gutenberg_native_replace_video">استبدال الفيديو</string>
-    <string name="gutenberg_native_replace_image_or_video">استبدال صورة أو فيديو</string>
-    <string name="gutenberg_native_open_the_block_list_view">عرض قائمة المكوّنات.</string>
-    <string name="gutenberg_native_media_preview">معاينة الوسائط</string>
-    <string name="gutenberg_native_image_width">عرض الصورة</string>
-    <string name="gutenberg_native_description">الوصف</string>
-    <string name="gutenberg_native_delete_site_logo">حذف شعار الموقع</string>
-    <string name="gutenberg_native_coordinated_universal_time">توقيت عالمي منسّق</string>
-    <string name="gutenberg_native_convert_to_blocks">تحويل إلى مكوّنات</string>
-    <string name="gutenberg_native_choose_video">اختيار فيديو</string>
-    <string name="gutenberg_native_choose_image_or_video">اختيار صورة أو فيديو</string>
-    <string name="gutenberg_native_choose_image">اختيار صورة</string>
-    <string name="gutenberg_native_child_blocks">المكوّنات الفرعية</string>
-    <string name="gutenberg_native_block_removed">تم إزالة المكوّن</string>
-    <string name="gutenberg_native_base">القاعدة</string>
-    <string name="content_description_logo">شعار ووردبريس</string>
-    <string name="enter_your_site_address">أدخل رابط موقعك</string>
-    <string name="continue_with_wpcom">المتابعة باستخدام WordPress.com</string>
-    <string name="signup_confirmation_title">تأكيد التسجيل</string>
-    <string name="continue_with_google_terms_of_service_text">إذا تابعت مع Google وليس لديك حساب WordPress.com بالفعل، فأنت تقوم بإنشاء حساب وتوافق على %1$sشروط الخدمة%2$s.</string>
-    <string name="continue_terms_of_service_text">بالمتابعة، أنت توافق على %1$sشروط الخدمة%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">سنرسل إليك رسالة على البريد الإلكتروني تحتوي على رابط سحري لإنشاء حساب WordPress.com.</string>
-    <string name="signup_confirmation_message">سنستخدم عنوان البريد الإلكتروني هذا لإنشاء حسابك الجديد على WordPress.com.</string>
-    <string name="signup_magic_link_message">أرسلنا إليك رسالة على بريدك الإلكتروني تحتوي على رابط سحري لإنشاء حسابك على WordPress.com. تحقّق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي استلمتها من WordPress.com.</string>
-    <string name="enter_account_info_for_site">أدخل معلومات حسابك لـ %1$s.</string>
-    <string name="login_or">أو</string>
-    <string name="continue_google_button_suffix">المتابعة باستخدام Google</string>
-    <string name="login_find_your_site_adress">العثور على عنوان موقعك</string>
-    <string name="login_done">تمّ</string>
-    <string name="magic_link_not_seeing_email_message">لم تشاهد البريد الإلكتروني؟ تحقّق من مجلد البريد المزعج أو البريد العشوائي.</string>
-    <string name="login_magic_links_sent_label">تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي ستستلمها من WordPress.com.</string>
-    <string name="login_magic_links_label">سنرسل إليك رسالة على البريد الإلكتروني تحتوي على رابط سحري يمكنك من تسجيل الدخول على الفور، دون الحاجة إلى كلمة مرور.</string>
-    <string name="check_email">التحقق من البريد الإلكتروني</string>
-    <string name="get_started">البدء</string>
-    <string name="enter_email_to_continue_wordpress_com">أدخل عنوان بريدك الإلكتروني لتسجيل الدخول أو إنشاء حساب WordPress.com.</string>
-    <string name="or_type_your_password">أو اكتب كلمة المرور الخاصة بك</string>
-    <string name="create_account">إنشاء حساب</string>
-    <string name="send_link_by_email">إرسال الرابط عبر البريد الإلكتروني</string>
-    <string name="login_promo_text_unlock_the_power">أطلق العنان لقدرات منشئ المواقع الأكثر مرونة.</string>
-    <string name="login_promo_title_37_percent">37\% من مواقع الويب مبنية على ووردبريس.</string>
-    <string name="reset_your_password">إعادة تعيين كلمة المرور الخاصة بك</string>
-    <string name="reader_error_generic_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه. الاعتماد على الانطباعات الأولى!</string>
     <string name="quick_start_list_update_site_title_title">تعيين عنوان موقعك</string>
-    <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b>⁦%1$s⁩&lt;/b> لتعيين عنوان جديد</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="gutenberg_native_s_block_options">%s خيارات المكوِّن</string>
     <string name="gutenberg_native_remove_block">إزالة المكوِّن</string>
@@ -71,40 +22,28 @@ Language: ar
     <string name="gutenberg_native_block_copied">المكوِّن الذي تم نسخه</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">يمكن للمستخدم فقط تغيير عنوان الموقع باستخدام دور المسؤول.</string>
     <string name="my_site_title_changer_dialog_hint">يُعرض عنوان الموقع في شريط العناوين في متصفح الويب ويُعرض في رأس الصفحة في معظم القوالب.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">موضوع</string>
     <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">تغييرات غير محفوظة</string>
-    <string name="gutenberg_native_open_link_in_a_browser">فتح الرابط في متصفح</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
     <string name="gutenberg_native_gradient_type">نوع التدرج</string>
-    <string name="gutenberg_native_go_back">العودة للخلف</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
     <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
-    <string name="pages_list_author">كاتب الصفحة</string>
     <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
     <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
     <string name="menu_content_info">هيكل المحتوى</string>
-    <string name="everyone">الجميع</string>
     <string name="me">أنا</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. وفي هذه الأثناء، يمكنك أيضًا تحرير هذا المكوِّن باستخدام متصفح الويب في جهازك.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">تحرير المكوِّن في متصفح الويب</string>
-    <string name="gutenberg_native_dismiss">تجاهل</string>
-    <string name="prepublishing_nudges_home_tags_not_set">لم يتم التعيين</string>
     <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله المقالة.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">تاريخ النشر</string>
     <string name="prepublishing_nudges_toolbar_title_tags">إضافة وسوم</string>
-    <string name="prepublishing_nudges_back_button">رجوع</string>
     <string name="prepublishing_nudges_home_save_button">حفظ الآن</string>
     <string name="prepublishing_nudges_home_submit_button">إرسال الآن</string>
-    <string name="prepublishing_nudges_home_schedule_button">جدولة الآن</string>
-    <string name="prepublishing_nudges_home_header_publishing_to">نشر إلى</string>
     <string name="prepublishing_nudges_tags_action">وسوم</string>
-    <string name="prepublishing_nudges_publish_action">تاريخ النشر</string>
-    <string name="post_list_move_trashed_post_to_draft_dialog_negative">إلغاء</string>
-    <string name="post_list_move_trashed_post_to_draft_dialog_positive">نقل إلى المسودة</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">يتعذر تحرير المقالات التي تمت إضافتها إلى سلة المهملات. هل ترغب في تغيير حالة هذه المقالة إلى \"مسودة\" حتى تتمكن من العمل عليها؟</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">هل تريد نقل المقالة إلى المسودات؟</string>
     <string name="reader_label_choose_your_interests">اختيار اهتماماتك</string>
@@ -114,7 +53,6 @@ Language: ar
     <string name="reader_btn_select_few_interests">تحديد القليل للاستمرار</string>
     <string name="post_status_post_published">منشور</string>
     <string name="post_status_post_trashed">أُضيف إلى سلة المهملات</string>
-    <string name="post_status_post_scheduled">مجدولة</string>
     <string name="publish_date">تاريخ النشر</string>
     <string name="ccpa_privacy_notice_read">قراءة إشعار الخصوصية لقانون خصوصية المستهلك في كاليفورنيا</string>
     <string name="ccpa_privacy_notice_caption">يتطلب قانون خصوصية المستهلك في كاليفورنيا (\"CCPA\") منا تزويد سكان كاليفورنيا ببعض المعلومات الإضافية حول تصنيفات المعلومات الشخصية التي نقوم بتجميعها ومشاركتها، مع تحديد المصدر الذي نحصل على تلك المعلومات الشخصية منه، وكيف نستخدمها ولماذا.</string>
@@ -328,6 +266,7 @@ Language: ar
     <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_edit_video">تحرير الفيديو</string>
+    <string name="gutenberg_native_edit_media">تحرير الوسائط</string>
     <string name="gutenberg_native_double_tap_to_select_layout">انقر نقرًا مزدوجًا لتحديد المخطط</string>
     <string name="gutenberg_native_add_a_shortcode">إضافة كود قصير…</string>
     <string name="post_list_author">كاتب المقالة</string>
@@ -375,7 +314,7 @@ Language: ar
     <string name="login_discovery_error_http_auth">تعذر علينا الوصول إلى موقعك لأنه يتطلب &lt;b>مصادقة HTTP&lt;/b>. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_discovery_error_xmlrpc">تعذر علينا الوصول إلى &lt;b>ملف XMLRPC&lt;/b> على موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_site_credentials_magic_link_label">تقريبًا هناك! يتعين علينا فقط التحقق من صحة عنوان بريدك الإلكتروني المتصل بـ Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">تسجيل الدخول باستخدام بيانات اعتماد الموقع.</string>
+    <string name="enter_site_credentials_instead">تسجيل الدخول باستخدام بيانات اعتماد الموقع</string>
     <string name="enter_credentials_for_site">تسجيل الدخول باستخدام بيانات اعتماد الموقع %1$s الخاصة بك</string>
     <string name="send_verification_email">إرسال رسالة تحقق عبر البريد الإلكتروني</string>
     <string name="my_site_bottom_sheet_add_page">صفحة الموقع</string>
@@ -449,6 +388,7 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_edit_this_value">الضغط المزدوج لتحرير هذه القيمة</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">الضغط المزدوج لتغيير القيمة باستخدام شريط التمرير</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">الضغط المزدوج لإضافة مكوِّن</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">الضغط المزدوج مع الاستمرار للتحرير</string>
     <string name="gutenberg_native_current_value_is_s">القيمة الحالية هي %s</string>
     <string name="gutenberg_native_content">المحتوى…</string>
     <string name="gutenberg_native_choose_from_device">الاختيار من الجهاز</string>
@@ -567,7 +507,7 @@ Language: ar
     <string name="post_notification_off">إيقاف</string>
     <string name="post_settings_add_to_calendar">إضافة إلى تقويم</string>
     <string name="post_settings_notification">إشعار</string>
-    <string name="post_settings_time_and_date">التاريخ والوقت</string>
+    <string name="post_settings_time_and_date">الوقت والتاريخ</string>
     <string name="login_need_help_finding_connected_email">هل تريد مساعدة في العثور على البريد الإلكتروني الذي أنت متصلاً به؟</string>
     <string name="enter_wordpress_site">موقع الويب على هذا العنوان ليس موقع ووردبريس. بالنسبة لنا للاتصال به، يجب أن يكون الموقع مُنصّبًا ووردبريس.</string>
     <string name="login_invalid_site_url">يرجى إدخال عنوان موقع ويب كامل، مثل example.com.</string>
@@ -914,7 +854,7 @@ Language: ar
     <string name="image_size_large_label">كبير</string>
     <string name="image_size_medium_label">متوسط</string>
     <string name="image_size_thumbnail_label">صورة مصغّرة</string>
-    <string name="menu_history">السّجل</string>
+    <string name="menu_history">سجل الأحداث</string>
     <string name="pages_pending">في انتظار المراجعة</string>
     <string name="pages_open_page_error">الصفحة المحددة غير متاحة</string>
     <string name="news_card_announcement_action_sample_announcement">[اقرأ المزيد]</string>
@@ -1280,6 +1220,7 @@ Language: ar
     <string name="signup_updating_account">جاري تحديث الحساب…</string>
     <string name="signup_terms_of_service_text">يعني تسجيل الدخول موافقتك على %1$sشروط الخدمة%2$s.</string>
     <string name="signup_magic_link_progress">إرسال البريد الإلكتروني</string>
+    <string name="signup_magic_link_message">أرسلنا إليك رابطًا لا يحتاج إلى كلمة مرور لتسجيل الدخول! تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط الموجود في البريد الإلكتروني لإنهاء تسجيل الدخول.</string>
     <string name="signup_magic_link_error_button_positive">إعادة المحاولة</string>
     <string name="signup_magic_link_error_button_negative">إغلاق</string>
     <string name="signup_magic_link_error">حدثت بعض المشكلات في إرسال البريد الإلكتروني. يمكنك إعادة المحاولة الآن أو الإغلاق والمحاولة مرة أخرى لاحقًا.</string>
@@ -1287,6 +1228,7 @@ Language: ar
     <string name="signup_epilogue_hint_password_detail">يمكنك دائمًا تسجيل الدخول باستخدام رابط لا يحتاج إلى كلمة مرور مثل الرابط الذي استخدمته، لكن يمكنك أيضًا إعداد كلمة مرور إذا كنت تفضل ذلك.</string>
     <string name="signup_epilogue_hint_password">كلمة المرور (اختياري)</string>
     <string name="signup_epilogue_hint_display">اسم العرض</string>
+    <string name="signup_epilogue_heading">حساب جديد</string>
     <string name="signup_epilogue_error_button_positive">إعادة المحاولة</string>
     <string name="signup_epilogue_error_button_negative">إلغاء</string>
     <string name="signup_epilogue_error_generic">حدثت بعض المشكلات أثناء تحديث حسابك. يمكنك المحاولة مرة أخرى أو استرداد التغييرات للمتابعة.</string>
@@ -1395,7 +1337,7 @@ Language: ar
     <string name="notification_login_title_success">تم تسجيل الدخول!</string>
     <string name="login_error_generic_start">تعذر بدء تسجيل الدخول إلى Google.</string>
     <string name="login_empty_password">يرجى إدخال كلمة المرور</string>
-    <string name="login_text_otp_another">أرسل إليّ رمزًا آخر بدلاً من ذلك</string>
+    <string name="login_text_otp_another">أرسل إليّ رمزًا آخر بدلاً من ذلك.</string>
     <string name="enter_verification_code_sms">أرسلنا رسالة نصية إلى رقم الهاتف الذي ينتهي بـ %s. يرجى إرسال رمز التحقق في رسالة نصية قصيرة.</string>
     <string name="image_size">الحجم</string>
     <string name="uploading_subtitle_media_only_one">ثمة ملف واحد متبقٍّ</string>
@@ -1463,7 +1405,7 @@ Language: ar
     <string name="media_edit_filename_caption">اسم الملف</string>
     <string name="media_edit_url_caption">عنوان URL</string>
     <string name="media_edit_alttext_text">النص البديل</string>
-    <string name="connect_site">الاتصال بـ موقع</string>
+    <string name="connect_site">الاتصال بالموقع</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">ضوء وميض</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">جهاز الاهتزاز</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">اختيار الصوت</string>
@@ -1507,6 +1449,7 @@ Language: ar
     <string name="connection_to_server_lost">كان الاتصال بالخادم مفقودًا</string>
     <string name="login_epilogue_mysites_other">مواقعي</string>
     <string name="login_epilogue_mysites_one">موقعي</string>
+    <string name="login_logged_in_as">تم تسجيل الدخول كـ</string>
     <string name="login_email_client_not_found">لا يمكن اكتشاف تطبيق عميل البريد الإلكتروني الخاص بك</string>
     <string name="login_empty_2fa">يُرجى إدخال كود التحقق</string>
     <string name="login_empty_username">الرجاء إدخال اسم المستخدم</string>
@@ -1519,14 +1462,17 @@ Language: ar
     <string name="login_site_address_help">هل تحتاج إلى المساعدة في العثور على عنوان موقعك؟</string>
     <string name="login_site_address">رابط الموقع</string>
     <string name="enter_site_address">أدخل العنوان لموقع ووردبريس الذي تود الاتصال به.</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">تم تسجيل الدخول بالفعل إلى WordPress.com</string>
     <string name="login_continue">المتابعة</string>
     <string name="connect_more">الاتصال بموقع آخر</string>
     <string name="enter_wpcom_password">أدخل كلمة مرور لحساب WordPress.com الخاص بك</string>
     <string name="login_magic_link_email_requesting">طلب بريد إلكتروني لتسجيل الدخول</string>
+    <string name="login_magic_links_sent_label">الارتباط السحري الخاص بك على وشك الحدوث! تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الارتباط الوارد في رسالة البريد الإلكتروني التي تلقيتها من WordPress.com.</string>
+    <string name="login_magic_links_label">سنرسل إليك رسالة على البريد الإلكتروني تحتوي على ارتباط سحري يمكنك من تسجيل الدخول على الفور، دون الحاجة إلى كلمة مرور. لا توجد حاجة إلى تحديد المزيد أو النقر عليه!</string>
     <string name="password_incorrect">يبدو أن كلمة المرور هذه غير صحيحة. يرجى التحقق مجددًا من معلوماتك والمحاولة مرة أخرى.</string>
     <string name="requesting_otp">طلب رمز تحقق عن طريق رسالة نصية قصيرة (SMS).</string>
-    <string name="login_text_otp">أرسل إليّ رمزًا بدلاً من ذلك.</string>
+    <string name="login_text_otp">اكتب رمزًا لي بدلاً من ذلك</string>
     <string name="enter_verification_code">تقريبًا هناك! يرجى إدخال رمز التحقق من تطبيق الموثق الخاص بك.</string>
     <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
@@ -1563,7 +1509,7 @@ Language: ar
     <string name="post_settings_tags">الوسوم</string>
     <string name="post_settings_slug">الاسم اللطيف</string>
     <string name="post_settings_excerpt">المقتطف</string>
-    <string name="post_settings_not_set">لم يتم التعيين</string>
+    <string name="post_settings_not_set">غير مُعيَّن</string>
     <string name="post_settings_more_options">المزيد من الخيارات</string>
     <string name="post_settings_categories_and_tags">الفئات والوسوم</string>
     <string name="notifications_tab_title_all">الكل</string>
@@ -1683,7 +1629,7 @@ Language: ar
     <string name="media_encoder_quality_90">مرتفع</string>
     <string name="media_encoder_quality_85">متوسط</string>
     <string name="media_encoder_quality_80">منخفض</string>
-    <string name="media_upload_state_uploaded">تم الرفع</string>
+    <string name="media_upload_state_uploaded">تم التحميل</string>
     <string name="media_upload_state_failed">فشل الرفع</string>
     <string name="media_upload_state_deleted">محذوف</string>
     <string name="media_upload_state_deleting">جاري الحذف</string>
@@ -2300,7 +2246,6 @@ Language: ar
     <string name="pick_video">تحديد فيديو</string>
     <string name="pick_photo">تحديد صورة</string>
     <string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
-    <string name="sign_up_label">التسجيل</string>
     <string name="reader_toast_err_url_intent">لايمكن فتح %s</string>
     <string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
     <string name="reader_toast_err_share_intent">لايمكن المشاركة</string>

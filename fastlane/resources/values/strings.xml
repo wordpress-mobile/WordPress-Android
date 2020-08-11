@@ -2364,7 +2364,7 @@
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
     <string name="login_promo_viewpager_content_description">Introduction</string>
-    <string name="login_promo_title_37_percent">37\% of the web is built on WordPress.</string>
+    <string name="login_promo_title_37_percent">37% of the web is built on WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
     <string name="send_link" tools:ignore="UnusedResources">Send link</string>

@@ -26,8 +26,8 @@
                     "clicks": [
                         {
                             "icon": null,
-                            "url": "https://apps.wordpress.com/",
-                            "name": "apps.wordpress.com",
+                            "url": "https://yourgroovysite.wordpress.com/about/",
+                            "name": "yourgroovysite.wordpress.com/about/",
                             "views": 5,
                             "children": null
                         },

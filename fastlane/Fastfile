@@ -360,33 +360,6 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
-  # upload_and_replace_screenshots_in_play_store
-  # -----------------------------------------------------------------------------------
-  # This lane uploads the screenshots in /metadata/android/{locale}/images to Play
-  # Store and replaces the existing ones.
-  # If a locale doesn't have any screenshots, it'll be skipped.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
-  #
-  # Example:
-  # bundle exec fastlane upload_and_replace_screenshots_in_play_store
-  #####################################################################################
-  desc "Upload Screenshots to Play Store and Replaces the existing ones"
-  lane :upload_and_replace_screenshots_in_play_store do | options |
-    upload_to_play_store(
-      package_name: 'org.wordpress.android',
-      skip_upload_apk: true,
-      skip_upload_aab: true,
-      skip_upload_metadata: true,
-      skip_upload_changelogs: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: false,
-      json_key: './google-upload-credentials.json',
-    )
-  end
-
-  #####################################################################################
   # download_metadata_string
   # -----------------------------------------------------------------------------------
   # This lane downloads the translated metadata (release notes,

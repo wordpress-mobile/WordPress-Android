@@ -23,6 +23,7 @@ Language: hi_IN
     <string name="media_edit_url_caption">यूआरएल</string>
     <string name="media_edit_filename_caption">फ़ाइल का नाम</string>
     <string name="media_edit_filetype_caption">फाइल का प्रकार</string>
+    <string name="connect_site">साइट कनेक्ट करे</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">लाइट टिमटिमाये </string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">ध्वनि चुनें</string>
     <string name="notification_settings_category_sights_and_sounds">दृश्य और ध्वनि </string>
@@ -55,7 +56,9 @@ Language: hi_IN
     <string name="button_retry">पुन: प्रयास करें</string>
     <string name="login_epilogue_mysites_one">मेरी साइट</string>
     <string name="login_site_address">साइट का पता</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_continue">जारी रखें</string>
+    <string name="connect_more">अन्य साइट कनेक्ट करें</string>
     <string name="next">अगला</string>
     <string name="open_mail">मेल खोलें</string>
     <string name="turn_on">चालू करें</string>

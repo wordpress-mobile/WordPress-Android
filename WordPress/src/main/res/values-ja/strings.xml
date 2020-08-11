@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-07 10:54:39+0000
+Translation-Revision-Date: 2020-07-24 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">サイトロゴ用の画像をアップロードするか、メディアライブラリーから選択します。</string>
-    <string name="gutenberg_native_site_tagline">サイトのキャッチフレーズ</string>
-    <string name="gutenberg_native_site_logo_settings">サイトロゴの設定</string>
-    <string name="gutenberg_native_site_logo">サイトロゴ</string>
-    <string name="gutenberg_native_site_icon">サイトアイコン</string>
-    <string name="gutenberg_native_show_a_site_logo">サイトロゴを表示</string>
-    <string name="gutenberg_native_replace_video">動画を置換</string>
-    <string name="gutenberg_native_replace_image_or_video">画像または動画を置換</string>
-    <string name="gutenberg_native_open_the_block_list_view">ブロックリストビューを開く</string>
-    <string name="gutenberg_native_media_preview">メディアプレビュー</string>
-    <string name="gutenberg_native_image_width">画像の幅</string>
-    <string name="gutenberg_native_description">説明</string>
-    <string name="gutenberg_native_delete_site_logo">サイトロゴを削除</string>
-    <string name="gutenberg_native_coordinated_universal_time">協定世界時</string>
-    <string name="gutenberg_native_convert_to_blocks">ブロックへ変換</string>
-    <string name="gutenberg_native_choose_video">動画を選択</string>
-    <string name="gutenberg_native_choose_image_or_video">画像または動画を選択</string>
-    <string name="gutenberg_native_choose_image">画像を選択</string>
-    <string name="gutenberg_native_child_blocks">子ブロック</string>
-    <string name="gutenberg_native_block_removed">削除したブロック</string>
-    <string name="gutenberg_native_base">ベース</string>
-    <string name="content_description_logo">WordPress のロゴ</string>
-    <string name="enter_your_site_address">サイトアドレスを入力</string>
-    <string name="continue_with_wpcom">WordPress.com で続ける</string>
-    <string name="signup_confirmation_title">登録の確認</string>
-    <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
-    <string name="continue_terms_of_service_text">継続することで、%1$s利用規約%2$sに合意したことになります。</string>
-    <string name="signup_confirmation_magic_link_message">新しい WordPress.com アカウントを作成するためのマジックリンクをメールでお送りします。</string>
-    <string name="signup_confirmation_message">このメールアドレスは新しい WordPress.com アカウントの作成に使用します。</string>
-    <string name="signup_magic_link_message">新しい WordPress.com アカウントを作成するためのマジックリンクをメールでお送りしました。 このデバイスでメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
-    <string name="enter_account_info_for_site">%1$s のアカウント情報を入力してください。</string>
-    <string name="login_or">または</string>
-    <string name="continue_google_button_suffix">Google で続ける</string>
-    <string name="login_find_your_site_adress">サイトアドレスを検索</string>
-    <string name="login_done">終了</string>
-    <string name="magic_link_not_seeing_email_message">メールが表示されない場合は、 スパムメールや迷惑メールのフォルダーを確認してください。</string>
-    <string name="login_magic_links_sent_label">このデバイスでメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
-    <string name="login_magic_links_label">パスワードなしですぐにログインできるマジックリンクのメールをお送りします。</string>
-    <string name="check_email">メールを確認</string>
-    <string name="get_started">今すぐ始める</string>
-    <string name="enter_email_to_continue_wordpress_com">メールアドレスを入力してログインするか、WordPress.com アカウントを作成します。</string>
-    <string name="or_type_your_password">または、パスワードを入力してください。</string>
-    <string name="create_account">アカウントを作成</string>
-    <string name="send_link_by_email">リンクをメールで送信</string>
-    <string name="login_promo_text_unlock_the_power">柔軟性の高いサイトビルダー機能を活用しましょう。</string>
-    <string name="login_promo_title_37_percent">Web の37\% が WordPress で構築されています。</string>
-    <string name="reset_your_password">パスワードをリセット</string>
-    <string name="reader_error_generic_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。 第一印象が大事です。</string>
     <string name="quick_start_list_update_site_title_title">サイトのタイトルを設定</string>
-    <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b>%1$s&lt;/b>をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
     <string name="gutenberg_native_remove_block">ブロックを削除</string>
@@ -71,6 +22,7 @@ Language: ja_JP
     <string name="gutenberg_native_block_copied">ブロックをコピーしました</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">サイトのタイトルを変更できるのは管理者の役割を持つユーザーだけです。</string>
     <string name="my_site_title_changer_dialog_hint">サイトのタイトルは、Web ブラウザーのタイトルバーに表示され、ほとんどのテーマのヘッダーに表示されます。</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">トピック</string>
     <string name="error_update_site_title_network">サイトのタイトルを更新できませんでした。 ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">保存されていない変更</string>
@@ -94,7 +46,7 @@ Language: ja_JP
     <string name="gutenberg_native_dismiss">非表示</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます。</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">公開日</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">公開</string>
     <string name="prepublishing_nudges_toolbar_title_tags">タグを追加</string>
     <string name="prepublishing_nudges_back_button">戻る</string>
     <string name="prepublishing_nudges_home_save_button">今すぐ保存</string>
@@ -328,6 +280,7 @@ Language: ja_JP
     <string name="reader_filter_cta">フィルター</string>
     <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>
     <string name="gutenberg_native_edit_video">動画を編集</string>
+    <string name="gutenberg_native_edit_media">メディアを編集</string>
     <string name="gutenberg_native_double_tap_to_select_layout">ダブルタップしてレイアウトを選択</string>
     <string name="gutenberg_native_add_a_shortcode">ショートコードを追加…</string>
     <string name="post_list_author">投稿作成者</string>
@@ -375,7 +328,7 @@ Language: ja_JP
     <string name="login_discovery_error_http_auth">&lt;b>HTTP 認証&lt;/b>の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_discovery_error_xmlrpc">サイトの &lt;b>XMLRPC ファイル&lt;/b>にアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_site_credentials_magic_link_label">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b>%1$s&lt;/b> を確認します</string>
-    <string name="enter_site_credentials_instead">サイトのログイン情報でログインします。</string>
+    <string name="enter_site_credentials_instead">サイトのログイン情報でログイン</string>
     <string name="enter_credentials_for_site">%1$s サイトのログイン情報でログインします。</string>
     <string name="send_verification_email">確認メールを送信</string>
     <string name="my_site_bottom_sheet_add_page">サイトのページ</string>
@@ -449,6 +402,7 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_edit_this_value">ダブルタップしてこの値を編集</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">ダブルタップしてスライダーを使用して値を変更</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">ダブルタップしてブロックを追加</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">ダブルタップと長押しで編集</string>
     <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
     <string name="gutenberg_native_content">コンテンツ…</string>
     <string name="gutenberg_native_choose_from_device">デバイスから選択</string>
@@ -567,7 +521,7 @@ Language: ja_JP
     <string name="post_notification_off">オフ</string>
     <string name="post_settings_add_to_calendar">カレンダーに追加</string>
     <string name="post_settings_notification">通知</string>
-    <string name="post_settings_time_and_date">日付と時刻</string>
+    <string name="post_settings_time_and_date">日付と時間</string>
     <string name="login_need_help_finding_connected_email">関連付けられているメールアドレスをお忘れですか ?</string>
     <string name="enter_wordpress_site">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトに WordPress がインストールされている必要があります。</string>
     <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
@@ -1280,6 +1234,7 @@ Language: ja_JP
     <string name="signup_updating_account">アカウントを更新しています…</string>
     <string name="signup_terms_of_service_text">登録することで、%1$s利用規約%2$sに合意したことになります。</string>
     <string name="signup_magic_link_progress">メールを送信中</string>
+    <string name="signup_magic_link_message">マジック登録リンクを送信しました。このデバイスでメールをチェックして、メールにあるリンクをタップして登録を完了してください。</string>
     <string name="signup_magic_link_error_button_positive">再試行</string>
     <string name="signup_magic_link_error_button_negative">閉じる</string>
     <string name="signup_magic_link_error">メールの送信中にエラーが発生しました。今すぐ再試行するか、しばらくしてからもう一度お試しください。</string>
@@ -1287,6 +1242,7 @@ Language: ja_JP
     <string name="signup_epilogue_hint_password_detail">直前に使用したものと同様のマジックリンクを使用していつでもログインできますが、希望される場合はパスワードを設定することもできます。</string>
     <string name="signup_epilogue_hint_password">パスワード (オプション)</string>
     <string name="signup_epilogue_hint_display">表示名</string>
+    <string name="signup_epilogue_heading">新しいアカウント</string>
     <string name="signup_epilogue_error_button_positive">再試行</string>
     <string name="signup_epilogue_error_button_negative">戻す</string>
     <string name="signup_epilogue_error_generic">アカウントの更新中にエラーが発生しました。変更を再試行するか、元に戻して続行できます。</string>
@@ -1395,6 +1351,7 @@ Language: ja_JP
     <string name="notification_login_title_success">ログインしました。</string>
     <string name="login_error_generic_start">Google ログインを開始できませんでした。</string>
     <string name="login_empty_password">パスワードを入力してください</string>
+    <string name="login_text_otp_another">代わりに別のコードを送信する。</string>
     <string name="enter_verification_code_sms">末尾が%sで終わる電話番号にテキストメッセージを送信しました。SMS の認証コードを入力してください。</string>
     <string name="image_size">サイズ</string>
     <string name="uploading_subtitle_media_only_one">残り1ファイルです</string>
@@ -1462,7 +1419,7 @@ Language: ja_JP
     <string name="media_edit_filename_caption">ファイル名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">代替テキスト</string>
-    <string name="connect_site">サイトと連携</string>
+    <string name="connect_site">サイトを連携</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">点滅</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">端末をバイブレート</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">音声を選択する</string>
@@ -1506,6 +1463,7 @@ Language: ja_JP
     <string name="connection_to_server_lost">サーバーへの接続が失われました</string>
     <string name="login_epilogue_mysites_other">自分のサイト</string>
     <string name="login_epilogue_mysites_one">自分のサイト</string>
+    <string name="login_logged_in_as">現在のユーザーアカウント:</string>
     <string name="login_email_client_not_found">メールクライアントアプリを検出できません</string>
     <string name="login_empty_2fa">認証コードを入力してください</string>
     <string name="login_empty_username">ユーザー名を入力してください</string>
@@ -1518,13 +1476,17 @@ Language: ja_JP
     <string name="login_site_address_help">自分のサイトアドレスを忘れましたか ?</string>
     <string name="login_site_address">サイトアドレス</string>
     <string name="enter_site_address">連携する WordPress サイトのアドレスを入力してください。</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">すでに WordPress.com にログインしています</string>
     <string name="login_continue">次へ</string>
+    <string name="connect_more">別のサイトと連携</string>
     <string name="enter_wpcom_password">WordPress.com パスワードを入力してください。</string>
     <string name="login_magic_link_email_requesting">ログインメールのリクエスト</string>
+    <string name="login_magic_links_sent_label">マジックリンクがもうすぐ送られてきます。このデバイスでメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
+    <string name="login_magic_links_label">パスワードなしですぐにログインできるマジックリンクのメールをお送りします。面倒な入力は不要です !</string>
     <string name="password_incorrect">このパスワードは間違っているようです。入力した情報をもう一度確認してから、やり直してください。</string>
     <string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
-    <string name="login_text_otp">代わりに SMS でコードを送信する</string>
+    <string name="login_text_otp">代わりに SMS でコードを送信する。</string>
     <string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
     <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>

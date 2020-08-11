@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-06 18:54:12+0000
+Translation-Revision-Date: 2020-07-23 10:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">上传图片或者从媒体库中选择一张图片作为您的站点徽标</string>
-    <string name="gutenberg_native_site_tagline">站点副标题</string>
-    <string name="gutenberg_native_site_logo_settings">站点徽标设置</string>
-    <string name="gutenberg_native_site_logo">站点徽标</string>
-    <string name="gutenberg_native_site_icon">站点图标</string>
-    <string name="gutenberg_native_show_a_site_logo">显示站点徽标</string>
-    <string name="gutenberg_native_replace_video">替换视频</string>
-    <string name="gutenberg_native_replace_image_or_video">替换图片或视频</string>
-    <string name="gutenberg_native_open_the_block_list_view">打开区块列表视图。</string>
-    <string name="gutenberg_native_media_preview">媒体预览</string>
-    <string name="gutenberg_native_image_width">图片宽度</string>
-    <string name="gutenberg_native_description">描述</string>
-    <string name="gutenberg_native_delete_site_logo">删除站点徽标</string>
-    <string name="gutenberg_native_coordinated_universal_time">世界协调时间</string>
-    <string name="gutenberg_native_convert_to_blocks">转换为区块</string>
-    <string name="gutenberg_native_choose_video">选择视频</string>
-    <string name="gutenberg_native_choose_image_or_video">选择图片或视频</string>
-    <string name="gutenberg_native_choose_image">选择图像</string>
-    <string name="gutenberg_native_child_blocks">子区块</string>
-    <string name="gutenberg_native_block_removed">区块已删除</string>
-    <string name="gutenberg_native_base">基本</string>
-    <string name="content_description_logo">WordPress 徽标</string>
-    <string name="enter_your_site_address">输入您的站点地址</string>
-    <string name="continue_with_wpcom">继续使用 WordPress.com</string>
-    <string name="signup_confirmation_title">注册确认</string>
-    <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
-    <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
-    <string name="signup_confirmation_magic_link_message">我们将通过电子邮件向您发送一个免密登录链接，供您创建新的 WordPress.com 帐户。</string>
-    <string name="signup_confirmation_message">我们将使用此电子邮件地址为您创建新 WordPress.com 帐户。</string>
-    <string name="signup_magic_link_message">我们已经通过电子邮件向您发送了一个免密登录链接，供您创建新的 WordPress.com 帐户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
-    <string name="enter_account_info_for_site">输入您的 %1$s 帐户信息。</string>
-    <string name="login_or">或</string>
-    <string name="continue_google_button_suffix">继续使用 Google</string>
-    <string name="login_find_your_site_adress">找到您的站点地址</string>
-    <string name="login_done">完成</string>
-    <string name="magic_link_not_seeing_email_message">没有看到电子邮件？ 请检查您的垃圾邮件文件夹。</string>
-    <string name="login_magic_links_sent_label">在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
-    <string name="login_magic_links_label">我们将通过电子邮件向您发送一个神奇链接，利用它您无需密码即可立即登录。</string>
-    <string name="check_email">查收电子邮件</string>
-    <string name="get_started">开始</string>
-    <string name="enter_email_to_continue_wordpress_com">输入您的电子邮件地址以登录或创建 WordPress.com 帐户。</string>
-    <string name="or_type_your_password">或者输入您的密码</string>
-    <string name="create_account">创建帐户</string>
-    <string name="send_link_by_email">通过电子邮件发送链接</string>
-    <string name="login_promo_text_unlock_the_power">发挥最灵活的网站生成器的强大功能。</string>
-    <string name="login_promo_title_37_percent">网上有 37\% 的内容是在 WordPress 上构建的。</string>
-    <string name="reset_your_password">重置密码</string>
-    <string name="reader_error_generic_title">处理请求时出现问题。 请稍后重试。</string>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
-    <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b>%1$s&lt;/b> 以设置新标题</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
     <string name="gutenberg_native_s_block_options">%s 区块选项</string>
     <string name="gutenberg_native_remove_block">移除区块</string>
@@ -71,6 +22,7 @@ Language: zh_CN
     <string name="gutenberg_native_block_copied">已拷贝区块</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">站点标题只能由担任管理员角色的用户更改。</string>
     <string name="my_site_title_changer_dialog_hint">站点标题显示在网络浏览器的标题栏中，以及大部分主题的页眉中。</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">主题</string>
     <string name="error_update_site_title_network">无法更新站点标题。 请检查您的网络连接，然后重试。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未保存的更改</string>
@@ -94,7 +46,7 @@ Language: zh_CN
     <string name="gutenberg_native_dismiss">忽略</string>
     <string name="prepublishing_nudges_home_tags_not_set">未设置</string>
     <string name="prepublishing_tags_description">标签有助于读者了解文章内容。</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">发布日期</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">发布</string>
     <string name="prepublishing_nudges_toolbar_title_tags">添加标签</string>
     <string name="prepublishing_nudges_back_button">返回</string>
     <string name="prepublishing_nudges_home_save_button">立即保存</string>
@@ -326,6 +278,7 @@ Language: zh_CN
     <string name="reader_filter_cta">过滤器</string>
     <string name="gutenberg_native_video_caption_s">视频说明。%s</string>
     <string name="gutenberg_native_edit_video">编辑视频</string>
+    <string name="gutenberg_native_edit_media">编辑媒体</string>
     <string name="gutenberg_native_double_tap_to_select_layout">双击以选择布局</string>
     <string name="gutenberg_native_add_a_shortcode">添加短代码…</string>
     <string name="post_list_author">文章作者</string>
@@ -373,7 +326,7 @@ Language: zh_CN
     <string name="login_discovery_error_http_auth">由于需要 &lt;b>HTTP 验证&lt;/b>，我们无法访问您的站点。您需要联系您的主机来解决这个问题。</string>
     <string name="login_discovery_error_xmlrpc">我们无法访问您的站点上的 &lt;b>XMLRPC 文件&lt;/b>。您需要联系您的主机来解决这个问题。</string>
     <string name="login_site_credentials_magic_link_label">马上就好！我们需要验证您的 Jetpack 连接的电子邮件地址 &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">使用站点凭据登录。</string>
+    <string name="enter_site_credentials_instead">使用站点凭据登录</string>
     <string name="enter_credentials_for_site">使用 %1$s 站点凭据登录</string>
     <string name="send_verification_email">发送验证电子邮件</string>
     <string name="my_site_bottom_sheet_add_page">站点页面</string>
@@ -447,6 +400,7 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_edit_this_value">轻按两下以编辑此值</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">轻按两下以使用滑块更改此值</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">轻按两下以添加区块</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">轻按两下并按住以进行编辑</string>
     <string name="gutenberg_native_current_value_is_s">当前值为 %s</string>
     <string name="gutenberg_native_content">内容…</string>
     <string name="gutenberg_native_choose_from_device">从设备中选择</string>
@@ -565,7 +519,7 @@ Language: zh_CN
     <string name="post_notification_off">关闭</string>
     <string name="post_settings_add_to_calendar">添加到日历</string>
     <string name="post_settings_notification">通知</string>
-    <string name="post_settings_time_and_date">日期和时间</string>
+    <string name="post_settings_time_and_date">时间和日期</string>
     <string name="login_need_help_finding_connected_email">需要帮助查找您连接的电子邮件吗?</string>
     <string name="enter_wordpress_site">此地址下的网站不是 WordPress 站点。站点必须安装 WordPress，我们才能建立连接。</string>
     <string name="login_invalid_site_url">请输入一个完整的网站地址，例如 example.com。</string>
@@ -1278,6 +1232,7 @@ Language: zh_CN
     <string name="signup_updating_account">正在更新帐户…</string>
     <string name="signup_terms_of_service_text">注册即表示您同意我们的%1$s服务条款%2$s。</string>
     <string name="signup_magic_link_progress">正在发送电子邮件</string>
+    <string name="signup_magic_link_message">我们向您发送了一个免密注册链接！请在该设备上检查电子邮件，并轻按电子邮件中的免密注册链接以完成注册。</string>
     <string name="signup_magic_link_error_button_positive">重试</string>
     <string name="signup_magic_link_error_button_negative">关闭</string>
     <string name="signup_magic_link_error">发送电子邮件时出现问题。您可以立即重试，或关闭并稍后重试。</string>
@@ -1285,6 +1240,7 @@ Language: zh_CN
     <string name="signup_epilogue_hint_password_detail">通常情况下，您可以随时使用刚刚用过的免密登录链接登录。但如果您愿意，也可以设置密码。</string>
     <string name="signup_epilogue_hint_password">密码（可选）</string>
     <string name="signup_epilogue_hint_display">显示名称</string>
+    <string name="signup_epilogue_heading">新帐户</string>
     <string name="signup_epilogue_error_button_positive">重试</string>
     <string name="signup_epilogue_error_button_negative">恢复</string>
     <string name="signup_epilogue_error_generic">更新帐户时出现问题。您可以重试或恢复更改以继续。</string>
@@ -1393,7 +1349,7 @@ Language: zh_CN
     <string name="notification_login_title_success">登录成功！</string>
     <string name="login_error_generic_start">无法启动 Google 登录。</string>
     <string name="login_empty_password">请输入密码</string>
-    <string name="login_text_otp_another">再发一条短信验证码</string>
+    <string name="login_text_otp_another">再发一条短信验证码。</string>
     <string name="enter_verification_code_sms">我们已经向尾号 %s 的手机号码发送短信。请输入短信中的验证码。</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">还剩一个文件</string>
@@ -1461,6 +1417,7 @@ Language: zh_CN
     <string name="media_edit_filename_caption">文件名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文本</string>
+    <string name="connect_site">连接站点</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">让指示灯闪烁</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">让设备振动</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">选择声音</string>
@@ -1504,6 +1461,7 @@ Language: zh_CN
     <string name="connection_to_server_lost">与服务器的连接已中断</string>
     <string name="login_epilogue_mysites_other">我的站点</string>
     <string name="login_epilogue_mysites_one">我的站点</string>
+    <string name="login_logged_in_as">登录身份为</string>
     <string name="login_email_client_not_found">未侦测到您的电子邮件客户端应用</string>
     <string name="login_empty_2fa">请输入验证码</string>
     <string name="login_empty_username">请输入用户名</string>
@@ -1516,13 +1474,17 @@ Language: zh_CN
     <string name="login_site_address_help">查找站点地址时需要帮助？</string>
     <string name="login_site_address">站点地址</string>
     <string name="enter_site_address">输入您要连接的 WordPress 站点的地址。</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">已经登录 WordPress.com</string>
     <string name="login_continue">继续</string>
+    <string name="connect_more">连接其他站点</string>
     <string name="enter_wpcom_password">输入您的 WordPress.com 密码。</string>
     <string name="login_magic_link_email_requesting">正在请求登录电子邮件</string>
+    <string name="login_magic_links_sent_label">神奇链接已经在路上！在此设备上查看电子邮件，并轻按来自 WordPress.com 的电子邮件中的链接。</string>
+    <string name="login_magic_links_label">我们将通过电子邮件向您发送一个神奇链接，通过它您无需密码即可登录。快去看邮件!</string>
     <string name="password_incorrect">密码似乎不对。请仔细检查您的信息，然后再试一次。</string>
     <string name="requesting_otp">正在请求短信验证码。</string>
-    <string name="login_text_otp">通过短信向我发送代码</string>
+    <string name="login_text_otp">通过短信向我发送验证码。</string>
     <string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
     <string name="open_mail">打开邮箱</string>
     <string name="next">下一步</string>

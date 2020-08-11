@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-06 20:54:09+0000
+Translation-Revision-Date: 2020-07-22 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">להעלות תמונה או לבחור אחת מספריית המדיה שלך בשביל הלוגו של האתר שלך</string>
-    <string name="gutenberg_native_site_tagline">תיאור האתר</string>
-    <string name="gutenberg_native_site_logo_settings">הגדרות הלוגו של האתר</string>
-    <string name="gutenberg_native_site_logo">לוגו האתר</string>
-    <string name="gutenberg_native_site_icon">סמל אתר</string>
-    <string name="gutenberg_native_show_a_site_logo">להציג את לוגו האתר</string>
-    <string name="gutenberg_native_replace_video">להחליף וידאו</string>
-    <string name="gutenberg_native_replace_image_or_video">להחליף תמונה או וידאו</string>
-    <string name="gutenberg_native_open_the_block_list_view">לפתוח את התצוגה של רשימת הבלוקים.</string>
-    <string name="gutenberg_native_media_preview">תצוגה מקדימה של המדיה</string>
-    <string name="gutenberg_native_image_width">רוחב התמונה</string>
-    <string name="gutenberg_native_description">תיאור</string>
-    <string name="gutenberg_native_delete_site_logo">למחוק את לוגו האתר</string>
-    <string name="gutenberg_native_coordinated_universal_time">לתאם את הזמן האוניברסלי</string>
-    <string name="gutenberg_native_convert_to_blocks">להמיר לבלוקים</string>
-    <string name="gutenberg_native_choose_video">לבחור וידאו</string>
-    <string name="gutenberg_native_choose_image_or_video">לבחור תמונה או וידאו</string>
-    <string name="gutenberg_native_choose_image">לבחור תמונה</string>
-    <string name="gutenberg_native_child_blocks">בלוקים משניים</string>
-    <string name="gutenberg_native_block_removed">הבלוק הוסר</string>
-    <string name="gutenberg_native_base">בסיס</string>
-    <string name="content_description_logo">הלוגו של WordPress</string>
-    <string name="enter_your_site_address">יש להזין את כתובת האתר שלך</string>
-    <string name="continue_with_wpcom">להמשיך עם WordPress.com</string>
-    <string name="signup_confirmation_title">אישור הרשמה</string>
-    <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
-    <string name="continue_terms_of_service_text">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
-    <string name="signup_confirmation_magic_link_message">נשלח אליך אימייל עם קישור ישיר כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
-    <string name="signup_confirmation_message">אנחנו נשתמש בכתובת האימייל הזאת כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
-    <string name="signup_magic_link_message">שלחנו אליך אימייל עם קישור ישיר כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
-    <string name="enter_account_info_for_site">להזין את פרטי החשבון שלך ב-⁦%1$s⁩.</string>
-    <string name="login_or">או</string>
-    <string name="continue_google_button_suffix">להמשיך עם Google</string>
-    <string name="login_find_your_site_adress">למצוא את הכותרת של האתר שלך</string>
-    <string name="login_done">בוצע</string>
-    <string name="magic_link_not_seeing_email_message">לא רואה את האימייל? כדאי לבדוק בתיבת הספאם או דואר הזבל.</string>
-    <string name="login_magic_links_sent_label">עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
-    <string name="login_magic_links_label">נשלח לך קישור מיוחד להתחברות מיידית, ללא צורך בסיסמה.</string>
-    <string name="check_email">יש לבדוק את האימייל</string>
-    <string name="get_started">מתחילים כאן</string>
-    <string name="enter_email_to_continue_wordpress_com">יש להזין את כתובת האימייל שלך כדי להתחבר או ליצור חשבון ב-WordPress.com.</string>
-    <string name="or_type_your_password">או להקליד את הסיסמה שלך</string>
-    <string name="create_account">ליצור חשבון</string>
-    <string name="send_link_by_email">לשלוח את הקישור באימייל</string>
-    <string name="login_promo_text_unlock_the_power">לעבוד עם בונה האתרים הכי הגמיש שיש.</string>
-    <string name="login_promo_title_37_percent">37\% מהאתרים ברשת בנויים על הפלטפורמה של WordPress.</string>
-    <string name="reset_your_password">יש לאפס את הסיסמה שלך</string>
-    <string name="reader_error_generic_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו. הרושם הראשוני חשוב!</string>
     <string name="quick_start_list_update_site_title_title">להגדיר את שם האתר שלך</string>
-    <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b>⁦%1$s⁩&lt;/b> כדי להגדיר שם חדש</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
     <string name="gutenberg_native_s_block_options">%s אפשרויות הבלוק</string>
     <string name="gutenberg_native_remove_block">להסיר בלוק</string>
@@ -71,6 +22,7 @@ Language: he_IL
     <string name="gutenberg_native_block_copied">הבלוק הועתק</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">רק משתמשים בעלי תפקיד של מנהלי מערכת יכולים לשנות את שם האתר.</string>
     <string name="my_site_title_changer_dialog_hint">שם האתר מוצג בסרגל הכותרת של הדפדפן ובתור הכותרת עליונה ברוב ערכות העיצוב.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">נושא</string>
     <string name="error_update_site_title_network">לא ניתן היה לעדכן את שם האתר. יש לבדוק את החיבור לרשת ולנסות שוב.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">שינויים שלא נשמרו</string>
@@ -94,7 +46,7 @@ Language: he_IL
     <string name="gutenberg_native_dismiss">ביטול</string>
     <string name="prepublishing_nudges_home_tags_not_set">לא הוגדר</string>
     <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">תאריך פרסום</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">פרסום</string>
     <string name="prepublishing_nudges_toolbar_title_tags">להוסיף תגיות</string>
     <string name="prepublishing_nudges_back_button">חזרה</string>
     <string name="prepublishing_nudges_home_save_button">לשמור כעת</string>
@@ -328,6 +280,7 @@ Language: he_IL
     <string name="reader_filter_cta">מסנן</string>
     <string name="gutenberg_native_video_caption_s">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_edit_video">לערוך וידאו</string>
+    <string name="gutenberg_native_edit_media">לערוך מדיה</string>
     <string name="gutenberg_native_double_tap_to_select_layout">יש להקיש פעמיים כדי לבחור פריסה</string>
     <string name="gutenberg_native_add_a_shortcode">להוסיף שורטקוד…</string>
     <string name="post_list_author">המחבר של הפוסט</string>
@@ -375,7 +328,7 @@ Language: he_IL
     <string name="login_discovery_error_http_auth">לא הייתה לנו אפשרות לגשת לאתר שלך מכיוון שהוא דורש &lt;b>אימות HTTP&lt;/b>. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
     <string name="login_discovery_error_xmlrpc">לא הייתה לנו אפשרות לגשת &lt;b>לקובץ XMLRPC&lt;/b> באתר שלך. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
     <string name="login_site_credentials_magic_link_label">כמעט סיימת! אנחנו רק צריכים לאמת שהשירות של Jetpack מחובר לכתובת האימייל שלך &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">יש להתחבר עם פרטי הכניסה של האתר.</string>
+    <string name="enter_site_credentials_instead">יש להתחבר עם פרטי הכניסה של האתר</string>
     <string name="enter_credentials_for_site">יש להתחבר עם פרטי הכניסה שלך לאתר %1$s</string>
     <string name="send_verification_email">לשלוח את הודעת האימייל לאישור</string>
     <string name="my_site_bottom_sheet_add_page">עמוד האתר</string>
@@ -448,6 +401,7 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_edit_this_value">יש להקיש פעמיים כדי לערוך את הערך הזה</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">יש להקיש פעמיים כדי לשנות את הערך באמצעות הסליידר</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">יש להקיש פעמיים כדי להוסיף בלוק</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">יש להקיש פעמיים ולהחזיק כדי לערוך</string>
     <string name="gutenberg_native_current_value_is_s">הערך הנוכחי הוא %s</string>
     <string name="gutenberg_native_content">תוכן…</string>
     <string name="gutenberg_native_choose_from_device">לבחור מהמכשיר</string>
@@ -566,7 +520,7 @@ Language: he_IL
     <string name="post_notification_off">מופסק</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_notification">הודעה</string>
-    <string name="post_settings_time_and_date">תאריך ושעה</string>
+    <string name="post_settings_time_and_date">Time and Date</string>
     <string name="login_need_help_finding_connected_email">נדרשת לך עזרה במציאת האימייל שבעזרתו התחברת?</string>
     <string name="enter_wordpress_site">האתר בכתובת זו אינו אתר של WordPress. כדי שנוכל להתחבר לאתר, השירות של WordPress חייב להיות מותקן באתר.</string>
     <string name="login_invalid_site_url">יש להזין את כתובת האתר המלאה, לדוגמה example.com.</string>
@@ -1276,6 +1230,7 @@ Language: he_IL
     <string name="signup_updating_account">מעדכן את החשבון….</string>
     <string name="signup_terms_of_service_text">ביצוע ההרשמה מהווה את הסכמתך %1$sלתנאי השימוש%2$s שלנו.</string>
     <string name="signup_magic_link_progress">שולח אימייל</string>
+    <string name="signup_magic_link_message">שלחנו אליך קישור ישיר להרשמה! עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת כדי להשלים את ההרשמה.</string>
     <string name="signup_magic_link_error_button_positive">יש לנסות שנית</string>
     <string name="signup_magic_link_error_button_negative">סגור</string>
     <string name="signup_magic_link_error">אירעה תקלה בשליחת האימייל. אפשר לנסות שוב עכשיו או לסגור ולנסות שוב מאוחר יותר.</string>
@@ -1283,6 +1238,7 @@ Language: he_IL
     <string name="signup_epilogue_hint_password_detail">אפשר תמיד להתחבר באמצעות קישור ישיר, כמו הקישור שבו השתמשת כעת, אבל באפשרותך גם להגדיר סיסמה לבחירתך.</string>
     <string name="signup_epilogue_hint_password">סיסמה (לא חובה)</string>
     <string name="signup_epilogue_hint_display">שם תצוגה</string>
+    <string name="signup_epilogue_heading">חשבון חדש</string>
     <string name="signup_epilogue_error_button_positive">יש לנסות שנית</string>
     <string name="signup_epilogue_error_button_negative">חזרה למצב קודם</string>
     <string name="signup_epilogue_error_generic">אירעה בעיה בעדכון החשבון שלך. אפשר לנסות שוב או לבטל את השינויים כדי להמשיך.</string>
@@ -1391,7 +1347,7 @@ Language: he_IL
     <string name="notification_login_title_success">התחברת!</string>
     <string name="login_error_generic_start">לא ניתן להתחיל בתהליך ההתחברות ל-Google.</string>
     <string name="login_empty_password">יש להזין סיסמה</string>
-    <string name="login_text_otp_another">שלחו לי קוד אחר כתחליף</string>
+    <string name="login_text_otp_another">שליחת קוד נוסף בהודעת טקסט במקום.</string>
     <string name="enter_verification_code_sms">שלחנו לך הודעת טקסט למספר הטלפון שמסתיים בספרות %s. יש להזין את קוד האימות שהתקבל בהודעת הטקסט.</string>
     <string name="image_size">גדולה</string>
     <string name="uploading_subtitle_media_only_one">נותר קובץ אחד</string>
@@ -1459,7 +1415,7 @@ Language: he_IL
     <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
-    <string name="connect_site">חיבור אתר</string>
+    <string name="connect_site">חיבור האתר</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">הבהוב</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">מכשיר רוטט</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">בחירת קול</string>
@@ -1503,6 +1459,7 @@ Language: he_IL
     <string name="connection_to_server_lost">החיבור לשרת אבד</string>
     <string name="login_epilogue_mysites_other">האתרים שלי</string>
     <string name="login_epilogue_mysites_one">האתר שלי</string>
+    <string name="login_logged_in_as">מחובר בתור</string>
     <string name="login_email_client_not_found">לא ניתן לאתר את האפליקציה של שירות האימייל שלך</string>
     <string name="login_empty_2fa">יש להזין קוד אימות</string>
     <string name="login_empty_username">נא להכניס שם משתמש</string>
@@ -1515,13 +1472,17 @@ Language: he_IL
     <string name="login_site_address_help">רוצה עזרה במציאת כתובת האתר שלך?</string>
     <string name="login_site_address">כתובת אתר</string>
     <string name="enter_site_address">יש להזין את כתובת האתר ב-WordPress שאליו ברצונך להתחבר.</string>
+    <string name="login_username_at">‎@‎%s‎</string>
     <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue">המשך</string>
+    <string name="connect_more">חיבור אתר נוסף</string>
     <string name="enter_wpcom_password">הזן את הסיסמה שלך ל-WordPress.com.</string>
     <string name="login_magic_link_email_requesting">שולח בקשה לאימייל להתחברות</string>
+    <string name="login_magic_links_sent_label">הקישור המיוחד שלך בדרך! עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
+    <string name="login_magic_links_label">נשלח לך קישור מיוחד להתחברות מיידית, ללא צורך בסיסמה. לא צריך לחפש או לנחש!</string>
     <string name="password_incorrect">נראה שהסיסמה הזו שגויה. יש לבדוק את המידע שהזנת ולנסות שוב.</string>
     <string name="requesting_otp">שולח קוד אימות באמצעות SMS.</string>
-    <string name="login_text_otp">שליחת קוד במקום</string>
+    <string name="login_text_otp">שלחו לי הודעת טקסט עם קוד במקום.</string>
     <string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות מאפליקציית האימות.</string>
     <string name="open_mail">פתיחת דואר</string>
     <string name="next">הבא</string>
@@ -2295,7 +2256,6 @@ Language: he_IL
     <string name="pick_video">בחר וידאו</string>
     <string name="pick_photo">בחר תמונה</string>
     <string name="reader_likes_you_and_one">אתה ועוד אחד אוהבים את זה</string>
-    <string name="sign_up_label">הרשמה</string>
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_share_intent">לא ניתן לשתף</string>

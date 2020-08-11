@@ -1,62 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-28 13:15:56+0000
+Translation-Revision-Date: 2020-07-15 14:29:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Upload een afbeelding of kies er een uit je slide bibliotheek welke je site-logo wordt</string>
-    <string name="gutenberg_native_site_tagline">Site tagline</string>
-    <string name="gutenberg_native_site_logo_settings">Site-logo instellingen</string>
-    <string name="gutenberg_native_site_logo">Site-logo</string>
-    <string name="gutenberg_native_site_icon">Site pictogram</string>
-    <string name="gutenberg_native_show_a_site_logo">Een site-logo weergeven</string>
-    <string name="gutenberg_native_replace_video">Video vervangen</string>
-    <string name="gutenberg_native_replace_image_or_video">Afbeelding of video vervangen</string>
-    <string name="gutenberg_native_open_the_block_list_view">Open de bloklijst weergave.</string>
-    <string name="gutenberg_native_media_preview">Media voorbeeld</string>
-    <string name="gutenberg_native_image_width">Afbeelding breedte</string>
-    <string name="gutenberg_native_description">beschrijving</string>
-    <string name="gutenberg_native_delete_site_logo">Site-logo verwijderen</string>
-    <string name="gutenberg_native_coordinated_universal_time">Gecoördineerde universele tijd</string>
-    <string name="gutenberg_native_convert_to_blocks">Converteren naar blokken</string>
-    <string name="gutenberg_native_choose_video">Video kiezen</string>
-    <string name="gutenberg_native_choose_image_or_video">Kies afbeelding of video</string>
-    <string name="gutenberg_native_choose_image">Kies afbeelding</string>
-    <string name="gutenberg_native_child_blocks">Child blokken</string>
-    <string name="gutenberg_native_block_removed">Blok verwijderd</string>
-    <string name="gutenberg_native_base">Basis</string>
-    <string name="content_description_logo">WordPress logo</string>
-    <string name="enter_your_site_address">Voer je site adres in</string>
-    <string name="continue_with_wpcom">Ga verder met WordPress.com</string>
-    <string name="signup_confirmation_title">Inschrijfbevestiging</string>
-    <string name="continue_with_google_terms_of_service_text">Als je doorgaat met Google en nog geen WordPress.com account hebt, maakt je een account aan en gaat je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
-    <string name="continue_terms_of_service_text">Als je doorgaat, ga je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">We sturen je een magische link per e-mail om je nieuwe WordPress.com account aan te maken.</string>
-    <string name="signup_confirmation_message">We gebruiken dit e-mailadres om je nieuwe WordPress.com account aan te maken.</string>
-    <string name="signup_magic_link_message">We hebben je een magische link gestuurd om je nieuwe WordPress.com account aan te maken. Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com ontvangt.</string>
-    <string name="enter_account_info_for_site">Voer je accountgegevens in voor %1$s.</string>
-    <string name="login_or">of</string>
-    <string name="continue_google_button_suffix">Doorgaan met Google</string>
-    <string name="login_find_your_site_adress">Vind het adres van je site</string>
-    <string name="login_done">Gedaan</string>
-    <string name="magic_link_not_seeing_email_message">Zie je de e-mail niet? Controleer je spam-map of ongewenste e-mail.</string>
-    <string name="login_magic_links_sent_label">Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com hebt ontvangen.</string>
-    <string name="login_magic_links_label">We e-mailen je een magische link waarmee je direct kan inloggen, geen wachtwoord nodig.</string>
-    <string name="check_email">E-mail controleren</string>
-    <string name="get_started">Begin</string>
-    <string name="enter_email_to_continue_wordpress_com">Voer je e-mailadres in om in te loggen of maak een WordPress.com account aan.</string>
-    <string name="or_type_your_password">Of typ je wachtwoord</string>
-    <string name="create_account">Account aanmaken</string>
-    <string name="send_link_by_email">Link per e-mail verzenden</string>
-    <string name="login_promo_text_unlock_the_power">Ontgrendel de kracht van de meest flexibele sitebouwer.</string>
-    <string name="login_promo_title_37_percent">37\% van het web is gebouwd op WordPress.</string>
-    <string name="reset_your_password">Stel je wachtwoord opnieuw in</string>
-    <string name="reader_error_generic_title">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
     <string name="quick_start_list_update_site_title_subtitle">Geef je site een naam die zijn personaliteit en onderwerp reflecteerd. De eerste indruk telt!</string>
     <string name="quick_start_list_update_site_title_title">Stel je site titel in</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tik &lt;b>%1$s&lt;/b> om een nieuwe titel in te stellen</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="gutenberg_native_s_block_options">%s blok opties</string>
     <string name="gutenberg_native_remove_block">Blok verwijderen</string>
@@ -71,6 +22,7 @@ Language: nl
     <string name="gutenberg_native_block_copied">Blok gekopieerd</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">De site titel kan alleen gewijzigd worden door een gebruiker met de beheerder rol.</string>
     <string name="my_site_title_changer_dialog_hint">De site titel wordt getoont in de titelbalk van een webbrowser en wordt getoont in de header van de meeste thema\'s.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">Onderwerp</string>
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
@@ -94,7 +46,7 @@ Language: nl
     <string name="gutenberg_native_dismiss">Negeren</string>
     <string name="prepublishing_nudges_home_tags_not_set">Niet ingesteld</string>
     <string name="prepublishing_tags_description">Tags helpen de lezers om aan te geven waar het bericht over gaat</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publicatie datum</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publiceren</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tags toevoegen</string>
     <string name="prepublishing_nudges_back_button">Terug</string>
     <string name="prepublishing_nudges_home_save_button">Bewaar nu</string>
@@ -328,6 +280,7 @@ Language: nl
     <string name="reader_filter_cta">Filteren</string>
     <string name="gutenberg_native_video_caption_s">Videobijschrift. %s</string>
     <string name="gutenberg_native_edit_video">Video bewerken</string>
+    <string name="gutenberg_native_edit_media">Media bewerken</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Tik tweemaal om lay-out te selecteren</string>
     <string name="gutenberg_native_add_a_shortcode">Een shortcode toevoegen …</string>
     <string name="post_list_author">Bericht auteur</string>
@@ -375,7 +328,7 @@ Language: nl
     <string name="login_discovery_error_http_auth">We konden geen toegang krijgen tot je site omdat hiervoor &lt;b>HTTP-authenticatie is vereist&lt;/b>. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_xmlrpc">We konden geen toegang krijgen tot het &lt;b>XMLRPC-bestand&lt;/b> op je site. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_site_credentials_magic_link_label">Bijna klaar! We hoeven nu alleen nog het e-mailadres (&lt;b>%1$s&lt;/b>) te verifiëren dat aan je Jetpack-account is gekoppeld</string>
-    <string name="enter_site_credentials_instead">Inloggen met site inlog-gegevens</string>
+    <string name="enter_site_credentials_instead">Inloggen met site-inloggegevens</string>
     <string name="enter_credentials_for_site">Inloggen met je site-inloggegevens voor %1$s.</string>
     <string name="send_verification_email">Verificatiemail verzenden</string>
     <string name="my_site_bottom_sheet_add_page">Site-pagina</string>
@@ -449,6 +402,7 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_edit_this_value">Tik tweemaal om deze waarde te bewerken</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Tik tweemaal om de waarde te wijzigen met behulp van de schuifbalk</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Tik tweemaal om een blok toe te voegen</string>
+    <string name="gutenberg_native_double_tap_and_hold_to_edit">Tik tweemaal en houd ingedrukt om te bewerken</string>
     <string name="gutenberg_native_current_value_is_s">Huidige waarde is %s</string>
     <string name="gutenberg_native_content">Inhoud…</string>
     <string name="gutenberg_native_choose_from_device">Kiezen op apparaat</string>
@@ -567,7 +521,7 @@ Language: nl
     <string name="post_notification_off">Uit</string>
     <string name="post_settings_add_to_calendar">Toevoegen aan agenda</string>
     <string name="post_settings_notification">Melding</string>
-    <string name="post_settings_time_and_date">Datum en tijd</string>
+    <string name="post_settings_time_and_date">Tijd en datum</string>
     <string name="login_need_help_finding_connected_email">Heb je hulp nodig bij het vinden van de e-mail waarmee je hebt ingelogd?</string>
     <string name="enter_wordpress_site">De website op dit adres is geen WordPress-site. Om er verbinding mee te kunnen maken, moet WordPress geïnstalleerd zijn.</string>
     <string name="login_invalid_site_url">Voer een compleet websiteadres in, zoals example.com.</string>
@@ -1280,6 +1234,7 @@ Language: nl
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_terms_of_service_text">Als je je registreert, ga je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
     <string name="signup_magic_link_progress">E-mail versturen</string>
+    <string name="signup_magic_link_message">We hebben je een magische inschrijf link gestuurd! Controleer je e-mail op dit apparaat en druk op de link in de e-mail om het inschrijven te voltooien.</string>
     <string name="signup_magic_link_error_button_positive">Probeer opnieuw</string>
     <string name="signup_magic_link_error_button_negative">Sluit</string>
     <string name="signup_magic_link_error">Er waren problemen met het versturen van de e-mail. Je kan het nu nog een keer proberen of sluiten en het later nog een keer proberen. </string>
@@ -1287,6 +1242,7 @@ Language: nl
     <string name="signup_epilogue_hint_password_detail">Je kan altijd inloggen met de magische link die je net hebt gebruikt maar je kunt ook een wachtwoord instellen als dat je voorkeur heeft.</string>
     <string name="signup_epilogue_hint_password">Wachtwoord (optioneel)</string>
     <string name="signup_epilogue_hint_display">Weergavenaam</string>
+    <string name="signup_epilogue_heading">Nieuw account</string>
     <string name="signup_epilogue_error_button_positive">Probeer opnieuw</string>
     <string name="signup_epilogue_error_button_negative">Terug draaien</string>
     <string name="signup_epilogue_error_generic">Er waren wat problemen bij het updaten van jouw account. Je kan het opnieuw proberen of je veranderingen terug draaien om door te gaan. </string>
@@ -1395,7 +1351,7 @@ Language: nl
     <string name="notification_login_title_success">Ingelogd!</string>
     <string name="login_error_generic_start">Inloggen via Google kon niet worden gestart.</string>
     <string name="login_empty_password">Voer een wachtwoord in</string>
-    <string name="login_text_otp_another">SMS mij een andere code in plaats daarvan</string>
+    <string name="login_text_otp_another">Stuur me via SMS een andere code.</string>
     <string name="enter_verification_code_sms">We hebben een sms gestuurd naar het telefoonnummer dat eindigt op %s. Voer de verificatiecode in de sms in.</string>
     <string name="image_size">Grootte</string>
     <string name="uploading_subtitle_media_only_one">1 bestand resterend</string>
@@ -1463,7 +1419,7 @@ Language: nl
     <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt. tekst</string>
-    <string name="connect_site">Verbind een site</string>
+    <string name="connect_site">Site koppelen</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Kies geluid</string>
@@ -1507,6 +1463,7 @@ Language: nl
     <string name="connection_to_server_lost">De verbinding met de server is verbroken</string>
     <string name="login_epilogue_mysites_other">Mijn sites</string>
     <string name="login_epilogue_mysites_one">Mijn site</string>
+    <string name="login_logged_in_as">Ingelogd als</string>
     <string name="login_email_client_not_found">Detectie van mailclient-app mislukt</string>
     <string name="login_empty_2fa">Voer een verificatiecode in</string>
     <string name="login_empty_username">Voer een gebruikersnaam in</string>
@@ -1519,14 +1476,17 @@ Language: nl
     <string name="login_site_address_help">Hulp nodig bij het vinden van je site-adres?</string>
     <string name="login_site_address">Site-adres</string>
     <string name="enter_site_address">Vul het adres van de WordPress site in die je wilt verbinden.</string>
+    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue">Doorgaan</string>
-    <string name="connect_more">Verbind een andere site</string>
+    <string name="connect_more">Andere site koppelen</string>
     <string name="enter_wpcom_password">Voer je WordPress.com wachtwoord in.</string>
     <string name="login_magic_link_email_requesting">E-mail voor inloggen aangevraagd</string>
+    <string name="login_magic_links_sent_label">Je magische link is onderweg! Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com ontvangt.</string>
+    <string name="login_magic_links_label">We sturen je een e-mail met een magische link waarmee je onmiddellijk kunt inloggen, zonder wachtwoord. Nooit meer moeite doen!</string>
     <string name="password_incorrect">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
     <string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
-    <string name="login_text_otp">Sms  mij een code in plaats daarvan</string>
+    <string name="login_text_otp">Sms de code in plaats daarvan naar me.</string>
     <string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
     <string name="open_mail">Open e-mail</string>
     <string name="next">Volgende</string>
@@ -2300,7 +2260,6 @@ Language: nl
     <string name="pick_video">Selecteer video</string>
     <string name="pick_photo">Selecteer foto</string>
     <string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
-    <string name="sign_up_label">Abonneren</string>
     <string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
     <string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
     <string name="reader_toast_err_share_intent">Onmogelijk te delen</string>
