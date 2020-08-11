@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/list_editor_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
@@ -35,15 +34,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/divider_size"
-                android:layout_alignWithParentIfMissing="true"
-                android:layout_below="@+id/list_editor_header_text"
                 android:background="?android:attr/listDivider" />
 
             <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/list_editor_header_text" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
