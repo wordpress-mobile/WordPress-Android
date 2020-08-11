@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -15,7 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SuggestionUtils {
-    private static HashMap<Long, Long> lastCallMap = new HashMap<>();
+    @VisibleForTesting
+    protected static HashMap<Long, Long> lastCallMap = new HashMap<>();
     private static final long MIN_MS_BEFORE_REFRESH = 60 * 1000;
 
     @Nullable
@@ -40,7 +42,7 @@ public class SuggestionUtils {
         }
 
         List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(siteId);
-        if (shouldRefresh(siteId)) {
+        if (shouldRefresh(siteId, System.currentTimeMillis())) {
             serviceConnectionManager.bindToService();
         }
 
@@ -50,10 +52,10 @@ public class SuggestionUtils {
         return suggestionAdapter;
     }
 
-    private static boolean shouldRefresh(final long siteId) {
+    @VisibleForTesting
+    protected static boolean shouldRefresh(final long siteId, final long currentMs) {
         Long lastCallMs = lastCallMap.get(siteId);
-        long currentMs = System.currentTimeMillis();
-        boolean shouldMakeCall = lastCallMs == null || currentMs - lastCallMs > MIN_MS_BEFORE_REFRESH;
+        boolean shouldMakeCall = lastCallMs == null || currentMs - lastCallMs >= MIN_MS_BEFORE_REFRESH;
 
         if (shouldMakeCall) {
             lastCallMap.put(siteId, currentMs);
