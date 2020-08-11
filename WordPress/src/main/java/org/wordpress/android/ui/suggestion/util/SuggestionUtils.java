@@ -18,11 +18,10 @@ public class SuggestionUtils {
     public static SuggestionAdapter setupSuggestions(
             SiteModel site,
             Context context,
-            @NonNull SuggestionServiceConnectionManager serviceConnectionManager,
-            boolean forceRefetch
+            @NonNull SuggestionServiceConnectionManager serviceConnectionManager
     ) {
         return SuggestionUtils.setupSuggestions(site.getSiteId(), context, serviceConnectionManager,
-                                                SiteUtils.isAccessedViaWPComRest(site), forceRefetch);
+                                                SiteUtils.isAccessedViaWPComRest(site));
     }
 
     @Nullable
@@ -30,21 +29,18 @@ public class SuggestionUtils {
             final long siteId,
             Context context,
             @NonNull SuggestionServiceConnectionManager serviceConnectionManager,
-            boolean isWPComFlag,
-            boolean forceRefetch
+            boolean isWPComFlag
     ) {
         if (!isWPComFlag) {
             return null;
         }
 
-        SuggestionAdapter suggestionAdapter = new SuggestionAdapter(context);
-
         List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(siteId);
-        // if the suggestions are not stored yet, we want to trigger an update for it
-        if (forceRefetch || suggestions.isEmpty()) {
-            serviceConnectionManager.bindToService();
-        }
+        serviceConnectionManager.bindToService();
+
+        SuggestionAdapter suggestionAdapter = new SuggestionAdapter(context);
         suggestionAdapter.setSuggestionList(suggestions);
+
         return suggestionAdapter;
     }
 }

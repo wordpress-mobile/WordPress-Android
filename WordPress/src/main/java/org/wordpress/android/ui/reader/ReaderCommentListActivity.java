@@ -250,7 +250,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
-                                                              mPost.isWP(), false);
+                                                              mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
