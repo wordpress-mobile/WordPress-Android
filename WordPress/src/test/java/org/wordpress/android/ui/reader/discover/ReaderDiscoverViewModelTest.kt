@@ -34,7 +34,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
 private const val POST_PARAM_POSITION = 0
-private const val ON_ITEM_RENDERED_PARAM_POSITION = 7
+private const val ON_ITEM_RENDERED_PARAM_POSITION = 8
 private const val NUMBER_OF_ITEMS = 10L
 
 @InternalCoroutinesApi
