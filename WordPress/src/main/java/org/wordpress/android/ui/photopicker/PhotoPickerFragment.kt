@@ -21,9 +21,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnFlingListener
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
@@ -67,7 +64,6 @@ import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import java.util.HashMap
 import javax.inject.Inject
-import kotlin.math.abs
 
 class PhotoPickerFragment : Fragment() {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
@@ -146,27 +142,6 @@ class PhotoPickerFragment : Fragment() {
         recycler.setEmptyView(actionable_empty_view)
         recycler.setHasFixedSize(true)
 
-        // disable thumbnail loading during a fling to conserve memory
-        val minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(requireActivity())
-        recycler.onFlingListener = object : OnFlingListener() {
-            override fun onFling(velocityX: Int, velocityY: Int): Boolean {
-                if (abs(velocityY) > minDistance) {
-                    adapter.setLoadThumbnails(false)
-                }
-                return false
-            }
-        }
-        recycler.addOnScrollListener(object : OnScrollListener() {
-            override fun onScrollStateChanged(
-                recyclerView: RecyclerView,
-                newState: Int
-            ) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    adapter.setLoadThumbnails(true)
-                }
-            }
-        })
         if (!canShowMediaSourceBottomBar()) {
             container_media_source_bar.visibility = View.GONE
         } else {
