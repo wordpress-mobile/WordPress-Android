@@ -6,32 +6,24 @@ import android.net.Uri
 import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.Video
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.SqlUtils
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.CoroutineContext
 
 class DeviceMediaListBuilder
 @Inject constructor(
     val context: Context,
-    @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
-) : CoroutineScope {
-    override val coroutineContext: CoroutineContext
-        get() = bgDispatcher
-    fun buildDeviceMedia(
-        browserType: MediaBrowserType,
-        callback: BuildDeviceMediaListListener
-    ) {
-        launch {
+) {
+    suspend fun buildDeviceMedia(
+        browserType: MediaBrowserType
+    ): List<PhotoPickerItem> {
+        return withContext(bgDispatcher) {
             val result = mutableListOf<PhotoPickerItem>()
             // images
             if (browserType.isImagePicker) {
@@ -43,9 +35,7 @@ class DeviceMediaListBuilder
                 result.addAll(addMedia(Video.Media.EXTERNAL_CONTENT_URI, true))
             }
             result.sortByDescending { it.id }
-            withContext(uiDispatcher) {
-                callback.onSuccess(result)
-            }
+            result
         }
     }
 
@@ -82,10 +72,6 @@ class DeviceMediaListBuilder
             SqlUtils.closeCursor(cursor)
         }
         return result
-    }
-
-    interface BuildDeviceMediaListListener {
-        fun onSuccess(result: List<PhotoPickerItem>?)
     }
 
     companion object {

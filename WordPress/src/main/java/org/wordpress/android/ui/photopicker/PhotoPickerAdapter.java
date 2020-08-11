@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +9,17 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.photopicker.DeviceMediaListBuilder.BuildDeviceMediaListListener;
+import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.ViewUtilsKt;
@@ -35,121 +33,37 @@ import java.util.Locale;
 import java.util.Map;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
-import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
 public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .8f;
 
-    /*
-     * used by this adapter to communicate with the owning fragment
-     */
-    interface PhotoPickerAdapterListener {
-        void onSelectedCountChanged(int count);
-
-        void onAdapterLoaded(boolean isEmpty);
-    }
-
-    private final ArrayList<Integer> mSelectedPositions = new ArrayList<>();
     private static final AniUtils.Duration ANI_DURATION = AniUtils.Duration.SHORT;
 
     private final Context mContext;
-    private RecyclerView mRecycler;
-    private int mThumbWidth;
-    private int mThumbHeight;
 
-    private boolean mIsListTaskRunning;
     private boolean mLoadThumbnails = true;
 
-    private final PhotoPickerAdapterListener mListener;
     private final LayoutInflater mInflater;
-    private final MediaBrowserType mBrowserType;
 
-    private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
+    private List<PhotoPickerUiItem> mMediaList = new ArrayList<>();
 
     protected final ImageManager mImageManager;
-    private final DeviceMediaListBuilder mDeviceMediaListBuilder;
 
     PhotoPickerAdapter(Context context,
-                       MediaBrowserType browserType,
-                       PhotoPickerAdapterListener listener,
-                       DeviceMediaListBuilder deviceMediaListBuilder) {
+                       ImageManager imageManager) {
         super();
         mContext = context;
-        mListener = listener;
         mInflater = LayoutInflater.from(context);
-        mBrowserType = browserType;
-        mDeviceMediaListBuilder = deviceMediaListBuilder;
-        mImageManager = ImageManager.getInstance();
+        mImageManager = imageManager;
 
         setHasStableIds(true);
     }
 
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        mRecycler = recyclerView;
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        mRecycler = null;
-    }
-
-    void refresh(boolean forceReload) {
-        if (mIsListTaskRunning) {
-            AppLog.w(AppLog.T.MEDIA, "photo picker > build list task already running");
-            return;
-        }
-
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        int thumbWidth = displayWidth / NUM_COLUMNS;
-        int thumbHeight = (int) (thumbWidth * 0.75f);
-        boolean sizeChanged = thumbWidth != mThumbWidth || thumbHeight != mThumbHeight;
-
-        // if thumb sizes have changed (due to device rotation, or never being set), we must
-        // reload from scratch - otherwise we can do a refresh so the adapter is only loaded
-        // if there are changes
-        boolean mustReload;
-        if (sizeChanged) {
-            mThumbWidth = thumbWidth;
-            mThumbHeight = thumbHeight;
-            mustReload = true;
-        } else {
-            mustReload = forceReload;
-        }
-        mIsListTaskRunning = true;
-        mDeviceMediaListBuilder.buildDeviceMedia(mBrowserType, new BuildDeviceMediaListListener() {
-            @Override
-            public void onSuccess(List<PhotoPickerItem> result) {
-                mIsListTaskRunning = false;
-                if (mustReload || !isSameMediaList(result)) {
-                    mMediaList.clear();
-                    mMediaList.addAll(result);
-                    notifyDataSetChanged();
-                }
-                if (mListener != null) {
-                    mListener.onAdapterLoaded(isEmpty());
-                }
-            }
-        });
-    }
-
-    // returns true if the media list built here is the same as the existing one
-    private boolean isSameMediaList(List<PhotoPickerItem> tmpList) {
-        if (tmpList.size() != mMediaList.size()) {
-            return false;
-        }
-        for (int i = 0; i < tmpList.size(); i++) {
-            if (!isValidPosition(i)) {
-                return false;
-            }
-            if (tmpList.get(i).getId() != mMediaList.get(i).getId()) {
-                return false;
-            }
-        }
-        return true;
+    void loadData(List<PhotoPickerUiItem> result) {
+        DiffResult diffResult = DiffUtil.calculateDiff(new PhotoPickerAdapterDiffCallback(mMediaList, result));
+        mMediaList = result;
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -166,10 +80,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
     }
 
-    private boolean isEmpty() {
-        return mMediaList.size() == 0;
-    }
-
     void setLoadThumbnails(boolean loadThumbnails) {
         if (loadThumbnails != mLoadThumbnails) {
             mLoadThumbnails = loadThumbnails;
@@ -180,51 +90,49 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
     }
 
-    @Override
-    public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull @Override
+    public ThumbnailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.photo_picker_thumbnail, parent, false);
         return new ThumbnailViewHolder(view);
     }
 
-    private void updateSelectionCountForPosition(int position,
-                                                 boolean isSelected,
-                                                 @NonNull TextView txtSelectionCount) {
-        if (canMultiselect() && isSelected) {
-            int count = mSelectedPositions.indexOf(position) + 1;
-            txtSelectionCount.setText(String.format(Locale.getDefault(), "%d", count));
+    private void updateSelectionCountForPosition(PhotoPickerUiItem item, @NonNull TextView txtSelectionCount) {
+        if (item.getSelectedOrder() != null) {
+            txtSelectionCount.setText(String.format(Locale.getDefault(), "%d", item.getSelectedOrder()));
         } else {
             txtSelectionCount.setText(null);
         }
     }
 
     @Override
-    public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
-        PhotoPickerItem item = getItemAtPosition(position);
+    public void onBindViewHolder(@NonNull ThumbnailViewHolder holder, int position, @NonNull List<Object> payloads) {
+        PhotoPickerUiItem item = getItemAtPosition(position);
         if (item == null) {
             return;
         }
-
-        boolean isSelected = isItemSelected(position);
-        holder.mTxtSelectionCount.setSelected(isSelected);
-        holder.mTxtSelectionCount.setVisibility(isSelected || canMultiselect() ? View.VISIBLE : View.GONE);
-        updateSelectionCountForPosition(position, isSelected, holder.mTxtSelectionCount);
-
-        float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
-        if (holder.mImgThumbnail.getScaleX() != scale) {
-            holder.mImgThumbnail.setScaleX(scale);
-            holder.mImgThumbnail.setScaleY(scale);
+        boolean animateSelection = false;
+        boolean updateCount = false;
+        for (Object payload : payloads) {
+            if (payload == Payload.SELECTION_CHANGE) {
+                animateSelection = true;
+            }
+            if (payload == Payload.COUNT_CHANGE) {
+                updateCount = true;
+            }
         }
-
-        holder.mVideoOverlay.setVisibility(item.isVideo() ? View.VISIBLE : View.GONE);
-
-        if (mLoadThumbnails) {
-            mImageManager.load(holder.mImgThumbnail, ImageType.PHOTO, item.getUri().toString(), ScaleType.FIT_CENTER);
-        } else {
-            mImageManager.cancelRequestAndClearImageView(holder.mImgThumbnail);
-        }
+        holder.bind(item, animateSelection, updateCount);
     }
 
-    private PhotoPickerItem getItemAtPosition(int position) {
+    @Override
+    public void onBindViewHolder(@NonNull ThumbnailViewHolder holder, int position) {
+        PhotoPickerUiItem item = getItemAtPosition(position);
+        if (item == null) {
+            return;
+        }
+        holder.bind(item, false, false);
+    }
+
+    private PhotoPickerUiItem getItemAtPosition(int position) {
         if (!isValidPosition(position)) {
             AppLog.w(AppLog.T.POSTS, "photo picker > invalid position in getItemAtPosition");
             return null;
@@ -234,132 +142,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
     private boolean isValidPosition(int position) {
         return position >= 0 && position < mMediaList.size();
-    }
-
-    private boolean isItemSelected(int position) {
-        return mSelectedPositions.contains(position);
-    }
-
-    private void toggleItemSelected(int position) {
-        setItemSelected(position, !isItemSelected(position));
-    }
-
-    private void setItemSelected(int position, boolean isSelected) {
-        setItemSelected(position, isSelected, true);
-    }
-
-    private void setItemSelected(int position, boolean isSelected, boolean updateAfter) {
-        PhotoPickerItem item = getItemAtPosition(position);
-        if (item == null) {
-            return;
-        }
-
-        // if an item is already selected and multiselect isn't allowed, deselect the previous selection
-        if (isSelected && !canMultiselect() && !mSelectedPositions.isEmpty()) {
-            setItemSelected(mSelectedPositions.get(0), false, false);
-        }
-
-        if (isSelected) {
-            mSelectedPositions.add(position);
-        } else {
-            int selectedIndex = mSelectedPositions.indexOf(position);
-            if (selectedIndex > -1) {
-                mSelectedPositions.remove(selectedIndex);
-            }
-        }
-
-        ThumbnailViewHolder holder = getViewHolderAtPosition(position);
-        if (holder != null) {
-            holder.mTxtSelectionCount.setSelected(isSelected);
-            updateSelectionCountForPosition(position, isSelected, holder.mTxtSelectionCount);
-
-            if (isSelected) {
-                AniUtils.scale(holder.mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, ANI_DURATION);
-            } else {
-                AniUtils.scale(holder.mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, ANI_DURATION);
-            }
-
-            if (canMultiselect()) {
-                AniUtils.startAnimation(holder.mTxtSelectionCount, R.anim.pop);
-            } else if (isSelected) {
-                AniUtils.fadeIn(holder.mTxtSelectionCount, ANI_DURATION);
-            } else {
-                AniUtils.fadeOut(holder.mTxtSelectionCount, ANI_DURATION);
-            }
-        }
-
-        if (updateAfter) {
-            notifySelectionCountChanged();
-            // redraw the grid after the scale animation completes
-            long delayMs = ANI_DURATION.toMillis(mContext);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    notifyDataSetChanged();
-                }
-            }, delayMs);
-        }
-    }
-
-    private ThumbnailViewHolder getViewHolderAtPosition(int position) {
-        if (mRecycler == null || !isValidPosition(position)) {
-            return null;
-        }
-        return (ThumbnailViewHolder) mRecycler.findViewHolderForAdapterPosition(position);
-    }
-
-    boolean isVideoFileSelected() {
-        for (Integer position : mSelectedPositions) {
-            PhotoPickerItem item = getItemAtPosition(position);
-            if (item != null && item.isVideo()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @NonNull
-    ArrayList<Uri> getSelectedURIs() {
-        ArrayList<Uri> uriList = new ArrayList<>();
-        for (Integer position : mSelectedPositions) {
-            PhotoPickerItem item = getItemAtPosition(position);
-            if (item != null) {
-                uriList.add(item.getUri());
-            }
-        }
-        return uriList;
-    }
-
-    ArrayList<Integer> getSelectedPositions() {
-        return mSelectedPositions;
-    }
-
-    void setSelectedPositions(@NonNull List<Integer> selectedPositions) {
-        mSelectedPositions.clear();
-        mSelectedPositions.addAll(selectedPositions);
-        notifyDataSetChanged();
-        notifySelectionCountChanged();
-    }
-
-    void clearSelection() {
-        if (mSelectedPositions.size() > 0) {
-            mSelectedPositions.clear();
-            notifyDataSetChanged();
-        }
-    }
-
-    private boolean canMultiselect() {
-        return mBrowserType.canMultiselect();
-    }
-
-    int getNumSelected() {
-        return mSelectedPositions.size();
-    }
-
-    private void notifySelectionCountChanged() {
-        if (mListener != null) {
-            mListener.onSelectedCountChanged(getNumSelected());
-        }
     }
 
     /*
@@ -377,54 +159,17 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             mTxtSelectionCount = view.findViewById(R.id.text_selection_count);
             mVideoOverlay = view.findViewById(R.id.image_video_overlay);
 
-            mImgThumbnail.getLayoutParams().width = mThumbWidth;
-            mImgThumbnail.getLayoutParams().height = mThumbHeight;
-
-            if (!canMultiselect()) {
-                mTxtSelectionCount.setBackgroundResource(R.drawable.photo_picker_circle_pressed);
-            }
-
-            mImgThumbnail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (isValidPosition(position)) {
-                        toggleItemSelected(position);
-                        PhotoPickerUtils.announceSelectedImageForAccessibility(mImgThumbnail, isItemSelected(position));
-                    }
-                }
-            });
-
-            mImgThumbnail.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int position = getAdapterPosition();
-                    showPreview(position);
-                    return true;
-                }
-            });
-            ViewUtilsKt.redirectContextClickToLongPressListener(mImgThumbnail);
-
-            mVideoOverlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    showPreview(position);
-                }
-            });
-
             ViewUtils.addCircularShadowOutline(mTxtSelectionCount);
-            addImageSelectedToAccessibilityFocusedEvent(mImgThumbnail);
         }
 
-        private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView) {
+        private void addImageSelectedToAccessibilityFocusedEvent(ImageView imageView, PhotoPickerUiItem item) {
             AccessibilityUtils.addPopulateAccessibilityEventFocusedListener(imageView, event -> {
                 int position = getAdapterPosition();
                 if (isValidPosition(position)) {
                     String imageSelectedText = imageView.getContext()
                                                         .getString(R.string.photo_picker_image_selected);
 
-                    if (isItemSelected(position)) {
+                    if (item.isSelected()) {
                         if (!imageView.getContentDescription().toString().contains(imageSelectedText)) {
                             imageView.setContentDescription(
                                     imageView.getContentDescription() + " "
@@ -438,10 +183,75 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                 }
             });
         }
+
+        public void bind(PhotoPickerUiItem item, boolean animateSelection, boolean updateCount) {
+            // Only count is updated so do not redraw the whole item
+            if (updateCount) {
+                updateSelectionCountForPosition(item, mTxtSelectionCount);
+                AniUtils.startAnimation(mTxtSelectionCount, R.anim.pop);
+                return;
+            }
+            boolean isSelected = item.isSelected();
+            mTxtSelectionCount.setSelected(isSelected);
+            updateSelectionCountForPosition(item, mTxtSelectionCount);
+
+            mVideoOverlay.setVisibility(item.isVideo() ? View.VISIBLE : View.GONE);
+
+            if (!item.getShowOrderCounter()) {
+                mTxtSelectionCount.setBackgroundResource(R.drawable.photo_picker_circle_pressed);
+            }
+
+            if (mLoadThumbnails) {
+                mImageManager.load(mImgThumbnail, ImageType.PHOTO, item.getUri().toString(), ScaleType.FIT_CENTER);
+            } else {
+                mImageManager.cancelRequestAndClearImageView(mImgThumbnail);
+            }
+
+            addImageSelectedToAccessibilityFocusedEvent(mImgThumbnail, item);
+            mImgThumbnail.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (isValidPosition(position)) {
+                    item.getToggleAction().toggle();
+                    PhotoPickerUtils.announceSelectedImageForAccessibility(mImgThumbnail, item.isSelected());
+                }
+            });
+
+            mImgThumbnail.setOnLongClickListener(v -> {
+                showPreview(item);
+                return true;
+            });
+            ViewUtilsKt.redirectContextClickToLongPressListener(mImgThumbnail);
+
+            mVideoOverlay.setOnClickListener(v -> {
+                showPreview(item);
+            });
+
+            if (animateSelection) {
+                if (isSelected) {
+                    AniUtils.scale(mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, ANI_DURATION);
+                } else {
+                    AniUtils.scale(mImgThumbnail, SCALE_SELECTED, SCALE_NORMAL, ANI_DURATION);
+                }
+
+                if (item.getShowOrderCounter()) {
+                    AniUtils.startAnimation(mTxtSelectionCount, R.anim.pop);
+                } else if (isSelected) {
+                    AniUtils.fadeIn(mTxtSelectionCount, ANI_DURATION);
+                } else {
+                    AniUtils.fadeOut(mTxtSelectionCount, ANI_DURATION);
+                }
+            } else {
+                float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
+                if (mImgThumbnail.getScaleX() != scale) {
+                    mImgThumbnail.setScaleX(scale);
+                    mImgThumbnail.setScaleY(scale);
+                }
+                mTxtSelectionCount.setVisibility(item.getShowOrderCounter() || isSelected ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 
-    private void showPreview(int position) {
-        PhotoPickerItem item = getItemAtPosition(position);
+    private void showPreview(PhotoPickerUiItem item) {
         if (item != null) {
             trackOpenPreviewScreenEvent(item);
             MediaPreviewActivity.showPreview(
@@ -451,18 +261,16 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
     }
 
-    private void trackOpenPreviewScreenEvent(final PhotoPickerItem item) {
+    private void trackOpenPreviewScreenEvent(final PhotoPickerUiItem item) {
         if (item == null) {
             return;
         }
 
-        new Thread(new Runnable() {
-            public void run() {
-                Map<String, Object> properties =
-                        AnalyticsUtils.getMediaProperties(mContext, item.isVideo(), item.getUri(), null);
-                properties.put("is_video", item.isVideo());
-                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
-            }
+        new Thread(() -> {
+            Map<String, Object> properties =
+                    AnalyticsUtils.getMediaProperties(mContext, item.isVideo(), item.getUri(), null);
+            properties.put("is_video", item.isVideo());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
         }).start();
     }
 }
