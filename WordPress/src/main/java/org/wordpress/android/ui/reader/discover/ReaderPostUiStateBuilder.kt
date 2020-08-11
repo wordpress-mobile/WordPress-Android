@@ -13,6 +13,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -38,7 +39,7 @@ import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
 
-private const val READER_INTERESTS_LIST_SIZE = 5
+private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -107,21 +108,24 @@ class ReaderPostUiStateBuilder @Inject constructor(
         interests: ReaderTagList,
         onClicked: ((String) -> Unit)
     ): ReaderInterestCardUiState {
-        val listSize = if (interests.size < READER_INTERESTS_LIST_SIZE) {
+        val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
             interests.size
         } else {
-            READER_INTERESTS_LIST_SIZE
+            READER_INTEREST_LIST_SIZE_LIMIT
         }
         val lastIndex = listSize - 1
 
         return ReaderInterestCardUiState(interests.take(listSize).map { interest ->
             ReaderInterestUiState(
                     interest.tagTitle,
-                    interests.indexOf(interest) != lastIndex,
+                    buildIsDividerVisible(interest, interests, lastIndex),
                     onClicked
             )
         })
     }
+
+    private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
+            readerTagList.indexOf(readerTag) != lastIndex
 
     private fun buildOnPostHeaderViewClicked(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
