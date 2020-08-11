@@ -12,6 +12,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -28,6 +30,7 @@ import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -40,7 +43,7 @@ import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PE
 
 public class CommentsDetailActivity extends LocaleAwareActivity
         implements CommentAdapter.OnLoadMoreListener,
-        CommentActions.OnCommentActionListener {
+        CommentActions.OnCommentActionListener, ScrollableViewInitializedListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
@@ -48,6 +51,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
 
     private WPViewPager mViewPager;
+    private AppBarLayout mAppBarLayout;
     private ProgressBar mProgressBar;
 
     private long mCommentId;
@@ -105,6 +109,7 @@ public class CommentsDetailActivity extends LocaleAwareActivity
                 new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         mProgressBar = findViewById(R.id.progress_loading);
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         // Asynchronously loads comments and build the adapter
         loadDataInViewPager();
@@ -259,5 +264,10 @@ public class CommentsDetailActivity extends LocaleAwareActivity
         resultIntent.putExtra(CommentsActivity.COMMENT_MODERATE_STATUS_EXTRA, newStatus.toString());
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    @Override
+    public void onScrollableViewInitialized(int containerId) {
+        mAppBarLayout.setLiftOnScrollTargetViewId(containerId);
     }
 }

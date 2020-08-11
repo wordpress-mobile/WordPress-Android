@@ -20,7 +20,7 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
                                  CommentList commentList,
                                  SiteModel site,
                                  CommentAdapter.OnLoadMoreListener onLoadMoreListener) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.mSite = site;
         this.mOnLoadMoreListener = onLoadMoreListener;
         this.mCommentList = commentList;
