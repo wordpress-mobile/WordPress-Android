@@ -39,7 +39,6 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
 
 private const val READER_INTERESTS_LIST_SIZE = 5
-private const val READER_INTERESTS_LAST_INDEX = READER_INTERESTS_LIST_SIZE - 1
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -104,13 +103,25 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
-    fun mapTagListToReaderInterestUiState(interests: ReaderTagList, onClicked: ((String) -> Unit)) =
-            ReaderInterestCardUiState(interests.take(READER_INTERESTS_LIST_SIZE).map { interest ->
-                ReaderInterestUiState(
-                        interest.tagTitle,
-                        interests.indexOf(interest) != READER_INTERESTS_LAST_INDEX, onClicked
-                )
-            })
+    fun mapTagListToReaderInterestUiState(
+        interests: ReaderTagList,
+        onClicked: ((String) -> Unit)
+    ): ReaderInterestCardUiState {
+        val listSize = if (interests.size < READER_INTERESTS_LIST_SIZE) {
+            interests.size
+        } else {
+            READER_INTERESTS_LIST_SIZE
+        }
+        val lastIndex = listSize - 1
+
+        return ReaderInterestCardUiState(interests.take(listSize).map { interest ->
+            ReaderInterestUiState(
+                    interest.tagTitle,
+                    interests.indexOf(interest) != lastIndex,
+                    onClicked
+            )
+        })
+    }
 
     private fun buildOnPostHeaderViewClicked(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
