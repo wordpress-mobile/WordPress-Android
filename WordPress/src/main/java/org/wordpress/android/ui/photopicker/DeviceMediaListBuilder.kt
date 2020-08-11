@@ -12,6 +12,7 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.SqlUtils
+import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -63,7 +64,7 @@ class DeviceMediaListBuilder
                 val id = cursor.getLong(idIndex)
                 val item = PhotoPickerItem(
                         id,
-                        Uri.withAppendedPath(baseUri, "" + id),
+                        UriWrapper(Uri.withAppendedPath(baseUri, "" + id)),
                         isVideo
                 )
                 result.add(item)

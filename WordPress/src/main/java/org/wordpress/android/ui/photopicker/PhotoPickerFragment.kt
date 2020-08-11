@@ -43,6 +43,7 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
+import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO
@@ -209,7 +210,7 @@ class PhotoPickerFragment : Fragment() {
                     .setOnClickListener {
                         val inputData = WPMediaUtils.createListOfEditImageInputData(
                                 requireContext(),
-                                viewModel.selectedURIs()
+                                viewModel.selectedURIs().map { it.uri }
                         )
                         ActivityLauncher.openImageEditor(activity, inputData)
                     }
@@ -232,7 +233,6 @@ class PhotoPickerFragment : Fragment() {
             if (it != null) {
                 if (recycler.adapter == null) {
                     recycler.adapter = PhotoPickerAdapter(
-                            activity,
                             imageManager
                     )
                 }
@@ -254,6 +254,16 @@ class PhotoPickerFragment : Fragment() {
                     }
                     updateActionModeTitle()
                 }
+            }
+        })
+
+        viewModel.navigateToPreview.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { uri ->
+                MediaPreviewActivity.showPreview(
+                        requireContext(),
+                        null,
+                        uri.toString()
+                )
             }
         })
 
@@ -422,7 +432,6 @@ class PhotoPickerFragment : Fragment() {
         get() {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
-                        activity,
                         imageManager
                 )
             }
@@ -518,7 +527,7 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private fun performInsertAction() {
-        val uriList = viewModel.selectedURIs()
+        val uriList = viewModel.selectedURIs().map { it.uri }
         listener!!.onPhotoPickerMediaChosen(uriList)
         trackAddRecentMediaEvent(uriList)
     }

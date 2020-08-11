@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.photopicker
 
-import android.net.Uri
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -9,25 +12,43 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.test
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel
+import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 
 class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
+    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var uriWrapper1: UriWrapper
+    @Mock lateinit var uriWrapper2: UriWrapper
     private lateinit var viewModel: PhotoPickerViewModel
     private var uiModels = mutableListOf<PhotoPickerUiModel>()
+    private var navigateEvents = mutableListOf<Event<UriWrapper>>()
     private val singleSelectBrowserType = GUTENBERG_SINGLE_IMAGE_PICKER
     private val multiSelectBrowserType = MediaBrowserType.GUTENBERG_IMAGE_PICKER
-    private val firstItem = PhotoPickerItem(1, Uri.EMPTY, false)
-    private val secondItem = PhotoPickerItem(2, Uri.EMPTY, false)
+    private lateinit var firstItem: PhotoPickerItem
+    private lateinit var secondItem: PhotoPickerItem
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = PhotoPickerViewModel(TEST_DISPATCHER, TEST_DISPATCHER, deviceMediaListBuilder)
+        viewModel = PhotoPickerViewModel(
+                TEST_DISPATCHER,
+                TEST_DISPATCHER,
+                deviceMediaListBuilder,
+                analyticsUtilsWrapper,
+                analyticsTrackerWrapper
+        )
         uiModels.clear()
+        firstItem = PhotoPickerItem(1, uriWrapper1, false)
+        secondItem = PhotoPickerItem(2, uriWrapper2, false)
     }
 
     @Test
@@ -142,8 +163,33 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `navigates to preview on item click`() = test {
+        setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
+        whenever(
+                analyticsUtilsWrapper.getMediaProperties(
+                        eq(firstItem.isVideo),
+                        eq(firstItem.uri),
+                        isNull()
+                )
+        ).thenReturn(
+                mutableMapOf()
+        )
+
+        viewModel.refreshData(singleSelectBrowserType, false)
+
+        assertThat(navigateEvents).isEmpty()
+        clickItem(0)
+        assertThat(navigateEvents).isNotEmpty
+        verify(analyticsTrackerWrapper).track(eq(MEDIA_PICKER_PREVIEW_OPENED), any<MutableMap<String, Any>>())
+    }
+
     private fun selectItem(position: Int) {
         uiModels.last().items[position].toggleAction.toggle()
+    }
+
+    private fun clickItem(position: Int) {
+        uiModels.last().items[position].clickAction.click()
     }
 
     private fun assertUiModel(
@@ -168,6 +214,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
             }
         }
         assertThat(viewModel.numSelected()).isEqualTo(selectedItems.size)
+        assertThat(viewModel.selectedURIs()).isEqualTo(selectedItems.map { it.uri })
     }
 
     private suspend fun setupViewModel(
@@ -178,6 +225,11 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         viewModel.data.observeForever {
             if (it != null) {
                 uiModels.add(it)
+            }
+        }
+        viewModel.navigateToPreview.observeForever {
+            if (it != null) {
+                navigateEvents.add(it)
             }
         }
         viewModel.start(listOf(), browserType)
