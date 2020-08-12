@@ -213,6 +213,10 @@ public class WPMediaUtils {
                 }
             case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
                 return context.getString(R.string.error_media_quota_exceeded);
+            case XMLRPC_UNAUTHORIZED:
+                return context.getString(R.string.error_media_xmlrpc_not_allowed);
+            case XMLRPC_INTERNAL_SERVER_ERROR:
+                return context.getString(R.string.error_media_xmlrcp_server_error);
         }
         return null;
     }
