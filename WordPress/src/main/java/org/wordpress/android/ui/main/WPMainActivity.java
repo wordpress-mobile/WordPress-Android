@@ -493,7 +493,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
             mViewModel.onFabLongPressed(mSelectedSite);
 
-            int messageId = hasFullAccessToContent()
+            int messageId = SiteUtils.hasFullAccessToContent(getSelectedSite())
                     ? R.string.create_post_page_fab_tooltip
                     : R.string.create_post_page_fab_tooltip_contributors;
 
@@ -558,6 +558,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
+        // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
+        // initialized with the most restrictive rights case. This is OK and will be frequently checked
+        // to normalize the UI state whenever mSelectedSite changes.
+        // It also means that the ViewModel must accept a nullable SiteModel.
         mViewModel.start(
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
                 mSelectedSite);
@@ -1524,14 +1529,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mQuickStartSnackbar.dismiss();
             mQuickStartSnackbar = null;
         }
-    }
-
-    // The first time this is called in onCreate -> initViewModel we still haven't initialized mSelectedSite,
-    // which hasFullAccessToContent depends on, and as such the state will be initialized with the most restrictive
-    // rights case (that is, will assume hasFullAccessToContent is false). This is OK and will be frequently checked
-    // to normalize the UI state whenever mSelectedSite changes.
-    private boolean hasFullAccessToContent() {
-        return SiteUtils.hasFullAccessToContent(getSelectedSite());
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because
