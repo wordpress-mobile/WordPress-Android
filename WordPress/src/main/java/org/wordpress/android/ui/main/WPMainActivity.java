@@ -484,14 +484,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getMySiteFragment().requestNextStepOfActiveQuickStartTask(false);
                 }
             }
-            mViewModel.onFabClicked(hasFullAccessToContent(), shouldShowPublishPostQuickStartTask);
+            mViewModel.onFabClicked(mSelectedSite, shouldShowPublishPostQuickStartTask);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed(hasFullAccessToContent());
+            mViewModel.onFabLongPressed(mSelectedSite);
 
             int messageId = hasFullAccessToContent()
                     ? R.string.create_post_page_fab_tooltip
@@ -504,7 +504,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped(hasFullAccessToContent());
+            mViewModel.onTooltipTapped(mSelectedSite);
         });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
@@ -560,8 +560,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.start(
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
+                mSelectedSite);
 
         mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
@@ -810,7 +809,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(hasFullAccessToContent());
+        mViewModel.onResume(mSelectedSite);
 
         mFirstResume = false;
     }
@@ -876,8 +875,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onPageChanged(
                 mSiteStore.hasSite() && pageType == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
+                mSelectedSite);
     }
 
     // user tapped the new post button in the bottom navbar
