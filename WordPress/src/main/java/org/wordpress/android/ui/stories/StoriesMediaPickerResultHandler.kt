@@ -69,8 +69,7 @@ class StoriesMediaPickerResultHandler @Inject constructor(
                 }
 
                 launch {
-                    val optimizedResult
-                            = fetchAndOptimizeLocalMediaIfNeededUseCase.copyAndOptimizeMedia(
+                    val optimizedResult = fetchAndOptimizeLocalMediaIfNeededUseCase.copyAndOptimizeMedia(
                             convertStringArrayIntoUrisList(mediaUriStringsArray),
                             requireNotNull(selectedSite),
                             false
