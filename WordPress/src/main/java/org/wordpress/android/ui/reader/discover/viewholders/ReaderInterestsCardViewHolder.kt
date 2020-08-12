@@ -11,17 +11,19 @@ import org.wordpress.android.ui.reader.discover.ReaderInterestAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 
 class ReaderInterestsCardViewHolder(
-    private val uiHelpers: UiHelpers,
+    uiHelpers: UiHelpers,
     parentView: ViewGroup
 ) : ReaderViewHolder(parentView, R.layout.reader_interest_card) {
-    override fun onBind(uiState: ReaderCardUiState) {
-        uiState as ReaderInterestsCardUiState
-
+    init {
         if (interests_list.adapter == null) {
             interests_list.layoutManager = LinearLayoutManager(interests_list.context, RecyclerView.VERTICAL, false)
             val readerInterestAdapter = ReaderInterestAdapter(uiHelpers)
             interests_list.adapter = readerInterestAdapter
         }
+    }
+
+    override fun onBind(uiState: ReaderCardUiState) {
+        uiState as ReaderInterestsCardUiState
         (interests_list.adapter as ReaderInterestAdapter).update(uiState.interest)
     }
 }
