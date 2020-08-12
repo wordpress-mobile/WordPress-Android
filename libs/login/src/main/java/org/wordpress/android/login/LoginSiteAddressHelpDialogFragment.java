@@ -58,6 +58,7 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
         alert.setView(getActivity().getLayoutInflater().inflate(R.layout.login_alert_site_address_help, null));
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                mAnalyticsListener.trackDismissDialog();
                 dialog.dismiss();
             }
         });
