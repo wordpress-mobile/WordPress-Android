@@ -1,9 +1,9 @@
 GIT
-  remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 841e167dffc0f45fc36a513f8ba68a37689141e8
-  tag: 0.9.11
+  remote: https://github.com/AliSoftware/release-toolkit
+  revision: bce10ca27946ccd93bbd6a253e31982147e6338b
+  branch: fix/rmagick-deprecated-constant
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.9.11)
+    fastlane-plugin-wpmreleasetoolkit (0.9.12)
       activesupport (~> 4)
       chroma (= 0.2.0)
       diffy (~> 3.3)
@@ -51,10 +51,10 @@ GEM
     colored2 (3.1.2)
     commander-fastlane (4.4.6)
       highline (~> 1.7.2)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     declarative (0.0.10)
     declarative-option (0.1.0)
-    diffy (3.3.0)
+    diffy (3.4.0)
     digest-crc (0.5.1)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -165,7 +165,7 @@ GEM
     octokit (4.18.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
-    oj (3.10.7)
+    oj (3.10.8)
     optimist (3.0.1)
     options (2.3.2)
     os (1.1.0)
