@@ -17,8 +17,8 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
@@ -107,7 +107,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     fun mapTagListToReaderInterestUiState(
         interests: ReaderTagList,
         onClicked: ((String) -> Unit)
-    ): ReaderInterestCardUiState {
+    ): ReaderInterestsCardUiState {
         val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
             interests.size
         } else {
@@ -115,7 +115,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
         val lastIndex = listSize - 1
 
-        return ReaderInterestCardUiState(interests.take(listSize).map { interest ->
+        return ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
             ReaderInterestUiState(
                     interest.tagTitle,
                     buildIsDividerVisible(interest, interests, lastIndex),
