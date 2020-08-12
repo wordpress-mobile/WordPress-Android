@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestCardViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -26,7 +26,7 @@ class ReaderDiscoverAdapter(
                     imageManager,
                     parent
             )
-            interestViewType -> ReaderInterestCardViewHolder(uiHelpers, parent)
+            interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }

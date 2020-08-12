@@ -10,7 +10,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderInterestAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 
-class ReaderInterestCardViewHolder(
+class ReaderInterestsCardViewHolder(
     private val uiHelpers: UiHelpers,
     parentView: ViewGroup
 ) : ReaderViewHolder(parentView, R.layout.reader_interest_card) {
