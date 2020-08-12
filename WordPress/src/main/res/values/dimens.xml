@@ -139,7 +139,6 @@
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
-    <dimen name="reader_card_avatar_margin_end">18dp</dimen>
     <dimen name="reader_card_elevation">0dp</dimen>
     <dimen name="reader_site_header_avatar_margin_end">20dp</dimen>
 
@@ -211,7 +210,6 @@
     <dimen name="reader_discover_layout_extra_padding">16dp</dimen>
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
-    <dimen name="reader_follow_button_extra_padding">32dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
     <dimen name="reader_chip_height">44dp</dimen>
