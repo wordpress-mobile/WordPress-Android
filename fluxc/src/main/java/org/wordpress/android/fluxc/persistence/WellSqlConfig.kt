@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 115
+        return 117
     }
 
     override fun getDbName(): String {
@@ -1264,6 +1264,16 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
                 }
                 114 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD GROUPED_PRODUCT_IDS TEXT")
+                }
+                115 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE EncryptedLogModel (UUID TEXT,FILE_PATH TEXT,DATE_CREATED TEXT," +
+                                    "UPLOAD_STATE_DB_VALUE INTEGER,FAILED_COUNT INTEGER," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT,UNIQUE(UUID) ON CONFLICT REPLACE)"
+                    )
+                }
+                116 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCTopPerformerProductModel")
                     db.execSQL("CREATE TABLE WCTopPerformerProductModel (" +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
