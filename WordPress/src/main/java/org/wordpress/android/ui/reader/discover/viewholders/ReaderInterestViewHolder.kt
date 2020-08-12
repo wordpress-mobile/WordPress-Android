@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.reader_interest_item.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.utils.UiHelpers
 
 class ReaderInterestViewHolder(

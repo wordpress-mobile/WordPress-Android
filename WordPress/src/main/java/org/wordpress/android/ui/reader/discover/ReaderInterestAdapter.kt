@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.Callback
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 

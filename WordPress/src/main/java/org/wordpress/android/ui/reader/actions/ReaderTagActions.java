@@ -12,8 +12,10 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -75,20 +77,21 @@ public class ReaderTagActions {
     }
 
     public static boolean addTag(@NotNull final ReaderTag tag,
-                                 final ReaderActions.ActionListener actionListener) {
+                                 final ReaderActions.ActionListener actionListener,
+                                 final boolean isLoggedIn) {
         ReaderTagList tags = new ReaderTagList();
         tags.add(tag);
-        return addTags(tags, actionListener);
-    }
-
-    public static boolean addTags(@NotNull final List<ReaderTag> tags) {
-        return addTags(tags, null);
+        return addTags(tags, actionListener, isLoggedIn);
     }
 
     public static boolean addTags(@NotNull final List<ReaderTag> tags,
-                                 final ReaderActions.ActionListener actionListener) {
-        ReaderTagList existingFollowedTags = ReaderTagTable.getFollowedTags();
+                                  final boolean isLoggedIn) {
+        return addTags(tags, null, isLoggedIn);
+    }
 
+    public static boolean addTags(@NotNull final List<ReaderTag> tags,
+                                  final ReaderActions.ActionListener actionListener,
+                                  final boolean isLoggedIn) {
         ReaderTagList newTags = new ReaderTagList();
         for (ReaderTag tag : tags) {
             final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
@@ -102,8 +105,25 @@ public class ReaderTagActions {
                     ReaderTagType.FOLLOWED);
             newTags.add(newTag);
         }
+        if (!isLoggedIn && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+            saveTagsLocallyOnly(newTags);
+        } else {
+            saveTagsLocallyAndRemotely(actionListener, newTags);
+        }
 
-        com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
+        return true;
+    }
+
+    private static void saveTagsLocallyOnly(ReaderTagList newTags) {
+        ReaderTagTable.addOrUpdateTags(newTags);
+        EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+    }
+
+    private static void saveTagsLocallyAndRemotely(ActionListener actionListener,
+                                                   ReaderTagList newTags) {
+        ReaderTagList existingFollowedTags = ReaderTagTable.getFollowedTags();
+
+        RestRequest.Listener listener = jsonObject -> {
             AppLog.i(T.READER, "add tag succeeded");
             // the response will contain the list of the user's followed tags
             ReaderTagList followedTags = parseFollowedTags(jsonObject);
@@ -147,8 +167,6 @@ public class ReaderTagActions {
         params.put("tags", newTagSlugs);
 
         WordPress.getRestClientUtilsV1_2().post(path, params, null, listener, errorListener);
-
-        return true;
     }
 
     /*

@@ -28,9 +28,11 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -54,6 +56,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, followed blogs, and recommended blogs
@@ -76,9 +80,12 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
+    @Inject AccountStore mAccountStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
@@ -355,7 +362,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             }
         };
 
-        ReaderTagActions.addTag(tag, actionListener);
+        ReaderTagActions.addTag(tag, actionListener, mAccountStore.hasAccessToken());
     }
 
     /*

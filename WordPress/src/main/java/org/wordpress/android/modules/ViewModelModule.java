@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
@@ -52,6 +53,7 @@ import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewMode
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -288,6 +290,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(ModalLayoutPickerViewModel.class)
+    abstract ViewModel mlpViewModel(ModalLayoutPickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
 
@@ -365,6 +372,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StoryComposerViewModel.class)
     abstract ViewModel storyComposerViewModel(StoryComposerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PhotoPickerViewModel.class)
+    abstract ViewModel photoPickerViewModel(PhotoPickerViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

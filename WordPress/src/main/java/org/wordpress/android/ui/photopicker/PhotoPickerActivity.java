@@ -273,7 +273,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         finish();
     }
 
-    private void doMediaUrisSelected(@NonNull List<Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
+    private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             Uri mediaUri = mediaUris.get(0);
@@ -328,23 +328,25 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
         if (mediaIds != null && mediaIds.size() > 0) {
-            if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
-                // if user chose a featured image, track image picked event
-                mFeaturedImageHelper.trackFeaturedImageEvent(
-                        FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                        mLocalPostId
-                );
-
+            if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
+                // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
                 Intent data = new Intent()
-                        .putExtra(EXTRA_MEDIA_ID, mediaIds.get(0))
+                        .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
+                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
                         .putExtra(EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
             } else {
-                // TODO WPSTORIES add TRACKS (see how it's tracked above? maybe do along the same lines)
+                // if user chose a featured image, track image picked event
+                if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+                    mFeaturedImageHelper.trackFeaturedImageEvent(
+                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                            mLocalPostId
+                    );
+                }
+
                 Intent data = new Intent()
-                        .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
-                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
+                        .putExtra(EXTRA_MEDIA_ID, mediaIds.get(0))
                         .putExtra(EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
@@ -355,7 +357,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NonNull List<? extends Uri> uriList) {
         if (uriList.size() > 0) {
             doMediaUrisSelected(uriList, PhotoPickerMediaSource.APP_PICKER);
         }
@@ -388,7 +390,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private String[] convertUrisListToStringArray(List<Uri> uris) {
+    private String[] convertUrisListToStringArray(List<? extends Uri> uris) {
         String[] stringUris = new String[uris.size()];
         for (int i = 0; i < uris.size(); i++) {
             stringUris[i] = uris.get(i).toString();

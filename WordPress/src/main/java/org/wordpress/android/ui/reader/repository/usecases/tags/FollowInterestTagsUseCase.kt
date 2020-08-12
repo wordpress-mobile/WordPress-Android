@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.repository.usecases.tags
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderTagActions
@@ -18,7 +19,8 @@ import kotlin.coroutines.suspendCoroutine
 
 class FollowInterestTagsUseCase @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val accountStore: AccountStore
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
@@ -26,14 +28,15 @@ class FollowInterestTagsUseCase @Inject constructor(
         if (continuation != null) {
             throw IllegalStateException("Follow interest tags already in progress.")
         }
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        val isLoggedIn = accountStore.hasAccessToken()
+        if (isLoggedIn && !networkUtilsWrapper.isNetworkAvailable()) {
             return NetworkUnavailable
         }
         return suspendCoroutine { cont ->
             continuation = cont
             eventBusWrapper.register(this)
 
-            ReaderTagActions.addTags(tags)
+            ReaderTagActions.addTags(tags, isLoggedIn)
         }
     }
 

@@ -7,6 +7,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.util.StringUtils;
@@ -28,9 +29,6 @@ public class ReaderEvents {
         public boolean didSucceed() {
             return mDidSucceed;
         }
-    }
-
-    public static class RecommendedTagsChanged {
     }
 
     public static class TagAdded {
@@ -70,14 +68,14 @@ public class ReaderEvents {
     }
 
     public static class FetchDiscoverCardsEnded {
-        private final boolean mDidSucceed;
+        final UpdateResult mResult;
 
-        public FetchDiscoverCardsEnded(boolean didSucceed) {
-            mDidSucceed = didSucceed;
+        public FetchDiscoverCardsEnded(UpdateResult result) {
+            this.mResult = result;
         }
 
-        public boolean didSucceed() {
-            return mDidSucceed;
+        public ReaderActions.UpdateResult getResult() {
+            return mResult;
         }
     }
 

@@ -17,8 +17,6 @@
         <item name="colorControlActivated">?attr/colorPrimary</item>
         <item name="colorAccent">?attr/colorPrimary</item>
 
-        <item name="wpColorText">@android:color/white</item>
-        <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorError">@color/error_50</item>
         <item name="wpColorSuccess">@color/green_30</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
@@ -26,6 +24,7 @@
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
+        <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>

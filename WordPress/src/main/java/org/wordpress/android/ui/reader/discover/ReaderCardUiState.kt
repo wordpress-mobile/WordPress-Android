@@ -38,7 +38,7 @@ sealed class ReaderCardUiState {
         val moreMenuItems: List<SecondaryAction>,
         val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
-        val onItemRendered: (Long, Long) -> Unit,
+        val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (Long, Long, View) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {
@@ -63,7 +63,7 @@ sealed class ReaderCardUiState {
         )
     }
 
-    data class ReaderInterestCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
+    data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
         data class ReaderInterestUiState(
             val interest: String,
             val isDividerVisible: Boolean,

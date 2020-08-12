@@ -4,8 +4,6 @@
     <attr name="longClickHint" format="string" />
 
     <!-- Semantic colors -->
-    <attr name="wpColorText" format="reference|color" />
-    <attr name="wpColorTextSubtle" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
     <attr name="wpColorSuccess" format="reference|color" />
     <attr name="wpColorAppBar" format="reference|color" />
@@ -14,6 +12,8 @@
     <attr name="wpColorWarningDark" format="reference|color" />
     <attr name="wpColorWarningLight" format="reference|color" />
     <attr name="wpColorActionModeIcon" format="reference|color" />
+
+    <attr name="wpColorSurfaceSecondary" format="reference|color" />
 
     <!-- Gutenberg colors-->
     <attr name="colorGutenbergDivider" format="reference|color" />

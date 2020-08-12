@@ -14,7 +14,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/interests_list"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -22,14 +22,9 @@
             app:layout_constraintTop_toBottomOf="@id/interests_you_may_like_header" />
 
         <org.wordpress.android.widgets.WPTextView
+            style="@style/ReaderTextView.Interests.Header"
             android:id="@+id/interests_you_may_like_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:layout_margin="@dimen/margin_extra_large"
             android:text="@string/reader_discover_interests_header"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textColor="?attr/colorOnSurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
