@@ -120,7 +120,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.getPromptDetailsForTask
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isTargetingBottomNavBar
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
-import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler.Companion.handleMediaPickerResultForStories
+import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
@@ -189,6 +189,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
+    @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -742,7 +743,7 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!handleMediaPickerResultForStories(data, activity, selectedSite)) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
                     if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)

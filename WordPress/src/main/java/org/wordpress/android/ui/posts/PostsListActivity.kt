@@ -90,6 +90,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
+    @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
 
     private lateinit var site: SiteModel
 
@@ -460,7 +461,7 @@ class PostsListActivity : LocaleAwareActivity(),
         } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
             viewModel.handleRemotePreviewClosing()
         } else if (requestCode == RequestCodes.PHOTO_PICKER && resultCode == Activity.RESULT_OK && data != null) {
-            StoriesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
+            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
         }
     }
 
