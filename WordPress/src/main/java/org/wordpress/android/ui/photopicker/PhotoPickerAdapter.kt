@@ -1,15 +1,17 @@
 package org.wordpress.android.ui.photopicker
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.R
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
+import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.PhotoItem
+import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type
+import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.VideoItem
 import org.wordpress.android.util.image.ImageManager
 
 class PhotoPickerAdapter internal constructor(private val imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
+    private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
     private var mediaList = listOf<PhotoPickerUiItem>()
 
     init {
@@ -33,9 +35,15 @@ class PhotoPickerAdapter internal constructor(private val imageManager: ImageMan
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailViewHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.photo_picker_thumbnail, parent, false)
-        return ThumbnailViewHolder(view, imageManager)
+        return when(viewType) {
+            Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils)
+            Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils)
+            else -> throw IllegalArgumentException("Unexpected view type")
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return mediaList[position].type.ordinal
     }
 
     override fun onBindViewHolder(
@@ -54,10 +62,13 @@ class PhotoPickerAdapter internal constructor(private val imageManager: ImageMan
                 updateCount = true
             }
         }
-        holder.bind(item, animateSelection, updateCount)
+        when (item) {
+            is PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(item, animateSelection, updateCount)
+            is VideoItem -> (holder as VideoThumbnailViewHolder).bind(item, animateSelection, updateCount)
+        }
     }
 
     override fun onBindViewHolder(holder: ThumbnailViewHolder, position: Int) {
-        holder.bind(mediaList[position], animateSelection = false, updateCount = false)
+        onBindViewHolder(holder, position, listOf())
     }
 }
