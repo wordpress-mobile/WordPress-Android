@@ -12,7 +12,6 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.util.AppLog.T.READER
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,19 +22,12 @@ class GetDiscoverCardsUseCase @Inject constructor(
     private val readerDiscoverCardsTableWrapper: ReaderDiscoverCardsTableWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val appLogWrapper: AppLogWrapper,
-    private val readerTagRepository: ReaderTagRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend fun get(): ReaderDiscoverCards =
             withContext(ioDispatcher) {
                 val cardJsonList = readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()
                 val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
-
-                // TODO jd-alexander remove mocked interests when the real implementation below is working.
-                val mockedInterests = readerTagRepository.getUserTags(false)
-                if (mockedInterests != null) {
-                    cards.add(InterestsYouMayLikeCard(mockedInterests))
-                }
 
                 if (cardJsonList.isNotEmpty()) {
                     val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(
