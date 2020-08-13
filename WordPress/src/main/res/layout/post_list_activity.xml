@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height"
             android:background="@drawable/tab_layout_background"
+            android:paddingBottom="@dimen/bottom_tabs_divider_size"
             android:duplicateParentState="true">
 
             <!--Padding start and end is set programmatically based on if the fading edge is visible-->
@@ -38,9 +39,10 @@
                 app:tabGravity="fill"
                 app:tabMode="scrollable"
                 tools:paddingEnd="0dp"
+                android:layout_marginBottom="0dp"
                 tools:paddingStart="@dimen/posts_list_tab_layout_fading_edge_width" />
 
-            <View
+            <org.wordpress.android.widgets.AppBarFadingEdgeView
                 android:id="@+id/post_list_tab_layout_fading_edge"
                 android:layout_width="@dimen/posts_list_tab_layout_fading_edge_width"
                 android:layout_height="match_parent"

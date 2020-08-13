@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.posts
 
-import android.R.color
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.GradientDrawable.Orientation
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
+import android.util.StateSet
 import android.view.HapticFeedbackConstants
 import android.view.Menu
 import android.view.MenuItem
@@ -190,6 +191,8 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun setupContent() {
         authorSelection = findViewById(R.id.post_list_author_selection)
+        tabLayoutFadingEdge = findViewById(R.id.post_list_tab_layout_fading_edge)
+
         authorSelectionAdapter = AuthorSelectionAdapter(this)
         authorSelection.adapter = authorSelectionAdapter
 
@@ -332,7 +335,8 @@ class PostsListActivity : LocaleAwareActivity(),
                     this,
                     progressDialog,
                     it.progressDialogUiState,
-                    uiHelpers)
+                    uiHelpers
+            )
         })
         viewModel.dialogAction.observe(this, Observer {
             it?.show(this, supportFragmentManager, uiHelpers)
@@ -390,14 +394,14 @@ class PostsListActivity : LocaleAwareActivity(),
             snackbarSequencer.enqueue(
                     SnackbarItem(
                             SnackbarItem.Info(
-                                view = parent,
-                                textRes = UiStringRes(holder.messageRes),
-                                duration = Snackbar.LENGTH_LONG
+                                    view = parent,
+                                    textRes = UiStringRes(holder.messageRes),
+                                    duration = Snackbar.LENGTH_LONG
                             ),
                             holder.buttonTitleRes?.let {
                                 SnackbarItem.Action(
-                                    textRes = UiStringRes(holder.buttonTitleRes),
-                                    clickListener = OnClickListener { holder.buttonAction() }
+                                        textRes = UiStringRes(holder.buttonTitleRes),
+                                        clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
                             dismissCallback = { _, _ -> holder.onDismissAction() }

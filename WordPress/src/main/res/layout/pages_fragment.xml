@@ -54,22 +54,24 @@
                 android:background="@drawable/tab_layout_background"
                 android:id="@+id/tabContainer"
                 android:layout_width="match_parent"
+                android:paddingBottom="@dimen/bottom_tabs_divider_size"
                 android:layout_height="@dimen/tab_height">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
-                    android:background="@null"
                     android:layout_height="match_parent"
                     android:layout_alignStart="@+id/pages_tab_layout_fading_edge"
                     android:layout_gravity="start"
+                    android:layout_marginBottom="0dp"
+                    android:background="@null"
                     android:clipToPadding="false"
                     app:tabGravity="fill"
                     app:tabMode="scrollable"
                     tools:paddingEnd="0dp"
                     tools:paddingStart="@dimen/page_list_tab_layout_fading_edge_width" />
 
-                <View
+                <org.wordpress.android.widgets.AppBarFadingEdgeView
                     android:id="@+id/pages_tab_layout_fading_edge"
                     android:layout_width="@dimen/page_list_tab_layout_fading_edge_width"
                     android:layout_height="match_parent"
