@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/insightsManagementScrollView"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/insightCards"
-        style="@style/StatsInsightManagementList"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:nestedScrollingEnabled="false"
-        android:paddingBottom="@dimen/margin_large"
-        android:scrollbars="none"
-        android:translationZ="1dp"
-        tools:listitem="@layout/insights_management_list_item" />
-
-</ScrollView>
+    android:id="@+id/insightCards"
+    style="@style/StatsInsightManagementList"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/margin_large"
+    android:layout_marginStart="@dimen/margin_large"
+    android:paddingBottom="@dimen/margin_large"
+    android:scrollbars="none"
+    android:translationZ="1dp"
+    tools:listitem="@layout/insights_management_list_item" />
