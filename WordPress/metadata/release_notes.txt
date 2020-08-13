@@ -1,4 +1,4 @@
-* [***] Block Editor: New feature for WordPress.com and Jetpack sites: auto-complete username mentions. An auto-complete popup will show up when the user types the @ character in the block editor.
-* [***] Enables search on post list for self-hosted sites.
-* [***] Enable upload of audio files and documents in the media library
+* Block Editor: Username @mentions now auto-complete in the Block Editor on WordPress.com and Jetpack sites. Type the “@” character to see a username popup. Edit media in the Cover block. A Heading block bug fix removes an unwanted white shadow on headings with a link and string formatting in dark mode.
+* Search for self-hosted sites on the post list.
+* Upload audio and document files to the media library.
 
