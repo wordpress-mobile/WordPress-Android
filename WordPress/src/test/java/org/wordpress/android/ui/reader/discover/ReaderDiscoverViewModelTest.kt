@@ -19,9 +19,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -80,6 +85,9 @@ class ReaderDiscoverViewModelTest {
             )
         }
         whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
+        whenever(uiStateBuilder.mapTagListToReaderInterestUiState(anyOrNull(), anyOrNull())).thenReturn(
+                createReaderInterestsCardUiState(createReaderTagList())
+        )
     }
 
     @Test
@@ -152,9 +160,16 @@ class ReaderDiscoverViewModelTest {
         fakeDiscoverFeed.value = createDummyReaderCardsList()
     }
 
+    // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
-        return ReaderDiscoverCards((1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList())
+        return ReaderDiscoverCards(
+                createDummyReaderPostCardList(numberOfItems - 1)
+                        .plus(createInterestsYouMayLikeCardList())
+        )
     }
+
+    private fun createDummyReaderPostCardList(numberOfItems: Long = NUMBER_OF_ITEMS) =
+            (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
         this.postId = id
@@ -197,4 +212,24 @@ class ReaderDiscoverViewModelTest {
                 moreMenuItems = mock()
         )
     }
+
+    private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
+            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
+
+    private fun createReaderTagList(numOfTags: Int = 1) = ReaderTagList().apply {
+        for (x in 0 until numOfTags) {
+            add(createReaderTag())
+        }
+    }
+
+    private fun createReaderTag() = ReaderTag(
+            "",
+            "",
+            "",
+            null,
+            mock(),
+            false
+    )
+
+    private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
 }
