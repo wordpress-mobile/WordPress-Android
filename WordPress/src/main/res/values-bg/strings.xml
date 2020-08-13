@@ -89,7 +89,6 @@ Language: bg
     <string name="confirm_delete_media_video">Да се изтрие ли това видео?</string>
     <string name="confirm_delete_media_image">Да се изтрие ли това изображение?</string>
     <string name="media_title_document_details">Детайли на документа</string>
-    <string name="connect_site">Свързване на сайт</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Изберете мелодия</string>
     <string name="notification_settings_item_other_comments_other_blogs">Коментари на други сайтове</string>
     <string name="notification_settings_category_other">Други</string>
@@ -121,7 +120,6 @@ Language: bg
     <string name="connection_to_server_lost">Връзката със сървъра бе прекъсната</string>
     <string name="login_epilogue_mysites_other">Моите сайтове</string>
     <string name="login_epilogue_mysites_one">Моя сайт</string>
-    <string name="login_logged_in_as">Влезли сте от името на</string>
     <string name="login_empty_2fa">Моля въведете потвърждаващия код</string>
     <string name="login_email_client_not_found">Не можахме да засечем вашия имейл клиент</string>
     <string name="login_empty_username">Въведете име</string>
@@ -130,11 +128,9 @@ Language: bg
     <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
     <string name="login_site_address_help">Трябва ви помощ, за да намерите адреса на сайта си?</string>
     <string name="login_site_address">Адрес на сайта</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue">Напред</string>
-    <string name="connect_more">Свързане на друг сайт</string>
     <string name="password_incorrect">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
     <string name="enter_verification_code">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>

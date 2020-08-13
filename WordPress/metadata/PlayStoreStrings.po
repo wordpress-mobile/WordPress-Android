@@ -11,20 +11,21 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_155"
+msgid ""
+"15.5:\n"
+"* Block Editor: Username @mentions now auto-complete in the Block Editor on WordPress.com and Jetpack sites. Type the “@” character to see a username popup. Edit media in the Cover block. A Heading block bug fix removes an unwanted white shadow on headings with a link and string formatting in dark mode.\n"
+"* Search for self-hosted sites on the post list.\n"
+"* Upload audio and document files to the media library.\n"
+"\n"
+msgstr ""
+
 msgctxt "release_note_154"
 msgid ""
 "15.4:\n"
 "<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.\n"
 "\n"
 "<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color.\n"
-msgstr ""
-
-msgctxt "release_note_153"
-msgid ""
-"15.3:\n"
-"Block editor updates: All blocks now have Copy, Cut, Paste, and Duplicate functionality. Unsupported blocks can be individually edited. (Note: Unsupported block editing is not available for self-hosted sites or sites that default to the classic editor.)\n"
-"\n"
-"UI updates: Clarified wording and added confirmation dialogs when trashing posts.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
