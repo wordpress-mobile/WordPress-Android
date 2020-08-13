@@ -25,7 +25,6 @@ sealed class ReaderRepositoryCommunication {
     sealed class Error : ReaderRepositoryCommunication() {
         object NetworkUnavailable : Error()
         object RemoteRequestFailure : Error()
-        class ReaderRepositoryException(val exception: Exception) : Error()
     }
 
     override fun toString(): String {

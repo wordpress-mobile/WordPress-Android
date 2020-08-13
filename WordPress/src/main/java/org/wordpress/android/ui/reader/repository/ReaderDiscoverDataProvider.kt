@@ -17,7 +17,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
@@ -45,7 +44,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         get() = ioDispatcher + job
 
     private var isStarted = false
-    // Indicates that the data were changed in the db while no-one was subscribed to the feed.
+    // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
 
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
@@ -74,8 +73,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     suspend fun refreshCards() {
         withContext(ioDispatcher) {
             val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
-            // todo annmarie do we want to post all responses on the communication channel
-            if (response != Started) _communicationChannel.postValue(Event(response))
+            _communicationChannel.postValue(Event(response))
         }
     }
 
@@ -84,8 +82,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         if (hasMoreCards) {
             withContext(ioDispatcher) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
-                // todo annmarie do we want to post all responses on the communication channel
-                if (response != Started) _communicationChannel.postValue(Event(response))
+                _communicationChannel.postValue(Event(response))
             }
         }
     }
@@ -103,8 +100,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
 
             if (refresh) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
-                // todo annmarie do we want to post all responses on the communication channel
-                if (response != Started) _communicationChannel.postValue(Event(response))
+                _communicationChannel.postValue(Event(response))
             }
         }
     }

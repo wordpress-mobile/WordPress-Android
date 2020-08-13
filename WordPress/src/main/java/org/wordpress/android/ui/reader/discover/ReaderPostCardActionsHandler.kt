@@ -24,6 +24,13 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.util.AppLog
@@ -37,6 +44,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val likeUseCase: PostLikeUseCase,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -69,7 +77,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
-            LIKE -> handleLikeClicked(post.postId, post.blogId)
+            LIKE -> handleLikeClicked(post)
             BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
@@ -102,8 +110,20 @@ class ReaderPostCardActionsHandler @Inject constructor(
         AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
-    private fun handleLikeClicked(postId: Long, blogId: Long) {
-        AppLog.d(AppLog.T.READER, "Like not implemented")
+    private fun handleLikeClicked(post: ReaderPost) {
+        uiScope.launch {
+            when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
+                is Started, is Success, is SuccessWithData<*>, is Failure -> {}
+                is NetworkUnavailable -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(R.string.no_network_message)))
+                }
+                is RemoteRequestFailure -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(R.string.reader_error_request_failed_title)))
+                }
+            }
+        }
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
