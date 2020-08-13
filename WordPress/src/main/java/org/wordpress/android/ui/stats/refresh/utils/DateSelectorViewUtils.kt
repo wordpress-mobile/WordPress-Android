@@ -2,10 +2,8 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.google.android.material.elevation.ElevationOverlayProvider
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
-import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 
 fun Fragment.drawDateSelector(dateSelectorUiModel: DateSelectorUiModel?) {

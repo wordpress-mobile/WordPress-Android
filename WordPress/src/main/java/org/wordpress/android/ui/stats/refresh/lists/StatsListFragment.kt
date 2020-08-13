@@ -122,7 +122,7 @@ class StatsListFragment : ViewPagerFragment() {
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View? {
-       return recyclerView
+        return recyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
