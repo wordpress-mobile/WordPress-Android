@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -553,6 +554,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // Display 'retry upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(getString(R.string.retry_failed_upload_title));
+        String mediaErrorMessage = mEditorFragmentListener.onFailedToInsertMediaTapped(mediaId);
+        if (!TextUtils.isEmpty(mediaErrorMessage)) {
+            builder.setMessage(mediaErrorMessage);
+        }
         builder.setPositiveButton(R.string.retry_failed_upload_yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
