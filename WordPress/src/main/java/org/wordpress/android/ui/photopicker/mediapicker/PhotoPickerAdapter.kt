@@ -1,28 +1,26 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.PhotoItem
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.VideoItem
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.PhotoItem
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.Type
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.util.image.ImageManager
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MedaPickerAdapter}")
 class PhotoPickerAdapter internal constructor(private val imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
-    private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
-    private var mediaList = listOf<PhotoPickerUiItem>()
+    private val thumbnailViewUtils = MediaThumbnailViewUtils(imageManager)
+    private var mediaList = listOf<MediaPickerUiItem>()
 
     init {
         setHasStableIds(true)
     }
 
-    fun loadData(result: List<PhotoPickerUiItem>) {
+    fun loadData(result: List<MediaPickerUiItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                PhotoPickerAdapterDiffCallback(mediaList, result)
+                MediaPickerAdapterDiffCallback(mediaList, result)
         )
         mediaList = result
         diffResult.dispatchUpdatesTo(this)

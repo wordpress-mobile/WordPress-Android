@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.view.View
 import android.widget.ImageView
@@ -7,8 +7,8 @@ import android.widget.TextView
 import org.wordpress.android.R.anim
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ClickAction
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ToggleAction
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ClickAction
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
@@ -19,9 +19,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import java.util.Locale
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.ThumbnailViewUtils}")
-class ThumbnailViewUtils(val imageManager: ImageManager) {
+class MediaThumbnailViewUtils(val imageManager: ImageManager) {
     fun setupThumbnailImage(
         imgThumbnail: ImageView,
         url: String,

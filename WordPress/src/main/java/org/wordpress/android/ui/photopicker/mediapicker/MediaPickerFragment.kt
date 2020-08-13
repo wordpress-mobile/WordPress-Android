@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.Manifest.permission
 import android.net.Uri
@@ -25,17 +25,17 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.FabUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.CAMERA
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_MEDIA
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.NONE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.FabUiModel
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -49,10 +49,8 @@ import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment}")
-class PhotoPickerFragment : Fragment() {
-    enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
+class MediaPickerFragment : Fragment() {
+    enum class MediaPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),
         ANDROID_CHOOSE_VIDEO(true),
         ANDROID_CAPTURE_PHOTO(true),
@@ -73,7 +71,7 @@ class PhotoPickerFragment : Fragment() {
      */
     interface PhotoPickerListener {
         fun onPhotoPickerMediaChosen(uriList: List<Uri>)
-        fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean)
+        fun onPhotoPickerIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
     }
 
     private var listener: PhotoPickerListener? = null
@@ -81,12 +79,12 @@ class PhotoPickerFragment : Fragment() {
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: PhotoPickerViewModel
+    private lateinit var viewModel: MediaPickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaPickerViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -107,10 +105,10 @@ class PhotoPickerFragment : Fragment() {
         val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         var selectedIds: List<Long>? = null
-        var lastTappedIcon: PhotoPickerIcon? = null
+        var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
-            lastTappedIcon = savedLastTappedIconName?.let { PhotoPickerIcon.valueOf(it) }
+            lastTappedIcon = savedLastTappedIconName?.let { MediaPickerIcon.valueOf(it) }
             if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
                 selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_POSITIONS)?.toList()
             }
@@ -428,7 +426,7 @@ class PhotoPickerFragment : Fragment() {
         viewModel.clearSelection()
     }
 
-    fun doIconClicked(wpMedia: PhotoPickerIcon) {
+    fun doIconClicked(wpMedia: MediaPickerIcon) {
         viewModel.clickIcon(wpMedia)
     }
 
@@ -441,13 +439,13 @@ class PhotoPickerFragment : Fragment() {
             listener: PhotoPickerListener,
             browserType: MediaBrowserType,
             site: SiteModel?
-        ): PhotoPickerFragment {
+        ): MediaPickerFragment {
             val args = Bundle()
             args.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
             if (site != null) {
                 args.putSerializable(WordPress.SITE, site)
             }
-            val fragment = PhotoPickerFragment()
+            val fragment = MediaPickerFragment()
             fragment.setPhotoPickerListener(listener)
             fragment.arguments = args
             return fragment

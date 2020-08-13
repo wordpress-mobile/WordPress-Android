@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.view.Menu
 import android.view.MenuItem
@@ -12,13 +12,11 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import org.wordpress.android.R
 import org.wordpress.android.R.id
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MedaPickerActionModeCallback}")
-class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel) : Callback,
+class PhotoPickerActionModeCallback(private val viewModel: MediaPickerViewModel) : Callback,
         LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry
     override fun onCreateActionMode(

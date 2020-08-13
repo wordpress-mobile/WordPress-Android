@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.Manifest.permission
 import android.content.Context
@@ -22,22 +22,23 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.GIF
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ClickAction
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ToggleAction
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PopupMenuUiModel.PopupMenuItem
+import org.wordpress.android.ui.photopicker.PermissionsHandler
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_PHOTO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_VIDEO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.GIF
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.STOCK_MEDIA
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_MEDIA
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ClickAction
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.NONE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -59,12 +60,10 @@ import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel}")
-class PhotoPickerViewModel @Inject constructor(
+class MediaPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val deviceMediaListBuilder: DeviceMediaListBuilder,
+    private val deviceListBuilder: DeviceListBuilder,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
@@ -75,7 +74,7 @@ class PhotoPickerViewModel @Inject constructor(
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
-    private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
+    private val _photoPickerItems = MutableLiveData<List<MediaItem>>()
     private val _selectedIds = MutableLiveData<List<Long>>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
@@ -110,12 +109,12 @@ class PhotoPickerViewModel @Inject constructor(
         )
     }
 
-    var lastTappedIcon: PhotoPickerIcon? = null
+    var lastTappedIcon: MediaPickerIcon? = null
     private lateinit var browserType: MediaBrowserType
     private var site: SiteModel? = null
 
     private fun buildPhotoPickerUiModel(
-        data: List<PhotoPickerItem>?,
+        data: List<MediaItem>?,
         selectedIds: List<Long>?
     ): PhotoListUiModel {
         var isVideoSelected = false
@@ -133,7 +132,7 @@ class PhotoPickerViewModel @Inject constructor(
                     null to false
                 }
                 if (it.isVideo) {
-                    PhotoPickerUiItem.VideoItem(
+                    MediaPickerUiItem.VideoItem(
                             id = it.id,
                             uri = it.uri,
                             isSelected = isSelected,
@@ -143,7 +142,7 @@ class PhotoPickerViewModel @Inject constructor(
                             clickAction = clickAction
                     )
                 } else {
-                    PhotoPickerUiItem.PhotoItem(
+                    MediaPickerUiItem.PhotoItem(
                             id = it.id,
                             uri = it.uri,
                             isSelected = isSelected,
@@ -189,12 +188,12 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     private fun buildBottomBar(
-        photoPickerItems: List<PhotoPickerItem>?,
+        mediaItems: List<MediaItem>?,
         selectedIds: List<Long>?,
         showSoftAskViewModel: Boolean
     ): BottomBarUiModel {
         val count = selectedIds?.size ?: 0
-        val isVideoSelected = photoPickerItems?.any { it.isVideo && selectedIds?.contains(it.id) == true } ?: false
+        val isVideoSelected = mediaItems?.any { it.isVideo && selectedIds?.contains(it.id) == true } ?: false
         val defaultBottomBar = when {
             showSoftAskViewModel -> NONE
             count <= 0 -> MEDIA_SOURCE
@@ -226,7 +225,7 @@ class PhotoPickerViewModel @Inject constructor(
             return
         }
         launch(bgDispatcher) {
-            val result = deviceMediaListBuilder.buildDeviceMedia(browserType)
+            val result = deviceListBuilder.buildDeviceMedia(browserType)
             val currentItems = _photoPickerItems.value ?: listOf()
             if (forceReload || currentItems != result) {
                 _photoPickerItems.postValue(result)
@@ -243,7 +242,7 @@ class PhotoPickerViewModel @Inject constructor(
     fun start(
         selectedIds: List<Long>?,
         browserType: MediaBrowserType,
-        lastTappedIcon: PhotoPickerIcon?,
+        lastTappedIcon: MediaPickerIcon?,
         site: SiteModel?
     ) {
         selectedIds?.let {
@@ -316,7 +315,7 @@ class PhotoPickerViewModel @Inject constructor(
 
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
-    fun clickIcon(icon: PhotoPickerIcon) {
+    fun clickIcon(icon: MediaPickerIcon) {
         if (icon == ANDROID_CAPTURE_PHOTO || icon == ANDROID_CAPTURE_VIDEO || icon == WP_STORIES_CAPTURE) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
                 _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
@@ -476,7 +475,7 @@ class PhotoPickerViewModel @Inject constructor(
     )
 
     sealed class PhotoListUiModel {
-        data class Data(val items: List<PhotoPickerUiItem>) :
+        data class Data(val items: List<MediaPickerUiItem>) :
                 PhotoListUiModel()
 
         object Empty : PhotoListUiModel()
@@ -514,7 +513,7 @@ class PhotoPickerViewModel @Inject constructor(
         object Hidden : ActionModeUiModel()
     }
 
-    data class IconClickEvent(val icon: PhotoPickerIcon, val allowMultipleSelection: Boolean)
+    data class IconClickEvent(val icon: MediaPickerIcon, val allowMultipleSelection: Boolean)
 
     enum class PermissionsRequested {
         CAMERA, STORAGE
