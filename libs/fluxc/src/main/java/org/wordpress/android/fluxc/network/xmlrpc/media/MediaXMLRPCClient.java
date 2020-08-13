@@ -563,7 +563,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
         if (exception instanceof XMLRPCFault) {
             switch (((XMLRPCFault) exception).getFaultCode()) {
                 case 401:
-                    mediaError.type = MediaErrorType.XMLRPC_UNAUTHORIZED;
+                    mediaError.type = MediaErrorType.XMLRPC_OPERATION_NOT_ALLOWED;
                     break;
                 case 403:
                     mediaError.type = MediaErrorType.NOT_AUTHENTICATED;
@@ -572,7 +572,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     mediaError.type = MediaErrorType.NOT_FOUND;
                     break;
                 case 500:
-                    mediaError.type = MediaErrorType.XMLRPC_INTERNAL_SERVER_ERROR;
+                    mediaError.type = MediaErrorType.XMLRPC_UPLOAD_ERROR;
                     break;
             }
         }
