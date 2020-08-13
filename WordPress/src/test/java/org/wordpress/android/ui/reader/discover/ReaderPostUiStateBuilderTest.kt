@@ -27,6 +27,8 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -751,6 +753,69 @@ class ReaderPostUiStateBuilderTest {
         // Assert
         assertThat(uiState.commentsAction.count).isEqualTo(numReplies)
     }
+
+    @Test
+    fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() {
+        // arrange
+        val expectedInterestListSize = 5
+
+        val readerTagList = ReaderTagList().apply {
+            add(createReaderTag())
+            add(createReaderTag())
+            add(createReaderTag())
+            add(createReaderTag())
+            add(createReaderTag())
+            add(createReaderTag())
+        }
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
+    }
+
+    @Test
+    fun `Ensures that there are three interests within the uiState when the ReaderTagList contains 3`() {
+        // arrange
+        val expectedInterestListSize = 3
+
+        val readerTagList = ReaderTagList().apply {
+            add(createReaderTag())
+            add(createReaderTag())
+            add(createReaderTag())
+        }
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
+    }
+
+    @Test
+    fun `Ensures that the first InterestUiState has isDividerVisible set to true`() {
+        val readerTagList = ReaderTagList().apply {
+            add(createReaderTag())
+            add(createReaderTag())
+        }
+
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        assertThat(result.interest.first().isDividerVisible).isTrue()
+    }
+
+    @Test
+    fun `Ensures that the last InterestUiState has isDividerVisible set to false`() {
+        val readerTagList = ReaderTagList().apply {
+            add(createReaderTag())
+            add(createReaderTag())
+        }
+
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        assertThat(result.interest.last().isDividerVisible).isFalse()
+    }
     // endregion
 
     // region Private methods
@@ -827,5 +892,14 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
         return post
     }
+
+    private fun createReaderTag() = ReaderTag(
+            "",
+            "",
+            "",
+            null,
+            mock(),
+            false
+    )
     // endregion
 }
