@@ -20,6 +20,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.pages.INVALID_MESSAGE_RES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
@@ -134,13 +135,20 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(constraint_layout, getString(this.messageRes), Snackbar.LENGTH_LONG)
-        if (this.buttonTitleRes != null) {
-            snackbar.setAction(getString(this.buttonTitleRes)) {
-                this.buttonAction.invoke()
+        message?.let {
+            val message = if (this.messageRes == INVALID_MESSAGE_RES) {
+                this.message
+            } else {
+                getString(this.messageRes)
             }
+            val snackbar = WPSnackbar.make(constraint_layout, message, Snackbar.LENGTH_LONG)
+            if (this.buttonTitleRes != null) {
+                snackbar.setAction(getString(this.buttonTitleRes)) {
+                    this.buttonAction.invoke()
+                }
+            }
+            snackbar.show()
         }
-        snackbar.show()
     }
 
     private fun PreLoadPostContent.addWebViewCachingFragment() {

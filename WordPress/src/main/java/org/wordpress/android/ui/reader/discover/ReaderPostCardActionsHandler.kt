@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_S
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -37,6 +38,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val followUseCase: ReaderPostFollowUseCase,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -54,6 +56,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
 
         _snackbarEvents.addSource(bookmarkUseCase.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _snackbarEvents.addSource(followUseCase.snackbarEvents) { event ->
             _snackbarEvents.value = event
         }
 
@@ -78,6 +84,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleFollowClicked(post: ReaderPost) {
         AppLog.d(AppLog.T.READER, "Follow not implemented")
+        uiScope.launch {
+            followUseCase.toggleFollow(post)
+        }
     }
 
     private fun handleSiteNotificationsClicked(postId: Long, blogId: Long) {
