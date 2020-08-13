@@ -1,5 +1,5 @@
 package org.wordpress.android.ui
 
-interface ViewPagerScrollableViewInitializedListener {
+interface ScrollableViewInitializedListener {
     fun onScrollableViewInitialized(containerId: Int)
 }

@@ -43,7 +43,7 @@
         <item name="wpColorWarningLight">@color/yellow_20</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
-        <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+        <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
 
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
@@ -78,6 +78,38 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
+
+        <item name="actionModeStyle">@style/WordPress.ActionMode</item>
+        <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
+        <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
+        <item name="actionOverflowButtonStyle">
+            @style/WordPress.ActionMode.OverflowButtonStyle
+        </item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/WordPress.ActionBar.Navigation
+        </item>
+    </style>
+
+    <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="subtitleTextStyle">@style/WordPress.ActionMode.SubtitleTextStyle</item>
+        <item name="titleTextStyle">@style/WordPress.ActionMode.TitleTextStyle</item>
+        <item name="theme">@style/WordPress.ActionMode.Theme</item>
+    </style>
+
+    <style name="WordPress.ActionMode.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.ActionMode.SubtitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.ActionMode.CloseButton" parent="Widget.AppCompat.Light.ActionButton.CloseMode">
+        <item name="tint">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.ActionMode.OverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="tint">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress" parent="Base.Wordpress">
@@ -225,6 +257,8 @@
         <item name="android:textColorSecondary">?attr/colorOnSurface</item>
         <item name="iconTint">?attr/colorOnSurface</item>
         <item name="colorControlNormal">?attr/colorOnSurface</item>
+        <item name="android:editTextColor">?attr/colorOnSurface</item>
+        <item name="android:textColorHint">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="WordPress.ToolBar.Title" parent="TextAppearance.MaterialComponents.Headline6">
@@ -239,11 +273,11 @@
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">
-            @style/WordPress.ActionBar.Navigation.Inverted
+            @style/WordPress.ActionBar.Navigation
         </item>
     </style>
 
-    <style name="WordPress.ActionBar.Navigation.Inverted" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+    <style name="WordPress.ActionBar.Navigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
@@ -1169,7 +1203,8 @@
         <item name="expandedTitleTextAppearance">
             @style/TextAppearance.App.CollapsingToolbar.Expanded
         </item>
-        <item name="expandedTitleMarginBottom">@dimen/collapsible_toolbar_expanded_bottom_margin</item>
+        <item name="expandedTitleMarginBottom">@dimen/collapsible_toolbar_expanded_bottom_margin
+        </item>
         <item name="expandedTitleMarginStart">16dp</item>
     </style>
 

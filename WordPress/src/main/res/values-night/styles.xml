@@ -15,6 +15,7 @@
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnError">@android:color/black</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorControlHighlight">?attr/colorOnSurface</item>
         <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="wpColorText">@android:color/white</item>
@@ -25,7 +26,7 @@
         <item name="wpColorWarningLight">@color/yellow_20</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
-        <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
+        <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
@@ -70,6 +71,9 @@
         <item name="actionModeStyle">@style/WordPress.ActionMode</item>
         <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
         <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/WordPress.ActionBar.Navigation
+        </item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -78,20 +82,8 @@
         <item name="theme">@style/WordPress.ActionMode.Theme</item>
     </style>
 
-    <style name="WordPress.ActionMode.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="WordPress.ActionMode.SubtitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="WordPress.ActionMode.CloseButton" parent="Widget.AppCompat.Light.ActionButton.CloseMode">
-        <item name="tint">?attr/colorPrimary</item>
-    </style>
-
     <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">?attr/colorPrimary</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
         <item name="colorControlActivated">@android:color/transparent</item>
     </style>
 

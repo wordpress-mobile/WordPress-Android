@@ -1,136 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nested_scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_extra_large">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/activityActorIcon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="@null"
-            android:src="@drawable/bg_rectangle_placeholder_user_32dp" />
-
-        <ImageView
-            android:id="@+id/activityJetpackActorIcon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="@string/activity_log_jetpack_icon"
-            android:src="@drawable/ic_plans_white_24dp"
-            app:tint="@color/neutral_30"
-            android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_extra_large">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/activityActorName"
+            <ImageView
+                android:id="@+id/activityActorIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@null"
+                android:src="@drawable/bg_rectangle_placeholder_user_32dp" />
+
+            <ImageView
+                android:id="@+id/activityJetpackActorIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/activity_log_jetpack_icon"
+                android:src="@drawable/ic_plans_white_24dp"
+                android:visibility="gone"
+                app:tint="@color/neutral_30" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activityActorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textAppearance="?attr/textAppearanceSubtitle2"
+                    android:textColor="?attr/wpColorText"
+                    tools:text="John Smith" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activityActorRole"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    tools:text="Administrator" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/wpColorText"
-                tools:text="John Smith" />
+                android:layout_marginTop="2dp"
+                android:gravity="end"
+                android:orientation="vertical">
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/activityActorRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textAppearance="?attr/textAppearanceCaption"
-                tools:text="Administrator" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activityCreatedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="?attr/colorOnSurface"
+                    tools:ignore="RelativeOverlap"
+                    tools:text="January 8, 2018" />
 
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/activityCreatedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceCaption"
+                    android:textColor="?attr/colorOnSurface"
+                    tools:ignore="RelativeOverlap"
+                    tools:text="11:32 PM" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/activityRewindButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="end"
-            android:orientation="vertical">
+            android:layout_marginTop="24dp"
+            android:contentDescription="@string/rewind"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@null"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_history_white_24dp"
+                app:tint="?attr/colorPrimary" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/activityCreatedDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:textColor="?attr/colorOnSurface"
-                tools:ignore="RelativeOverlap"
-                tools:text="January 8, 2018" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/activityCreatedTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceCaption"
-                android:textColor="?attr/colorOnSurface"
-                tools:ignore="RelativeOverlap"
-                tools:text="11:32 PM" />
+                android:layout_gravity="center_vertical"
+                android:text="@string/rewind"
+                android:textAllCaps="true"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary" />
         </LinearLayout>
-    </LinearLayout>
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/activityMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:focusable="true"
-        android:linksClickable="true"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/activityType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="?attr/wpColorOnSurfaceMedium"
-        tools:text="Plugin autoupdated" />
-
-    <LinearLayout
-        android:id="@+id/activityRewindButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:contentDescription="@string/rewind"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_history_white_24dp"
-            app:tint="?attr/colorPrimary" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
+            android:id="@+id/activityType"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="@string/rewind"
-            android:textAllCaps="true"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorPrimary" />
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            tools:text="Plugin autoupdated" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/activityMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:focusable="true"
+            android:linksClickable="true"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
     </LinearLayout>
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

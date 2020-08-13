@@ -1,81 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/publicize_details_nested_scroll_View"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clipToPadding="false"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/content_margin">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/connections_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:paddingBottom="@dimen/content_margin">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:text="@string/connected_accounts_label"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/colorPrimary" />
-
-        <org.wordpress.android.ui.reader.views.ReaderRecyclerView
-            android:id="@+id/recycler_view"
+        <LinearLayout
+            android:id="@+id/connections_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_large" />
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-    </LinearLayout>
+            <org.wordpress.android.widgets.WPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:text="@string/connected_accounts_label"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorPrimary" />
 
-    <LinearLayout
-        android:id="@+id/service_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            <org.wordpress.android.ui.reader.views.ReaderRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_large" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_service"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:ellipsize="end"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/colorPrimary"
-            tools:text="text_service" />
+        </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:ellipsize="end"
-            android:textAppearance="?attr/textAppearanceCaption"
-            tools:text="text_description" />
-
-        <View
+        <LinearLayout
+            android:id="@+id/service_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/list_divider_height"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:background="?android:attr/listDivider" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <org.wordpress.android.ui.publicize.ConnectButton
-            android:id="@+id/button_connect"
-            style="@style/PublicizeConnectButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:ellipsize="end"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorPrimary"
+                tools:text="text_service" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:ellipsize="end"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="text_description" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_divider_height"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:background="?android:attr/listDivider" />
+
+            <org.wordpress.android.ui.publicize.ConnectButton
+                android:id="@+id/button_connect"
+                style="@style/PublicizeConnectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -18,8 +18,7 @@
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_main">
+        android:layout_height="match_parent">
 
         <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
             android:id="@+id/log_list_view"

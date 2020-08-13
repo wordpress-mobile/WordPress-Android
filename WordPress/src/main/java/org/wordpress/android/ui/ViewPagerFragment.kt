@@ -32,10 +32,10 @@ abstract class ViewPagerFragment : Fragment {
         val scrollableContainer = getScrollableViewForUniqueIdProvision()
         scrollableContainer?.let {
             val host = when {
-                parentFragment is ViewPagerScrollableViewInitializedListener -> {
+                parentFragment is ScrollableViewInitializedListener -> {
                     parentFragment
                 }
-                activity is ViewPagerScrollableViewInitializedListener -> {
+                activity is ScrollableViewInitializedListener -> {
                     activity
                 }
                 else -> {
@@ -43,7 +43,7 @@ abstract class ViewPagerFragment : Fragment {
                 }
             }
             host?.let {
-                (host as ViewPagerScrollableViewInitializedListener).onScrollableViewInitialized(
+                (host as ScrollableViewInitializedListener).onScrollableViewInitialized(
                         setUniqueIdToView(scrollableContainer)
                 )
             }

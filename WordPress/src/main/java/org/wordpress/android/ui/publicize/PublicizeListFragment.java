@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
@@ -46,6 +47,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private PublicizeServiceAdapter mAdapter;
     private RecyclerView mRecycler;
     private TextView mEmptyView;
+    private View mNestedScrollView;
 
     private QuickStartEvent mQuickStartEvent;
 
@@ -90,6 +92,10 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         getAdapter().refresh();
         setTitle(R.string.sharing);
         setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
+
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+           ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+        }
     }
 
     @Override
@@ -98,6 +104,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
 
         mRecycler = rootView.findViewById(R.id.recycler_view);
         mEmptyView = rootView.findViewById(R.id.empty_view);
+        mNestedScrollView = rootView.findViewById(R.id.publicize_list_nested_scroll_view);
 
         boolean isAdminOrSelfHosted = mSite.getHasCapabilityManageOptions() || !SiteUtils.isAccessedViaWPComRest(mSite);
         View manageContainer = rootView.findViewById(R.id.manage_container);
