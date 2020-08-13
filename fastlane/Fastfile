@@ -515,9 +515,11 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Build
     Dir.chdir("..") do
+      sh("mkdir -p #{build_dir}")
       UI.message("Cleaning branch...")
       sh("echo \"Cleaning branch\" >> #{logfile_path}")
       sh("./gradlew clean >> #{logfile_path} 2>&1")
+      sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
       sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
