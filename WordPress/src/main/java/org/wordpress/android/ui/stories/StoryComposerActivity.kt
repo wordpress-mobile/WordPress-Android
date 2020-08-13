@@ -252,7 +252,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
                 PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
-        requestCodes.EXTRA_MEDIA_URIS = PhotoPickerActivity.EXTRA_MEDIA_URIS
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
