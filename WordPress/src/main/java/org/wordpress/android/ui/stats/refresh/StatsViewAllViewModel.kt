@@ -57,8 +57,6 @@ class StatsViewAllViewModel(
 
     val showSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = mutableSnackbarMessage
 
-    val toolbarHasShadow = dateSelectorData.map { !it.isVisible }
-
     fun start(startDate: SelectedDate?) {
         launch {
             startDate?.let {

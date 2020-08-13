@@ -10,22 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-            android:id="@+id/pullToRefresh"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:fillViewport="true">
 
-            <include layout="@layout/stats_list_fragment" />
+            <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+                android:id="@+id/pullToRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+                <include layout="@layout/stats_list_fragment" />
+
+            </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            app:liftOnScrollTargetViewId="@+id/recyclerView">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"

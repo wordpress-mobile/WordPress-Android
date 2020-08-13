@@ -219,19 +219,6 @@ class StatsViewAllFragment : DaggerFragment() {
                 viewModel.onDateChanged()
             }
         })
-
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            app_bar_layout.postDelayed({
-                if (app_bar_layout != null) {
-                    val elevation = if (hasShadow == true) {
-                        resources.getDimension(R.dimen.appbar_elevation)
-                    } else {
-                        0f
-                    }
-                    ViewCompat.setElevation(app_bar_layout, elevation)
-                }
-            }, 100)
-        })
     }
 
     private fun loadData(recyclerView: RecyclerView, data: List<BlockListItem>) {
