@@ -17,4 +17,6 @@
     <item type="id" name="media_grid_file_path_id" />
     <item type="id" name="post_menu_item_view_layout_type" />
     <item type="id" name="original_view_pager_fragment_id_tag_key" />
+    <item type="id" name="pages_search_recycler_view_id" />
+    <item type="id" name="pages_non_search_recycler_view_id_tag_key" />
 </resources>

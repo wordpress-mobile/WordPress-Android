@@ -75,6 +75,7 @@ class SearchListFragment : Fragment() {
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+        recyclerView.id = R.id.pages_search_recycler_view_id
     }
 
     private fun setupObservers() {

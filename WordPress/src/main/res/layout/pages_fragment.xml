@@ -37,33 +37,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:elevation="@dimen/appbar_elevation"
+            android:id="@+id/appbar_main"
             android:fitsSystemWindows="true">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:elevation="0dp"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+                app:theme="@style/WordPress.ActionBar" />
 
             <RelativeLayout
+                android:duplicateParentState="true"
+                android:background="@drawable/tab_layout_background"
                 android:id="@+id/tabContainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/tab_height"
-                android:elevation="0dp">
+                android:layout_height="@dimen/tab_height">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
+                    android:background="@null"
                     android:layout_height="match_parent"
                     android:layout_alignStart="@+id/pages_tab_layout_fading_edge"
                     android:layout_gravity="start"
                     android:clipToPadding="false"
-                    android:elevation="0dp"
                     app:tabGravity="fill"
                     app:tabMode="scrollable"
                     tools:paddingEnd="0dp"
@@ -73,8 +73,7 @@
                     android:id="@+id/pages_tab_layout_fading_edge"
                     android:layout_width="@dimen/page_list_tab_layout_fading_edge_width"
                     android:layout_height="match_parent"
-                    android:layout_alignEnd="@+id/pages_author_selection"
-                    android:elevation="0dp" />
+                    android:layout_alignEnd="@+id/pages_author_selection" />
 
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/pages_author_selection"
@@ -82,7 +81,6 @@
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
                     android:contentDescription="@string/pages_list_author"
-                    android:elevation="0dp"
                     android:paddingEnd="@dimen/margin_small"
                     android:paddingStart="0dp" />
             </RelativeLayout>
