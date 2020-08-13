@@ -89,12 +89,12 @@ class MediaPickerViewModel @Inject constructor(
 
     val selectedIds: LiveData<List<Long>> = _selectedIds
 
-    val uiState: LiveData<PhotoPickerUiState> = merge(
+    val uiState: LiveData<MediaPickerUiState> = merge(
             _photoPickerItems.distinct(),
             _selectedIds.distinct(),
             _softAskRequest
     ) { photoPickerItems, selectedIds, softAskRequest ->
-        PhotoPickerUiState(
+        MediaPickerUiState(
                 buildPhotoPickerUiModel(photoPickerItems, selectedIds),
                 buildBottomBar(
                         photoPickerItems,
@@ -466,7 +466,7 @@ class MediaPickerViewModel @Inject constructor(
         }
     }
 
-    data class PhotoPickerUiState(
+    data class MediaPickerUiState(
         val photoListUiModel: PhotoListUiModel,
         val bottomBarUiModel: BottomBarUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
