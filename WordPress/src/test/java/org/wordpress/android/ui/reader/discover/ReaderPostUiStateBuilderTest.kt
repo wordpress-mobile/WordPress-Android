@@ -758,15 +758,9 @@ class ReaderPostUiStateBuilderTest {
     fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() {
         // arrange
         val expectedInterestListSize = 5
+        val currentReaderTagListSize = 6
 
-        val readerTagList = ReaderTagList().apply {
-            add(createReaderTag())
-            add(createReaderTag())
-            add(createReaderTag())
-            add(createReaderTag())
-            add(createReaderTag())
-            add(createReaderTag())
-        }
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
 
         // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
@@ -779,12 +773,9 @@ class ReaderPostUiStateBuilderTest {
     fun `Ensures that there are three interests within the uiState when the ReaderTagList contains 3`() {
         // arrange
         val expectedInterestListSize = 3
+        val currentReaderTagListSize = 3
 
-        val readerTagList = ReaderTagList().apply {
-            add(createReaderTag())
-            add(createReaderTag())
-            add(createReaderTag())
-        }
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
 
         // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
@@ -795,25 +786,27 @@ class ReaderPostUiStateBuilderTest {
 
     @Test
     fun `Ensures that the first InterestUiState has isDividerVisible set to true`() {
-        val readerTagList = ReaderTagList().apply {
-            add(createReaderTag())
-            add(createReaderTag())
-        }
+        // arrange
+        val currentReaderTagListSize = 2
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
 
+        // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
 
+        // assert
         assertThat(result.interest.first().isDividerVisible).isTrue()
     }
 
     @Test
     fun `Ensures that the last InterestUiState has isDividerVisible set to false`() {
-        val readerTagList = ReaderTagList().apply {
-            add(createReaderTag())
-            add(createReaderTag())
-        }
+        // arrange
+        val currentReaderTagListSize = 2
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
 
+        // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
 
+        // assert
         assertThat(result.interest.last().isDividerVisible).isFalse()
     }
     // endregion
@@ -891,6 +884,12 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
         return post
+    }
+
+    private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
+        for (x in 0 until numOfTags) {
+            add(createReaderTag())
+        }
     }
 
     private fun createReaderTag() = ReaderTag(
