@@ -47,6 +47,8 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
+import org.wordpress.android.ui.mlp.ModalLayoutPickerAdapter;
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -148,6 +150,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobServic
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
+import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
@@ -395,6 +398,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderTagHeaderView object);
 
+    void inject(ReaderExpandableTagsView object);
+
     void inject(ReaderLikingUsersView object);
 
     void inject(ReaderWebView object);
@@ -511,9 +516,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(MainBottomSheetFragment object);
 
+    void inject(ModalLayoutPickerFragment object);
+
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
+
+    void inject(ModalLayoutPickerAdapter object);
 
     void inject(PageParentSearchFragment object);
 

@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="@dimen/photo_picker_item_padding">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/photo_picker_item_padding">
 
     <ImageView
         android:id="@+id/image_thumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/photo_picker_image_thumbnail_content_description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/photo_picker_item_background"
-        android:scaleType="centerCrop" />
+        android:contentDescription="@string/photo_picker_image_thumbnail_content_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="@string/media_grid_item_ratio"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:importantForAccessibility="no"
         android:id="@+id/text_selection_count"
         android:layout_width="@dimen/media_selection_dot"
         android:layout_height="@dimen/media_selection_dot"
-        android:layout_gravity="bottom|start"
         android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
         android:background="@drawable/photo_picker_circle_selector"
         android:elevation="4dp"
         android:gravity="center"
+        android:importantForAccessibility="no"
         android:includeFontPadding="false"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_sz_small"
-        tools:text="5"
-        android:layout_marginStart="@dimen/margin_medium"
-        tools:ignore="UnusedAttribute"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:ignore="UnusedAttribute"
+        tools:text="5" />
 
     <ImageView
         android:id="@+id/image_video_overlay"
         android:layout_width="@dimen/photo_picker_preview_icon"
         android:layout_height="@dimen/photo_picker_preview_icon"
         android:layout_gravity="center"
+        android:contentDescription="@string/photo_picker_thumbnail_desc"
         android:padding="@dimen/margin_extra_small"
         android:src="@drawable/ic_play_white_black_black_white_24dp_selector"
         android:visibility="gone"
-        android:contentDescription="@string/photo_picker_thumbnail_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
