@@ -41,6 +41,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private long mBlogId;
     private long mFeedId;
+    // Represents the true siteId/blogId for a feed situation (blogId == feedId)
+    private long mSiteId;
     private ReaderFollowButton mFollowButton;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
@@ -82,15 +84,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mFeedId = feedId;
 
         final ReaderBlog localBlogInfo;
-        final long blogIdForFeed;
 
         // In case this is a feed request, grab the actual blogId/siteId for the feed from the post table.
         // When it's a feed situation, blogId is set to the value of feedId before it gets here. We need the
         // actual blogId/siteId for the feed so we can make a request for the icon image.
         if (blogId == feedId || blogId == 0) {
-            blogIdForFeed = ReaderPostTable.getBlogIdForFeed(mFeedId);
+            mSiteId = ReaderPostTable.getBlogIdForFeed(mFeedId);
         } else {
-            blogIdForFeed = 0L;
+            mSiteId = 0L;
         }
 
         // first get info from local db - always check by feedId first, following by blogId - why?
@@ -117,7 +118,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 public void onResult(ReaderBlog serverBlogInfo) {
                     if (isAttachedToWindow()) {
                         showBlogInfo(serverBlogInfo);
-                        handleMissingImage(blogIdForFeed, mFeedId, serverBlogInfo);
+                        handleMissingImage(mSiteId, mFeedId, serverBlogInfo);
                     }
                 }
             };
@@ -129,7 +130,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             }
         } else {
             // if we don't need to go to the server, make sure we have an image to use on the header
-            handleMissingImage(blogIdForFeed, mFeedId, localBlogInfo);
+            handleMissingImage(mSiteId, mFeedId, localBlogInfo);
         }
     }
 
@@ -244,7 +245,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (mFollowListener != null) {
             if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
+                mFollowListener.onFollowTapped(
+                        followButton,
+                        mBlogInfo.getName(),
+                        mSiteId > 0 ? mSiteId : mBlogInfo.blogId);
             } else {
                 mFollowListener.onFollowingTapped();
             }
