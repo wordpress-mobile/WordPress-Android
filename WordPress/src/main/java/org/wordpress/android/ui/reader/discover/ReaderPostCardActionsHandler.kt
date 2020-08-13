@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -39,6 +40,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderPostFollowUseCase,
+    private val dispatcher: Dispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -51,6 +53,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val preloadPostEvents = _preloadPostEvents
 
     init {
+        dispatcher.register(followUseCase)
+
         _navigationEvents.addSource(bookmarkUseCase.navigationEvents) { event ->
             _navigationEvents.value = event
         }
@@ -132,5 +136,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleCommentsClicked(postId: Long, blogId: Long) {
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
+    }
+
+    fun onCleared() {
+        dispatcher.unregister(followUseCase)
     }
 }

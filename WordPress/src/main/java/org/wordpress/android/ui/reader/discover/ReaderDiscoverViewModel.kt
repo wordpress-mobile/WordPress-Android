@@ -181,6 +181,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         readerDiscoverDataProvider.stop()
+        readerPostCardActionsHandler.onCleared()
     }
 
     fun swipeToRefresh() {

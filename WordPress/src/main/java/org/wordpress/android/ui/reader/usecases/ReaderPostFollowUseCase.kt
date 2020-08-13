@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
 import org.wordpress.android.datasets.ReaderBlogTable
@@ -15,12 +17,15 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
+import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.pages.INVALID_MESSAGE_RES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -85,13 +90,15 @@ class ReaderPostFollowUseCase @Inject constructor(
     private fun prepareNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
         return {
             val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
-            val blog = (if (TextUtils.isEmpty(blogName)) thisSite else blogName)!!
-            val notificationMessage = HtmlCompat.fromHtml(String.format(
-                    resourceProvider.getString(R.string.reader_followed_blog_notifications),
-                    "<b>",
-                    blog,
-                    "</b>"
-            ), HtmlCompat.FROM_HTML_MODE_LEGACY)
+            val blog: String? = if (TextUtils.isEmpty(blogName)) thisSite else blogName
+            val notificationMessage = HtmlCompat.fromHtml(
+                    String.format(
+                            resourceProvider.getString(R.string.reader_followed_blog_notifications),
+                            "<b>",
+                            blog,
+                            "</b>"
+                    ), HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
             _snackbarEvents.postValue(
                     Event(
                             SnackbarMessageHolder(
@@ -115,6 +122,20 @@ class ReaderPostFollowUseCase @Inject constructor(
                             )
                     )
             )
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
+    fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
+        if (event.isError) {
+            AppLog.e(
+                    API,
+                    ReaderPostFollowUseCase::class.java.simpleName + ".onSubscriptionUpdated: " +
+                            event.error.type + " - " + event.error.message
+            )
+        } else {
+            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
     }
 }
