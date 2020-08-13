@@ -288,6 +288,7 @@
         <item name="tabTextColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="tabSelectedTextColor">?attr/colorOnSurface</item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
+        <item name="android:layout_marginBottom">@dimen/bottom_tabs_divider_size</item>
     </style>
 
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">

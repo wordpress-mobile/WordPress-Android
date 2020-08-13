@@ -7,7 +7,7 @@
         <shape>
             <solid android:color="@android:color/transparent" />
             <stroke
-                android:width="0.3dp"
+                android:width="@dimen/bottom_tabs_divider_size"
                 android:color="@color/material_on_surface_disabled" />
         </shape>
     </item>
