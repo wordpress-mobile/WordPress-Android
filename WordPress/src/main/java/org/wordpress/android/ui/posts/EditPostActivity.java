@@ -81,11 +81,13 @@ import org.wordpress.android.fluxc.model.EditorTheme;
 import org.wordpress.android.fluxc.model.EditorThemeSupport;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
+import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.EditorThemeStore;
@@ -3132,5 +3134,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {
         mAddingMediaToEditorProgressDialog = mProgressDialogHelper
                 .updateProgressDialogState(this, mAddingMediaToEditorProgressDialog, uiState, mUiHelpers);
+    }
+
+    @Override
+    public String onFailedToInsertMediaTapped(int mediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
+
+        if (media != null) {
+            UploadUtils.getErrorMessageFromMedia(this, media);
+        }
+
+        return "";
     }
 }
