@@ -37,6 +37,8 @@ public class ReaderWebView extends WPWebView {
         @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);
 
+        boolean onPageJumpClick(String pageJump);
+
         boolean onImageUrlClick(String imageUrl, View view, int x, int y);
 
         boolean onFileDownloadClick(String fileUrl);
@@ -195,15 +197,22 @@ public class ReaderWebView extends WPWebView {
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
             HitTestResult hr = getHitTestResult();
-            if (hr != null && isValidClickedUrl(hr.getExtra())) {
-                if (UrlUtils.isImageUrl(hr.getExtra())) {
-                    return mUrlClickListener.onImageUrlClick(
-                            hr.getExtra(),
-                            this,
-                            (int) event.getX(),
-                            (int) event.getY());
+            if (hr != null) {
+                if (isValidClickedUrl(hr.getExtra())) {
+                    if (UrlUtils.isImageUrl(hr.getExtra())) {
+                        return mUrlClickListener.onImageUrlClick(
+                                hr.getExtra(),
+                                this,
+                                (int) event.getX(),
+                                (int) event.getY());
+                    } else {
+                        return mUrlClickListener.onUrlClick(hr.getExtra());
+                    }
                 } else {
-                    return mUrlClickListener.onUrlClick(hr.getExtra());
+                    String pageJump = UrlUtils.getPageJumpOrNull(hr.getExtra());
+                    if (null != pageJump) {
+                        return mUrlClickListener.onPageJumpClick(pageJump);
+                    }
                 }
             }
         }

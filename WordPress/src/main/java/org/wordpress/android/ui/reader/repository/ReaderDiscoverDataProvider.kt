@@ -51,6 +51,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
+    private var hasMoreCards = true
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
@@ -79,10 +80,13 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     suspend fun loadMoreCards() {
-        withContext(ioDispatcher) {
-            val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
-            // todo annmarie do we want to post all responses on the communication channel
-            if (response != Started) _communicationChannel.postValue(Event(response))
+        // TODO malinjir check that the request isn't already in progress
+        if (hasMoreCards) {
+            withContext(ioDispatcher) {
+                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
+                // todo annmarie do we want to post all responses on the communication channel
+                if (response != Started) _communicationChannel.postValue(Event(response))
+            }
         }
     }
 
@@ -114,12 +118,14 @@ class ReaderDiscoverDataProvider @Inject constructor(
 
     // Handlers for ReaderPostServices
     private fun onUpdated() {
+        hasMoreCards = true
         launch {
             reloadPosts()
         }
     }
 
     private fun onUnchanged() {
+        hasMoreCards = false
     }
 
     private fun onFailed() {
