@@ -8,33 +8,33 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
+        android:id="@+id/appbar_main"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:elevation="@dimen/appbar_elevation"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:elevation="0dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <RelativeLayout
             android:id="@+id/tabContainer"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tab_height"
-            android:elevation="0dp">
+            android:background="@drawable/tab_layout_background"
+            android:duplicateParentState="true">
 
             <!--Padding start and end is set programmatically based on if the fading edge is visible-->
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
+                android:background="@null"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignStart="@+id/post_list_tab_layout_fading_edge"
                 android:layout_gravity="start"
                 android:clipToPadding="false"
-                android:elevation="0dp"
                 app:tabGravity="fill"
                 app:tabMode="scrollable"
                 tools:paddingEnd="0dp"
@@ -44,8 +44,7 @@
                 android:id="@+id/post_list_tab_layout_fading_edge"
                 android:layout_width="@dimen/posts_list_tab_layout_fading_edge_width"
                 android:layout_height="match_parent"
-                android:layout_alignEnd="@+id/post_list_author_selection"
-                android:elevation="0dp" />
+                android:layout_alignEnd="@+id/post_list_author_selection" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/post_list_author_selection"
@@ -53,7 +52,6 @@
                 android:contentDescription="@string/post_list_author"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:elevation="0dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="@dimen/margin_small" />
         </RelativeLayout>

@@ -28,7 +28,8 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.main_activity.fab_tooltip
+import kotlinx.android.synthetic.main.post_list_activity.appbar_main
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
@@ -77,7 +79,8 @@ class PostsListActivity : LocaleAwareActivity(),
         PrepublishingBottomSheetListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
-        BasicDialogOnDismissByOutsideTouchInterface {
+        BasicDialogOnDismissByOutsideTouchInterface,
+        ScrollableViewInitializedListener {
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
@@ -187,26 +190,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun setupContent() {
         authorSelection = findViewById(R.id.post_list_author_selection)
-
-        val elevationOverlayProvider = ElevationOverlayProvider(this)
-        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-        val appBarColor = elevationOverlayProvider.compositeOverlayIfNeeded(
-                this.getColorFromAttribute(R.attr.wpColorAppBar),
-                appbarElevation
-        )
-
-        val fadingEdgeDrawable = GradientDrawable(
-                if (RtlUtils.isRtl(this)) {
-                    Orientation.LEFT_RIGHT
-                } else {
-                    Orientation.RIGHT_LEFT
-                },
-                intArrayOf(ContextCompat.getColor(this, color.transparent), appBarColor)
-        )
-
-        tabLayoutFadingEdge = findViewById(R.id.post_list_tab_layout_fading_edge)
-        tabLayoutFadingEdge.background = fadingEdgeDrawable
-
         authorSelectionAdapter = AuthorSelectionAdapter(this)
         authorSelection.adapter = authorSelectionAdapter
 
@@ -557,12 +540,22 @@ class PostsListActivity : LocaleAwareActivity(),
             if (!searchActionButton.isActionViewExpanded) {
                 searchActionButton.expandActionView()
             }
+            appbar_main.post {
+                appbar_main.liftOnScrollTargetViewId = R.id.posts_search_recycler_view_id
+                appbar_main.requestLayout()
+            }
         } else {
             pager.visibility = View.VISIBLE
             tabContainer.visibility = View.VISIBLE
             searchContainer.visibility = View.GONE
             if (searchActionButton.isActionViewExpanded) {
                 searchActionButton.collapseActionView()
+            }
+            appbar_main.getTag(R.id.posts_non_search_recycler_view_id_tag_key)?.let {
+                appbar_main.post {
+                    appbar_main.liftOnScrollTargetViewId = it as Int
+                    appbar_main.requestLayout()
+                }
             }
         }
     }
@@ -606,5 +599,13 @@ class PostsListActivity : LocaleAwareActivity(),
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         viewModel.onBottomSheetPublishButtonClicked()
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        appbar_main.post {
+            appbar_main.liftOnScrollTargetViewId = containerId
+            appbar_main.requestLayout()
+            appbar_main.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
+        }
     }
 }

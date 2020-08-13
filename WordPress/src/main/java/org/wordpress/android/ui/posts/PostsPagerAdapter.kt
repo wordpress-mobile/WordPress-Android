@@ -11,7 +11,7 @@ class PostsPagerAdapter(
     private val pages: List<PostListType>,
     private val site: SiteModel,
     val fm: FragmentManager
-) : FragmentStatePagerAdapter(fm) {
+) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val listFragments = mutableMapOf<Int, WeakReference<PostListFragment>>()
 
     override fun getCount(): Int = pages.size
