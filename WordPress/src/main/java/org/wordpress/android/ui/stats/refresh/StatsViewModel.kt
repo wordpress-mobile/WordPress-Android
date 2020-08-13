@@ -72,8 +72,6 @@ class StatsViewModel
 
     val siteChanged = statsSiteProvider.siteChanged
 
-    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
-
     val hideToolbar = newsCardHandler.hideToolbar
 
     val selectedSection = statsSectionManager.liveSelectedSection

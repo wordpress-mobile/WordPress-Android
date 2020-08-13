@@ -29,12 +29,4 @@ fun Fragment.drawDateSelector(dateSelectorUiModel: DateSelectorUiModel?) {
     if (nextDateButton.isEnabled != enableNextButton) {
         nextDateButton.isEnabled = enableNextButton
     }
-
-    val elevationOverlayProvider = ElevationOverlayProvider(date_selection_toolbar.context)
-    val cardElevation = resources.getDimension(R.dimen.card_elevation)
-    val elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-            cardElevation
-    )
-
-    date_selection_toolbar.setBackgroundColor(elevatedColor)
 }

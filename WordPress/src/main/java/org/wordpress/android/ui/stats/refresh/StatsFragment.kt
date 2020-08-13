@@ -21,6 +21,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -37,7 +38,7 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment() {
+class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -123,22 +124,6 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            app_bar_layout.postDelayed(
-                    {
-                        if (app_bar_layout != null) {
-                            val elevation = if (hasShadow == true) {
-                                resources.getDimension(R.dimen.appbar_elevation)
-                            } else {
-                                0f
-                            }
-                            ViewCompat.setElevation(app_bar_layout, elevation)
-                        }
-                    },
-                    100
-            )
-        })
-
         viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->
             siteChangedEvent?.applyIfNotHandled {
                 when (this) {
@@ -175,9 +160,16 @@ class StatsFragment : DaggerFragment() {
             }
         })
     }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        app_bar_layout.liftOnScrollTargetViewId = containerId
+    }
 }
 
-class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
+        fm,
+        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+) {
     override fun getCount(): Int = statsSections.size
 
     override fun getItem(position: Int): Fragment {

@@ -4,7 +4,7 @@
     android:id="@+id/date_selector_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="@dimen/appbar_elevation"
+    android:background="@drawable/bottom_divider_background"
     android:minHeight="@dimen/one_line_list_item_height">
 
     <com.google.android.material.textview.MaterialTextView

@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
@@ -29,7 +30,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
-class StatsListFragment : DaggerFragment() {
+class StatsListFragment : ViewPagerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
@@ -50,6 +51,11 @@ class StatsListFragment : DaggerFragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -113,6 +119,10 @@ class StatsListFragment : DaggerFragment() {
         statsErrorView.button.setOnClickListener {
             viewModel.onRetryClick()
         }
+    }
+
+    override fun getScrollableViewForUniqueIdProvision(): View? {
+       return recyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
