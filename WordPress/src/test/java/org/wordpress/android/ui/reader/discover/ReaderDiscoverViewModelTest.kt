@@ -151,6 +151,61 @@ class ReaderDiscoverViewModelTest {
         verify(readerDiscoverDataProvider, never()).loadMoreCards()
     }
 
+    @Test
+    fun `ReaderInterestsCardUiState should be first then ReaderPostUiState after in the ContentUiState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = createDummyReaderCardsList()
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
+                assertThat(contentUiState.cards[2]).isInstanceOf(ReaderPostUiState::class.java)
+            }
+
+    @Test
+    fun `if InterestsYouMayLikeCard exist then ReaderInterestsCardUiState will be present in the ContentUIState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createInterestsYouMayLikeCardList())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
+            }
+
+    @Test
+    fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
+            }
+
     private fun init() {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
@@ -163,8 +218,8 @@ class ReaderDiscoverViewModelTest {
     // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
         return ReaderDiscoverCards(
-                createDummyReaderPostCardList(numberOfItems - 1)
-                        .plus(createInterestsYouMayLikeCardList())
+                createInterestsYouMayLikeCardList()
+                        .plus(createDummyReaderPostCardList(numberOfItems - 1))
         )
     }
 
