@@ -168,7 +168,7 @@ class ReaderDiscoverViewModelTest {
         )
     }
 
-    private fun createDummyReaderPostCardList(numberOfItems: Long = NUMBER_OF_ITEMS) =
+    private fun createDummyReaderPostCardList(numberOfItems: Long) =
             (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
