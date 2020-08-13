@@ -279,7 +279,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableTitle.setSpan(
-                ForegroundColorSpan(context.getColorFromAttribute(R.attr.wpColorTextSubtle)),
+                ForegroundColorSpan(context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)),
                 domainSpan.first,
                 domainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

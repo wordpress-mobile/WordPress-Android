@@ -2372,7 +2372,7 @@
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
     <string name="login_promo_viewpager_content_description">Introduction</string>
-    <string name="login_promo_title_37_percent">37% of the web is built on WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% of the web is built on WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
     <string name="send_link" tools:ignore="UnusedResources">Send link</string>
@@ -2645,7 +2645,7 @@
     <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Pages %2$s to continue.</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
-    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select <![CDATA[<b>Blog post</b>]]></string>
+    <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
@@ -2875,6 +2875,67 @@
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
 
+    <string name="capture_button_alt">Capture</string>
+    <string name="flip_button_alt">Flip camera</string>
+    <string name="flash_button_alt">Flash</string>
+    <string name="stickers_button_alt">Stickers</string>
+    <string name="more_button_alt">More</string>
+    <string name="text_button_alt">Text</string>
+    <string name="sound_button_alt">Sound</string>
+    <string name="label_control_flip_camera">Flip</string>
+    <string name="label_control_flash">Flash</string>
+    <string name="label_control_saving">Saving</string>
+    <string name="label_control_saved">Saved</string>
+    <string name="label_control_retry">Retry</string>
+    <string name="label_snackbar_loop_frame_saved">Saved to photos</string>
+    <string name="label_snackbar_share">SHARE</string>
+    <string name="label_share_to">Share to</string>
+    <string name="label_done">Done</string>
+    <string name="label_control_publish">Next</string>
+    <string name="label_close_button">Close</string>
+    <string name="label_saved_icon">Saved</string>
+    <string name="label_retry_icon">Retry</string>
+    <string name="label_frame_image">Slide</string>
+    <string name="label_frame_unselected_border">unselected</string>
+    <string name="label_frame_selected_border">selected</string>
+    <string name="label_frame_errored">errored</string>
+    <string name="label_text_alignment_button">Change text alignment</string>
+    <string name="label_text_color_button">Change text color</string>
+    <string name="menu_delete_page">Delete slide</string>
+    <string name="dialog_discard_page_title">Delete story slide?</string>
+    <string name="dialog_discard_page_message">This slide will be removed from your story.</string>
+    <string name="dialog_discard_errored_page_message">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
+    <string name="dialog_discard_page_ok_button">Delete</string>
+    <string name="dialog_discard_story_title">Discard story post?</string>
+    <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
+    <string name="dialog_discard_story_ok_button">Discard</string>
+    <string name="pref_camera_selection">pref_camera_selection</string>
+    <string name="pref_flash_mode_selection">pref_flash_mode_selection</string>
+    <string name="story_saving_untitled">Untitled</string>
+    <string name="story_saving_title">Saving "%1$s"…</string>
+    <string name="story_saving_title_several">several stories</string>
+    <string name="story_saving_subtitle_frames_remaining_singular">1 slide remaining</string>
+    <string name="story_saving_subtitle_frames_remaining_plural">%1$d slides remaining</string>
+    <string name="story_saving_snackbar_started">Uploading "%1$s"…</string>
+    <string name="story_saving_snackbar_finished_successfully">"%1$s" published</string>
+    <string name="story_saving_snackbar_finished_with_error">Unable to upload "%1$s"</string>
+    <string name="story_saving_failed_title">Unable to upload "%1$s"</string>
+    <string name="story_saving_failed_message_singular">1 slide requires action</string>
+    <string name="story_saving_failed_message_plural">%1$d slides require action</string>
+    <string name="story_saving_failed_quick_action_manage">Manage</string>
+    <string name="dialog_story_saving_error_title_singular">Unable to save 1 slide</string>
+    <string name="dialog_story_saving_error_title_plural">Unable to save %1$d slides</string>
+    <string name="dialog_story_saving_error_message">Retry saving or delete the slides, then try publishing your story again.</string>
+    <string name="dialog_insufficient_device_storage_error_title">Insufficient device storage</string>
+    <string name="dialog_insufficient_device_storage_error_message">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button">View Storage</string>
+    <string name="toast_story_page_not_found">Couldn\'t find Story slide</string>
+    <string name="toast_capture_operation_in_progress">Operation in progress, try again</string>
+    <string name="toast_error_saving_image">Error saving image</string>
+    <string name="toast_error_saving_video">Video could not be saved</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="toast_error_playing_video">An error occurred while playing your video</string>
+
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
     <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
@@ -2907,7 +2968,6 @@
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
-    <string name="gutenberg_native_base" tools:ignore="UnusedResources">Base</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
     <!-- translators: displayed right after the block is cut. -->
@@ -2921,7 +2981,6 @@
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
     <!-- translators: title for "Blog" page template -->
     <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
-    <string name="gutenberg_native_child_blocks" tools:ignore="UnusedResources">Child Blocks</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Choose image</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
@@ -2930,8 +2989,6 @@
     <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
-    <string name="gutenberg_native_convert_to_blocks" tools:ignore="UnusedResources">Convert to blocks</string>
-    <string name="gutenberg_native_coordinated_universal_time" tools:ignore="UnusedResources">Coordinated Universal Time</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <!-- translators: %s: current cell value. -->
@@ -2939,8 +2996,6 @@
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
-    <string name="gutenberg_native_delete_site_logo" tools:ignore="UnusedResources">Delete Site Logo</string>
-    <string name="gutenberg_native_description" tools:ignore="UnusedResources">description</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
@@ -2991,7 +3046,6 @@ translators: sample content for "Team" page template -->
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <string name="gutenberg_native_image_width" tools:ignore="UnusedResources">Image width</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_inspiration" tools:ignore="UnusedResources">Inspiration</string>
@@ -3011,7 +3065,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
-    <string name="gutenberg_native_media_preview" tools:ignore="UnusedResources">Media preview</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block down from row %1$s to row %2$s</string>
@@ -3042,10 +3095,13 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
-    <string name="gutenberg_native_open_the_block_list_view" tools:ignore="UnusedResources">Open the block list view.</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
-    <string name="gutenberg_native_paste_block" tools:ignore="UnusedResources">Paste block</string>
+    <!-- translators: accessibility text. empty page title. -->
+    <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Page title. Empty</string>
+    <!-- translators: accessibility text. %s: text content of the page title. -->
+    <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Page title. %s</string>
+    <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Paste block after</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
     <!-- translators: title for "Portfolio" page template -->
     <string name="gutenberg_native_portfolio" tools:ignore="UnusedResources">Portfolio</string>
@@ -3083,15 +3139,10 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <!-- translators: title for "Services" page template -->
     <string name="gutenberg_native_services" tools:ignore="UnusedResources">Services</string>
-    <string name="gutenberg_native_show_a_site_logo" tools:ignore="UnusedResources">Show a site logo</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
     <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
-    <string name="gutenberg_native_site_icon" tools:ignore="UnusedResources">Site Icon</string>
-    <string name="gutenberg_native_site_logo" tools:ignore="UnusedResources">Site Logo</string>
-    <string name="gutenberg_native_site_logo_settings" tools:ignore="UnusedResources">Site Logo Settings</string>
-    <string name="gutenberg_native_site_tagline" tools:ignore="UnusedResources">Site Tagline</string>
     <string name="gutenberg_native_size" tools:ignore="UnusedResources">Size</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
     <!-- translators: sample content for "Services" page template -->
@@ -3113,9 +3164,11 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_translate" tools:ignore="UnusedResources">Translate</string>
     <string name="gutenberg_native_try_a_starter_layout" tools:ignore="UnusedResources">Try a starter layout</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si" tools:ignore="UnusedResources">Upload an image, or pick one from your media library, to be your site logo</string>
+    <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updates the title.</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_usa" tools:ignore="UnusedResources">USA</string>
+    <!-- translators: accessibility text. Empty video caption. -->
+    <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video caption. Empty</string>
     <!-- translators: accessibility text. %s: video caption. -->
     <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
     <!-- translators: sample content for "About" page template -->
