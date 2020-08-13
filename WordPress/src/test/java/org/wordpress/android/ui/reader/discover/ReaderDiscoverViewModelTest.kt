@@ -137,7 +137,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `load more action is NOT initiated when we are at the beggining of the list`() = test {
+    fun `load more action is NOT initiated when we are at the beginning of the list`() = test {
         // Arrange
         val notCloseToEndIndex = 2
         init()
