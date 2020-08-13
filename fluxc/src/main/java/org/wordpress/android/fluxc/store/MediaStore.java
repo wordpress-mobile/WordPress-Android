@@ -366,8 +366,8 @@ public class MediaStore extends Store {
         SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
         TIMEOUT,
         BAD_REQUEST,
-        XMLRPC_UNAUTHORIZED,
-        XMLRPC_INTERNAL_SERVER_ERROR,
+        XMLRPC_OPERATION_NOT_ALLOWED,
+        XMLRPC_UPLOAD_ERROR,
 
         // logic constraints errors
         INVALID_ID,
