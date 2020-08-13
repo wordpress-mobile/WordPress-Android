@@ -1,63 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/coordinator_layout"
     android:animateLayoutChanges="true">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:elevation="@dimen/tabs_elevation"
-        app:tabMode="scrollable" />
+        android:layout_alignParentTop="true"
+        app:liftOnScrollTargetViewId="@+id/recycler">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_cross_white_24dp"
+            app:theme="@style/WordPress.ActionBar" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:layout_below="@+id/toolbar"
+            android:elevation="@dimen/tabs_elevation"
+            app:tabMode="scrollable" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
-        android:id="@+id/quota_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/colorSurface"
-        android:gravity="center"
-        android:padding="@dimen/margin_small"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <TextView
-            android:id="@+id/quota_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="@dimen/quota_bar_text_minimum_height"
-            android:textAllCaps="true"
-            android:textAppearance="?attr/textAppearanceBody1"
-            tools:text="19.5% of 3 GB used" />
-
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/quota_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_above="@+id/quota_bar"
-        android:background="?android:attr/listDivider" />
-
-    <FrameLayout
-        android:id="@+id/media_browser_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/quota_divider"
-        android:layout_below="@+id/tab_layout" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-</RelativeLayout>
+        <FrameLayout
+            android:id="@+id/media_browser_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/quota_divider"
+            android:layout_alignParentTop="true" />
+
+        <RelativeLayout
+            android:id="@+id/quota_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorSurface"
+            android:gravity="center"
+            android:padding="@dimen/margin_small"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/quota_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="@dimen/quota_bar_text_minimum_height"
+                android:textAllCaps="true"
+                android:textAppearance="?attr/textAppearanceBody1"
+                tools:text="19.5% of 3 GB used" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/quota_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:layout_above="@+id/quota_bar"
+            android:layout_alignWithParentIfMissing="true"
+            android:background="?android:attr/listDivider" />
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
