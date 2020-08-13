@@ -32,7 +32,7 @@ import javax.inject.Named
  */
 class ReaderPostFollowUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    private val mDispatcher: Dispatcher,
+    private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
@@ -51,11 +51,11 @@ class ReaderPostFollowUseCase @Inject constructor(
     }
 
     private fun onFollowingTapped() {
-        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
     }
 
     private fun onFollowTapped(blogName: String?, blogId: Long) {
-        mDispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         val notificationsSnackBar = prepareNotificationSnackbarAction(blogName, blogId)
         notificationsSnackBar.invoke()
     }
@@ -104,7 +104,7 @@ class ReaderPostFollowUseCase @Inject constructor(
                                                 blogId.toString(),
                                                 NEW
                                         )
-                                        mDispatcher.dispatch(
+                                        dispatcher.dispatch(
                                                 AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(
                                                         payload
                                                 )

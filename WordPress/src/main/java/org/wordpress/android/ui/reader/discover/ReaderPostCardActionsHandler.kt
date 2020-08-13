@@ -83,7 +83,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
-        AppLog.d(AppLog.T.READER, "Follow not implemented")
         uiScope.launch {
             followUseCase.toggleFollow(post)
         }
