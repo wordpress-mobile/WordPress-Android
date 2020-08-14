@@ -3135,7 +3135,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public String onFailedToInsertMediaTapped(int mediaId) {
+    public String getErrorMessageFromMedia(int mediaId) {
         MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
 
         if (media != null) {

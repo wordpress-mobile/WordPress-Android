@@ -554,7 +554,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         // Display 'retry upload' dialog
         AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(getString(R.string.retry_failed_upload_title));
-        String mediaErrorMessage = mEditorFragmentListener.onFailedToInsertMediaTapped(mediaId);
+        String mediaErrorMessage = mEditorFragmentListener.getErrorMessageFromMedia(mediaId);
         if (!TextUtils.isEmpty(mediaErrorMessage)) {
             builder.setMessage(mediaErrorMessage);
         }
