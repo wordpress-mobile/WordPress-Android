@@ -204,6 +204,10 @@
         <item name="android:layout_width">@dimen/avatar_sz_extra_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
+    <style name="ReaderImageView.Avatar.ExtraLarge" parent="ReaderImageView">
+        <item name="android:layout_width">@dimen/blavatar_sz_extra_large</item>
+        <item name="android:layout_height">@dimen/blavatar_sz_extra_large</item>
+    </style>
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
@@ -217,6 +221,14 @@
         <item name="android:ellipsize">end</item>
         <item name="checkedIconVisible">false</item>
         <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
+    </style>
+
+    <style name="ReaderTextView.Site.Header.Title" parent="ReaderTextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="textColor">?attr/colorOnSurface</item>
+        <item name="android:gravity">start</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>-->
     </style>
 
     <style name="ReaderInterestFilterChip" parent="@style/ReaderChip">
@@ -237,4 +249,23 @@
         <item name="ensureMinTouchTargetSize">false</item>
     </style>
 
+    <style name="ReaderTextView.Site.Header.Caption" parent="ReaderTextView">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="textColor">?attr/colorOnSurface</item>
+        <item name="android:gravity">start</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="ReaderTextView.Site.Header.Body" parent="ReaderTextView">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="textColor">?attr/colorOnSurface</item>
+        <item name="android:gravity">start</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
+    </style>
 </resources>
