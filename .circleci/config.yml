@@ -222,6 +222,56 @@ jobs:
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
+  Release Build:
+    executor:
+      name: android/default
+      api-version: "28"
+    steps:
+      - git/shallow-checkout:
+          init-submodules: true
+      - checkout-submodules
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - update-gradle-memory
+      - android/restore-gradle-cache
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+      - run:
+          name: Install other tools
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+            echo "export PATH='/home/linuxbrew/.linuxbrew/Cellar/bundletool/1.0.0/bin:$PATH'" >> $BASH_ENV
+            brew install bundletool
+      - run:
+          name: Build APK
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            APP_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $APP_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $APP_VERSION has been deployed!'" >> $BASH_ENV
+            if [[ $APP_VERSION == *"-rc-"* ]]; then
+              bundle exec fastlane build_and_upload_pre_releases skip_confirm:true create_release:true
+            else
+              bundle exec fastlane build_and_upload_release skip_confirm:true create_release:true
+            fi
+      - android/save-gradle-cache
+      - slack/status:
+          include_job_number_field: false
+          include_project_field: false
+          include_visit_job_action: false
+          webhook: '${SLACK_BUILD_WEBHOOK}'
+          failure_message: '${SLACK_FAILURE_MESSAGE}'
+          success_message: '${SLACK_SUCCESS_MESSAGE}'
+
   Connected Tests:
     parameters:
       post-to-slack:
@@ -419,3 +469,12 @@ workflows:
     when: << pipeline.parameters.translation_review_build >>
     jobs:
       - translation-review-build
+  Release Build:
+    unless: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - Release Build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/

@@ -611,14 +611,21 @@ ENV["HAS_ALPHA_VERSION"]="true"
     apk_path=options[:apk_path]
     temp_dir = Dir.mktmpdir()
 
-    command = "source ./tools/gradle-functions.sh"
-    command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
-    --output=\"#{temp_dir}/universal.apks\" \\
-    --mode=universal \\
-    --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
-    --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
-    --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
-    --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
+    command = ""
+    if is_ci 
+      command << "bundletool build-apks --bundle=\"#{bundle_path}\" \\
+      --output=\"#{temp_dir}/universal.apks\" \\
+      --mode=universal"
+    else
+      command = "source ./tools/gradle-functions.sh"
+      command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
+      --output=\"#{temp_dir}/universal.apks\" \\
+      --mode=universal \\
+      --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
+      --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
+      --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
+      --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
+    end
     sh(command)
 
     sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")
