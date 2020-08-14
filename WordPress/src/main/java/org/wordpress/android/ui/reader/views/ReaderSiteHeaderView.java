@@ -98,10 +98,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
         // Because in the case of feeds, the blogId is set to the same value as feedId AND we happen to
         // be following a blogId that matches our feedId, then that record is returned from the db therefore
         // we will have the wrong data.
-        if (mFeedId != 0) {
-            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
-        } else if (mBlogId != 0) {
+        if (mBlogId != 0) {
             localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
+        } else if (mFeedId != 0) {
+            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
         } else {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
             return;
