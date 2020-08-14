@@ -45,22 +45,18 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
+import static org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED;
+import static org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID;
+import static org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED;
+import static org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE;
+import static org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_URIS;
+import static org.wordpress.android.ui.photopicker.MediaPickerConstants.LOCAL_POST_ID;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
 public class MediaPickerActivity extends LocaleAwareActivity
         implements PhotoPickerFragment.PhotoPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
-
-    public static final String EXTRA_MEDIA_URIS = "media_uris";
-    public static final String EXTRA_MEDIA_ID = "media_id";
-    public static final String EXTRA_MEDIA_QUEUED = "media_queued";
-    public static final String EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED = "launch_wpstories_camera_requested";
-
-    // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
-    public static final String EXTRA_MEDIA_SOURCE = "media_source";
-
-    public static final String LOCAL_POST_ID = "local_post_id";
 
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
