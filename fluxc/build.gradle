@@ -21,14 +21,13 @@ repositories {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
 
     defaultConfig {
         versionCode 4
         versionName "0.1"
-        minSdkVersion 15
-        targetSdkVersion 28
+        minSdkVersion 16
+        targetSdkVersion 29
     }
     buildTypes {
         release {
@@ -103,6 +102,10 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+
+    // Encrypted Logging
+    api "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
+    api "net.java.dev.jna:jna:4.5.1@aar"
 }
 
 version = android.defaultConfig.versionName
