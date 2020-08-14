@@ -75,16 +75,16 @@ public class MediaPickerActivity extends LocaleAwareActivity
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject ImageEditorTracker mImageEditorTracker;
 
-    public enum PhotoPickerMediaSource {
+    public enum MediaPickerMediaSource {
         ANDROID_CAMERA,
         ANDROID_PICKER,
         APP_PICKER,
         WP_MEDIA_PICKER,
         STOCK_MEDIA_PICKER;
 
-        public static PhotoPickerMediaSource fromString(String strSource) {
+        public static MediaPickerMediaSource fromString(String strSource) {
             if (strSource != null) {
-                for (PhotoPickerMediaSource source : PhotoPickerMediaSource.values()) {
+                for (MediaPickerMediaSource source : MediaPickerMediaSource.values()) {
                     if (source.name().equalsIgnoreCase(strSource)) {
                         return source;
                     }
@@ -127,7 +127,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                 .commitAllowingStateLoss();
         } else {
-            fragment.setPhotoPickerListener(this);
+            fragment.setMediaPickerListener(this);
         }
         updateTitle(mBrowserType, actionBar);
     }
@@ -192,7 +192,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
-                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
+                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), MediaPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
@@ -200,7 +200,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
                     WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     File f = new File(mMediaCapturePath);
                     List<Uri> capturedImageUri = Collections.singletonList(Uri.fromFile(f));
-                    doMediaUrisSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
+                    doMediaUrisSelected(capturedImageUri, MediaPickerMediaSource.ANDROID_CAMERA);
                 } catch (RuntimeException e) {
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
@@ -211,7 +211,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
                 if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                     ArrayList<Long> ids =
                             ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
-                    doMediaIdsSelected(ids, PhotoPickerMediaSource.WP_MEDIA_PICKER);
+                    doMediaIdsSelected(ids, MediaPickerMediaSource.WP_MEDIA_PICKER);
                 }
                 break;
             // user selected a stock photo
@@ -220,13 +220,13 @@ public class MediaPickerActivity extends LocaleAwareActivity
                     long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
                     ArrayList<Long> ids = new ArrayList<>();
                     ids.add(mediaId);
-                    doMediaIdsSelected(ids, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
+                    doMediaIdsSelected(ids, MediaPickerMediaSource.STOCK_MEDIA_PICKER);
                 }
                 break;
             case IMAGE_EDITOR_EDIT_IMAGE:
                 if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
                     List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
-                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
+                    doMediaUrisSelected(uris, MediaPickerMediaSource.APP_PICKER);
                 }
                 break;
         }
@@ -273,7 +273,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
         finish();
     }
 
-    private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
+    private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull MediaPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             Uri mediaUri = mediaUris.get(0);
@@ -326,7 +326,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
+    private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull MediaPickerMediaSource source) {
         if (mediaIds != null && mediaIds.size() > 0) {
             if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
                 // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
@@ -359,7 +359,7 @@ public class MediaPickerActivity extends LocaleAwareActivity
     @Override
     public void onMediaChosen(@NonNull List<? extends Uri> uriList) {
         if (uriList.size() > 0) {
-            doMediaUrisSelected(uriList, PhotoPickerMediaSource.APP_PICKER);
+            doMediaUrisSelected(uriList, MediaPickerMediaSource.APP_PICKER);
         }
     }
 

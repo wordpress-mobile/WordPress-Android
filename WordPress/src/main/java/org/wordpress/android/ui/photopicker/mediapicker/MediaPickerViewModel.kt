@@ -95,7 +95,7 @@ class MediaPickerViewModel @Inject constructor(
             _softAskRequest
     ) { photoPickerItems, selectedIds, softAskRequest ->
         MediaPickerUiState(
-                buildPhotoPickerUiModel(photoPickerItems, selectedIds),
+                buildUiModel(photoPickerItems, selectedIds),
                 buildBottomBar(
                         photoPickerItems,
                         selectedIds,
@@ -113,7 +113,7 @@ class MediaPickerViewModel @Inject constructor(
     private lateinit var browserType: MediaBrowserType
     private var site: SiteModel? = null
 
-    private fun buildPhotoPickerUiModel(
+    private fun buildUiModel(
         data: List<MediaItem>?,
         selectedIds: List<Long>?
     ): PhotoListUiModel {

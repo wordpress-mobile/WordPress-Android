@@ -137,7 +137,7 @@ class MediaPickerFragment : Fragment() {
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
-                            PhotoPickerActionModeCallback(
+                            MediaPickerActionModeCallback(
                                     viewModel
                             )
                     )
@@ -222,11 +222,11 @@ class MediaPickerFragment : Fragment() {
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
         if (uiModel is PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
-                recycler.adapter = PhotoPickerAdapter(
+                recycler.adapter = MediaPickerAdapter(
                         imageManager
                 )
             }
-            val adapter = recycler.adapter as PhotoPickerAdapter
+            val adapter = recycler.adapter as MediaPickerAdapter
             val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
             recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
@@ -335,7 +335,7 @@ class MediaPickerFragment : Fragment() {
         viewModel.showCameraPopupMenu(ViewWrapper(view))
     }
 
-    fun setPhotoPickerListener(listener: MediaPickerListener?) {
+    fun setMediaPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
     }
 
@@ -446,7 +446,7 @@ class MediaPickerFragment : Fragment() {
                 args.putSerializable(WordPress.SITE, site)
             }
             val fragment = MediaPickerFragment()
-            fragment.setPhotoPickerListener(listener)
+            fragment.setMediaPickerListener(listener)
             fragment.arguments = args
             return fragment
         }

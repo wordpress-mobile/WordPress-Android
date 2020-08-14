@@ -16,7 +16,7 @@ import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.Act
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-class PhotoPickerActionModeCallback(private val viewModel: MediaPickerViewModel) : Callback,
+class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel) : Callback,
         LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry
     override fun onCreateActionMode(
