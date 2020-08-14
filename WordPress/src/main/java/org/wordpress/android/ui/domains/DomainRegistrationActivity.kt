@@ -8,14 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.toolbar_main.*
+import kotlinx.android.synthetic.main.domain_suggestions_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import javax.inject.Inject
 
-class DomainRegistrationActivity : LocaleAwareActivity() {
+class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitializedListener {
     enum class DomainRegistrationPurpose {
         AUTOMATED_TRANSFER,
         CTA_DOMAIN_CREDIT_REDEMPTION
@@ -136,5 +137,21 @@ class DomainRegistrationActivity : LocaleAwareActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        if (containerId == R.id.domain_suggestions_list) {
+            appbar_main.post {
+                appbar_main.isLiftOnScroll = false
+                appbar_main.setLifted(false)
+                appbar_main.elevation = 0F
+                appbar_main.requestLayout()
+            }
+        } else {
+            appbar_main.post {
+                appbar_main.isLiftOnScroll = true
+                appbar_main.liftOnScrollTargetViewId = containerId
+            }
+        }
     }
 }
