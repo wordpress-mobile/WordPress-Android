@@ -100,7 +100,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
@@ -743,13 +743,13 @@ class MySiteFragment : Fragment(),
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
                 if (!handleMediaPickerResultForStories(data, activity, selectedSite)) {
-                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                        val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
                         updateSiteIconMediaId(mediaId)
                     } else {
                         val mediaUriStringsArray = data.getStringArrayExtra(
-                                PhotoPickerActivity.EXTRA_MEDIA_URIS
+                                MediaPickerConstants.EXTRA_MEDIA_URIS
                         )
                         if (mediaUriStringsArray.isNullOrEmpty()) {
                             AppLog.e(
@@ -760,7 +760,7 @@ class MySiteFragment : Fragment(),
                         }
 
                         val source = PhotoPickerMediaSource.fromString(
-                                data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                                data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                         )
                         val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
                         AnalyticsTracker.track(stat)

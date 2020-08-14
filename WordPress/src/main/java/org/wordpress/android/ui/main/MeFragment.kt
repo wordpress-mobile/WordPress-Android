@@ -47,7 +47,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.util.AppLog
@@ -319,7 +319,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         when (requestCode) {
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val mediaUriStringsArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                val mediaUriStringsArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                 if (mediaUriStringsArray == null || mediaUriStringsArray.size == 0) {
                     AppLog.e(
                             UTILS,
@@ -328,7 +328,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                     return
                 }
                 val source = PhotoPickerMediaSource.fromString(
-                        data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                        data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                 )
                 val stat = if (source == ANDROID_CAMERA) ME_GRAVATAR_SHOT_NEW else ME_GRAVATAR_GALLERY_PICKED
                 AnalyticsTracker.track(stat)
