@@ -3139,7 +3139,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
 
         if (media != null) {
-            UploadUtils.getErrorMessageFromMedia(this, media);
+            return UploadUtils.getErrorMessageFromMedia(this, media);
         }
 
         return "";
