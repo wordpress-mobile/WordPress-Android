@@ -27,6 +27,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -61,6 +62,8 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+    @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
     fun setUp() {
@@ -71,7 +74,9 @@ class ReaderPostUiStateBuilderTest {
                 dateTimeUtilsWrapper,
                 readerImageScannerProvider,
                 readerUtilsWrapper,
-                readerPostMoreButtonUiStateBuilder
+                readerPostMoreButtonUiStateBuilder,
+                readerPostTagsUiStateBuilder,
+                appPrefsWrapper
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
@@ -820,6 +825,7 @@ class ReaderPostUiStateBuilderTest {
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
                 post = post,
+                isDiscover = false,
                 photonWidth = 0,
                 photonHeight = 0,
                 postListType = postListType,
@@ -830,7 +836,8 @@ class ReaderPostUiStateBuilderTest {
                 onDiscoverSectionClicked = mock(),
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
-                onPostHeaderViewClicked = mock()
+                onPostHeaderViewClicked = mock(),
+                onTagItemClicked = mock()
         )
     }
 

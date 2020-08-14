@@ -86,6 +86,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         when (it) {
                             is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                                     post = it.post,
+                                    isDiscover = true,
                                     photonWidth = photonWidth,
                                     photonHeight = photonHeight,
                                     isBookmarkList = false,
@@ -96,6 +97,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                     onMoreButtonClicked = this::onMoreButtonClicked,
                                     onVideoOverlayClicked = this::onVideoOverlayClicked,
                                     onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                    onTagItemClicked = this::onTagItemClicked,
                                     postListType = TAG_FOLLOWED
                             )
                             is InterestsYouMayLikeCard -> {
@@ -152,6 +154,11 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
         // TODO malinjir implement action
+    }
+
+    private fun onTagItemClicked(tagSlug: String) {
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, INTERESTS)
+        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
     private fun onPostItemClicked(postId: Long, blogId: Long) {

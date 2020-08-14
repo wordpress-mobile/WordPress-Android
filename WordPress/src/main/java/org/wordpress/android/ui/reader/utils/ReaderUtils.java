@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -424,5 +425,26 @@ public class ReaderUtils {
 
     public static boolean isDefaultInMemoryTag(ReaderTag tag) {
         return tag != null && tag.isDefaultInMemoryTag();
+    }
+
+    public static String getCommaSeparatedTagSlugs(ReaderTagList tags) {
+        StringBuilder slugs = new StringBuilder();
+        for (ReaderTag tag : tags) {
+            if (slugs.length() > 0) {
+                slugs.append(",");
+            }
+            final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
+            slugs.append(tagNameForApi);
+        }
+        return slugs.toString();
+    }
+
+    public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NotNull String commaSeparatedTagSlugs) {
+        ReaderTagList tags = new ReaderTagList();
+        for (String slug : commaSeparatedTagSlugs.split(",", -1)) {
+            ReaderTag tag = ReaderUtils.getTagFromTagName(slug, ReaderTagType.DEFAULT);
+            tags.add(tag);
+        }
+        return tags;
     }
 }
