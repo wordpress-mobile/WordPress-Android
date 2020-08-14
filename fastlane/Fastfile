@@ -595,6 +595,65 @@ ENV["HAS_ALPHA_VERSION"]="true"
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoDebug #{cmd_params}")
   end 
 
+  #####################################################################################
+  # trigger_ci
+  # -----------------------------------------------------------------------------------
+  # This lane triggers a CircleCI build on demand, with custom parameters
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  #   trigger_ci(
+  #     [token:<circleci_token>,]
+  #     [fork:<github_fork_name>,]
+  #     [branch:<git branch>,]
+  #     [parameters:<CircleCI pipeline parameters>]
+  #   )
+  # -----------------------------------------------------------------------------------
+  # Notes:
+  #   - The CircleCI token can be passed via the CIRCLECI_TOKEN env var instead of as a parameter to the lane call
+  #   - The fork parameter allows us to trigger a build on a fork of WPAndroid instead of the default repo on `wordpress-mobile` org.
+  #####################################################################################
+  desc "Trigger a CircleCI Build"
+  private_lane :trigger_ci do |options|
+    token = options[:token] || ENV['CIRCLECI_TOKEN']
+    UI.user_error!("You need to provide a CircleCI token either via the token: option or CIRCLECI_TOKEN env var") if token.nil?
+
+    require 'net/http'
+    require 'uri'
+    require 'json'
+
+    fork = options[:fork] || 'wordpress-mobile'
+    uri = URI.parse("https://circleci.com/api/v2/project/github/#{fork}/WordPress-Android/pipeline")
+    headers = {
+      'Content-Type' => 'application/json',
+      'Accept' => 'application/json',
+      "Circle-Token" => token
+    }
+
+    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+      request = Net::HTTP::Post.new(uri.request_uri, headers)
+      body = { "branch": options[:branch], "parameters": options[:parameters] }
+      request.body = body.to_json
+      response = http.request(request)
+      UI.message(response.body)
+    end
+  end
+
+  #####################################################################################
+  # trigger_screenshots
+  # -----------------------------------------------------------------------------------
+  # This lane triggers a CircleCI build on demand to generate Raw and Promo screenshots
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  #   bundle exec fastlane trigger_screenshots [token:<circleci_token>] [fork:<github_fork_name>]
+  # Notes:
+  #   - The CircleCI token can be passed via the CIRCLECI_TOKEN env var instead of as a parameter to the lane call
+  #   - The fork parameter allows us to trigger a build on a fork of WPAndroid instead of the default repo on `wordpress-mobile` org.
+  #####################################################################################
+  lane :trigger_screenshots do |options|
+    new_options = options.merge({ parameters: { "generate_screenshots": true } })
+    trigger_ci(new_options)
+  end
+
 #####################################################################################
 # Private lanes
 #####################################################################################
