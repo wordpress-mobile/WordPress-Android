@@ -69,12 +69,12 @@ class MediaPickerFragment : Fragment() {
     /*
      * parent activity must implement this listener
      */
-    interface PhotoPickerListener {
-        fun onPhotoPickerMediaChosen(uriList: List<Uri>)
-        fun onPhotoPickerIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
+    interface MediaPickerListener {
+        fun onMediaChosen(uriList: List<Uri>)
+        fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
     }
 
-    private var listener: PhotoPickerListener? = null
+    private var listener: MediaPickerListener? = null
 
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
@@ -160,13 +160,13 @@ class MediaPickerFragment : Fragment() {
         viewModel.onInsert.observe(viewLifecycleOwner, Observer
         { event ->
             event.getContentIfNotHandled()?.let { selectedUris ->
-                listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
+                listener?.onMediaChosen(selectedUris.map { it.uri })
             }
         })
 
         viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { (icon, allowMultipleSelection) ->
-                listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
+                listener?.onIconClicked(icon, allowMultipleSelection)
             }
         })
 
@@ -335,7 +335,7 @@ class MediaPickerFragment : Fragment() {
         viewModel.showCameraPopupMenu(ViewWrapper(view))
     }
 
-    fun setPhotoPickerListener(listener: PhotoPickerListener?) {
+    fun setPhotoPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
     }
 
@@ -436,7 +436,7 @@ class MediaPickerFragment : Fragment() {
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(
-            listener: PhotoPickerListener,
+            listener: MediaPickerListener,
             browserType: MediaBrowserType,
             site: SiteModel?
         ): MediaPickerFragment {

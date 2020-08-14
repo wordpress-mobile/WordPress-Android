@@ -27,7 +27,6 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
@@ -48,7 +47,7 @@ import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TY
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
 public class MediaPickerActivity extends LocaleAwareActivity
-        implements PhotoPickerFragment.PhotoPickerListener {
+        implements MediaPickerFragment.MediaPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
 
@@ -120,9 +119,9 @@ public class MediaPickerActivity extends LocaleAwareActivity
             mLocalPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         }
 
-        PhotoPickerFragment fragment = getPickerFragment();
+        MediaPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
-            fragment = PhotoPickerFragment.newInstance(this, mBrowserType, mSite);
+            fragment = MediaPickerFragment.newInstance(this, mBrowserType, mSite);
             getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -143,10 +142,10 @@ public class MediaPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private PhotoPickerFragment getPickerFragment() {
+    private MediaPickerFragment getPickerFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
         if (fragment != null) {
-            return (PhotoPickerFragment) fragment;
+            return (MediaPickerFragment) fragment;
         }
         return null;
     }
@@ -358,14 +357,14 @@ public class MediaPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onPhotoPickerMediaChosen(@NonNull List<? extends Uri> uriList) {
+    public void onMediaChosen(@NonNull List<? extends Uri> uriList) {
         if (uriList.size() > 0) {
             doMediaUrisSelected(uriList, PhotoPickerMediaSource.APP_PICKER);
         }
     }
 
     @Override
-    public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon, boolean multiple) {
+    public void onIconClicked(@NonNull MediaPickerFragment.MediaPickerIcon icon, boolean multiple) {
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCameraForImage();
