@@ -3,12 +3,18 @@ package org.wordpress.android.ui.photopicker.mediapicker
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.Video
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.photopicker.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.photopicker.mediapicker.MediaType.AUDIO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaType.DOCUMENT
+import org.wordpress.android.ui.photopicker.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.SqlUtils
@@ -20,23 +26,25 @@ class DeviceListBuilder
 @Inject constructor(
     val context: Context,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
-) {
-    suspend fun buildDeviceMedia(
-        browserType: MediaBrowserType
-    ): List<MediaItem> {
+) : MediaSource {
+    override suspend fun load(
+        mediaTypes: Set<MediaType>,
+        offset: Int,
+        pageSize: Int?
+    ): MediaLoadingResult {
         return withContext(bgDispatcher) {
             val result = mutableListOf<MediaItem>()
-            // images
-            if (browserType.isImagePicker) {
-                result.addAll(addMedia(Media.EXTERNAL_CONTENT_URI, false))
+            val deferredJobs = mediaTypes.map { mediaType ->
+                when(mediaType) {
+                    IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, false) }
+                    VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, true) }
+                    AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true) }
+                    DOCUMENT -> TODO()
+                }
             }
-
-            // videos
-            if (browserType.isVideoPicker) {
-                result.addAll(addMedia(Video.Media.EXTERNAL_CONTENT_URI, true))
-            }
+            deferredJobs.forEach { result.addAll(it.await()) }
             result.sortByDescending { it.id }
-            result
+            MediaLoadingResult.Success(result, false)
         }
     }
 
@@ -65,6 +73,7 @@ class DeviceListBuilder
                 val item = MediaItem(
                         id,
                         UriWrapper(Uri.withAppendedPath(baseUri, "" + id)),
+                        "",
                         isVideo
                 )
                 result.add(item)

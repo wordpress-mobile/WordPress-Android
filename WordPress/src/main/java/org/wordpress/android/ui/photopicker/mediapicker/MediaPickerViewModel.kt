@@ -5,7 +5,10 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -23,6 +26,7 @@ import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.PermissionsHandler
+import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_PHOTO
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_VIDEO
@@ -39,6 +43,8 @@ import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.Bot
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.NONE
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
+import org.wordpress.android.ui.photopicker.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -63,7 +69,7 @@ import javax.inject.Named
 class MediaPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val deviceListBuilder: DeviceListBuilder,
+    private val mediaLoaderFactory: MediaLoaderFactory,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
@@ -71,6 +77,8 @@ class MediaPickerViewModel @Inject constructor(
     private val context: Context,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
+    private lateinit var mediaLoader: MediaLoader
+    private val loadActions = Channel<LoadAction>()
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
@@ -225,11 +233,7 @@ class MediaPickerViewModel @Inject constructor(
             return
         }
         launch(bgDispatcher) {
-            val result = deviceListBuilder.buildDeviceMedia(browserType)
-            val currentItems = _photoPickerItems.value ?: listOf()
-            if (forceReload || currentItems != result) {
-                _photoPickerItems.postValue(result)
-            }
+            loadActions.send(LoadAction.Refresh)
         }
     }
 
@@ -245,12 +249,28 @@ class MediaPickerViewModel @Inject constructor(
         lastTappedIcon: MediaPickerIcon?,
         site: SiteModel?
     ) {
+        this.mediaLoader = mediaLoaderFactory.build()
         selectedIds?.let {
             _selectedIds.value = selectedIds
         }
         this.browserType = browserType
         this.lastTappedIcon = lastTappedIcon
         this.site = site
+        launch {
+            withContext(bgDispatcher) {
+                mediaLoader.loadMedia(loadActions).collect { domainModel ->
+                    _photoPickerItems.value = domainModel.domainItems
+                }
+            }
+            val mediaTypes = mutableSetOf<MediaType>()
+            if (browserType.isVideoPicker) {
+                mediaTypes.add(VIDEO)
+            }
+            if (browserType.isImagePicker) {
+                mediaTypes.add(IMAGE)
+            }
+            loadActions.send(LoadAction.Start(mediaTypes))
+        }
     }
 
     fun numSelected(): Int {
