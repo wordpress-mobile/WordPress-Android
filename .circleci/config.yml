@@ -336,6 +336,7 @@ jobs:
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
+      - update-gradle-memory
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
       - run:
