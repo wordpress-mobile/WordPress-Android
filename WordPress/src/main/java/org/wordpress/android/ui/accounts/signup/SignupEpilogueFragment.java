@@ -60,8 +60,8 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.MediaPickerConstants;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
@@ -89,8 +89,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
-import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener {
@@ -141,6 +139,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected AppPrefsWrapper mAppPrefsWrapper;
     @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SignupUtils mSignupUtils;
+    @Inject protected MediaPickerLauncher mMediaPickerLauncher;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -184,9 +183,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             @Override
             public void onClick(View view) {
                 mUnifiedLoginTracker.trackClick(Click.SELECT_AVATAR);
-                Intent intent = new Intent(getActivity(), PhotoPickerActivity.class);
-                intent.putExtra(ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
-                startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+                mMediaPickerLauncher.showGravatarPicker(requireActivity());
             }
         });
         headerAvatarLayout.setOnLongClickListener(new View.OnLongClickListener() {

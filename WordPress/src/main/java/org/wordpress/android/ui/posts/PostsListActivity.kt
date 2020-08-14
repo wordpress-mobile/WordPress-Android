@@ -45,6 +45,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
@@ -90,6 +91,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
+    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
 
     private lateinit var site: SiteModel
 
@@ -327,7 +329,8 @@ class PostsListActivity : LocaleAwareActivity(),
                         this@PostsListActivity,
                         action,
                         remotePreviewLogicHelper,
-                        previewStateHelper
+                        previewStateHelper,
+                        mediaPickerLauncher
                 )
             }
         })

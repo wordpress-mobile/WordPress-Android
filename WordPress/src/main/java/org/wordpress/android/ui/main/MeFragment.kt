@@ -48,6 +48,7 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.util.AppLog
@@ -74,6 +75,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -373,7 +375,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showPhotoPickerForGravatar() {
-        ActivityLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
+        mediaPickerLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
     }
 
     private fun startCropActivity(uri: Uri) {

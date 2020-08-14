@@ -167,6 +167,10 @@ public class ActivityLauncher {
         return intent;
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
+     */
+    @Deprecated
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site,
@@ -175,6 +179,11 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
+
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
+     */
+    @Deprecated
     public static void showPhotoPickerForResult(Fragment fragment,
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site,

@@ -92,6 +92,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
@@ -209,6 +210,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -921,7 +923,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (site != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.showPhotoPickerForResult(
+            mMediaPickerLauncher.showPhotoPickerForResult(
                     this,
                     MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                     site,

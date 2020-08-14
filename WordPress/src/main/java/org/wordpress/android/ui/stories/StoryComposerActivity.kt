@@ -38,6 +38,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -85,6 +86,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -255,7 +257,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showProvidedMediaPicker() {
-        ActivityLauncher.showPhotoPickerForResult(
+        mediaPickerLauncher.showPhotoPickerForResult(
                 this,
                 MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                 site,

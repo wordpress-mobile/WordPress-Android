@@ -101,6 +101,7 @@ import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
@@ -189,6 +190,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -1185,8 +1187,8 @@ class MySiteFragment : Fragment(),
 
     override fun onPositiveClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> ActivityLauncher.showPhotoPickerForResult(
-                    activity,
+            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showPhotoPickerForResult(
+                    requireActivity(),
                     SITE_ICON_PICKER, selectedSite, null
             )
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG -> {

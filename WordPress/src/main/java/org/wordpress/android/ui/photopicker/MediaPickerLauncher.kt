@@ -10,6 +10,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
@@ -54,6 +55,16 @@ class MediaPickerLauncher
         }
     }
 
+    fun showGravatarPicker(activity: Activity) {
+        val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            Intent(activity, MediaPickerActivity::class.java)
+        } else {
+            Intent(activity, PhotoPickerActivity::class.java)
+        }
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, GRAVATAR_IMAGE_PICKER)
+        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+    }
+
     private fun createShowPhotoPickerIntent(
         context: Context,
         browserType: MediaBrowserType,
@@ -66,7 +77,7 @@ class MediaPickerLauncher
             intent.putExtra(WordPress.SITE, site)
         }
         if (localPostId != null) {
-            intent.putExtra(MediaPickerActivity.LOCAL_POST_ID, localPostId.toInt())
+            intent.putExtra(MediaPickerConstants.LOCAL_POST_ID, localPostId.toInt())
         }
         return intent
     }
