@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 116
+        return 117
     }
 
     override fun getDbName(): String {
@@ -1272,6 +1272,17 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "UPLOAD_STATE_DB_VALUE INTEGER,FAILED_COUNT INTEGER," +
                                     "_id INTEGER PRIMARY KEY AUTOINCREMENT,UNIQUE(UUID) ON CONFLICT REPLACE)"
                     )
+                }
+                116 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCTopPerformerProductModel")
+                    db.execSQL("CREATE TABLE WCTopPerformerProductModel (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "PRODUCT_INFO TEXT, " +
+                            "CURRENCY TEXT, " +
+                            "QUANTITY INTEGER, " +
+                            "UNIT TEXT," +
+                            "TOTAL REAL)")
                 }
             }
         }
