@@ -61,6 +61,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
@@ -368,11 +369,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         case RequestCodes.PHOTO_PICKER:
                             if (data != null) {
                                 String[] mediaUriStringsArray =
-                                        data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
+                                        data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS);
 
                                 if (mediaUriStringsArray != null && mediaUriStringsArray.length > 0) {
                                     PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
-                                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
+                                            data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
                                                 ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW

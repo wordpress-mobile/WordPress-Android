@@ -7,7 +7,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 
@@ -19,7 +19,7 @@ class StoriesMediaPickerResultHandler {
             activity: Activity?,
             selectedSite: SiteModel?
         ): Boolean {
-            if (data.getBooleanExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
+            if (data.getBooleanExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
                 ActivityLauncher.addNewStoryForResult(
                         activity,
                         selectedSite,
@@ -39,7 +39,7 @@ class StoriesMediaPickerResultHandler {
                     return true
                 } else {
                     val mediaUriStringsArray = data.getStringArrayExtra(
-                            PhotoPickerActivity.EXTRA_MEDIA_URIS
+                            MediaPickerConstants.EXTRA_MEDIA_URIS
                     )
                     if (mediaUriStringsArray.isNullOrEmpty()) {
                         AppLog.e(

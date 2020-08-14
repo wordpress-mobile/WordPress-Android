@@ -37,7 +37,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -209,9 +209,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER -> {
-                    if (it.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                    if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                                it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                                it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                         )
                         storyEditorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
@@ -250,8 +250,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun setupRequestCodes(requestCodes: ExternalMediaPickerRequestCodesAndExtraKeys) {
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
-                PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
-        requestCodes.EXTRA_MEDIA_URIS = PhotoPickerActivity.EXTRA_MEDIA_URIS
+                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+        requestCodes.EXTRA_MEDIA_URIS = MediaPickerConstants.EXTRA_MEDIA_URIS
     }
 
     override fun showProvidedMediaPicker() {

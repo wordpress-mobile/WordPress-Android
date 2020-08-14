@@ -56,16 +56,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
 
-    public static final String EXTRA_MEDIA_URIS = "media_uris";
-    public static final String EXTRA_MEDIA_ID = "media_id";
-    public static final String EXTRA_MEDIA_QUEUED = "media_queued";
-    public static final String EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED = "launch_wpstories_camera_requested";
-
-    // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
-    public static final String EXTRA_MEDIA_SOURCE = "media_source";
-
-    public static final String LOCAL_POST_ID = "local_post_id";
-
     private String mMediaCapturePath;
     private MediaBrowserType mBrowserType;
 
@@ -117,11 +107,11 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         if (savedInstanceState == null) {
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            mLocalPostId = getIntent().getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
+            mLocalPostId = getIntent().getIntExtra(MediaPickerConstants.LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         } else {
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mLocalPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
+            mLocalPostId = savedInstanceState.getInt(MediaPickerConstants.LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         }
 
         PhotoPickerFragment fragment = getPickerFragment();
@@ -159,7 +149,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
-        outState.putInt(LOCAL_POST_ID, mLocalPostId);
+        outState.putInt(MediaPickerConstants.LOCAL_POST_ID, mLocalPostId);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -221,8 +211,8 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             // user selected a stock photo
             case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
-                if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
-                    long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
+                if (data != null && data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                    long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
                     ArrayList<Long> ids = new ArrayList<>();
                     ids.add(mediaId);
                     doMediaIdsSelected(ids, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
@@ -273,7 +263,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     private void launchWPStoriesCamera() {
         Intent intent = new Intent()
-                .putExtra(EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+                .putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -315,15 +305,15 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                                     break;
                             }
                             Intent intent = new Intent()
-                                    .putExtra(EXTRA_MEDIA_QUEUED, true);
+                                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED, true);
                             setResult(RESULT_OK, intent);
                             finish();
                         }
                     });
         } else {
             Intent intent = new Intent()
-                    .putExtra(EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))
-                    .putExtra(EXTRA_MEDIA_SOURCE, source.name())
+                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))
+                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name())
                     // set the browserType in the result, so caller can distinguish and handle things as needed
                     .putExtra(ARG_BROWSER_TYPE, mBrowserType);
             setResult(RESULT_OK, intent);
@@ -338,7 +328,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 Intent data = new Intent()
                         .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
                         .putExtra(ARG_BROWSER_TYPE, mBrowserType)
-                        .putExtra(EXTRA_MEDIA_SOURCE, source.name());
+                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
             } else {
@@ -351,8 +341,8 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 }
 
                 Intent data = new Intent()
-                        .putExtra(EXTRA_MEDIA_ID, mediaIds.get(0))
-                        .putExtra(EXTRA_MEDIA_SOURCE, source.name());
+                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_ID, mediaIds.get(0))
+                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
             }

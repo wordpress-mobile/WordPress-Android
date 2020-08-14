@@ -53,6 +53,7 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
@@ -192,7 +193,7 @@ public class ActivityLauncher {
             intent.putExtra(WordPress.SITE, site);
         }
         if (localPostId != null) {
-            intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
+            intent.putExtra(MediaPickerConstants.LOCAL_POST_ID, localPostId.intValue());
         }
         return intent;
     }
@@ -676,7 +677,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
@@ -709,7 +710,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS, mediaUris);
+        intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, mediaUris);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }

@@ -122,8 +122,8 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
@@ -2302,23 +2302,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     // user chose a featured image
-                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
                         setFeaturedImageId(mediaId);
-                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_QUEUED)) {
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
-                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         List<Uri> uris = convertStringArrayIntoUrisList(
-                                data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
-                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         // pass array with single item
-                        long[] mediaIds = {data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0)};
+                        long[] mediaIds = {data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)};
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
