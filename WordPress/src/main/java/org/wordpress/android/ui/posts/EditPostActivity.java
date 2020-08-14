@@ -122,6 +122,7 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
@@ -369,6 +370,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     private StorePostViewModel mViewModel;
 
@@ -2568,10 +2570,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
@@ -2584,10 +2586,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddVideoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
@@ -2595,10 +2597,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
