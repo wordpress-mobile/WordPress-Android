@@ -2,6 +2,10 @@
 -----
 * [***] Block Editor: New feature for WordPress.com and Jetpack sites: auto-complete username mentions. An auto-complete popup will show up when the user types the @ character in the block editor.
 
+15.4.1
+-----
+* [**] Block Editor: Fix for editing the Classic Block in the Unsupported block editor
+
 15.4
 -----
 * [***] The login and signup flows were unified and have a new design.
