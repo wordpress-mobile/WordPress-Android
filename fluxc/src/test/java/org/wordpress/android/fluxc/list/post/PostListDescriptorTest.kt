@@ -179,6 +179,20 @@ internal class PostListDescriptorTest(
                             shouldHaveSameTypeIdentifier = true,
                             shouldHaveSameUniqueIdentifier = false
                     ),
+                    PostListDescriptorTestCase(
+                            typeIdentifierReason = "Different search query should have same type identifiers",
+                            uniqueIdentifierReason = "Different search query should have different unique identifiers",
+                            descriptor1 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    searchQuery = LIST_DESCRIPTOR_TEST_QUERY_1
+                            ),
+                            descriptor2 = PostListDescriptorForXmlRpcSite(
+                                    mockSite,
+                                    searchQuery = LIST_DESCRIPTOR_TEST_QUERY_2
+                            ),
+                            shouldHaveSameTypeIdentifier = true,
+                            shouldHaveSameUniqueIdentifier = false
+                    ),
                     // Different list config
                     PostListDescriptorTestCase(
                             typeIdentifierReason = "Different list configs should have same type identifiers",
