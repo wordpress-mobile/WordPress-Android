@@ -1310,6 +1310,8 @@
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">hide all</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1740,7 +1742,7 @@
     <string name="reader_label_followed_blog">Site followed</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
-    <string name="reader_label_follow_count">%,d followers</string>
+    <string name="reader_label_follow_count">%,d Followers</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
@@ -2874,6 +2876,67 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
+
+    <string name="capture_button_alt">Capture</string>
+    <string name="flip_button_alt">Flip camera</string>
+    <string name="flash_button_alt">Flash</string>
+    <string name="stickers_button_alt">Stickers</string>
+    <string name="more_button_alt">More</string>
+    <string name="text_button_alt">Text</string>
+    <string name="sound_button_alt">Sound</string>
+    <string name="label_control_flip_camera">Flip</string>
+    <string name="label_control_flash">Flash</string>
+    <string name="label_control_saving">Saving</string>
+    <string name="label_control_saved">Saved</string>
+    <string name="label_control_retry">Retry</string>
+    <string name="label_snackbar_loop_frame_saved">Saved to photos</string>
+    <string name="label_snackbar_share">SHARE</string>
+    <string name="label_share_to">Share to</string>
+    <string name="label_done">Done</string>
+    <string name="label_control_publish">Next</string>
+    <string name="label_close_button">Close</string>
+    <string name="label_saved_icon">Saved</string>
+    <string name="label_retry_icon">Retry</string>
+    <string name="label_frame_image">Slide</string>
+    <string name="label_frame_unselected_border">unselected</string>
+    <string name="label_frame_selected_border">selected</string>
+    <string name="label_frame_errored">errored</string>
+    <string name="label_text_alignment_button">Change text alignment</string>
+    <string name="label_text_color_button">Change text color</string>
+    <string name="menu_delete_page">Delete slide</string>
+    <string name="dialog_discard_page_title">Delete story slide?</string>
+    <string name="dialog_discard_page_message">This slide will be removed from your story.</string>
+    <string name="dialog_discard_errored_page_message">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
+    <string name="dialog_discard_page_ok_button">Delete</string>
+    <string name="dialog_discard_story_title">Discard story post?</string>
+    <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
+    <string name="dialog_discard_story_ok_button">Discard</string>
+    <string name="pref_camera_selection">pref_camera_selection</string>
+    <string name="pref_flash_mode_selection">pref_flash_mode_selection</string>
+    <string name="story_saving_untitled">Untitled</string>
+    <string name="story_saving_title">Saving "%1$s"…</string>
+    <string name="story_saving_title_several">several stories</string>
+    <string name="story_saving_subtitle_frames_remaining_singular">1 slide remaining</string>
+    <string name="story_saving_subtitle_frames_remaining_plural">%1$d slides remaining</string>
+    <string name="story_saving_snackbar_started">Uploading "%1$s"…</string>
+    <string name="story_saving_snackbar_finished_successfully">"%1$s" published</string>
+    <string name="story_saving_snackbar_finished_with_error">Unable to upload "%1$s"</string>
+    <string name="story_saving_failed_title">Unable to upload "%1$s"</string>
+    <string name="story_saving_failed_message_singular">1 slide requires action</string>
+    <string name="story_saving_failed_message_plural">%1$d slides require action</string>
+    <string name="story_saving_failed_quick_action_manage">Manage</string>
+    <string name="dialog_story_saving_error_title_singular">Unable to save 1 slide</string>
+    <string name="dialog_story_saving_error_title_plural">Unable to save %1$d slides</string>
+    <string name="dialog_story_saving_error_message">Retry saving or delete the slides, then try publishing your story again.</string>
+    <string name="dialog_insufficient_device_storage_error_title">Insufficient device storage</string>
+    <string name="dialog_insufficient_device_storage_error_message">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button">View Storage</string>
+    <string name="toast_story_page_not_found">Couldn\'t find Story slide</string>
+    <string name="toast_capture_operation_in_progress">Operation in progress, try again</string>
+    <string name="toast_error_saving_image">Error saving image</string>
+    <string name="toast_error_saving_video">Video could not be saved</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="toast_error_playing_video">An error occurred while playing your video</string>
 
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->

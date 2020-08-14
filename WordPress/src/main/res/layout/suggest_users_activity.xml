@@ -14,8 +14,7 @@
         android:padding="@dimen/margin_medium"
         android:gravity="center"
         android:background="?attr/colorGutenbergBackground"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_medium"
+        android:textAppearance="?attr/textAppearanceBody2"
         android:visibility="gone"
         android:elevation="@dimen/popup_over_toolbar_elevation"
         />

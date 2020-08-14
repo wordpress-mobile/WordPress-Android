@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTagType.INTERESTS
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -15,10 +16,12 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -33,6 +36,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -81,6 +85,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     posts.cards.filterIsInstance<ReaderPostCard>().map {
                         postUiStateBuilder.mapPostToUiState(
                                 post = it.post,
+                                isDiscover = true,
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
@@ -91,6 +96,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onMoreButtonClicked = this::onMoreButtonClicked,
                                 onVideoOverlayClicked = this::onVideoOverlayClicked,
                                 onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                onTagItemClicked = this::onTagItemClicked,
                                 postListType = TAG_FOLLOWED
                         )
                     },
@@ -135,6 +141,11 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
         // TODO malinjir implement action
+    }
+
+    private fun onTagItemClicked(tagSlug: String) {
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, INTERESTS)
+        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
     private fun onPostItemClicked(postId: Long, blogId: Long) {

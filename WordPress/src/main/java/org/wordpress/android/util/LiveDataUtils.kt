@@ -93,7 +93,7 @@ fun <T, U, V> mergeAsyncNotNull(
  * @param sourceB second source
  * @return new data source
  */
-fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?) -> V?): MediatorLiveData<V> {
+fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?) -> V?): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
         mediator.value = Pair(it, mediator.value?.second)
@@ -139,23 +139,81 @@ fun <S, T, U, V> merge(
     distinct: Boolean = false,
     merger: (S?, T?, U?) -> V
 ): MediatorLiveData<V> {
-    val mediator = MediatorLiveData<Triple<S?, T?, U?>>()
+    data class TripleContainer(val first: S? = null, val second: T? = null, val third: U? = null)
+
+    val mediator = MediatorLiveData<TripleContainer>()
+    mediator.value = TripleContainer()
     mediator.addSource(sourceA) {
-        if (mediator.value?.first != it || !distinct) {
-            mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
         }
     }
     mediator.addSource(sourceB) {
-        if (mediator.value?.second != it || !distinct) {
-            mediator.value = Triple(mediator.value?.first, it, mediator.value?.third)
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
         }
     }
     mediator.addSource(sourceC) {
-        if (mediator.value?.third != it || !distinct) {
-            mediator.value = Triple(mediator.value?.first, mediator.value?.second, it)
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
         }
     }
-    return mediator.map { (dataA, dataB, dataC) -> merger(dataA, dataB, dataC) }
+    return mediator.map { (first, second, third) -> merger(first, second, third) }
+}
+
+/**
+ * Merges four LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @param sourceC third source
+ * @param sourceD fourth source
+ * @return new data source
+ */
+fun <S, T, U, V, W> merge(
+    sourceA: LiveData<S>,
+    sourceB: LiveData<T>,
+    sourceC: LiveData<U>,
+    sourceD: LiveData<V>,
+    distinct: Boolean = false,
+    merger: (S?, T?, U?, V?) -> W?
+): LiveData<W> {
+    data class FourItemContainer(
+        val first: S? = null,
+        val second: T? = null,
+        val third: U? = null,
+        val fourth: V? = null
+    )
+
+    val mediator = MediatorLiveData<FourItemContainer>()
+    mediator.value = FourItemContainer()
+    mediator.addSource(sourceA) {
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
+    }
+    mediator.addSource(sourceB) {
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
+    }
+    mediator.addSource(sourceC) {
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
+    }
+    mediator.addSource(sourceD) {
+        val container = mediator.value
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
+    }
+    return mediator.map { (first, second, third, fourth) -> merger(first, second, third, fourth) }
 }
 
 /**
@@ -231,6 +289,20 @@ fun <T> LiveData<T>.distinct(): MediatorLiveData<T> {
     mediatorLiveData.addSource(this) {
         if (it != mediatorLiveData.value) {
             mediatorLiveData.value = it
+        }
+    }
+    return mediatorLiveData
+}
+
+/**
+ * This method folds previous and updated value in a result
+ */
+fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveData<T> {
+    val mediatorLiveData: MediatorLiveData<T> = MediatorLiveData()
+    mediatorLiveData.addSource(this) {
+        if (it != null) {
+            val previous = mediatorLiveData.value
+            mediatorLiveData.value = if (previous != null) action(previous, it) else it
         }
     }
     return mediatorLiveData
