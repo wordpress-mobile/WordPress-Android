@@ -1052,8 +1052,9 @@ public class EditPostSettingsFragment extends Fragment {
             int postId = getEditPostRepository().getId();
             mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId);
 
-            mMediaPickerLauncher.showPhotoPickerForResult(requireActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
-                    postId);
+            mMediaPickerLauncher
+                    .showPhotoPickerForResult(requireActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
+                            postId);
         }
     }
 
