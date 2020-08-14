@@ -95,7 +95,7 @@ class PostListFragment : ViewPagerFragment() {
         super.onViewCreated(view, savedInstanceState)
         postListType = requireNotNull(arguments).getSerializable(EXTRA_POST_LIST_TYPE) as PostListType
 
-        if(postListType == SEARCH){
+        if (postListType == SEARCH) {
             recyclerView?.id = R.id.posts_search_recycler_view_id
         }
 

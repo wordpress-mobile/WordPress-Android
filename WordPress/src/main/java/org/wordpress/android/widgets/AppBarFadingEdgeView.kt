@@ -17,7 +17,9 @@ import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.getColorFromAttribute
 
 class AppBarFadingEdgeView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     init {
         isDuplicateParentStateEnabled = true
@@ -57,8 +59,8 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
                         com.google.android.material.R.attr.state_liftable,
                         android.R.attr.state_enabled
                 ), fadingEdgeDrawableFlush
-        );
-        fadingAgeStateListDrawable.addState(StateSet.WILD_CARD, fadingEdgeDrawableElevated);
+        )
+        fadingAgeStateListDrawable.addState(StateSet.WILD_CARD, fadingEdgeDrawableElevated)
         background = fadingAgeStateListDrawable
     }
 }
