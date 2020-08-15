@@ -2862,6 +2862,7 @@
     <string name="gutenberg_native_10_street_road" tools:ignore="UnusedResources">10 Street Road</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_555_555_1234" tools:ignore="UnusedResources">(555)555–1234</string>
+    <string name="gutenberg_native_a_block_that_groups_other_blocks" tools:ignore="UnusedResources">A block that groups other blocks.</string>
     <!-- translators: sample content for "Portfolio" page template -->
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented" tools:ignore="UnusedResources">A description of the project and the works presented.</string>
     <!-- translators: sample content for "Contact" page template -->
@@ -2876,24 +2877,31 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
+    <string name="gutenberg_native_add_column_after" tools:ignore="UnusedResources">Add Column After</string>
+    <string name="gutenberg_native_add_column_before" tools:ignore="UnusedResources">Add Column Before</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Add link text</string>
     <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Add paragraph block</string>
+    <string name="gutenberg_native_add_row_after" tools:ignore="UnusedResources">Add Row After</string>
+    <string name="gutenberg_native_add_row_before" tools:ignore="UnusedResources">Add Row Before</string>
     <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">Add To Beginning</string>
     <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Add To End</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Add URL</string>
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
+    <string name="gutenberg_native_align_column_center" tools:ignore="UnusedResources">Align Column Center</string>
+    <string name="gutenberg_native_align_column_left" tools:ignore="UnusedResources">Align Column Left</string>
+    <string name="gutenberg_native_align_column_right" tools:ignore="UnusedResources">Align Column Right</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
-    <string name="gutenberg_native_base" tools:ignore="UnusedResources">Base</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
     <!-- translators: displayed right after the block is cut. -->
     <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">Block cut</string>
     <!-- translators: displayed right after the block is duplicated. -->
     <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">Block duplicated</string>
+    <string name="gutenberg_native_block_has_no_assets" tools:ignore="UnusedResources">Block has no assets.</string>
     <!-- translators: displayed right after the block is pasted. -->
     <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">Block pasted</string>
     <!-- translators: displayed right after the block is removed. -->
@@ -2901,27 +2909,32 @@
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
     <!-- translators: title for "Blog" page template -->
     <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
-    <string name="gutenberg_native_child_blocks" tools:ignore="UnusedResources">Child Blocks</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Choose image</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
+    <string name="gutenberg_native_column_count" tools:ignore="UnusedResources">Column Count</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
-    <string name="gutenberg_native_convert_to_blocks" tools:ignore="UnusedResources">Convert to blocks</string>
-    <string name="gutenberg_native_coordinated_universal_time" tools:ignore="UnusedResources">Coordinated Universal Time</string>
+    <string name="gutenberg_native_convert_to_regular_block" tools:ignore="UnusedResources">Convert to Regular Block</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
+    <!-- Translators: Number of blocks being copied -->
+    <string name="gutenberg_native_copied_d_blocks_to_clipboard" tools:ignore="UnusedResources">Copied %d blocks to clipboard.</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
-    <string name="gutenberg_native_delete_site_logo" tools:ignore="UnusedResources">Delete Site Logo</string>
-    <string name="gutenberg_native_description" tools:ignore="UnusedResources">description</string>
+    <!-- translators: %d: number of blocks. -->
+    <string name="gutenberg_native_d_blocks" tools:ignore="UnusedResources">%d blocks</string>
+    <string name="gutenberg_native_delete_column" tools:ignore="UnusedResources">Delete Column</string>
+    <string name="gutenberg_native_delete_row" tools:ignore="UnusedResources">Delete Row</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
+    <!-- translators: ARIA label for the Document sidebar tab, selected. -->
+    <string name="gutenberg_native_document_selected" tools:ignore="UnusedResources">Document (selected)</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Double tap to add a block</string>
@@ -2971,7 +2984,6 @@ translators: sample content for "Team" page template -->
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <string name="gutenberg_native_image_width" tools:ignore="UnusedResources">Image width</string>
     <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_inspiration" tools:ignore="UnusedResources">Inspiration</string>
@@ -2991,7 +3003,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
-    <string name="gutenberg_native_media_preview" tools:ignore="UnusedResources">Media preview</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block down from row %1$s to row %2$s</string>
@@ -3006,6 +3017,8 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block up from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Move Image Backward</string>
     <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Move Image Forward</string>
+    <!-- Translators: Number of blocks being cut -->
+    <string name="gutenberg_native_moved_d_blocks_to_clipboard" tools:ignore="UnusedResources">Moved %d blocks to clipboard.</string>
     <string name="gutenberg_native_my_document_setting_panel" tools:ignore="UnusedResources">My Document Setting Panel</string>
     <!-- translators: sample content for "Portfolio" page template -->
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car" tools:ignore="UnusedResources">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
@@ -3022,7 +3035,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
-    <string name="gutenberg_native_open_the_block_list_view" tools:ignore="UnusedResources">Open the block list view.</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
     <string name="gutenberg_native_paste_block" tools:ignore="UnusedResources">Paste block</string>
@@ -3046,6 +3058,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
     <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">Reset Block</string>
+    <string name="gutenberg_native_row_count" tools:ignore="UnusedResources">Row Count</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s block. Empty</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
@@ -3063,15 +3076,10 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <!-- translators: title for "Services" page template -->
     <string name="gutenberg_native_services" tools:ignore="UnusedResources">Services</string>
-    <string name="gutenberg_native_show_a_site_logo" tools:ignore="UnusedResources">Show a site logo</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
     <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
-    <string name="gutenberg_native_site_icon" tools:ignore="UnusedResources">Site Icon</string>
-    <string name="gutenberg_native_site_logo" tools:ignore="UnusedResources">Site Logo</string>
-    <string name="gutenberg_native_site_logo_settings" tools:ignore="UnusedResources">Site Logo Settings</string>
-    <string name="gutenberg_native_site_tagline" tools:ignore="UnusedResources">Site Tagline</string>
     <string name="gutenberg_native_size" tools:ignore="UnusedResources">Size</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
     <!-- translators: sample content for "Services" page template -->
@@ -3093,7 +3101,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_translate" tools:ignore="UnusedResources">Translate</string>
     <string name="gutenberg_native_try_a_starter_layout" tools:ignore="UnusedResources">Try a starter layout</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si" tools:ignore="UnusedResources">Upload an image, or pick one from your media library, to be your site logo</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_usa" tools:ignore="UnusedResources">USA</string>
     <!-- translators: accessibility text. %s: video caption. -->
