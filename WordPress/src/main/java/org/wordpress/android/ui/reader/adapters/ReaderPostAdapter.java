@@ -306,7 +306,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled
+                isFollowButtonEnabled,
+                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
             )
         );
         tagHolder.onBind(uiState);
@@ -539,8 +540,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return AppPrefs.isReaderImprovementsPhase2Enabled()
-               && ((getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty());
+        return (getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty();
     }
 
     private boolean isDiscover() {
