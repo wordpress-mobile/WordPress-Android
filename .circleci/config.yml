@@ -23,7 +23,7 @@ commands:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -258,17 +258,18 @@ jobs:
             APP_VERSION=$(./gradlew -q printVersionName | tail -1)
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $APP_VERSION failed!'" >> $BASH_ENV
             echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $APP_VERSION has been deployed!'" >> $BASH_ENV
+            bundle check
             if [[ $APP_VERSION == *"-rc-"* ]]; then
-              bundle exec fastlane build_and_upload_pre_releases skip_confirm:true create_release:true
+              bundle exec fastlane build_and_upload_pre_releases skip_confirm:true skip_prechecks:true create_release:true
             else
-              bundle exec fastlane build_and_upload_release skip_confirm:true create_release:true
+              bundle exec fastlane build_and_upload_release skip_confirm:true skip_prechecks:true create_release:true
             fi
       - android/save-gradle-cache
       - slack/status:
           include_job_number_field: false
           include_project_field: false
           include_visit_job_action: false
-          webhook: '${SLACK_BUILD_WEBHOOK}'
+          webhook: '${SLACK_BUILD_WEBHOOK_2}'
           failure_message: '${SLACK_FAILURE_MESSAGE}'
           success_message: '${SLACK_SUCCESS_MESSAGE}'
 

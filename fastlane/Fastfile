@@ -258,7 +258,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
       alpha: true,
       beta: true,
       final: false)
-    android_build_preflight()
+    android_build_preflight() unless (options[:skip_prechecks])
     build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
     build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
