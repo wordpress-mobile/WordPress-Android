@@ -98,7 +98,7 @@ class ReaderPostListViewModel @Inject constructor(
         readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
     }
 
-    fun onFollowButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+    fun onFollowSiteClicked(post: ReaderPost, bookmarksList: Boolean) {
         readerPostCardActionsHandler.onAction(post, FOLLOW, bookmarksList)
     }
 

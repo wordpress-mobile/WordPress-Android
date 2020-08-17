@@ -2583,7 +2583,7 @@ public class ReaderPostListFragment extends Fragment
     public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
         switch (actionType) {
             case FOLLOW:
-                mViewModel.onFollowButtonClicked(post, isBookmarksList());
+                mViewModel.onFollowSiteClicked(post, isBookmarksList());
                 break;
             case SITE_NOTIFICATIONS:
                 if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
