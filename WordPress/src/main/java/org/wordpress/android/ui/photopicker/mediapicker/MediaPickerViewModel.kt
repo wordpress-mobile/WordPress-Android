@@ -256,12 +256,14 @@ class MediaPickerViewModel @Inject constructor(
         this.browserType = browserType
         this.lastTappedIcon = lastTappedIcon
         this.site = site
-        launch {
-            withContext(bgDispatcher) {
-                mediaLoader.loadMedia(loadActions).collect { domainModel ->
+        launch(bgDispatcher) {
+            mediaLoader.loadMedia(loadActions).collect { domainModel ->
+                withContext(mainDispatcher) {
                     _photoPickerItems.value = domainModel.domainItems
                 }
             }
+        }
+        launch(bgDispatcher) {
             val mediaTypes = mutableSetOf<MediaType>()
             if (browserType.isVideoPicker) {
                 mediaTypes.add(VIDEO)
