@@ -91,7 +91,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "15.4.1"
             }
-            versionCode 902
+            versionCode 906
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
