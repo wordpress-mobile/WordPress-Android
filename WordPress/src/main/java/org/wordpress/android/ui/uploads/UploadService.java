@@ -56,8 +56,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.stories.StoryComposerActivity.POST_FORMAT_WP_STORY_KEY;
-
 public class UploadService extends Service {
     private static final String KEY_CHANGE_STATUS_TO_PUBLISH = "shouldPublish";
     private static final String KEY_SHOULD_RETRY = "shouldRetry";
@@ -609,7 +607,7 @@ public class UploadService extends Service {
             // obtain site url used to generate attachment page url
             SiteModel site = sInstance.mSiteStore.getSiteByLocalId(media.getLocalSiteId());
 
-            if (POST_FORMAT_WP_STORY_KEY.compareTo(post.getPostFormat()) == 0) {
+            if (PostUtils.contentContainsWPStoryGutenbergBlocks(post.getContent())) {
                 processor.replaceMediaLocalIdWithRemoteMediaIdInPost(
                         post, FluxCUtils.mediaFileFromMediaModel(media));
             } else {
