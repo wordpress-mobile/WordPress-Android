@@ -354,13 +354,14 @@ jobs:
             VERSION_NAME="${APP_VERSION_PREFIX}-build-${TODAY_DATE}-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
+            cp ~/.android/debug_a8c.keystore ~/.android/debug.keystore
             bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
           command: |
             mkdir -p Artifacts
-            mv WordPress/build/outputs/apk/jalapeno/debug/org.wordpress.android-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+            mv WordPress/build/outputs/apk/jalapeno/release/org.wordpress.android-jalapeno-release.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
       - run: 
           name: Upload APK
           command: |
