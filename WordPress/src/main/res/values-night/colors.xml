@@ -58,6 +58,8 @@
 
     <!-- Reader Post Card -->
     <color name="reader_post_list_background">@color/gray_100</color>
+    <color name="reader_welcome_card_background">@color/background_dark</color>
+    <color name="reader_welcome_card_text">@color/white</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>

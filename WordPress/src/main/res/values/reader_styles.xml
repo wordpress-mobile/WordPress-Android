@@ -19,6 +19,12 @@
         <item name="cardCornerRadius">0dp</item>
     </style>
 
+    <style name="ReaderWelcomeCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/reader_card_elevation</item>
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardBackgroundColor">@color/reader_welcome_card_background</item>
+    </style>
+
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>
@@ -136,6 +142,18 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
+    <style name="ReaderTextView.Post.Welcome.Title" parent="ReaderTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/reader_welcome_card_text</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:text">@string/reader_welcome_banner</item>
+        <item name="android:paddingStart">@dimen/margin_extra_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_extra_large</item>
+    </style>
+
     <!-- Buttons -->
     <style name="WordPress.ReaderPrimaryButton" parent="WordPress.Button.Primary">
         <item name="android:textAllCaps">false</item>
@@ -207,6 +225,11 @@
     <style name="ReaderImageView.Avatar.ExtraLarge" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/blavatar_sz_extra_large</item>
         <item name="android:layout_height">@dimen/blavatar_sz_extra_large</item>
+    </style>
+    <style name="ReaderWelcomeBannerImageView" parent="ReaderImageView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/bg_colorful_dots</item>
     </style>
 
     <!-- progress bars -->

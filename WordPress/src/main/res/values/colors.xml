@@ -325,5 +325,7 @@
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
+    <color name="reader_welcome_card_background">@color/primary_emphasis_lowest</color>
+    <color name="reader_welcome_card_text">@color/blue_70</color>
 
 </resources>
