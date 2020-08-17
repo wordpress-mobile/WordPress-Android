@@ -135,7 +135,6 @@ class PhotoPickerFragment : Fragment() {
                 setupPhotoList(uiState.photoListUiModel)
                 setupBottomBar(uiState.bottomBarUiModel)
                 setupSoftAskView(uiState.softAskViewUiModel)
-                uiState.fabUiModel.let(this::setupFab)
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
@@ -143,7 +142,10 @@ class PhotoPickerFragment : Fragment() {
                                     viewModel
                             )
                     )
+                } else if (uiState.actionModeUiModel is ActionModeUiModel.Hidden && isShowingActionMode) {
+                    isShowingActionMode = false
                 }
+                uiState.fabUiModel.let(this::setupFab)
             }
         })
 

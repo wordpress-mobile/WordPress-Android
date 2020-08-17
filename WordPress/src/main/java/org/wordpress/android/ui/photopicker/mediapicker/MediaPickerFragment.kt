@@ -69,12 +69,12 @@ class MediaPickerFragment : Fragment() {
     /*
      * parent activity must implement this listener
      */
-    interface PhotoPickerListener {
-        fun onPhotoPickerMediaChosen(uriList: List<Uri>)
-        fun onPhotoPickerIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
+    interface MediaPickerListener {
+        fun onMediaChosen(uriList: List<Uri>)
+        fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
     }
 
-    private var listener: PhotoPickerListener? = null
+    private var listener: MediaPickerListener? = null
 
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
@@ -137,7 +137,7 @@ class MediaPickerFragment : Fragment() {
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
-                            PhotoPickerActionModeCallback(
+                            MediaPickerActionModeCallback(
                                     viewModel
                             )
                     )
@@ -160,13 +160,13 @@ class MediaPickerFragment : Fragment() {
         viewModel.onInsert.observe(viewLifecycleOwner, Observer
         { event ->
             event.getContentIfNotHandled()?.let { selectedUris ->
-                listener?.onPhotoPickerMediaChosen(selectedUris.map { it.uri })
+                listener?.onMediaChosen(selectedUris.map { it.uri })
             }
         })
 
         viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { (icon, allowMultipleSelection) ->
-                listener?.onPhotoPickerIconClicked(icon, allowMultipleSelection)
+                listener?.onIconClicked(icon, allowMultipleSelection)
             }
         })
 
@@ -222,11 +222,11 @@ class MediaPickerFragment : Fragment() {
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
         if (uiModel is PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
-                recycler.adapter = PhotoPickerAdapter(
+                recycler.adapter = MediaPickerAdapter(
                         imageManager
                 )
             }
-            val adapter = recycler.adapter as PhotoPickerAdapter
+            val adapter = recycler.adapter as MediaPickerAdapter
             val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
             recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
@@ -335,7 +335,7 @@ class MediaPickerFragment : Fragment() {
         viewModel.showCameraPopupMenu(ViewWrapper(view))
     }
 
-    fun setPhotoPickerListener(listener: PhotoPickerListener?) {
+    fun setMediaPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
     }
 
@@ -436,7 +436,7 @@ class MediaPickerFragment : Fragment() {
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(
-            listener: PhotoPickerListener,
+            listener: MediaPickerListener,
             browserType: MediaBrowserType,
             site: SiteModel?
         ): MediaPickerFragment {
@@ -446,7 +446,7 @@ class MediaPickerFragment : Fragment() {
                 args.putSerializable(WordPress.SITE, site)
             }
             val fragment = MediaPickerFragment()
-            fragment.setPhotoPickerListener(listener)
+            fragment.setMediaPickerListener(listener)
             fragment.arguments = args
             return fragment
         }

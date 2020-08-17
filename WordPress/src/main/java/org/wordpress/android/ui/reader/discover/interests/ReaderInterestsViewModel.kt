@@ -168,10 +168,10 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
-            InterestUiState(interest.tagTitle, interest.tagSlug)
+            TagUiState(interest.tagTitle, interest.tagSlug)
         }
 
-    private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
+    private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<TagUiState> {
         val currentUiState = uiState.value as ContentUiState
         val newInterestsUiState = currentUiState.interestsUiState.toMutableList()
         newInterestsUiState[index] = currentUiState.interestsUiState[index].copy(isChecked = isChecked)
@@ -194,7 +194,7 @@ class ReaderInterestsViewModel @Inject constructor(
         )
 
         data class ContentUiState(
-            val interestsUiState: List<InterestUiState>,
+            val interestsUiState: List<TagUiState>,
             val interests: ReaderTagList,
             override val progressBarVisible: Boolean = false,
             override val doneButtonUiState: DoneButtonUiState = DoneButtonDisabledUiState()
@@ -222,7 +222,7 @@ class ReaderInterestsViewModel @Inject constructor(
             )
         }
 
-        private fun getCheckedInterestsUiState(): List<InterestUiState> {
+        private fun getCheckedInterestsUiState(): List<TagUiState> {
             return if (this is ContentUiState) {
                 interestsUiState.filter { it.isChecked }
             } else {
@@ -258,12 +258,6 @@ class ReaderInterestsViewModel @Inject constructor(
             }
         }
     }
-
-    data class InterestUiState(
-        val title: String,
-        val slug: String,
-        val isChecked: Boolean = false
-    )
 
     sealed class DoneButtonUiState(
         @StringRes open val titleRes: Int = R.string.reader_btn_done,
