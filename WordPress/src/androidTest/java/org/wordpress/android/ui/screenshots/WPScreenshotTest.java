@@ -18,9 +18,6 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageType;
 
-import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
-
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
@@ -34,6 +31,9 @@ import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElem
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
+
+import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -63,8 +63,8 @@ public class WPScreenshotTest extends BaseTest {
 
         editBlogPost();
         manageMedia();
-        navigateStats();
         navigateNotifications();
+        navigateStats();
 
         // Turn Demo Mode off on the emulator when we're done
         mDemoModeEnabler.disable();

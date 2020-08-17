@@ -29,11 +29,12 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
 private const val POST_PARAM_POSITION = 0
-private const val ON_ITEM_RENDERED_PARAM_POSITION = 7
+private const val ON_ITEM_RENDERED_PARAM_POSITION = 8
 private const val NUMBER_OF_ITEMS = 10L
 
 @InternalCoroutinesApi
@@ -46,6 +47,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
+    @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
@@ -59,14 +61,15 @@ class ReaderDiscoverViewModelTest {
                 readerPostCardActionsHandler,
                 readerDiscoverDataProvider,
                 reblogUseCase,
+                readerUtilsWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
         whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
@@ -167,6 +170,7 @@ class ReaderDiscoverViewModelTest {
                 postId = post.postId,
                 blogId = post.blogId,
                 blogUrl = "",
+                tagItems = mock(),
                 dateLine = "",
                 avatarOrBlavatarUrl = "",
                 blogName = "",
@@ -182,6 +186,7 @@ class ReaderDiscoverViewModelTest {
                 moreMenuVisibility = false,
                 fullVideoUrl = "",
                 discoverSection = mock(),
+                expandableTagsViewVisibility = false,
                 bookmarkAction = mock(),
                 likeAction = mock(),
                 reblogAction = mock(),
