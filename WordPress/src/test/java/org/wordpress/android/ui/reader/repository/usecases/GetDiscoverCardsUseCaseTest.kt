@@ -66,7 +66,7 @@ class GetDiscoverCardsUseCaseTest {
         // Act
         val result = useCase.get()
         // Assert
-        assertThat(result.cards[0]).isInstanceOf(InterestsYouMayLikeCard::class.java)
+        assertThat(result.cards[1]).isInstanceOf(InterestsYouMayLikeCard::class.java)
     }
 
     @Test
@@ -77,7 +77,7 @@ class GetDiscoverCardsUseCaseTest {
         // Act
         val result = useCase.get()
         // Assert
-        assertThat(result.cards[0]).isInstanceOf(ReaderPostCard::class.java)
+        assertThat(result.cards[1]).isInstanceOf(ReaderPostCard::class.java)
     }
 
     @Test
@@ -87,7 +87,7 @@ class GetDiscoverCardsUseCaseTest {
         // Act
         val result = useCase.get()
         // Assert
-        assertThat(result.cards.size).isEqualTo(1)
+        assertThat(result.cards.size).isEqualTo(2)
     }
 
     @Test
@@ -97,7 +97,7 @@ class GetDiscoverCardsUseCaseTest {
         // Act
         val result = useCase.get()
         // Assert
-        assertThat(result.cards.size).isEqualTo(2)
+        assertThat(result.cards.size).isEqualTo(3)
     }
 
     @Test
