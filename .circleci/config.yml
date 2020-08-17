@@ -162,6 +162,7 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+          no_output_timeout: 15m
       - run:
           name: Violations
           when: on_fail

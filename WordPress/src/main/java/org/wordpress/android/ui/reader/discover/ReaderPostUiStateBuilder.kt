@@ -13,6 +13,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -43,11 +44,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
+    private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
         post: ReaderPost,
+        isDiscover: Boolean = false, // set to true for new discover tab
         photonWidth: Int,
         photonHeight: Int,
             // TODO malinjir try to refactor/remove this parameter
@@ -60,7 +64,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onDiscoverSectionClicked: (Long, Long) -> Unit,
         onMoreButtonClicked: (Long, Long, View) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
-        onPostHeaderViewClicked: (Long, Long) -> Unit
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onTagItemClicked: (String) -> Unit
     ): ReaderPostUiState {
         return ReaderPostUiState(
                 postId = post.postId,
@@ -71,11 +76,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 blogName = buildBlogName(post),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
+                tagItems = buildTagItems(post, onTagItemClicked),
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
                 featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
+                expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 featuredImageVisibility = buildFeaturedImageVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
@@ -121,6 +128,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildFullVideoUrl(post: ReaderPost) =
             post.takeIf { post.cardType == VIDEO }
                     ?.let { post.featuredVideo }
+
+    private fun buildExpandedTagsViewVisibility(post: ReaderPost, isDiscover: Boolean) =
+            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty() && isDiscover
+
+    private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
+            readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
 
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
