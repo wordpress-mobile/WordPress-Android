@@ -472,6 +472,7 @@ workflows:
   Release Build:
     unless: << pipeline.parameters.translation_review_build >>
     jobs:
+      - gutenberg-bundle-build
       - Release Build:
           filters:
             branches:
