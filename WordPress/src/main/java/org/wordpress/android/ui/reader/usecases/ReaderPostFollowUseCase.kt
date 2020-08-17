@@ -41,6 +41,10 @@ class ReaderPostFollowUseCase @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    // TODO: ashiagr - needed for refreshing post status on legacy post adapter.
+    private val _refreshPost = MutableLiveData<ReaderPostData>()
+    val refreshPost: LiveData<ReaderPostData> = _refreshPost
+
     private val _snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
@@ -71,9 +75,12 @@ class ReaderPostFollowUseCase @Inject constructor(
             if (!succeeded) {
                 val errorSnackBar = prepareErrorSnackbarAction(isAskingToFollow)
                 errorSnackBar.invoke()
+                _refreshPost.postValue(ReaderPostData(post.blogId, !isAskingToFollow))
             }
         }
-        ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)
+        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
+            _refreshPost.postValue(ReaderPostData(post.blogId, isAskingToFollow))
+        }
     }
 
     private fun prepareErrorSnackbarAction(isAskingToFollow: Boolean): () -> Unit {
@@ -138,4 +145,6 @@ class ReaderPostFollowUseCase @Inject constructor(
             dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
     }
+
+    data class ReaderPostData(val blogId: Long, val following: Boolean)
 }

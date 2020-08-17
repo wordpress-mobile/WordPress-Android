@@ -11,6 +11,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.ReaderPostData
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -46,6 +48,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents = _preloadPostEvents
 
+    private val _refreshPost = MediatorLiveData<ReaderPostData>()
+    val refreshPost: LiveData<ReaderPostData> = _refreshPost
+
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
 
@@ -73,6 +78,10 @@ class ReaderPostListViewModel @Inject constructor(
         _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
             _preloadPostEvents.value = event
         }
+
+        _refreshPost.addSource(readerPostCardActionsHandler.refreshPost) { data ->
+            _refreshPost.value = data
+        }
     }
 
     /**
@@ -87,6 +96,10 @@ class ReaderPostListViewModel @Inject constructor(
     fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
         val post = ReaderPostTable.getBlogPost(blogId, postId, true)
         readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
+    }
+
+    fun onFollowButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        readerPostCardActionsHandler.onAction(post, FOLLOW, bookmarksList)
     }
 
     /**

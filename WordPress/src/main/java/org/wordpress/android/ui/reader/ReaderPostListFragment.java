@@ -110,6 +110,7 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
+import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.ReaderPostData;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
@@ -145,6 +146,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+import static org.wordpress.android.ui.pages.SnackbarMessageHolderKt.INVALID_MESSAGE_RES;
 
 import kotlin.Unit;
 
@@ -477,6 +479,8 @@ public class ReaderPostListFragment extends Fragment
                 })
         );
 
+        mViewModel.getRefreshPost().observe(getViewLifecycleOwner(), this::setFollowStatusForBlog);
+
         mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
@@ -490,16 +494,31 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void showSnackbar(SnackbarMessageHolder holder) {
-        WPSnackbar snackbar = WPSnackbar.make(
-                requireView(),
-                holder.getMessageRes(),
-                Snackbar.LENGTH_LONG
-        );
-        if (holder.getButtonTitleRes() != null) {
-            snackbar.setAction(getString(holder.getButtonTitleRes()), v -> holder.getButtonAction().invoke());
+    private void setFollowStatusForBlog(ReaderPostData readerData) {
+        if (!hasPostAdapter()) {
+            return;
         }
-        snackbar.show();
+        getPostAdapter().setFollowStatusForBlog(readerData.getBlogId(), readerData.getFollowing());
+    }
+
+    private void showSnackbar(SnackbarMessageHolder holder) {
+        CharSequence message;
+        if (holder.getMessageRes() == INVALID_MESSAGE_RES) {
+            message = holder.getMessage();
+        } else {
+            message = getString(holder.getMessageRes());
+        }
+        if (message != null) {
+            WPSnackbar snackbar = WPSnackbar.make(
+                    requireView(),
+                    message,
+                    Snackbar.LENGTH_LONG
+            );
+            if (holder.getButtonTitleRes() != null) {
+                snackbar.setAction(getString(holder.getButtonTitleRes()), v -> holder.getButtonAction().invoke());
+            }
+            snackbar.show();
+        }
     }
 
     private void addWebViewCachingFragment(Long blogId, Long postId) {
@@ -1606,35 +1625,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called when user taps follow item in popup menu for a post
-     */
-    private void toggleFollowStatusForPost(final ReaderPost post) {
-        if (post == null
-            || !hasPostAdapter()
-            || !NetworkUtils.checkConnection(getActivity())) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isAdded() && !succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                            : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(getActivity(), resId);
-                    getPostAdapter().setFollowStatusForBlog(post.blogId, !isAskingToFollow);
-                }
-            }
-        };
-
-        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
-            getPostAdapter().setFollowStatusForBlog(post.blogId, isAskingToFollow);
-        }
-    }
-
-    /*
      * blocks the blog associated with the passed post and removes all posts in that blog
      * from the adapter
      */
@@ -2593,12 +2583,7 @@ public class ReaderPostListFragment extends Fragment
     public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
         switch (actionType) {
             case FOLLOW:
-                if (post.isFollowedByCurrentUser) {
-                    onFollowingTapped();
-                } else {
-                    onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                }
-                toggleFollowStatusForPost(post);
+                mViewModel.onFollowButtonClicked(post, isBookmarksList());
                 break;
             case SITE_NOTIFICATIONS:
                 if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
