@@ -76,4 +76,36 @@ class ReaderUtilsTest {
         result = ReaderUtils.isTagManagedInFollowingTab(currentTag, true, filteredRecyclerView)
         assertThat(result).isEqualTo(false)
     }
+
+    @Test
+    fun `when blogId == feedId then this is a feed`() {
+        val feedId: Long = 100
+        val blogId: Long = 100
+        var result = ReaderUtils.isFeed(blogId, feedId)
+        assertThat(result).isEqualTo(true)
+    }
+
+    @Test
+    fun `when blogId == 0 and feedId is not equal to 0 then this is a feed`() {
+        val feedId: Long = 100
+        val blogId: Long = 0
+        var result = ReaderUtils.isFeed(blogId, feedId)
+        assertThat(result).isEqualTo(true)
+    }
+
+    @Test
+    fun `when blogId is != 0 and feedId !=0 this is not a feed`() {
+        val feedId: Long = 100
+        val blogId: Long = 150
+        var result = ReaderUtils.isFeed(blogId, feedId)
+        assertThat(result).isEqualTo(false)
+    }
+
+    @Test
+    fun `when blogId is != 0 and feedId ==0 this is not a feed`() {
+        val feedId: Long = 0
+        val blogId: Long = 150
+        var result = ReaderUtils.isFeed(blogId, feedId)
+        assertThat(result).isEqualTo(false)
+    }
 }
