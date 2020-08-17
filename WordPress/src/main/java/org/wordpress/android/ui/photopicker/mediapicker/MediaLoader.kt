@@ -34,7 +34,7 @@ class MediaLoader(private val mediaSource: MediaSource) {
                             )) {
                                 is Success -> {
                                     state.copy(
-                                            items = mediaLoadingResult.mediaItems,
+                                            items = state.items + mediaLoadingResult.mediaItems,
                                             hasMore = mediaLoadingResult.hasMore,
                                             error = null
                                     )
@@ -51,7 +51,9 @@ class MediaLoader(private val mediaSource: MediaSource) {
                         state = state.copy(filter = loadAction.filter)
                     }
                 }
-                emit(buildDomainModel(state))
+                if (state.isNotInitialState()) {
+                    emit(buildDomainModel(state))
+                }
             }
         }
     }
@@ -99,5 +101,7 @@ class MediaLoader(private val mediaSource: MediaSource) {
         val hasMore: Boolean = false,
         val filter: String? = null,
         val error: String? = null
-    )
+    ) {
+        fun isNotInitialState(): Boolean = mediaTypes != null
+    }
 }
