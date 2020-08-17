@@ -133,7 +133,7 @@ class MediaPickerFragment : Fragment() {
                 setupPhotoList(uiState.photoListUiModel)
                 setupBottomBar(uiState.bottomBarUiModel)
                 setupSoftAskView(uiState.softAskViewUiModel)
-`                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
+                if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
                     (activity as AppCompatActivity).startSupportActionMode(
                             MediaPickerActionModeCallback(
