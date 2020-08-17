@@ -17,6 +17,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/activity_log_icon_margin"
         android:contentDescription="@string/activity_log_icon"
+        android:importantForAccessibility="no"
         android:padding="@dimen/margin_medium"
         tools:background="@drawable/bg_oval_neutral_30"
         tools:src="@drawable/ic_comment_white_24dp" />
