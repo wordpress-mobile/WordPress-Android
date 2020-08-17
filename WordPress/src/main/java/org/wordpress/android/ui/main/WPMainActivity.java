@@ -81,6 +81,8 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
+import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -99,6 +101,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -111,6 +114,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -122,6 +126,8 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -181,6 +187,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private SiteModel mSelectedSite;
     private WPMainActivityViewModel mViewModel;
+    private ModalLayoutPickerViewModel mMLPViewModel;
     private FloatingActionButton mFloatingActionButton;
     private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
@@ -201,6 +208,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -390,6 +398,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+        mMLPViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
@@ -415,12 +424,48 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
+                    // complete quick start task outside of QS process
+                    if (getSelectedSite() != null) {
+                        QuickStartUtils.completeTaskAndRemindNextOne(
+                                mQuickStartStore,
+                                QuickStartTask.PUBLISH_POST,
+                                mDispatcher,
+                                getSelectedSite(),
+                                null,
+                                this
+                        );
+                    }
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
-                    handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    if (mModalLayoutPickerFeatureConfig.isEnabled()) {
+                        mMLPViewModel.show();
+                    } else {
+                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    }
+                    break;
+                case CREATE_NEW_STORY:
+                    handleNewStoryAction(PagePostCreationSourcesDetail.STORY_FROM_MY_SITE);
                     break;
             }
+        });
+
+        mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
+             // complete quick start task during QS process and remind of a next one
+            if (getSelectedSite() != null) {
+                QuickStartUtils.completeTaskAndRemindNextOne(
+                        mQuickStartStore,
+                        QuickStartTask.PUBLISH_POST,
+                        mDispatcher,
+                        getSelectedSite(),
+                        new QuickStartEvent(QuickStartTask.PUBLISH_POST),
+                        this
+                );
+            }
+        });
+
+        mMLPViewModel.getOnCreateNewPageRequested().observe(this, action -> {
+            handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -429,7 +474,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            mViewModel.onFabClicked(hasFullAccessToContent());
+            boolean shouldShowPublishPostQuickStartTask = getMySiteFragment() != null && getMySiteFragment()
+                    .isQuickStartTaskActive(QuickStartTask.PUBLISH_POST);
+
+            if (shouldShowPublishPostQuickStartTask) {
+                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.fab_container));
+                hideQuickStartSnackBar();
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().requestNextStepOfActiveQuickStartTask(false);
+                }
+            }
+            mViewModel.onFabClicked(hasFullAccessToContent(), shouldShowPublishPostQuickStartTask);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
@@ -469,6 +524,25 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mMLPViewModel.isModalLayoutPickerShowing().observe(this, event -> {
+            event.applyIfNotHandled(isShowing -> {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm != null) {
+                    ModalLayoutPickerFragment mlpFragment =
+                            (ModalLayoutPickerFragment) fm
+                                    .findFragmentByTag(ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
+                    if (isShowing && mlpFragment == null) {
+                        mlpFragment = new ModalLayoutPickerFragment();
+                        mlpFragment
+                                .show(getSupportFragmentManager(), ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
+                    } else if (!isShowing && mlpFragment != null) {
+                        mlpFragment.dismiss();
+                    }
+                }
+                return null;
+            });
+        });
+
         mViewModel.getStartLoginFlow().observe(this, event -> {
             event.applyIfNotHandled(startLoginFlow -> {
                 if (mBottomNav != null) {
@@ -488,6 +562,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
                 hasFullAccessToContent()
         );
+
+        mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
 
     private @Nullable String getAuthToken() {
@@ -834,6 +910,26 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
     }
 
+    private void handleNewStoryAction(PagePostCreationSourcesDetail source) {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
+            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
+            ActivityLauncher.showPhotoPickerForResult(
+                    this,
+                    MediaBrowserType.WP_STORIES_MEDIA_PICKER,
+                    site,
+                    null // this is not required, only used for featured image in normal Posts
+            );
+        }
+    }
+
     private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {
         switch (pageType) {
             case MY_SITE:
@@ -883,6 +979,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (mSelectedSite == null) {
+            initSelectedSite();
+        }
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
@@ -1321,7 +1420,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-       refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
+        refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
     }
 
     @SuppressWarnings("unused")

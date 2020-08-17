@@ -106,7 +106,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -134,7 +135,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -160,6 +162,7 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+          no_output_timeout: 15m
       - run:
           name: Violations
           when: on_fail
@@ -178,7 +181,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
@@ -228,7 +232,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -272,7 +277,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -305,7 +311,8 @@ jobs:
     docker:
       - image: circleci/ruby:2.6.4
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - run:
           name: Install bundler
@@ -322,20 +329,22 @@ jobs:
     environment:
       APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
+      - update-gradle-memory
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
           name: Build APK
           environment:

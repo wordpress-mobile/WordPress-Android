@@ -136,7 +136,8 @@ class EditorMediaTest : BaseUnitTest() {
         // Assert
         verify(addLocalMediaToPostUseCase).addLocalMediaToEditorAsync(
                 eq(localIdArray.toList()),
-                anyOrNull()
+                anyOrNull(),
+                anyBoolean()
         )
     }
 
@@ -157,7 +158,7 @@ class EditorMediaTest : BaseUnitTest() {
                 // Assert
                 verify(addLocalMediaToPostUseCase).addNewMediaToEditorAsync(
                         eq(listOf(lastRecoredVideoUri)),
-                        anyOrNull(), anyBoolean(), anyOrNull()
+                        anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()
                 )
             }
 
@@ -432,7 +433,8 @@ class EditorMediaTest : BaseUnitTest() {
                                 anyOrNull(),
                                 anyOrNull(),
                                 anyBoolean(),
-                                anyOrNull()
+                                anyOrNull(),
+                                anyBoolean()
                         )
                     }.thenReturn(resultForAddNewMediaToEditorAsync)
                 }

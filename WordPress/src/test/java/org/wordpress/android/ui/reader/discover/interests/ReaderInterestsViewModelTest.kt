@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -21,17 +22,17 @@ import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.GenericErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -287,11 +288,12 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `close reader interests screen triggered on done button click`() =
+    fun `close reader interests screen triggered when interests are saved successfully`() =
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
             // When
             initViewModel()
@@ -321,27 +323,57 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `interests data loading triggered on retry`() =
+    fun `get interests triggered on retry`() =
         testWithEmptyUserTags {
-            // Given
-            val uiStates = mutableListOf<UiState>()
-            viewModel.uiState.observeForever {
-                uiStates.add(it)
-            }
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-
             // When
             viewModel.onRetryButtonClick()
 
             // Then
-            assertThat(uiStates.size).isEqualTo(2)
-            assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
+            verify(readerTagRepository, times(1)).getInterests()
         }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `network error shown when internet access not available`() =
+    fun `get user tags re-triggered on retry if user tags request had failed earlier`() =
+        testWithFailedUserTags {
+            // When
+            initViewModel()
+            viewModel.onRetryButtonClick()
+
+            // Then
+            verify(readerTagRepository, times(2)).getUserTags()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `get user tags not re-triggered on retry if user tags request had not failed earlier`() =
+        testWithEmptyUserTags {
+            // When
+            initViewModel()
+            viewModel.onRetryButtonClick()
+
+            // Then
+            verify(readerTagRepository, times(1)).getUserTags()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `error layout is shown on interests load error`() =
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+
+            // Then
+            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `network error shown when internet access not available on interests load`() =
         testWithEmptyUserTags {
             // Given
             whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
@@ -351,14 +383,13 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
-            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value as ConnectionErrorUiState)
-            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
-            assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.no_network_message)
+            val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+            assertThat(errorUiState.titleResId).isEqualTo(R.string.no_network_message)
         }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `error shown on remote request failure`() =
+    fun `request failed error shown on load interests remote request failure`() =
         testWithEmptyUserTags {
             // Given
             whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
@@ -367,10 +398,79 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             // Then
-            assertThat(viewModel.uiState.value).isInstanceOf(GenericErrorUiState::class.java)
-            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value as GenericErrorUiState)
-            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
-            assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.reader_error_generic_title)
+            assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
+            val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
+            assertThat(errorUiState.titleResId).isEqualTo(R.string.reader_error_request_failed_title)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `snackbar is shown on save interests error`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(viewModel.snackbarEvents.value).isNotNull
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `snackbar is not shown when interests are saved successfully`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(viewModel.snackbarEvents.value).isNull()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `network error shown when internet access not available on save interests`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                    .isEqualTo(SnackbarMessageHolder(R.string.no_network_message))
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `request failed error shown on save interests remote request failure`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                .isEqualTo(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
         }
 
     private fun initViewModel() = viewModel.start(
@@ -381,7 +481,15 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
-            whenever(readerTagRepository.getUserTags()).thenReturn(ReaderTagList())
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
+            block()
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun <T> testWithFailedUserTags(block: suspend CoroutineScope.() -> T) {
+        coroutineScope.runBlockingTest {
+            whenever(readerTagRepository.getUserTags()).thenReturn(NetworkUnavailable)
             block()
         }
     }
@@ -393,7 +501,7 @@ class ReaderInterestsViewModelTest {
                 this.add(mock())
                 this.add(mock())
             }
-            whenever(readerTagRepository.getUserTags()).thenReturn(nonEmptyUserTags)
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(nonEmptyUserTags))
             block()
         }
     }
