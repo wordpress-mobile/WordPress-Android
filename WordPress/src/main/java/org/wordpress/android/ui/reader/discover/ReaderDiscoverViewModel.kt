@@ -9,11 +9,14 @@ import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.INTERESTS
+import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -81,24 +84,28 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    // TODO malinjir we currently ignore all other types but ReaderPostCards
-                    posts.cards.filterIsInstance<ReaderPostCard>().map {
-                        postUiStateBuilder.mapPostToUiState(
-                                post = it.post,
-                                isDiscover = true,
-                                photonWidth = photonWidth,
-                                photonHeight = photonHeight,
-                                isBookmarkList = false,
-                                onButtonClicked = this::onButtonClicked,
-                                onItemClicked = this::onPostItemClicked,
-                                onItemRendered = this::onItemRendered,
-                                onDiscoverSectionClicked = this::onDiscoverClicked,
-                                onMoreButtonClicked = this::onMoreButtonClicked,
-                                onVideoOverlayClicked = this::onVideoOverlayClicked,
-                                onPostHeaderViewClicked = this::onPostHeaderClicked,
-                                onTagItemClicked = this::onTagItemClicked,
-                                postListType = TAG_FOLLOWED
-                        )
+                    posts.cards.map {
+                        when (it) {
+                            is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                                    post = it.post,
+                                    isDiscover = true,
+                                    photonWidth = photonWidth,
+                                    photonHeight = photonHeight,
+                                    isBookmarkList = false,
+                                    onButtonClicked = this::onButtonClicked,
+                                    onItemClicked = this::onPostItemClicked,
+                                    onItemRendered = this::onItemRendered,
+                                    onDiscoverSectionClicked = this::onDiscoverClicked,
+                                    onMoreButtonClicked = this::onMoreButtonClicked,
+                                    onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                    onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                    onTagItemClicked = this::onTagItemClicked,
+                                    postListType = TAG_FOLLOWED
+                            )
+                            is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(it.show)
+                            // TODO: ashiagr InterestsYouMayLikeCard will be mapped to actual state in #PR 12579
+                            is InterestsYouMayLikeCard -> ReaderWelcomeBannerCardUiState(false)
+                        }
                     },
                     swipeToRefreshIsRefreshing = false
             )

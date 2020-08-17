@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
@@ -33,6 +34,9 @@ class GetDiscoverCardsUseCase @Inject constructor(
                     val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(
                             cardJsonList
                     )
+
+                    // TODO: ashiagr fix condition to display welcome card
+                    cards.add(WelcomeBannerCard(true))
 
                     forLoop@ for (i in 0 until jsonObjects.length()) {
                         val cardJson = jsonObjects.getJSONObject(i)
