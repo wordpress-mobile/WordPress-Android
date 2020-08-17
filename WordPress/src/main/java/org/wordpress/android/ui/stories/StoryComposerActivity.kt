@@ -273,9 +273,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun handleMediaPickerIntentData(data: Intent) {
-        if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                    data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             )
             if (uriList.isNotEmpty()) {
                 storyEditorMedia.onPhotoPickerMediaChosen(uriList)
