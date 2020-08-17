@@ -40,10 +40,7 @@ public class SuggestionServiceConnectionManager implements ServiceConnection {
     public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
         SuggestionService.SuggestionBinder b = (SuggestionService.SuggestionBinder) iBinder;
         SuggestionService suggestionService = b.getService();
-
-        suggestionService.updateSuggestions(mSiteId);
-        suggestionService.updateTags(mSiteId);
-
+        suggestionService.update(mSiteId);
         mAttemptingToBind = false;
     }
 
