@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-16 17:56:51+0000
+Translation-Revision-Date: 2020-07-31 11:35:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Last opp et bilde eller velg et fra ditt mediebibliotek, som skal være din nettstedslogo</string>
+    <string name="gutenberg_native_site_tagline">Slagord for nettstedet</string>
+    <string name="gutenberg_native_site_logo_settings">Innstillinger for nettstedslogo</string>
+    <string name="gutenberg_native_site_logo">Nettstedslogo</string>
+    <string name="gutenberg_native_site_icon">Nettstedsikon</string>
+    <string name="gutenberg_native_show_a_site_logo">Vis som nettstedslogo</string>
+    <string name="gutenberg_native_replace_video">Erstatt video</string>
+    <string name="gutenberg_native_replace_image_or_video">Erstatt bilde eller video</string>
+    <string name="gutenberg_native_open_the_block_list_view">Åpne blokklistevisningen.</string>
+    <string name="gutenberg_native_media_preview">Media-forhåndsvisning</string>
+    <string name="gutenberg_native_image_width">Bildebredde</string>
+    <string name="gutenberg_native_description">beskrivelse</string>
+    <string name="gutenberg_native_delete_site_logo">Slett nettstedslogo</string>
+    <string name="gutenberg_native_coordinated_universal_time">Universell tid</string>
+    <string name="gutenberg_native_convert_to_blocks">Konverter til blokker</string>
+    <string name="gutenberg_native_choose_video">Velg video</string>
+    <string name="gutenberg_native_choose_image_or_video">Velg bilde eller video</string>
+    <string name="gutenberg_native_choose_image">Velg bilde</string>
+    <string name="gutenberg_native_child_blocks">Underliggende blokker</string>
+    <string name="gutenberg_native_block_removed">Blokk fjernet</string>
+    <string name="gutenberg_native_base">Base</string>
+    <string name="content_description_logo">WordPress-logo</string>
+    <string name="enter_your_site_address">Oppgi din nettstedsadresse</string>
+    <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
+    <string name="signup_confirmation_title">Registreringsbekreftelse</string>
+    <string name="signup_confirmation_magic_link_message">Vi vil sende deg en magisk lenke for å lage din nye WordPress.com-konto.</string>
+    <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
+    <string name="signup_magic_link_message">Vi har sendt deg en magisk lenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
+    <string name="enter_account_info_for_site">Oppgi din kontoinformasjon for %1$s.</string>
+    <string name="login_or">eller</string>
+    <string name="continue_google_button_suffix">Fortsett med Google</string>
+    <string name="login_find_your_site_adress">Finn din nettstedsadresse</string>
+    <string name="login_done">Fullført</string>
+    <string name="check_email">Sjekk e-post</string>
+    <string name="get_started">Kom i gang</string>
+    <string name="enter_email_to_continue_wordpress_com">Oppgi din e-postadresse for å logge inn på eller opprette en WordPress.com-konto.</string>
+    <string name="or_type_your_password">Eller oppgi dit passord</string>
+    <string name="create_account">Opprett konto</string>
+    <string name="send_link_by_email">Send lenke med e-post</string>
+    <string name="login_promo_text_unlock_the_power">Lås opp kraften til en mest fleksible nettstedsbyggeren.</string>
+    <string name="login_promo_title_37_percent">37\% av alle nettsteder er bygget på WordPress.</string>
+    <string name="reset_your_password">Tilbakestill ditt passord</string>
+    <string name="quick_start_list_update_site_title_subtitle">Gi ditt nettsted et navn som reflekterer des personlighet og emne Førsteinntrykket teller!</string>
+    <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
     <string name="gutenberg_native_remove_block">Fjern blokk</string>
@@ -28,7 +72,7 @@ Language: nb_NO
     <string name="gutenberg_native_dismiss">Avfei</string>
     <string name="prepublishing_nudges_home_tags_not_set">Ikke bestemt</string>
     <string name="prepublishing_tags_description">Stikkord hjelper leserne vit hva innlegg er om.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publiser</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publiseringsdato</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Legg til stikkord</string>
     <string name="prepublishing_nudges_back_button">Tilbake</string>
     <string name="prepublishing_nudges_home_save_button">Lagre nå</string>
@@ -224,7 +268,6 @@ Language: nb_NO
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
-    <string name="gutenberg_native_edit_media">Rediger media</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Dobbelttrykk for å velge oppsett</string>
     <string name="gutenberg_native_add_a_shortcode">Legg til en kortkode…</string>
     <string name="post_list_author">Innleggsforfatter</string>
@@ -265,7 +308,7 @@ Language: nb_NO
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Vi klarte ikke å få tilgang til nettstedet ditt. Du må kontakte din nettvert for å løse dette.</string>
     <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Logg inn med innloggingsinformasjon for nettstedet</string>
+    <string name="enter_site_credentials_instead">Logg inn med nettstedsinnloggingen.</string>
     <string name="enter_credentials_for_site">Logg inn med din innlggingsinformasjon fra nettstedet %1$s</string>
     <string name="send_verification_email">Send e-post for bekreftelse</string>
     <string name="my_site_bottom_sheet_add_page">Nettstedsside</string>
@@ -335,7 +378,6 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dobbelttrykk for å redigere denne verdien</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Dobbelttrykk for å redigere verdien med glidekontroll</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dobbelttrykk for å legge til en blokk</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Dobbelttrykk og hold for å redigere</string>
     <string name="gutenberg_native_current_value_is_s">Nåværende verdi er %s</string>
     <string name="gutenberg_native_content">Innhold…</string>
     <string name="gutenberg_native_choose_from_device">Velg fra enhet</string>
@@ -454,7 +496,7 @@ Language: nb_NO
     <string name="post_notification_off">Av</string>
     <string name="post_settings_add_to_calendar">Legg til på kalender</string>
     <string name="post_settings_notification">Varsling</string>
-    <string name="post_settings_time_and_date">Tid og dato</string>
+    <string name="post_settings_time_and_date">Dato og tid</string>
     <string name="login_need_help_finding_connected_email">Trenger du hjelp til å finne den e-postadressen du koblet til med?</string>
     <string name="enter_wordpress_site">Nettstedet på denne adressen er ikke et WordPress-nettsted. For at vi skal kunne koble til det må det ha WordPress installert.</string>
     <string name="login_invalid_site_url">Vennligst oppgi en fullstendig nettstedsadresse, f.eks example.com.</string>
@@ -1146,13 +1188,11 @@ Language: nb_NO
     <string name="signup_updating_account">Oppdaterer konto…</string>
     <string name="signup_terms_of_service_text">Ved å registrere deg aksepterer du %1$stjenestebetingelsene%2$s.</string>
     <string name="signup_magic_link_progress">Sender epost</string>
-    <string name="signup_magic_link_message">Vi sendte deg en magisk registreringslenke! Sjekk din e-post på denne enheten og trykk på lenken i e-posten for å avslutte registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Prøv igjen</string>
     <string name="signup_magic_link_error_button_negative">Lukk</string>
     <string name="signup_epilogue_hint_username">Brukernavn</string>
     <string name="signup_epilogue_hint_password">Passord (frivillig)</string>
     <string name="signup_epilogue_hint_display">Visningsnavn</string>
-    <string name="signup_epilogue_heading">Ny konto</string>
     <string name="signup_epilogue_error_button_positive">Prøv igjen</string>
     <string name="signup_epilogue_error_button_negative">Tilbakestill</string>
     <string name="signup_epilogue_error_avatar">Det oppsto problemer med å laste opp din avatar.</string>
@@ -1258,7 +1298,7 @@ Language: nb_NO
     <string name="notification_logged_in">Trykk for å fortsette.</string>
     <string name="notification_login_title_success">Innlogget!</string>
     <string name="login_empty_password">Vennligst skriv inn et passord</string>
-    <string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
+    <string name="login_text_otp_another">Send meg en annen kode i stedet</string>
     <string name="enter_verification_code_sms">Vi sendte en tekstmelding til telefonnummeret som slutter på %s. Vennligst oppgi bekreftelseskoden o SMS-en.</string>
     <string name="image_size">Størrelse</string>
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
@@ -1324,7 +1364,7 @@ Language: nb_NO
     <string name="media_edit_filename_caption">Filnavn</string>
     <string name="media_edit_url_caption">Nettadresse</string>
     <string name="media_edit_alttext_text">Alternativ tekst</string>
-    <string name="connect_site">Koble til nettsted</string>
+    <string name="connect_site">Koble til et nettsted</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibreringer</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Velg lyd</string>
@@ -1368,7 +1408,6 @@ Language: nb_NO
     <string name="connection_to_server_lost">Tilkoblingen til tjeneren forsvant</string>
     <string name="login_epilogue_mysites_other">Nettstedene mine</string>
     <string name="login_epilogue_mysites_one">Nettstedet mitt</string>
-    <string name="login_logged_in_as">Logget inn som</string>
     <string name="login_email_client_not_found">Klarte ikke å oppdage E-postklientappen din</string>
     <string name="login_empty_2fa">Vennligst skriv inn en verifiseringskode</string>
     <string name="login_empty_username">Vennligst skriv inn et brukernavn</string>
@@ -1381,17 +1420,14 @@ Language: nb_NO
     <string name="login_site_address_help">Trenger du hjelp med å finne nettstedsadressen din?</string>
     <string name="login_site_address">Nettstedsadresse</string>
     <string name="enter_site_address">Oppgi adressen til det WordPress-nettstedet du ønsker å koble til.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Du er allerede logget på WordPress.com</string>
     <string name="login_continue">Fortsett</string>
     <string name="connect_more">Koble til et annet nettsted</string>
     <string name="enter_wpcom_password">Skriv inn WordPress.com-passordet ditt.</string>
     <string name="login_magic_link_email_requesting">Ber om innloggings-E-post</string>
-    <string name="login_magic_links_sent_label">Din magiske lenke er på vei! Sjekk E-posten din på denne enheten, og trykk på lenken i E-posten du mottok fra WordPress.com.</string>
-    <string name="login_magic_links_label">Vi sender deg en E-post med en magisk lenke som vil logge deg inn umiddelbart, og intet passord er påkrevd. Du trenger aldri å lete etter den igjen!</string>
     <string name="password_incorrect">Det ser ut til at dette passordet er feil. Vennligst dobbeltsjekk informasjonen din og prøv igjen.</string>
     <string name="requesting_otp">Ber om en verifiseringskode via SMS.</string>
-    <string name="login_text_otp">Send meg en SMS-kode istedet.</string>
+    <string name="login_text_otp">Send meg en kode i stedet</string>
     <string name="enter_verification_code">Nesten framme! Vennligst skriv inn verifiseringskoden fra autentiseringsappen din.</string>
     <string name="open_mail">Åpne E-post</string>
     <string name="next">Neste</string>

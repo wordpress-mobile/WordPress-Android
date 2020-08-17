@@ -21,13 +21,15 @@ import java.util.Date;
 
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
- * user is following. Note that this table is populated from two endpoints:
+ * user is following. Note that this table is populated from three endpoints:
  * <p>
  * 1. sites/{$siteId}
  * 2. read/following/mine?meta=site,feed
+ * 3. read/feed/{$feedId}
  * <p>
  * The first endpoint is called when the user views blog preview, the second is called
- * to get the full list of blogs the user is following
+ * to get the full list of blogs the user is following, the third is called when user views
+ * by feed
  */
 public class ReaderBlogTable {
     protected static void createTables(SQLiteDatabase db) {
@@ -378,6 +380,25 @@ public class ReaderBlogTable {
             return true;
         }
         return (minutes >= ReaderConstants.READER_AUTO_UPDATE_DELAY_MINUTES);
+    }
+
+    /**
+     * updateImageByFeedId updates the image_url for the entry based on feed_id
+     * @param feedId
+     * @param imageUrl
+     */
+    public static void updateImageByFeedId(long feedId, String imageUrl) {
+        if (imageUrl != null || feedId != 0) {
+            String sql = "UPDATE tbl_blog_info SET image_url =? WHERE feed_id=?";
+            SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
+            try {
+                stmt.bindString(1, imageUrl);
+                stmt.bindLong(2, feedId);
+                stmt.execute();
+            } finally {
+                SqlUtils.closeStatement(stmt);
+            }
+        }
     }
 
     private static String getBlogInfoLastUpdated(ReaderBlog blogInfo) {
