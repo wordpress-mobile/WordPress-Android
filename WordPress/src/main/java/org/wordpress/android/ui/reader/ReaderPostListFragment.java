@@ -2638,6 +2638,7 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
+
         WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
                 "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
                   .setAction(getString(R.string.reader_followed_blog_notifications_action),

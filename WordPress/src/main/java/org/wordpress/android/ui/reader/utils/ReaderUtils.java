@@ -16,8 +16,8 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -446,5 +446,9 @@ public class ReaderUtils {
             tags.add(tag);
         }
         return tags;
+    }
+
+    public static boolean isFeed(long blogId, long feedId) {
+         return (blogId == 0 && feedId != 0) || blogId == feedId;
     }
 }
