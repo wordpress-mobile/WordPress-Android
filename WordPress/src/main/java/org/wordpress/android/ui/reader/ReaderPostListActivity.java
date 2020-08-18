@@ -80,11 +80,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW
             || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            // show an X in the toolbar which closes the activity - if this is tag preview, then
-            // using the back button will navigate through tags if the user explores beyond a single tag
-            boolean showCrossButton = (!AppPrefs.isReaderImprovementsPhase2Enabled()
-                                       && getPostListType() == ReaderPostListType.TAG_PREVIEW)
-                                      || getPostListType() == ReaderPostListType.BLOG_PREVIEW;
+            // show an X in the toolbar which closes the activity - if this is blog preview
+            boolean showCrossButton = getPostListType() == ReaderPostListType.BLOG_PREVIEW;
             if (showCrossButton) {
                 toolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             }
@@ -253,9 +250,6 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
-        if (!AppPrefs.isReaderImprovementsPhase2Enabled()) {
-            setTitle(tag.getTagDisplayName());
-        }
     }
 
     /*
