@@ -152,7 +152,11 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onPostItemClicked(postId: Long, blogId: Long) {
-        AppLog.d(T.READER, "OnItemClicked")
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.handleOnItemClicked(it)
+            }
+        }
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {
