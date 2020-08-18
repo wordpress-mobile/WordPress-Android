@@ -189,8 +189,7 @@
                     android:layout_below="@+id/message"
                     android:gravity="end"
                     android:padding="5dp"
-                    android:textColor="@color/neutral_40"
-                    android:textSize="@dimen/text_sz_small" />
+                    android:textAppearance="?attr/textAppearanceCaption" />
             </RelativeLayout>
 
             <org.wordpress.android.widgets.WPTextView

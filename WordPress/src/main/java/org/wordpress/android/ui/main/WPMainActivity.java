@@ -82,6 +82,7 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -113,6 +114,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -124,6 +126,8 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -160,6 +164,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
+    public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_MY_SITE = "show_my_site";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
@@ -182,6 +187,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private SiteModel mSelectedSite;
     private WPMainActivityViewModel mViewModel;
+    private ModalLayoutPickerViewModel mMLPViewModel;
     private FloatingActionButton mFloatingActionButton;
     private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
@@ -202,6 +208,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -344,6 +351,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
+            canShowAppRatingPrompt = false;
+            ActivityLauncher.newBlogForResult(this);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
@@ -388,6 +398,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+        mMLPViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
@@ -427,7 +438,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
-                    handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    if (mModalLayoutPickerFeatureConfig.isEnabled()) {
+                        mMLPViewModel.show();
+                    } else {
+                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    }
                     break;
                 case CREATE_NEW_STORY:
                     handleNewStoryAction(PagePostCreationSourcesDetail.STORY_FROM_MY_SITE);
@@ -447,6 +462,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         this
                 );
             }
+        });
+
+        mMLPViewModel.getOnCreateNewPageRequested().observe(this, action -> {
+            handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -505,6 +524,25 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mMLPViewModel.isModalLayoutPickerShowing().observe(this, event -> {
+            event.applyIfNotHandled(isShowing -> {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm != null) {
+                    ModalLayoutPickerFragment mlpFragment =
+                            (ModalLayoutPickerFragment) fm
+                                    .findFragmentByTag(ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
+                    if (isShowing && mlpFragment == null) {
+                        mlpFragment = new ModalLayoutPickerFragment();
+                        mlpFragment
+                                .show(getSupportFragmentManager(), ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
+                    } else if (!isShowing && mlpFragment != null) {
+                        mlpFragment.dismiss();
+                    }
+                }
+                return null;
+            });
+        });
+
         mViewModel.getStartLoginFlow().observe(this, event -> {
             event.applyIfNotHandled(startLoginFlow -> {
                 if (mBottomNav != null) {
@@ -524,6 +562,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
                 hasFullAccessToContent()
         );
+
+        mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
 
     private @Nullable String getAuthToken() {

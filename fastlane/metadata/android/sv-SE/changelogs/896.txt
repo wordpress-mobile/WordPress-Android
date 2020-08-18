@@ -1,4 +1,0 @@
-15.3:
-Nytt i blockredigeraren: Nu har alla block funktionerna kopiera, klipp ut, klistra och duplicera. Block som saknar stöd kan redigeras individuellt. (Obs: redigering av block som inte stöds är inte tillgängligt för webbplats på eget webbhotell eller om webbplatsen som standard använder den klassiska redigeraren.)
-
-Uppdateringar av användargränssnittet: Förtydligat vissa beskrivningar, lagt till bekräftelsedialog när inlägg kastas.

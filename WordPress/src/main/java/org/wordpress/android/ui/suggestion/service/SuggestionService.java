@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,11 +15,15 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.models.Tag;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SuggestionService extends Service {
+    private static final RequestThrottler<Long> SUGGESTION_REQUEST_THROTTLER = new RequestThrottler<>();
+    private static final RequestThrottler<Long> TAG_REQUEST_THROTTLER = new RequestThrottler<>();
+
     private final IBinder mBinder = new SuggestionBinder();
     private final List<Long> mCurrentlyRequestingSuggestionsSiteIds = new ArrayList<>();
     private final List<Long> mCurrentlyRequestingTagsSiteIds = new ArrayList<>();
@@ -47,27 +50,43 @@ public class SuggestionService extends Service {
         return mBinder;
     }
 
-    // We're still using `siteId` here and not a SiteModel, because suggestions the enpoint works on any site, not only
+    public void update(final long siteId) {
+        boolean currentlyRequestingSuggestions = mCurrentlyRequestingSuggestionsSiteIds.contains(siteId);
+        boolean suggestionsAreStale = SUGGESTION_REQUEST_THROTTLER.areResultsStale(siteId);
+        if (!currentlyRequestingSuggestions && suggestionsAreStale) {
+            updateSuggestions(siteId);
+        } else {
+            String reason = currentlyRequestingSuggestions
+                    ? "a suggestions request is already in progress."
+                    : "the suggestions were recently updated.";
+            AppLog.d(T.SUGGESTION, "Skipping suggestion update for site " + siteId + " because " + reason);
+        }
+
+        boolean currentlyRequestingTags = mCurrentlyRequestingTagsSiteIds.contains(siteId);
+        boolean tagsAreStale = TAG_REQUEST_THROTTLER.areResultsStale(siteId);
+        if (!currentlyRequestingTags && tagsAreStale) {
+            updateTags(siteId);
+        } else {
+            String reason = currentlyRequestingTags
+                    ? "a tags request is already in progress."
+                    : "the tags were recently updated.";
+            AppLog.d(T.SUGGESTION, "Skipping tags update for site " + siteId + " because " + reason);
+        }
+    }
+
+    // We're still using `siteId` here and not a SiteModel, because suggestions the endpoint works on any site, not only
     // on sites the user is a member of. Username suggestions are used in the Reader to auto complete usernames
     // when replying to comments.
-    public void updateSuggestions(final long siteId) {
-        if (mCurrentlyRequestingSuggestionsSiteIds.contains(siteId)) {
-            return;
-        }
+    private void updateSuggestions(final long siteId) {
         mCurrentlyRequestingSuggestionsSiteIds.add(siteId);
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleSuggestionsUpdatedResponse(siteId, jsonObject);
-                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(siteId);
-            }
+        RestRequest.Listener listener = jsonObject -> {
+            handleSuggestionsUpdatedResponse(siteId, jsonObject);
+            SUGGESTION_REQUEST_THROTTLER.onResponseReceived(siteId);
+            removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(siteId);
         };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.SUGGESTION, volleyError);
-                removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(siteId);
-            }
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.e(AppLog.T.SUGGESTION, volleyError);
+            removeSiteIdFromSuggestionRequestsAndStopServiceIfNecessary(siteId);
         };
 
         AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating suggestions for siteId: " + siteId);
@@ -103,24 +122,16 @@ public class SuggestionService extends Service {
         }
     }
 
-    public void updateTags(final long siteId) {
-        if (mCurrentlyRequestingTagsSiteIds.contains(siteId)) {
-            return;
-        }
+    private void updateTags(final long siteId) {
         mCurrentlyRequestingTagsSiteIds.add(siteId);
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleTagsUpdatedResponse(siteId, jsonObject);
-                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(siteId);
-            }
+        RestRequest.Listener listener = jsonObject -> {
+            handleTagsUpdatedResponse(siteId, jsonObject);
+            TAG_REQUEST_THROTTLER.onResponseReceived(siteId);
+            removeSiteIdFromTagRequestsAndStopServiceIfNecessary(siteId);
         };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.SUGGESTION, volleyError);
-                removeSiteIdFromTagRequestsAndStopServiceIfNecessary(siteId);
-            }
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.e(AppLog.T.SUGGESTION, volleyError);
+            removeSiteIdFromTagRequestsAndStopServiceIfNecessary(siteId);
         };
 
         AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating tags for siteId: " + siteId);

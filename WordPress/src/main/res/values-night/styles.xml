@@ -18,8 +18,6 @@
         <item name="colorControlHighlight">?attr/colorOnSurface</item>
         <item name="colorAccent">?attr/colorPrimary</item>
 
-        <item name="wpColorText">@android:color/white</item>
-        <item name="wpColorTextSubtle">@color/neutral_50</item>
         <item name="wpColorError">@color/error_50</item>
         <item name="wpColorSuccess">@color/green_30</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
