@@ -44,6 +44,8 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
@@ -58,9 +60,12 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -77,6 +82,7 @@ import javax.inject.Inject
 class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
+    private lateinit var mlpViewModel: ModalLayoutPickerViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
 
@@ -93,6 +99,8 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var modalLayoutPickerFeatureConfig: ModalLayoutPickerFeatureConfig
+
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -271,6 +279,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
+        mlpViewModel = ViewModelProviders.of(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
 
         setupObservers(activity)
 
@@ -302,6 +311,8 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.start(site)
+
+        mlpViewModel.init(DisplayUtils.isLandscape(context))
     }
 
     private fun showToast(toastMessageHolder: ToastMessageHolder) {
@@ -334,11 +345,16 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
-            QuickStartUtils.completeTaskAndRemindNextOne(
-                    quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
-                    viewModel.site, quickStartEvent, context
-            )
-            ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
+
+            if (modalLayoutPickerFeatureConfig.isEnabled()) {
+                mlpViewModel.show()
+            } else {
+                createNewPage()
+            }
+        })
+
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer {
+            createNewPage()
         })
 
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
@@ -445,6 +461,28 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
                 )
             }
         })
+
+        mlpViewModel.isModalLayoutPickerShowing.observe(viewLifecycleOwner, Observer { event: Event<Boolean> ->
+            event.applyIfNotHandled {
+                val fm = activity.supportFragmentManager
+                var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
+                if (this && mlpFragment == null) {
+                    mlpFragment = ModalLayoutPickerFragment()
+                    mlpFragment.show(fm, MODAL_LAYOUT_PICKER_TAG)
+                } else if (!this && mlpFragment != null) {
+                    mlpFragment.dismiss()
+                }
+            }
+        })
+    }
+
+    /**
+     * Triggers new page creation
+     */
+    private fun createNewPage() {
+        QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
+                viewModel.site, quickStartEvent, context)
+        ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

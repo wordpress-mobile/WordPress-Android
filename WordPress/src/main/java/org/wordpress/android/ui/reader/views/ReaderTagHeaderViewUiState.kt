@@ -7,10 +7,9 @@ sealed class ReaderTagHeaderViewUiState {
     ) : ReaderTagHeaderViewUiState() {
         data class FollowButtonUiState(
             val onFollowButtonClicked: (() -> Unit)?,
-            val isVisible: Boolean,
             val isFollowed: Boolean,
             val isEnabled: Boolean,
-            val shouldAnimate: Boolean
+            val isVisible: Boolean
         )
     }
 }

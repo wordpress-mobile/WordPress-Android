@@ -1,4 +1,0 @@
-15.3:
-Actualizaciones del editor de bloques: Ahora, todos los bloques tienen la funcionalidad de copiar, cortar, pegar y duplicar. Los bloques no compatibles pueden ser editados individualmente. (Nota: La edición de bloques no compatibles no está disponible para los sitios autoalojados o los sitios con el editor clásico por defecto).
-
-Actualizaciones de la interfaz de usuario: Se ha aclarado la redacción y se han añadido diálogos de confirmación al enviar entradas a la papelera.

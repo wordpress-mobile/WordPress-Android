@@ -228,6 +228,13 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return true;
     }
 
+    /**
+     * Local only tag used to identify post cards for the "discover" tab in the Reader.
+     */
+    public static ReaderTag createDiscoverPostCardsTag() {
+        return new ReaderTag("", "", "", "", ReaderTagType.DISCOVER_POST_CARDS);
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof ReaderTag) {

@@ -6,6 +6,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -20,6 +21,7 @@ sealed class ReaderCardUiState {
         val blogName: String?,
         val excerpt: String?, // mTxtText
         val blogUrl: String?,
+        val tagItems: List<TagUiState>,
         val photoTitle: String?,
         val featuredImageUrl: String?,
         val featuredImageCornerRadius: UiDimen,
@@ -27,6 +29,7 @@ sealed class ReaderCardUiState {
         val avatarOrBlavatarUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val discoverSection: DiscoverLayoutUiState?,
+        val expandableTagsViewVisibility: Boolean,
         val videoOverlayVisibility: Boolean,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
@@ -38,7 +41,7 @@ sealed class ReaderCardUiState {
         val moreMenuItems: List<SecondaryAction>,
         val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
-        val onItemRendered: (Long, Long) -> Unit,
+        val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (Long, Long, View) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {
