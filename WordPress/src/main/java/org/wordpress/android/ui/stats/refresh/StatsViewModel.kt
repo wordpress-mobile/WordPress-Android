@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -70,6 +71,8 @@ class StatsViewModel
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
     val siteChanged = statsSiteProvider.siteChanged
+
+    val toolbarHasShadow: LiveData<Boolean> = statsSectionManager.liveSelectedSection.mapNullable { it == INSIGHTS }
 
     val hideToolbar = newsCardHandler.hideToolbar
 

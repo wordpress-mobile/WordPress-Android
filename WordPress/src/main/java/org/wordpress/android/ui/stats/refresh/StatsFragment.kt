@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.animation.StateListAnimator
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -121,6 +122,31 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
                     snackbar.show()
                 }
             }
+        })
+
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
+            app_bar_layout.postDelayed(
+                    {
+                        if (app_bar_layout != null) {
+                            val originalStateListAnimator = app_bar_layout.stateListAnimator
+                            if (originalStateListAnimator != null) {
+                                app_bar_layout.setTag(
+                                        R.id.appbar_layout_original_animator_tag_key,
+                                        originalStateListAnimator
+                                )
+                            }
+
+                            if (hasShadow == true) {
+                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
+                                        R.id.appbar_layout_original_animator_tag_key
+                                ) as StateListAnimator
+                            } else {
+                                app_bar_layout.stateListAnimator = null
+                            }
+                        }
+                    },
+                    100
+            )
         })
 
         viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->

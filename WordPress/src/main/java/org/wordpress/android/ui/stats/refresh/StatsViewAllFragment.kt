@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.animation.StateListAnimator
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -20,7 +21,10 @@ import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
-import kotlinx.android.synthetic.main.stats_view_all_fragment.*
+import kotlinx.android.synthetic.main.stats_view_all_fragment.app_bar_layout
+import kotlinx.android.synthetic.main.stats_view_all_fragment.pullToRefresh
+import kotlinx.android.synthetic.main.stats_view_all_fragment.tabLayout
+import kotlinx.android.synthetic.main.stats_view_all_fragment.toolbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -217,6 +221,31 @@ class StatsViewAllFragment : DaggerFragment() {
             if (event != null) {
                 viewModel.onDateChanged()
             }
+        })
+
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
+            app_bar_layout.postDelayed(
+                    {
+                        if (app_bar_layout != null) {
+                            val originalStateListAnimator = app_bar_layout.stateListAnimator
+                            if (originalStateListAnimator != null) {
+                                app_bar_layout.setTag(
+                                        R.id.appbar_layout_original_animator_tag_key,
+                                        originalStateListAnimator
+                                )
+                            }
+
+                            if (hasShadow == true) {
+                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
+                                        R.id.appbar_layout_original_animator_tag_key
+                                ) as StateListAnimator
+                            } else {
+                                app_bar_layout.stateListAnimator = null
+                            }
+                        }
+                    },
+                    100
+            )
         })
     }
 

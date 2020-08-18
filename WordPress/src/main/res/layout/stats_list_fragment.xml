@@ -1,43 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/date_selection_toolbar"
-        layout="@layout/stats_date_selector"/>
-
-    <include
-        layout="@layout/stats_error_view"
+        android:duplicateParentState="true"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"
+        app:liftOnScrollTargetViewId="@+id/recyclerView">
 
-    <include
-        layout="@layout/stats_empty_view" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+               android:duplicateParentState="true"
+              android:background="@drawable/tab_layout_background"
+            android:layout_height="wrap_content">
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/loadingContainer"
-        style="@style/StatsList"
-        android:visibility="gone">
+            <include
+                   android:duplicateParentState="true"
+                layout="@layout/stats_date_selector" />
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <include
+            layout="@layout/stats_error_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include layout="@layout/stats_empty_view" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/loadingContainer"
+            style="@style/StatsList"
+            android:visibility="gone">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/loadingRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:descendantFocusability="beforeDescendants"
+                android:scrollbars="vertical" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/loadingRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:id="@+id/recyclerView"
+            style="@style/StatsList"
             android:clipToPadding="false"
             android:descendantFocusability="beforeDescendants"
-            android:scrollbars="vertical"/>
-    </com.facebook.shimmer.ShimmerFrameLayout>
+            android:scrollbars="vertical" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        style="@style/StatsList"
-        android:clipToPadding="false"
-        android:descendantFocusability="beforeDescendants"
-        android:scrollbars="vertical"/>
-
-</LinearLayout>
+    </LinearLayout>
+</org.wordpress.android.widgets.NestedCoordinatorLayout>
