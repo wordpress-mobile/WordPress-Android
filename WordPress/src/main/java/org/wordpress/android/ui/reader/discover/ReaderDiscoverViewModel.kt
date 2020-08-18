@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.ITEM_CLICK
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
@@ -149,7 +150,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onPostItemClicked(postId: Long, blogId: Long) {
-        AppLog.d(T.READER, "OnItemClicked")
+        // TODO malinjir inline
+        onButtonClicked(postId, blogId, ITEM_CLICK)
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {

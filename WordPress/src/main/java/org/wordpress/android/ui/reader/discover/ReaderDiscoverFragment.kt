@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
@@ -83,6 +84,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {
+                    is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, post.blogId, post.postId)
                     is SharePost -> ReaderActivityLauncher.sharePost(context, post)
                     is OpenPost -> ReaderActivityLauncher.openPost(context, post)
                     is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
