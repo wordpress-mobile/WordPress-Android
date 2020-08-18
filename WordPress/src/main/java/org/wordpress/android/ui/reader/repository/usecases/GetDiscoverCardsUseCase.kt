@@ -36,7 +36,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
                     )
 
                     // TODO: ashiagr fix condition to display welcome card
-                    cards.add(WelcomeBannerCard(true))
+                    cards.add(WelcomeBannerCard)
 
                     forLoop@ for (i in 0 until jsonObjects.length()) {
                         val cardJson = jsonObjects.getJSONObject(i)

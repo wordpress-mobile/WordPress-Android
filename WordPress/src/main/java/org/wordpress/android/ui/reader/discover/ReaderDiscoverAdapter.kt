@@ -21,7 +21,7 @@ class ReaderDiscoverAdapter(
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder {
         return when (viewType) {
-            welcomeBannerViewType -> WelcomeBannerViewHolder(uiHelpers, parent)
+            welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
             postViewType -> ReaderPostViewHolder(
                     uiHelpers,
                     imageManager,

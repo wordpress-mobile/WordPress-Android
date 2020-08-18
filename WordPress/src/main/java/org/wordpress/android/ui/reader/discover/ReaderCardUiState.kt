@@ -13,7 +13,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
-    data class ReaderWelcomeBannerCardUiState(val show: Boolean) : ReaderCardUiState()
+    object ReaderWelcomeBannerCardUiState : ReaderCardUiState()
 
     data class ReaderPostUiState(
         val postId: Long,
