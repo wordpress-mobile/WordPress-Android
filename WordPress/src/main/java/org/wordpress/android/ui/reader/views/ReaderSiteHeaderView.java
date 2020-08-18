@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
@@ -22,7 +23,6 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -41,6 +41,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private long mBlogId;
     private long mFeedId;
+    // Represents the true siteId/blogId for a feed situation (blogId == feedId)
+    private long mSiteId;
     private ReaderFollowButton mFollowButton;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
@@ -60,14 +62,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
     public ReaderSiteHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         ((WordPress) context.getApplicationContext()).component().inject(this);
-        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
+        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_extra_large);
         initView(context);
     }
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
-        ViewUtilsKt.expandTouchTargetArea(mFollowButton, R.dimen.reader_follow_button_extra_padding, false);
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
@@ -82,16 +83,30 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogId = blogId;
         mFeedId = feedId;
 
-        // first get info from local db
         final ReaderBlog localBlogInfo;
-        if (mBlogId != 0) {
-            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
-        } else if (mFeedId != 0) {
+
+        // In case this is a feed request, grab the actual blogId/siteId for the feed from the post table.
+        // When it's a feed situation, blogId is set to the value of feedId before it gets here. We need the
+        // actual blogId/siteId for the feed so we can make a request for the icon image.
+        if (blogId == feedId || blogId == 0) {
+            mSiteId = ReaderPostTable.getBlogIdForFeed(mFeedId);
+        } else {
+            mSiteId = 0L;
+        }
+
+        // first get info from local db - always check by feedId first, following by blogId - why?
+        // Because in the case of feeds, the blogId is set to the same value as feedId AND we happen to
+        // be following a blogId that matches our feedId, then that record is returned from the db therefore
+        // we will have the wrong data.
+        if (mFeedId != 0) {
             localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
+        } else if (mBlogId != 0) {
+            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
         } else {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
             return;
         }
+
         if (localBlogInfo != null) {
             showBlogInfo(localBlogInfo);
         }
@@ -103,14 +118,49 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 public void onResult(ReaderBlog serverBlogInfo) {
                     if (isAttachedToWindow()) {
                         showBlogInfo(serverBlogInfo);
+                        handleMissingImage(mSiteId, mFeedId, serverBlogInfo);
                     }
                 }
             };
+
             if (mFeedId != 0) {
                 ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
             } else {
                 ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
             }
+        } else {
+            // if we don't need to go to the server, make sure we have an image to use on the header
+            handleMissingImage(mSiteId, mFeedId, localBlogInfo);
+        }
+    }
+
+    /**
+     * If the blogInfo does not contain an image, do a call out to get if from /read/sites/{siteId}
+     * @param blogIdForFeed
+     * @param feedId
+     * @param blogInfo
+     */
+    private void handleMissingImage(long blogIdForFeed, long feedId, ReaderBlog blogInfo) {
+        if (blogIdForFeed > 0 && blogInfo != null && !blogInfo.hasImageUrl()) {
+            ReaderActions.UpdateBlogInfoListener listener = serverBlogInfo -> {
+                if (isAttachedToWindow()) {
+                    updateImage(blogInfo, serverBlogInfo);
+                }
+            };
+            ReaderBlogActions.updateImageForFeedByBlog(blogIdForFeed, null, feedId, listener);
+        }
+    }
+
+    private void updateImage(ReaderBlog blogInfo, ReaderBlog serverBlogInfo) {
+        ViewGroup layoutInfo = findViewById(R.id.layout_blog_info);
+        ImageView blavatarImg = layoutInfo.findViewById(R.id.image_blavatar);
+        if (serverBlogInfo.hasImageUrl()) {
+            mImageManager.loadIntoCircle(blavatarImg, ImageType.BLAVATAR_CIRCULAR,
+                   PhotonUtils.getPhotonImageUrl(serverBlogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
+        }
+        blogInfo.setImageUrl(serverBlogInfo.getImageUrl());
+        if (mBlogInfoListener != null) {
+            mBlogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 
@@ -150,14 +200,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (blogInfo.hasImageUrl()) {
-            mImageManager.load(blavatarImg, ImageType.BLAVATAR,
-                    PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.MEDIUM));
+            mImageManager.loadIntoCircle(blavatarImg, ImageType.BLAVATAR_CIRCULAR,
+                    PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
         }
 
         txtFollowCount.setText(String.format(
-                        LocaleManager.getSafeLocale(getContext()),
-                        getContext().getString(R.string.reader_label_follow_count),
-                        blogInfo.numSubscribers));
+                LocaleManager.getSafeLocale(getContext()),
+                getContext().getString(R.string.reader_label_follow_count),
+                blogInfo.numSubscribers));
 
         if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
@@ -195,7 +245,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (mFollowListener != null) {
             if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
+                mFollowListener.onFollowTapped(
+                        followButton,
+                        mBlogInfo.getName(),
+                        mSiteId > 0 ? mSiteId : mBlogInfo.blogId);
             } else {
                 mFollowListener.onFollowingTapped();
             }
