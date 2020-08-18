@@ -1,6 +1,7 @@
 package org.wordpress.android.widgets
 
 import android.R.color
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT
@@ -22,6 +23,13 @@ class AppBarFadingEdgeView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
     init {
+        iniView()
+    }
+
+    // state_lifted and state_liftable are actually not private, and this waring appears only in code (xml is ok)
+    // is gone on newer versions of gradle
+    @SuppressLint("PrivateResource")
+    private fun iniView() {
         isDuplicateParentStateEnabled = true
 
         val elevationOverlayProvider = ElevationOverlayProvider(context)
