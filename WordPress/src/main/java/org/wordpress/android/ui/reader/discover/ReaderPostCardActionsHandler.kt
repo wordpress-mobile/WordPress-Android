@@ -14,6 +14,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
@@ -74,6 +75,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
         }
+    }
+
+    fun handleVideoOverlayClicked(videoUrl: String) {
+        _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
     }
 
     private fun handleFollowClicked(post: ReaderPost) {

@@ -29,4 +29,5 @@ sealed class ReaderNavigationEvents {
         @StringRes val message: Int = R.string.reader_save_posts_locally_dialog_message
         @StringRes val buttonLabel: Int = R.string.dialog_button_ok
     }
+    data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
 }
