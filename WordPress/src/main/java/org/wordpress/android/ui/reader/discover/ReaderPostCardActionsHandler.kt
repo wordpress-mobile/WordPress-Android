@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
@@ -89,6 +90,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
             analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
         }
         _navigationEvents.postValue(Event(ShowPostDetail(post)))
+    }
+
+    fun handleVideoOverlayClicked(videoUrl: String) {
+        _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
     }
 
     private fun handleFollowClicked(post: ReaderPost) {

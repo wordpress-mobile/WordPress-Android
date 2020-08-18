@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.INTERESTS
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
@@ -130,14 +129,18 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
-            // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false)
+            }
         }
     }
 
     private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
-        // TODO malinjir implement action
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.handleVideoOverlayClicked(it.featuredVideo)
+            }
+        }
     }
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
@@ -156,6 +159,14 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {
         initiateLoadMoreIfNecessary(itemUiState)
+    }
+
+    private fun findPost(postId: Long, blogId: Long): ReaderPost? {
+        return readerDiscoverDataProvider.discoverFeed.value?.cards?.let {
+            it.filterIsInstance<ReaderPostCard>()
+                    .find { card -> card.post.postId == postId && card.post.blogId == blogId }
+                    ?.post
+        }
     }
 
     private fun initiateLoadMoreIfNecessary(item: ReaderCardUiState) {
