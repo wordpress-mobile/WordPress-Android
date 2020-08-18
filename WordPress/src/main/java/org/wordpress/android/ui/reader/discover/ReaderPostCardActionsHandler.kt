@@ -15,6 +15,7 @@ import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -92,6 +93,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     fun handleVideoOverlayClicked(videoUrl: String) {
         _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
+    }
+
+    fun handleHeaderClicked(siteId: Long, feedId: Long) {
+        _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
     }
 
     private fun handleFollowClicked(post: ReaderPost) {

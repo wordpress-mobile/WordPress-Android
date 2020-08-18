@@ -143,7 +143,11 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
-        // TODO malinjir implement action
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.handleHeaderClicked(it.blogId, it.feedId)
+            }
+        }
     }
 
     private fun onTagItemClicked(tagSlug: String) {
