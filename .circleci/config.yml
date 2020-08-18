@@ -102,9 +102,8 @@ jobs:
           command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle
       - save-gutenberg-bundle-cache
   test:
-    executor:
-      name: android/default
-      api-version: "28"
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -131,9 +130,8 @@ jobs:
       - android/save-gradle-cache
       - android/save-test-results
   lint:
-    executor:
-      name: android/default
-      api-version: "28"
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -177,9 +175,8 @@ jobs:
       - android/save-gradle-cache
       - android/save-lint-results
   Installable Build:
-    executor:
-      name: android/default
-      api-version: "28"
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -279,9 +276,8 @@ jobs:
         description: Post to Slack when tests fail. SLACK_WEBHOOK ENV variable must be set.
         type: boolean
         default: false
-    executor:
-      name: android/default
-      api-version: "28"
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -324,9 +320,8 @@ jobs:
                 include_project_field: false
                 failure_message: ':red_circle: WordPress Android connected tests failed on \`${CIRCLE_BRANCH}\` branch after merge by ${CIRCLE_USERNAME}. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
   WordPressUtils Connected Tests:
-    executor:
-      name: android/default
-      api-version: "28"
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -374,9 +369,8 @@ jobs:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
   translation-review-build:
-    executor:
-      name: android/default
-      api-version: "28"
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
     environment:
       APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
     steps:
