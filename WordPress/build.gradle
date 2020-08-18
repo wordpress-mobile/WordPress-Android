@@ -76,6 +76,7 @@ android {
         buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
+        buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -116,6 +117,7 @@ android {
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
+            buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
