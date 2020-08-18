@@ -130,10 +130,10 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         const val headingEnd = " -->\n"
         const val divPart = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
         const val closingtag = "<!-- /wp:jetpack/story -->"
-        const val VIDEOPRESS_MIME_TYPE =  "video/videopress"
+        const val VIDEOPRESS_MIME_TYPE = "video/videopress"
         // TODO verify this base URL is constant - or update FluxC to bring the VideoPress video URL from REST API, i.e.
         // media_details.original.url
         // "media_details":{"original":{"url":"https:\/\/videos.files.wordpress.com\/Si7WwFlU\/wp-1597773400767.mp4"}
-        const val VIDEOPRESS_BASE_URL =  "https://videos.files.wordpress.com/"
+        const val VIDEOPRESS_BASE_URL = "https://videos.files.wordpress.com/"
     }
 }
