@@ -345,7 +345,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
-
             if (modalLayoutPickerFeatureConfig.isEnabled()) {
                 mlpViewModel.show()
             } else {
