@@ -101,6 +101,5 @@ enum class ReaderPostCardActionType {
     LIKE,
     BOOKMARK,
     REBLOG,
-    COMMENTS,
-    ITEM_CLICK
+    COMMENTS
 }

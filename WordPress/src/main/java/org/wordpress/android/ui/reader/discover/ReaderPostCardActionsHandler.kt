@@ -22,7 +22,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_S
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.ITEM_CLICK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
@@ -79,11 +78,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
             BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
-            ITEM_CLICK -> handleOnItemClicked(post)
         }
     }
 
-    private fun handleOnItemClicked(post: ReaderPost) {
+    fun handleOnItemClicked(post: ReaderPost) {
         incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
 
         if (post.isBookmarked) {
