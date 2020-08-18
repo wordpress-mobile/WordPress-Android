@@ -14,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
@@ -100,7 +99,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         uiHelpers.updateVisibility(done_button, doneButtonUiState.visible)
     }
 
-    private fun updateInterests(interestsUiState: List<InterestUiState>) {
+    private fun updateInterests(interestsUiState: List<TagUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
             val chip = interests_chip_group.findViewWithTag(interestTagUiState.slug)
                 ?: createChipView(interestTagUiState.slug, index)

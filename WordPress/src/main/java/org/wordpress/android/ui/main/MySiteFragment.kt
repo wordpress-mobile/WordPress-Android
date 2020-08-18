@@ -457,12 +457,18 @@ class MySiteFragment : Fragment(),
                 }
                 completeQuickStarTask(UPLOAD_SITE_ICON)
             } else {
-                val message = if (hasIcon) {
-                    R.string.my_site_icon_dialog_change_requires_permission_message
-                } else {
-                    R.string.my_site_icon_dialog_add_requires_permission_message
+                val message = when {
+                    !site.isUsingWpComRestApi -> {
+                        R.string.my_site_icon_dialog_change_requires_jetpack_message
+                    }
+                    hasIcon -> {
+                        R.string.my_site_icon_dialog_change_requires_permission_message
+                    }
+                    else -> {
+                        R.string.my_site_icon_dialog_add_requires_permission_message
+                    }
                 }
-                showEditingSiteIconRequiresPermissionDialog(getString(message))
+                showEditingSiteIconNotAllowedDialog(getString(message))
             }
         }
     }
@@ -713,9 +719,9 @@ class MySiteFragment : Fragment(),
         dialog.show(requireActivity().supportFragmentManager, tag)
     }
 
-    private fun showEditingSiteIconRequiresPermissionDialog(message: String) {
+    private fun showEditingSiteIconNotAllowedDialog(message: String) {
         val dialog = BasicFragmentDialog()
-        val tag = TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG
+        val tag = TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG
         dialog.initialize(
                 tag, getString(R.string.my_site_icon_dialog_title),
                 message,
@@ -1212,7 +1218,7 @@ class MySiteFragment : Fragment(),
                     activity,
                     SITE_ICON_PICKER, selectedSite, null
             )
-            TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG -> {
+            TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG -> {
             }
             TAG_QUICK_START_DIALOG -> {
                 startQuickStart()
@@ -1299,7 +1305,7 @@ class MySiteFragment : Fragment(),
         when (instanceTag) {
             TAG_ADD_SITE_ICON_DIALOG -> showQuickStartNoticeIfNecessary()
             TAG_CHANGE_SITE_ICON_DIALOG,
-            TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG,
+            TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG,
             TAG_QUICK_START_DIALOG,
             TAG_QUICK_START_MIGRATION_DIALOG,
             TAG_REMOVE_NEXT_STEPS_DIALOG -> {
@@ -1547,7 +1553,7 @@ class MySiteFragment : Fragment(),
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
-        const val TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG"
+        const val TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG = "TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG"
         const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
         const val TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG"
         const val AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000

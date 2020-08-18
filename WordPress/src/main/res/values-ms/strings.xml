@@ -13,7 +13,6 @@ Language: ms
     <string name="plugin_remove_progress_dialog_message">Membuang %s…</string>
     <string name="plugin_remove_dialog_title">Buang Pemalam</string>
     <string name="login_empty_password">Sila masukkan kata laluan</string>
-    <string name="login_text_otp_another">Sebaliknya tekskan saya kod sekali lagi.</string>
     <string name="enter_verification_code_sms">Kami telah menghantar mesej teks ke nombor telefon berakhir dengan %s. Sila masukkan kod pengesahan dalam SMS.</string>
     <string name="uploading_subtitle_media_only">Tinggal %1$d daripada %2$d fail</string>
     <string name="uploading_subtitle_media_only_one">Tinggal 1 fail</string>
@@ -81,7 +80,6 @@ Language: ms
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lampu kelip</string>
-    <string name="connect_site">Sambung Laman</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gegarkan peranti</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Pilih bunyi</string>
     <string name="notification_settings_category_sights_and_sounds">Penglihatan dan Bunyian</string>
@@ -122,7 +120,6 @@ Language: ms
     <string name="button_retry">Cuba Semula</string>
     <string name="connection_to_server_lost">Sambungan ke pelayan telah hilang</string>
     <string name="uploading_post">Memuat naik \"%s\"</string>
-    <string name="login_logged_in_as">Dilog masuk sebagai</string>
     <string name="login_epilogue_mysites_one">Laman saya</string>
     <string name="login_epilogue_mysites_other">Laman-laman saya</string>
     <string name="login_email_client_not_found">Tidak dapat mengesan aplikasi klien emel anda</string>
@@ -136,17 +133,12 @@ Language: ms
     <string name="login_site_address_help_title">Apa alamat laman saya?</string>
     <string name="login_site_address_help">Perlu bantuan mencari alamat laman anda?</string>
     <string name="login_site_address">Alamat laman</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
-    <string name="connect_more">Sambung Laman Lain</string>
     <string name="login_continue">Teruskan</string>
     <string name="enter_wpcom_password">Masukkan kata laluan WordPress.com anda.</string>
     <string name="login_magic_link_email_requesting">Memohon emel log masuk</string>
-    <string name="login_magic_links_sent_label">Pautan sihir anda sedang dalam perjalanan! Semak e-mel anda pada peranti ini dan ketik pautan dalam e-mel yang anda terima dari WordPress.com.</string>
-    <string name="login_magic_links_label">Kami akan mengemel anda pautan ajaib yang akan melog masuk anda dengan serta-merta, tiada kata laluan diperlukan. Tidak perlu lagi mengetik!</string>
     <string name="password_incorrect">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
     <string name="requesting_otp">Memohon ko pengesahan melalui SMS.</string>
-    <string name="login_text_otp">Sebaliknya tekskan saya kod.</string>
     <string name="enter_verification_code">Hampir di sana! Sila masukkan kod pengesahan daripada aplikasi Authenticator anda.</string>
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
