@@ -522,10 +522,12 @@ ENV["HAS_ALPHA_VERSION"]="true"
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      #sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew lint#{options[:flavor]}Release")
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
-      sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      #sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew bundle#{options[:flavor]}Release")
 
       UI.crash!("Unable to find a bundle at #{bundle_path}") unless File.file?(bundle_path)
 
