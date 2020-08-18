@@ -99,6 +99,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
+        const val UNUSED_KEY = "unused_key"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
 
@@ -251,7 +252,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
                 PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
-        requestCodes.EXTRA_MEDIA_URIS = PhotoPickerActivity.EXTRA_MEDIA_URIS
+        // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
+        // hence we set the requestCode to UNUSED
+        requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
     }
 
     override fun showProvidedMediaPicker() {
@@ -269,17 +272,24 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun handleMediaPickerIntentData(data: Intent) {
-        // TODO move this to EditorMedia
-        val ids = ListUtils.fromLongArray(
-                data.getLongArrayExtra(
-                        MediaBrowserActivity.RESULT_IDS
-                )
-        )
-        if (ids == null || ids.size == 0) {
-            return
+        if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+            val uriList: List<Uri> = convertStringArrayIntoUrisList(
+                    data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+            )
+            if (uriList.isNotEmpty()) {
+                storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+            }
+        } else if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
+            val ids = ListUtils.fromLongArray(
+                    data.getLongArrayExtra(
+                            MediaBrowserActivity.RESULT_IDS
+                    )
+            )
+            if (ids == null || ids.size == 0) {
+                return
+            }
+            storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
         }
-
-        storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
     private fun setupStoryEditorMediaObserver() {
