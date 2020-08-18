@@ -8,10 +8,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_CAPTURE_MEDIA
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
@@ -21,36 +17,23 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_PHOTO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_VIDEO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.GIF
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.STOCK_MEDIA
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ToggleAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -61,7 +44,6 @@ class MediaPickerViewModel @Inject constructor(
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
-    private val tenorFeatureConfig: TenorFeatureConfig,
     private val context: Context,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
@@ -278,115 +260,16 @@ class MediaPickerViewModel @Inject constructor(
 
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
-    fun clickIcon(icon: MediaPickerIcon) {
-        if (icon == ANDROID_CAPTURE_PHOTO || icon == ANDROID_CAPTURE_VIDEO || icon == WP_STORIES_CAPTURE) {
+    private fun clickIcon(icon: MediaPickerIcon) {
+        if (icon == WP_STORIES_CAPTURE) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
                 _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
                 lastTappedIcon = icon
                 return
             }
-        }
-        when (icon) {
-            ANDROID_CAPTURE_PHOTO -> trackSelectedOtherSourceEvents(
-                    MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
-                    false
-            )
-            ANDROID_CAPTURE_VIDEO -> trackSelectedOtherSourceEvents(
-                    MEDIA_PICKER_OPEN_CAPTURE_MEDIA,
-                    true
-            )
-            ANDROID_CHOOSE_PHOTO -> trackSelectedOtherSourceEvents(
-                    MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
-                    false
-            )
-            ANDROID_CHOOSE_VIDEO -> trackSelectedOtherSourceEvents(
-                    MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
-                    true
-            )
-            WP_MEDIA -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_MEDIA)
-            STOCK_MEDIA -> {
-            }
-            GIF -> {
-            }
-            WP_STORIES_CAPTURE -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
-            ANDROID_CHOOSE_PHOTO_OR_VIDEO -> {
-            }
+            AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
         }
         _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
-    }
-
-    private fun trackSelectedOtherSourceEvents(stat: Stat, isVideo: Boolean) {
-        val properties: MutableMap<String, Any?> = HashMap()
-        properties["is_video"] = isVideo
-        AnalyticsTracker.track(stat, properties)
-    }
-
-    fun onCameraClicked(viewWrapper: ViewWrapper) {
-        if (browserType.isImagePicker && browserType.isVideoPicker) {
-            showCameraPopupMenu(viewWrapper)
-        } else if (browserType.isImagePicker) {
-            clickIcon(ANDROID_CAPTURE_PHOTO)
-        } else if (browserType.isVideoPicker) {
-            clickIcon(ANDROID_CAPTURE_VIDEO)
-        } else {
-            AppLog.e(
-                    MEDIA,
-                    "This code should be unreachable. If you see this message one of " +
-                            "the MediaBrowserTypes isn't setup correctly."
-            )
-        }
-    }
-
-    fun showCameraPopupMenu(viewWrapper: ViewWrapper) {
-        val capturePhotoItem = PopupMenuItem(UiStringRes(R.string.photo_picker_capture_photo)) {
-            clickIcon(
-                    ANDROID_CAPTURE_PHOTO
-            )
-        }
-        val captureVideoItem = PopupMenuItem(UiStringRes(R.string.photo_picker_capture_video)) {
-            clickIcon(
-                    ANDROID_CAPTURE_VIDEO
-            )
-        }
-        _showPopupMenu.value = Event(PopupMenuUiModel(viewWrapper, listOf(capturePhotoItem, captureVideoItem)))
-    }
-
-    fun performActionOrShowPopup(viewWrapper: ViewWrapper) {
-        val items = mutableListOf<PopupMenuItem>()
-        if (browserType.isImagePicker) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_photo)) {
-                clickIcon(
-                        ANDROID_CHOOSE_PHOTO
-                )
-            })
-        }
-        if (browserType.isVideoPicker) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_video)) {
-                clickIcon(
-                        ANDROID_CHOOSE_VIDEO
-                )
-            })
-        }
-        if (site != null && !browserType.isGutenbergPicker) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_stock_media)) {
-                clickIcon(
-                        STOCK_MEDIA
-                )
-            })
-            // only show GIF picker from Tenor if this is NOT the WPStories picker
-            if (tenorFeatureConfig.isEnabled() && !browserType.isWPStoriesPicker) {
-                items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
-                    clickIcon(
-                            GIF
-                    )
-                })
-            }
-        }
-        if (items.size == 1) {
-            items[0].action()
-        } else {
-            _showPopupMenu.value = Event(PopupMenuUiModel(viewWrapper, items))
-        }
     }
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {

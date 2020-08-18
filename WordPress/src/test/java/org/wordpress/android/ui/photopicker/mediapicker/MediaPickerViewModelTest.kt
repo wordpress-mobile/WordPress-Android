@@ -34,7 +34,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -45,7 +44,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var uriWrapper1: UriWrapper
     @Mock lateinit var uriWrapper2: UriWrapper
     @Mock lateinit var permissionsHandler: PermissionsHandler
-    @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Mock lateinit var context: Context
     @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: MediaPickerViewModel
@@ -67,7 +65,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,
                 permissionsHandler,
-                tenorFeatureConfig,
                 context,
                 resourceProvider
         )

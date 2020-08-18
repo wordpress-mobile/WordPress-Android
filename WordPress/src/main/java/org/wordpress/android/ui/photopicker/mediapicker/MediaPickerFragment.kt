@@ -41,20 +41,8 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class MediaPickerFragment : Fragment() {
-    enum class MediaPickerIcon(private val mRequiresUploadPermission: Boolean) {
-        ANDROID_CHOOSE_PHOTO(true),
-        ANDROID_CHOOSE_VIDEO(true),
-        ANDROID_CAPTURE_PHOTO(true),
-        ANDROID_CAPTURE_VIDEO(true),
-        ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
-        WP_MEDIA(false),
-        STOCK_MEDIA(true),
-        GIF(true),
-        WP_STORIES_CAPTURE(true);
-
-        fun requiresUploadPermission(): Boolean {
-            return mRequiresUploadPermission
-        }
+    enum class MediaPickerIcon {
+        WP_STORIES_CAPTURE;
     }
 
     /*
@@ -331,14 +319,6 @@ class MediaPickerFragment : Fragment() {
                 viewModel.clickOnLastTappedIcon()
             }
         }
-    }
-
-    fun finishActionMode() {
-        viewModel.clearSelection()
-    }
-
-    fun doIconClicked(wpMedia: MediaPickerIcon) {
-        viewModel.clickIcon(wpMedia)
     }
 
     companion object {
