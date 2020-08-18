@@ -5,8 +5,6 @@
 <resources>
     <!-- images -->
     <style name="ReaderWelcomeBannerImageView" parent="ReaderImageView">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:src">@drawable/bg_colorful_dots_large</item>
     </style>
 </resources>
