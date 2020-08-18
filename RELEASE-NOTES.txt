@@ -9,6 +9,10 @@
 * [*] Block Editor: Media editing support in Cover block.
 * [*] Block Editor: Fixed a bug on the Heading block, where a heading with a link and string formatting showed a white shadow in dark mode.
 
+15.4.1
+-----
+* [**] Block Editor: Fix for editing the Classic Block in the Unsupported block editor
+
 15.4
 -----
 * [***] The login and signup flows were unified and have a new design.
