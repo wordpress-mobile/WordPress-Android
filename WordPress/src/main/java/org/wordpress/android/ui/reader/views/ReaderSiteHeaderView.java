@@ -237,7 +237,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (result) {
-            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            mFollowButton.setIsFollowed(isAskingToFollow);
         }
     }
 }
