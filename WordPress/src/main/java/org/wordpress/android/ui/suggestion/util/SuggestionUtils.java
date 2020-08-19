@@ -35,14 +35,13 @@ public class SuggestionUtils {
             return null;
         }
 
-        SuggestionAdapter suggestionAdapter = new SuggestionAdapter(context);
+
+        serviceConnectionManager.bindToService();
 
         List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(siteId);
-        // if the suggestions are not stored yet, we want to trigger an update for it
-        if (suggestions.isEmpty()) {
-            serviceConnectionManager.bindToService();
-        }
+        SuggestionAdapter suggestionAdapter = new SuggestionAdapter(context);
         suggestionAdapter.setSuggestionList(suggestions);
+
         return suggestionAdapter;
     }
 }

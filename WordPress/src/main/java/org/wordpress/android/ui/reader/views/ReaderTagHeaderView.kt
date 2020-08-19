@@ -37,6 +37,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
         with(uiState.followButtonUiState) {
             follow_button.setIsFollowed(isFollowed)
             follow_button.isEnabled = isEnabled
+            uiHelpers.updateVisibility(follow_button, isVisible)
             onFollowBtnClicked = onFollowButtonClicked
         }
     }

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
 
 sealed class ReaderNavigationEvents {
+    data class ShowPostDetail(val post: ReaderPost) : ReaderNavigationEvents()
     data class SharePost(val post: ReaderPost) : ReaderNavigationEvents()
     data class OpenPost(val post: ReaderPost) : ReaderNavigationEvents()
     data class ShowPostsByTag(val tag: ReaderTag) : ReaderNavigationEvents()
@@ -29,4 +30,6 @@ sealed class ReaderNavigationEvents {
         @StringRes val message: Int = R.string.reader_save_posts_locally_dialog_message
         @StringRes val buttonLabel: Int = R.string.dialog_button_ok
     }
+    data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
+    data class ShowBlogPreview(val siteId: Long, val feedId: Long) : ReaderNavigationEvents()
 }
