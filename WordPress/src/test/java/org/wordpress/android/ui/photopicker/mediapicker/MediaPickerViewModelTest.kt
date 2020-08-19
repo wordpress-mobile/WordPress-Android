@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_MEDIA_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER
 import org.wordpress.android.ui.photopicker.PermissionsHandler
+import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
@@ -38,7 +40,8 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class MediaPickerViewModelTest : BaseUnitTest() {
-    @Mock lateinit var deviceMediaListBuilder: DeviceListBuilder
+    @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
+    @Mock lateinit var mediaLoader: MediaLoader
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var uriWrapper1: UriWrapper
@@ -61,7 +64,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel = MediaPickerViewModel(
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
-                deviceMediaListBuilder,
+                mediaLoaderFactory,
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,
                 permissionsHandler,
@@ -69,8 +72,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 resourceProvider
         )
         uiStates.clear()
-        firstItem = MediaItem(1, uriWrapper1, false)
-        secondItem = MediaItem(2, uriWrapper2, false)
+        firstItem = MediaItem(1, uriWrapper1)
+        secondItem = MediaItem(2, uriWrapper2)
     }
 
     @Test
@@ -220,7 +223,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         viewModel.checkStoragePermission(isAlwaysDenied = false)
 
-        assertThat(uiStates).hasSize(2)
+        assertThat(uiStates).hasSize(3)
 
         assertSoftAskUiModelVisible()
     }
@@ -338,8 +341,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         hasStoragePermissions: Boolean = true
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
+        whenever(mediaLoaderFactory.build()).thenReturn(mediaLoader)
+        whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel)) })
         viewModel.start(listOf(), browserType, null, site)
-        whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
         viewModel.uiState.observeForever {
             if (it != null) {
                 uiStates.add(it)
@@ -350,7 +354,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 navigateEvents.add(it)
             }
         }
-        assertThat(uiStates).hasSize(1)
+        assertThat(uiStates).hasSize(2)
     }
 
     private fun PhotoListUiModel.Data.assertSelection(
