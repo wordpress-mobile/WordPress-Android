@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.ReaderTagType.INTERESTS
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
@@ -135,7 +136,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onReaderTagClicked(tag: String) {
-        val readerTag = readerUtilsWrapper.getTagFromTagName(tag, INTERESTS)
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
         _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
