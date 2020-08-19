@@ -7,7 +7,6 @@ include ':photoeditor'
 project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/stories-android/photoeditor')
 
 include ':libs:image-editor:ImageEditor'
-include ':libs:utils:WordPressUtils'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
@@ -49,4 +48,10 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
     project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-safe-area-context/android')
     include ':react-native-reanimated'
     project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-reanimated/android')
+}
+
+sourceControl {
+    gitRepository("https://github.com/wordpress-mobile/WordPress-Utils-Android") {
+        producesModule("org.wordpress.android:WordPressUtils")
+    }
 }
