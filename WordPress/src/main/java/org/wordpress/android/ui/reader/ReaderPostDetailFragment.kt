@@ -70,6 +70,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
@@ -127,7 +128,7 @@ import org.wordpress.android.widgets.WPTextView
 import java.util.EnumSet
 import javax.inject.Inject
 
-class ReaderPostDetailFragment : Fragment(),
+class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
         ReaderCustomViewListener,
@@ -232,6 +233,10 @@ class ReaderPostDetailFragment : Fragment(),
             }
             postSlugsResolutionUnderway = args.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
         }
+    }
+
+    override fun getScrollableViewForUniqueIdProvision(): View? {
+        return scrollView
     }
 
     override fun onAttach(context: Context) {
