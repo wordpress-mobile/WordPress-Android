@@ -43,12 +43,6 @@ import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.Medi
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_PHOTO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CAPTURE_VIDEO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.STOCK_MEDIA
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerListener
 import org.wordpress.android.ui.posts.EMPTY_LOCAL_POST_ID
@@ -369,12 +363,6 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
 
     override fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean) {
         when (icon) {
-            ANDROID_CAPTURE_PHOTO -> launchCameraForImage()
-            ANDROID_CHOOSE_PHOTO -> launchPictureLibrary(allowMultipleSelection)
-            ANDROID_CAPTURE_VIDEO -> launchCameraForVideo()
-            ANDROID_CHOOSE_VIDEO -> launchVideoLibrary(allowMultipleSelection)
-            WP_MEDIA -> launchWPMediaLibrary()
-            STOCK_MEDIA -> launchStockMediaPicker()
             WP_STORIES_CAPTURE -> launchWPStoriesCamera()
         }
     }
