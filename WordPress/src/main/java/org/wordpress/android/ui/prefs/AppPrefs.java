@@ -148,6 +148,8 @@ public class AppPrefs {
         READER_CSS_UPDATED_TIMESTAMP,
         // Identifier of the next page for the discover /cards endpoint
         READER_CARDS_ENDPOINT_PAGE_HANDLE,
+        // used to tell the server to return a different set of data so the content on discover tab doesn't look static
+        READER_CARDS_ENDPOINT_REFRESH_COUNTER,
 
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
@@ -1174,6 +1176,14 @@ public class AppPrefs {
 
     public static void setReaderCardsPageHandle(String pageHandle) {
         setString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, pageHandle);
+    }
+
+    public static int getReaderCardsRefreshCounter() {
+        return getInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, 0);
+    }
+
+    public static void incrementReaderCardsRefreshCounter() {
+        setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
     }
 
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {

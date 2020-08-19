@@ -19,7 +19,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/contact_us_button"
                 style="@style/HelpActivitySingleText"
-                android:text="@string/contact_us" />
+                android:text="@string/contact_support" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/faq_button"

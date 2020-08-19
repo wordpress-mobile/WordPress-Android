@@ -124,7 +124,8 @@ class MediaLoaderTest : BaseUnitTest() {
         assertFunction: suspend (
             domainModels: List<DomainModel>,
             performAction: suspend (
-                action: LoadAction, awaitResult: Boolean
+                action: LoadAction,
+                awaitResult: Boolean
             ) -> Unit
         ) -> Unit
     ) =

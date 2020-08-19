@@ -35,7 +35,7 @@ class DeviceListBuilder
         return withContext(bgDispatcher) {
             val result = mutableListOf<MediaItem>()
             val deferredJobs = mediaTypes.map { mediaType ->
-                when(mediaType) {
+                when (mediaType) {
                     IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, false) }
                     VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, true) }
                     AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true) }
