@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.util.AppLog
@@ -43,6 +44,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val blockSiteUseCase: BlockSiteUseCase,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -74,7 +76,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.postId, post.blogId)
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
             LIKE -> handleLikeClicked(post.postId, post.blogId)
             BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
             REBLOG -> handleReblogClicked(post)
@@ -121,7 +123,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
-    private fun handleBlockSiteClicked(postId: Long, blogId: Long) {
+    private fun handleBlockSiteClicked(blogId: Long) {
+        uiScope.launch {
+            val result = blockSiteUseCase.blockSite(blogId)
+            result?.let {
+                _snackbarEvents.postValue(Event(it))
+            }
+        }
         AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
