@@ -56,6 +56,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginAutofillCredentialsFilled() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+        mUnifiedLoginTracker.track(Flow.SMART_LOCK_LOGIN, Step.START);
     }
 
     @Override

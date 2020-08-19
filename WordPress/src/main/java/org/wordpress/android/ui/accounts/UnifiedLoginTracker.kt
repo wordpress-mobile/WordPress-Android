@@ -129,6 +129,7 @@ class UnifiedLoginTracker
         PROLOGUE("prologue"),
         WORDPRESS_COM("wordpress_com"),
         GOOGLE_LOGIN("google_login"),
+        SMART_LOCK_LOGIN("smart_lock_login"),
         LOGIN_MAGIC_LINK("login_magic_link"),
         LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),
