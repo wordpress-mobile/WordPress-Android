@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
@@ -51,10 +52,11 @@ class ReaderInterestsViewModelTest {
     @Mock lateinit var parentViewModel: ReaderViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
+    @Mock lateinit var trackerWrapper: AnalyticsTrackerWrapper
 
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel(readerTagRepository)
+        viewModel = ReaderInterestsViewModel(readerTagRepository, trackerWrapper)
     }
 
     @ExperimentalCoroutinesApi
