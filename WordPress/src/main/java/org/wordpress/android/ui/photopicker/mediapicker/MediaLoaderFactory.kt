@@ -11,9 +11,9 @@ class MediaLoaderFactory
     fun build(mediaSourceType: MediaPickerSetup.DataSource): MediaLoader {
         return when (mediaSourceType) {
             DEVICE -> MediaLoader(deviceListBuilder)
-            WP_LIBRARY -> TODO()
-            STOCK_LIBRARY -> TODO()
-            GIF_LIBRARY -> TODO()
+            WP_LIBRARY -> throw NotImplementedError("Source not implemented yet")
+            STOCK_LIBRARY -> throw NotImplementedError("Source not implemented yet")
+            GIF_LIBRARY -> throw NotImplementedError("Source not implemented yet")
         }
     }
 }
