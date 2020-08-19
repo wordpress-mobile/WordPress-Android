@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -231,9 +230,9 @@ class PhotoPickerFragment : Fragment() {
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter
-            val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+            val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
-            recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
         }
     }
 
