@@ -28,12 +28,15 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -90,6 +93,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {
+                    is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, post.blogId, post.postId)
                     is SharePost -> ReaderActivityLauncher.sharePost(context, post)
                     is OpenPost -> ReaderActivityLauncher.openPost(context, post)
                     is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
@@ -106,6 +110,12 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                     }
                     is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
                     is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+                    is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, this.videoUrl)
+                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                            context,
+                            this.siteId,
+                            this.feedId
+                    )
                 }
             }
         })
