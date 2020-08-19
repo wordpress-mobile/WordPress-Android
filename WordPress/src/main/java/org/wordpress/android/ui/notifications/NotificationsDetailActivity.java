@@ -493,7 +493,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         private final ArrayList<Note> mNoteList;
 
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mNoteList = (ArrayList<Note>) notes.clone();
         }
 
