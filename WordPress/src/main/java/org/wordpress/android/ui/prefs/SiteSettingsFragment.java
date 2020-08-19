@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -471,7 +472,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupPreferenceList(view.findViewById(android.R.id.list), getResources());
         }
         mDispatcher.register(this);
-
+        
         return view;
     }
 
@@ -871,6 +872,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // remove footer divider bar
         prefList.setFooterDividersEnabled(false);
         prefList.setOverscrollFooter(res.getDrawable(android.R.color.transparent));
+        ViewCompat.setNestedScrollingEnabled(prefList, true);
     }
 
     /**
