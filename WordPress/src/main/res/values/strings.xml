@@ -1877,7 +1877,6 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
-    <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -1885,6 +1884,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
+    <string name="contact_fragment_title">@string/contact_support</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -2236,7 +2236,7 @@
     <string name="start_over_email_intent_error">Unable to send an email</string>
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
-    <string name="contact_support">Contact support</string>
+    <string name="contact_support">Contact Support</string>
     <string name="confirm_delete_site">Confirm Delete Site</string>
     <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
     <string name="site_settings_export_content_title">Export content</string>
@@ -2911,8 +2911,8 @@
     <string name="dialog_discard_story_title">Discard story post?</string>
     <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
     <string name="dialog_discard_story_ok_button">Discard</string>
-    <string name="pref_camera_selection">pref_camera_selection</string>
-    <string name="pref_flash_mode_selection">pref_flash_mode_selection</string>
+    <string name="pref_camera_selection" translatable="false">pref_camera_selection</string>
+    <string name="pref_flash_mode_selection" translatable="false">pref_flash_mode_selection</string>
     <string name="story_saving_untitled">Untitled</string>
     <string name="story_saving_title">Saving "%1$s"…</string>
     <string name="story_saving_title_several">several stories</string>
