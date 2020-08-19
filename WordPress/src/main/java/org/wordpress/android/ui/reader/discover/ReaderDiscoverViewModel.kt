@@ -84,7 +84,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    posts.cards.map {
+                    // TODO ashiagr remove filter once InterestsYouMayLikeCard is mapped to
+                    //  actual state in #PR 12579
+                    posts.cards.filter { it is ReaderPostCard || it is WelcomeBannerCard }.map {
                         when (it) {
                             is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                                     post = it.post,
@@ -102,9 +104,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                     onTagItemClicked = this::onTagItemClicked,
                                     postListType = TAG_FOLLOWED
                             )
-                            is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(it.show)
-                            // TODO: ashiagr InterestsYouMayLikeCard will be mapped to actual state in #PR 12579
-                            is InterestsYouMayLikeCard -> ReaderWelcomeBannerCardUiState(false)
+                            is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState
+                            is InterestsYouMayLikeCard -> TODO()
                         }
                     },
                     swipeToRefreshIsRefreshing = false
