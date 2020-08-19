@@ -448,7 +448,12 @@ public class ReaderUtils {
         return tags;
     }
 
-    public static boolean isFeed(long blogId, long feedId) {
+    /**
+    * isExternalFeed identifies an external RSS feed
+     * blogId will be empty for feeds and in some instances, it is explicitly
+     * setting blogId equal to the feedId  
+     */
+    public static boolean isExternalFeed(long blogId, long feedId) {
          return (blogId == 0 && feedId != 0) || blogId == feedId;
     }
 }

@@ -89,7 +89,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
             return;
         }
 
-        mIsFeed = ReaderUtils.isFeed(mBlogId, mFeedId);
+        mIsFeed = ReaderUtils.isExternalFeed(mBlogId, mFeedId);
 
         if (mIsFeed) {
             localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);

@@ -101,7 +101,7 @@ public class ReaderActivityLauncher {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
-        if (ReaderUtils.isFeed(siteId, feedId)) {
+        if (ReaderUtils.isExternalFeed(siteId, feedId)) {
             intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
             intent.putExtra(ReaderConstants.ARG_IS_FEED, true);
         } else {
