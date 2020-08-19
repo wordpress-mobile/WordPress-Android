@@ -19,7 +19,13 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
+import org.wordpress.android.ui.RequestCodes.MULTI_SELECT_MEDIA_PICKER
+import org.wordpress.android.ui.RequestCodes.PICTURE_LIBRARY
+import org.wordpress.android.ui.RequestCodes.SINGLE_SELECT_MEDIA_PICKER
+import org.wordpress.android.ui.RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT
+import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
+import org.wordpress.android.ui.RequestCodes.VIDEO_LIBRARY
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
@@ -189,10 +195,10 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             return
         }
         when (requestCode) {
-            RequestCodes.PICTURE_LIBRARY, RequestCodes.VIDEO_LIBRARY -> if (data != null) {
+            PICTURE_LIBRARY, VIDEO_LIBRARY -> if (data != null) {
                 doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), ANDROID_PICKER)
             }
-            RequestCodes.TAKE_PHOTO -> try {
+            TAKE_PHOTO -> try {
                 WPMediaUtils.scanMediaFile(this, mediaCapturePath!!)
                 val f = File(mediaCapturePath)
                 val capturedImageUri = listOf(
@@ -204,7 +210,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             } catch (e: RuntimeException) {
                 AppLog.e(MEDIA, e)
             }
-            RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> if (data!!.hasExtra(
+            MULTI_SELECT_MEDIA_PICKER, SINGLE_SELECT_MEDIA_PICKER -> if (data!!.hasExtra(
                             MediaBrowserActivity.RESULT_IDS
                     )) {
                 val ids = ListUtils.fromLongArray(
@@ -214,13 +220,13 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 )
                 doMediaIdsSelected(ids, WP_MEDIA_PICKER)
             }
-            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT -> if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
+            STOCK_MEDIA_PICKER_SINGLE_SELECT -> if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
                 val mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0)
                 val ids = ArrayList<Long>()
                 ids.add(mediaId)
                 doMediaIdsSelected(ids, STOCK_MEDIA_PICKER)
             }
-            RequestCodes.IMAGE_EDITOR_EDIT_IMAGE -> if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
+            IMAGE_EDITOR_EDIT_IMAGE -> if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
                 val uris = WPMediaUtils.retrieveImageEditorResult(data)
                 doMediaUrisSelected(uris, APP_PICKER)
             }
@@ -256,7 +262,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             ActivityLauncher.showStockMediaPickerForResult(
                     this,
                     it,
-                    RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT
+                    STOCK_MEDIA_PICKER_SINGLE_SELECT
             )
         } ?: ToastUtils.showToast(this, R.string.blog_not_found)
     }
