@@ -8,8 +8,8 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentTransaction
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -69,7 +69,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     private var site: SiteModel? = null
 
     // note that the local post id isn't required (default value is EMPTY_LOCAL_POST_ID)
-    private var localPostId: Int? = null
+    private var localPostId: Int = EMPTY_LOCAL_POST_ID
 
     @Inject lateinit var dispatcher: Dispatcher
 
@@ -100,9 +100,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.photo_picker_activity)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
-        setSupportActionBar(toolbar)
+        toolbar_main.setNavigationIcon(R.drawable.ic_close_white_24dp)
+        setSupportActionBar(toolbar_main)
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
@@ -119,7 +118,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
         var fragment = pickerFragment
         if (fragment == null) {
-            fragment = newInstance(this, browserType!!, site)
+            fragment = newInstance(this, browserType, site)
             supportFragmentManager.beginTransaction()
                     .replace(
                             R.id.fragment_container,
@@ -131,33 +130,33 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         } else {
             fragment.setMediaPickerListener(this)
         }
-        updateTitle(browserType, actionBar)
+        updateTitle(browserType, requireNotNull(actionBar))
     }
 
-    private fun updateTitle(browserType: MediaBrowserType?, actionBar: ActionBar?) {
-        if (browserType!!.isImagePicker && browserType.isVideoPicker) {
-            actionBar!!.setTitle(R.string.photo_picker_photo_or_video_title)
+    private fun updateTitle(browserType: MediaBrowserType, actionBar: ActionBar) {
+        if (browserType.isImagePicker && browserType.isVideoPicker) {
+            actionBar.setTitle(R.string.photo_picker_photo_or_video_title)
         } else if (browserType.isVideoPicker) {
-            actionBar!!.setTitle(R.string.photo_picker_video_title)
+            actionBar.setTitle(R.string.photo_picker_video_title)
         } else {
-            actionBar!!.setTitle(R.string.photo_picker_title)
+            actionBar.setTitle(R.string.photo_picker_title)
         }
     }
 
     private val pickerFragment: MediaPickerFragment?
-        private get() {
+        get() {
             val fragment = supportFragmentManager.findFragmentByTag(
                     PICKER_FRAGMENT_TAG
             )
             return if (fragment != null) {
-                fragment as MediaPickerFragment?
+                fragment as MediaPickerFragment
             } else null
         }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
-        outState.putInt(LOCAL_POST_ID, localPostId!!)
+        outState.putInt(LOCAL_POST_ID, localPostId)
         if (site != null) {
             outState.putSerializable(WordPress.SITE, site)
         }
@@ -247,22 +246,19 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     }
 
     private fun launchWPMediaLibrary() {
-        if (site != null) {
-            ActivityLauncher.viewMediaPickerForResult(this, site!!, browserType!!)
-        } else {
-            ToastUtils.showToast(this, R.string.blog_not_found)
-        }
+        site?.let {
+            ActivityLauncher.viewMediaPickerForResult(this, it, browserType)
+        } ?: ToastUtils.showToast(this, R.string.blog_not_found)
     }
 
     private fun launchStockMediaPicker() {
-        if (site != null) {
+        site?.let {
             ActivityLauncher.showStockMediaPickerForResult(
                     this,
-                    site!!, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT
+                    it,
+                    RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT
             )
-        } else {
-            ToastUtils.showToast(this, R.string.blog_not_found)
-        }
+        } ?: ToastUtils.showToast(this, R.string.blog_not_found)
     }
 
     private fun launchWPStoriesCamera() {
@@ -280,16 +276,16 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         if (browserType == FEATURED_IMAGE_PICKER) {
             val mediaUri = mediaUris[0]
             val mimeType = contentResolver.getType(mediaUri)
-            featuredImageHelper!!.trackFeaturedImageEvent(
+            featuredImageHelper.trackFeaturedImageEvent(
                     IMAGE_PICKED,
-                    localPostId!!
+                    localPostId
             )
             WPMediaUtils.fetchMediaAndDoNext(
                     this, mediaUri
             ) { uri ->
                 val queueImageResult = featuredImageHelper
                         .queueFeaturedImageForUpload(
-                                localPostId!!, site!!, uri,
+                                localPostId, site!!, uri,
                                 mimeType
                         )
                 when (queueImageResult) {
@@ -343,9 +339,9 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             } else {
                 // if user chose a featured image, track image picked event
                 if (browserType == FEATURED_IMAGE_PICKER) {
-                    featuredImageHelper!!.trackFeaturedImageEvent(
+                    featuredImageHelper.trackFeaturedImageEvent(
                             IMAGE_PICKED,
-                            localPostId!!
+                            localPostId
                     )
                 }
                 val data = Intent()
@@ -365,12 +361,12 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
-    override fun onIconClicked(icon: MediaPickerIcon, multiple: Boolean) {
+    override fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean) {
         when (icon) {
             ANDROID_CAPTURE_PHOTO -> launchCameraForImage()
-            ANDROID_CHOOSE_PHOTO -> launchPictureLibrary(multiple)
+            ANDROID_CHOOSE_PHOTO -> launchPictureLibrary(allowMultipleSelection)
             ANDROID_CAPTURE_VIDEO -> launchCameraForVideo()
-            ANDROID_CHOOSE_VIDEO -> launchVideoLibrary(multiple)
+            ANDROID_CHOOSE_VIDEO -> launchVideoLibrary(allowMultipleSelection)
             WP_MEDIA -> launchWPMediaLibrary()
             STOCK_MEDIA -> launchStockMediaPicker()
             WP_STORIES_CAPTURE -> launchWPStoriesCamera()
