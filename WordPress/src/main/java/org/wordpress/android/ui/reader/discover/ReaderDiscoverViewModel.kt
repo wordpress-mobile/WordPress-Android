@@ -6,6 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.INTERESTS
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
@@ -23,6 +26,7 @@ import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -36,6 +40,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -181,7 +186,10 @@ class ReaderDiscoverViewModel @Inject constructor(
             if (closeToEndIndex > 0) {
                 val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
                 // TODO malinjir we might want to show some kind of progress indicator when the request is in progress
-                if (isCardCloseToEnd) launch(bgDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
+                if (isCardCloseToEnd) {
+                    analyticsTrackerWrapper.track(READER_DISCOVER_PAGINATED)
+                    launch(bgDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
+                }
             }
         }
     }
@@ -193,6 +201,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     // TODO malinjir get rid of the view reference
     private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
         AppLog.d(T.READER, "OnMoreButtonClicked")
+        analyticsTrackerWrapper.track(POST_CARD_MORE_TAPPED)
     }
 
     fun onReblogSiteSelected(siteLocalId: Int) {
@@ -214,6 +223,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     fun swipeToRefresh() {
+        analyticsTrackerWrapper.track(READER_PULL_TO_REFRESH)
         launch {
             (uiState.value as ContentUiState).copy(swipeToRefreshIsRefreshing = true)
             readerDiscoverDataProvider.refreshCards()

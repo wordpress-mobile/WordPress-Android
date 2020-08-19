@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_SHOWN
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.SitePickerActivity
@@ -39,6 +40,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideo
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -49,6 +51,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

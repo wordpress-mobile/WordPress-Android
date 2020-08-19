@@ -100,10 +100,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
+        // todo: add tracking dependent upon implementation (tracked in ReaderBlogActions)
         AppLog.d(AppLog.T.READER, "Follow not implemented")
     }
 
     private fun handleSiteNotificationsClicked(postId: Long, blogId: Long) {
+        // todo: add tracking dependent upon implementation
         AppLog.d(AppLog.T.READER, "SiteNotifications not implemented")
     }
 
@@ -122,14 +124,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBlockSiteClicked(postId: Long, blogId: Long) {
+        // todo: add tracking dependent upon implementation
         AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
     private fun handleLikeClicked(postId: Long, blogId: Long) {
+        // todo: add tracking dependent upon implementation
         AppLog.d(AppLog.T.READER, "Like not implemented")
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
+        // todo: add tracking dependent upon implementation
         uiScope.launch {
             bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
         }

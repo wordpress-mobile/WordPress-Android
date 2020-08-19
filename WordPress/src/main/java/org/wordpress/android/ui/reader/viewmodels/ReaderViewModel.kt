@@ -9,11 +9,13 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_SHOWN
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -41,7 +44,8 @@ class ReaderViewModel @Inject constructor(
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
-    private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var isReaderInterestsShown: Boolean = false
@@ -131,6 +135,8 @@ class ReaderViewModel @Inject constructor(
                     _showReaderInterests.value = Event(Unit)
                 }
             }
+
+            analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
         }
     }
 
@@ -147,16 +153,20 @@ class ReaderViewModel @Inject constructor(
         val tabLayoutVisible: Boolean = false
     ) {
         object InitialUiState : ReaderUiState(
-            searchIconVisible = false,
-            appBarExpanded = false,
-            tabLayoutVisible = false
+                searchIconVisible = false,
+                appBarExpanded = false,
+                tabLayoutVisible = false
         )
 
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
             override val searchIconVisible: Boolean
-        ) : ReaderUiState(searchIconVisible = searchIconVisible, appBarExpanded = true, tabLayoutVisible = true)
+        ) : ReaderUiState(
+                searchIconVisible = searchIconVisible,
+                appBarExpanded = true,
+                tabLayoutVisible = true
+        )
     }
 
     override fun onCleared() {
@@ -174,6 +184,10 @@ class ReaderViewModel @Inject constructor(
         uiState.value?.let {
             val currentUiState = it as ContentUiState
             val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
+            if (AppPrefs.isReaderImprovementsPhase2Enabled()
+                    && currentUiState.readerTagList[position].isDiscover) {
+                analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
+            }
             _selectTab.postValue(Event(position))
         }
     }
@@ -191,8 +205,8 @@ class ReaderViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
         if (appPrefsWrapper.isReaderImprovementsPhase2Enabled() &&
-            _uiState.value == InitialUiState &&
-            isReaderInterestsShown
+                _uiState.value == InitialUiState &&
+                isReaderInterestsShown
         ) {
             return
         } else {

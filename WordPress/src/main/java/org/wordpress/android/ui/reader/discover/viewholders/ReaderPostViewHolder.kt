@@ -8,6 +8,10 @@ import androidx.appcompat.widget.ListPopupWindow
 import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_CARD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SITE_SHOWN
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
@@ -58,6 +62,7 @@ class ReaderPostViewHolder(
         )
         uiState.postHeaderClickData?.onPostHeaderViewClicked?.let {
             layout_post_header.setOnClickListener {
+                AnalyticsTracker.track(READER_SITE_SHOWN)
                 uiState.postHeaderClickData.onPostHeaderViewClicked.invoke(uiState.postId, uiState.blogId)
             }
         } ?: run {
@@ -79,7 +84,10 @@ class ReaderPostViewHolder(
         // Content section
         uiHelpers.setTextOrHide(text_title, state.title)
         uiHelpers.setTextOrHide(text_excerpt, state.excerpt)
-        post_container.setOnClickListener { state.onItemClicked(uiState.postId, uiState.blogId) }
+        post_container.setOnClickListener {
+            AnalyticsTracker.track(READER_CARD_TAPPED)
+            state.onItemClicked(uiState.postId, uiState.blogId)
+        }
 
         // Discover section
         updateDiscoverSection(state)
@@ -175,6 +183,7 @@ class ReaderPostViewHolder(
 
     private fun onMoreClicked(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
         // TODO malinjir the popup menu was reused from the legacy implementation. It needs to be refactored.
+        AnalyticsTracker.track(Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
         listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
