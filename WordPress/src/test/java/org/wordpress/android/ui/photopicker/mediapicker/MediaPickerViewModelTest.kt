@@ -117,7 +117,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-
         viewModel.clearSelection()
 
         assertThat(uiStates).hasSize(4)
