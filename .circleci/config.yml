@@ -23,7 +23,7 @@ commands:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx3500m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -255,6 +255,7 @@ jobs:
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $APP_VERSION failed!'" >> $BASH_ENV
             echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $APP_VERSION has been deployed!'" >> $BASH_ENV
             bundle check
+            ./gradlew --stacktrace lintVanillaRelease
             if [[ $APP_VERSION == *"-rc-"* ]]; then
               bundle exec fastlane build_and_upload_pre_releases skip_confirm:true skip_prechecks:true create_release:true
             else
