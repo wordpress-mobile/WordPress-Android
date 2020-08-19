@@ -592,7 +592,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     sh("../tools/update-translations.sh review fuzzy")
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
-    sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoDebug #{cmd_params}")
+    sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
   end 
 
 #####################################################################################
