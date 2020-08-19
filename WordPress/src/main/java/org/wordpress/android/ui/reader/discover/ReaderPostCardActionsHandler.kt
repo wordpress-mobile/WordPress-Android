@@ -6,14 +6,19 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
@@ -29,6 +34,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -74,6 +80,23 @@ class ReaderPostCardActionsHandler @Inject constructor(
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
         }
+    }
+
+    fun handleOnItemClicked(post: ReaderPost) {
+        incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
+
+        if (post.isBookmarked) {
+            analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+        }
+        _navigationEvents.postValue(Event(ShowPostDetail(post)))
+    }
+
+    fun handleVideoOverlayClicked(videoUrl: String) {
+        _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
+    }
+
+    fun handleHeaderClicked(siteId: Long, feedId: Long) {
+        _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
