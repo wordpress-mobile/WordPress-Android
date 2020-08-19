@@ -44,11 +44,6 @@ public class WPActivityUtils {
 
         View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
 
-        // just in case, try to find a container of our own custom dialog
-        if (dialogContainerView == null) {
-            dialogContainerView = dialog.findViewById(R.id.list_editor_parent);
-        }
-
         if (dialogContainerView == null) {
             AppLog.e(T.SETTINGS, "Preference Dialog View was null when adding Toolbar");
             return;
@@ -56,7 +51,10 @@ public class WPActivityUtils {
 
         // find the root view, then make sure the toolbar doesn't already exist
         ViewGroup root = (ViewGroup) dialogContainerView.getParent();
-        if (root.findViewById(R.id.toolbar) != null || root.findViewById(R.id.appbar_main) != null) {
+
+        // if we already added an appbar to the dialog it will be in the view one level above it's parent
+        ViewGroup modifiedRoot = (ViewGroup) dialogContainerView.getParent().getParent();
+        if (modifiedRoot != null && modifiedRoot.findViewById(R.id.appbar_main) != null) {
             return;
         }
 
@@ -121,7 +119,7 @@ public class WPActivityUtils {
             return;
         }
 
-        ViewGroup root = (ViewGroup) dialogContainerView.getParent();
+        ViewGroup root = (ViewGroup) dialogContainerView.getParent().getParent();
 
         if (root.getChildAt(0) instanceof Toolbar) {
             root.removeViewAt(0);
