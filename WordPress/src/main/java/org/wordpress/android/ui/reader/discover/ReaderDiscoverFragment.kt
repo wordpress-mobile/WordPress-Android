@@ -16,7 +16,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_SHOWN
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.SitePickerActivity

@@ -184,8 +184,8 @@ class ReaderViewModel @Inject constructor(
         uiState.value?.let {
             val currentUiState = it as ContentUiState
             val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
-            if (AppPrefs.isReaderImprovementsPhase2Enabled()
-                    && currentUiState.readerTagList[position].isDiscover) {
+            if (AppPrefs.isReaderImprovementsPhase2Enabled() &&
+                    currentUiState.readerTagList[position].isDiscover) {
                 analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
             }
             _selectTab.postValue(Event(position))
