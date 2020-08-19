@@ -81,7 +81,7 @@ class MediaPickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+        val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         var selectedIds: List<Long>? = null
         var lastTappedIcon: MediaPickerIcon? = null
@@ -184,7 +184,7 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+        viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
     }
 
     private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
@@ -328,11 +328,11 @@ class MediaPickerFragment : Fragment() {
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(
             listener: MediaPickerListener,
-            browserType: MediaBrowserType,
+            mediaPickerSetup: MediaPickerSetup,
             site: SiteModel?
         ): MediaPickerFragment {
             val args = Bundle()
-            args.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
+            mediaPickerSetup.toBundle(args)
             if (site != null) {
                 args.putSerializable(WordPress.SITE, site)
             }
