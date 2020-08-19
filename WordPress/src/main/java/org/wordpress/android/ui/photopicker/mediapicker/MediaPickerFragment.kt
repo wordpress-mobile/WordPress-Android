@@ -229,9 +229,9 @@ class MediaPickerFragment : Fragment() {
                 )
             }
             val adapter = recycler.adapter as MediaPickerAdapter
-            val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+            val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
-            recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
         }
     }
 
