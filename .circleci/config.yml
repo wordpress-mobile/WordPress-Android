@@ -122,11 +122,6 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 ./gradlew testVanillaRelease --stacktrace --no-daemon
-      - run:
-          name: Test WordPressUtils
-          environment:
-            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
       - android/save-gradle-cache
       - android/save-test-results
   lint:
@@ -268,40 +263,6 @@ jobs:
                 include_job_number_field: false
                 include_project_field: false
                 failure_message: ':red_circle: WordPress Android connected tests failed on \`${CIRCLE_BRANCH}\` branch after merge by ${CIRCLE_USERNAME}. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
-  WordPressUtils Connected Tests:
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
-    steps:
-      - git/shallow-checkout:
-          init-submodules: true
-      - checkout-submodules
-      - android/restore-gradle-cache
-      - copy-gradle-properties
-      - update-gradle-memory
-      - restore-gutenberg-bundle-cache
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
-      - run:
-          name: Build
-          environment:
-            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: ./gradlew WordPress:assembleVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
-      - run:
-          name: Decrypt credentials
-          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
-      - android/firebase-test:
-          key-file: .circleci/.firebase.secrets.json
-          type: instrumentation
-          apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
-          test-apk-path: libs/utils/WordPressUtils/build/outputs/apk/androidTest/debug/WordPressUtils-debug-androidTest.apk
-          device: model=Nexus5X,version=26,locale=en,orientation=portrait
-          project: api-project-108380595987
-          timeout: 10m
-          results-history-name: CircleCI WPUtils Connected Tests
-      - android/save-gradle-cache
   strings-check:
     docker:
       - image: circleci/ruby:2.6.4
@@ -377,12 +338,6 @@ workflows:
           requires:
             - gutenberg-bundle-build
       - Installable Build:
-          requires:
-            - gutenberg-bundle-build
-          filters:
-            branches:
-              ignore: /pull\/[0-9]+/
-      - WordPressUtils Connected Tests:
           requires:
             - gutenberg-bundle-build
           filters:
