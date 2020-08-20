@@ -86,7 +86,14 @@ class ReaderDiscoverLogic(
                     present a static content to the user. We need to include it only for the first page (when
                     page_handle is empty). The server will take care of including the "refresh" parameter within the
                     page_handle so the user will stay on the same shard while they’re paging through the cards. */
-                    params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
+                    val refreshCounter = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
+                    params["refresh"] = refreshCounter
+
+                    // hide welcome banner if list is refreshed
+                    if (refreshCounter.toInt() > 0) {
+                        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
+                    }
+
                     appPrefsWrapper.incrementReaderCardsRefreshCounter()
                 }
                 REQUEST_MORE -> {
