@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
@@ -139,6 +140,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onReaderTagClicked(tag: String) {
+        analyticsTrackerWrapper.track(READER_DISCOVER_TOPIC_TAPPED)
         val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
         _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
