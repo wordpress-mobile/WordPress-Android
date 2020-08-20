@@ -12,17 +12,12 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         editPostRepository: EditPostRepository,
         mediaFiles: Map<String, MediaFile>
     ) {
-        val jsonArrayIds = ArrayList<Int>() // holds ids
-        for (entry in mediaFiles.entries) {
-            jsonArrayIds.add(entry.value.id)
-        }
-
         val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
         for (entry in mediaFiles.entries) {
             jsonArrayMediaFiles.add(buildMediaFileData(entry.value))
         }
 
-        val storyBlock = StoryBlockData(ids = jsonArrayIds, mediaFiles = jsonArrayMediaFiles)
+        val storyBlock = StoryBlockData(mediaFiles = jsonArrayMediaFiles)
 
         editPostRepository.update { postModel: PostModel ->
             postModel.setContent(createGBStoryBlockStringFromJson(storyBlock))
@@ -56,19 +51,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         val gson = Gson()
         val storyBlockData: StoryBlockData? = gson.fromJson(jsonString, StoryBlockData::class.java)
 
-        // now replace matching localMediaId with remoteMediaId
         val localMediaId = mediaFile.id
-        storyBlockData?.ids?.let {
-            // update the ids list
-            for (i in 0..it.size) {
-                if (it[i] == localMediaId) {
-                    it[i] = mediaFile.mediaId.toInt()
-                    break
-                }
-            }
-        }
-
-        // now replace the same in the mediaFileObjects, obtain the URLs and replace
+        // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
         storyBlockData?.mediaFiles?.filter { it.id == localMediaId }?.get(0)?.apply {
             id = mediaFile.mediaId.toInt()
             link = mediaFile.fileURL
@@ -83,7 +67,6 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     }
 
     data class StoryBlockData(
-        var ids: MutableList<Int>,
         val mediaFiles: List<StoryMediaFileData>
     )
 
