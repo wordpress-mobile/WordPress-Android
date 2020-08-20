@@ -15,7 +15,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
@@ -184,10 +183,6 @@ class ReaderViewModel @Inject constructor(
         uiState.value?.let {
             val currentUiState = it as ContentUiState
             val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
-            if (AppPrefs.isReaderImprovementsPhase2Enabled() &&
-                    currentUiState.readerTagList[position].isDiscover) {
-                analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
-            }
             _selectTab.postValue(Event(position))
         }
     }
