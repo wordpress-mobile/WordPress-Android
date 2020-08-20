@@ -86,7 +86,7 @@ class PostListCreateMenuViewModel @Inject constructor(
         val newState = MainFabUiState(
                 isFabVisible = true,
                 isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
-                CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+                CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_enabled
         )
 
         _fabUiState.value = newState
@@ -114,7 +114,7 @@ class PostListCreateMenuViewModel @Inject constructor(
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
                     isFabTooltipVisible = false,
-                    CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+                    CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_enabled
             )
         }
     }
@@ -125,7 +125,7 @@ class PostListCreateMenuViewModel @Inject constructor(
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
                     isFabTooltipVisible = it.isFabTooltipVisible,
-                    CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+                    CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_enabled
             )
         }
     }

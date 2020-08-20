@@ -493,9 +493,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
             mViewModel.onFabLongPressed(mSelectedSite);
 
-            int messageId = SiteUtils.hasFullAccessToContent(getSelectedSite())
-                    ? R.string.create_post_page_fab_tooltip
-                    : R.string.create_post_page_fab_tooltip_contributors;
+            int messageId = mViewModel.getCreateContentMessageId(mSelectedSite);
 
             Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;

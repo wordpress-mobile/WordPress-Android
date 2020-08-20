@@ -229,7 +229,7 @@ class WPMainActivityViewModel @Inject constructor(
         _fabUiState.value = newState
     }
 
-    private fun getCreateContentMessageId(site: SiteModel?): Int {
+    fun getCreateContentMessageId(site: SiteModel?): Int {
         return if (shouldShowStories(site))
             getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
         else
@@ -239,9 +239,9 @@ class WPMainActivityViewModel @Inject constructor(
     // create_post_page_fab_tooltip_stories_feature_flag_on
     private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent)
-            R.string.create_post_page_fab_tooltip_stories_feature_flag_on
+            R.string.create_post_page_fab_tooltip_stories_enabled
         else
-            R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+            R.string.create_post_page_fab_tooltip_contributors_stories_enabled
     }
 
     private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {

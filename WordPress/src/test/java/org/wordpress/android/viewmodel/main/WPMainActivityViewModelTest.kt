@@ -299,7 +299,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onResume(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
-                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_feature_flag_on)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_enabled)
     }
 
     @Test
@@ -308,7 +308,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onResume(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
-                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
     }
 
     @Test
