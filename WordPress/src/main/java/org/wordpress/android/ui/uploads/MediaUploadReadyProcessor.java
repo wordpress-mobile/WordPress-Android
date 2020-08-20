@@ -58,14 +58,6 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             SaveStoryGutenbergBlockUseCase saveStoryGutenbergBlockUseCase = new SaveStoryGutenbergBlockUseCase();
             saveStoryGutenbergBlockUseCase
                     .replaceLocalMediaIdsWithRemoteMediaIdsInPost(post, mediaFile);
-        } else {
-            post.setContent(
-                    PostUtils.replaceMediaLocalIdWithMediaRemoteIdInStoryPost(
-                            post.getContent(),
-                            String.valueOf(mediaFile.getId()),
-                            String.valueOf(mediaFile.getMediaId())
-                    )
-            );
         }
         return post;
     }
