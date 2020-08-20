@@ -607,14 +607,9 @@ public class UploadService extends Service {
             // obtain site url used to generate attachment page url
             SiteModel site = sInstance.mSiteStore.getSiteByLocalId(media.getLocalSiteId());
 
-            if (PostUtils.contentContainsWPStoryGutenbergBlocks(post.getContent())) {
-                processor.replaceMediaLocalIdWithRemoteMediaIdInPost(
-                        post, FluxCUtils.mediaFileFromMediaModel(media));
-            } else {
-                // actually replace the media ID with the media uri
-                processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                        FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
-            }
+            // actually replace the media ID with the media uri
+            processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
+                    FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
