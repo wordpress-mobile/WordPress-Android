@@ -9,7 +9,8 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTagType.INTERESTS
+import org.wordpress.android.models.ReaderTagType.FOLLOWED
+import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -84,24 +85,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    // TODO malinjir we currently ignore all other types but ReaderPostCards
-                    posts.cards.filterIsInstance<ReaderPostCard>().map {
-                        postUiStateBuilder.mapPostToUiState(
-                                post = it.post,
-                                isDiscover = true,
-                                photonWidth = photonWidth,
-                                photonHeight = photonHeight,
-                                isBookmarkList = false,
-                                onButtonClicked = this::onButtonClicked,
-                                onItemClicked = this::onPostItemClicked,
-                                onItemRendered = this::onItemRendered,
-                                onDiscoverSectionClicked = this::onDiscoverClicked,
-                                onMoreButtonClicked = this::onMoreButtonClicked,
-                                onVideoOverlayClicked = this::onVideoOverlayClicked,
-                                onPostHeaderViewClicked = this::onPostHeaderClicked,
-                                onTagItemClicked = this::onTagItemClicked,
-                                postListType = TAG_FOLLOWED
-                        )
+                    posts.cards.map {
+                        when (it) {
+                            is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                                    post = it.post,
+                                    isDiscover = true,
+                                    photonWidth = photonWidth,
+                                    photonHeight = photonHeight,
+                                    isBookmarkList = false,
+                                    onButtonClicked = this::onButtonClicked,
+                                    onItemClicked = this::onPostItemClicked,
+                                    onItemRendered = this::onItemRendered,
+                                    onDiscoverSectionClicked = this::onDiscoverClicked,
+                                    onMoreButtonClicked = this::onMoreButtonClicked,
+                                    onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                    onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                    onTagItemClicked = this::onTagItemClicked,
+                                    postListType = TAG_FOLLOWED
+                            )
+                            is InterestsYouMayLikeCard -> {
+                                postUiStateBuilder.mapTagListToReaderInterestUiState(
+                                        it.interests,
+                                        this::onReaderTagClicked
+                                )
+                            }
+                        }
                     },
                     swipeToRefreshIsRefreshing = false
             )
@@ -130,6 +138,11 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
+    private fun onReaderTagClicked(tag: String) {
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
+        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+    }
+
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
@@ -155,7 +168,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onTagItemClicked(tagSlug: String) {
-        val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, INTERESTS)
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
         _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
