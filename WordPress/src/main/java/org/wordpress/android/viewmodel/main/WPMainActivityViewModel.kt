@@ -19,6 +19,7 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
@@ -108,7 +109,7 @@ class WPMainActivityViewModel @Inject constructor(
                     onClickAction = ::onCreateActionClicked
             ))
         }
-        if (wpStoriesFeatureConfig.isEnabled()) {
+        if (shouldShowStories(site)) {
             actionsList.add(CreateAction(
                     actionType = CREATE_NEW_STORY,
                     iconRes = R.drawable.ic_story_icon_24dp,
@@ -153,7 +154,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
 
-        if (wpStoriesFeatureConfig.isEnabled()) {
+        if (shouldShowStories(site)) {
             loadMainActions(site)
             _isBottomSheetShowing.value = Event(true)
         } else {
@@ -229,7 +230,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (wpStoriesFeatureConfig.isEnabled())
+        return if (shouldShowStories(site))
             getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
         else
             getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
@@ -262,5 +263,9 @@ class WPMainActivityViewModel @Inject constructor(
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
+    }
+
+    private fun shouldShowStories(site: SiteModel?): Boolean {
+        return wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)
     }
 }

@@ -240,6 +240,15 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `new post action is triggered from FAB when no full access to content if stories enabled but unavailable`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, supportsStories = false))
+        assertThat(viewModel.isBottomSheetShowing.value).isNull()
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
+    }
+
+    @Test
     fun `bottom sheet is visualized when user has full access to content and has all 3 options if stories enabled`() {
         setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
         startViewModelWithDefaultParameters()
@@ -403,12 +412,13 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     private fun startViewModelWithDefaultParameters() {
-        viewModel.start(isFabVisible = true, site = initSite(hasFullAccessToContent = true))
+        viewModel.start(isFabVisible = true, site = initSite(hasFullAccessToContent = true, supportsStories = true))
     }
 
-    private fun initSite(hasFullAccessToContent: Boolean = true): SiteModel {
+    private fun initSite(hasFullAccessToContent: Boolean = true, supportsStories: Boolean = true): SiteModel {
         return SiteModel().apply {
             hasCapabilityEditPages = hasFullAccessToContent
+            setIsWPCom(supportsStories)
         }
     }
 
