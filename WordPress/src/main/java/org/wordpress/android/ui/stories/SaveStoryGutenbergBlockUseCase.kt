@@ -17,7 +17,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         for (entry in mediaFiles.entries) {
             jsonArrayIds.add(entry.value.id)
         }
-        var jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
+
+        val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
         for (entry in mediaFiles.entries) {
             jsonArrayMediaFiles.add(buildMediaFileData(entry.value))
         }
@@ -31,7 +32,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     }
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
-        val mediaFileData = StoryMediaFileData(
+        return StoryMediaFileData(
                 alt = "",
                 id = mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
@@ -40,7 +41,6 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                 caption = "",
                 url = StringUtils.notNullStr(mediaFile.fileURL)
         )
-        return mediaFileData
     }
 
     fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(post: PostModel, mediaFile: MediaFile) {
