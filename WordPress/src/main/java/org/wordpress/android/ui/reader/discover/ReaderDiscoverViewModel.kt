@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
 import org.wordpress.android.models.ReaderPost
@@ -201,7 +200,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     // TODO malinjir get rid of the view reference
     private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
         AppLog.d(T.READER, "OnMoreButtonClicked")
-        analyticsTrackerWrapper.track(POST_CARD_MORE_TAPPED)
     }
 
     fun onReblogSiteSelected(siteLocalId: Int) {
