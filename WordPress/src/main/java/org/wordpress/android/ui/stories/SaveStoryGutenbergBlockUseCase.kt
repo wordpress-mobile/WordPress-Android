@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stories
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.util.ShortcodeUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -70,22 +69,12 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         }
 
         // now replace the same in the mediaFileObjects, obtain the URLs and replace
-        val mediaUrl = getMediaFileUrl(mediaFile)
         storyBlockData?.mediaFiles?.filter { it.id == localMediaId }?.get(0)?.apply {
             id = mediaFile.mediaId.toInt()
-            link = mediaUrl
-            url = mediaUrl
+            link = mediaFile.fileURL
+            url = mediaFile.fileURL
         }
         post.setContent(createGBStoryBlockStringFromJson(requireNotNull(storyBlockData)))
-    }
-
-    private fun getMediaFileUrl(mediaFile: MediaFile): String {
-        if (VIDEOPRESS_MIME_TYPE.equals(mediaFile.mimeType)) {
-            return VIDEOPRESS_BASE_URL + ShortcodeUtils.getVideoPressIdFromShortCode(mediaFile.videoPressShortCode) +
-                    "/" + mediaFile.fileName
-        } else {
-            return StringUtils.notNullStr(mediaFile.fileURL)
-        }
     }
 
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {
@@ -113,10 +102,5 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         const val HEADING_END = " -->\n"
         const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
         const val CLOSING_TAG = "<!-- /wp:jetpack/story -->"
-        const val VIDEOPRESS_MIME_TYPE = "video/videopress"
-        // TODO verify this base URL is constant - or update FluxC to bring the VideoPress video URL from REST API, i.e.
-        // media_details.original.url
-        // "media_details":{"original":{"url":"https:\/\/videos.files.wordpress.com\/Si7WwFlU\/wp-1597773400767.mp4"}
-        const val VIDEOPRESS_BASE_URL = "https://videos.files.wordpress.com/"
     }
 }
