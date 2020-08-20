@@ -200,11 +200,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (mFollowListener != null) {
-            if (isAskingToFollow && !mIsFeed) {
+            if (isAskingToFollow) {
                 mFollowListener.onFollowTapped(
                         followButton,
                         mBlogInfo.getName(),
-                        mBlogInfo.blogId);
+                        mIsFeed ? 0 : mBlogInfo.blogId);
             } else {
                 mFollowListener.onFollowingTapped();
             }
