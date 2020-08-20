@@ -985,8 +985,6 @@ public class ReaderPostListFragment extends Fragment
             }
             // make sure swipe-to-refresh progress shows since this is a manual refresh
             mRecyclerView.setRefreshing(true);
-            // Track the manual PTR
-            AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
         }
         if (getCurrentTag() != null && getCurrentTag().isBookmarked()) {
             ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
@@ -1016,6 +1014,9 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public void onLoadData(boolean forced) {
+                if (forced) {
+                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                }
                 updatePosts(forced);
             }
 
