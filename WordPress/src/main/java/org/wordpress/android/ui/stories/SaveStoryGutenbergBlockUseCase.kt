@@ -3,27 +3,11 @@ package org.wordpress.android.ui.stories
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
 class SaveStoryGutenbergBlockUseCase @Inject constructor() {
-    // TODO will be removed shortly, but keeping for sites that don't yet have support for the jetpack stories block.
-    fun buildWPGalleryInPost(
-        editPostRepository: EditPostRepository,
-        mediaFiles: Map<String, MediaFile>
-    ) {
-        // Create a gallery shortcode and placeholders for Media Ids
-        val idsString = mediaFiles.map {
-            PostUtils.WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER + it.value.id.toString()
-        }.joinToString(separator = ",")
-        editPostRepository.update { postModel: PostModel ->
-            postModel.setContent("[gallery type=\"slideshow\" ids=\"$idsString\"]")
-            true
-        }
-    }
-
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
         mediaFiles: Map<String, MediaFile>
@@ -32,7 +16,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         for (entry in mediaFiles.entries) {
             jsonArrayIds.add(entry.value.id)
         }
-        var jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
+
+        val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
         for (entry in mediaFiles.entries) {
             jsonArrayMediaFiles.add(buildMediaFileData(entry.value))
         }
@@ -46,7 +31,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     }
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
-        val mediaFileData = StoryMediaFileData(
+        return StoryMediaFileData(
                 alt = "",
                 id = mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
@@ -55,7 +40,6 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                 caption = "",
                 url = StringUtils.notNullStr(mediaFile.fileURL)
         )
-        return mediaFileData
     }
 
     fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(post: PostModel, mediaFile: MediaFile) {
@@ -66,8 +50,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         // the gutenberg parser / validator anyway.
         val content = post.content
         val jsonString: String = content.substring(
-                content.indexOf(headingStart) + headingStart.length,
-                content.indexOf(headingEnd)
+                content.indexOf(HEADING_START) + HEADING_START.length,
+                content.indexOf(HEADING_END)
         )
         val gson = Gson()
         val storyBlockData: StoryBlockData? = gson.fromJson(jsonString, StoryBlockData::class.java)
@@ -95,8 +79,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
 
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {
         val gson = Gson()
-        var newContent = headingStart + gson.toJson(storyBlock) + headingEnd + divPart + closingtag
-        return newContent
+        return HEADING_START + gson.toJson(storyBlock) + HEADING_END + DIV_PART + CLOSING_TAG
     }
 
     data class StoryBlockData(
@@ -115,9 +98,9 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     )
 
     companion object {
-        const val headingStart = "<!-- wp:jetpack/story "
-        const val headingEnd = " -->\n"
-        const val divPart = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
-        const val closingtag = "<!-- /wp:jetpack/story -->"
+        const val HEADING_START = "<!-- wp:jetpack/story "
+        const val HEADING_END = " -->\n"
+        const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
+        const val CLOSING_TAG = "<!-- /wp:jetpack/story -->"
     }
 }
