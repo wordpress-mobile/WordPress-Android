@@ -51,8 +51,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         // the gutenberg parser / validator anyway.
         val content = post.content
         val jsonString: String = content.substring(
-                content.indexOf(headingStart) + headingStart.length,
-                content.indexOf(headingEnd)
+                content.indexOf(HEADING_START) + HEADING_START.length,
+                content.indexOf(HEADING_END)
         )
         val gson = Gson()
         val storyBlockData: StoryBlockData? = gson.fromJson(jsonString, StoryBlockData::class.java)
@@ -90,8 +90,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
 
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {
         val gson = Gson()
-        var newContent = headingStart + gson.toJson(storyBlock) + headingEnd + divPart + closingtag
-        return newContent
+        return HEADING_START + gson.toJson(storyBlock) + HEADING_END + DIV_PART + CLOSING_TAG
     }
 
     data class StoryBlockData(
@@ -110,10 +109,10 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     )
 
     companion object {
-        const val headingStart = "<!-- wp:jetpack/story "
-        const val headingEnd = " -->\n"
-        const val divPart = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
-        const val closingtag = "<!-- /wp:jetpack/story -->"
+        const val HEADING_START = "<!-- wp:jetpack/story "
+        const val HEADING_END = " -->\n"
+        const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"
+        const val CLOSING_TAG = "<!-- /wp:jetpack/story -->"
         const val VIDEOPRESS_MIME_TYPE = "video/videopress"
         // TODO verify this base URL is constant - or update FluxC to bring the VideoPress video URL from REST API, i.e.
         // media_details.original.url
