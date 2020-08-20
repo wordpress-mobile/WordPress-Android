@@ -288,7 +288,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start()
+        postListCreateMenuViewModel.start(site)
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
