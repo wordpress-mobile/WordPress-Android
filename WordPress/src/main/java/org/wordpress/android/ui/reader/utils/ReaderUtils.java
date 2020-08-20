@@ -441,9 +441,11 @@ public class ReaderUtils {
 
     public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NotNull String commaSeparatedTagSlugs) {
         ReaderTagList tags = new ReaderTagList();
-        for (String slug : commaSeparatedTagSlugs.split(",", -1)) {
-            ReaderTag tag = ReaderUtils.getTagFromTagName(slug, ReaderTagType.DEFAULT);
-            tags.add(tag);
+        if (!commaSeparatedTagSlugs.trim().equals("")) {
+            for (String slug : commaSeparatedTagSlugs.split(",", -1)) {
+                ReaderTag tag = ReaderUtils.getTagFromTagName(slug, ReaderTagType.DEFAULT);
+                tags.add(tag);
+            }
         }
         return tags;
     }
