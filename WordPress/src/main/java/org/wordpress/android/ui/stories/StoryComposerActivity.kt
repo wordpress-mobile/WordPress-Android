@@ -269,6 +269,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun handleMediaPickerIntentData(data: Intent) {
+        if (permissionsRequestForCameraInProgress) {
+            return
+        }
+
         if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
             val uriList: List<Uri> = convertStringArrayIntoUrisList(
                     data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
