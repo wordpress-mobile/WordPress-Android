@@ -41,6 +41,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.NetworkUtils;
@@ -234,10 +235,8 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            mAppBar.post(() -> {
-                mAppBar.setLiftOnScrollTargetViewId(R.id.scroll_view);
-                mAppBar.requestLayout();
-            });
+            // update the lift on scroll target id when we return to the root fragment
+            AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBar, R.id.scroll_view);
         }
         super.onBackPressed();
     }
@@ -300,10 +299,7 @@ public class PluginBrowserActivity extends LocaleAwareActivity
     }
 
     private void showListFragment(@NonNull PluginListType listType) {
-        mAppBar.post(() -> {
-            mAppBar.setLiftOnScrollTargetViewId(R.id.recycler);
-            mAppBar.requestLayout();
-        });
+        AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBar, R.id.recycler);
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.fragment_container, listFragment, PluginListFragment.TAG)

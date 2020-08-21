@@ -41,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.Validatio
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ContextUtilsKt;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -372,7 +374,6 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Override
     public void onDestroyView() {
-        removeMoreScreenToolbar();
         removeJetpackSecurityScreenToolbar();
         mDispatcher.unregister(this);
         super.onDestroyView();
@@ -472,13 +473,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             setupPreferenceList(view.findViewById(android.R.id.list), getResources());
         }
         mDispatcher.register(this);
-        
+
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        removeMoreScreenToolbar();
         removeJetpackSecurityScreenToolbar();
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
@@ -1802,14 +1802,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         return false;
     }
 
-    private void removeMoreScreenToolbar() {
-        if (mMorePreference == null || !isAdded()) {
-            return;
-        }
-        Dialog moreDialog = mMorePreference.getDialog();
-        WPActivityUtils.removeToolbarFromDialog(this, moreDialog);
-    }
-
     private void removeJetpackSecurityScreenToolbar() {
         if (mJpSecuritySettings == null || !isAdded()) {
             return;
@@ -2020,6 +2012,16 @@ public class SiteSettingsFragment extends PreferenceFragment
             mActionMode = actionMode;
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.list_editor, menu);
+
+            // we cant use support version of action mode, since we start it on view
+            // because of this we need to apply icon tint manually (it's supported only from api 26+)
+            MenuItem selectAll = menu.findItem(R.id.menu_select_all);
+            MenuItem delete = menu.findItem(R.id.menu_delete);
+            MenuItemCompat.setIconTintList(selectAll,
+                    ContextExtensionsKt.getColorStateListFromAttribute(getActivity(), R.attr.wpColorActionModeIcon));
+            MenuItemCompat.setIconTintList(delete,
+                    ContextExtensionsKt.getColorStateListFromAttribute(getActivity(), R.attr.wpColorActionModeIcon));
+
             return true;
         }
 
