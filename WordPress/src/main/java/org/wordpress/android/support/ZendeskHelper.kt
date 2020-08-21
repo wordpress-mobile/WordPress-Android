@@ -123,14 +123,14 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        val identitySet = isIdentitySet()
+        val isIdentitySet = isIdentitySet()
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
-                .withContactUsButtonVisible(identitySet)
+                .withContactUsButtonVisible(isIdentitySet)
                 .withLabelNames(ZendeskConstants.articleLabel)
-                .withShowConversationsMenuButton(identitySet)
+                .withShowConversationsMenuButton(isIdentitySet)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
-        if (identitySet) {
+        if (isIdentitySet) {
             builder.show(
                 context,
                 buildZendeskConfig(
