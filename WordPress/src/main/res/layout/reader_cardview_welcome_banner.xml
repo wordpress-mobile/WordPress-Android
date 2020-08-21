@@ -24,6 +24,7 @@
             app:layout_constraintTop_toBottomOf="parent" />
 
         <TextView
+            android:id="@+id/welcome_title"
             style="@style/ReaderTextView.Post.Welcome.Title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

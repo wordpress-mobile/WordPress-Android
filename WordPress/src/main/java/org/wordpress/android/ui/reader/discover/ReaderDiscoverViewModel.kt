@@ -86,7 +86,9 @@ class ReaderDiscoverViewModel @Inject constructor(
             _uiState.value = ContentUiState(
                     posts.cards.map {
                         when (it) {
-                            is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState
+                            is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
+                                    titleRes = R.string.reader_welcome_banner
+                            )
                             is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                                     post = it.post,
                                     isDiscover = true,
