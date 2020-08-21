@@ -115,7 +115,7 @@ class StatsFragment : DaggerFragment() {
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
+                if (holder.buttonTitle == null) {
                     WPSnackbar.make(
                             parent,
                             uiHelpers.getTextOfUiString(requireContext(), holder.message),
@@ -127,7 +127,9 @@ class StatsFragment : DaggerFragment() {
                             uiHelpers.getTextOfUiString(requireContext(), holder.message),
                             Snackbar.LENGTH_LONG
                     )
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                    snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
+                        holder.buttonAction()
+                    }
                     snackbar.show()
                 }
             }

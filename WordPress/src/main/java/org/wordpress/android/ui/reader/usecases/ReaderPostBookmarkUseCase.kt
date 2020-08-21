@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
@@ -111,8 +111,8 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             _snackbarEvents.postValue(
                     Event(
                             SnackbarMessageHolder(
-                                    UiStringRes(string.reader_bookmark_snack_title),
-                                    string.reader_bookmark_snack_btn,
+                                    UiStringRes(R.string.reader_bookmark_snack_title),
+                                    UiStringRes(R.string.reader_bookmark_snack_btn),
                                     buttonAction = {
                                         analyticsTrackerWrapper
                                                 .track(READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE)

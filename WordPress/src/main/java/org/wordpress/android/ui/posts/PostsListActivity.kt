@@ -411,9 +411,9 @@ class PostsListActivity : LocaleAwareActivity(),
                                 textRes = holder.message as UiStringRes,
                                 duration = Snackbar.LENGTH_LONG
                             ),
-                            holder.buttonTitleRes?.let {
+                            holder.buttonTitle?.let {
                                 SnackbarItem.Action(
-                                    textRes = UiStringRes(holder.buttonTitleRes),
+                                    textRes = holder.buttonTitle as UiStringRes,
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },

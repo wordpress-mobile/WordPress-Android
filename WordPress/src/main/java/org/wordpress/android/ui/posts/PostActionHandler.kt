@@ -309,7 +309,7 @@ class PostActionHandler(
             val snackBarHolder = when (criticalAction) {
                 TRASHING_POST -> SnackbarMessageHolder(
                         message = UiStringRes(R.string.post_trashed),
-                        buttonTitleRes = R.string.undo,
+                        buttonTitle = UiStringRes(R.string.undo),
                         buttonAction = {
                             val post = postStore.getPostByLocalPostId(localPostId.value)
                             if (post != null) {

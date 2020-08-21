@@ -73,7 +73,9 @@ class PostConflictResolver(
         }
         val snackBarHolder = SnackbarMessageHolder(
                 UiStringRes(R.string.snackbar_conflict_web_version_discarded),
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+                UiStringRes(R.string.snackbar_conflict_undo),
+                undoAction,
+                onDismissAction
         )
         showSnackbar.invoke(snackBarHolder)
     }
@@ -111,7 +113,9 @@ class PostConflictResolver(
         }
         val snackBarHolder = SnackbarMessageHolder(
                 UiStringRes(R.string.snackbar_conflict_local_version_discarded),
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+                UiStringRes(R.string.snackbar_conflict_undo),
+                undoAction,
+                onDismissAction
         )
         showSnackbar.invoke(snackBarHolder)
     }

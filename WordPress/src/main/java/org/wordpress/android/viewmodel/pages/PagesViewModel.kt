@@ -632,7 +632,7 @@ class PagesViewModel
                         if (action.undo != null) {
                             SnackbarMessageHolder(
                                     UiStringRes(R.string.page_parent_changed),
-                                    R.string.undo,
+                                    UiStringRes(R.string.undo),
                                     action.undo!!
                             )
                         } else {
@@ -784,7 +784,7 @@ class PagesViewModel
         }
 
         return if (undo != null) {
-            SnackbarMessageHolder(UiStringRes(message), R.string.undo, undo)
+            SnackbarMessageHolder(UiStringRes(message), UiStringRes(R.string.undo), undo)
         } else {
             SnackbarMessageHolder(UiStringRes(message))
         }
