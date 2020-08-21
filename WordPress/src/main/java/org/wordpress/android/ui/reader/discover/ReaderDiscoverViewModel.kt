@@ -15,6 +15,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCar
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -40,6 +41,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -230,12 +232,16 @@ class ReaderDiscoverViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         readerDiscoverDataProvider.stop()
+
+        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun swipeToRefresh() {
         launch {
             (uiState.value as ContentUiState).copy(swipeToRefreshIsRefreshing = true)
             readerDiscoverDataProvider.refreshCards()
+
+            appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
         }
     }
 
