@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -110,7 +111,7 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             _snackbarEvents.postValue(
                     Event(
                             SnackbarMessageHolder(
-                                    string.reader_bookmark_snack_title,
+                                    UiStringRes(string.reader_bookmark_snack_title),
                                     string.reader_bookmark_snack_btn,
                                     buttonAction = {
                                         analyticsTrackerWrapper

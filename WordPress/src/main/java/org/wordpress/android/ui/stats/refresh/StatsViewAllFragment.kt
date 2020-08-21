@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -46,6 +47,7 @@ class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var navigator: StatsNavigator
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -167,9 +169,17 @@ class StatsViewAllFragment : DaggerFragment() {
                 val parent = activity.findViewById<View>(R.id.coordinatorLayout)
                 if (parent != null) {
                     if (holder.buttonTitleRes == null) {
-                        WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                        WPSnackbar.make(
+                                parent,
+                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                                Snackbar.LENGTH_LONG
+                        ).show()
                     } else {
-                        val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                        val snackbar = WPSnackbar.make(
+                                parent,
+                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                                Snackbar.LENGTH_LONG
+                        )
                         snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                         snackbar.show()
                     }

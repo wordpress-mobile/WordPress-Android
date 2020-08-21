@@ -161,6 +161,7 @@ import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -678,9 +679,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         });
         mEditorMedia.getSnackBarMessage().observe(this, event -> {
             SnackbarMessageHolder messageHolder = event.getContentIfNotHandled();
-            if (messageHolder != null) {
+            if (messageHolder != null && messageHolder.getMessage() instanceof UiStringRes) {
+                UiStringRes message = (UiStringRes) messageHolder.getMessage();
                 WPSnackbar
-                        .make(findViewById(R.id.editor_activity), messageHolder.getMessageRes(), Snackbar.LENGTH_SHORT)
+                        .make(findViewById(R.id.editor_activity), message.getStringRes(), Snackbar.LENGTH_SHORT)
                         .show();
             }
         });

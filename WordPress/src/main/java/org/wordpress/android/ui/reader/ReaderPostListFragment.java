@@ -493,7 +493,7 @@ public class ReaderPostListFragment extends Fragment
     private void showSnackbar(SnackbarMessageHolder holder) {
         WPSnackbar snackbar = WPSnackbar.make(
                 requireView(),
-                holder.getMessageRes(),
+                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG
         );
         if (holder.getButtonTitleRes() != null) {

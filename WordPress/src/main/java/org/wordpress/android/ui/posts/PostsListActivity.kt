@@ -408,7 +408,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     SnackbarItem(
                             SnackbarItem.Info(
                                 view = parent,
-                                textRes = UiStringRes(holder.messageRes),
+                                textRes = holder.message as UiStringRes,
                                 duration = Snackbar.LENGTH_LONG
                             ),
                             holder.buttonTitleRes?.let {

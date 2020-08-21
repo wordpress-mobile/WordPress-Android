@@ -119,7 +119,11 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(bottom_bar, getString(this.messageRes), Snackbar.LENGTH_LONG)
+        val snackbar = WPSnackbar.make(
+                bottom_bar,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
+        )
         if (this.buttonTitleRes != null) {
             snackbar.setAction(getString(this.buttonTitleRes)) {
                 this.buttonAction.invoke()

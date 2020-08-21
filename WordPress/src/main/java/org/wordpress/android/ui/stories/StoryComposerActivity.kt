@@ -312,7 +312,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         WPSnackbar
                                 .make(
                                         findViewById(id.editor_activity),
-                                        messageHolder.messageRes,
+                                        uiHelpers.getTextOfUiString(this, messageHolder.message),
                                         Snackbar.LENGTH_SHORT
                                 )
                                 .show()
