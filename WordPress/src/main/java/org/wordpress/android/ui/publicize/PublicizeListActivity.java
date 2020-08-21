@@ -32,6 +32,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
@@ -365,9 +366,6 @@ public class PublicizeListActivity extends LocaleAwareActivity
 
     @Override
     public void onScrollableViewInitialized(int containerId) {
-        mAppBarLayout.post(() -> {
-            mAppBarLayout.setLiftOnScrollTargetViewId(containerId);
-            mAppBarLayout.requestLayout();
-        });
+        AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, containerId);
     }
 }

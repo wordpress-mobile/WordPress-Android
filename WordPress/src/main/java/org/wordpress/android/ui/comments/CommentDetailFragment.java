@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -69,6 +67,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
+import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -112,7 +111,7 @@ import javax.inject.Inject;
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  */
-public class CommentDetailFragment extends Fragment implements NotificationFragment {
+public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment {
     private static final String KEY_MODE = "KEY_MODE";
     private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
@@ -146,6 +145,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnSpamCommentText;
     private View mBtnMoreComment;
     private View mSnackbarAnchor;
+    private View mNestedScrollView;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
@@ -274,6 +274,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamCommentText = mLayoutButtons.findViewById(R.id.btn_spam_text);
         mBtnMoreComment = mLayoutButtons.findViewById(R.id.btn_more);
         mSnackbarAnchor = view.findViewById(R.id.layout_bottom);
+        mNestedScrollView = view.findViewById(R.id.nested_scroll_view);
 
         // As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
         // CommentDetailFragment itself:
@@ -632,12 +633,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         // these two views contain all the other views except the progress bar
-        final ScrollView scrollView = getView().findViewById(R.id.scroll_view);
         final View layoutBottom = getView().findViewById(R.id.layout_bottom);
 
         // hide container views when comment is null (will happen when opened from a notification)
         if (mComment == null) {
-            scrollView.setVisibility(View.GONE);
+            mNestedScrollView.setVisibility(View.GONE);
             layoutBottom.setVisibility(View.GONE);
 
             if (mNote != null) {
@@ -667,7 +667,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         }
 
-        scrollView.setVisibility(View.VISIBLE);
+        mNestedScrollView.setVisibility(View.VISIBLE);
         layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
@@ -1093,7 +1093,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-    * The more button contains controls which only moderates can use
+     * The more button contains controls which only moderates can use
      */
     private boolean canShowMore() {
         return canModerate();
@@ -1455,5 +1455,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                                                 })
                                         .setAnchorView(mSnackbarAnchor);
         snackBar.show();
+    }
+
+    @Override
+    @Nullable public View getScrollableViewForUniqueIdProvision() {
+        return mNestedScrollView;
     }
 }
