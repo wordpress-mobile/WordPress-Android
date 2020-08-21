@@ -78,10 +78,11 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                 }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
-            uiHelpers.updateVisibility(progress_bar, it.progressVisibility)
-            uiHelpers.updateVisibility(progress_text, it.progressVisibility)
+            uiHelpers.updateVisibility(progress_bar, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
-            ptr_layout.isRefreshing = it.swipeToRefreshIsRefreshing
+            ptr_layout.isRefreshing = it.reloadProgressVisibility
         })
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
@@ -130,8 +131,8 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
             MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(getString(bookmarkDialog.title))
                     .setMessage(getString(bookmarkDialog.message))
-                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) {
-                        _, _ -> bookmarkDialog.okButtonAction.invoke()
+                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                        bookmarkDialog.okButtonAction.invoke()
                     }
                     .setOnDismissListener {
                         bookmarksSavedLocallyDialog = null
