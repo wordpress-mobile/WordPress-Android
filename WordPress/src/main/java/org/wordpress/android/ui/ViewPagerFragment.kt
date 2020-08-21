@@ -30,7 +30,6 @@ abstract class ViewPagerFragment : Fragment {
         }
     }
 
-
     /**
      * Provide a scrollable view that will be used with "lift on scroll" functionality of AppBar in parent
      * fragment/activity. ID will of the scrollable view be set to unique one using View.generateViewId()
