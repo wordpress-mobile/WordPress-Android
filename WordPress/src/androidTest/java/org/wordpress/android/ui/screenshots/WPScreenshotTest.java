@@ -32,8 +32,7 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
-import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -51,7 +50,6 @@ public class WPScreenshotTest extends BaseTest {
     @Test
     public void wPScreenshotTest() {
         mActivityTestRule.launchActivity(null);
-        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
         // Enable Demo Mode
         mDemoModeEnabler.enable();
@@ -172,9 +170,9 @@ public class WPScreenshotTest extends BaseTest {
 
     private void takeScreenshot(String screenshotName) {
         try {
-            Screengrab.screenshot(screenshotName);
+            ScreenShotter.takeScreenshot(screenshotName, getCurrentActivity());
         } catch (RuntimeException r) {
-            // Screenshots will fail when running outside of Fastlane, so this is safe to ignore.
+            // Screenshots will fail when running outside of FTL, so this is safe to ignore.
         }
     }
 
