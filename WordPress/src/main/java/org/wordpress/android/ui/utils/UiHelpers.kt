@@ -25,7 +25,7 @@ class UiHelpers @Inject constructor() {
                 is UIDimenDPInt -> DisplayUtils.dpToPx(context, uiDimen.dimensionDP)
             }
 
-    fun getTextOfUiString(context: Context, uiString: UiString): a =
+    fun getTextOfUiString(context: Context, uiString: UiString): String =
             when (uiString) {
                 is UiStringRes -> context.getString(uiString.stringRes)
                 is UiStringText -> uiString.text

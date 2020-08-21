@@ -129,8 +129,12 @@ class ReaderDiscoverViewModel @Inject constructor(
                             uiState.value.let { state ->
                                 if (state is ContentUiState) {
                                     when (it.task) {
-                                        REQUEST_FIRST_PAGE -> _uiState.value = state.copy(reloadProgressVisibility = true)
-                                        REQUEST_MORE -> _uiState.value = state.copy(loadMoreProgressVisibility = true)
+                                        REQUEST_FIRST_PAGE -> {
+                                            _uiState.value = state.copy(reloadProgressVisibility = true)
+                                        }
+                                        REQUEST_MORE -> {
+                                            _uiState.value = state.copy(loadMoreProgressVisibility = true)
+                                        }
                                     }
                                 } else {
                                     _uiState.value = LoadingUiState
