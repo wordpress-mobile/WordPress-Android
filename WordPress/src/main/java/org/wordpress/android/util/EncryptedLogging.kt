@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.ASYNC
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.EncryptedLogActionBuilder
 import org.wordpress.android.fluxc.store.EncryptedLogStore
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploade
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
@@ -25,6 +27,7 @@ class EncryptedLogging @Inject constructor(
     private val dispatcher: Dispatcher,
     private val encryptedLogStore: EncryptedLogStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
@@ -72,9 +75,17 @@ class EncryptedLogging @Inject constructor(
         when (event) {
             is EncryptedLogUploadedSuccessfully -> {
                 AppLog.i(T.MAIN, "Encrypted log with uuid: ${event.uuid} uploaded successfully!")
+                analyticsTrackerWrapper.track(Stat.ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL)
             }
             is EncryptedLogFailedToUpload -> {
                 AppLog.e(T.MAIN, "Encrypted log with uuid: ${event.uuid} failed to upload with error: ${event.error}")
+                // Only track final errors
+                if (event.willRetry) {
+                    analyticsTrackerWrapper.track(
+                            Stat.ENCRYPTED_LOGGING_UPLOAD_FAILED,
+                            mapOf("error_type" to event.error.javaClass.simpleName)
+                    )
+                }
             }
         }
     }
