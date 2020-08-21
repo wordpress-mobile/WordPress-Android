@@ -58,7 +58,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
@@ -408,12 +407,12 @@ class PostsListActivity : LocaleAwareActivity(),
                     SnackbarItem(
                             SnackbarItem.Info(
                                 view = parent,
-                                textRes = holder.message as UiStringRes,
+                                textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                             ),
                             holder.buttonTitle?.let {
                                 SnackbarItem.Action(
-                                    textRes = holder.buttonTitle as UiStringRes,
+                                    textRes = holder.buttonTitle,
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
