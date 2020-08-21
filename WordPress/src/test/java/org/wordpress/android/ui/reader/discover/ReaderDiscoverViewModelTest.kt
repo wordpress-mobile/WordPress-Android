@@ -17,17 +17,21 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
@@ -53,6 +57,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
@@ -67,6 +72,7 @@ class ReaderDiscoverViewModelTest {
                 readerDiscoverDataProvider,
                 reblogUseCase,
                 readerUtilsWrapper,
+                appPrefsWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
@@ -187,6 +193,43 @@ class ReaderDiscoverViewModelTest {
                 assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
             }
 
+    @Test
+    fun `if WelcomeBannerCard exists then ReaderWelcomeBannerCardUiState will be present in the ContentUiState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
+            }
+
+    @Test
+    fun `WelcomeBannerCard has welcome title set to it`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                val welcomeBannerCardUiState = contentUiState.cards.first() as ReaderWelcomeBannerCardUiState
+                assertThat(welcomeBannerCardUiState.titleRes).isEqualTo(R.string.reader_welcome_banner)
+            }
+
     private fun init() {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
@@ -270,4 +313,5 @@ class ReaderDiscoverViewModelTest {
     )
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
+    private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)
 }
