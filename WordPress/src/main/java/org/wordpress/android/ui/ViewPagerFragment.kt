@@ -10,6 +10,27 @@ abstract class ViewPagerFragment : Fragment {
 
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
+    companion object {
+        @JvmStatic
+        fun restoreOriginalViewId(view: View) {
+            val originalId = view.getTag(R.id.original_view_pager_fragment_id_tag_key)
+            if (originalId != null) {
+                view.id = originalId as Int
+            }
+        }
+
+        @JvmStatic
+        fun setUniqueIdToView(view: View): Int {
+            val newId = View.generateViewId()
+            if (view.getTag(R.id.original_view_pager_fragment_id_tag_key) == null) {
+                view.setTag(R.id.original_view_pager_fragment_id_tag_key, view.id)
+            }
+            view.id = newId
+            return newId
+        }
+    }
+
+
     /**
      * Provide a scrollable view that will be used with "lift on scroll" functionality of AppBar in parent
      * fragment/activity. ID will of the scrollable view be set to unique one using View.generateViewId()
@@ -57,21 +78,5 @@ abstract class ViewPagerFragment : Fragment {
             // restore original view ID, so it's state could be restored correctly
             restoreOriginalViewId(scrollableContainer)
         }
-    }
-
-    fun restoreOriginalViewId(view: View) {
-        val originalId = view.getTag(R.id.original_view_pager_fragment_id_tag_key)
-        if (originalId != null) {
-            view.id = originalId as Int
-        }
-    }
-
-    private fun setUniqueIdToView(view: View): Int {
-        val newId = View.generateViewId()
-        if (view.getTag(R.id.original_view_pager_fragment_id_tag_key) == null) {
-            view.setTag(R.id.original_view_pager_fragment_id_tag_key, view.id)
-        }
-        view.id = newId
-        return newId
     }
 }
