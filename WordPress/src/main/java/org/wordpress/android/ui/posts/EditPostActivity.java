@@ -679,10 +679,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         });
         mEditorMedia.getSnackBarMessage().observe(this, event -> {
             SnackbarMessageHolder messageHolder = event.getContentIfNotHandled();
-            if (messageHolder != null && messageHolder.getMessage() instanceof UiStringRes) {
-                UiStringRes message = (UiStringRes) messageHolder.getMessage();
-                WPSnackbar
-                        .make(findViewById(R.id.editor_activity), message.getStringRes(), Snackbar.LENGTH_SHORT)
+            if (messageHolder != null) {
+                WPSnackbar.make(
+                                findViewById(R.id.editor_activity),
+                                mUiHelpers.getTextOfUiString(this, messageHolder.getMessage()),
+                                Snackbar.LENGTH_SHORT
+                        )
                         .show();
             }
         });
