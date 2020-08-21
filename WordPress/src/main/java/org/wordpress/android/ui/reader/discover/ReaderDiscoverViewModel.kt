@@ -15,7 +15,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -144,7 +144,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 when (uiState) {
                                     is LoadingUiState -> {
                                         // show fullscreen error
-                                        _uiState.value = ErrorUiState
+                                        _uiState.value = RequestFailedErrorUiState
                                     }
                                     is ContentUiState -> {
                                         _uiState.value = uiState.copy(
@@ -277,9 +277,16 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
+    fun onRetryButtonClick() {
+        launch {
+            readerDiscoverDataProvider.refreshCards()
+        }
+    }
+
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
         val fullscreenProgressVisibility: Boolean = false,
+        open val fullscreenErrorVisibility: Boolean = false,
         val swipeToRefreshEnabled: Boolean = false
     ) {
         open val reloadProgressVisibility: Boolean = false
@@ -292,6 +299,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
 
         object LoadingUiState : DiscoverUiState(fullscreenProgressVisibility = true)
-        object ErrorUiState : DiscoverUiState()
+        sealed class ErrorUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenErrorVisibility = true) {
+            object RequestFailedErrorUiState : ErrorUiState(
+                    titleResId = R.string.reader_error_request_failed_title
+            )
+        }
     }
 }

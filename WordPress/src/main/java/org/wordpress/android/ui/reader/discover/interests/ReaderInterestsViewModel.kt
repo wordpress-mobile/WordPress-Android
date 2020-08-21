@@ -206,9 +206,7 @@ class ReaderInterestsViewModel @Inject constructor(
         )
 
         sealed class ErrorUiState constructor(
-            val titleResId: Int,
-            val subtitleResId: Int? = null,
-            val showContactSupport: Boolean = false
+            val titleResId: Int
         ) : UiState(
             progressBarVisible = false,
             errorLayoutVisible = true
