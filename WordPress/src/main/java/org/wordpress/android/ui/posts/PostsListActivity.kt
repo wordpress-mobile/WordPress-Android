@@ -60,6 +60,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 
@@ -536,10 +537,7 @@ class PostsListActivity : LocaleAwareActivity(),
             if (!searchActionButton.isActionViewExpanded) {
                 searchActionButton.expandActionView()
             }
-            appbar_main.post {
-                appbar_main.liftOnScrollTargetViewId = R.id.posts_search_recycler_view_id
-                appbar_main.requestLayout()
-            }
+            appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(R.id.posts_search_recycler_view_id)
         } else {
             pager.visibility = View.VISIBLE
             tabContainer.visibility = View.VISIBLE
@@ -548,10 +546,7 @@ class PostsListActivity : LocaleAwareActivity(),
                 searchActionButton.collapseActionView()
             }
             appbar_main.getTag(R.id.posts_non_search_recycler_view_id_tag_key)?.let {
-                appbar_main.post {
-                    appbar_main.liftOnScrollTargetViewId = it as Int
-                    appbar_main.requestLayout()
-                }
+                appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
             }
         }
     }
@@ -598,10 +593,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        appbar_main.post {
-            appbar_main.liftOnScrollTargetViewId = containerId
-            appbar_main.requestLayout()
-            appbar_main.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
-        }
+        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        appbar_main.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
     }
 }

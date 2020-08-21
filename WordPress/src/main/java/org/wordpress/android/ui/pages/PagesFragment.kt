@@ -63,6 +63,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
@@ -511,10 +512,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
             myActionMenuItem.collapseActionView()
         }
         appbar_main.getTag(R.id.pages_non_search_recycler_view_id_tag_key)?.let {
-            appbar_main.post {
-                appbar_main.liftOnScrollTargetViewId = it as Int
-                appbar_main.requestLayout()
-            }
+            appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
         }
     }
 
@@ -526,10 +524,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-        appbar_main.post {
-            appbar_main.liftOnScrollTargetViewId = R.id.pages_search_recycler_view_id
-            appbar_main.requestLayout()
-        }
+        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(R.id.pages_search_recycler_view_id)
     }
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -577,11 +572,8 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        appbar_main.post {
-            appbar_main.liftOnScrollTargetViewId = containerId
-            appbar_main.requestLayout()
-            appbar_main.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
-        }
+        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        appbar_main.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
     }
 }
 
