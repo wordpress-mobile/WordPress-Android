@@ -470,28 +470,30 @@ class ReaderPostDetailFragment : Fragment(),
             else
                 blogName
 
-            WPSnackbar.make(
-                    view, Html.fromHtml(
-                    getString(
-                            R.string.reader_followed_blog_notifications,
-                            "<b>", blog, "</b>"
-                    )
-            ), Snackbar.LENGTH_LONG
-            )
-                    .setAction(
-                            getString(R.string.reader_followed_blog_notifications_action)
-                    ) {
-                        AnalyticsUtils.trackWithSiteId(
-                                Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                                blogId
+            if (blogId > 0) {
+                WPSnackbar.make(
+                        view, Html.fromHtml(
+                        getString(
+                                R.string.reader_followed_blog_notifications,
+                                "<b>", blog, "</b>"
                         )
-                        val payload = AddOrDeleteSubscriptionPayload(
-                                blogId.toString(), SubscriptionAction.NEW
-                        )
-                        dispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload))
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
-                    }
-                    .show()
+                ), Snackbar.LENGTH_LONG
+                )
+                        .setAction(
+                                getString(R.string.reader_followed_blog_notifications_action)
+                        ) {
+                            AnalyticsUtils.trackWithSiteId(
+                                    Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
+                                    blogId
+                            )
+                            val payload = AddOrDeleteSubscriptionPayload(
+                                    blogId.toString(), SubscriptionAction.NEW
+                            )
+                            dispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload))
+                            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
+                        }
+                        .show()
+            }
         }
     }
 
