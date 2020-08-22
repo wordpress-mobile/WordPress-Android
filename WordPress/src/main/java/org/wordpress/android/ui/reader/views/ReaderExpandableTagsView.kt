@@ -20,6 +20,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 ) : ChipGroup(context, attrs, defStyleAttr) {
     @Inject lateinit var uiHelpers: UiHelpers
 
+    private var tagsUiState: List<TagUiState>? = null
+
     private val tagChips
         get() = (0 until childCount - 1).map { getChildAt(it) as Chip }
 
@@ -43,10 +45,14 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         layoutDirection = View.LAYOUT_DIRECTION_LOCALE
     }
 
-    fun updateUi(tags: List<TagUiState>) {
+    fun updateUi(tagsUiState: List<TagUiState>) {
+        if (this.tagsUiState != null && this.tagsUiState == tagsUiState) {
+            return
+        }
+        this.tagsUiState = tagsUiState
         removeAllViews()
         addOverflowIndicatorChip()
-        addTagChips(tags)
+        addTagChips(tagsUiState)
         expandLayout(false)
     }
 
@@ -57,16 +63,16 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         addView(chip)
     }
 
-    private fun addTagChips(tags: List<TagUiState>) {
-        tags.forEachIndexed { index, tag ->
+    private fun addTagChips(tagsUiState: List<TagUiState>) {
+        tagsUiState.forEachIndexed { index, tagUiState ->
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val chip = inflater.inflate(R.layout.reader_expandable_tags_view_chip, this, false) as Chip
-            chip.tag = tag.slug
-            chip.text = tag.title
-            chip.maxWidth = tag.maxWidth
-            tag.onClick?.let { onClick ->
+            chip.tag = tagUiState.slug
+            chip.text = tagUiState.title
+            chip.maxWidth = tagUiState.maxWidth
+            tagUiState.onClick?.let { onClick ->
                 chip.setOnClickListener {
-                    onClick.invoke(tag.slug)
+                    onClick.invoke(tagUiState.slug)
                 }
             }
             addView(chip, index)
