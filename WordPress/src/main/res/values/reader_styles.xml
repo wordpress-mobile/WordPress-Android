@@ -241,12 +241,16 @@
 
     <style name="ReaderExpandableTagsViewChip" parent="@style/ReaderChip">
         <item name="android:checkable">false</item>
-        <item name="chipMinHeight">@dimen/margin_extra_medium_large</item>
+        <item name="chipMinHeight">@dimen/reader_expandable_tags_view_chip_height</item>
         <item name="chipStartPadding">@dimen/margin_medium</item>
         <item name="chipEndPadding">@dimen/margin_medium</item>
+        <item name="textStartPadding">0dp</item>
+        <item name="textEndPadding">0dp</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="ensureMinTouchTargetSize">false</item>
+        <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_radius</item>
+        <item name="chipBackgroundColor">@color/on_surface_divider</item>
     </style>
 
     <style name="ReaderTextView.Site.Header.Caption" parent="ReaderTextView">
