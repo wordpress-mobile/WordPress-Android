@@ -14,11 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -111,6 +113,10 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
         View coordinatorView = inflater.inflate(R.layout.preference_coordinator, container, false);
         CoordinatorLayout coordinator = coordinatorView.findViewById(R.id.coordinator);
         View preferenceView = super.onCreateView(inflater, coordinator, savedInstanceState);
+        final ListView listOfPreferences = preferenceView.findViewById(android.R.id.list);
+        if (listOfPreferences != null) {
+            ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
+        }
         coordinator.addView(preferenceView);
         return coordinatorView;
     }
