@@ -68,6 +68,7 @@ import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -653,11 +654,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onSettingsUpdated() {
         // Let's hold the value in local variable as listener is too noisy
-        if (mIsJetpackSsoEnabled != mSiteSettings.isJetpackSsoEnabled()) {
-            mIsJetpackSsoEnabled = mSiteSettings.isJetpackSsoEnabled();
+        boolean isJetpackSsoEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
+        if (mIsJetpackSsoEnabled != isJetpackSsoEnabled) {
+            mIsJetpackSsoEnabled = isJetpackSsoEnabled;
             if (mEditorFragment instanceof GutenbergEditorFragment) {
                 ((GutenbergEditorFragment) mEditorFragment)
-                        .updateCapabilities(getGutenbergPropsBuilder());
+                        .updateCapabilities(mIsJetpackSsoEnabled, getGutenbergPropsBuilder());
             }
         }
     }
@@ -2007,18 +2009,26 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
                         GutenbergPropsBuilder gutenbergPropsBuilder = getGutenbergPropsBuilder();
 
+                        GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
+                                new GutenbergWebViewAuthorizationData(
+                                        mSite.getUrl(),
+                                        isWpCom,
+                                        mAccountStore.getAccount().getUserId(),
+                                        mAccountStore.getAccount().getUserName(),
+                                        mAccountStore.getAccessToken(),
+                                        mSite.getSelfHostedSiteId(),
+                                        mSite.getUsername(),
+                                        mSite.getPassword(),
+                                        mSite.isUsingWpComRestApi(),
+                                        mSite.getWebEditor(),
+                                        WordPress.getUserAgent(),
+                                        mIsJetpackSsoEnabled);
+
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
                                 mIsNewPost,
-                                mSite.getUrl(),
-                                !isWpCom,
-                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
-                                isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
-                                isWpCom ? "" : mSite.getPassword(),
-                                mAccountStore.getAccessToken(),
-                                mSite.isUsingWpComRestApi(),
-                                WordPress.getUserAgent(),
+                                gutenbergWebViewAuthorizationData,
                                 mTenorFeatureConfig.isEnabled(),
                                 gutenbergPropsBuilder
                         );
@@ -2082,14 +2092,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
-        // The Unsupported Block Editor is disabled for all self-hosted non-jetpack sites
-        // The option is disabled on Self-hosted sites because they can have their web editor
-        // to be set to classic and then the fallback will not work.
-        // We disable in Jetpack site because we don't have the self-hosted site's credentials
-        // which are required for us to be able to fetch the site's authentication cookie.
-        boolean isJetpackSSOEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
+
         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
-        boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled)
+        boolean isUnsupportedBlockEditorEnabled = (isWpCom || mIsJetpackSsoEnabled)
                 && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
