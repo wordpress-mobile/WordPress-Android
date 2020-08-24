@@ -21,13 +21,15 @@ import java.util.Date;
 
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
- * user is following. Note that this table is populated from two endpoints:
+ * user is following. Note that this table is populated from three endpoints:
  * <p>
  * 1. sites/{$siteId}
  * 2. read/following/mine?meta=site,feed
+ * 3. read/feed/{$feedId}
  * <p>
  * The first endpoint is called when the user views blog preview, the second is called
- * to get the full list of blogs the user is following
+ * to get the full list of blogs the user is following, the third is called when user views
+ * by feed
  */
 public class ReaderBlogTable {
     protected static void createTables(SQLiteDatabase db) {

@@ -4,21 +4,25 @@ import android.content.Context
 import android.preference.PreferenceManager
 import io.sentry.android.core.SentryAndroid
 import io.sentry.core.Sentry
+import io.sentry.core.SentryLevel
 import io.sentry.core.protocol.User
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.helpers.logfile.LogFileProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val EXTRA_UUID = "uuid"
 private const val EVENT_BUS_MODULE = "org.greenrobot.eventbus"
 private const val EVENT_BUS_EXCEPTION = "EventBusException"
 private const val EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR = "Invoking subscriber failed"
 
 @Singleton
 class CrashLogging @Inject constructor(
-    private val accountStore: AccountStore
+    private val accountStore: AccountStore,
+    private val encryptedLogging: EncryptedLogging
 ) {
     fun start(context: Context) {
         SentryAndroid.init(context) { options ->
@@ -46,6 +50,30 @@ class CrashLogging @Inject constructor(
                                 lastException.type == EVENT_BUS_EXCEPTION &&
                                 lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
                             event.exceptions.remove(lastException)
+                        }
+                    }
+                }
+                /**
+                 * If Sentry is unable to upload the event in its first attempt, it'll call the `setBeforeSend` callback
+                 * before trying to send it again. This can be easily reproduced by turning off network connectivity
+                 * and re-launching the app over and over again which will hit this callback each time.
+                 *
+                 * The problem with that is it'll keep queuing more and more logs to be uploaded to MC and more
+                 * importantly, it'll set the `uuid` of the Sentry event to the log file at the time of the successful
+                 * Sentry request. Since we are interested in the logs for when the crash happened, this would not be
+                 * correct for us.
+                 *
+                 * We can simply fix this issue by checking if the [EXTRA_UUID] field is already set.
+                 */
+                if (event.getExtra(EXTRA_UUID) == null) {
+                    LogFileProvider.fromContext(context).getLogFiles().lastOrNull()?.let { logFile ->
+                        if (logFile.exists()) {
+                            encryptedLogging.encryptAndUploadLogFile(
+                                    logFile = logFile,
+                                    shouldStartUploadImmediately = event.level != SentryLevel.FATAL
+                            )?.let { uuid ->
+                                event.setExtra(EXTRA_UUID, uuid)
+                            }
                         }
                     }
                 }

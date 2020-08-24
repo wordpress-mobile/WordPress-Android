@@ -102,6 +102,7 @@ import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.EncryptedLogging;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -176,6 +177,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject ImageEditorTracker mImageEditorTracker;
     @Inject StoryMediaSaveUploadBridge mStoryMediaSaveUploadBridge;
     @Inject CrashLogging mCrashLogging;
+    @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -253,7 +255,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         component().inject(this);
         mDispatcher.register(this);
 
+        // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
         mCrashLogging.start(getContext());
+        mEncryptedLogging.start();
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
@@ -264,7 +268,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Enable log recording
         AppLog.enableRecording(true);
-        AppLog.enableLogFilePersistence(this.getBaseContext(), 3);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 30);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {

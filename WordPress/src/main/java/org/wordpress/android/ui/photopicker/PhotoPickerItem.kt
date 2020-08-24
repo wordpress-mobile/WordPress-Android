@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.photopicker
 
-import android.net.Uri
+import org.wordpress.android.util.UriWrapper
 
 data class PhotoPickerItem(
     val id: Long = 0,
-    val uri: Uri? = null,
+    val uri: UriWrapper? = null,
     val isVideo: Boolean = false
 )

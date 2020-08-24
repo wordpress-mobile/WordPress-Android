@@ -310,7 +310,6 @@ Language: el_GR
     <string name="signup_epilogue_hint_username">Όνομα χρήστη  </string>
     <string name="signup_epilogue_hint_password">Κωδικός (προαιρετικός)</string>
     <string name="signup_epilogue_hint_display">Όνομα εμφάνισης</string>
-    <string name="signup_epilogue_heading">Νέος λογαριασμός</string>
     <string name="signup_epilogue_error_button_positive">Προσπαθήστε ξανά</string>
     <string name="signup_epilogue_error_button_negative">Επαναφορά</string>
     <string name="sign_up">Εγγραφείτε για WordPress.com</string>
@@ -429,7 +428,6 @@ Language: el_GR
     <string name="media_edit_filename_caption">Όνομα Αρχείου</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Ενναλακτικό κείμενο</string>
-    <string name="connect_site">Σύνδεση ιστότοπου</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Δόνηση συσκευής</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Επιλογή ήχου</string>
     <string name="notification_settings_category_sights_and_sounds">Εικόνες και Ήχοι</string>
@@ -452,14 +450,11 @@ Language: el_GR
     <string name="uploading_post">Μεταφόρτωση του \"%s\"</string>
     <string name="login_epilogue_mysites_other">Οι ιστότοποι μου</string>
     <string name="login_epilogue_mysites_one">Ο ιστότοπος μου</string>
-    <string name="login_logged_in_as">Συνδεδεμένος ως</string>
     <string name="login_empty_2fa">Παρακαλώ εισάγετε έναν κωδικό επαλήθευσης</string>
     <string name="login_empty_username">Παρακαλώ δώστε ένα όνομα χρήστη</string>
     <string name="login_site_address_more_help">Χρειάζεστε περισσότερη βοήθεια;</string>
     <string name="login_site_address">Διεύθυνση ιστότοπου</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_continue">Συνέχεια</string>
-    <string name="connect_more">Συνδέστε Έναν Άλλο Ιστότοπο</string>
     <string name="next">Επόμενο</string>
     <string name="me_profile_photo">Φωτογραφία προφίλ</string>
     <string name="post_title">Τίτλος</string>

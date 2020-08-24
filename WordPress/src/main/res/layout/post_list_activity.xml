@@ -110,7 +110,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
-            app:wpTooltipMessage="@string/create_post_page_fab_tooltip_contributors_stories_feature_flag_on"
+            app:wpTooltipMessage="@string/create_post_story_fab_tooltip"
             app:wpTooltipPosition="above"
             tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>

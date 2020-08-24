@@ -1,84 +1,24 @@
 <ar>
-15.3:
-تحديثات محرِّر المكوِّن: يوجد في جميع المكوِّنات الآن وظائف النسخ والقص واللصق والتكرار. يمكن تحرير المكوِّنات غير المدعومة على حدة. (ملحوظة: لا يتوافر تحرير المكوِّن غير المدعوم للمواقع المستضافة ذاتيًا أو المواقع التي تتحوَّل افتراضيًا إلى المحرِّر التقليدي).
+15.4:
+<b> تسجيل الدخول / تسجيل الحساب الموحّد:</b> لم تعد بحاجة إلى الاختيار بين تسجيل الدخول أو تسجيل حساب جديد، وستبدأ عملية تسجيل الدخول تلقائيًا في حالة المتابعة مع ووردبريس. تصميم أنظف مع الإجراء الأساسي في كل شاشة أكثر وضوحًا.
 
-تحديثات واجهة المستخدم: تم توضيح الصياغة وإضافة مربعات حوار التأكيد عند نقل المقالات إلى سلة المهملات.
+<b> تحسينات مُحرر المكوّنات</b>تمت إضافة مكوّن الروابط الاجتماعية الجديد حتى تتمكن من ربط حسابات الوسائط الاجتماعية الخاصة بك. يحتوي مكوّن الوسائط والنص على المزيد من خيارات التحرير. يتيح العنصر النائب للمستخدمين بمكوّن غلاف البدء بلون خلفية.
 </ar>
 <en-US>
-15.3:
-Block editor updates: All blocks now have Copy, Cut, Paste, and Duplicate functionality. Unsupported blocks can be individually edited. (Note: Unsupported block editing is not available for self-hosted sites or sites that default to the classic editor.)
+15.4:
+<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.
 
-UI updates: Clarified wording and added confirmation dialogs when trashing posts.
+<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color.
 </en-US>
-<es-ES>
-15.3:
-Actualizaciones del editor de bloques: Ahora, todos los bloques tienen la funcionalidad de copiar, cortar, pegar y duplicar. Los bloques no compatibles pueden ser editados individualmente. (Nota: La edición de bloques no compatibles no está disponible para los sitios autoalojados o los sitios con el editor clásico por defecto).
-
-Actualizaciones de la interfaz de usuario: Se ha aclarado la redacción y se han añadido diálogos de confirmación al enviar entradas a la papelera.
-</es-ES>
-<iw-IL>
-15.3:
-עדכונים בעורך הבלוקים: הוספנו לכל הבלוקים אפשרויות של העתקה, חיתוך, הדבקה ושכפול. ניתן לערוך בנפרד בלוקים שלא תומכים באפשרויות. (לתשומת ליבך: עריכה של בלוקים שלא נתמכים לא זמינה באתרים באחסון עצמי או באתרים שבהם העורך הקלאסי הוא ברירת המחדל.)
-
-עדכון לממשק המשתמש: הוספנו מלל ברור יותר ותיבות דו-שיח לאישור כאשר מעבירים פוסטים לפח.
-</iw-IL>
-<id>
-15.3:
-Pembaruan penyunting blok: Semua blok kini memiliki fungsionalitas Salin, Potong, Tempel, dan Duplikasi. Blok yang tidak didukung dapat diedit secara individual. (Catatan: Pengeditan blok yang tidak didukung belum tersedia untuk situs yang di-hosting sendiri atau situs yang menggunakan editor lama sebagai editor asal.)
-
-Pembaruan UI: Susunan kata yang lebih jelas dan penambahan dialog konfirmasi ketika membuang pos.
-</id>
-<ja-JP>
-15.3: 
-ブロックエディターの更新 : すべてのブロックにコピー、切り取り、貼り付け、複製の機能が追加されました。 サポート対象外のブロックを個別に編集できます (注 : サポート対象外ブロックの編集はインストール型のサイトまたは初期設定で旧エディターに設定されているサイトでは利用できません)。 
-
-UI の更新 : 表現を明確化し、投稿をゴミ箱に移動する前の確認メッセージを追加しました。
-</ja-JP>
-<ko-KR>
-15.3:
-블록 편집기 업데이트: 모든 블록이 이제 복사, 잘라내기, 붙여넣기, 그리고 복제 기능을 가져요. 지원하지 않는 블록은 개별적으로 편집할 수 있어요. (안내: 지원하지 않는 블록 편집은 자체 호스팅 사이트나 클래식 편집기가 기본인 사이트에서는 사용할 수 없어요.)
-
-UI 업데이트: 표현을 명확하게 하고 글을 휴지통에 버릴 때 확인 대화상자를 추가했어요.
-</ko-KR>
-<nl-NL>
-15.3:
-Block editor updates: Alle blokken hebben nu de functies Kopiëren, Knippen, Plakken en Dupliceren. Niet ondersteunde blokken kunnen afzonderlijk worden bewerkt. (Opmerking: niet ondersteunde blokbewerking is niet beschikbaar voor zelf gehoste sites of sites die standaard de klassieke editor gebruiken.)
-
-UI updates: Verduidelijkte bewoordingen en toegevoegde bevestiging dialogen bij het verplaatsen van berichten naar de prullenbak.
-</nl-NL>
 <pt-BR>
-15.3:
-Atualizações do editor de bloco: Todos os blocos agora têm a funcionalidade Copiar, Recortar, Colar e Duplicar. Blocos não suportados podem ser editados individualmente. (Nota: A edição de bloco não suportados não está disponível para sites auto-hospedados ou sites com o padrão do editor clássico.)
+15.4:
+<b>Login e Inscrição unificados:</b> Não é mais necessário escolher entre login e inscrever-se e o processo de acesso continua automaticamente no WordPress. Design mais limpo com as principais ações em destaque em cada tela.
 
-Atualizações na interface de usuário: Formulação esclarecida e caixas de diálogo de confirmação adicionadas ao enviar mensagens para a lixeira.
+<b>Melhorias no editor de blocos:</b> Adição do novo bloco de Links Sociais para adicionar os links de suas contas nas redes sociais. O bloco Media & Texto recebeu mais opções de edição. O bloco Cobertura agora permite iniciar com uma cor de fundo.
 </pt-BR>
-<ru-RU>
-15,3:
-Обновления редактора блоков: все блоки теперь имеют функции копирования, вырезания, вставки и дублирования. Неподдерживаемые блоки можно редактировать индивидуально. (Примечание. Неподдерживаемое редактирование блоков недоступно для сайтов с самостоятельным размещением или сайтов, для которых по умолчанию используется классический редактор.)
-
-Обновления интерфейса: уточнены формулировки и добавлены диалоги подтверждения при удалении сообщений.
-</ru-RU>
 <sv-SE>
-15.3:
-Nytt i blockredigeraren: Nu har alla block funktionerna kopiera, klipp ut, klistra och duplicera. Block som saknar stöd kan redigeras individuellt. (Obs: redigering av block som inte stöds är inte tillgängligt för webbplats på eget webbhotell eller om webbplatsen som standard använder den klassiska redigeraren.)
+15.4:
+<b>Enhetlig inloggning och registrering:</b> Nu finns båda funktionerna på samma sida och inloggningen sker automatiskt om du fortsätter med WordPress. Renare design där varje sida visar huvudåtgärden tydligare.
 
-Uppdateringar av användargränssnittet: Förtydligat vissa beskrivningar, lagt till bekräftelsedialog när inlägg kastas.
+<b>Förbättringar i blockredigeraren:</b> Nytt socialt block för länkning till dina profiler på sociala nätverk. Blocket ”Media och text” har fler redigeringsmöjligheter. Platshållaren i omslagsblocket låter nu användaren starta med en bakgrundsfärg.
 </sv-SE>
-<tr-TR>
-15.3:
-Blok düzenleyici güncellemeleri: Artık tüm bloklar kopyala, kes, yapıştır ve çoğalt işlevlerine sahiptir. Desteklenmeyen bloklar ayrı ayrı düzenlenebilir. (Not: Desteklenmeyen blok düzenleme, kendi kendine barındırılan siteler veya varsayılan olarak klasik düzenleyiciye sahip siteler için kullanılamaz.)
-
-Kullanıcı arayüzü güncellemeleri: Mesajları çöp kutusuna gönderirken açıklamalı ifadeler ve onay iletişim kutuları eklendi.
-</tr-TR>
-<zh-CN>
-15.3：
-区块编辑器更新：所有区块现在都提供拷贝、剪切、粘贴和复杂功能。 您可以单独编辑不受支持的区块。 （注意：编辑不受支持区块功能不适用于自托管站点或默认使用经典编辑器的站点。）
-
-UI 更新：将文章放入回收站时显示说明内容，并添加了确认对话框。
-</zh-CN>
-<zh-TW>
-15.3：
-區塊編輯器更新：所有區塊現在提供「複製」、「剪下」、「貼上」和「重複」功能。 你現在可以個別編輯不支援的區塊。 (請注意：自助託管和預設使用傳統編輯器的網站無法編輯不支援的區塊。)
-
-UI 更新：將文章移至垃圾桶時，系統會顯示說明文字，並新增確認對話方塊。
-</zh-TW>

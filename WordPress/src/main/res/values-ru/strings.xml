@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-15 09:06:24+0000
+Translation-Revision-Date: 2020-07-28 09:48:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Загрузите изображение логотипа или выберите его из медиабиблиотеки.</string>
+    <string name="gutenberg_native_site_tagline">Слоган сайта</string>
+    <string name="gutenberg_native_site_logo_settings">Настройки логотипа сайта</string>
+    <string name="gutenberg_native_site_logo">Логотип сайта</string>
+    <string name="gutenberg_native_site_icon">Иконка сайта</string>
+    <string name="gutenberg_native_show_a_site_logo">Показать логотип сайта</string>
+    <string name="gutenberg_native_replace_video">Заменить видео</string>
+    <string name="gutenberg_native_replace_image_or_video">Заменить изображение или видео</string>
+    <string name="gutenberg_native_open_the_block_list_view">Открыть список блоков.</string>
+    <string name="gutenberg_native_media_preview">Предварительный просмотр медиафайла</string>
+    <string name="gutenberg_native_image_width">Ширина изображения</string>
+    <string name="gutenberg_native_description">описание</string>
+    <string name="gutenberg_native_delete_site_logo">Удалить логотип сайта</string>
+    <string name="gutenberg_native_coordinated_universal_time">время в UTC</string>
+    <string name="gutenberg_native_convert_to_blocks">Преобразовать в блоки</string>
+    <string name="gutenberg_native_choose_video">Выбор видео</string>
+    <string name="gutenberg_native_choose_image_or_video">Выбор изображения или видео</string>
+    <string name="gutenberg_native_choose_image">Выбор изображения</string>
+    <string name="gutenberg_native_child_blocks">Дочерние блоки</string>
+    <string name="gutenberg_native_block_removed">Блок удалён</string>
+    <string name="gutenberg_native_base">Основа</string>
+    <string name="content_description_logo">Логотип WordPress</string>
+    <string name="enter_your_site_address">Введите адрес вашего сайта</string>
+    <string name="continue_with_wpcom">Продолжить с WordPress.com</string>
+    <string name="signup_confirmation_title">Подтверждение регистрации</string>
+    <string name="continue_with_google_terms_of_service_text">Если вы продолжите работу с учетной записью Google, не имея учётной записи WordPress.com, вы создадите учётную запись и примете наши %1$sУсловия обслуживания%2$s.</string>
+    <string name="continue_terms_of_service_text">Продолжив, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
+    <string name="signup_confirmation_magic_link_message">Мы пришлём вам волшебную ссылку для создания учётной записи WordPress.com.</string>
+    <string name="signup_confirmation_message">Этот адрес эл.почты будет использован при создании вашей новой учётной записи WordPress.com.</string>
+    <string name="signup_magic_link_message">Мы отослали вам волшебную ссылку для создания учётной записи WordPress.com. Проверьте почту на вашем устройстве и нажмите на ссылку, полученную с WordPress.com.</string>
+    <string name="enter_account_info_for_site">Введите данные вашей учётной записи для %1$s.</string>
+    <string name="login_or">или</string>
+    <string name="continue_google_button_suffix">Продолжить с Google</string>
+    <string name="login_find_your_site_adress">Найдите адрес вашего сайта</string>
+    <string name="login_done">Готово</string>
+    <string name="magic_link_not_seeing_email_message">Не нашли письмо? Загляните в папку со спамом.</string>
+    <string name="login_magic_links_sent_label">Проверьте почту на этом устройстве и нажмите ссылку в письме от WordPress.com</string>
+    <string name="login_magic_links_label">Мы пришлём вам волшебную ссылку для входа, которая позволит вам сразу войти без пароля.</string>
+    <string name="check_email">Проверка почты</string>
+    <string name="get_started">Начать </string>
+    <string name="enter_email_to_continue_wordpress_com">Введите ваш адрес электронной почты чтобы войти или создать учётную запись WordPress.com.</string>
+    <string name="or_type_your_password">или введите ваш пароль</string>
+    <string name="create_account">Создать учётную запись</string>
+    <string name="send_link_by_email">Прислать ссылку по электронной почте</string>
+    <string name="login_promo_text_unlock_the_power">Раскройте потенциал самой гибкой платформы для создания сайтов.</string>
+    <string name="login_promo_title_37_percent">37\% всех сайтов сети основаны на WordPress.</string>
+    <string name="reset_your_password">Сбросить пароль</string>
+    <string name="reader_error_generic_title">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
     <string name="quick_start_list_update_site_title_subtitle">Первое впечатление важно! Назовите свой сайт так, как это отразит его индивидуальность и содержание.</string>
     <string name="quick_start_list_update_site_title_title">Задайте название сайта</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b>%1$s&lt;/b> для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options">настройки блока %s</string>
     <string name="gutenberg_native_remove_block">Удалить блок</string>
@@ -22,7 +71,6 @@ Language: ru
     <string name="gutenberg_native_block_copied">Блок скопирован</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Название сайта может быть изменено только администратором.</string>
     <string name="my_site_title_changer_dialog_hint">Название сайта отображается в заголовке браузера и отображается большинством тем в заголовке сайта.</string>
-    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">Тема</string>
     <string name="error_update_site_title_network">Невозможно обновить название сайта. Проверьте подключение к сети и попробуйте снова.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несохранённые изменения</string>
@@ -46,7 +94,7 @@ Language: ru
     <string name="gutenberg_native_dismiss">Закрыть</string>
     <string name="prepublishing_nudges_home_tags_not_set">Не установлены</string>
     <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Опубликовать</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Дата публикации</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Добавить метки</string>
     <string name="prepublishing_nudges_back_button">Назад</string>
     <string name="prepublishing_nudges_home_save_button">Сохранить</string>
@@ -280,7 +328,6 @@ Language: ru
     <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>
     <string name="gutenberg_native_edit_video">Измненить видео</string>
-    <string name="gutenberg_native_edit_media">Изменить мультимедиа</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Нажмите дважды для выбора макета</string>
     <string name="gutenberg_native_add_a_shortcode">Добавить шорткод…</string>
     <string name="post_list_author">Автор записи</string>
@@ -328,7 +375,7 @@ Language: ru
     <string name="login_discovery_error_http_auth">Мы не смогли подключиться к сайту, поскольку он требует &lt;b>HTTP авторизации&lt;/b>. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_discovery_error_xmlrpc">Мы не смогли подключиться к &lt;b>XMLRPC&lt;/b> сайта. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_site_credentials_magic_link_label">Почти готово! Нужно только проверить адрес эл.почты подключения Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Войдите с именем пользователя и паролем для сайта</string>
+    <string name="enter_site_credentials_instead">Войти с именем пользователя и паролем cайта.</string>
     <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="send_verification_email">Отправить письмо с подтверждением</string>
     <string name="my_site_bottom_sheet_add_page">Страница сайта</string>
@@ -402,7 +449,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_edit_this_value">Нажмите дважды для изменения</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Нажмите дважды и измените значение используя ползунок</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Нажмите дважды для добавления блока</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Нажмите дважды и удерживайте для изменения</string>
     <string name="gutenberg_native_current_value_is_s">Текущее значение - %s</string>
     <string name="gutenberg_native_content">Содержимое…</string>
     <string name="gutenberg_native_choose_from_device">Выбрать с устройства</string>
@@ -521,7 +567,7 @@ Language: ru
     <string name="post_notification_off">Выкл.</string>
     <string name="post_settings_add_to_calendar">Добавить в календарь</string>
     <string name="post_settings_notification">Уведомление</string>
-    <string name="post_settings_time_and_date">Время и дата</string>
+    <string name="post_settings_time_and_date">Дата и время</string>
     <string name="login_need_help_finding_connected_email">Не можете вспомнить адрес эл. почты, указанный при регистрации?</string>
     <string name="enter_wordpress_site">Сайт по этому адресу не является сайтом на WordPress. Мы не можем подключиться к нему.</string>
     <string name="login_invalid_site_url">Введите полный адрес вебсайта, например example.com.</string>
@@ -1234,7 +1280,6 @@ Language: ru
     <string name="signup_updating_account">Обновление учетной записи…</string>
     <string name="signup_terms_of_service_text">Регистрируясь, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
     <string name="signup_magic_link_progress">Отправка email</string>
-    <string name="signup_magic_link_message">Мы послали вам магическую ссылку для регистрации. Проверьте вашу почту и нажмите присланную ссылку для завершения регистрации.</string>
     <string name="signup_magic_link_error_button_positive">Повторить</string>
     <string name="signup_magic_link_error_button_negative">Закрыть</string>
     <string name="signup_magic_link_error">Возникла проблема при отправке почты. Вы можете повторить сейчас или закрыть и попробовать еще раз позже.</string>
@@ -1242,7 +1287,6 @@ Language: ru
     <string name="signup_epilogue_hint_password_detail">Вы всегда можете войти с магической ссылкой, как вы только что использовали, но если хотите, то можно и установить пароль.</string>
     <string name="signup_epilogue_hint_password">Пароль (не обязательно)</string>
     <string name="signup_epilogue_hint_display">Отображаемое имя</string>
-    <string name="signup_epilogue_heading">Новая учетная запись</string>
     <string name="signup_epilogue_error_button_positive">Повтор</string>
     <string name="signup_epilogue_error_button_negative">Откат</string>
     <string name="signup_epilogue_error_generic">Возникла ошибка обновления учетной записи. Вы можете повторить или сделать откат изменений.</string>
@@ -1463,7 +1507,6 @@ Language: ru
     <string name="connection_to_server_lost">Соединение с сервером прервано</string>
     <string name="login_epilogue_mysites_other">Мои сайты</string>
     <string name="login_epilogue_mysites_one">Мой сайт</string>
-    <string name="login_logged_in_as">Вы вошли как</string>
     <string name="login_email_client_not_found">Не удалось определить ваш почтовый клиент</string>
     <string name="login_empty_2fa">Введите проверочный код.</string>
     <string name="login_empty_username">Введите имя пользователя</string>
@@ -1476,14 +1519,11 @@ Language: ru
     <string name="login_site_address_help">Как найти адрес своего сайта?</string>
     <string name="login_site_address">Адрес сайта</string>
     <string name="enter_site_address">Введите адрес сайта WordPress, к которому требуется подключиться.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Вы уже вошли на WordPress.com</string>
     <string name="login_continue">Продолжить</string>
     <string name="connect_more">Подключить ещё один сайт</string>
     <string name="enter_wpcom_password">Введите свой пароль на WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Выполняется запрос электронного письма со ссылкой для входа</string>
-    <string name="login_magic_links_sent_label">Ваша волшебная ссылка уже в пути! Проверьте почту с этого устройства и нажмите ссылку в письме от WordPress.com.</string>
-    <string name="login_magic_links_label">Мы отправим вам волшебную ссылку, по которой вы сможете сразу войти в систему без пароля. Не нужно больше тыкать по клавиатуре!</string>
     <string name="password_incorrect">Похоже, пароль введён неправильно. Проверьте правильность введенных данных и повторите попытку.</string>
     <string name="requesting_otp">Выполняется запрос на получение проверочного кода в SMS-сообщении.</string>
     <string name="login_text_otp">Пришлите мне сообщение с кодом.</string>
@@ -2260,6 +2300,7 @@ Language: ru
     <string name="pick_video">Выберите видео</string>
     <string name="pick_photo">Выберите фото</string>
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
+    <string name="sign_up_label">Зарегистрироваться</string>
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
     <string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
     <string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
