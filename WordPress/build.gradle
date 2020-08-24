@@ -57,7 +57,7 @@ android {
         } else {
             versionName "alpha-237"
         }
-        versionCode 903
+        versionCode 904040
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
