@@ -388,7 +388,12 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     private fun PhotoPickerUiItem.assertEqualToDomainItem(domainItem: PhotoPickerItem) {
         assertThat(this.id).isEqualTo(domainItem.id)
-        assertThat(this.isVideo).isEqualTo(domainItem.isVideo)
+        if (domainItem.isVideo) {
+            assertThat(this is PhotoPickerUiItem.VideoItem)
+        } else {
+            assertThat(this is PhotoPickerUiItem.PhotoItem)
+        }
+
         assertThat(this.uri).isEqualTo(domainItem.uri)
     }
 
