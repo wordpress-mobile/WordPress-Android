@@ -80,7 +80,7 @@ class EncryptedLogging @Inject constructor(
             is EncryptedLogFailedToUpload -> {
                 AppLog.e(T.MAIN, "Encrypted log with uuid: ${event.uuid} failed to upload with error: ${event.error}")
                 // Only track final errors
-                if (event.willRetry) {
+                if (!event.willRetry) {
                     analyticsTrackerWrapper.track(
                             Stat.ENCRYPTED_LOGGING_UPLOAD_FAILED,
                             mapOf("error_type" to event.error.javaClass.simpleName)
