@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogErr
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.NoConnection
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.TooManyRequests
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.Unknown
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.UnsatisfiedLinkException
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.util.AppLog
@@ -141,16 +142,22 @@ class EncryptedLogStore @Inject constructor(
             uploadNext()
             return
         }
-        val encryptedText = logEncrypter.encrypt(text = encryptedLog.file.readText(), uuid = encryptedLog.uuid)
+        try {
+            val encryptedText = logEncrypter.encrypt(text = encryptedLog.file.readText(), uuid = encryptedLog.uuid)
 
-        // Update the upload state of the log
-        encryptedLog.copy(uploadState = UPLOADING).let {
-            encryptedLogSqlUtils.insertOrUpdateEncryptedLog(it)
-        }
+            // Update the upload state of the log
+            encryptedLog.copy(uploadState = UPLOADING).let {
+                encryptedLogSqlUtils.insertOrUpdateEncryptedLog(it)
+            }
 
-        when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, encryptedText)) {
-            is LogUploaded -> handleSuccessfulUpload(encryptedLog)
-            is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
+            when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, encryptedText)) {
+                is LogUploaded -> handleSuccessfulUpload(encryptedLog)
+                is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
+            }
+            uploadNextWithDelay()
+        } catch (e: UnsatisfiedLinkError) {
+            handleFailedUpload(encryptedLog, UnsatisfiedLinkException)
+            uploadNext()
         }
     }
 
@@ -220,6 +227,9 @@ class EncryptedLogStore @Inject constructor(
                 IRRECOVERABLE_FAILURE
             }
             is MissingFile -> {
+                IRRECOVERABLE_FAILURE
+            }
+            is UnsatisfiedLinkException -> {
                 IRRECOVERABLE_FAILURE
             }
             is Unknown -> {
@@ -297,6 +307,7 @@ class EncryptedLogStore @Inject constructor(
         object TooManyRequests : UploadEncryptedLogError()
         object NoConnection : UploadEncryptedLogError()
         object MissingFile : UploadEncryptedLogError()
+        object UnsatisfiedLinkException : UploadEncryptedLogError()
     }
 
     /**
