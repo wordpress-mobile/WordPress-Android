@@ -1575,15 +1575,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
      *   2. Saves the post via {@link EditPostActivity#updateAndSavePostAsync(OnPostUpdatedFromUIListener)};
      *   3. Invokes the listener method parameter
      *   4. If there were changes in the post that needed to be saved, for debug builds the app will crash, and
-     *      for release builds we add to the logs and send a report off to Sentry because this
+     *      for release builds we send an exception to Sentry because this
      *      indicates that the editor's autosave mechanism failed to save all changes to the post. Ideally,
      *      there should never be any changes that need to be saved when exiting the editor because all changes
-     *      should be caught by the autosave mechanism; and
+     *      should be caught by the autosave mechanism, but there is a known issue where there will be unsaved
+     *      changes when the user quickly exits the editor after making changes. For that reason we send that as
+     *      a separate event to Sentry.
      */
     private void updateAndSavePostAsyncOnEditorExit(@NonNull final OnPostUpdatedFromUIListener listener) {
         if (mEditorFragment == null) {
             return;
         }
+
+        // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
+        boolean isAutosavePending = mViewModel.isAutosavePending();
 
         mEditorFragment.showSavingProgressDialogIfNeeded();
         updateAndSavePostAsync((result) -> {
@@ -1594,16 +1599,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
             listener.onPostUpdatedFromUI(result);
 
             if (result == Updated.INSTANCE) {
-                String message = "Post had changes that needed to be saved when exiting the editor. "
-                                 + "This means that the editor's autosave mechanism failed to save all changes.";
+                SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
                 if (BuildConfig.DEBUG) {
-                    throw new RuntimeException("Debug build crash: " + message + " This only crashes on debug builds.");
+                    throw new RuntimeException(
+                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
+                    );
                 } else {
-                    AppLog.e(T.EDITOR, message);
-                    mCrashLogging.report(message, T.EDITOR);
+                    mCrashLogging.reportException(exception, T.EDITOR.toString());
+                    AppLog.e(T.EDITOR, exception.getMessage());
                 }
             } else {
-                AppLog.d(T.EDITOR, "Post had no changes that needed to be saved when exiting the editor.");
+                AppLog.d(T.EDITOR, "Post had no unsaved changes when exiting the editor.");
             }
         });
     }
