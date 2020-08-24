@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
-import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction

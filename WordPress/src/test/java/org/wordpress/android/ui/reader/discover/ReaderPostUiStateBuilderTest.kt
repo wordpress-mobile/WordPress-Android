@@ -61,7 +61,6 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
@@ -74,7 +73,6 @@ class ReaderPostUiStateBuilderTest {
                 dateTimeUtilsWrapper,
                 readerImageScannerProvider,
                 readerUtilsWrapper,
-                readerPostMoreButtonUiStateBuilder,
                 readerPostTagsUiStateBuilder,
                 appPrefsWrapper
         )
@@ -837,7 +835,8 @@ class ReaderPostUiStateBuilderTest {
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
                 onPostHeaderViewClicked = mock(),
-                onTagItemClicked = mock()
+                onTagItemClicked = mock(),
+                onMoreDismissed = mock()
         )
     }
 

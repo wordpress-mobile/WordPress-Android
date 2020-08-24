@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.discover
 
-import android.view.View
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -13,9 +12,9 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
