@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -151,21 +150,15 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
         // Design changes added to the Woo Magic link sign-in
         if (mVerifyMagicLinkEmail) {
-            View avatarContainerView = view.findViewById(R.id.avatar_container);
-
-            LayoutParams lp = avatarContainerView.getLayoutParams();
-            lp.width = LayoutParams.WRAP_CONTENT;
-            lp.height = getContext().getResources().getDimensionPixelSize(R.dimen.magic_link_sent_illustration_sz);
-            avatarContainerView.setLayoutParams(lp);
-
-            mAvatarProgressBar.setVisibility(View.GONE);
-            avatarView.setImageResource(R.drawable.login_email_alert);
+            AvatarHelper.loadAvatarFromEmail(this, mEmail, avatarView, new AvatarRequestListener() {
+                @Override public void onRequestFinished() {
+                    mAvatarProgressBar.setVisibility(View.GONE);
+                }
+            });
 
             TextView labelTextView = view.findViewById(R.id.label);
             labelTextView.setText(Html.fromHtml(String.format(getResources().getString(
                     R.string.login_site_credentials_magic_link_label), mEmail)));
-
-            mRequestMagicLinkButton.setText(getString(R.string.send_verification_email));
         } else {
             AvatarHelper.loadAvatarFromEmail(this, mEmail, avatarView, new AvatarRequestListener() {
                 @Override public void onRequestFinished() {
