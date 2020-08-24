@@ -62,7 +62,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
 
         SecondaryAction item = mMenuItems.get(position);
-        String textRes = mUiHelpers.getTextOfUiString(convertView.getContext(), item.getLabel());
+        String textRes = mUiHelpers.getTextOfUiString(convertView.getContext(), item.getLabel()).toString();
         int textColorRes =
                 ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), item.getLabelColor());
         int iconColorRes =

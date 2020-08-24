@@ -197,7 +197,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             val newText = uiHelpers.getTextOfUiString(progress_text.context, loadingTextResId)
             AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
             if (animate) {
-                updateLoadingTextWithFadeAnimation(newText)
+                updateLoadingTextWithFadeAnimation(newText.toString())
             } else {
                 progress_text.text = newText
             }
