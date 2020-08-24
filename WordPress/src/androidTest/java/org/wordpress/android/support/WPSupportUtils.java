@@ -19,6 +19,7 @@ import androidx.test.espresso.action.GeneralLocation;
 import androidx.test.espresso.action.Press;
 import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -50,6 +51,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -63,8 +65,12 @@ import static org.hamcrest.Matchers.isA;
 public class WPSupportUtils {
     // HIGH-LEVEL METHODS
 
+    public static ViewInteraction visibleElementWithId(Integer elementID) {
+        return onView(allOf(withId(elementID), withEffectiveVisibility(Visibility.VISIBLE)));
+    }
+
     public static boolean isElementDisplayed(Integer elementID) {
-        return isElementDisplayed(onView(withId(elementID)));
+        return isElementDisplayed(visibleElementWithId(elementID));
     }
 
     public static boolean isElementDisplayed(ViewInteraction element) {
@@ -87,7 +93,7 @@ public class WPSupportUtils {
 
     public static void scrollToThenClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID))
+        visibleElementWithId(elementID)
                 .perform(scrollTo());
         clickOn(elementID);
     }
@@ -100,7 +106,7 @@ public class WPSupportUtils {
 
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        clickOn(onView(withId(elementID)));
+        clickOn(visibleElementWithId(elementID));
         idleFor(500); // allow for transitions
     }
 
@@ -191,7 +197,7 @@ public class WPSupportUtils {
 
     public static void longClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID)).perform(longClick());
+        visibleElementWithId(elementID).perform(longClick());
     }
 
     public static void longClickOn(ViewInteraction element) {
@@ -223,7 +229,7 @@ public class WPSupportUtils {
 
     public static void populateTextField(Integer elementID, String text) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID))
+        visibleElementWithId(elementID)
                 .perform(replaceText(text))
                 .perform(closeSoftKeyboard());
     }
@@ -348,11 +354,11 @@ public class WPSupportUtils {
         Integer maxTries = 10;
 
         for (Integer i = 0; i < 10; i++) {
-            onView(withId(elementID)).perform(swipeRight());
+            visibleElementWithId(elementID).perform(swipeRight());
         }
 
         while (!tabLayoutHasTextDisplayed(elementID, string) && tries < maxTries) {
-            onView(withId(elementID)).perform(swipeLeft());
+            visibleElementWithId(elementID).perform(swipeLeft());
             tries++;
         }
 

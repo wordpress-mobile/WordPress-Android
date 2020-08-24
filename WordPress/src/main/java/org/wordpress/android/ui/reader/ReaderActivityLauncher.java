@@ -20,7 +20,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.EnumSet;
@@ -101,7 +100,7 @@ public class ReaderActivityLauncher {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
-        if (ReaderUtils.isExternalFeed(siteId, feedId)) {
+        if (feedId != 0) {
             intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
             intent.putExtra(ReaderConstants.ARG_IS_FEED, true);
         } else {

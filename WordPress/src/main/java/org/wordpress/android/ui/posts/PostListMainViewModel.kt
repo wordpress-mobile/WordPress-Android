@@ -46,7 +46,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -353,7 +352,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
+        if (wpStoriesFeatureConfig.isEnabled()) {
             _onFabClicked.postValue(Event(Unit))
         } else {
             newPost()
@@ -582,7 +581,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onFabLongPressed() {
-        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
+        if (wpStoriesFeatureConfig.isEnabled()) {
             _onFabLongPressedForCreateMenu.postValue(Event(Unit))
         } else {
             _onFabLongPressedForPostList.postValue(Event(Unit))

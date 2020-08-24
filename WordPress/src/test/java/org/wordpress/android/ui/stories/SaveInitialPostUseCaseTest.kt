@@ -48,6 +48,18 @@ class SaveInitialPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `if saveInitialPost is called then the PostModel should get set with a PostFormat of wpstory`() {
+        // arrange
+        val expectedPostFormat = StoryComposerActivity.POST_FORMAT_WP_STORY_KEY
+
+        // act
+        saveInitialPostUseCase.saveInitialPost(editPostRepository, site)
+
+        // assert
+        assertThat(editPostRepository.postFormat).isEqualTo(expectedPostFormat)
+    }
+
+    @Test
     fun `if saveInitialPost is called and the site is not null then savePostToDbUseCase is invoked`() {
         // arrange
         val nonNullSite: SiteModel? = mock()

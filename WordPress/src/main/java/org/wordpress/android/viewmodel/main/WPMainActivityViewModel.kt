@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -19,8 +18,6 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.SiteUtils
-import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.util.merge
@@ -75,18 +72,18 @@ class WPMainActivityViewModel @Inject constructor(
     private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
     val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
 
-    fun start(isFabVisible: Boolean, site: SiteModel?) {
+    fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
         isStarted = true
 
-        setMainFabUiState(isFabVisible, site)
+        setMainFabUiState(isFabVisible, hasFullAccessToContent)
 
-        loadMainActions(site)
+        loadMainActions(hasFullAccessToContent)
 
         updateFeatureAnnouncements()
     }
 
-    private fun loadMainActions(site: SiteModel?) {
+    private fun loadMainActions(hasFullAccessToContent: Boolean) {
         val actionsList = ArrayList<MainActionListItem>()
 
         actionsList.add(CreateAction(
@@ -101,7 +98,7 @@ class WPMainActivityViewModel @Inject constructor(
                 labelRes = R.string.my_site_bottom_sheet_add_post,
                 onClickAction = ::onCreateActionClicked
         ))
-        if (hasFullAccessToContent(site)) {
+        if (hasFullAccessToContent) {
             actionsList.add(CreateAction(
                     actionType = CREATE_NEW_PAGE,
                     iconRes = R.drawable.ic_pages_white_24dp,
@@ -109,7 +106,7 @@ class WPMainActivityViewModel @Inject constructor(
                     onClickAction = ::onCreateActionClicked
             ))
         }
-        if (shouldShowStories(site)) {
+        if (wpStoriesFeatureConfig.isEnabled()) {
             actionsList.add(CreateAction(
                     actionType = CREATE_NEW_STORY,
                     iconRes = R.drawable.ic_story_icon_24dp,
@@ -135,7 +132,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun disableTooltip(site: SiteModel) {
+    private fun disableTooltip(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
 
         val oldState = _fabUiState.value
@@ -143,19 +140,19 @@ class WPMainActivityViewModel @Inject constructor(
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
                     isFabTooltipVisible = false,
-                    CreateContentMessageId = getCreateContentMessageId(site)
+                    CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
             )
         }
     }
 
-    fun onFabClicked(site: SiteModel, shouldShowQuickStartFocusPoint: Boolean = false) {
+    fun onFabClicked(hasFullAccessToContent: Boolean, shouldShowQuickStartFocusPoint: Boolean = false) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
-        setMainFabUiState(true, site)
+        setMainFabUiState(true, hasFullAccessToContent)
 
         _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
 
-        if (shouldShowStories(site)) {
-            loadMainActions(site)
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            loadMainActions(hasFullAccessToContent)
             _isBottomSheetShowing.value = Event(true)
         } else {
             // NOTE: this whole piece of code and comment below to be removed when we remove the feature flag.
@@ -166,10 +163,10 @@ class WPMainActivityViewModel @Inject constructor(
             // We should evaluate to re-introduce the bottom sheet also for users without full access to content
             // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
             // See p5T066-1cA-p2/#comment-4463
-            if (hasFullAccessToContent(site)) {
+            if (hasFullAccessToContent) {
                 // reload main actions given the first time this is initialized, the SiteModel may not contain the
                 // latest info
-                loadMainActions(site)
+                loadMainActions(hasFullAccessToContent)
                 _isBottomSheetShowing.value = Event(true)
             } else {
                 _createAction.postValue(CREATE_NEW_POST)
@@ -177,29 +174,29 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onPageChanged(showFab: Boolean, site: SiteModel) {
-        setMainFabUiState(showFab, site)
+    fun onPageChanged(showFab: Boolean, hasFullAccessToContent: Boolean) {
+        setMainFabUiState(showFab, hasFullAccessToContent)
     }
 
-    fun onTooltipTapped(site: SiteModel) {
-        disableTooltip(site)
+    fun onTooltipTapped(hasFullAccessToContent: Boolean) {
+        disableTooltip(hasFullAccessToContent)
     }
 
-    fun onFabLongPressed(site: SiteModel) {
-        disableTooltip(site)
+    fun onFabLongPressed(hasFullAccessToContent: Boolean) {
+        disableTooltip(hasFullAccessToContent)
     }
 
     fun onOpenLoginPage() {
         _startLoginFlow.value = Event(true)
     }
 
-    fun onResume(site: SiteModel) {
+    fun onResume(hasFullAccessToContent: Boolean) {
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
                     isFabTooltipVisible = it.isFabTooltipVisible,
-                    CreateContentMessageId = getCreateContentMessageId(site)
+                    CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
             )
         }
 
@@ -219,29 +216,29 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?) {
+    private fun setMainFabUiState(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         val newState = MainFabUiState(
                 isFabVisible = isFabVisible,
                 isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
-                CreateContentMessageId = getCreateContentMessageId(site)
+                CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
         )
 
         _fabUiState.value = newState
     }
 
-    fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (shouldShowStories(site))
-            getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
+    private fun getCreateContentMessageId(hasFullAccessToContent: Boolean): Int {
+        return if (wpStoriesFeatureConfig.isEnabled())
+            return getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent)
         else
-            getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
+            return getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent)
     }
 
     // create_post_page_fab_tooltip_stories_feature_flag_on
     private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent)
-            R.string.create_post_page_fab_tooltip_stories_enabled
+            R.string.create_post_page_fab_tooltip_stories_feature_flag_on
         else
-            R.string.create_post_page_fab_tooltip_contributors_stories_enabled
+            R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
     }
 
     private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
@@ -263,9 +260,5 @@ class WPMainActivityViewModel @Inject constructor(
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
                 appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
-    }
-
-    private fun shouldShowStories(site: SiteModel?): Boolean {
-        return wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)
     }
 }

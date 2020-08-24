@@ -2638,22 +2638,20 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        if (blogId > 0) {
-            WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                      .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                              new View.OnClickListener() {
-                                  @Override public void onClick(View view) {
-                                      AnalyticsUtils
-                                              .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                                      AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                              String.valueOf(blogId), SubscriptionAction.NEW);
-                                      mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                                      ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                                  }
-                              })
-                      .show();
-        }
+        WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
+                  .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                          new View.OnClickListener() {
+                              @Override public void onClick(View view) {
+                                  AnalyticsUtils
+                                          .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                  AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                          String.valueOf(blogId), SubscriptionAction.NEW);
+                                  mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                  ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                              }
+                          })
+                  .show();
     }
 
     @Override

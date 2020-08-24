@@ -93,6 +93,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun getEditPostRepository() = editPostRepository
 
     companion object {
+        // arbitrary post format for Stories. Will be used in Posts lists for filtering.
+        // See https://wordpress.org/support/article/post-formats/
+        const val POST_FORMAT_WP_STORY_KEY = "wpstory"
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
@@ -269,10 +272,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun handleMediaPickerIntentData(data: Intent) {
-        if (permissionsRequestForCameraInProgress) {
-            return
-        }
-
         if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
             val uriList: List<Uri> = convertStringArrayIntoUrisList(
                     data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)

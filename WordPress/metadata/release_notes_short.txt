@@ -1,0 +1,5 @@
+* Type the “@” character to auto-complete username @mentions in the Block Editor on WordPress.com and Jetpack sites.
+* Search for self-hosted sites on the post list.
+* Upload audio and document files to the media library.
+* Edit media in the Cover block.
+* Fixed Heading block bug causing a white shadow in dark mode.

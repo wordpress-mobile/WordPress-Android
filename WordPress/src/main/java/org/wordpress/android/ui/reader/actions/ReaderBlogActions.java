@@ -505,4 +505,87 @@ public class ReaderBlogActions {
         String path = "me/block/sites/" + Long.toString(blockResult.blogId) + "/delete";
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
+
+    /**
+     * Updates the imageUrl for a feed. Since the /read/feed/{feedId} endpoint does not have this data,
+     * the request is made to the /read/sites/{blogId} endpoint.
+     * @param blogId
+     * @param blogUrl
+     * @param feedId
+     * @param infoListener
+     */
+    public static void updateImageForFeedByBlog(long blogId,
+                                      final String blogUrl,
+                                      final long feedId,
+                                      final UpdateBlogInfoListener infoListener) {
+        // must pass either a valid id or url
+        final boolean hasBlogId = (blogId != 0);
+        final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
+        if (!hasBlogId && !hasBlogUrl) {
+            AppLog.w(T.READER, "cannot get blog info without either id or url");
+            if (infoListener != null) {
+                infoListener.onResult(null);
+            }
+            return;
+        }
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                updateImageForFeedInfoResponse(feedId, jsonObject, infoListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                // authentication error may indicate that API access has been disabled for this blog
+                int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                boolean isAuthErr = (statusCode == HttpURLConnection.HTTP_FORBIDDEN);
+                // if we failed to get the blog info using the id and this isn't an authentication
+                // error, try again using just the domain
+                if (!isAuthErr && hasBlogId && hasBlogUrl) {
+                    AppLog.w(T.READER, "failed to get blog info by id, retrying with url");
+                    updateImageForFeedByBlog(0, blogUrl, feedId, infoListener);
+                } else {
+                    AppLog.e(T.READER, volleyError);
+                    if (infoListener != null) {
+                        infoListener.onResult(null);
+                    }
+                }
+            }
+        };
+
+        if (hasBlogId) {
+            WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
+        } else {
+            WordPress.getRestClientUtilsV1_1()
+                     .get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
+        }
+    }
+
+    /**
+     * updateImageForFeedInfoResponse is executed on return of updateImageForFeedByBlog. It sends a request
+     * to the readerBlogTable to update the entry using feedId
+     * @param feedId
+     * @param jsonObject
+     * @param infoListener
+     */
+    private static void updateImageForFeedInfoResponse(
+            long feedId, JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
+        if (jsonObject == null) {
+            if (infoListener != null) {
+                infoListener.onResult(null);
+            }
+            return;
+        }
+
+        ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
+        if (blogInfo.hasImageUrl()) {
+            ReaderBlogTable.updateImageByFeedId(feedId, blogInfo.getImageUrl());
+        }
+
+        if (infoListener != null) {
+            infoListener.onResult(blogInfo);
+        }
+    }
 }

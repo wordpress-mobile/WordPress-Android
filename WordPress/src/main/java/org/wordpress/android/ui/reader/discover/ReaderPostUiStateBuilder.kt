@@ -14,12 +14,8 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_P
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
@@ -39,8 +35,6 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
-
-private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -110,29 +104,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 )
         )
     }
-
-    fun mapTagListToReaderInterestUiState(
-        interests: ReaderTagList,
-        onClicked: ((String) -> Unit)
-    ): ReaderInterestsCardUiState {
-        val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
-            interests.size
-        } else {
-            READER_INTEREST_LIST_SIZE_LIMIT
-        }
-        val lastIndex = listSize - 1
-
-        return ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
-            ReaderInterestUiState(
-                    interest.tagTitle,
-                    buildIsDividerVisible(interest, interests, lastIndex),
-                    onClicked
-            )
-        })
-    }
-
-    private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
-            readerTagList.indexOf(readerTag) != lastIndex
 
     private fun buildOnPostHeaderViewClicked(
         onPostHeaderViewClicked: (Long, Long) -> Unit,

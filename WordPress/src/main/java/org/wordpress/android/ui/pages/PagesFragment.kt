@@ -186,7 +186,7 @@ class PagesFragment : Fragment() {
                 newPageButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
 
-            Toast.makeText(newPageButton.context, R.string.create_page_fab_tooltip, Toast.LENGTH_SHORT).show()
+            Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
         newPageButton.redirectContextClickToLongPressListener()
