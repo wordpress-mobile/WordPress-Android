@@ -154,10 +154,8 @@ class EncryptedLogStore @Inject constructor(
                 is LogUploaded -> handleSuccessfulUpload(encryptedLog)
                 is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
             }
-            uploadNextWithDelay()
         } catch (e: UnsatisfiedLinkError) {
             handleFailedUpload(encryptedLog, UnsatisfiedLinkException)
-            uploadNext()
         }
     }
 
