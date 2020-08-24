@@ -1808,6 +1808,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
                 return "prepublishing_bottom_sheet_dismissed";
+            case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:
+                return "encrypted_logging_upload_successful";
+            case ENCRYPTED_LOGGING_UPLOAD_FAILED:
+                return "encrypted_logging_upload_failed";
         }
         return null;
     }
