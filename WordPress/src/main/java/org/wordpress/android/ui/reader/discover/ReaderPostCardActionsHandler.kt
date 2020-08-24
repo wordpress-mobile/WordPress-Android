@@ -10,6 +10,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_I
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NO
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -43,6 +45,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
+    private val dispatcher: Dispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -55,6 +59,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val preloadPostEvents = _preloadPostEvents
 
     init {
+        dispatcher.register(siteNotificationsUseCase)
+
         _navigationEvents.addSource(bookmarkUseCase.navigationEvents) { event ->
             _navigationEvents.value = event
         }
@@ -71,7 +77,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
         when (type) {
             FOLLOW -> handleFollowClicked(post)
-            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.postId, post.blogId)
+            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
@@ -103,8 +109,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         AppLog.d(AppLog.T.READER, "Follow not implemented")
     }
 
-    private fun handleSiteNotificationsClicked(postId: Long, blogId: Long) {
-        AppLog.d(AppLog.T.READER, "SiteNotifications not implemented")
+    private fun handleSiteNotificationsClicked(blogId: Long) {
+        uiScope.launch {
+            siteNotificationsUseCase.toggleNotification(blogId)
+        }
     }
 
     private fun handleShareClicked(post: ReaderPost) {
@@ -147,5 +155,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleCommentsClicked(postId: Long, blogId: Long) {
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
+    }
+
+    fun onCleared() {
+        dispatcher.unregister(siteNotificationsUseCase)
     }
 }
