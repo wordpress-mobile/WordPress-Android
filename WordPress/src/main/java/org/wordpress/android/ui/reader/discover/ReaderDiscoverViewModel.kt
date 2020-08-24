@@ -215,9 +215,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         changeMoreMenuVisibility(postUiState, false)
     }
 
-    private fun changeMoreMenuVisibility(postUiState: ReaderPostUiState, show: Boolean) {
-        findPost(postUiState.postId, postUiState.blogId)?.let { post ->
-            val updateUiState = postUiState.copy(
+    private fun changeMoreMenuVisibility(currentUiState: ReaderPostUiState, show: Boolean) {
+        findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+            val updatedUiState = currentUiState.copy(
                     moreMenuItems = if (show) readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
                             post,
                             TAG_FOLLOWED,
@@ -226,16 +226,16 @@ class ReaderDiscoverViewModel @Inject constructor(
                     else null
             )
 
-            replaceUiStateItem(postUiState, updateUiState)
+            replaceUiStateItem(currentUiState, updatedUiState)
         }
     }
 
-    private fun replaceUiStateItem(postUiState: ReaderPostUiState, updateUiState: ReaderPostUiState) {
+    private fun replaceUiStateItem(before: ReaderPostUiState, after: ReaderPostUiState) {
         (_uiState.value as? ContentUiState)?.let {
             val updatedList = it.cards.toMutableList()
-            val index = it.cards.indexOf(postUiState)
+            val index = it.cards.indexOf(before)
             if (index != -1) {
-                updatedList[index] = updateUiState
+                updatedList[index] = after
                 _uiState.value = it.copy(cards = updatedList)
             }
         }
