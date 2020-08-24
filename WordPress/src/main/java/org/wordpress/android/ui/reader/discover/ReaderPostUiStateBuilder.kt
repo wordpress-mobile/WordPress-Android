@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
@@ -50,7 +51,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
@@ -68,10 +68,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
-        onMoreButtonClicked: (Long, Long, View) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
-        onTagItemClicked: (String) -> Unit
+        onTagItemClicked: (String) -> Unit,
+        moreMenuItems: List<SecondaryAction>? = null
     ): ReaderPostUiState {
         return ReaderPostUiState(
                 postId = post.postId,
@@ -92,6 +94,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 featuredImageVisibility = buildFeaturedImageVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
+                moreMenuItems = moreMenuItems,
                 fullVideoUrl = buildFullVideoUrl(post),
                 discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
                 bookmarkAction = buildBookmarkSection(post, onButtonClicked),
@@ -101,13 +104,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 onItemClicked = onItemClicked,
                 onItemRendered = onItemRendered,
                 onMoreButtonClicked = onMoreButtonClicked,
+                onMoreDismissed = onMoreDismissed,
                 onVideoOverlayClicked = onVideoOverlayClicked,
-                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType),
-                moreMenuItems = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                        post,
-                        postListType,
-                        onButtonClicked
-                )
+                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
         )
     }
 

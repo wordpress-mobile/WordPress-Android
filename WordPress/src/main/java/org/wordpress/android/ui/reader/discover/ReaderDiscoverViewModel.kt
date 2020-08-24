@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.discover
 
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,6 +13,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -33,6 +33,7 @@ const val INITIATE_LOAD_MORE_OFFSET = 3
 
 class ReaderDiscoverViewModel @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
+    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
@@ -94,6 +95,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                     onItemRendered = this::onItemRendered,
                                     onDiscoverSectionClicked = this::onDiscoverClicked,
                                     onMoreButtonClicked = this::onMoreButtonClicked,
+                                    onMoreDismissed = this::onMoreMenuDismissed,
                                     onVideoOverlayClicked = this::onVideoOverlayClicked,
                                     onPostHeaderViewClicked = this::onPostHeaderClicked,
                                     onTagItemClicked = this::onTagItemClicked,
@@ -204,8 +206,39 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     // TODO malinjir get rid of the view reference
-    private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
+    private fun onMoreButtonClicked(postUiState: ReaderPostUiState) {
         AppLog.d(T.READER, "OnMoreButtonClicked")
+        changeMoreMenuVisibility(postUiState, true)
+    }
+
+    private fun onMoreMenuDismissed(postUiState: ReaderPostUiState) {
+        changeMoreMenuVisibility(postUiState, false)
+    }
+
+    private fun changeMoreMenuVisibility(postUiState: ReaderPostUiState, show: Boolean) {
+        findPost(postUiState.postId, postUiState.blogId)?.let { post ->
+            val updateUiState = postUiState.copy(
+                    moreMenuItems = if (show) readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
+                            post,
+                            TAG_FOLLOWED,
+                            this::onButtonClicked
+                    )
+                    else null
+            )
+
+            replaceUiStateItem(postUiState, updateUiState)
+        }
+    }
+
+    private fun replaceUiStateItem(postUiState: ReaderPostUiState, updateUiState: ReaderPostUiState) {
+        (_uiState.value as? ContentUiState)?.let {
+            val updatedList = it.cards.toMutableList()
+            val index = it.cards.indexOf(postUiState)
+            if (index != -1) {
+                updatedList[index] = updateUiState
+                _uiState.value = it.copy(cards = updatedList)
+            }
+        }
     }
 
     fun onReblogSiteSelected(siteLocalId: Int) {
