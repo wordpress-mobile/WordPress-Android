@@ -111,7 +111,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleSiteNotificationsClicked(blogId: Long) {
         uiScope.launch {
-            siteNotificationsUseCase.toggleNotification(blogId)
+            val result = siteNotificationsUseCase.toggleNotification(blogId)
+            result?.let {
+                _snackbarEvents.postValue(Event(it))
+            }
         }
     }
 

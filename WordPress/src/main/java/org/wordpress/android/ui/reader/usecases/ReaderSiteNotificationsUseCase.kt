@@ -2,20 +2,25 @@ package org.wordpress.android.ui.reader.usecases
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * This class handles reader notification events.
@@ -23,27 +28,59 @@ import javax.inject.Inject
 class ReaderSiteNotificationsUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val readerBlogTableWrapper: ReaderBlogTableWrapper
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
-    fun toggleNotification(blogId: Long) {
-        if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
-            analyticsUtilsWrapper.trackWithSiteId(
-                    FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF,
-                    blogId
-            )
-            readerBlogTableWrapper.setNotificationsEnabledByBlogId(blogId, false)
-            updateSubscription(DELETE, blogId)
-        } else {
-            analyticsUtilsWrapper.trackWithSiteId(
-                    FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON,
-                    blogId
-            )
-            readerBlogTableWrapper.setNotificationsEnabledByBlogId(blogId, true)
-            updateSubscription(NEW, blogId)
+    private var continuation: Continuation<Boolean>? = null
+
+    suspend fun toggleNotification(blogId: Long): SnackbarMessageHolder? {
+        if (continuation != null) {
+            // Toggling notification for multiple sites in parallel isn't supported
+            // as the user would lose the ability to undo the action
+            return null
         }
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return SnackbarMessageHolder(R.string.error_network_connection)
+        }
+
+        // We want to track the action no matter the result
+        trackEvent(blogId)
+
+        val succeeded = suspendCoroutine<Boolean> { cont ->
+            continuation = cont
+            updateSubscription(blogId)
+        }
+
+        if (succeeded) {
+            updateBlogInDb(blogId)
+        }
+        return null
     }
 
-    private fun updateSubscription(action: SubscriptionAction, blogId: Long) {
+    private fun trackEvent(blogId: Long) {
+        val trackingEvent = if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
+            FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
+        } else {
+            FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
+        }
+
+        analyticsUtilsWrapper.trackWithSiteId(trackingEvent, blogId)
+    }
+
+    private fun updateBlogInDb(blogId: Long) {
+        val isNotificationEnabledInDb = readerBlogTableWrapper.isNotificationsEnabled(blogId)
+        readerBlogTableWrapper.setNotificationsEnabledByBlogId(
+                blogId,
+                !isNotificationEnabledInDb
+        )
+    }
+
+    private fun updateSubscription(blogId: Long) {
+        val action = if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
+            DELETE
+        } else {
+            NEW
+        }
         val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
         dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(payload))
     }
@@ -52,13 +89,16 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
     @SuppressWarnings("unused")
     fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
         if (event.isError) {
+            continuation?.resume(false)
             AppLog.e(
                     API,
                     ReaderSiteNotificationsUseCase::class.java.simpleName + ".onSubscriptionUpdated: " +
                             event.error.type + " - " + event.error.message
             )
         } else {
+            continuation?.resume(true)
             dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
+        continuation = null
     }
 }
