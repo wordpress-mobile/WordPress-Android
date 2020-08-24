@@ -6,7 +6,7 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper

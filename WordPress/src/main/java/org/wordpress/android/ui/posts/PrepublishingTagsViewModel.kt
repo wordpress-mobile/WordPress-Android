@@ -23,6 +23,7 @@ class PrepublishingTagsViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
+    private var closeKeyboard = true
     private lateinit var editPostRepository: EditPostRepository
     private var updateTagsJob: Job? = null
 
@@ -35,8 +36,9 @@ class PrepublishingTagsViewModel @Inject constructor(
     private val _toolbarTitleUiState = MutableLiveData<UiString>()
     val toolbarTitleUiState: LiveData<UiString> = _toolbarTitleUiState
 
-    fun start(editPostRepository: EditPostRepository) {
+    fun start(editPostRepository: EditPostRepository, closeKeyboard: Boolean = false) {
         this.editPostRepository = editPostRepository
+        this.closeKeyboard = closeKeyboard
 
         if (isStarted) return
         isStarted = true
@@ -57,7 +59,9 @@ class PrepublishingTagsViewModel @Inject constructor(
     }
 
     fun onBackButtonClicked() {
-        _dismissKeyboard.postValue(Event(Unit))
+        if (closeKeyboard) {
+            _dismissKeyboard.postValue(Event(Unit))
+        }
         _navigateToHomeScreen.postValue(Event(Unit))
     }
 

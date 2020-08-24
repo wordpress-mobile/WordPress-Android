@@ -124,6 +124,16 @@
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?attr/colorOnPrimarySurface" />
 
+                <!-- This is just a super secret crash button, so it shouldn't interfere with
+                any real element -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/about_secret_crash"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:alpha="0"
+                    android:gravity="center" />
             </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

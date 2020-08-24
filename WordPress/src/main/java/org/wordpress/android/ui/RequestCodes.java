@@ -34,6 +34,7 @@ public class RequestCodes {
     public static final int TAKE_PHOTO = 2100;
     public static final int VIDEO_LIBRARY = 2200;
     public static final int MEDIA_LIBRARY = 2210;
+    public static final int FILE_LIBRARY = 2220;
     public static final int TAKE_VIDEO = 2300;
     public static final int CROP_PHOTO = 2400;
     public static final int PICTURE_LIBRARY_OR_CAPTURE = 2500;
@@ -59,4 +60,7 @@ public class RequestCodes {
 
     // Other
     public static final int SELECTED_USER_MENTION = 7000;
+
+    // Story creator
+    public static final int CREATE_STORY = 8000;
 }

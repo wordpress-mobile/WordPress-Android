@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderCardType;
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -232,6 +234,9 @@ public class ReaderPostTable {
                 numDeleted += ReaderDatabase.getWritableDb()
                                             .delete("tbl_posts", "tag_name=? AND tag_type=? AND is_bookmarked=0", args);
             }
+        }
+        if (numDeleted > 0) {
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         }
         return numDeleted;
     }
@@ -507,6 +512,7 @@ public class ReaderPostTable {
                 values,
                 "blog_id=? AND post_id=?",
                 args);
+        EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
     }
 
 
@@ -526,10 +532,15 @@ public class ReaderPostTable {
         }
 
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        return ReaderDatabase.getWritableDb().delete(
+        int rowsDeleted = ReaderDatabase.getWritableDb().delete(
                 "tbl_posts",
                 "tag_name=? AND tag_type=?",
                 args);
+
+        if (rowsDeleted > 0) {
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+        }
+        return rowsDeleted;
     }
 
     public static int removeTagsFromPost(long blogId, long postId, final ReaderTagType tagType) {
@@ -538,20 +549,30 @@ public class ReaderPostTable {
         }
 
         String[] args = {Integer.toString(tagType.toInt()), Long.toString(blogId), Long.toString(postId)};
-        return ReaderDatabase.getWritableDb().delete(
+        int rowsDeleted = ReaderDatabase.getWritableDb().delete(
                 "tbl_posts",
                 "tag_type=? AND blog_id=? AND post_id=?",
                 args);
+
+        if (rowsDeleted > 0) {
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+        }
+        return rowsDeleted;
     }
 
     public static int deletePostsInBlog(long blogId) {
         String[] args = {Long.toString(blogId)};
-        return ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+        int rowsDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+        if (rowsDeleted > 0) {
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+        }
+        return rowsDeleted;
     }
 
     public static void deletePost(long blogId, long postId) {
         String[] args = new String[]{Long.toString(blogId), Long.toString(postId)};
         ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
+        EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
     }
 
     /*
@@ -568,6 +589,7 @@ public class ReaderPostTable {
             if (count > 0) {
                 AppLog.d(AppLog.T.READER, String.format(Locale.ENGLISH,
                         "reader post table > marked %d posts unfollowed", count));
+                EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
             }
         } finally {
             statement.close();
@@ -616,6 +638,7 @@ public class ReaderPostTable {
         String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String sql = "UPDATE tbl_posts SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
+        EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
     }
 
     /*
@@ -656,6 +679,7 @@ public class ReaderPostTable {
         String sql =
                 "UPDATE tbl_posts SET has_gap_marker=1 WHERE blog_id=? AND post_id=? AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
+        EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
     }
 
     public static String getGapMarkerDateForTag(ReaderTag tag) {
@@ -709,6 +733,7 @@ public class ReaderPostTable {
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", where, args);
         if (numDeleted > 0) {
             AppLog.d(AppLog.T.READER, "removed " + numDeleted + " posts older than gap marker");
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         }
     }
 
@@ -751,6 +776,7 @@ public class ReaderPostTable {
             }
 
             db.setTransactionSuccessful();
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         } finally {
             db.endTransaction();
         }
@@ -860,6 +886,7 @@ public class ReaderPostTable {
             }
 
             db.setTransactionSuccessful();
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         } finally {
             db.endTransaction();
             SqlUtils.closeStatement(stmtPosts);

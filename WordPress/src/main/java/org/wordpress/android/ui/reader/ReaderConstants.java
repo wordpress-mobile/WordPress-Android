@@ -71,12 +71,22 @@ public class ReaderConstants {
     static final String KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS = "already_tracked_local_related_posts";
 
     // JSON key names
-    // tag endpoints
     public static final String JSON_TAG_TAGS_ARRAY = "tags";
     public static final String JSON_TAG_TITLE = "title";
     public static final String JSON_TAG_DISPLAY_NAME = "tag_display_name";
     public static final String JSON_TAG_SLUG = "slug";
     public static final String JSON_TAG_URL = "URL";
+    public static final String JSON_CARDS = "cards";
+    public static final String JSON_CARD_TYPE = "type";
+    public static final String JSON_CARD_INTERESTS_YOU_MAY_LIKE = "interests_you_may_like";
+    public static final String JSON_CARD_POST = "post";
+    public static final String JSON_CARD_DATA = "data";
+    public static final String JSON_NEXT_PAGE_HANDLE = "next_page_handle";
+
+    // JSON Post key names
+    public static final String POST_ID = "ID";
+    public static final String POST_SITE_ID = "site_ID";
+    public static final String POST_PSEUDO_ID = "pseudo_ID";
 
     public static final String KEY_FOLLOWING = "following";
     public static final String KEY_DISCOVER = "discover";

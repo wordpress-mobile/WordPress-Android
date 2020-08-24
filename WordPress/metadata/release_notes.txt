@@ -1,3 +1,4 @@
-<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.
+* Block Editor: Username @mentions now auto-complete in the Block Editor on WordPress.com and Jetpack sites. Type the “@” character to see a username popup. Edit media in the Cover block. A Heading block bug fix removes an unwanted white shadow on headings with a link and string formatting in dark mode.
+* Search for self-hosted sites on the post list.
+* Upload audio and document files to the media library.
 
-<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color. 

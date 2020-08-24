@@ -59,13 +59,18 @@ public class PostUtils {
     private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s";
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
     private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
+    public static final String WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER = "placeholderLocalId";
+    public static final String WP_STORIES_GUTENBERG_BLOCK_START = "<!-- wp:jetpack/story";
 
-    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostImmutableModel post,
-                                                                       Map<String, Object> properties) {
+    public static Map<String, Object> addPostTypeAndPostFormatToAnalyticsProperties(PostImmutableModel post,
+                                                                                    Map<String, Object> properties) {
         if (properties == null) {
             properties = new HashMap<>();
         }
         properties.put("post_type", post.isPage() ? "page" : "post");
+        if (!StringUtils.isEmpty(post.getPostFormat())) {
+            properties.put("post_format", post.getPostFormat());
+        }
         return properties;
     }
 
@@ -145,7 +150,7 @@ public class PostUtils {
     public static void trackSavePostAnalytics(PostImmutableModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
         Map<String, Object> properties = new HashMap<>();
-        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
+        PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
@@ -166,8 +171,10 @@ public class PostUtils {
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source",
-                            shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site)
-                                    ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
+                            contentContainsWPStoryGutenbergBlocks(post.getContent())
+                                    ? SiteUtils.WP_STORIES_CREATOR_NAME
+                                    : (shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site)
+                                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                             PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
@@ -187,7 +194,7 @@ public class PostUtils {
 
     public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
-        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
+        PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }
@@ -462,6 +469,13 @@ public class PostUtils {
         return matcher.find();
     }
 
+    public static String replaceMediaLocalIdWithMediaRemoteIdInStoryPost(@NonNull String postContent,
+                                                                String localMediaId, String remoteMediaId) {
+        // replace the contents
+        postContent = postContent.replace(WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER + localMediaId, remoteMediaId);
+        return postContent;
+    }
+
     public static boolean isPostInConflictWithRemote(PostImmutableModel post) {
         // at this point we know there's a potential version conflict (the post has been modified
         // both locally and on the remote)
@@ -576,5 +590,9 @@ public class PostUtils {
         return flag != null && post != null
                && post.getLocalSiteId() == flag.localSiteId
                && post.getId() == flag.postId;
+    }
+
+    public static boolean contentContainsWPStoryGutenbergBlocks(String postContent) {
+        return (postContent != null && postContent.contains(WP_STORIES_GUTENBERG_BLOCK_START));
     }
 }

@@ -134,6 +134,10 @@ class PostActionHandler(
         triggerPostListAction(PostListAction.NewPost(site))
     }
 
+    fun newStoryPost() {
+        triggerPostListAction(PostListAction.NewStoryPost(site))
+    }
+
     fun handleEditPostResult(data: Intent?) {
         val localPostId = data?.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
         if (localPostId == null || localPostId == 0) {

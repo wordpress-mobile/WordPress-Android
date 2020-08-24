@@ -290,7 +290,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, prerelease: true)
     end
   end
 
@@ -321,7 +321,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, prerelease: true)
     end
   end
 
@@ -427,7 +427,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
   update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
     {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
-    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []},
+    {library: "Stories Creator", strings_path: "./libs/stories-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   private_lane :send_strings_for_translation do | options |
@@ -514,9 +515,11 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Build
     Dir.chdir("..") do
+      sh("mkdir -p #{build_dir}")
       UI.message("Cleaning branch...")
       sh("echo \"Cleaning branch\" >> #{logfile_path}")
       sh("./gradlew clean >> #{logfile_path} 2>&1")
+      sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
       sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
@@ -624,12 +627,14 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   private_lane :create_gh_release do | options |
+    set_prerelease_flag = options["prerelease"].nil? ? false : options["prerelease"]
     version = options[:version]
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(version)
     create_release(repository:GHHELPER_REPO, 
       version: version["name"], 
       release_notes_file_path:release_notes_path,
+      prerelease: set_prerelease_flag,
       release_assets:"#{apk_file_path},#{aab_file_path}"
     )
   end

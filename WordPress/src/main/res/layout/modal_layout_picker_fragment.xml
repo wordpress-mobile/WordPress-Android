@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_marginBottom="@dimen/mlp_layouts_handle_margin_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include
+        layout="@layout/modal_layout_picker_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:layout_marginBottom="@dimen/mlp_bottom_shadow_height_overlap"
+        android:descendantFocusability="beforeDescendants"
+        android:scrollbars="vertical" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mlp_bottom_shadow_height"
+        android:background="@drawable/modal_layout_picker_bottom_shadow" />
+
+    <include
+        layout="@layout/modal_layout_picker_bottom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

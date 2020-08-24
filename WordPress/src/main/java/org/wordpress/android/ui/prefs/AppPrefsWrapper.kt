@@ -71,6 +71,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderCssUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
 
+    var readerCardsPageHandle: String?
+        get() = AppPrefs.getReaderCardsPageHandle()
+        set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -150,6 +154,9 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
+
+    fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
+    fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

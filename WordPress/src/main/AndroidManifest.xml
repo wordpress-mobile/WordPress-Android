@@ -46,6 +46,11 @@
         android:name="android.hardware.screen.landscape"
         android:required="false" />
 
+    <!-- Adding this meta-data will download the font when application is installed from
+    Google Play Store. This way the font will be downloaded and ready when your app starts
+    for the first time. -->
+    <meta-data android:name="fontProviderRequests" android:value="Noto Color Emoji Compat"/>
+
     <application
         android:name=".WordPress"
         android:allowBackup="true"
@@ -216,6 +221,15 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <!-- Story composer activity -->
+        <activity
+            android:name=".ui.stories.StoryComposerActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/WordPress.Stories.Immersive">
+        </activity>
+
         <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
         <activity-alias
             android:name=".ui.posts.PostsActivity"
@@ -638,6 +652,16 @@
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
             android:label="Reader Update JobService" />
+
+        <service
+            android:name=".ui.reader.services.discover.ReaderDiscoverService"
+            android:exported="false"
+            android:label="Reader Discover Service" />
+        <service
+            android:name=".ui.reader.services.discover.ReaderDiscoverJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:label="Reader Discover JobService" />
 
         <service
             android:name=".ui.reader.services.post.ReaderPostService"

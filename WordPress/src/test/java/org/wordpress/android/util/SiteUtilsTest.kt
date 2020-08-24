@@ -114,4 +114,24 @@ class SiteUtilsTest {
 
         assertThat(hasMinimalJetpackVersion).isFalse()
     }
+
+    @Test
+    fun `isAccessedViaWPComRest return false when origin is not wpcom rest`() {
+        val site = SiteModel()
+        site.origin = SiteModel.ORIGIN_XMLRPC
+
+        val isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(site)
+
+        assertThat(isAccessedViaWPComRest).isFalse()
+    }
+
+    @Test
+    fun `isAccessedViaWPComRest return true when origin is wpcom rest`() {
+        val site = SiteModel()
+        site.origin = SiteModel.ORIGIN_WPCOM_REST
+
+        val isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(site)
+
+        assertThat(isAccessedViaWPComRest).isTrue()
+    }
 }

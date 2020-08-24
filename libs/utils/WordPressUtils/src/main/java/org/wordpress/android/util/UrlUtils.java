@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.UnsupportedEncodingException;
@@ -255,6 +257,20 @@ public class UrlUtils {
 
         return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg")
                || cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+    }
+
+    public static @Nullable String getPageJumpOrNull(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+
+        if (url.contains("#")
+            && url.indexOf("#") < url.length() - 1
+            && url.split("#").length == 2) {
+            return url.substring(url.indexOf('#') + 1);
+        }
+
+        return null;
     }
 
     private static boolean isAtomicImageProxyUrl(String urlString) {

@@ -7,19 +7,22 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.WPActivityUtils
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
@@ -62,7 +65,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             when (uiState) {
-                is LoadingUiState -> {
+                is InitialLoadingUiState -> {
                 }
                 is ContentUiState -> {
                     updateInterests(uiState.interestsUiState)
@@ -77,6 +80,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 updateVisibility(title, uiState.titleVisible)
                 updateVisibility(subtitle, uiState.subtitleVisible)
                 updateVisibility(error_layout, uiState.errorLayoutVisible)
+            }
+        })
+
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                showSnackbar()
             }
         })
 
@@ -108,6 +117,17 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             setTextOrHide(error_subtitle, uiState.subtitleResId)
             updateVisibility(contact_support, uiState.showContactSupport)
         }
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(bottom_bar, getString(this.messageRes), Snackbar.LENGTH_LONG)
+        if (this.buttonTitleRes != null) {
+            snackbar.setAction(getString(this.buttonTitleRes)) {
+                this.buttonAction.invoke()
+            }
+        }
+        snackbar.setAnchorView(bottom_bar)
+        snackbar.show()
     }
 
     private fun createChipView(slug: String, index: Int): Chip {

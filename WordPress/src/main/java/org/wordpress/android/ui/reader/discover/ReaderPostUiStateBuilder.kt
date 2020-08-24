@@ -56,7 +56,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         isBookmarkList: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
-        onItemRendered: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
         onMoreButtonClicked: (Long, Long, View) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,

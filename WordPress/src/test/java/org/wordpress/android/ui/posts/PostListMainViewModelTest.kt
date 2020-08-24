@@ -25,6 +25,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 class PostListMainViewModelTest : BaseUnitTest() {
@@ -34,6 +35,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
+    @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
     private lateinit var viewModel: PostListMainViewModel
 
     @InternalCoroutinesApi
@@ -63,7 +65,8 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 postListEventListenerFactory = mock(),
                 uploadStarter = uploadStarter,
                 uploadActionUseCase = mock(),
-                savePostToDbUseCase = savePostToDbUseCase
+                savePostToDbUseCase = savePostToDbUseCase,
+                wpStoriesFeatureConfig = wpStoriesFeatureConfig
         )
     }
 
@@ -72,32 +75,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
-    }
-
-    @Test
-    fun `search is available for wpcom and jetpack sites`() {
-        site.origin = SiteModel.ORIGIN_WPCOM_REST
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
-
-        var isSearchAvailable = false
-        viewModel.isSearchAvailable.observeForever {
-            isSearchAvailable = it
-        }
-
-        assertThat(isSearchAvailable).isTrue()
-    }
-
-    @Test
-    fun `search is not available for xmlrpc sites`() {
-        site.origin = SiteModel.ORIGIN_XMLRPC
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
-
-        var isSearchAvailable = true
-        viewModel.isSearchAvailable.observeForever {
-            isSearchAvailable = it
-        }
-
-        assertThat(isSearchAvailable).isFalse()
     }
 
     @Test
@@ -214,5 +191,45 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         // assert
         verify(savePostToDbUseCase, times(1)).savePostToDb(any(), any())
+    }
+
+    @Test
+    fun `if wpStoriesFeatureConfig is true and onFabClicked then _onFabClicked is called`() {
+        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.fabClicked()
+
+        assertThat(viewModel.onFabClicked.value?.peekContent()).isNotNull
+    }
+
+    @Test
+    fun `if wpStoriesFeatureConfig is false and onFabClicked then _onFabClicked is not called`() {
+        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.fabClicked()
+
+        assertThat(viewModel.onFabClicked.value?.peekContent()).isNull()
+    }
+
+    @Test
+    fun `if wpStoriesFeatureConfig is true and onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
+        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.onFabLongPressed()
+
+        assertThat(viewModel.onFabLongPressedForCreateMenu.value?.peekContent()).isNotNull
+    }
+
+    @Test
+    fun `if wpStoriesFeatureConfig is false and onFabLongPressed then onFabLongPressedForPostList is called`() {
+        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+        viewModel.onFabLongPressed()
+
+        assertThat(viewModel.onFabLongPressedForPostList.value?.peekContent()).isNotNull
     }
 }

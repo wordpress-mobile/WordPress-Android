@@ -27,6 +27,7 @@ wp.zendesk.oauth_client_id=wordpress
 wp.reset_db_on_downgrade = false
 wp.sentry.dsn=https://00000000000000000000000000000000@sentry.io/00000000
 wp.tenor.api_key=wordpress
+wp.encrypted_logging_key=abcabcabcabcabcabcabcabcabcabcabcabcabcabcab
 
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key

@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -58,7 +59,8 @@ class QuickStartUtils {
          * in front of it if necessary
          *
          * @param context Context used to access resources
-         * @param messageId resources id of the message to display
+         * @param messageId resources id of the message to display. If string contains basic HTML tags inside
+         * <![CDATA[ ]]>, they will be converted to Spans.
          * @param iconId resource if of the icon that goes before the highlighted area
          */
         @JvmStatic
@@ -89,7 +91,9 @@ class QuickStartUtils {
             formattedMessage = formattedMessage.replaceFirst(spanTagEnd, "")
             formattedMessage = formattedMessage.replaceFirst("  ", " ")
 
-            val mutableSpannedMessage = SpannableStringBuilder(formattedMessage)
+            val mutableSpannedMessage = SpannableStringBuilder(
+                    HtmlCompat.fromHtml(formattedMessage, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            )
             // nothing to highlight
             if (startOfHighlight != -1 && endOfHighlight != -1) {
                 val highlightColor = ContextCompat.getColor(context, android.R.color.white)

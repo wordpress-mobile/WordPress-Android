@@ -24,25 +24,31 @@ class AddLocalMediaToPostUseCase @Inject constructor(
     private val uploadMediaUseCase: UploadMediaUseCase
 ) {
     /**
-     * Adds media items with existing localMediaId to the editor and initiates an upload. Does NOT optimize the
-     * items.
+     * Adds media items with existing localMediaId to the editor and optionally initiates an upload.
+     * Does NOT optimize the items.
      */
     suspend fun addLocalMediaToEditorAsync(
         localMediaIds: List<Int>,
-        editorMediaListener: EditorMediaListener
+        editorMediaListener: EditorMediaListener,
+        doUploadAfterAdding: Boolean = true
     ) {
-        // Add media to editor and initiate upload
-        addToEditorAndUpload(getMediaModelUseCase.loadMediaByLocalId(localMediaIds), editorMediaListener)
+        // Add media to editor and optionally initiate upload
+        addToEditorAndOptionallyUpload(
+                getMediaModelUseCase.loadMediaByLocalId(localMediaIds),
+                editorMediaListener,
+                doUploadAfterAdding
+        )
     }
 
     /**
-     * Copies files to app storage, optimizes them, adds them to the editor and initiates an upload.
+     * Copies files to app storage, optimizes them, adds them to the editor and optionally initiates an upload.
      */
     suspend fun addNewMediaToEditorAsync(
         uriList: List<Uri>,
         site: SiteModel,
         freshlyTaken: Boolean,
-        editorMediaListener: EditorMediaListener
+        editorMediaListener: EditorMediaListener,
+        doUploadAfterAdding: Boolean = true
     ): Boolean {
         // Copy files to apps storage to make sure they are permanently accessible.
         val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
@@ -61,21 +67,31 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                 optimizeMediaResult.optimizedMediaUris
         )
 
-        // Add media to editor and initiate upload
-        addToEditorAndUpload(createMediaModelsResult.mediaModels, editorMediaListener)
+        // Add media to editor and optionally initiate upload
+        addToEditorAndOptionallyUpload(createMediaModelsResult.mediaModels, editorMediaListener, doUploadAfterAdding)
 
         return !optimizeMediaResult.loadingSomeMediaFailed &&
                 !createMediaModelsResult.loadingSomeMediaFailed &&
                 !copyFilesResult.copyingSomeMediaFailed
     }
 
-    private fun addToEditorAndUpload(
+    private fun addToEditorAndOptionallyUpload(
         mediaModels: List<MediaModel>,
-        editorMediaListener: EditorMediaListener
+        editorMediaListener: EditorMediaListener,
+        doUploadAfterAdding: Boolean
     ) {
-        updateMediaModel(mediaModels, editorMediaListener)
+        // 1. first, set the Post's data in the mediaModels and set them QUEUED if we want to upload
+        if (doUploadAfterAdding) {
+            updateMediaModel(mediaModels, editorMediaListener)
+        }
+
+        // 2. actually append media to the Editor
         appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, mediaModels)
-        uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaModels)
+
+        // 3. finally, upload
+        if (doUploadAfterAdding) {
+            uploadMediaUseCase.saveQueuedPostAndStartUpload(editorMediaListener, mediaModels)
+        }
     }
 
     private fun updateMediaModel(

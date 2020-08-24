@@ -41,13 +41,14 @@ public class PostEditorAnalyticsSession implements Serializable {
     private boolean mHWAccOff = false;
     private long mStartTime = System.currentTimeMillis();
 
-    enum Editor {
+    public enum Editor {
         GUTENBERG,
         CLASSIC,
-        HTML
+        HTML,
+        WP_STORIES_CREATOR
     }
 
-    enum Outcome {
+    public enum Outcome {
         CANCEL,
         DISCARD,    // not used in WPAndroid, but kept for parity with iOS
                     // see https://github.com/wordpress-mobile/gutenberg-mobile/issues/556#issuecomment-462678807
@@ -86,6 +87,11 @@ public class PostEditorAnalyticsSession implements Serializable {
         }
 
         mHWAccOff = AppPrefs.isPostWithHWAccelerationOff(site.getId(), post.getId());
+    }
+
+    public static PostEditorAnalyticsSession getNewPostEditorAnalyticsSession(
+            Editor editor, PostImmutableModel post, SiteModel site, boolean isNewPost) {
+        return new PostEditorAnalyticsSession(editor, post, site, isNewPost);
     }
 
     public void start(ArrayList<Object> unsupportedBlocksList) {

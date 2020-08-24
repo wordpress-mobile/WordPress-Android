@@ -8,11 +8,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 private const val headerViewType: Int = 1
@@ -53,6 +55,8 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
             is HeaderUiState -> headerViewType
             is HomeUiState -> homeItemViewType
             is ButtonUiState -> submitButtonViewType
+            is StoryTitleUiState ->
+                throw IllegalStateException("StoryTitleUiState is not supported by the PrepublishingHomeAdapter")
         }
     }
 

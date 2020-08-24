@@ -4,9 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -22,7 +24,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 138;
+    private static final int DB_VERSION = 140;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -94,6 +96,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 136 - added tbl_posts.is_bookmarked
      * 137 - added support for migration scripts
      * 138 - added tbl_posts.is_private_atomic
+     * 139 - introduced new DiscoverCardsTable
+     * 140 - drop tbl_tags_recommended
      */
 
     /*
@@ -186,6 +190,12 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 137:
                 db.execSQL("ALTER TABLE tbl_posts ADD is_private_atomic BOOLEAN;");
                 currentVersion++;
+            case 138:
+                ReaderDiscoverCardsTable.INSTANCE.createTable(db);
+                currentVersion++;
+            case 139:
+                db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended;");
+                currentVersion++;
         }
         if (currentVersion != newVersion) {
             throw new RuntimeException(
@@ -211,6 +221,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
         ReaderSearchTable.createTables(db);
+        ReaderDiscoverCardsTable.INSTANCE.createTable(db);
     }
 
     private void dropAllTables(SQLiteDatabase db) {
@@ -222,6 +233,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
         ReaderSearchTable.dropTables(db);
+        ReaderDiscoverCardsTable.INSTANCE.dropTables(db);
     }
 
     /*
@@ -270,6 +282,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 }
             }
             db.setTransactionSuccessful();
+            if (numPostsDeleted > 0) {
+                EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+            }
         } finally {
             db.endTransaction();
         }

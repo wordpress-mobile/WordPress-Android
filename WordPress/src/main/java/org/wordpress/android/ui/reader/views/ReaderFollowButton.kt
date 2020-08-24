@@ -68,7 +68,7 @@ class ReaderFollowButton @JvmOverloads constructor(
         setIsFollowed(isFollowed, true)
     }
 
-    fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {
+    private fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {
         if (isFollowed == this.isFollowed && isSelected == isFollowed) {
             return
         }

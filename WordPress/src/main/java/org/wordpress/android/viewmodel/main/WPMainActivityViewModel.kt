@@ -11,6 +11,7 @@ import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
@@ -18,6 +19,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -29,6 +32,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -36,9 +40,23 @@ class WPMainActivityViewModel @Inject constructor(
     private val _fabUiState = MutableLiveData<MainFabUiState>()
     val fabUiState: LiveData<MainFabUiState> = _fabUiState
 
-    private val _mainActions = MutableLiveData<List<MainActionListItem>>()
-    val mainActions: LiveData<List<MainActionListItem>> = _mainActions
+    private val _showQuickStarInBottomSheet = MutableLiveData<Boolean>()
 
+    private val _mainActions = MutableLiveData<List<MainActionListItem>>()
+    val mainActions: LiveData<List<MainActionListItem>> = merge(
+            _mainActions,
+            _showQuickStarInBottomSheet
+    ) { mainActions, showQuickStart ->
+        if (showQuickStart != null && mainActions != null) {
+            mainActions.map {
+                if (it is CreateAction && it.actionType == CREATE_NEW_POST) it.copy(
+                        showQuickStartFocusPoint = showQuickStart
+                ) else it
+            }
+        } else {
+            mainActions
+        }
+    }
     private val _createAction = SingleLiveEvent<ActionType>()
     val createAction: LiveData<ActionType> = _createAction
 
@@ -51,44 +69,51 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
+    private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
+    val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
+
     fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
         isStarted = true
 
         setMainFabUiState(isFabVisible, hasFullAccessToContent)
 
-        loadMainActions()
+        loadMainActions(hasFullAccessToContent)
 
         updateFeatureAnnouncements()
     }
 
-    private fun loadMainActions() {
+    private fun loadMainActions(hasFullAccessToContent: Boolean) {
         val actionsList = ArrayList<MainActionListItem>()
 
-        actionsList.add(
-                CreateAction(
-                        actionType = NO_ACTION,
-                        iconRes = 0,
-                        labelRes = R.string.my_site_bottom_sheet_title,
-                        onClickAction = null
-                )
-        )
-        actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
-        )
-        actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_PAGE,
-                        iconRes = R.drawable.ic_pages_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_page,
-                        onClickAction = ::onCreateActionClicked
-                )
-        )
+        actionsList.add(CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+        ))
+        actionsList.add(CreateAction(
+                actionType = CREATE_NEW_POST,
+                iconRes = R.drawable.ic_posts_white_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_post,
+                onClickAction = ::onCreateActionClicked
+        ))
+        if (hasFullAccessToContent) {
+            actionsList.add(CreateAction(
+                    actionType = CREATE_NEW_PAGE,
+                    iconRes = R.drawable.ic_pages_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_page,
+                    onClickAction = ::onCreateActionClicked
+            ))
+        }
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            actionsList.add(CreateAction(
+                    actionType = CREATE_NEW_STORY,
+                    iconRes = R.drawable.ic_story_icon_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_story,
+                    onClickAction = ::onCreateActionClicked
+            ))
+        }
 
         _mainActions.postValue(actionsList)
     }
@@ -96,6 +121,15 @@ class WPMainActivityViewModel @Inject constructor(
     private fun onCreateActionClicked(actionType: ActionType) {
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
+
+        _showQuickStarInBottomSheet.value?.let { showQuickStart ->
+            if (showQuickStart) {
+                if (actionType == CREATE_NEW_POST) {
+                    _completeBottomSheetQuickStartTask.call()
+                }
+                _showQuickStarInBottomSheet.postValue(false)
+            }
+        }
     }
 
     private fun disableTooltip(hasFullAccessToContent: Boolean) {
@@ -111,18 +145,32 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(hasFullAccessToContent: Boolean) {
+    fun onFabClicked(hasFullAccessToContent: Boolean, shouldShowQuickStartFocusPoint: Boolean = false) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, hasFullAccessToContent)
 
-        // Currently this bottom sheet has only 2 options.
-        // We should evaluate to re-introduce the bottom sheet also for users without full access to content
-        // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
-        // See p5T066-1cA-p2/#comment-4463
-        if (hasFullAccessToContent) {
+        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
+
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            loadMainActions(hasFullAccessToContent)
             _isBottomSheetShowing.value = Event(true)
         } else {
-            _createAction.postValue(CREATE_NEW_POST)
+            // NOTE: this whole piece of code and comment below to be removed when we remove the feature flag.
+            // Also note: This comment below and code as is is in `develop` at the time of writing the feature
+            // flag, so bringing it all back in. See https://github.com/wordpress-mobile/WordPress-Android/pull/11930
+            // ----------------------
+            // Currently this bottom sheet has only 2 options.
+            // We should evaluate to re-introduce the bottom sheet also for users without full access to content
+            // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
+            // See p5T066-1cA-p2/#comment-4463
+            if (hasFullAccessToContent) {
+                // reload main actions given the first time this is initialized, the SiteModel may not contain the
+                // latest info
+                loadMainActions(hasFullAccessToContent)
+                _isBottomSheetShowing.value = Event(true)
+            } else {
+                _createAction.postValue(CREATE_NEW_POST)
+            }
         }
     }
 
@@ -179,6 +227,21 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getCreateContentMessageId(hasFullAccessToContent: Boolean): Int {
+        return if (wpStoriesFeatureConfig.isEnabled())
+            return getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent)
+        else
+            return getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent)
+    }
+
+    // create_post_page_fab_tooltip_stories_feature_flag_on
+    private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
+        return if (hasFullAccessToContent)
+            R.string.create_post_page_fab_tooltip_stories_feature_flag_on
+        else
+            R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+    }
+
+    private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent)
             R.string.create_post_page_fab_tooltip
         else

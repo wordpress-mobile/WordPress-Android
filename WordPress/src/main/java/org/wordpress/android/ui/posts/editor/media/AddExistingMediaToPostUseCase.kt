@@ -3,8 +3,12 @@ package org.wordpress.android.ui.posts.editor.media
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.editor.EditorTracker
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource
 import javax.inject.Inject
+
+enum class AddExistingMediaSource {
+    WP_MEDIA_LIBRARY,
+    STOCK_PHOTO_LIBRARY
+}
 
 /**
  * Loads existing media items (they must have a valid url) from the local db and adds them to the editor.

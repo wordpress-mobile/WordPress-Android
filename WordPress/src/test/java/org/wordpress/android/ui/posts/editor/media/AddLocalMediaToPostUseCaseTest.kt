@@ -37,6 +37,58 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `addNewMediaToEditorAsync calls addToEditorAndUpload when doUploadAfterAdding is true`() = test {
+        // Arrange
+        val doUploadAfterAdding = true
+
+        val localUris = listOf<Uri>(mock(), mock())
+
+        val appendMediaToEditorUseCase: AppendMediaToEditorUseCase = mock()
+        val uploadMediaUseCase: UploadMediaUseCase = mock()
+        val updateMediaModelUseCase: UpdateMediaModelUseCase = mock()
+
+        // Act
+        val useCase = createAddLocalMediaToPostUseCase(
+                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+                uploadMediaUseCase = uploadMediaUseCase,
+                updateMediaModelUseCase = updateMediaModelUseCase
+        )
+
+        useCase.addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock(), doUploadAfterAdding)
+
+        // Assert
+        verify(appendMediaToEditorUseCase).addMediaToEditor(any(), any())
+        verify(uploadMediaUseCase).saveQueuedPostAndStartUpload(any(), any())
+        verify(updateMediaModelUseCase).updateMediaModel(any(), anyOrNull(), any())
+    }
+
+    @Test
+    fun `addNewMediaToEditorAsync calls addMediaToEditor when doUploadAfterAdding is false`() = test {
+        // Arrange
+        val doUploadAfterAdding = false
+
+        val localUris = listOf<Uri>(mock(), mock())
+
+        val appendMediaToEditorUseCase: AppendMediaToEditorUseCase = mock()
+        val uploadMediaUseCase: UploadMediaUseCase = mock()
+        val updateMediaModelUseCase: UpdateMediaModelUseCase = mock()
+
+        // Act
+        val useCase = createAddLocalMediaToPostUseCase(
+                appendMediaToEditorUseCase = appendMediaToEditorUseCase,
+                uploadMediaUseCase = uploadMediaUseCase,
+                updateMediaModelUseCase = updateMediaModelUseCase
+        )
+
+        useCase.addNewMediaToEditorAsync(localUris, SITE_MODEL, FRESHLY_TAKEN, mock(), doUploadAfterAdding)
+
+        // Assert
+        verify(appendMediaToEditorUseCase).addMediaToEditor(any(), any())
+        verify(uploadMediaUseCase, times(0)).saveQueuedPostAndStartUpload(any(), any())
+        verify(updateMediaModelUseCase, times(0)).updateMediaModel(any(), anyOrNull(), any())
+    }
+
+    @Test
     fun `addNewMediaToEditorAsync returns false when optimization for a media fails`() = test {
         // Arrange
         val localUris = listOf<Uri>(mock(), mock())
