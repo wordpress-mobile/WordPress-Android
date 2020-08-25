@@ -25,7 +25,6 @@ class BlockBlogUseCaseTest {
     @Before
     fun setUp() {
         mBlockBlogUseCase = BlockBlogUseCase(networkUtilsWrapper, analyticsUtilsWrapper, readerBlogActionsWrapper)
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
