@@ -8,7 +8,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded
@@ -46,7 +46,7 @@ class PostLikeUseCase @Inject constructor(
         }
 
         if (continuations[request] != null) {
-            return Failure(PostLikeUnChanged(
+            return SuccessWithData(PostLikeUnChanged(
                     post.postId,
                     post.blogId,
                     isAskingToLike,
@@ -72,9 +72,9 @@ class PostLikeUseCase @Inject constructor(
             )
 
             val comm: ReaderRepositoryCommunication = when (event) {
-                is PostLikeUnChanged -> Failure(event)
+                is PostLikeUnChanged -> SuccessWithData(event)
                 is PostLikeSuccess -> SuccessWithData(event)
-                is PostLikeFailure -> Failure(event)
+                is PostLikeFailure -> RemoteRequestFailure
             }
 
             continuations[request]?.resume(comm)

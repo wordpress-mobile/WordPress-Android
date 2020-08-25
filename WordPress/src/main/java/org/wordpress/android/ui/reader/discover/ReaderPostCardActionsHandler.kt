@@ -26,7 +26,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_S
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
@@ -113,7 +112,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun handleLikeClicked(post: ReaderPost) {
         uiScope.launch {
             when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
-                is Started, is Success, is SuccessWithData<*>, is Failure -> {}
+                is Started, is Success, is SuccessWithData<*> -> {}
                 is NetworkUnavailable -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder(R.string.no_network_message)))
