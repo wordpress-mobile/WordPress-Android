@@ -77,7 +77,7 @@ class ReaderDiscoverViewModelTest {
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-                        anyOrNull()
+                        anyOrNull(), anyOrNull()
                 )
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
