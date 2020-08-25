@@ -1,12 +1,10 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type.PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type.VIDEO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.Type.PHOTO
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.Type.VIDEO
 import org.wordpress.android.util.UriWrapper
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MedaPickerUiItem}")
-sealed class PhotoPickerUiItem(
+sealed class MediaPickerUiItem(
     val type: Type,
     open val id: Long,
     open val uri: UriWrapper? = null,
@@ -24,7 +22,7 @@ sealed class PhotoPickerUiItem(
         override val showOrderCounter: Boolean = false,
         override val toggleAction: ToggleAction,
         override val clickAction: ClickAction
-    ) : PhotoPickerUiItem(PHOTO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
+    ) : MediaPickerUiItem(PHOTO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
 
     data class VideoItem(
         override val id: Long,
@@ -34,7 +32,7 @@ sealed class PhotoPickerUiItem(
         override val showOrderCounter: Boolean = false,
         override val toggleAction: ToggleAction,
         override val clickAction: ClickAction
-    ) : PhotoPickerUiItem(VIDEO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
+    ) : MediaPickerUiItem(VIDEO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
 
     data class ToggleAction(
         val id: Long,
