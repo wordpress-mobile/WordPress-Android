@@ -313,7 +313,7 @@ jobs:
           # [Trial Limitation] Free plan I use to experiment with Firebase Test Lab has a quota of 5 tests/day. {2 devices} x {2 locales} is already 4.
           # locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
           locales: ar en_US
-          project: api-project-108380595987
+          project: wpandroid-74b6c
           timeout: 30m
           num-flaky-test-attempts: 2
           results-history-name: CircleCI WordPress Screenshots
