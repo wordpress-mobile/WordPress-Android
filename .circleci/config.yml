@@ -323,7 +323,7 @@ jobs:
           devices: |
             model=blueline,version=28,orientation=portrait
             model=gts3lltevzw,version=28,orientation=default
-          locales: ar de-DE en-US es-ES fr-FR iw-IL in it-IT ja-JP ko-KR nl-NL pl-PL pt-BR ru-RU sr sv-SE th tr-TR vi zh-CN zh-TW
+          locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
           project: api-project-108380595987
           timeout: 10m
           num-flaky-test-attempts: 2
@@ -337,7 +337,8 @@ jobs:
             TEST_BUCKET=$(cat log.txt | grep -o "gs://test\-lab\-.*/" | head -1)
             DEVICE_DIRS=$(gsutil ls "$TEST_BUCKET" | grep "/$")
             for DIR in ${DEVICE_DIRS}; do
-              SUBDIR_DEST=$(echo $(basename $DIR) | sed "s/blueline-28-\([a-zA-Z]*\)-.*/\1\/images\/phoneScreenshots/"  | sed "s/gts3lltevzw-28-\([a-zA-Z]*\)-.*/\1\/images\/tenInchScreenshots/")
+              # Replace device codenames with phone/tenInch and adapt to fastlane-expected folder hierarchy. Also replace `_` in locale name with `-`
+              SUBDIR_DEST=$(echo $(basename $DIR) | sed "s/blueline-28-\([a-zA-Z]*\)-.*/\1\/images\/phoneScreenshots/" | sed "s/gts3lltevzw-28-\([a-zA-Z]*\)-.*/\1\/images\/tenInchScreenshots/" | sed "s/_/-/")
               mkdir -p fastlane/screenshots/raw/$SUBDIR_DEST
               gsutil -m cp -r -U "$DIR/artifacts/*.jpg" "fastlane/screenshots/raw/$SUBDIR_DEST"
             done
