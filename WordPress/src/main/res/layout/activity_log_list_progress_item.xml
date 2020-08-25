@@ -45,8 +45,7 @@
                 android:gravity="start"
                 android:singleLine="true"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="?attr/wpColorText"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
                 tools:text="Rewinding to June 1 2018 12:22PM" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -56,7 +55,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
                 tools:text="Rewind in progress" />
 
         </LinearLayout>

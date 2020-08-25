@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/wp/v2/sites/106707880/themes"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": [
+    ],
+    "headers": {
+      "Content-Type": "application/json",
+      "Connection": "keep-alive",
+      "Cache-Control": "no-cache, must-revalidate, max-age=0"
+    }
+  }
+}

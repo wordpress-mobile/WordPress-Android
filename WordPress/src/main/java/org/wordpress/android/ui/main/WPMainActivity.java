@@ -484,18 +484,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getMySiteFragment().requestNextStepOfActiveQuickStartTask(false);
                 }
             }
-            mViewModel.onFabClicked(hasFullAccessToContent(), shouldShowPublishPostQuickStartTask);
+            mViewModel.onFabClicked(mSelectedSite, shouldShowPublishPostQuickStartTask);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed(hasFullAccessToContent());
+            mViewModel.onFabLongPressed(mSelectedSite);
 
-            int messageId = hasFullAccessToContent()
-                    ? R.string.create_post_page_fab_tooltip
-                    : R.string.create_post_page_fab_tooltip_contributors;
+            int messageId = mViewModel.getCreateContentMessageId(mSelectedSite);
 
             Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
@@ -504,7 +502,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped(hasFullAccessToContent());
+            mViewModel.onTooltipTapped(mSelectedSite);
         });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
@@ -558,10 +556,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
+        // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
+        // initialized with the most restrictive rights case. This is OK and will be frequently checked
+        // to normalize the UI state whenever mSelectedSite changes.
+        // It also means that the ViewModel must accept a nullable SiteModel.
         mViewModel.start(
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
+                mSelectedSite);
 
         mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
@@ -810,7 +812,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(hasFullAccessToContent());
+        mViewModel.onResume(mSelectedSite);
 
         mFirstResume = false;
     }
@@ -876,8 +878,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onPageChanged(
                 mSiteStore.hasSite() && pageType == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
+                mSelectedSite);
     }
 
     // user tapped the new post button in the bottom navbar
@@ -1526,14 +1527,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mQuickStartSnackbar.dismiss();
             mQuickStartSnackbar = null;
         }
-    }
-
-    // The first time this is called in onCreate -> initViewModel we still haven't initialized mSelectedSite,
-    // which hasFullAccessToContent depends on, and as such the state will be initialized with the most restrictive
-    // rights case (that is, will assume hasFullAccessToContent is false). This is OK and will be frequently checked
-    // to normalize the UI state whenever mSelectedSite changes.
-    private boolean hasFullAccessToContent() {
-        return SiteUtils.hasFullAccessToContent(getSelectedSite());
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

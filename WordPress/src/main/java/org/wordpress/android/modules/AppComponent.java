@@ -150,6 +150,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobServic
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
+import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
@@ -396,6 +397,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderSiteHeaderView object);
 
     void inject(ReaderTagHeaderView object);
+
+    void inject(ReaderExpandableTagsView object);
 
     void inject(ReaderLikingUsersView object);
 

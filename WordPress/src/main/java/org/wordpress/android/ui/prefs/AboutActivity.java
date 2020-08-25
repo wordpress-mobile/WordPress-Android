@@ -18,6 +18,8 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.Calendar;
 
 public class AboutActivity extends LocaleAwareActivity implements OnClickListener {
+    private int mCurrentTapCountForSecretCrash = 0;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -49,6 +51,15 @@ public class AboutActivity extends LocaleAwareActivity implements OnClickListene
 
         View about = findViewById(R.id.about_url);
         about.setOnClickListener(this);
+
+        View secretCrash = findViewById(R.id.about_secret_crash);
+        secretCrash.setOnClickListener(view -> {
+            mCurrentTapCountForSecretCrash++;
+            if (mCurrentTapCountForSecretCrash >= 10) {
+                throw new IllegalStateException("This is a secret crash triggered from an invisible button in "
+                                                + "the about page in case it's necessary to test a crash");
+            }
+        });
     }
 
     @Override

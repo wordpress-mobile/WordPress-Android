@@ -9,7 +9,15 @@
             "date": "{{now format='yyyy-MM-dd'}}",
             "days": {
                 "{{now format='yyyy-MM-dd'}}": {
-                    "authors": []
+                    "authors": [
+                        {
+                            "name": "e2eflowtestingmobile",
+                            "avatar": "https://1.gravatar.com/avatar/7a4015c11be6a342f65e0e169092d402?s=96&d=identicon",
+                            "views": 145,
+                            "posts": [],
+                            "follow_data": {}
+                        }
+                    ]
                 }
             },
             "period": "day"

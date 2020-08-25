@@ -6,8 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTagType.FOLLOWED
+import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -15,10 +16,12 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -33,6 +36,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -77,22 +81,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    // TODO malinjir we currently ignore all other types but ReaderPostCards
-                    posts.cards.filterIsInstance<ReaderPostCard>().map {
-                        postUiStateBuilder.mapPostToUiState(
-                                post = it.post,
-                                photonWidth = photonWidth,
-                                photonHeight = photonHeight,
-                                isBookmarkList = false,
-                                onButtonClicked = this::onButtonClicked,
-                                onItemClicked = this::onPostItemClicked,
-                                onItemRendered = this::onItemRendered,
-                                onDiscoverSectionClicked = this::onDiscoverClicked,
-                                onMoreButtonClicked = this::onMoreButtonClicked,
-                                onVideoOverlayClicked = this::onVideoOverlayClicked,
-                                onPostHeaderViewClicked = this::onPostHeaderClicked,
-                                postListType = TAG_FOLLOWED
-                        )
+                    posts.cards.map {
+                        when (it) {
+                            is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                                    post = it.post,
+                                    isDiscover = true,
+                                    photonWidth = photonWidth,
+                                    photonHeight = photonHeight,
+                                    isBookmarkList = false,
+                                    onButtonClicked = this::onButtonClicked,
+                                    onItemClicked = this::onPostItemClicked,
+                                    onItemRendered = this::onItemRendered,
+                                    onDiscoverSectionClicked = this::onDiscoverClicked,
+                                    onMoreButtonClicked = this::onMoreButtonClicked,
+                                    onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                    onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                    onTagItemClicked = this::onTagItemClicked,
+                                    postListType = TAG_FOLLOWED
+                            )
+                            is InterestsYouMayLikeCard -> {
+                                postUiStateBuilder.mapTagListToReaderInterestUiState(
+                                        it.interests,
+                                        this::onReaderTagClicked
+                                )
+                            }
+                        }
                     },
                     swipeToRefreshIsRefreshing = false
             )
@@ -121,28 +134,58 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
+    private fun onReaderTagClicked(tag: String) {
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
+        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+    }
+
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
-            // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
-            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false)
+            }
         }
     }
 
     private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
-        // TODO malinjir implement action
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.handleVideoOverlayClicked(it.featuredVideo)
+            }
+        }
     }
 
     private fun onPostHeaderClicked(postId: Long, blogId: Long) {
-        // TODO malinjir implement action
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.handleHeaderClicked(it.blogId, it.feedId)
+            }
+        }
+    }
+
+    private fun onTagItemClicked(tagSlug: String) {
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
+        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
     private fun onPostItemClicked(postId: Long, blogId: Long) {
-        AppLog.d(T.READER, "OnItemClicked")
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.handleOnItemClicked(it)
+            }
+        }
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {
         initiateLoadMoreIfNecessary(itemUiState)
+    }
+
+    private fun findPost(postId: Long, blogId: Long): ReaderPost? {
+        return readerDiscoverDataProvider.discoverFeed.value?.cards?.let {
+            it.filterIsInstance<ReaderPostCard>()
+                    .find { card -> card.post.postId == postId && card.post.blogId == blogId }
+                    ?.post
+        }
     }
 
     private fun initiateLoadMoreIfNecessary(item: ReaderCardUiState) {

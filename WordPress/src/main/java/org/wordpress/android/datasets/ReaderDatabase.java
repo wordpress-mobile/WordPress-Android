@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 140;
+    private static final int DB_VERSION = 141;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -98,6 +98,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 138 - added tbl_posts.is_private_atomic
      * 139 - introduced new DiscoverCardsTable
      * 140 - drop tbl_tags_recommended
+     * 141 - added tbl_posts.tags
      */
 
     /*
@@ -195,6 +196,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 currentVersion++;
             case 139:
                 db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended;");
+                currentVersion++;
+            case 140:
+                db.execSQL("ALTER TABLE tbl_posts ADD tags TEXT;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
