@@ -372,6 +372,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements OnPre
                 .setAction(R.string.username_changer_action)
                 .setOnConfirmListener(this)
                 .setHideActivityBar(true)
+                .setIsLifOnScroll(false)
                 .setOnDismissListener(null)
                 .setContent(SettingsUsernameChangerFragment.class, bundle)
                 .build()
