@@ -6,10 +6,12 @@ import android.text.TextUtils;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.mobile.FileUtils;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergWebViewActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     public static final String ENCODING_UTF8 = "UTF-8";
@@ -111,5 +113,10 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
         }
 
         return "";
+    }
+
+    @Override
+    protected List<String> getExternalSources() {
+        return FileUtils.getAssetFileList(this, "unsupported-block-editor");
     }
 }
