@@ -523,9 +523,8 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (activity is ScrollableViewInitializedListener) {
-            (activity as ScrollableViewInitializedListener)
-                    .onScrollableViewInitialized(R.id.domain_registration_details_container)
-        }
+        (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(
+                R.id.domain_registration_details_container
+        )
     }
 }

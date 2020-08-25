@@ -140,8 +140,11 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             if (EditPostActivity.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(
-                        data, this@PagesFragment, viewModel.site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0), false
+                        data,
+                        this@PagesFragment,
+                        viewModel.site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0),
+                        false
                 )
 
                 // a restart will happen so, no need to continue here

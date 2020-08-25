@@ -151,6 +151,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
             appbar_main.post {
                 appbar_main.isLiftOnScroll = true
                 appbar_main.liftOnScrollTargetViewId = containerId
+                appbar_main.requestLayout()
             }
         }
     }
