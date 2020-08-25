@@ -12,7 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_O
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -31,9 +31,12 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NO
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -48,8 +51,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val followUseCase: ReaderPostFollowUseCase,
+    private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope
+    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -65,6 +69,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     init {
         dispatcher.register(followUseCase)
+        dispatcher.register(siteNotificationsUseCase)
 
         _navigationEvents.addSource(bookmarkUseCase.navigationEvents) { event ->
             _navigationEvents.value = event
@@ -90,7 +95,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
         when (type) {
             FOLLOW -> handleFollowClicked(post)
-            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.postId, post.blogId)
+            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
@@ -124,8 +129,24 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private fun handleSiteNotificationsClicked(postId: Long, blogId: Long) {
-        AppLog.d(AppLog.T.READER, "SiteNotifications not implemented")
+    private fun handleSiteNotificationsClicked(blogId: Long) {
+        defaultScope.launch {
+            val result = siteNotificationsUseCase.toggleNotification(blogId)
+            result?.let {
+                when (it) {
+                    is NoNetwork -> {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                        )
+                    }
+                    is RequestFailed -> {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private fun handleShareClicked(post: ReaderPost) {
@@ -151,7 +172,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        uiScope.launch {
+        defaultScope.launch {
             bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
         }
     }
@@ -172,5 +193,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     fun onCleared() {
         dispatcher.unregister(followUseCase)
+        dispatcher.unregister(siteNotificationsUseCase)
     }
 }
