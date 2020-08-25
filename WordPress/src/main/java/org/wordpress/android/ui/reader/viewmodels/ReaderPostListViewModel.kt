@@ -10,6 +10,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
@@ -46,6 +47,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents = _preloadPostEvents
 
+    private val _refreshPosts = MediatorLiveData<Event<Unit>>()
+    val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
+
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
 
@@ -73,6 +77,10 @@ class ReaderPostListViewModel @Inject constructor(
         _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
             _preloadPostEvents.value = event
         }
+
+        _refreshPosts.addSource(readerPostCardActionsHandler.refreshPosts) { event ->
+            _refreshPosts.value = event
+        }
     }
 
     /**
@@ -82,6 +90,10 @@ class ReaderPostListViewModel @Inject constructor(
      */
     fun onReblogButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
         readerPostCardActionsHandler.onAction(post, REBLOG, bookmarksList)
+    }
+
+    fun onBlockSiteButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        readerPostCardActionsHandler.onAction(post, BLOCK_SITE, bookmarksList)
     }
 
     fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {

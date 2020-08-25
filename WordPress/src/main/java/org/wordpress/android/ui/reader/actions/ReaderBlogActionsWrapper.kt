@@ -5,8 +5,10 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import javax.inject.Inject
 
 class ReaderBlogActionsWrapper @Inject constructor() {
-    fun blockBlogFromReader(blogId: Long, actionListener: ActionListener?): BlockedBlogResult =
-            ReaderBlogActions.blockBlogFromReader(blogId, actionListener)
+    fun blockBlogFromReaderLocal(blogId: Long): BlockedBlogResult = ReaderBlogActions.blockBlogFromReaderLocal(blogId)
+
+    fun blockBlogFromReaderRemote(blockedBlogResult: BlockedBlogResult, actionListener: ActionListener?): Unit =
+            ReaderBlogActions.blockBlogFromReaderRemote(blockedBlogResult, actionListener)
 
     fun undoBlockBlogFromReader(blocked: BlockedBlogResult) = ReaderBlogActions.undoBlockBlogFromReader(blocked)
 }

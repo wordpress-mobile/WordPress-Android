@@ -436,19 +436,22 @@ public class ReaderBlogActions {
         WordPress.sRequestQueue.add(request);
     }
 
+    public static BlockedBlogResult blockBlogFromReaderLocal(final long blogId) {
+        final BlockedBlogResult blockResult = new BlockedBlogResult();
+        blockResult.blogId = blogId;
+        blockResult.deletedPosts = ReaderPostTable.getPostsInBlogIgnoringTag(blogId);
+        blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
+
+        ReaderPostTable.deletePostsInBlog(blockResult.blogId);
+        ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, false);
+        return blockResult;
+    }
+
     /*
      * block a blog - result includes the list of posts that were deleted by the block so they
      * can be restored if the user undoes the block
      */
-    public static BlockedBlogResult blockBlogFromReader(final long blogId, final ActionListener actionListener) {
-        final BlockedBlogResult blockResult = new BlockedBlogResult();
-        blockResult.blogId = blogId;
-        blockResult.deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0, false);
-        blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
-
-        ReaderPostTable.deletePostsInBlog(blogId);
-        ReaderBlogTable.setIsFollowedBlogId(blogId, false);
-
+    public static void blockBlogFromReaderRemote(BlockedBlogResult blockResult, final ActionListener actionListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -461,17 +464,15 @@ public class ReaderBlogActions {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
                 if (blockResult.wasFollowing) {
-                    ReaderBlogTable.setIsFollowedBlogId(blogId, true);
+                    ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true);
                 }
                 ReaderActions.callActionListener(actionListener, false);
             }
         };
 
-        AppLog.i(T.READER, "blocking blog " + blogId);
-        String path = "me/block/sites/" + Long.toString(blogId) + "/new";
+        AppLog.i(T.READER, "blocking blog " + blockResult.blogId);
+        String path = "me/block/sites/" + Long.toString(blockResult.blogId) + "/new";
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
-
-        return blockResult;
     }
 
     public static void undoBlockBlogFromReader(final BlockedBlogResult blockResult) {

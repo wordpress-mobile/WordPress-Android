@@ -949,6 +949,16 @@ public class ReaderPostTable {
         }
     }
 
+    public static ReaderPostList getPostsInBlogIgnoringTag(long blogId) {
+        String sql = "SELECT * FROM tbl_posts WHERE blog_id=?";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            return getPostListFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =

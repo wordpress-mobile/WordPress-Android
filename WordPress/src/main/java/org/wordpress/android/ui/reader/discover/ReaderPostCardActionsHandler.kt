@@ -4,15 +4,18 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -29,7 +32,12 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.usecases.BlockSiteUseCase
+import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.AlreadyRunning
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.NoNetwork
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.RequestFailed
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Success
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.util.AppLog
@@ -44,8 +52,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
-    private val blockSiteUseCase: BlockSiteUseCase,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope
+    private val blockBlogUseCase: BlockBlogUseCase,
+    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -54,7 +62,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
-    val preloadPostEvents = _preloadPostEvents
+    val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
+
+    // Used only in legacy ReaderPostListFragment. The discover tab observes reactive ReaderDiscoverDataProvider.
+    private val _refreshPosts = MediatorLiveData<Event<Unit>>()
+    val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
     init {
         _navigationEvents.addSource(bookmarkUseCase.navigationEvents) { event ->
@@ -124,13 +136,32 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBlockSiteClicked(blogId: Long) {
-        uiScope.launch {
-            val result = blockSiteUseCase.blockSite(blogId)
-            result?.let {
-                _snackbarEvents.postValue(Event(it))
+        defaultScope.launch {
+            blockBlogUseCase.blockBlog(blogId).collect {
+                when (it) {
+                    is SiteBlockedInLocalDb -> {
+                        _refreshPosts.postValue(Event(Unit))
+                        _snackbarEvents.postValue(
+                                Event(
+                                        SnackbarMessageHolder(string.reader_toast_blog_blocked, string.undo, {
+                                            defaultScope.launch {
+                                                ReaderBlogActions.undoBlockBlogFromReader(it.blockedBlogData)
+                                                _refreshPosts.postValue(Event(Unit))
+                                            }
+                                        })
+                                )
+                        )
+                    }
+                    Success, AlreadyRunning -> {
+                    } // do nothing
+                    NoNetwork -> _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
+                    RequestFailed -> {
+                        _refreshPosts.postValue(Event(Unit))
+                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
+                    }
+                }
             }
         }
-        AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
     private fun handleLikeClicked(postId: Long, blogId: Long) {
@@ -138,7 +169,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        uiScope.launch {
+        defaultScope.launch {
             bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
         }
     }
