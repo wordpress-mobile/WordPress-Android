@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -25,5 +26,9 @@ class BlockBlogUseCaseTest {
     fun setUp() {
         mBlockBlogUseCase = BlockBlogUseCase(networkUtilsWrapper, analyticsUtilsWrapper, readerBlogActionsWrapper)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+    }
+
+    @Test
+    fun foo() {
     }
 }
