@@ -58,7 +58,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
@@ -288,7 +287,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start()
+        postListCreateMenuViewModel.start(site)
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
@@ -392,13 +391,14 @@ class PostsListActivity : LocaleAwareActivity(),
             event.applyIfNotHandled {
                 postListCreateMenuViewModel.onFabLongPressed()
             }
+            Toast.makeText(fab.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.onFabLongPressedForPostList.observe(this, Observer {
             if (fab.isHapticFeedbackEnabled) {
                 fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
-            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+            Toast.makeText(fab.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -408,12 +408,12 @@ class PostsListActivity : LocaleAwareActivity(),
                     SnackbarItem(
                             SnackbarItem.Info(
                                 view = parent,
-                                textRes = UiStringRes(holder.messageRes),
+                                textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                             ),
-                            holder.buttonTitleRes?.let {
+                            holder.buttonTitle?.let {
                                 SnackbarItem.Action(
-                                    textRes = UiStringRes(holder.buttonTitleRes),
+                                    textRes = holder.buttonTitle,
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },

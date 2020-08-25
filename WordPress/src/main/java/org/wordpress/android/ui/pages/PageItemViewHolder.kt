@@ -82,7 +82,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 showSubtitle(page.date, page.author, page.subtitle)
 
-                labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it) }.sorted()
+                labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it).toString() }.sorted()
                         .joinToString(separator = " · ")
                 page.labelsColor?.let { labelsColor ->
                     labels.setTextColor(

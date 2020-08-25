@@ -1,35 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-04 22:48:41+0000
+Translation-Revision-Date: 2020-08-20 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Site logonuz olması için bir görsel yükleyin veya ortam kitaplığınızdan bir görsel seçin</string>
-    <string name="gutenberg_native_coordinated_universal_time">Eşgüdümlü evrensel zaman</string>
-    <string name="gutenberg_native_delete_site_logo">Site logosunu sil</string>
-    <string name="gutenberg_native_description">açıklama</string>
-    <string name="gutenberg_native_image_width">Görsel genişliği</string>
-    <string name="gutenberg_native_media_preview">Ortam ön izlemesi</string>
-    <string name="gutenberg_native_open_the_block_list_view">Blok listesi görünümünü aç.</string>
+    <string name="gutenberg_native_video_caption_empty">Video yazısı. Boş</string>
+    <string name="toast_error_playing_video">Videonuzu oynatırken bir hata oluştu</string>
+    <string name="camera_error">Bu cihaz Camera2 API\'sını desteklemiyor.</string>
+    <string name="toast_error_saving_video">Video kaydedilemedi</string>
+    <string name="toast_error_saving_image">Görüntü kaydedilirken hata oluştu</string>
+    <string name="toast_capture_operation_in_progress">İşlem devam ediyor, tekrar deneyin</string>
+    <string name="toast_story_page_not_found">Öykü slaytı bulunamadı</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button">Depolamayı Görüntüle</string>
+    <string name="dialog_insufficient_device_storage_error_message">Yayınlanmadan önce öyküyü cihazınıza kaydetmemiz gerekiyor. Depolama ayarlarınızı gözden geçirin ve yer açmak için bazı dosyaları kaldırın.</string>
+    <string name="dialog_insufficient_device_storage_error_title">Yetersiz cihaz depolama alanı</string>
+    <string name="dialog_story_saving_error_message">Slaytları kaydetmeyi veya silmeyi yeniden deneyin, ardından öykünüzü tekrar yayımlamayı deneyin.</string>
+    <string name="dialog_story_saving_error_title_plural">%1$d slayt kaydedilemedi</string>
+    <string name="dialog_story_saving_error_title_singular">1 slayt kaydedilemedi</string>
+    <string name="story_saving_failed_quick_action_manage">Yönet</string>
+    <string name="story_saving_failed_message_plural">%1$d slaytlar için işlem gerekiyor</string>
+    <string name="story_saving_failed_message_singular">1 slayt için işlem gerekiyor</string>
+    <string name="story_saving_failed_title">\"%1$s\" yüklenemedi</string>
+    <string name="story_saving_snackbar_finished_with_error">\"%1$s\" yüklenemedi</string>
+    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" yayımlandı</string>
+    <string name="story_saving_snackbar_started">\"%1$s\" yükleniyor…</string>
+    <string name="story_saving_subtitle_frames_remaining_plural">%1$d slayt kaldı</string>
+    <string name="story_saving_subtitle_frames_remaining_singular">1 slayt kaldı</string>
+    <string name="story_saving_title_several">birkaç öykü</string>
+    <string name="story_saving_title">\"%1$s\" kaydediliyor…</string>
+    <string name="story_saving_untitled">Başlıksız</string>
+    <string name="dialog_discard_story_ok_button">Vazgeç</string>
+    <string name="dialog_discard_story_message">Öykü yayınınız taslak olarak kaydedilmeyecek.</string>
+    <string name="dialog_discard_story_title">Öykü yayını silinsin mi?</string>
+    <string name="dialog_discard_page_ok_button">Sil</string>
+    <string name="dialog_discard_errored_page_message">Bu slayt henüz kaydedilmedi. Bu slaytı silerseniz yaptığınız tüm düzenlemeleri kaybedersiniz.</string>
+    <string name="dialog_discard_page_message">Bu slayt öykünüzden kaldırılacak.</string>
+    <string name="dialog_discard_page_title">Öykü slaytı silinsin mi?</string>
+    <string name="menu_delete_page">Slaytı sil</string>
+    <string name="label_text_color_button">Metin rengini değiştir</string>
+    <string name="label_text_alignment_button">Metin hizalamasını değiştir</string>
+    <string name="label_frame_errored">hata oluştu</string>
+    <string name="label_frame_selected_border">seçildi</string>
+    <string name="label_frame_unselected_border">seçilmedi</string>
+    <string name="label_frame_image">Slayt</string>
+    <string name="label_retry_icon">Tekrar dene</string>
+    <string name="label_saved_icon">Kaydedildi</string>
+    <string name="label_close_button">Kapat</string>
+    <string name="label_control_publish">Sonraki</string>
+    <string name="label_done">Bitti</string>
+    <string name="label_share_to">Şununla paylaş:</string>
+    <string name="label_snackbar_share">PAYLAŞ</string>
+    <string name="label_snackbar_loop_frame_saved">Fotoğraflara kaydedildi</string>
+    <string name="label_control_retry">Tekrar dene</string>
+    <string name="label_control_saved">Kaydedildi</string>
+    <string name="label_control_saving">Kaydediliyor</string>
+    <string name="label_control_flash">Flaş</string>
+    <string name="label_control_flip_camera">Ters Çevir</string>
+    <string name="sound_button_alt">Ses</string>
+    <string name="text_button_alt">Metin</string>
+    <string name="more_button_alt">Daha Fazla</string>
+    <string name="stickers_button_alt">Çıkartmalar</string>
+    <string name="flash_button_alt">Flaş</string>
+    <string name="flip_button_alt">Kamerayı çevir</string>
+    <string name="capture_button_alt">Aktarım</string>
+    <string name="mlp_preview_page">Önizleme</string>
+    <string name="mlp_create_page">Sayfa Oluştur</string>
+    <string name="mlp_create_blank_page">Boş sayfa oluştur</string>
+    <string name="mlp_choose_layout_subtitle">Önceden hazırlanmış çeşitli sayfa düzenleri arasından seçim yaparak başlayın. Veya boş bir sayfayla başlayın.</string>
+    <string name="mlp_choose_layout_title">Bir Düzen Seç</string>
+    <string name="prepublishing_nudges_story_title_hint">Öykünüze bir başlık koyun</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Bir yayın veya öykü oluştur</string>
+    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Bir yayın, sayfa veya öykü oluştur</string>
+    <string name="quick_start_dialog_create_new_post_message_short">%1$s Oluştur\'a dokunun. %2$s Ardından &lt;b>Blog yayını&lt;/b>\'nı seçin</string>
+    <string name="photo_picker_choose_file">Cihazdan seç</string>
+    <string name="my_site_bottom_sheet_add_story">Öykü yayını</string>
+    <string name="my_site_icon_dialog_change_requires_jetpack_message">Kendi kendine barındırılan WordPress sitelerinde site simgelerini düzenlemek için Jetpack eklentisi gerekir.</string>
+    <string name="reader_toast_err_page_jump_not_found">Bağlantılı sayfa atlaması bulunamıyor</string>
+    <string name="error_media_quota_exceeded_toast">Dosya yüklenemiyor.\nDepolama kotası aşıldı.</string>
+    <string name="error_media_quota_exceeded">Depolama kotası aşıldı.</string>
+    <string name="media_error_file_not_allowed_on_free_plan">Ücretsiz pakette bu dosya türüne izin verilmiyor</string>
+    <string name="pick_file">Dosya ekle</string>
     <string name="gutenberg_native_replace_image_or_video">Video veya görseli değiştir</string>
     <string name="gutenberg_native_replace_video">Videoyu değiştir</string>
-    <string name="gutenberg_native_show_a_site_logo">Bir site logosu göster</string>
-    <string name="gutenberg_native_site_icon">Site simgesi</string>
-    <string name="gutenberg_native_site_logo">Site logosu</string>
-    <string name="gutenberg_native_site_logo_settings">Site logo ayarları</string>
-    <string name="gutenberg_native_site_tagline">Site sloganı</string>
     <string name="continue_with_wpcom">WordPress.com ile devam et</string>
     <string name="enter_your_site_address">Site adresinizi girin</string>
     <string name="content_description_logo">WordPress logosu</string>
-    <string name="gutenberg_native_base">Temel</string>
     <string name="gutenberg_native_block_removed">Blok kaldırıldı</string>
-    <string name="gutenberg_native_child_blocks">Alt bloklar</string>
     <string name="gutenberg_native_choose_image">Görsel seç</string>
     <string name="gutenberg_native_choose_image_or_video">Görsel veya video seç</string>
     <string name="gutenberg_native_choose_video">Video seç</string>
-    <string name="gutenberg_native_convert_to_blocks">Bloklara dönüştür</string>
     <string name="continue_with_google_terms_of_service_text">Google ile devam ederseniz ve WordPress.com hesabınız yoksa, bir hesap oluşturup %1$shizmet şartlarımızı%2$s kabul etmiş olursunuz.</string>
     <string name="signup_confirmation_title">Kayıt onayı</string>
     <string name="continue_terms_of_service_text">Devam etmekle, %1$shizmet koşullarını%2$s kabul etmiş olursunuz.</string>
@@ -52,7 +113,6 @@ Language: tr
     <string name="send_link_by_email">Bağlantıyı e-postayla gönder</string>
     <string name="or_type_your_password">Veya parolanızı yazın</string>
     <string name="enter_email_to_continue_wordpress_com">Giriş yapmak veya bir WordPress.com hesabı oluşturmak için e-posta adresinizi girin.</string>
-    <string name="reader_error_generic_title">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Yeni bir başlık belirlemek için &lt;b>%1$s&lt;/b> dokunun</string>
     <string name="quick_start_list_update_site_title_title">Site başlığınızı ayarlayın</string>
     <string name="quick_start_list_update_site_title_subtitle">Sitenize kişiliğini ve konuyu yansıtan bir ad verin. İlk izlenim önemlidir.</string>
@@ -67,7 +127,6 @@ Language: tr
     <string name="gutenberg_native_copied_block">Kopyalanan blok</string>
     <string name="gutenberg_native_copy_block">Bloğu kopyala</string>
     <string name="gutenberg_native_duplicate_block">Bloğu çoğalt</string>
-    <string name="gutenberg_native_paste_block">Bloğu yapıştır</string>
     <string name="gutenberg_native_remove_block">Bloğu kaldır</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Kaydedilmemiş değişiklikler</string>
     <string name="error_update_site_title_network">Site başlığı güncellenemedi. Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
@@ -342,7 +401,6 @@ Language: tr
     <string name="stats_box_type_low">düşük</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="quick_start_dialog_create_new_post_message_short_posts">Yeni bir yazı oluşturmak için %1$s Yazı ekleye %2$s dokunun.</string>
     <string name="create_post_page_fab_tooltip">Yazı veya sayfa oluştur</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Mevcut değer %2$s</string>
     <string name="gutenberg_native_gallery_caption_s">Galeri yazısı. %s</string>
@@ -351,7 +409,6 @@ Language: tr
     <string name="gutenberg_native_remove_image">Görseli kaldır</string>
     <string name="post_signup_interstitial_subtitle">Oluşturmak veya paylaşmak istediğiniz her şeyi burada yapmanıza yardımcı olacağız.</string>
     <string name="post_signup_interstitial_not_right_now">Şimdi değil</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Devam etmek için %1$s Blog yazılarına %2$s dokunun.</string>
     <string name="content_description_person_building_website">İnsan yapımı websitesi</string>
     <string name="photo_picker_image_thumbnail_unselected">Görsel seçilmedi</string>
     <string name="stock_media_picker_list_content_description">Fotoğraf kütüphanesi</string>

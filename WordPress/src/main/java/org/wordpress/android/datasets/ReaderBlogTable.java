@@ -382,25 +382,6 @@ public class ReaderBlogTable {
         return (minutes >= ReaderConstants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
-    /**
-     * updateImageByFeedId updates the image_url for the entry based on feed_id
-     * @param feedId
-     * @param imageUrl
-     */
-    public static void updateImageByFeedId(long feedId, String imageUrl) {
-        if (imageUrl != null || feedId != 0) {
-            String sql = "UPDATE tbl_blog_info SET image_url =? WHERE feed_id=?";
-            SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
-            try {
-                stmt.bindString(1, imageUrl);
-                stmt.bindLong(2, feedId);
-                stmt.execute();
-            } finally {
-                SqlUtils.closeStatement(stmt);
-            }
-        }
-    }
-
     private static String getBlogInfoLastUpdated(ReaderBlog blogInfo) {
         if (blogInfo == null) {
             return "";

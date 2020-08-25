@@ -1,0 +1,5 @@
+15.5:
+* Block-Editor: Benutzernamen-@mentions werden im Block-Editor für WordPress.com und Jetpack-Websites auto-vervollständigt. Gib das @-Zeichen ein und du siehst ein Popup-Menü mit Benutzernamen. Bearbeite Medien im Cover-Block. Fehlerbehebung am Überschriftsblock entfernt weißen Schatten im Dunkelmodus an Überschriften mit Link und String-Formatierung.
+* Suche nach selbst gehosteten Websites in der Beitragsliste.
+* Lade Audio- und Dokumentdateien in die Medienbibliothek hoch.
+

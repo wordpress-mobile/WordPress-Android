@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
+import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
 
 class SaveInitialPostUseCase @Inject constructor(
@@ -20,9 +21,11 @@ class SaveInitialPostUseCase @Inject constructor(
             post
         }
         editPostRepository.savePostSnapshot()
-        // this is an artifact to be able to call savePostToDb()
+        // setting the date locally changed is an artifact to be able to call savePostToDb(), as we need to change
+        // something on it
         editPostRepository.updateAsync({ postModel ->
-            postModel.setPostFormat(StoryComposerActivity.POST_FORMAT_WP_STORY_KEY)
+            postModel.setDateLocallyChanged(
+                    DateTimeUtils.iso8601UTCFromTimestamp(System.currentTimeMillis() / 1000))
             true
         }, { _, result ->
             if (result == UpdatePostResult.Updated) {
