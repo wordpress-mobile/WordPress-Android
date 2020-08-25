@@ -12,7 +12,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_O
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -50,7 +50,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope
+    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -113,7 +113,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleSiteNotificationsClicked(blogId: Long) {
-        uiScope.launch {
+        defaultScope.launch {
             val result = siteNotificationsUseCase.toggleNotification(blogId)
             result?.let {
                 when (it) {
@@ -155,7 +155,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        uiScope.launch {
+        defaultScope.launch {
             bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
         }
     }
