@@ -1,0 +1,5 @@
+15.5:
+* Blockredigeraren: Nu kompletteras @taggning av användarnamn automatiskt i blockredigeraren på hos WordPress.com webbplatser med Jetpack. När du skriver tecknet ”@” visas en lista med användarnamn. Redigera media i omslagsblocket. Rättat ett fel i rubrikblocket där länkade rubriker med formaterad text i mörkt läge hade vit skugga.
+* Sökning efter webbplatser på webbhotell i inläggslistan.
+* Uppladdning av ljud- och dokumentfiler till mediabiblioteket.
+

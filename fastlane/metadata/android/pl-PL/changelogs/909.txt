@@ -1,0 +1,5 @@
+15.5:
+* Edytor blokowy: Nazwy użytkownika @mentions mają teraz autouzupełnianie w edytorze blokowym na stronach WordPressa i Jetpacka. Wprowadź z klawiatury znak “@” , aby wyskoczyło okienko z nazwą użytkownika. Edytuj materiały użyte w bloku okładki. Rozwiązanie problemu buga w bloku nagłówka usunęło niepożądany biały cień na nagłówkach formatowanych w trybie ciemnym. 
+* Wyszukiwanie samodzielnych witryn na liście postów.
+* Wgrywanie plików audio i dokumentów do biblioteki mediów.
+

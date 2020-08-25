@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_S
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -112,7 +113,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         try {
             _navigationEvents.postValue(Event(SharePost(post)))
         } catch (ex: ActivityNotFoundException) {
-            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_toast_err_share_intent)))
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_share_intent))))
         }
     }
 
@@ -141,7 +142,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))
         } else {
-            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error))))
         }
     }
 
