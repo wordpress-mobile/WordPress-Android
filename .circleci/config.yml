@@ -325,7 +325,7 @@ jobs:
             model=gts3lltevzw,version=28,orientation=default
           locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
           project: api-project-108380595987
-          timeout: 10m
+          timeout: 30m
           num-flaky-test-attempts: 2
           results-history-name: CircleCI WordPress Screenshots
       - android/save-gradle-cache
