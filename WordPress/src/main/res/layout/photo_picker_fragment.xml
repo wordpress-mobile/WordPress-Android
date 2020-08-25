@@ -13,8 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:visibility="gone"
-        android:backgroundTint="@color/pink_50"
-        android:tint="@color/white"
         android:src="@drawable/ic_photo_camera_24px"
         android:layout_margin="@dimen/fab_margin"
         tools:ignore="InconsistentLayout"/>
