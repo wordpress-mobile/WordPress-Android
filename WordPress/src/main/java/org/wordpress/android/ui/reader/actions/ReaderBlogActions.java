@@ -35,7 +35,7 @@ public class ReaderBlogActions {
     public static class BlockedBlogResult {
         public long blogId;
         // Key: Pair<ReaderTagSlug, ReaderTagType>, Value: ReaderPostList
-        public Map<Pair<String, ReaderTagType>, ReaderPostList> deleteRows;
+        public Map<Pair<String, ReaderTagType>, ReaderPostList> deletedRows;
         public boolean wasFollowing;
     }
 
@@ -445,7 +445,7 @@ public class ReaderBlogActions {
     public static BlockedBlogResult blockBlogFromReaderLocal(final long blogId) {
         final BlockedBlogResult blockResult = new BlockedBlogResult();
         blockResult.blogId = blogId;
-        blockResult.deleteRows = ReaderPostTable.getTagPostMap(blogId);
+        blockResult.deletedRows = ReaderPostTable.getTagPostMap(blogId);
         blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
 
         ReaderPostTable.deletePostsInBlog(blockResult.blogId);
@@ -512,10 +512,10 @@ public class ReaderBlogActions {
     }
 
     private static void undoBlockBlogLocal(final BlockedBlogResult blockResult) {
-        if (blockResult.deleteRows != null) {
-            for (Pair<String, ReaderTagType> tagInfo : blockResult.deleteRows.keySet()) {
+        if (blockResult.deletedRows != null) {
+            for (Pair<String, ReaderTagType> tagInfo : blockResult.deletedRows.keySet()) {
                 ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
-                ReaderPostTable.addOrUpdatePosts(tag, blockResult.deleteRows.get(tagInfo));
+                ReaderPostTable.addOrUpdatePosts(tag, blockResult.deletedRows.get(tagInfo));
             }
         }
     }
