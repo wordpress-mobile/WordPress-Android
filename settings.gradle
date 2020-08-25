@@ -7,7 +7,7 @@ include ':photoeditor'
 project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/stories-android/photoeditor')
 
 include ':libs:image-editor:ImageEditor'
-include ':libs:utils:WordPressUtils'
+includeBuild('../WordPress-Utils-Android')
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
