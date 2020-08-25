@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.usecases
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
@@ -12,8 +11,8 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -34,14 +33,14 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<Boolean>? = null
 
-    suspend fun toggleNotification(blogId: Long): SnackbarMessageHolder? {
+    suspend fun toggleNotification(blogId: Long): SiteNotificationState? {
         if (continuation != null) {
             // Toggling notification for multiple sites in parallel isn't supported
             // as the user would lose the ability to undo the action
             return null
         }
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            return SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+            return NoNetwork
         }
 
         // We want to track the action no matter the result
@@ -55,6 +54,8 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         if (succeeded) {
             updateBlogInDb(blogId)
             dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+        } else {
+            return RequestFailed
         }
         return null
     }
@@ -101,5 +102,12 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
             continuation?.resume(true)
         }
         continuation = null
+    }
+
+    sealed class SiteNotificationState {
+        sealed class Failed : SiteNotificationState() {
+            object NoNetwork : Failed()
+            object RequestFailed : Failed()
+        }
     }
 }
