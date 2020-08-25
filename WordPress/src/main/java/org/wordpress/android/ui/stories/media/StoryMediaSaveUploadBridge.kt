@@ -164,7 +164,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
         // no op
         // WARNING: don't remove this, we need to call the listener no matter what, so save & upload actually happen
-        listener?.onPostUpdatedFromUI()
+        listener?.onPostUpdatedFromUI(null)
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {

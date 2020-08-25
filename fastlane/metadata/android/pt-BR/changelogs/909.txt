@@ -1,0 +1,4 @@
+15.5:
+* Editor de blocos: Agora @menções são auto-completadas no editor de blocos em sites no WordPress.com e Jetpack. Digite "@" para abrir um popup de nomes de usuários. Edição de mídia no bloco Cobertura. Corrigimos um erro de formatação no bloco Título para remover uma sombra branca adicionada sem necessidade ao usar o modo escuro.
+* Pesquise por sites auto-hospedados na lista de posts
+* Envie arquivos de áudio e documentos para a biblioteca de mídias.
