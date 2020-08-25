@@ -26,7 +26,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
-import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType.NOTIFICATION_POST
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
@@ -125,17 +124,15 @@ class ReaderSiteNotificationsUseCaseTest {
     }
 
     @Test
-    fun `fetch subscriptions action invoked if notification was subscribed successfully`() = test {
+    fun `fetch subscriptions action invoked if notification is subscribed successfully`() = test {
         // Arrange
-        val successEvent = OnSubscriptionUpdated()
-        successEvent.subscribed = true
-        successEvent.type = NOTIFICATION_POST
+        val blogId = 1L
 
         // Act
-        useCase.onSubscriptionUpdated(successEvent)
+        useCase.toggleNotification(blogId)
 
         // Assert
-        verify(dispatcher).dispatch(dispatchCaptor.capture())
+        verify(dispatcher, times(2)).dispatch(dispatchCaptor.capture())
         Assert.assertEquals(dispatchCaptor.lastValue.type, AccountAction.FETCH_SUBSCRIPTIONS)
     }
 
