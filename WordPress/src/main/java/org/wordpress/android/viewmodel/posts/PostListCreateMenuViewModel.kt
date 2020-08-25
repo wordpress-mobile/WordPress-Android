@@ -3,9 +3,9 @@ package org.wordpress.android.viewmodel.posts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -14,14 +14,18 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class PostListCreateMenuViewModel @Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig
 ) : ViewModel() {
     private var isStarted = false
+    private lateinit var site: SiteModel
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
     val fabUiState: LiveData<MainFabUiState> = _fabUiState
@@ -35,9 +39,11 @@ class PostListCreateMenuViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    fun start() {
+    fun start(site: SiteModel) {
         if (isStarted) return
         isStarted = true
+
+        this.site = site
 
         setMainFabUiState()
 
@@ -86,7 +92,7 @@ class PostListCreateMenuViewModel @Inject constructor(
         val newState = MainFabUiState(
                 isFabVisible = true,
                 isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
-                CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+                CreateContentMessageId = getCreateContentMessageId()
         )
 
         _fabUiState.value = newState
@@ -114,7 +120,7 @@ class PostListCreateMenuViewModel @Inject constructor(
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
                     isFabTooltipVisible = false,
-                    CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+                    CreateContentMessageId = getCreateContentMessageId()
             )
         }
     }
@@ -125,8 +131,16 @@ class PostListCreateMenuViewModel @Inject constructor(
             _fabUiState.value = MainFabUiState(
                     isFabVisible = it.isFabVisible,
                     isFabTooltipVisible = it.isFabTooltipVisible,
-                    CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+                    CreateContentMessageId = getCreateContentMessageId()
             )
+        }
+    }
+
+    private fun getCreateContentMessageId(): Int {
+        return if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
+            string.create_post_story_fab_tooltip
+        } else {
+            string.create_post_fab_tooltip
         }
     }
 }

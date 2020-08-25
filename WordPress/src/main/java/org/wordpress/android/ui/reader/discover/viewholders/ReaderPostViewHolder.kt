@@ -41,6 +41,10 @@ class ReaderPostViewHolder(
         val state = uiState as ReaderPostUiState
         // TODO malinjir animate like button on click
 
+        // Expandable tags section
+        uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
+        expandable_tags_view.updateUi(state.tagItems)
+
         // Header section
         updateAvatarOrBlavatar(state)
         uiHelpers.setTextOrHide(text_author_and_blog_name, state.blogName)
@@ -48,7 +52,7 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, state.dateLine)
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
-        image_more.setOnClickListener { onMoreClicked(uiState, uiState.moreMenuItems, it) }
+        image_more.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
         layout_post_header.setBackgroundResource(
                 layout_post_header.context.getDrawableResIdFromAttribute(uiState.postHeaderClickData?.background ?: 0)
         )
@@ -85,6 +89,10 @@ class ReaderPostViewHolder(
         updateActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
         updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
         updateActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
+
+        state.moreMenuItems?.let {
+            renderMoreMenu(state, state.moreMenuItems, image_more)
+        }
 
         state.onItemRendered.invoke(uiState)
     }
@@ -169,7 +177,7 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun onMoreClicked(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
+    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
         // TODO malinjir the popup menu was reused from the legacy implementation. It needs to be refactored.
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
@@ -182,6 +190,7 @@ class ReaderPostViewHolder(
             val item = actions[position]
             item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
         }
+        listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
         listPopup.show()
     }
 }

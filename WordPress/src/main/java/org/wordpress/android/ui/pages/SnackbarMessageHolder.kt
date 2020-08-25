@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.pages
 
-import androidx.annotation.StringRes
+import org.wordpress.android.ui.utils.UiString
 
 data class SnackbarMessageHolder(
-    @StringRes val messageRes: Int,
-    @StringRes val buttonTitleRes: Int? = null,
+    val message: UiString,
+    val buttonTitle: UiString? = null,
     val buttonAction: () -> Unit = {},
     val onDismissAction: () -> Unit = {}
 )

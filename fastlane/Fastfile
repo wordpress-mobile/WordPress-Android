@@ -515,9 +515,11 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Build
     Dir.chdir("..") do
+      sh("mkdir -p #{build_dir}")
       UI.message("Cleaning branch...")
       sh("echo \"Cleaning branch\" >> #{logfile_path}")
       sh("./gradlew clean >> #{logfile_path} 2>&1")
+      sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
       sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
@@ -590,7 +592,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     sh("../tools/update-translations.sh review fuzzy")
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
-    sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoDebug #{cmd_params}")
+    sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
   end 
 
 #####################################################################################

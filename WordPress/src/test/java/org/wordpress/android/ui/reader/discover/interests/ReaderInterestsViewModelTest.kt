@@ -26,7 +26,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.RequestFailedErrorUiState
@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
@@ -182,7 +183,7 @@ class ReaderInterestsViewModelTest {
 
             val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
             assertThat(uiState.interests).isEqualTo(mockInterests)
-            assertThat(uiState.interestsUiState[0]).isInstanceOf(InterestUiState::class.java)
+            assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
             assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
         }
 
@@ -452,7 +453,7 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                    .isEqualTo(SnackbarMessageHolder(R.string.no_network_message))
+                    .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
         }
 
     @ExperimentalCoroutinesApi
@@ -470,7 +471,7 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                .isEqualTo(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
         }
 
     private fun initViewModel() = viewModel.start(

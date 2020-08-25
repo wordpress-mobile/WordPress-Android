@@ -1,3 +1,13 @@
+15.7
+-----
+ 
+15.6
+-----
+* [***] Block Editor: Fixed empty text fields on RTL layout. Now they are selectable and placeholders are visible.
+* [**] Block Editor: Add settings to allow changing column widths
+* [**] Block Editor: Media editing support in Gallery block.
+* [*] Block Editor: Improved logic for creating undo levels.
+ 
 15.5
 -----
 * [***] Block Editor: New feature for WordPress.com and Jetpack sites: auto-complete username mentions. An auto-complete popup will show up when the user types the @ character in the block editor.
@@ -5,6 +15,10 @@
 * [***] Enable upload of audio files and documents in the media library
 * [*] Block Editor: Media editing support in Cover block.
 * [*] Block Editor: Fixed a bug on the Heading block, where a heading with a link and string formatting showed a white shadow in dark mode.
+
+15.4.1
+-----
+* [**] Block Editor: Fix for editing the Classic Block in the Unsupported block editor
 
 15.4
 -----

@@ -29,7 +29,7 @@ import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 class PostListMainViewModelTest : BaseUnitTest() {
-    lateinit var site: SiteModel
+    @Mock lateinit var site: SiteModel
     private val currentBottomSheetPostId = LocalId(0)
     @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var dispatcher: Dispatcher
@@ -45,8 +45,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
         val prefs = mock<AppPrefsWrapper> {
             on { postListViewLayoutType } doReturn STANDARD
         }
-
-        site = SiteModel()
 
         whenever(editPostRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
 
@@ -194,8 +192,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if wpStoriesFeatureConfig is true and onFabClicked then _onFabClicked is called`() {
+    fun `if stories is enabled and onFabClicked then _onFabClicked is called`() {
         whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.isWPCom).thenReturn(true)
 
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
         viewModel.fabClicked()
@@ -204,7 +203,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if wpStoriesFeatureConfig is false and onFabClicked then _onFabClicked is not called`() {
+    fun `if stories is disabled and onFabClicked then _onFabClicked is not called`() {
         whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
@@ -214,8 +213,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if wpStoriesFeatureConfig is true and onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
+    fun `if stories is enabled and onFabLongPressed then onFabLongPressedForCreateMenu is called`() {
         whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.isWPCom).thenReturn(true)
 
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
         viewModel.onFabLongPressed()
@@ -224,7 +224,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if wpStoriesFeatureConfig is false and onFabLongPressed then onFabLongPressedForPostList is called`() {
+    fun `if stories is disabled and onFabLongPressed then onFabLongPressedForPostList is called`() {
         whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())

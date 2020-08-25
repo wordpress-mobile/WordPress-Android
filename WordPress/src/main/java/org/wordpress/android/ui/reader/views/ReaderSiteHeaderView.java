@@ -16,13 +16,13 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -41,6 +41,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private long mBlogId;
     private long mFeedId;
+    private boolean mIsFeed;
+
     private ReaderFollowButton mFollowButton;
     private ReaderBlog mBlogInfo;
     private OnBlogInfoLoadedListener mBlogInfoListener;
@@ -60,14 +62,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
     public ReaderSiteHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         ((WordPress) context.getApplicationContext()).component().inject(this);
-        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
+        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_extra_large);
         initView(context);
     }
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
-        ViewUtilsKt.expandTouchTargetArea(mFollowButton, R.dimen.reader_follow_button_extra_padding, false);
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
@@ -82,16 +83,20 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogId = blogId;
         mFeedId = feedId;
 
-        // first get info from local db
         final ReaderBlog localBlogInfo;
-        if (mBlogId != 0) {
-            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
-        } else if (mFeedId != 0) {
-            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
-        } else {
+        if (blogId == 0 && feedId == 0) {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog_info);
             return;
         }
+
+        mIsFeed = ReaderUtils.isExternalFeed(mBlogId, mFeedId);
+
+        if (mIsFeed) {
+            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
+        } else {
+            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
+        }
+
         if (localBlogInfo != null) {
             showBlogInfo(localBlogInfo);
         }
@@ -106,7 +111,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
                     }
                 }
             };
-            if (mFeedId != 0) {
+
+            if (mIsFeed) {
                 ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
             } else {
                 ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
@@ -150,14 +156,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         if (blogInfo.hasImageUrl()) {
-            mImageManager.load(blavatarImg, ImageType.BLAVATAR,
-                    PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.MEDIUM));
+            mImageManager.loadIntoCircle(blavatarImg, ImageType.BLAVATAR_CIRCULAR,
+                    PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
         }
 
         txtFollowCount.setText(String.format(
-                        LocaleManager.getSafeLocale(getContext()),
-                        getContext().getString(R.string.reader_label_follow_count),
-                        blogInfo.numSubscribers));
+                LocaleManager.getSafeLocale(getContext()),
+                getContext().getString(R.string.reader_label_follow_count),
+                blogInfo.numSubscribers));
 
         if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
@@ -187,7 +193,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         final boolean isAskingToFollow;
-        if (mFeedId != 0) {
+        if (mIsFeed) {
             isAskingToFollow = !ReaderBlogTable.isFollowedFeed(mFeedId);
         } else {
             isAskingToFollow = !ReaderBlogTable.isFollowedBlog(mBlogId);
@@ -195,7 +201,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         if (mFollowListener != null) {
             if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(followButton, mBlogInfo.getName(), mBlogInfo.blogId);
+                mFollowListener.onFollowTapped(
+                        followButton,
+                        mBlogInfo.getName(),
+                        mIsFeed ? 0 : mBlogInfo.blogId);
             } else {
                 mFollowListener.onFollowingTapped();
             }
@@ -221,14 +230,14 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mFollowButton.setEnabled(false);
 
         boolean result;
-        if (mFeedId != 0) {
+        if (mIsFeed) {
             result = ReaderBlogActions.followFeedById(mFeedId, isAskingToFollow, listener);
         } else {
             result = ReaderBlogActions.followBlogById(mBlogId, isAskingToFollow, listener);
         }
 
         if (result) {
-            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            mFollowButton.setIsFollowed(isAskingToFollow);
         }
     }
 }

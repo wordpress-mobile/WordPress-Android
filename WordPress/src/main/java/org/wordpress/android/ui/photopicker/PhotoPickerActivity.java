@@ -46,6 +46,11 @@ import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
+/**
+ * This class is being refactored, if you implement any change, please also update
+ * {@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity}
+ */
+@Deprecated
 public class PhotoPickerActivity extends LocaleAwareActivity
         implements PhotoPickerFragment.PhotoPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
@@ -123,9 +128,9 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         if (fragment == null) {
             fragment = PhotoPickerFragment.newInstance(this, mBrowserType, mSite);
             getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
-                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .commitAllowingStateLoss();
+                                       .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
+                                       .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                       .commitAllowingStateLoss();
         } else {
             fragment.setPhotoPickerListener(this);
         }
@@ -280,41 +285,41 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             final String mimeType = getContentResolver().getType(mediaUri);
 
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                mLocalPostId
+                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                    mLocalPostId
             );
 
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
-                                             new WPMediaUtils.MediaFetchDoNext() {
-                                                 @Override
-                                                 public void doNext(Uri uri) {
-                                                     EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
-                                                             .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
-                                                                     mimeType);
-                                                     // we intentionally display a toast instead of a snackbar as a
-                                                     // Snackbar is tied to an Activity and the activity is finished
-                                                     // right after this call
-                                                     switch (queueImageResult) {
-                                                         case FILE_NOT_FOUND:
-                                                             Toast.makeText(getApplicationContext(),
-                                                                     R.string.file_not_found, Toast.LENGTH_SHORT)
-                                                                  .show();
-                                                             break;
-                                                         case INVALID_POST_ID:
-                                                             Toast.makeText(getApplicationContext(),
-                                                                     R.string.error_generic, Toast.LENGTH_SHORT)
-                                                                  .show();
-                                                             break;
-                                                         case SUCCESS:
-                                                             // noop
-                                                             break;
-                                                     }
-                                                     Intent intent = new Intent()
-                                                             .putExtra(EXTRA_MEDIA_QUEUED, true);
-                                                     setResult(RESULT_OK, intent);
-                                                     finish();
-                                                 }
-                                             });
+                    new WPMediaUtils.MediaFetchDoNext() {
+                        @Override
+                        public void doNext(Uri uri) {
+                            EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
+                                    .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
+                                            mimeType);
+                            // we intentionally display a toast instead of a snackbar as a
+                            // Snackbar is tied to an Activity and the activity is finished
+                            // right after this call
+                            switch (queueImageResult) {
+                                case FILE_NOT_FOUND:
+                                    Toast.makeText(getApplicationContext(),
+                                            R.string.file_not_found, Toast.LENGTH_SHORT)
+                                         .show();
+                                    break;
+                                case INVALID_POST_ID:
+                                    Toast.makeText(getApplicationContext(),
+                                            R.string.error_generic, Toast.LENGTH_SHORT)
+                                         .show();
+                                    break;
+                                case SUCCESS:
+                                    // noop
+                                    break;
+                            }
+                            Intent intent = new Intent()
+                                    .putExtra(EXTRA_MEDIA_QUEUED, true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    });
         } else {
             Intent intent = new Intent()
                     .putExtra(EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))

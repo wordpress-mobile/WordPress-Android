@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
@@ -132,6 +133,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
+    @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
 
     /*
      * cross-post
@@ -264,7 +266,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReaderPostViewHolder) {
-            renderPost(position, (ReaderPostViewHolder) holder);
+            renderPost(position, (ReaderPostViewHolder) holder, false);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
         } else if (holder instanceof ReaderRemovedPostViewHolder) {
@@ -306,7 +308,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled
+                isFollowButtonEnabled,
+                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
             )
         );
         tagHolder.onBind(uiState);
@@ -381,7 +384,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void renderPost(final int position, final ReaderPostViewHolder holder) {
+    private void renderPost(final int position, final ReaderPostViewHolder holder, boolean showMoreMenu) {
         final ReaderPost post = getItem(position);
         ReaderPostListType postListType = getPostListType();
         if (post == null) {
@@ -394,7 +397,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     switch (type) {
                         case BOOKMARK:
                             toggleBookmark(post.blogId, post.postId);
-                            renderPost(position, holder);
+                            renderPost(position, holder, false);
                             break;
                         case LIKE:
                             toggleLike(ctx, post, position, holder);
@@ -411,7 +414,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case VISIT_SITE:
                         case BLOCK_SITE:
                             mOnPostListItemButtonListener.onButtonClicked(post, type);
-                            renderPost(position, holder);
+                            renderPost(position, holder, false);
                             break;
                     }
                     return Unit.INSTANCE;
@@ -454,8 +457,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return Unit.INSTANCE;
         };
-        Function3<Long, Long, View, Unit> onMoreButtonClicked = (postId, blogId, view) -> {
-            // noop
+        Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
+            renderPost(position, holder, true);
+            return Unit.INSTANCE;
+        };
+
+        Function1<ReaderPostUiState, Unit> onMoreDismissed = (uiState) -> {
+            renderPost(position, holder, false);
             return Unit.INSTANCE;
         };
 
@@ -469,9 +477,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
 
+        Function1<String, Unit> onTagItemClicked = (tagSlug) -> {
+            // noop
+            return Unit.INSTANCE;
+        };
+
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiState(
                         post,
+                        false,
                         mPhotonWidth,
                         mPhotonHeight,
                         postListType,
@@ -481,8 +495,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onItemRendered,
                         onDiscoverSectionClicked,
                         onMoreButtonClicked,
+                        onMoreDismissed,
                         onVideoOverlayClicked,
-                        onPostHeaderClicked
+                        onPostHeaderClicked,
+                        onTagItemClicked,
+                        showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
+                                .buildMoreMenuItems(post, postListType, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -532,8 +550,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return AppPrefs.isReaderImprovementsPhase2Enabled()
-               && ((getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty());
+        return (getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty();
     }
 
     private boolean isDiscover() {
@@ -765,7 +782,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
         if (updatedPost != null && positionInReaderPostList > -1) {
             mPosts.set(positionInReaderPostList, updatedPost);
-            renderPost(listPosition, holder);
+            renderPost(listPosition, holder, false);
         }
     }
 

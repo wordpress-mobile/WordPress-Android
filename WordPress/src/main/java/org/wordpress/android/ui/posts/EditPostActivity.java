@@ -126,6 +126,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -166,6 +167,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -369,6 +371,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject CrashLogging mCrashLogging;
 
     private StorePostViewModel mViewModel;
 
@@ -679,8 +682,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorMedia.getSnackBarMessage().observe(this, event -> {
             SnackbarMessageHolder messageHolder = event.getContentIfNotHandled();
             if (messageHolder != null) {
-                WPSnackbar
-                        .make(findViewById(R.id.editor_activity), messageHolder.getMessageRes(), Snackbar.LENGTH_SHORT)
+                WPSnackbar.make(
+                                findViewById(R.id.editor_activity),
+                                mUiHelpers.getTextOfUiString(this, messageHolder.getMessage()),
+                                Snackbar.LENGTH_SHORT
+                        )
                         .show();
             }
         });
@@ -1560,10 +1566,55 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 (post, result) -> {
                     // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
-                        listener.onPostUpdatedFromUI();
+                        listener.onPostUpdatedFromUI(result);
                     }
                     return null;
                 });
+    }
+
+    /**
+     * This method:
+     *   1. Shows and hides the editor's progress dialog;
+     *   2. Saves the post via {@link EditPostActivity#updateAndSavePostAsync(OnPostUpdatedFromUIListener)};
+     *   3. Invokes the listener method parameter
+     *   4. If there were changes in the post that needed to be saved, for debug builds the app will crash, and
+     *      for release builds we send an exception to Sentry because this
+     *      indicates that the editor's autosave mechanism failed to save all changes to the post. Ideally,
+     *      there should never be any changes that need to be saved when exiting the editor because all changes
+     *      should be caught by the autosave mechanism, but there is a known issue where there will be unsaved
+     *      changes when the user quickly exits the editor after making changes. For that reason we send that as
+     *      a separate event to Sentry.
+     */
+    private void updateAndSavePostAsyncOnEditorExit(@NonNull final OnPostUpdatedFromUIListener listener) {
+        if (mEditorFragment == null) {
+            return;
+        }
+
+        // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
+        boolean isAutosavePending = mViewModel.isAutosavePending();
+
+        mEditorFragment.showSavingProgressDialogIfNeeded();
+        updateAndSavePostAsync((result) -> {
+            if (mEditorFragment != null) {
+                mEditorFragment.hideSavingProgressDialog();
+            }
+
+            listener.onPostUpdatedFromUI(result);
+
+            if (result == Updated.INSTANCE) {
+                SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
+                if (BuildConfig.DEBUG) {
+                    throw new RuntimeException(
+                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
+                    );
+                } else {
+                    mCrashLogging.reportException(exception, T.EDITOR.toString());
+                    AppLog.e(T.EDITOR, exception.getMessage());
+                }
+            } else {
+                AppLog.d(T.EDITOR, "Post had no unsaved changes when exiting the editor.");
+            }
+        });
     }
 
     private UpdateFromEditor updateFromEditor(String oldContent) {
@@ -1714,7 +1765,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     public interface OnPostUpdatedFromUIListener {
-        void onPostUpdatedFromUI();
+        void onPostUpdatedFromUI(@Nullable UpdatePostResult updatePostResult);
     }
 
     @Override
@@ -1804,79 +1855,82 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void uploadPost(final boolean publishPost) {
-        AccountModel account = mAccountStore.getAccount();
-        // prompt user to verify e-mail before publishing
-        if (!account.getEmailVerified()) {
-            String message = TextUtils.isEmpty(account.getEmail())
-                    ? getString(R.string.editor_confirm_email_prompt_message)
-                    : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
-                            account.getEmail());
+        updateAndSavePostAsyncOnEditorExit(((updatePostResult) -> {
+            AccountModel account = mAccountStore.getAccount();
+            // prompt user to verify e-mail before publishing
+            if (!account.getEmailVerified()) {
+                String message = TextUtils.isEmpty(account.getEmail())
+                        ? getString(R.string.editor_confirm_email_prompt_message)
+                        : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
+                                account.getEmail());
 
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(R.string.editor_confirm_email_prompt_title)
-                   .setMessage(message)
-                   .setPositiveButton(android.R.string.ok,
-                           (dialog, id) -> {
-                               ToastUtils.showToast(EditPostActivity.this,
-                                       getString(R.string.toast_saving_post_as_draft));
-                               savePostAndOptionallyFinish(true, false);
-                           })
-                   .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
-                           (dialog, id) -> mDispatcher
-                                   .dispatch(AccountActionBuilder.newSendVerificationEmailAction()));
-            builder.create().show();
-            return;
-        }
-        if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
-            // TODO we don't want to show "publish" message when the user clicked on eg. save
-            mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
-            EditPostActivity.this.runOnUiThread(() -> {
-                String message = getString(
-                        mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
-                ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
-            });
-            return;
-        }
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                builder.setTitle(R.string.editor_confirm_email_prompt_title)
+                       .setMessage(message)
+                       .setPositiveButton(android.R.string.ok,
+                               (dialog, id) -> {
+                                   ToastUtils.showToast(EditPostActivity.this,
+                                           getString(R.string.toast_saving_post_as_draft));
+                                   savePostAndOptionallyFinish(true, false);
+                               })
+                       .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
+                               (dialog, id) -> mDispatcher
+                                       .dispatch(AccountActionBuilder.newSendVerificationEmailAction()));
+                builder.create().show();
+                return;
+            }
+            if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
+                // TODO we don't want to show "publish" message when the user clicked on eg. save
+                mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
+                EditPostActivity.this.runOnUiThread(() -> {
+                    String message = getString(
+                            mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                    ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+                });
+                return;
+            }
 
-        // Loading the content from the GB HTML editor can take time on long posts.
-        // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
-        mEditorFragment.showSavingProgressDialogIfNeeded();
+            // Loading the content from the GB HTML editor can take time on long posts.
+            // Let's show a progress dialog for now.
+            // Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
+            mEditorFragment.showSavingProgressDialogIfNeeded();
 
-        boolean isFirstTimePublish = isFirstTimePublish(publishPost);
-        mEditPostRepository.updateAsync(postModel -> {
-            if (publishPost) {
-                // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
-                // otherwise we'd have an incorrect value
-                // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
-                    postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
-                }
+            boolean isFirstTimePublish = isFirstTimePublish(publishPost);
+            mEditPostRepository.updateAsync(postModel -> {
+                if (publishPost) {
+                    // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
+                    // otherwise we'd have an incorrect value
+                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                    if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
+                        postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
+                    }
 
-                if (mUploadUtilsWrapper.userCanPublish(getSite())) {
-                    postModel.setStatus(PostStatus.PUBLISHED.toString());
+                    if (mUploadUtilsWrapper.userCanPublish(getSite())) {
+                        postModel.setStatus(PostStatus.PUBLISHED.toString());
+                    } else {
+                        postModel.setStatus(PostStatus.PENDING.toString());
+                    }
+
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                 } else {
-                    postModel.setStatus(PostStatus.PENDING.toString());
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
-                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
-            } else {
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-            }
+                AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
+                // the user explicitly confirmed an intention to upload the post
+                postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
-            AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
-            // the user explicitly confirmed an intention to upload the post
-            postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
-
-            // Hide the progress dialog now
-            mEditorFragment.hideSavingProgressDialog();
-            return true;
-        }, (postModel, result) -> {
-            if (result == UpdatePostResult.Updated.INSTANCE) {
-                ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-                mViewModel.finish(activityFinishState);
-            }
-            return null;
-        });
+                // Hide the progress dialog now
+                mEditorFragment.hideSavingProgressDialog();
+                return true;
+            }, (postModel, result) -> {
+                if (result == Updated.INSTANCE) {
+                    ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                    mViewModel.finish(activityFinishState);
+                }
+                return null;
+            });
+        }));
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
@@ -1884,39 +1938,42 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
-        // check if the opened post had some unsaved local changes
-        boolean isFirstTimePublish = isFirstTimePublish(false);
 
-        // if post was modified during this editing session, save it
-        boolean shouldSave = shouldSavePost() || forceSave;
+        updateAndSavePostAsyncOnEditorExit(((updatePostResult) -> {
+            // check if the opened post had some unsaved local changes
+            boolean isFirstTimePublish = isFirstTimePublish(false);
 
-        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-        ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
-        if (shouldSave) {
-            /*
-             * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
-             * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
-             * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
-             * user didn't confirm the changes in this code path.
-             */
-            boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
-            if (isWpComOrIsLocalDraft) {
-                activityFinishState = savePostOnline(isFirstTimePublish);
-            } else if (forceSave) {
-                activityFinishState = savePostOnline(false);
-            } else {
-                activityFinishState = ActivityFinishState.SAVED_LOCALLY;
+            // if post was modified during this editing session, save it
+            boolean shouldSave = shouldSavePost() || forceSave;
+
+            mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+            ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
+            if (shouldSave) {
+                /*
+                 * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
+                 * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
+                 * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
+                 * user didn't confirm the changes in this code path.
+                 */
+                boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
+                if (isWpComOrIsLocalDraft) {
+                    activityFinishState = savePostOnline(isFirstTimePublish);
+                } else if (forceSave) {
+                    activityFinishState = savePostOnline(false);
+                } else {
+                    activityFinishState = ActivityFinishState.SAVED_LOCALLY;
+                }
             }
-        }
-        // discard post if new & empty
-        if (isDiscardable()) {
-            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-            mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-            activityFinishState = ActivityFinishState.CANCELLED;
-        }
-        if (doFinish) {
-            mViewModel.finish(activityFinishState);
-        }
+            // discard post if new & empty
+            if (isDiscardable()) {
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+                activityFinishState = ActivityFinishState.CANCELLED;
+            }
+            if (doFinish) {
+                mViewModel.finish(activityFinishState);
+            }
+        }));
     }
 
     private boolean shouldSavePost() {

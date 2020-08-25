@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -140,11 +142,11 @@ class ReaderInterestsViewModel @Inject constructor(
                 is Error -> {
                     if (result is NetworkUnavailable) {
                         _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(R.string.no_network_message))
+                            Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
                         )
                     } else if (result is RemoteRequestFailure) {
                         _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
                         )
                     }
                     updateUiState(
@@ -168,10 +170,10 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
-            InterestUiState(interest.tagTitle, interest.tagSlug)
+            TagUiState(interest.tagTitle, interest.tagSlug)
         }
 
-    private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
+    private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<TagUiState> {
         val currentUiState = uiState.value as ContentUiState
         val newInterestsUiState = currentUiState.interestsUiState.toMutableList()
         newInterestsUiState[index] = currentUiState.interestsUiState[index].copy(isChecked = isChecked)
@@ -194,7 +196,7 @@ class ReaderInterestsViewModel @Inject constructor(
         )
 
         data class ContentUiState(
-            val interestsUiState: List<InterestUiState>,
+            val interestsUiState: List<TagUiState>,
             val interests: ReaderTagList,
             override val progressBarVisible: Boolean = false,
             override val doneButtonUiState: DoneButtonUiState = DoneButtonDisabledUiState()
@@ -222,7 +224,7 @@ class ReaderInterestsViewModel @Inject constructor(
             )
         }
 
-        private fun getCheckedInterestsUiState(): List<InterestUiState> {
+        private fun getCheckedInterestsUiState(): List<TagUiState> {
             return if (this is ContentUiState) {
                 interestsUiState.filter { it.isChecked }
             } else {
@@ -258,12 +260,6 @@ class ReaderInterestsViewModel @Inject constructor(
             }
         }
     }
-
-    data class InterestUiState(
-        val title: String,
-        val slug: String,
-        val isChecked: Boolean = false
-    )
 
     sealed class DoneButtonUiState(
         @StringRes open val titleRes: Int = R.string.reader_btn_done,
