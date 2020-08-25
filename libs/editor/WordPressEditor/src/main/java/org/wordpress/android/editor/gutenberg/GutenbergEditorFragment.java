@@ -113,6 +113,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mIsJetpackSsoEnabled;
 
     private boolean mEditorDidMount;
+    private GutenbergPropsBuilder mLatestGutenbergPropsBuilder;
 
     private ProgressDialog mSavingContentProgressDialog;
 
@@ -388,6 +389,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+                getGutenbergContainerFragment().updateCapabilities(mLatestGutenbergPropsBuilder);
                 trackWebViewClosed("save");
             } else {
                 trackWebViewClosed("dismiss");
@@ -689,6 +691,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public void updateCapabilities(boolean isJetpackSsoEnabled, GutenbergPropsBuilder gutenbergPropsBuilder) {
         mIsJetpackSsoEnabled = isJetpackSsoEnabled;
+        mLatestGutenbergPropsBuilder = gutenbergPropsBuilder;
         getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
     }
 
