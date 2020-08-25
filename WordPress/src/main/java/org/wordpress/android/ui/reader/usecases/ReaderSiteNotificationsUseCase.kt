@@ -54,6 +54,7 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 
         if (succeeded) {
             updateBlogInDb(blogId)
+            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
         return null
     }
@@ -98,7 +99,6 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
             )
         } else {
             continuation?.resume(true)
-            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
         }
         continuation = null
     }
