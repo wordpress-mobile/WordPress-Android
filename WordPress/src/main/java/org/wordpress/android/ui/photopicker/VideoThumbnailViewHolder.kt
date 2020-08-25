@@ -11,7 +11,7 @@ import org.wordpress.android.R.id
  */
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.VideoThumbnailViewHolder}")
+        "{@link org.wordpress.android.ui.mediapicker.VideoThumbnailViewHolder}")
 class VideoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils: ThumbnailViewUtils) :
         ThumbnailViewHolder(
                 parent,

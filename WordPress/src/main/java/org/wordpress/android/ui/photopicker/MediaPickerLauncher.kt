@@ -11,7 +11,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 

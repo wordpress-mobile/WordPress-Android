@@ -1,7 +1,7 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.Type.PHOTO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.Type.VIDEO
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.PHOTO
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.VIDEO
 import org.wordpress.android.util.UriWrapper
 
 sealed class MediaPickerUiItem(

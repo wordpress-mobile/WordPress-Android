@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import org.wordpress.android.util.UriWrapper
 

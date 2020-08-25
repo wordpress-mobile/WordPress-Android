@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.any
@@ -25,11 +25,11 @@ import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_MEDIA_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER
 import org.wordpress.android.ui.photopicker.PermissionsHandler
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.DomainModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.MediaPickerUiState
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
