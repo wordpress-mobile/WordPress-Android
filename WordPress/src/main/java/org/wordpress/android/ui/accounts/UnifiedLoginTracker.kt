@@ -146,7 +146,8 @@ class UnifiedLoginTracker
         SUCCESS("success"),
         HELP("help"),
         TWO_FACTOR_AUTHENTICATION("2fa"),
-        SHOW_EMAIL_HINTS("show_email_hints")
+        SHOW_EMAIL_HINTS("show_email_hints"),
+        PASSWORD_CHALLENGE("password_challenge")
     }
 
     enum class Click(val value: String) {
