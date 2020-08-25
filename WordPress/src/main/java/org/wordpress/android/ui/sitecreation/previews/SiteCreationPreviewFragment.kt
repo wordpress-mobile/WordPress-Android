@@ -197,14 +197,14 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             val newText = uiHelpers.getTextOfUiString(progress_text.context, loadingTextResId)
             AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
             if (animate) {
-                updateLoadingTextWithFadeAnimation(newText.toString())
+                updateLoadingTextWithFadeAnimation(newText)
             } else {
                 progress_text.text = newText
             }
         }
     }
 
-    private fun updateLoadingTextWithFadeAnimation(newText: String) {
+    private fun updateLoadingTextWithFadeAnimation(newText: CharSequence) {
         val animationDuration = AniUtils.Duration.SHORT
         val fadeOut = AniUtils.getFadeOutAnim(progress_text_layout, animationDuration, View.VISIBLE)
         val fadeIn = AniUtils.getFadeInAnim(progress_text_layout, animationDuration)
