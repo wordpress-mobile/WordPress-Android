@@ -1820,8 +1820,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_discover_topic_tapped";
             case READER_SITE_SHOWN:
                 return "reader_site_shown";
-            case READER_CARD_TAPPED:
-                return "reader_card_tapped";
+            case READER_POST_CARD_TAPPED:
+                return "reader_post_card_tapped";
             case READER_PULL_TO_REFRESH:
                 return "reader_pull_to_refresh";
             case POST_CARD_MORE_TAPPED:

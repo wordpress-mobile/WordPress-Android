@@ -10,7 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_CARD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SITE_SHOWN
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
@@ -85,7 +85,7 @@ class ReaderPostViewHolder(
         uiHelpers.setTextOrHide(text_title, state.title)
         uiHelpers.setTextOrHide(text_excerpt, state.excerpt)
         post_container.setOnClickListener {
-            AnalyticsTracker.track(READER_CARD_TAPPED)
+            AnalyticsTracker.track(READER_POST_CARD_TAPPED)
             state.onItemClicked(uiState.postId, uiState.blogId)
         }
 
