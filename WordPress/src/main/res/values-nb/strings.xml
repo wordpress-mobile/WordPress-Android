@@ -1,32 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-31 11:35:13+0000
+Translation-Revision-Date: 2020-08-19 10:39:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Last opp et bilde eller velg et fra ditt mediebibliotek, som skal være din nettstedslogo</string>
-    <string name="gutenberg_native_site_tagline">Slagord for nettstedet</string>
-    <string name="gutenberg_native_site_logo_settings">Innstillinger for nettstedslogo</string>
-    <string name="gutenberg_native_site_logo">Nettstedslogo</string>
-    <string name="gutenberg_native_site_icon">Nettstedsikon</string>
-    <string name="gutenberg_native_show_a_site_logo">Vis som nettstedslogo</string>
+    <string name="gutenberg_native_video_caption_empty">Videobildetekst. Tom.</string>
+    <string name="gutenberg_native_updates_the_title">Oppdaterer tittelen.</string>
+    <string name="gutenberg_native_paste_block_after">Lim inn blokk etter</string>
+    <string name="gutenberg_native_page_title_s">Sidetittel. %s</string>
+    <string name="gutenberg_native_page_title_empty">Sidetittel. Tom.</string>
+    <string name="toast_error_playing_video">Det oppsto en feil under avspilling av din video</string>
+    <string name="toast_error_saving_video">Video kunne ikke lagres</string>
+    <string name="toast_error_saving_image">Feil ved lagring av bilde</string>
+    <string name="toast_capture_operation_in_progress">Operasjon pågår, prøv igjen</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button">Se lagring</string>
+    <string name="dialog_insufficient_device_storage_error_title">Utilstrekkelig lagringsplass på enheten</string>
+    <string name="dialog_story_saving_error_message">Prøv å lagre på nytt, eller slett lysbildene og forsøk så publisere fortellingen på nytt.</string>
+    <string name="dialog_story_saving_error_title_plural">Kunne ikke lagre %1$d lysbilder</string>
+    <string name="dialog_story_saving_error_title_singular">Kunne ikke lagre 1 lysbilde</string>
+    <string name="story_saving_failed_quick_action_manage">Behandle</string>
+    <string name="story_saving_failed_message_plural">%1$d lysbilder trenger handling</string>
+    <string name="story_saving_failed_message_singular">1 lysbilde trenger handling</string>
+    <string name="story_saving_failed_title">Kunne ikke laste opp \"%1$s\"</string>
+    <string name="story_saving_snackbar_finished_with_error">Kunne ikke laste opp \"%1$s\"</string>
+    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" publisert</string>
+    <string name="story_saving_snackbar_started">Laster opp \"%1$s\"…</string>
+    <string name="story_saving_subtitle_frames_remaining_plural">%1$d lysbilder igjen</string>
+    <string name="story_saving_subtitle_frames_remaining_singular">1 lysbilde igjen</string>
+    <string name="story_saving_title_several">mange fortellinger</string>
+    <string name="story_saving_title">Lagrer \"%1$s\"…</string>
+    <string name="story_saving_untitled">Uten tittel</string>
+    <string name="dialog_discard_story_ok_button">Forkast</string>
+    <string name="dialog_discard_story_message">Din fortelling vil ikke lagres som kladd.</string>
+    <string name="dialog_discard_story_title">Forkaste fortelling?</string>
+    <string name="dialog_discard_page_ok_button">Slett</string>
+    <string name="dialog_discard_page_title">Slette fortellingslysbilde?</string>
+    <string name="menu_delete_page">Slette lysbilde</string>
+    <string name="label_text_color_button">Endre tekstfarge</string>
+    <string name="label_text_alignment_button">Endre tekstjustering</string>
+    <string name="label_retry_icon">Prøv igjen</string>
+    <string name="label_saved_icon">Lagret</string>
+    <string name="label_close_button">Lukk</string>
+    <string name="label_control_publish">Neste</string>
+    <string name="label_done">Utført</string>
+    <string name="label_share_to">Del på</string>
+    <string name="label_snackbar_loop_frame_saved">Lagret til forografier</string>
+    <string name="label_control_retry">Prøv på nytt</string>
+    <string name="label_control_saved">Lagret</string>
+    <string name="label_control_saving">Lagrer</string>
+    <string name="sound_button_alt">Lyd</string>
+    <string name="text_button_alt">Tekst</string>
+    <string name="more_button_alt">Mer</string>
+    <string name="mlp_preview_page">Forhåndsvis</string>
+    <string name="mlp_create_page">Opprett side</string>
+    <string name="mlp_create_blank_page">Opprett tom side</string>
+    <string name="mlp_choose_layout_title">Velg et oppsett</string>
+    <string name="prepublishing_nudges_story_title_hint">Gi din fortelling en tittel</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Opprett et innlegg eller en historie</string>
+    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Opprett et innlegg, side eller fortelling</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Opprett. %2$s Velg så &lt;b>blogginnlegg&lt;/b></string>
+    <string name="photo_picker_choose_file">Velg fra enheten</string>
+    <string name="my_site_bottom_sheet_add_story">Fortelling</string>
+    <string name="pick_file">Legg til fil</string>
     <string name="gutenberg_native_replace_video">Erstatt video</string>
     <string name="gutenberg_native_replace_image_or_video">Erstatt bilde eller video</string>
-    <string name="gutenberg_native_open_the_block_list_view">Åpne blokklistevisningen.</string>
-    <string name="gutenberg_native_media_preview">Media-forhåndsvisning</string>
-    <string name="gutenberg_native_image_width">Bildebredde</string>
-    <string name="gutenberg_native_description">beskrivelse</string>
-    <string name="gutenberg_native_delete_site_logo">Slett nettstedslogo</string>
-    <string name="gutenberg_native_coordinated_universal_time">Universell tid</string>
-    <string name="gutenberg_native_convert_to_blocks">Konverter til blokker</string>
     <string name="gutenberg_native_choose_video">Velg video</string>
     <string name="gutenberg_native_choose_image_or_video">Velg bilde eller video</string>
     <string name="gutenberg_native_choose_image">Velg bilde</string>
-    <string name="gutenberg_native_child_blocks">Underliggende blokker</string>
     <string name="gutenberg_native_block_removed">Blokk fjernet</string>
-    <string name="gutenberg_native_base">Base</string>
     <string name="content_description_logo">WordPress-logo</string>
     <string name="enter_your_site_address">Oppgi din nettstedsadresse</string>
     <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
@@ -50,10 +93,10 @@ Language: nb_NO
     <string name="reset_your_password">Tilbakestill ditt passord</string>
     <string name="quick_start_list_update_site_title_subtitle">Gi ditt nettsted et navn som reflekterer des personlighet og emne Førsteinntrykket teller!</string>
     <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b>%1$s&lt;/b> for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
     <string name="gutenberg_native_remove_block">Fjern blokk</string>
-    <string name="gutenberg_native_paste_block">Lim inn blokk</string>
     <string name="gutenberg_native_duplicate_block">Dupliser blokk</string>
     <string name="gutenberg_native_copy_block">Kopier blokk</string>
     <string name="gutenberg_native_copied_block">Kopiert blokk</string>
@@ -65,7 +108,13 @@ Language: nb_NO
     <string name="reader_title_tag_preview">Emne</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
+    <string name="gutenberg_native_gradient_type">Gradienttype</string>
+    <string name="gutenberg_native_go_back">Gå tilbake</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
+    <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Sideforfatter</string>
+    <string name="photo_picker_use_gif">Bruk denne GIFen</string>
     <string name="everyone">Alle</string>
     <string name="me">Meg</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Rediger blokk i nettleser</string>
@@ -99,6 +148,7 @@ Language: nb_NO
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
     <string name="gutenberg_native_try_a_starter_layout">Prøv et startoppsett</string>
     <string name="gutenberg_native_insert_mention">Sett inn omtale</string>
+    <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
     <string name="suggestion_invalid_user">\"%s er ikke en gyldig bruker\"</string>
@@ -287,8 +337,6 @@ Language: nb_NO
     <string name="gutenberg_native_gallery_caption_s">Galleribeskrivelse. %s</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Nåværende verdi er %2$s</string>
     <string name="create_post_page_fab_tooltip">Opprett et innlegg eller en side</string>
-    <string name="quick_start_dialog_create_new_post_message_short_posts">Trykk %1$s Legg til innlegg %2$s for å lage et nytt innlegg.</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Blogginnlegg %2$s for å fortsette.</string>
     <string name="post_signup_interstitial_not_right_now">Ikke akkurat nå</string>
     <string name="post_signup_interstitial_subtitle">Hva du enn vil lage eller dele vil vi hjelpe deg å gjøre det her.</string>
     <string name="post_signup_interstitial_title">Velkommen til WordPress</string>

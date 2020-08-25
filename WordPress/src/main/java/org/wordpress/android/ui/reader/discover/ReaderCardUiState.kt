@@ -65,6 +65,14 @@ sealed class ReaderCardUiState {
             val onDiscoverClicked: ((Long, Long) -> Unit)
         )
     }
+
+    data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
+        data class ReaderInterestUiState(
+            val interest: String,
+            val isDividerVisible: Boolean,
+            val onClicked: ((String) -> Unit)
+        )
+    }
 }
 
 sealed class ReaderPostCardAction {
