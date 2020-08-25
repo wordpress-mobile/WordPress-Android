@@ -20,10 +20,11 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.pages.INVALID_MESSAGE_RES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -90,7 +91,7 @@ class ReaderPostFollowUseCase @Inject constructor(
             } else {
                 R.string.reader_toast_err_unfollow_blog
             }
-            _snackbarEvents.postValue(Event(SnackbarMessageHolder(resId)))
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(resId))))
         }
     }
 
@@ -109,8 +110,8 @@ class ReaderPostFollowUseCase @Inject constructor(
             _snackbarEvents.postValue(
                     Event(
                             SnackbarMessageHolder(
-                                    INVALID_MESSAGE_RES,
-                                    R.string.reader_followed_blog_notifications_action,
+                                    UiStringText(notificationMessage),
+                                    UiStringRes(R.string.reader_followed_blog_notifications_action),
                                     buttonAction = {
                                         analyticsTrackerWrapper
                                                 .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
@@ -124,8 +125,7 @@ class ReaderPostFollowUseCase @Inject constructor(
                                                 )
                                         )
                                         ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
-                                    },
-                                    message = notificationMessage
+                                    }
                             )
                     )
             )
