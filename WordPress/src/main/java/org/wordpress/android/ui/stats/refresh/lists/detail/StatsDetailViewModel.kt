@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -78,7 +79,7 @@ class StatsDetailViewModel
             refresh()
         } else {
             _isRefreshing.value = false
-            _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
+            _showSnackbarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.no_network_title))
         }
     }
 }
