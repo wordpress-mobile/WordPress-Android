@@ -24,6 +24,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     private boolean mIsJetpackSsoEnabled;
     private String mUrlToLoad;
+    private long mUserId;
 
     @Override
     protected void loadUrl() {
@@ -49,9 +50,12 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             String password = gutenbergWebViewAuthorizationData.getWPComAccountPassword();
             String token = gutenbergWebViewAuthorizationData.getWPComAccountToken();
 
+            mUserId = isSitePrivate ? gutenbergWebViewAuthorizationData.getSelfHostedSiteId() : gutenbergWebViewAuthorizationData.getWPComAccountUserId();
+
             if (isSitePrivate && gutenbergWebViewAuthorizationData.isJetpackSsoEnabled()) {
                 mIsJetpackSsoEnabled = true;
                 mUrlToLoad = urlToLoad;
+                mUserId = gutenbergWebViewAuthorizationData.getWPComAccountUserId();
                 loadAuthenticatedUrl(WPCOM_LOGIN_URL, "", username, password, token);
                 return;
             }
@@ -135,5 +139,9 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     @Override
     protected String urlToLoad() {
         return mUrlToLoad;
+    }
+
+    @Override public long getUserId() {
+        return mUserId;
     }
 }

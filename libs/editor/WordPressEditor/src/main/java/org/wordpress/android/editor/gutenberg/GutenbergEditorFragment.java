@@ -389,6 +389,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+                // We need to send latest capabilities as JS side clears them
                 getGutenbergContainerFragment().updateCapabilities(mLatestGutenbergPropsBuilder);
                 trackWebViewClosed("save");
             } else {
