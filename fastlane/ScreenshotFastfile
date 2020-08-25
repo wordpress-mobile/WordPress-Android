@@ -100,7 +100,6 @@ platform :android do
     }
 
     take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
-    fix_obsolete_locales_for_screenshots(locales: [{source_id:'in', target_id:'id'}], output_directory: "metadata/android")
   end
 
   #####################################################################################
@@ -236,32 +235,6 @@ platform :android do
 
     emulators.each do |emulator_configuration|
         sh("helpers/copy-device.sh '#{emulator_configuration}'")
-    end
-  end
-
-
-  #####################################################################################
-  # Private lanes
-  #####################################################################################
-  #####################################################################################
-  # fix_obsolete_locales_for_screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane copies screenshots from the obsolete locale folder to the expected one
-  # -----------------------------------------------------------------------------------
-  #####################################################################################
-  private_lane :fix_obsolete_locales_for_screenshots do | options |
-    options[:locales].each do | locale |
-      UI.message ("Copying #{locale[:source_id]} to #{locale[:target_id]}...")
-      source_folder = File.join(options[:output_directory], locale[:source_id])
-      dest_folder = File.join(options[:output_directory], locale[:target_id])
-
-      puts source_folder
-      puts dest_folder
-
-      FileUtils.mkdir_p(dest_folder)
-
-      FileUtils.copy_entry(source_folder, dest_folder) if File.directory?(source_folder)
-      UI.message ("Done.")
     end
   end
 
