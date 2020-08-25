@@ -50,7 +50,8 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             String password = gutenbergWebViewAuthorizationData.getWPComAccountPassword();
             String token = gutenbergWebViewAuthorizationData.getWPComAccountToken();
 
-            mUserId = isSitePrivate ? gutenbergWebViewAuthorizationData.getSelfHostedSiteId() : gutenbergWebViewAuthorizationData.getWPComAccountUserId();
+            mUserId = isSitePrivate ? gutenbergWebViewAuthorizationData.getSelfHostedSiteId()
+                    : gutenbergWebViewAuthorizationData.getWPComAccountUserId();
 
             if (isSitePrivate && gutenbergWebViewAuthorizationData.isJetpackSsoEnabled()) {
                 mIsJetpackSsoEnabled = true;
