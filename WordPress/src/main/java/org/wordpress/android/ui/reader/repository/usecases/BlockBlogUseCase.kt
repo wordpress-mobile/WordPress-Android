@@ -70,10 +70,8 @@ sealed class BlockSiteState {
     data class SiteBlockedInLocalDb(val blockedBlogData: BlockedBlogResult) : BlockSiteState()
     object Success : BlockSiteState()
     sealed class Failed : BlockSiteState() {
-        object NoNetwork: Failed()
-        object RequestFailed: Failed()
-        object AlreadyRunning: Failed()
+        object NoNetwork : Failed()
+        object RequestFailed : Failed()
+        object AlreadyRunning : Failed()
     }
 }
-
-

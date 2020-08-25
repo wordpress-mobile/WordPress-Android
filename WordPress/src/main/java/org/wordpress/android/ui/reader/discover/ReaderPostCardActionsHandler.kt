@@ -154,7 +154,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     }
                     Success, AlreadyRunning -> {
                     } // do nothing
-                    NoNetwork -> _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
+                    NoNetwork -> {
+                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
+                    }
                     RequestFailed -> {
                         _refreshPosts.postValue(Event(Unit))
                         _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
