@@ -18,7 +18,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.AccountAction
@@ -29,7 +28,8 @@ import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType.NOTIFICATION_POST
 import org.wordpress.android.test
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
@@ -140,20 +140,30 @@ class ReaderSiteNotificationsUseCaseTest {
     }
 
     @Test
-    fun `no further action invoked if notification subscription failed with error`() = test {
+    fun `RequestFailed returned if notification subscription failed with error`() = test {
         // Arrange
+        val blogId = 1L
+
         val failedEvent = OnSubscriptionUpdated()
         failedEvent.error = SubscriptionError(ERROR, ERROR)
 
+        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
+            it.type == AccountAction.UPDATE_SUBSCRIPTION_NOTIFICATION_POST
+        })).then {
+            useCase.onSubscriptionUpdated(
+                    failedEvent
+            )
+        }
+
         // Act
-        useCase.onSubscriptionUpdated(failedEvent)
+        val result = useCase.toggleNotification(blogId)
 
         // Assert
-        verify(dispatcher, times(0)).dispatch(any())
+        assertThat(result).isEqualTo(RequestFailed)
     }
 
     @Test
-    fun `toggling notification when no network available displays network error`() = test {
+    fun `NoNetwork returned on toggling notification when no network is available`() = test {
         // Arrange
         val blogId = 1L
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
@@ -162,7 +172,6 @@ class ReaderSiteNotificationsUseCaseTest {
         val result = useCase.toggleNotification(blogId)
 
         // Assert
-        val message = result?.message as? UiStringRes
-        assertThat(message?.stringRes).isEqualTo(R.string.error_network_connection)
+        assertThat(result).isEqualTo(NoNetwork)
     }
 }
