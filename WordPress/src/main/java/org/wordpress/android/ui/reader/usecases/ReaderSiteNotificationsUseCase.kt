@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -40,7 +41,7 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
             return null
         }
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            return SnackbarMessageHolder(R.string.error_network_connection)
+            return SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
         }
 
         // We want to track the action no matter the result

@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
 import org.wordpress.android.fluxc.store.AccountStore.SubscriptionType.NOTIFICATION_POST
 import org.wordpress.android.test
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
@@ -161,6 +162,7 @@ class ReaderSiteNotificationsUseCaseTest {
         val result = useCase.toggleNotification(blogId)
 
         // Assert
-        assertThat(result!!.messageRes).isEqualTo(R.string.error_network_connection)
+        val message = result?.message as? UiStringRes
+        assertThat(message?.stringRes).isEqualTo(R.string.error_network_connection)
     }
 }
