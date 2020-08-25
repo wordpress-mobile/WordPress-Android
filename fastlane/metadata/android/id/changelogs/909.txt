@@ -1,0 +1,5 @@
+15,5:
+* Penyunting Blok: Penyebutan @namapengguna kini dapat dilengkapi otomatis di Penyunting Blok untuk situs WordPress.com dan Jetpack. Ketik karakter “@” untuk menampilkan popup nama pengguna. Sunting media di blok Sampul. Perbaikan bug blok Judul menghilangkan bayangan putih pada judul dengan format tautan dan string pada mode gelap.
+* Cari situs hosting sendiri pada daftar pos.
+* Unggah file audio dan dokumen ke pustaka media.
+

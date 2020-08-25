@@ -19,9 +19,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -45,6 +50,7 @@ class ReaderDiscoverViewModelTest {
 
     @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
+    @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
@@ -58,6 +64,7 @@ class ReaderDiscoverViewModelTest {
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(
                 uiStateBuilder,
+                menuUiStateBuilder,
                 readerPostCardActionsHandler,
                 readerDiscoverDataProvider,
                 reblogUseCase,
@@ -69,7 +76,8 @@ class ReaderDiscoverViewModelTest {
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+                        anyOrNull(), anyOrNull()
                 )
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
@@ -80,6 +88,9 @@ class ReaderDiscoverViewModelTest {
             )
         }
         whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
+        whenever(uiStateBuilder.mapTagListToReaderInterestUiState(anyOrNull(), anyOrNull())).thenReturn(
+                createReaderInterestsCardUiState(createReaderTagList())
+        )
     }
 
     @Test
@@ -129,7 +140,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `load more action is NOT initiated when we are at the beggining of the list`() = test {
+    fun `load more action is NOT initiated when we are at the beginning of the list`() = test {
         // Arrange
         val notCloseToEndIndex = 2
         init()
@@ -143,6 +154,42 @@ class ReaderDiscoverViewModelTest {
         verify(readerDiscoverDataProvider, never()).loadMoreCards()
     }
 
+    @Test
+    fun `if InterestsYouMayLikeCard exist then ReaderInterestsCardUiState will be present in the ContentUIState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createInterestsYouMayLikeCardList())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
+            }
+
+    @Test
+    fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
+            }
+
     private fun init() {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
@@ -152,9 +199,16 @@ class ReaderDiscoverViewModelTest {
         fakeDiscoverFeed.value = createDummyReaderCardsList()
     }
 
+    // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
-        return ReaderDiscoverCards((1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList())
+        return ReaderDiscoverCards(
+                createInterestsYouMayLikeCardList()
+                        .plus(createDummyReaderPostCardList(numberOfItems - 1))
+        )
     }
+
+    private fun createDummyReaderPostCardList(numberOfItems: Long = NUMBER_OF_ITEMS) =
+            (1..numberOfItems).map { ReaderPostCard(createDummyReaderPost(it)) }.toList()
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
         this.postId = id
@@ -196,7 +250,28 @@ class ReaderDiscoverViewModelTest {
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
                 postHeaderClickData = mock(),
-                moreMenuItems = mock()
+                moreMenuItems = mock(),
+                onMoreDismissed = mock()
         )
     }
+
+    private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
+            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
+
+    private fun createReaderTagList(numOfTags: Int = 1) = ReaderTagList().apply {
+        for (x in 0 until numOfTags) {
+            add(createReaderTag())
+        }
+    }
+
+    private fun createReaderTag() = ReaderTag(
+            "",
+            "",
+            "",
+            null,
+            mock(),
+            false
+    )
+
+    private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
 }

@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
@@ -44,8 +45,10 @@ import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.Standard
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -352,7 +355,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (wpStoriesFeatureConfig.isEnabled()) {
+        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
             _onFabClicked.postValue(Event(Unit))
         } else {
             newPost()
@@ -393,7 +396,7 @@ class PostListMainViewModel @Inject constructor(
     fun showTargetPost(targetPostId: Int) {
         val postModel = postStore.getPostByLocalPostId(targetPostId)
         if (postModel == null) {
-            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(string.error_post_does_not_exist))
         } else {
             launch(mainDispatcher) {
                 val targetTab = PostListType.fromPostStatus(PostStatus.fromPost(postModel))
@@ -417,7 +420,7 @@ class PostListMainViewModel @Inject constructor(
         if (post != null) {
             _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = true))
         } else {
-            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes((R.string.error_post_does_not_exist)))
         }
     }
 
@@ -426,7 +429,7 @@ class PostListMainViewModel @Inject constructor(
         if (post != null) {
             _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
         } else {
-            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.error_post_does_not_exist))
         }
     }
 
@@ -581,7 +584,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onFabLongPressed() {
-        if (wpStoriesFeatureConfig.isEnabled()) {
+        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
             _onFabLongPressedForCreateMenu.postValue(Event(Unit))
         } else {
             _onFabLongPressedForPostList.postValue(Event(Unit))
