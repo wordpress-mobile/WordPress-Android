@@ -7,7 +7,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
@@ -143,7 +142,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                         _refreshPosts.postValue(Event(Unit))
                         _snackbarEvents.postValue(
                                 Event(
-                                        SnackbarMessageHolder(string.reader_toast_blog_blocked, string.undo, {
+                                        SnackbarMessageHolder(R.string.reader_toast_blog_blocked, R.string.undo, {
                                             defaultScope.launch {
                                                 ReaderBlogActions.undoBlockBlogFromReader(it.blockedBlogData)
                                                 _refreshPosts.postValue(Event(Unit))
@@ -155,11 +154,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     Success, AlreadyRunning -> {
                     } // do nothing
                     NoNetwork -> {
-                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
+                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_toast_err_block_blog)))
                     }
                     RequestFailed -> {
                         _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(string.reader_toast_err_block_blog)))
+                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_toast_err_block_blog)))
                     }
                 }
             }
