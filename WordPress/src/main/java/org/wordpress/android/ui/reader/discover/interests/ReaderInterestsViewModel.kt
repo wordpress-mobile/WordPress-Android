@@ -8,8 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -27,8 +28,8 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -89,7 +90,7 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
                 is SuccessWithData<*> -> {
-                    trackerWrapper.track(SELECT_INTERESTS_SHOWN)
+                    trackerWrapper.track(Stat.SELECT_INTERESTS_SHOWN)
 
                     val tags = result.data as ReaderTagList
                     val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
