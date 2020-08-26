@@ -274,6 +274,9 @@ jobs:
             fi
           no_output_timeout: 15m
       - android/save-gradle-cache
+      - store_artifacts:
+          path: build
+          destination: Artifacts
       - slack/status:
           include_job_number_field: false
           include_project_field: false
