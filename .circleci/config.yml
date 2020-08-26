@@ -347,7 +347,7 @@ jobs:
           path: fastlane/screenshots/raw/
       - run:
           name: Create Promo Screenshots
-          command: bundle exec fastlane android create_promo_screenshots
+          command: bundle exec fastlane android create_promo_screenshots force:true
       - run:
           name: ZIP Metadata
           command: cd fastlane/metadata; zip -r Android-Promo-Screenshots.zip android
