@@ -313,31 +313,13 @@ jobs:
           results-history-name: CircleCI WordPress Screenshots
       - android/save-gradle-cache
       - run:
-          name: Download raw screenshots from Google Storage
+          name: Store Bucket URLGoogle Storage
           command: |
-            rm -rf fastlane/screenshots/raw
-            mkdir -p fastlane/screenshots/raw
-            TEST_BUCKET=$(cat log.txt | grep -o "gs://test\-lab\-.*/" | head -1)
-
-            DEVICE_DIRS=$(gsutil ls "$TEST_BUCKET" | sed -n "s/\/$//p" | sort)
-            echo "${DEVICE_DIRS}" | while read -r DIR; do
-              # Replace device codenames with phone/tenInch and adapt to fastlane-expected folder hierarchy. Also replace '_' in locale name with '-'
-              SUBDIR_DEST=$(basename "${DIR}" | sed "s/blueline-28-\([a-zA-Z]*\)-.*/\1\/images\/phoneScreenshots/" | sed "s/gts3lltevzw-28-\([a-zA-Z]*\)-.*/\1\/images\/tenInchScreenshots/" | sed "s/_/-/")
-              mkdir -p "fastlane/screenshots/raw/${SUBDIR_DEST}"
-              gsutil -m cp -r -cU "${DIR}/artifacts/*.jpg" "fastlane/screenshots/raw/${SUBDIR_DEST}" || true
-            done
-
-            # Rename all jpg files to get rid of the prefix in the basename
-            for JPG in fastlane/screenshots/raw/*/images/*Screenshots/*.jpg; do
-              D=$(dirname $JPG)
-              B=$(basename $JPG)
-              mv "${JPG}" "${D}/${B##org.wordpress.android.ui.screenshots.WPScreenshotTest-wPScreenshotTest-}"
-            done
-      - store_artifacts:
-          path: fastlane/screenshots/raw/
+            cat log.txt | grep -o "gs://test\-lab\-.*/" | head -1 >testlab-bucket.txt
       - persist_to_workspace:
           root: .
           paths:
+            - testlab-bucket.txt
             - Gemfile
             - Gemfile.lock
             - fastlane/
@@ -374,6 +356,11 @@ jobs:
             bundle config --local with screenshots
       - bundle-install/bundle-install:
           cache_key_prefix: v1-promo-screenshots
+      - run:
+          name: Download Raw Screenshots
+          command: |
+            TEST_BUCKET=$(cat testlab-bucket.txt)
+            bundle exec fastlane download_raw_screenshots bucket:"$TEST_BUCKET" phone:blueline-28 tenInch:gts3lltevzw-28
       - run:
           name: Create Promo Screenshots
           command: bundle exec fastlane android create_promo_screenshots force:true

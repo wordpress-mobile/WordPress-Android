@@ -638,22 +638,6 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
   end
 
-  #####################################################################################
-  # trigger_screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane triggers a CircleCI build on demand to generate Raw and Promo screenshots
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  #   bundle exec fastlane trigger_screenshots [token:<circleci_token>] [fork:<github_fork_name>]
-  # Notes:
-  #   - The CircleCI token can be passed via the CIRCLECI_TOKEN env var instead of as a parameter to the lane call
-  #   - The fork parameter allows us to trigger a build on a fork of WPAndroid instead of the default repo on `wordpress-mobile` org.
-  #####################################################################################
-  lane :trigger_screenshots do |options|
-    new_options = options.merge({ parameters: { "generate_screenshots": true } })
-    trigger_ci(new_options)
-  end
-
 #####################################################################################
 # Private lanes
 #####################################################################################
