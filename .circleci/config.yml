@@ -373,7 +373,7 @@ jobs:
             bundle config --local --delete without
             bundle config --local with screenshots
       - bundle-install/bundle-install:
-          cache_key_prefix: v1-with-screenshots
+          cache_key_prefix: v1-promo-screenshots
       - run:
           name: Create Promo Screenshots
           command: bundle exec fastlane android create_promo_screenshots force:true
