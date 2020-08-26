@@ -12,6 +12,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -88,6 +89,11 @@ class ReaderPostListViewModel @Inject constructor(
     fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
         val post = ReaderPostTable.getBlogPost(blogId, postId, true)
         readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
+    }
+
+    fun onSiteNotificationMenuClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+        val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+        readerPostCardActionsHandler.onAction(post, SITE_NOTIFICATIONS, isBookmarkList)
     }
 
     /**
