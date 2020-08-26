@@ -335,12 +335,13 @@ jobs:
             rm -rf fastlane/screenshots/raw
             mkdir -p fastlane/screenshots/raw
             TEST_BUCKET=$(cat log.txt | grep -o "gs://test\-lab\-.*/" | head -1)
-            DEVICE_DIRS=$(gsutil ls "$TEST_BUCKET" | grep "/$")
-            for DIR in ${DEVICE_DIRS}; do
-              # Replace device codenames with phone/tenInch and adapt to fastlane-expected folder hierarchy. Also replace `_` in locale name with `-`
-              SUBDIR_DEST=$(echo $(basename $DIR) | sed "s/blueline-28-\([a-zA-Z]*\)-.*/\1\/images\/phoneScreenshots/" | sed "s/gts3lltevzw-28-\([a-zA-Z]*\)-.*/\1\/images\/tenInchScreenshots/" | sed "s/_/-/")
-              mkdir -p fastlane/screenshots/raw/$SUBDIR_DEST
-              gsutil -m cp -r -U "$DIR/artifacts/*.jpg" "fastlane/screenshots/raw/$SUBDIR_DEST"
+
+            DEVICE_DIRS=$(gsutil ls "$TEST_BUCKET" | sed -n "s/\/$//p" | sort)
+            echo "${DEVICE_DIRS}" | while read -r DIR; do
+              # Replace device codenames with phone/tenInch and adapt to fastlane-expected folder hierarchy. Also replace '_' in locale name with '-'
+              SUBDIR_DEST=$(basename "${DIR}" | sed "s/blueline-28-\([a-zA-Z]*\)-.*/\1\/images\/phoneScreenshots/" | sed "s/gts3lltevzw-28-\([a-zA-Z]*\)-.*/\1\/images\/tenInchScreenshots/" | sed "s/_/-/")
+              mkdir -p "fastlane/screenshots/raw/${SUBDIR_DEST}"
+              gsutil -m cp -r -cU "${DIR}/artifacts/*.jpg" "fastlane/screenshots/raw/${SUBDIR_DEST}" || true
             done
       - store_artifacts:
           path: fastlane/screenshots/raw/
