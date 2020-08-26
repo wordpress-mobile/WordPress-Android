@@ -23,7 +23,7 @@ commands:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx3500m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -222,7 +222,13 @@ jobs:
   Release Build:
     docker:
       - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    environment:
+      JVM_OPTS: -Xmx2048m
     steps:
+      - run: 
+          name: Init messages
+          command: |
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android failed!'" >> $BASH_ENV
       - git/shallow-checkout:
           init-submodules: true
       - checkout-submodules
@@ -246,22 +252,38 @@ jobs:
             eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             echo "export PATH='/home/linuxbrew/.linuxbrew/Cellar/bundletool/1.0.0/bin:$PATH'" >> $BASH_ENV
             brew install bundletool
+      - run: 
+          name: Prepare build
+          command: |
+            echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV 
+            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
+            bundle check
       - run:
-          name: Build APK
+          name: Build Zalpha 
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
-            APP_VERSION=$(./gradlew -q printVersionName | tail -1)
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $APP_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $APP_VERSION has been deployed!'" >> $BASH_ENV
-            bundle check
-            ./gradlew --stacktrace lintVanillaRelease
-            if [[ $APP_VERSION == *"-rc-"* ]]; then
-              bundle exec fastlane build_and_upload_pre_releases skip_confirm:true skip_prechecks:true create_release:true
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_alpha skip_confirm:true skip_prechecks:true create_release:true
+            fi 
+          no_output_timeout: 15m
+      - run: 
+          name: Build Vanilla
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_beta skip_confirm:true skip_prechecks:true create_release:true
             else
               bundle exec fastlane build_and_upload_release skip_confirm:true skip_prechecks:true create_release:true
             fi
+          no_output_timeout: 15m
       - android/save-gradle-cache
+      - store_artifacts:
+          path: build
+          destination: Artifacts
       - slack/status:
           include_job_number_field: false
           include_project_field: false
@@ -467,8 +489,23 @@ workflows:
   Release Build:
     unless: << pipeline.parameters.translation_review_build >>
     jobs:
-      - gutenberg-bundle-build
+      - gutenberg-bundle-build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - lint:
+          requires:
+            - gutenberg-bundle-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
       - Release Build:
+          requires:
+            - lint 
           filters:
             branches:
               ignore: /.*/
