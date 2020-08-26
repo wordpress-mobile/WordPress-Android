@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -12,13 +13,16 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_PREVIEW
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostMoreButtonUiStateBuilderTest {
     @Rule
@@ -30,12 +34,12 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
     @Before
-    fun setUp() {
-        builder = ReaderPostMoreButtonUiStateBuilder(readerPostTableWrapper, readerBlogTableWrapper)
+    fun setUp() = test {
+        builder = ReaderPostMoreButtonUiStateBuilder(readerPostTableWrapper, readerBlogTableWrapper, TEST_DISPATCHER)
     }
 
     @Test
-    fun `contains follow action when post is not followed`() {
+    fun `contains follow action when post is not followed`() = test {
         // Arrange
         val post = init(isFollowed = false)
         // Act
@@ -48,7 +52,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `contains unfollow action when post is followed`() {
+    fun `contains unfollow action when post is followed`() = test {
         // Arrange
         val post = init(isFollowed = true)
         // Act
@@ -61,7 +65,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `does not contain site notifications action when not followed`() {
+    fun `does not contain site notifications action when not followed`() = test {
         // Arrange
         val post = init(isFollowed = false)
         // Act
@@ -73,7 +77,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `contains site notifications action when followed`() {
+    fun `contains site notifications action when followed`() = test {
         // Arrange
         val post = init(isFollowed = true)
         // Act
@@ -85,7 +89,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `does not contain site notifications action for feeds`() {
+    fun `does not contain site notifications action for feeds`() = test {
         // Arrange
         val post = init(isFeed = true, isFollowed = true)
         // Act
@@ -97,7 +101,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `site notifications action label is ON when notifications disabled`() {
+    fun `site notifications action label is ON when notifications disabled`() = test {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = false)
         // Act
@@ -110,7 +114,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `site notifications action label is OFF when notifications enabled`() {
+    fun `site notifications action label is OFF when notifications enabled`() = test {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = true)
         // Act
@@ -123,7 +127,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `contains share action`() {
+    fun `contains share action`() = test {
         // Arrange
         val post = init()
         // Act
@@ -133,7 +137,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `contains visit site action`() {
+    fun `contains visit site action`() = test {
         // Arrange
         val post = init()
         // Act
@@ -143,7 +147,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `contains block site action when post list type is TAG_FOLLOWED`() {
+    fun `contains block site action when post list type is TAG_FOLLOWED`() = test {
         // Arrange
         val post = init()
         // Act
@@ -153,7 +157,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `does not contain block site action when post list type is not TAG_FOLLOWED`() {
+    fun `does not contain block site action when post list type is not TAG_FOLLOWED`() = test {
         // Arrange
         val post = init()
         // Act
@@ -163,7 +167,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `follow action label color is primary(blue)`() {
+    fun `follow action label color is primary(blue)`() = test {
         // Arrange
         val post = init(isFollowed = false)
         // Act
@@ -176,7 +180,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `unfollow action label color is success(green)`() {
+    fun `unfollow action label color is success(green)`() = test {
         // Arrange
         val post = init(isFollowed = true)
         // Act
@@ -189,7 +193,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `site notifications action label color is default when notifications disabled`() {
+    fun `site notifications action label color is default when notifications disabled`() = test {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = false)
         // Act
@@ -202,7 +206,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `site notifications action label color is success(green) when notifications enabled`() {
+    fun `site notifications action label color is success(green) when notifications enabled`() = test {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = true)
         // Act

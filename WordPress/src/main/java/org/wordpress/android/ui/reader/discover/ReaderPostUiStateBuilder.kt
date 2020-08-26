@@ -58,10 +58,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    // TODO malinjir move this to a bg thread
     suspend fun mapPostToUiState(
         post: ReaderPost,
-        isDiscover: Boolean = false, // set to true for new discover tab
+        isDiscover: Boolean = false,
         photonWidth: Int,
         photonHeight: Int,
             // TODO malinjir try to refactor/remove this parameter
@@ -80,40 +79,78 @@ class ReaderPostUiStateBuilder @Inject constructor(
         moreMenuItems: List<SecondaryAction>? = null
     ): ReaderPostUiState {
         return withContext(bgDispatcher) {
-            ReaderPostUiState(
-                    postId = post.postId,
-                    blogId = post.blogId,
-                    blogUrl = buildBlogUrl(post),
-                    dateLine = buildDateLine(post),
-                    avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-                    blogName = buildBlogName(post),
-                    excerpt = buildExcerpt(post),
-                    title = buildTitle(post),
-                    tagItems = buildTagItems(post, onTagItemClicked),
-                    photoFrameVisibility = buildPhotoFrameVisibility(post),
-                    photoTitle = buildPhotoTitle(post),
-                    featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-                    featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-                    thumbnailStripSection = buildThumbnailStripUrls(post),
-                    expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
-                    videoOverlayVisibility = buildVideoOverlayVisibility(post),
-                    featuredImageVisibility = buildFeaturedImageVisibility(post),
-                    moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
-                    moreMenuItems = moreMenuItems,
-                    fullVideoUrl = buildFullVideoUrl(post),
-                    discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
-                    bookmarkAction = buildBookmarkSection(post, onButtonClicked),
-                    likeAction = buildLikeSection(post, isBookmarkList, onButtonClicked),
-                    reblogAction = buildReblogSection(post, onButtonClicked),
-                    commentsAction = buildCommentsSection(post, isBookmarkList, onButtonClicked),
-                    onItemClicked = onItemClicked,
-                    onItemRendered = onItemRendered,
-                    onMoreButtonClicked = onMoreButtonClicked,
-                    onMoreDismissed = onMoreDismissed,
-                    onVideoOverlayClicked = onVideoOverlayClicked,
-                    postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+            mapPostToUiStateBlocking(
+                    post,
+                    isDiscover,
+                    photonWidth,
+                    photonHeight,
+                    postListType,
+                    isBookmarkList,
+                    onButtonClicked,
+                    onItemClicked,
+                    onItemRendered,
+                    onDiscoverSectionClicked,
+                    onMoreButtonClicked,
+                    onMoreDismissed,
+                    onVideoOverlayClicked,
+                    onPostHeaderViewClicked,
+                    onTagItemClicked,
+                    moreMenuItems
             )
         }
+    }
+
+    fun mapPostToUiStateBlocking(
+        post: ReaderPost,
+        isDiscover: Boolean = false,
+        photonWidth: Int,
+        photonHeight: Int,
+        postListType: ReaderPostListType,
+        isBookmarkList: Boolean,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onTagItemClicked: (String) -> Unit,
+        moreMenuItems: List<SecondaryAction>? = null
+    ): ReaderPostUiState {
+        return ReaderPostUiState(
+                postId = post.postId,
+                blogId = post.blogId,
+                blogUrl = buildBlogUrl(post),
+                dateLine = buildDateLine(post),
+                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+                blogName = buildBlogName(post),
+                excerpt = buildExcerpt(post),
+                title = buildTitle(post),
+                tagItems = buildTagItems(post, onTagItemClicked),
+                photoFrameVisibility = buildPhotoFrameVisibility(post),
+                photoTitle = buildPhotoTitle(post),
+                featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+                featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+                thumbnailStripSection = buildThumbnailStripUrls(post),
+                expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
+                videoOverlayVisibility = buildVideoOverlayVisibility(post),
+                featuredImageVisibility = buildFeaturedImageVisibility(post),
+                moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
+                moreMenuItems = moreMenuItems,
+                fullVideoUrl = buildFullVideoUrl(post),
+                discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
+                bookmarkAction = buildBookmarkSection(post, onButtonClicked),
+                likeAction = buildLikeSection(post, isBookmarkList, onButtonClicked),
+                reblogAction = buildReblogSection(post, onButtonClicked),
+                commentsAction = buildCommentsSection(post, isBookmarkList, onButtonClicked),
+                onItemClicked = onItemClicked,
+                onItemRendered = onItemRendered,
+                onMoreButtonClicked = onMoreButtonClicked,
+                onMoreDismissed = onMoreDismissed,
+                onVideoOverlayClicked = onVideoOverlayClicked,
+                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+        )
     }
 
     suspend fun mapTagListToReaderInterestUiState(

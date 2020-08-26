@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
@@ -43,7 +44,6 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.CoroutineContext
 
 // TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
 class ReaderPostCardActionsHandler @Inject constructor(
@@ -52,7 +52,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
