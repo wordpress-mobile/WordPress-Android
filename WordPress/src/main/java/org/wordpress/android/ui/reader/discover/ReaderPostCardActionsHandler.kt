@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
@@ -31,18 +32,19 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NO
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState
+import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
@@ -55,6 +57,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val followUseCase: ReaderPostFollowUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
+    private val resourceProvider: ResourceProvider,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -70,7 +73,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val refreshPost: LiveData<ReaderPostData> = _refreshPost
 
     init {
-        dispatcher.register(followUseCase)
         dispatcher.register(siteNotificationsUseCase)
 
         _navigationEvents.addSource(bookmarkUseCase.navigationEvents) { event ->
@@ -81,16 +83,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
             _snackbarEvents.value = event
         }
 
-        _snackbarEvents.addSource(followUseCase.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-
         _preloadPostEvents.addSource(bookmarkUseCase.preloadPostEvents) { event ->
             _preloadPostEvents.value = event
-        }
-
-        _refreshPost.addSource(followUseCase.refreshPost) { event ->
-            _refreshPost.value = event
         }
     }
 
@@ -127,7 +121,29 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleFollowClicked(post: ReaderPost) {
         defaultScope.launch {
-            followUseCase.toggleFollow(post)
+            followUseCase.toggleFollow(post).collect {
+                when (it) {
+                    is FollowSiteState.Failed.NoNetwork -> {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                        )
+                    }
+                    is FollowSiteState.Failed.RequestFailed -> {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                        )
+                    }
+                    is FollowSiteState.Success -> { // Do nothing
+                    }
+                    is ReaderPostData -> {
+                        _refreshPost.postValue(it)
+                        siteNotificationsUseCase.fetchSubscriptions()
+
+                        if (it.showEnableNotification) { // TODO: prepare snackbar to enable notification
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -136,12 +152,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             when (siteNotificationsUseCase.toggleNotification(blogId)) {
                 is Success, AlreadyRunning -> { // Do Nothing
                 }
-                is NoNetwork -> {
+                is Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                     )
                 }
-                is RequestFailed -> {
+                is Failed.RequestFailed -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                     )
@@ -193,7 +209,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     fun onCleared() {
-        dispatcher.unregister(followUseCase)
         dispatcher.unregister(siteNotificationsUseCase)
     }
 }
