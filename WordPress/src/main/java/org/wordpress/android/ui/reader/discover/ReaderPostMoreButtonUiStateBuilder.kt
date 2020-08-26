@@ -32,7 +32,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
         return withContext(bgDispatcher) {
-            buildMoreMenuItems(post, postListType, onButtonClicked)
+            buildMoreMenuItemsBlocking(post, postListType, onButtonClicked)
         }
     }
 
