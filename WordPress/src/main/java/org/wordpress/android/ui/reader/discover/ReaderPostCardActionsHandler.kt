@@ -3,8 +3,7 @@ package org.wordpress.android.ui.reader.discover
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
@@ -12,7 +11,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_O
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -31,8 +30,8 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NO
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
@@ -44,6 +43,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
 // TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
 class ReaderPostCardActionsHandler @Inject constructor(
@@ -52,7 +52,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
-    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineContext
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -79,56 +79,62 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
-        when (type) {
-            FOLLOW -> handleFollowClicked(post)
-            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
-            SHARE -> handleShareClicked(post)
-            VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
-            LIKE -> handleLikeClicked(post.postId, post.blogId)
-            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
-            REBLOG -> handleReblogClicked(post)
-            COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+    suspend fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
+        withContext(bgDispatcher) {
+            when (type) {
+                FOLLOW -> handleFollowClicked(post)
+                SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
+                SHARE -> handleShareClicked(post)
+                VISIT_SITE -> handleVisitSiteClicked(post)
+                BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
+                LIKE -> handleLikeClicked(post.postId, post.blogId)
+                BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
+                REBLOG -> handleReblogClicked(post)
+                COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+            }
         }
     }
 
-    fun handleOnItemClicked(post: ReaderPost) {
-        incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
+    suspend fun handleOnItemClicked(post: ReaderPost) {
+        withContext(bgDispatcher) {
+            incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
 
-        if (post.isBookmarked) {
-            analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+            if (post.isBookmarked) {
+                analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+            }
+            _navigationEvents.postValue(Event(ShowPostDetail(post)))
         }
-        _navigationEvents.postValue(Event(ShowPostDetail(post)))
     }
 
-    fun handleVideoOverlayClicked(videoUrl: String) {
-        _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
+    suspend fun handleVideoOverlayClicked(videoUrl: String) {
+        withContext(bgDispatcher) {
+            _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
+        }
     }
 
-    fun handleHeaderClicked(siteId: Long, feedId: Long) {
-        _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
+    suspend fun handleHeaderClicked(siteId: Long, feedId: Long) {
+        withContext(bgDispatcher) {
+            _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
+        }
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
         AppLog.d(AppLog.T.READER, "Follow not implemented")
     }
 
-    private fun handleSiteNotificationsClicked(blogId: Long) {
-        defaultScope.launch {
-            when (siteNotificationsUseCase.toggleNotification(blogId)) {
-                is Success, AlreadyRunning -> { // Do Nothing
-                }
-                is NoNetwork -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
-                    )
-                }
-                is RequestFailed -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
-                    )
-                }
+    private suspend fun handleSiteNotificationsClicked(blogId: Long) {
+        when (siteNotificationsUseCase.toggleNotification(blogId)) {
+            is Success, AlreadyRunning -> { // Do Nothing
+            }
+            is NoNetwork -> {
+                _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                )
+            }
+            is RequestFailed -> {
+                _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                )
             }
         }
     }
@@ -155,13 +161,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
         AppLog.d(AppLog.T.READER, "Like not implemented")
     }
 
-    private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        defaultScope.launch {
-            bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
-        }
+    private suspend fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
+        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
     }
 
-    private fun handleReblogClicked(post: ReaderPost) {
+    private suspend fun handleReblogClicked(post: ReaderPost) {
         val state = reblogUseCase.onReblogButtonClicked(post)
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {

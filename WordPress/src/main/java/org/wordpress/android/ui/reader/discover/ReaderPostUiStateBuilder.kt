@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
@@ -14,6 +16,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -39,6 +42,7 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
 
@@ -51,10 +55,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     // TODO malinjir move this to a bg thread
-    fun mapPostToUiState(
+    suspend fun mapPostToUiState(
         post: ReaderPost,
         isDiscover: Boolean = false, // set to true for new discover tab
         photonWidth: Int,
@@ -74,59 +79,63 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onTagItemClicked: (String) -> Unit,
         moreMenuItems: List<SecondaryAction>? = null
     ): ReaderPostUiState {
-        return ReaderPostUiState(
-                postId = post.postId,
-                blogId = post.blogId,
-                blogUrl = buildBlogUrl(post),
-                dateLine = buildDateLine(post),
-                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-                blogName = buildBlogName(post),
-                excerpt = buildExcerpt(post),
-                title = buildTitle(post),
-                tagItems = buildTagItems(post, onTagItemClicked),
-                photoFrameVisibility = buildPhotoFrameVisibility(post),
-                photoTitle = buildPhotoTitle(post),
-                featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-                featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-                thumbnailStripSection = buildThumbnailStripUrls(post),
-                expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
-                videoOverlayVisibility = buildVideoOverlayVisibility(post),
-                featuredImageVisibility = buildFeaturedImageVisibility(post),
-                moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
-                moreMenuItems = moreMenuItems,
-                fullVideoUrl = buildFullVideoUrl(post),
-                discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
-                bookmarkAction = buildBookmarkSection(post, onButtonClicked),
-                likeAction = buildLikeSection(post, isBookmarkList, onButtonClicked),
-                reblogAction = buildReblogSection(post, onButtonClicked),
-                commentsAction = buildCommentsSection(post, isBookmarkList, onButtonClicked),
-                onItemClicked = onItemClicked,
-                onItemRendered = onItemRendered,
-                onMoreButtonClicked = onMoreButtonClicked,
-                onMoreDismissed = onMoreDismissed,
-                onVideoOverlayClicked = onVideoOverlayClicked,
-                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
-        )
+        return withContext(bgDispatcher) {
+            ReaderPostUiState(
+                    postId = post.postId,
+                    blogId = post.blogId,
+                    blogUrl = buildBlogUrl(post),
+                    dateLine = buildDateLine(post),
+                    avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+                    blogName = buildBlogName(post),
+                    excerpt = buildExcerpt(post),
+                    title = buildTitle(post),
+                    tagItems = buildTagItems(post, onTagItemClicked),
+                    photoFrameVisibility = buildPhotoFrameVisibility(post),
+                    photoTitle = buildPhotoTitle(post),
+                    featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+                    featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
+                    thumbnailStripSection = buildThumbnailStripUrls(post),
+                    expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
+                    videoOverlayVisibility = buildVideoOverlayVisibility(post),
+                    featuredImageVisibility = buildFeaturedImageVisibility(post),
+                    moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
+                    moreMenuItems = moreMenuItems,
+                    fullVideoUrl = buildFullVideoUrl(post),
+                    discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
+                    bookmarkAction = buildBookmarkSection(post, onButtonClicked),
+                    likeAction = buildLikeSection(post, isBookmarkList, onButtonClicked),
+                    reblogAction = buildReblogSection(post, onButtonClicked),
+                    commentsAction = buildCommentsSection(post, isBookmarkList, onButtonClicked),
+                    onItemClicked = onItemClicked,
+                    onItemRendered = onItemRendered,
+                    onMoreButtonClicked = onMoreButtonClicked,
+                    onMoreDismissed = onMoreDismissed,
+                    onVideoOverlayClicked = onVideoOverlayClicked,
+                    postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+            )
+        }
     }
 
-    fun mapTagListToReaderInterestUiState(
+    suspend fun mapTagListToReaderInterestUiState(
         interests: ReaderTagList,
         onClicked: ((String) -> Unit)
     ): ReaderInterestsCardUiState {
-        val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
-            interests.size
-        } else {
-            READER_INTEREST_LIST_SIZE_LIMIT
-        }
-        val lastIndex = listSize - 1
+        return withContext(bgDispatcher) {
+            val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
+                interests.size
+            } else {
+                READER_INTEREST_LIST_SIZE_LIMIT
+            }
+            val lastIndex = listSize - 1
 
-        return ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
-            ReaderInterestUiState(
-                    interest.tagTitle,
-                    buildIsDividerVisible(interest, interests, lastIndex),
-                    onClicked
-            )
-        })
+            return@withContext ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
+                ReaderInterestUiState(
+                        interest.tagTitle,
+                        buildIsDividerVisible(interest, interests, lastIndex),
+                        onClicked
+                )
+            })
+        }
     }
 
     private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
