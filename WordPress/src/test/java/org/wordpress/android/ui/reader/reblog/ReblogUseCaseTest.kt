@@ -79,7 +79,8 @@ class ReblogUseCaseTest {
     }
 
     @Test
-    fun `when having more than one visible WPCOM sites and selecting site to reblog the post editor is triggered`() = test {
+    fun `when having more than one visible WPCOM sites and selecting site to reblog the post editor is triggered`() =
+            test {
         val siteId = 1
         val site = SiteModel()
         val post = ReaderPost()
@@ -111,7 +112,8 @@ class ReblogUseCaseTest {
     }
 
     @Test
-    fun `when user has more than one visible WPCOM sites but the selected site is not retrieved an error occurs`() = test {
+    fun `when user has more than one visible WPCOM sites but the selected site is not retrieved an error occurs`() =
+            test {
         val post = ReaderPost()
         val visibleWPComSites = listOf(null, null) // More sites
 
