@@ -105,7 +105,7 @@ class PhotoPickerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
             lastTappedIcon = savedLastTappedIconName?.let { PhotoPickerIcon.valueOf(it) }
