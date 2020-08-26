@@ -351,13 +351,12 @@ jobs:
             - ~/Library/Caches/Homebrew
           key: *homebrew-cache-key
       - run:
-          name: Prepare bundle Config with rmagick
+          name: Bundle install with rmagick
           command: |
             # Activate 'screenshots' in bundle config options (remove it from 'without' in case it's set here)
             bundle config --local --delete without
             bundle config --local with screenshots
-      - bundle-install/bundle-install:
-          cache_key_prefix: v1-promo-screenshots
+            bundle install --path vendor/bundle
       - run:
           name: Download Promo Strings
           command: bundle exec fastlane download_promo_strings
