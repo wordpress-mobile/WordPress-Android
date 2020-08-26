@@ -11,7 +11,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_CARD_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SITE_SHOWN
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
@@ -62,7 +61,6 @@ class ReaderPostViewHolder(
         )
         uiState.postHeaderClickData?.onPostHeaderViewClicked?.let {
             layout_post_header.setOnClickListener {
-                AnalyticsTracker.track(READER_SITE_SHOWN)
                 uiState.postHeaderClickData.onPostHeaderViewClicked.invoke(uiState.postId, uiState.blogId)
             }
         } ?: run {

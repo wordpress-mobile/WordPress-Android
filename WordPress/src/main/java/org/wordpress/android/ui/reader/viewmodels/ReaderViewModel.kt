@@ -9,7 +9,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_SHOWN
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -48,6 +47,7 @@ class ReaderViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var isReaderInterestsShown: Boolean = false
+    private var wasPaused: Boolean = false
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -134,8 +134,6 @@ class ReaderViewModel @Inject constructor(
                     _showReaderInterests.value = Event(Unit)
                 }
             }
-
-            analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
         }
     }
 
@@ -215,6 +213,7 @@ class ReaderViewModel @Inject constructor(
 
     fun onScreenInBackground() {
         readerTracker.stop(MAIN_READER)
+        wasPaused = true
     }
 
     private fun isSearchSupported() = accountStore.hasAccessToken()
