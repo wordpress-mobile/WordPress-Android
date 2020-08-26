@@ -275,6 +275,7 @@ jobs:
     executor:
       name: android/default
       api-version: "28"
+    working_directory: /tmp/workspace
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -348,6 +349,7 @@ jobs:
         default: true
     macos:
       xcode: 11.6.0
+    working_directory: /tmp/workspace
     steps:
       - attach_workspace:
           at: .
