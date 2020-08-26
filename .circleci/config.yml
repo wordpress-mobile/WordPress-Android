@@ -246,21 +246,33 @@ jobs:
             eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
             echo "export PATH='/home/linuxbrew/.linuxbrew/Cellar/bundletool/1.0.0/bin:$PATH'" >> $BASH_ENV
             brew install bundletool
-      - run:
-          name: Build APK
-          environment:
-            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+      - run: 
+          name: Prepare build
           command: |
-            APP_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV 
             echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $APP_VERSION failed!'" >> $BASH_ENV
             echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $APP_VERSION has been deployed!'" >> $BASH_ENV
             bundle check
-            ./gradlew --stacktrace lintVanillaRelease
-            if [[ $APP_VERSION == *"-rc-"* ]]; then
-              bundle exec fastlane build_and_upload_pre_releases skip_confirm:true skip_prechecks:true create_release:true
+      - run:
+          name: Build Zalpha 
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_alpha skip_confirm:true skip_prechecks:true create_release:true
+            fi 
+          no_output_timeout: 15m
+      - run: 
+          name: Build Vanilla
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_beta skip_confirm:true skip_prechecks:true create_release:true
             else
               bundle exec fastlane build_and_upload_release skip_confirm:true skip_prechecks:true create_release:true
             fi
+          no_output_timeout: 15m
       - android/save-gradle-cache
       - slack/status:
           include_job_number_field: false
@@ -468,7 +480,12 @@ workflows:
     unless: << pipeline.parameters.translation_review_build >>
     jobs:
       - gutenberg-bundle-build
+      - lint:
+          requires:
+            - gutenberg-bundle-build
       - Release Build:
+          requires:
+            - gutenberg-bundle-build
           filters:
             branches:
               ignore: /.*/
