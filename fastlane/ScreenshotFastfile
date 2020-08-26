@@ -13,6 +13,11 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+RAW_SCREENSHOTS_DIR = File.join(Dir.pwd, "screenshots", "raw")
+RAW_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "raw_tmp")
+PROMO_SCREENSHOTS_PROCESSING_DIR = File.join(Dir.pwd, "screenshots", "promo_tmp")
+FINAL_METADATA_DIR = File.join(Dir.pwd, "metadata/android")
+
 default_platform(:android)
 
 platform :android do
@@ -88,7 +93,7 @@ platform :android do
     puts locales
 
     screenshot_options = {
-      output_directory: "fastlane/metadata/android",
+      output_directory: RAW_SCREENSHOTS_DIR,
       app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk",
       tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk",
       use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
@@ -156,23 +161,19 @@ platform :android do
   #####################################################################################
   desc "Creates promo screenshots"
   lane :create_promo_screenshots do |options|
-
+    # Clean temporary folder from previous runs
+    FileUtils.rm_rf(PROMO_SCREENSHOTS_PROCESSING_DIR)
+    
     # Create a copy of the files to work with – this ensures that if we're doing multiple
     # screenshot generation tasks close together, we can keep reusing the same source files
-    original_screenshot_directory = File.join(Dir.pwd, "metadata/android/")
-    repaired_screenshot_directory = File.join(Dir.pwd, "metadata/tmp")
-    FileUtils.rm_rf(repaired_screenshot_directory)
-    FileUtils.copy_entry(original_screenshot_directory, repaired_screenshot_directory)
+    FileUtils.rm_rf(RAW_SCREENSHOTS_PROCESSING_DIR)
+    FileUtils.copy_entry(RAW_SCREENSHOTS_DIR, RAW_SCREENSHOTS_PROCESSING_DIR)
 
     # Remove the timestamps from filenames to make them easier to work with
-    Dir.glob(repaired_screenshot_directory + "/**/**")
-    .select{ |entry|
-      entry.end_with? ".png"
-    }
-    .each { |entry|
+    Dir.glob(RAW_SCREENSHOTS_PROCESSING_DIR + "/**/*.png").each do |entry|
       newfilename = File.dirname(entry) + "/" + File.basename(entry).split("_")[0] + File.extname(entry)
       File.rename( entry, newfilename.downcase )
-    }
+    end
 
     locales = SUPPORTED_LOCALES
       .select { |hsh| hsh[:promo_config] != false }
@@ -186,26 +187,42 @@ platform :android do
     end
 
     # Remove locales we're not interested in
-    Pathname(repaired_screenshot_directory)
+    Pathname(RAW_SCREENSHOTS_PROCESSING_DIR)
         .children
         .select(&:directory?)
-        .select { |dir|
-        !locales.include? File.basename(dir)
-    }
-    .each { |dir|
-        FileUtils.rm_rf(dir)
-    }
+        .reject { |dir| locales.include? File.basename(dir) }
+        .each do |dir|
+          FileUtils.rm_rf(dir)
+        end
 
     # Run screenshots generator tool
     promo_screenshots(
-      orig_folder: repaired_screenshot_directory,
-      metadata_folder: repaired_screenshot_directory,
-      output_folder: File.join(Dir.pwd, "/promo_screenshots"),
+      orig_folder: RAW_SCREENSHOTS_PROCESSING_DIR,
+      metadata_folder: FINAL_METADATA_DIR,
+      output_folder: PROMO_SCREENSHOTS_PROCESSING_DIR,
       force: options[:force],
     )
 
-    # Clean up the temp directory
-    FileUtils.rm_rf(repaired_screenshot_directory)
+    # Remove old screenshots from FINAL_METADATA_DIR subfolders of the targetted locales
+    UI.message("Cleaning old promo screenshots from #{FINAL_METADATA_DIR} for #{locales.count} selected locales...")
+    locales.each do |locale|
+      screenshot_files = Dir.glob("#{FINAL_METADATA_DIR}/#{locale}/images/*/*.png")
+      FileUtils.rm( screenshot_files )
+    end
+
+    # Finally move generated screenshots from PROMO_SCREENSHOTS_PROCESSING_DIR to FINAL_METADATA_DIR subfolders
+    relative_paths = Dir.chdir(PROMO_SCREENSHOTS_PROCESSING_DIR) { Dir.glob("*/images/*/*.png") }
+    UI.message("Moving #{relative_paths.count} new promo screenshots to #{FINAL_METADATA_DIR}...")
+    relative_paths.each do |entry|
+      old_path = File.join( PROMO_SCREENSHOTS_PROCESSING_DIR, entry )
+      new_path = File.join( FINAL_METADATA_DIR, entry )
+      FileUtils.mkdir_p( File.dirname(new_path) )
+      File.rename( old_path, new_path )
+    end
+
+    # Clean up the temp directories
+    FileUtils.rm_rf(RAW_SCREENSHOTS_PROCESSING_DIR)
+    FileUtils.rm_rf(PROMO_SCREENSHOTS_PROCESSING_DIR)
   end
 
 
