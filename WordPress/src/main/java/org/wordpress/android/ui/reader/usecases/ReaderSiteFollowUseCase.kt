@@ -10,6 +10,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Success
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
@@ -22,8 +23,8 @@ import kotlin.coroutines.suspendCoroutine
 class ReaderSiteFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
-    private val readerPostTableWrapper: ReaderPostTableWrapper
-
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
     private var continuation: Continuation<Boolean>? = null
 
@@ -32,7 +33,8 @@ class ReaderSiteFollowUseCase @Inject constructor(
             emit(NoNetwork)
         } else {
             val isAskingToFollow = !readerPostTableWrapper.isPostFollowed(post)
-            val showEnableNotification = !post.isFollowedByCurrentUser
+            val showEnableNotification = !readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId) &&
+                    !post.isFollowedByCurrentUser
             emit(ReaderPostData(post.blogId, isAskingToFollow, showEnableNotification))
 
             performAction(post, isAskingToFollow)
