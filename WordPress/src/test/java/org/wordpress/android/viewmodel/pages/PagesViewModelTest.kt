@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -280,7 +281,8 @@ class PagesViewModelTest {
         )
 
         // Assert
-        assertThat(snackbarMessages[0].messageRes).isEqualTo(R.string.page_homepage_successfully_updated)
+        val message = snackbarMessages[0].message as UiStringRes
+        assertThat(message.stringRes).isEqualTo(R.string.page_homepage_successfully_updated)
     }
 
     @Test
@@ -302,7 +304,8 @@ class PagesViewModelTest {
         )
 
         // Assert
-        assertThat(snackbarMessages[0].messageRes).isEqualTo(R.string.page_homepage_update_failed)
+        val message = snackbarMessages[0].message as UiStringRes
+        assertThat(message.stringRes).isEqualTo(R.string.page_homepage_update_failed)
     }
 
     @Test
@@ -323,7 +326,8 @@ class PagesViewModelTest {
         )
 
         // Assert
-        assertThat(snackbarMessages[0].messageRes).isEqualTo(R.string.page_posts_page_successfully_updated)
+        val message = snackbarMessages[0].message as UiStringRes
+        assertThat(message.stringRes).isEqualTo(R.string.page_posts_page_successfully_updated)
     }
 
     @Test
@@ -345,7 +349,8 @@ class PagesViewModelTest {
         )
 
         // Assert
-        assertThat(snackbarMessages[0].messageRes).isEqualTo(R.string.page_posts_page_update_failed)
+        val message = snackbarMessages[0].message as UiStringRes
+        assertThat(message.stringRes).isEqualTo(R.string.page_posts_page_update_failed)
     }
 
     private fun getPublishedPage(remoteId: Long): PublishedPage = PublishedPage(

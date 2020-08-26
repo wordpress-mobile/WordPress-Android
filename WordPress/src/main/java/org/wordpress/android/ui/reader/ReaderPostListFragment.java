@@ -493,11 +493,14 @@ public class ReaderPostListFragment extends Fragment
     private void showSnackbar(SnackbarMessageHolder holder) {
         WPSnackbar snackbar = WPSnackbar.make(
                 requireView(),
-                holder.getMessageRes(),
+                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG
         );
-        if (holder.getButtonTitleRes() != null) {
-            snackbar.setAction(getString(holder.getButtonTitleRes()), v -> holder.getButtonAction().invoke());
+        if (holder.getButtonTitle() != null) {
+            snackbar.setAction(
+                    mUiHelpers.getTextOfUiString(requireContext(), holder.getButtonTitle()),
+                    v -> holder.getButtonAction().invoke()
+            );
         }
         snackbar.show();
     }
@@ -2601,15 +2604,7 @@ public class ReaderPostListFragment extends Fragment
                 toggleFollowStatusForPost(post);
                 break;
             case SITE_NOTIFICATIONS:
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-                    updateSubscription(SubscriptionAction.DELETE, post.blogId);
-                } else {
-                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-                    updateSubscription(SubscriptionAction.NEW, post.blogId);
-                }
+                mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
                 break;
             case SHARE:
                 AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
@@ -2638,20 +2633,22 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                  .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                          new View.OnClickListener() {
-                              @Override public void onClick(View view) {
-                                  AnalyticsUtils
-                                          .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                                  AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                          String.valueOf(blogId), SubscriptionAction.NEW);
-                                  mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                                  ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                              }
-                          })
-                  .show();
+        if (blogId > 0) {
+            WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
+                      .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                              new View.OnClickListener() {
+                                  @Override public void onClick(View view) {
+                                      AnalyticsUtils
+                                              .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                      AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                              String.valueOf(blogId), SubscriptionAction.NEW);
+                                      mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                      ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                                  }
+                              })
+                      .show();
+        }
     }
 
     @Override
@@ -2683,11 +2680,6 @@ public class ReaderPostListFragment extends Fragment
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_share_intent);
         }
-    }
-
-    private void updateSubscription(SubscriptionAction action, long blogId) {
-        AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(String.valueOf(blogId), action);
-        mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
     }
 
     /*

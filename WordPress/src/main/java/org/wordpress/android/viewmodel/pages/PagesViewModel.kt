@@ -56,6 +56,7 @@ import org.wordpress.android.ui.posts.getAuthorFilterItems
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.PAGES
 import org.wordpress.android.util.EventBusWrapper
@@ -276,7 +277,7 @@ class PagesViewModel
                     val result = pageStore.requestPagesFromServer(site, forced)
                     if (result.isError) {
                         _listState.setOnUi(ERROR)
-                        showSnackbar(SnackbarMessageHolder(R.string.error_refresh_pages))
+                        showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.error_refresh_pages)))
                         AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
                     } else {
                         _listState.setOnUi(DONE)
@@ -359,7 +360,7 @@ class PagesViewModel
             if (page != null) {
                 _scrollToPage.postValue(page)
             } else {
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.pages_open_page_error))
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.pages_open_page_error)))
             }
         } else {
             scrollToPageId = remotePageId
@@ -452,7 +453,7 @@ class PagesViewModel
     private fun cancelPendingAutoUpload(pageId: LocalId) {
         val page = postStore.getPostByLocalPostId(pageId.value)
         val msgRes = UploadUtils.cancelPendingAutoUpload(page, dispatcher)
-        _showSnackbarMessage.postValue(SnackbarMessageHolder(msgRes))
+        _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(msgRes)))
     }
 
     private fun setParent(page: Page) {
@@ -480,12 +481,12 @@ class PagesViewModel
                             R.string.page_homepage_successfully_updated
                         }
                     }
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder(message))
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(message)))
                 }
             } else {
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(
-                                messageRes = R.string.page_cannot_set_homepage
+                                message = UiStringRes(R.string.page_cannot_set_homepage)
                         )
                 )
             }
@@ -509,12 +510,12 @@ class PagesViewModel
                             R.string.page_posts_page_successfully_updated
                         }
                     }
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder(message))
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(message)))
                 }
             } else {
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(
-                                messageRes = R.string.page_cannot_set_posts_page
+                                message = UiStringRes(R.string.page_cannot_set_posts_page)
                         )
                 )
             }
@@ -535,7 +536,7 @@ class PagesViewModel
             performAction()
             true
         } else {
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             false
         }
     }
@@ -545,7 +546,7 @@ class PagesViewModel
             performAction()
             true
         } else {
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.no_network_message))
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             false
         }
     }
@@ -629,9 +630,13 @@ class PagesViewModel
 
                 showSnackbar(
                         if (action.undo != null) {
-                            SnackbarMessageHolder(R.string.page_parent_changed, R.string.undo, action.undo!!)
+                            SnackbarMessageHolder(
+                                    UiStringRes(R.string.page_parent_changed),
+                                    UiStringRes(R.string.undo),
+                                    action.undo!!
+                            )
                         } else {
-                            SnackbarMessageHolder(R.string.page_parent_changed)
+                            SnackbarMessageHolder(UiStringRes(R.string.page_parent_changed))
                         }
                 )
             }
@@ -640,7 +645,7 @@ class PagesViewModel
             launch(defaultDispatcher) {
                 refreshPages()
 
-                showSnackbar(SnackbarMessageHolder(R.string.page_parent_change_error))
+                showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.page_parent_change_error)))
             }
         }
 
@@ -681,14 +686,14 @@ class PagesViewModel
                 delay(ACTION_DELAY)
                 reloadPages()
 
-                showSnackbar(SnackbarMessageHolder(R.string.page_permanently_deleted))
+                showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.page_permanently_deleted)))
             }
         }
         action.onError = {
             launch(defaultDispatcher) {
                 refreshPages()
 
-                showSnackbar(SnackbarMessageHolder(R.string.page_delete_error))
+                showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.page_delete_error)))
             }
         }
 
@@ -748,7 +753,7 @@ class PagesViewModel
                     launch(defaultDispatcher) {
                         action.undo?.let { it() }
 
-                        showSnackbar(SnackbarMessageHolder(R.string.page_status_change_error))
+                        showSnackbar(SnackbarMessageHolder(UiStringRes(R.string.page_status_change_error)))
                     }
                 }
 
@@ -779,9 +784,9 @@ class PagesViewModel
         }
 
         return if (undo != null) {
-            SnackbarMessageHolder(message, R.string.undo, undo)
+            SnackbarMessageHolder(UiStringRes(message), UiStringRes(R.string.undo), undo)
         } else {
-            SnackbarMessageHolder(message)
+            SnackbarMessageHolder(UiStringRes(message))
         }
     }
 
@@ -800,7 +805,7 @@ class PagesViewModel
     private fun handleRemoteAutoSave(post: PostModel, isError: Boolean) {
         if (isError || hasRemoteAutoSavePreviewError()) {
             updatePreviewAndDialogState(PostListRemotePreviewState.NONE, PostInfoType.PostNoInfo)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(R.string.remote_preview_operation_error))
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.remote_preview_operation_error)))
         } else {
             updatePreviewAndDialogState(
                     PostListRemotePreviewState.PREVIEWING,
