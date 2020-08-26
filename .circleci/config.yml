@@ -351,13 +351,23 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - restore_cache:
+          # ImageMagick is used by the 'rmagick' gem, so cache invalidation of ImageMagick should depend on version of rmagick from Gemfile.lock
+          keys:
+            - &homebrew-cache-key v2-brew-imagemagick-{{ checksum "Gemfile.lock" }}
       - run:
-          name: Install ImageMagick
-          command: brew install pkg-config imagemagick
-      - run:
-          name: Bundle Config with rmagick
+          name: Brew Install ImageMagick
           command: |
-            # Remove 'screenshots' from the 'without' bundle config options in case it's set
+            brew install pkg-config imagemagick
+            brew cleanup
+      - save_cache:
+          paths:
+            - ~/Library/Caches/Homebrew
+          key: *homebrew-cache-key
+      - run:
+          name: Prepare bundle Config with rmagick
+          command: |
+            # Activate 'screenshots' in bundle config options (remove it from 'without' in case it's set here)
             bundle config --local --delete without
             bundle config --local with screenshots
       - bundle-install/bundle-install:
