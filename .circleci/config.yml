@@ -23,7 +23,7 @@ commands:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx3500m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -222,6 +222,8 @@ jobs:
   Release Build:
     docker:
       - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    environment:
+      JVM_OPTS: -Xmx2048m
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -250,8 +252,8 @@ jobs:
           name: Prepare build
           command: |
             echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV 
-            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $APP_VERSION failed!'" >> $BASH_ENV
-            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $APP_VERSION has been deployed!'" >> $BASH_ENV
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android ${APP_VERSION} failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android ${APP_VERSION} has been deployed!'" >> $BASH_ENV
             bundle check
       - run:
           name: Build Zalpha 
