@@ -57,7 +57,7 @@ android {
         } else {
             versionName "alpha-241"
         }
-        versionCode 913
+        versionCode 914
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -95,7 +95,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "15.6-rc-2"
             }
-            versionCode 912
+            versionCode 913
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
