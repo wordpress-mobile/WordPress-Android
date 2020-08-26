@@ -16,6 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:contentInsetEnd="@dimen/toolbar_content_offset_end"
             app:contentInsetLeft="@dimen/toolbar_content_offset"
             app:contentInsetRight="@dimen/toolbar_content_offset_end"
