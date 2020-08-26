@@ -51,6 +51,7 @@ class ReaderDiscoverViewModelTest {
 
     @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
+    @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
@@ -65,6 +66,7 @@ class ReaderDiscoverViewModelTest {
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(
                 uiStateBuilder,
+                menuUiStateBuilder,
                 readerPostCardActionsHandler,
                 readerDiscoverDataProvider,
                 reblogUseCase,
@@ -77,7 +79,8 @@ class ReaderDiscoverViewModelTest {
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
+                        anyOrNull(), anyOrNull()
                 )
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
@@ -250,7 +253,8 @@ class ReaderDiscoverViewModelTest {
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
                 postHeaderClickData = mock(),
-                moreMenuItems = mock()
+                moreMenuItems = mock(),
+                onMoreDismissed = mock()
         )
     }
 

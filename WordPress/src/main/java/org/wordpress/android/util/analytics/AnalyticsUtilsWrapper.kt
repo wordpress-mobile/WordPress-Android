@@ -3,6 +3,7 @@ package org.wordpress.android.util.analytics
 import android.content.Context
 import android.content.Intent
 import dagger.Reusable
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.UriWrapper
@@ -22,4 +23,6 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
 
     fun trackEditorCreatedPost(action: String?, intent: Intent, site: SiteModel, post: PostImmutableModel?) =
             AnalyticsUtils.trackEditorCreatedPost(action, intent, site, post)
+
+    fun trackWithSiteId(stat: AnalyticsTracker.Stat, blogID: Long) = AnalyticsUtils.trackWithSiteId(stat, blogID)
 }

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_SHOWN
+import org.wordpress.android.R.string
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -148,11 +149,11 @@ class ReaderInterestsViewModel @Inject constructor(
                 is Error -> {
                     if (result is NetworkUnavailable) {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(R.string.no_network_message))
+                            Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
                         )
                     } else if (result is RemoteRequestFailure) {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
                         )
                     }
                     updateUiState(

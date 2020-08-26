@@ -148,9 +148,13 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(constraint_layout, getString(this.messageRes), Snackbar.LENGTH_LONG)
-        if (this.buttonTitleRes != null) {
-            snackbar.setAction(getString(this.buttonTitleRes)) {
+        val snackbar = WPSnackbar.make(
+                constraint_layout,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
+        )
+        if (this.buttonTitle != null) {
+            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
                 this.buttonAction.invoke()
             }
         }

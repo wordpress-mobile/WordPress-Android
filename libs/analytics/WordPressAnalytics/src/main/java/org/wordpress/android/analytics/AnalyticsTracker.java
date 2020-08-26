@@ -654,6 +654,8 @@ public final class AnalyticsTracker {
         READER_PULL_TO_REFRESH,
         POST_CARD_MORE_TAPPED,
         READER_CHIPS_MORE_TOGGLED
+        ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL,
+        ENCRYPTED_LOGGING_UPLOAD_FAILED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

@@ -1826,6 +1826,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_card_more_tapped";
             case READER_CHIPS_MORE_TOGGLED:
                 return "reader_chips_more_toggled";
+            case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:
+                return "encrypted_logging_upload_successful";
+            case ENCRYPTED_LOGGING_UPLOAD_FAILED:
+                return "encrypted_logging_upload_failed";
         }
         return null;
     }
