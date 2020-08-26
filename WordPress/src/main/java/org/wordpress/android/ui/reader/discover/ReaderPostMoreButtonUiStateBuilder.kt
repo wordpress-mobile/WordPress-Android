@@ -13,13 +13,15 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
 @Reusable
 class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val readerBlogTableWrapper: ReaderBlogTableWrapper
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
     fun buildMoreMenuItems(
         post: ReaderPost,
@@ -39,8 +41,8 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     )
             )
 
-            // When blogId and feedId are not equal, post is not a feed so show notifications option.
-            if (post.blogId != post.feedId) {
+            // When post not from external feed so show notifications option.
+            if (!readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) {
                 if (readerBlogTableWrapper.isNotificationsEnabled(post.blogId)) {
                     menuItems.add(
                             SecondaryAction(
