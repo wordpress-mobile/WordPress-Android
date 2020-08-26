@@ -134,4 +134,46 @@ class SiteUtilsTest {
 
         assertThat(isAccessedViaWPComRest).isTrue()
     }
+
+    @Test
+    fun `supportsStoriesFeature returns true when origin is wpcom rest`() {
+        val site = SiteModel().apply {
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            setIsWPCom(true)
+        }
+
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site)
+
+        assertTrue(supportsStoriesFeature)
+    }
+
+    @Test
+    fun `supportsStoriesFeature returns true when Jetpack site meets requirement`() {
+        val site = initJetpackSite().apply {
+            jetpackVersion = SiteUtils.WP_STORIES_JETPACK_VERSION
+        }
+
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site)
+
+        assertTrue(supportsStoriesFeature)
+    }
+
+    @Test
+    fun `supportsStoriesFeature returns false when Jetpack site does not meet requirement`() {
+        val site = initJetpackSite().apply {
+            jetpackVersion = (SiteUtils.WP_STORIES_JETPACK_VERSION.toFloat() - 1).toString()
+        }
+
+        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site)
+
+        assertFalse(supportsStoriesFeature)
+    }
+
+    private fun initJetpackSite(): SiteModel {
+        return SiteModel().apply {
+            origin = SiteModel.ORIGIN_WPCOM_REST
+            setIsJetpackInstalled(true)
+            setIsJetpackConnected(true)
+        }
+    }
 }

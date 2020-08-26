@@ -12,7 +12,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnSocialChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
@@ -21,6 +20,8 @@ import org.wordpress.android.util.AppLog.T;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType.UNKNOWN_USER;
+import static org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType.USER_EXISTS;
 
 import dagger.android.support.AndroidSupportInjection;
 
@@ -189,7 +190,8 @@ public class LoginGoogleFragment extends GoogleFragment {
         if (event.isError()) {
             AppLog.e(T.API, "LoginGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
 
-            if (event.error.type != AccountSocialErrorType.USER_EXISTS) {
+            // We don't want to track these errors: USER_EXISTS and UNKNOWN_USER (if signup from login is enabled)
+            if (event.error.type != USER_EXISTS && (!mIsSignupFromLoginEnabled || event.error.type != UNKNOWN_USER)) {
                 mAnalyticsListener.trackLoginFailed(event.getClass().getSimpleName(),
                         event.error.type.toString(), event.error.message);
 
