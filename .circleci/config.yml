@@ -343,6 +343,13 @@ jobs:
               mkdir -p "fastlane/screenshots/raw/${SUBDIR_DEST}"
               gsutil -m cp -r -cU "${DIR}/artifacts/*.jpg" "fastlane/screenshots/raw/${SUBDIR_DEST}" || true
             done
+
+            # Rename all jpg files to get rid of the prefix in the basename
+            for JPG in fastlane/screenshots/raw/*/images/*Screenshots/*.jpg; do
+              D=$(dirname $JPG)
+              B=$(basename $JPG)
+              mv "${JPG}" "${D}/${B##org.wordpress.android.ui.screenshots.WPScreenshotTest-wPScreenshotTest-}"
+            done
       - store_artifacts:
           path: fastlane/screenshots/raw/
       - run:
