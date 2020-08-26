@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.AccountStore.SubscriptionError
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
@@ -134,6 +135,18 @@ class ReaderSiteNotificationsUseCaseTest {
         // Assert
         verify(dispatcher, times(2)).dispatch(dispatchCaptor.capture())
         Assert.assertEquals(dispatchCaptor.lastValue.type, AccountAction.FETCH_SUBSCRIPTIONS)
+    }
+
+    @Test
+    fun `Success returned if notification is subscribed successfully`() = test {
+        // Arrange
+        val blogId = 1L
+
+        // Act
+        val result = useCase.toggleNotification(blogId)
+
+        // Assert
+        assertThat(result).isEqualTo(Success)
     }
 
     @Test

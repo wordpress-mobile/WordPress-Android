@@ -11,8 +11,10 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -33,11 +35,11 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<Boolean>? = null
 
-    suspend fun toggleNotification(blogId: Long): SiteNotificationState? {
+    suspend fun toggleNotification(blogId: Long): SiteNotificationState {
         if (continuation != null) {
             // Toggling notification for multiple sites in parallel isn't supported
             // as the user would lose the ability to undo the action
-            return null
+            return AlreadyRunning
         }
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return NoNetwork
@@ -51,13 +53,13 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
             updateSubscription(blogId)
         }
 
-        if (succeeded) {
+        return if (succeeded) {
             updateBlogInDb(blogId)
             dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+            Success
         } else {
-            return RequestFailed
+            RequestFailed
         }
-        return null
     }
 
     private fun trackEvent(blogId: Long) {
@@ -105,9 +107,11 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
     }
 
     sealed class SiteNotificationState {
+        object Success : SiteNotificationState()
         sealed class Failed : SiteNotificationState() {
             object NoNetwork : Failed()
             object RequestFailed : Failed()
+            object AlreadyRunning : Failed()
         }
     }
 }

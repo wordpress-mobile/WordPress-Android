@@ -35,8 +35,10 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -124,26 +126,25 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
-        uiScope.launch {
+        defaultScope.launch {
             followUseCase.toggleFollow(post)
         }
     }
 
     private fun handleSiteNotificationsClicked(blogId: Long) {
         defaultScope.launch {
-            val result = siteNotificationsUseCase.toggleNotification(blogId)
-            result?.let {
-                when (it) {
-                    is NoNetwork -> {
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
-                        )
-                    }
-                    is RequestFailed -> {
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
-                        )
-                    }
+            when (siteNotificationsUseCase.toggleNotification(blogId)) {
+                is Success, AlreadyRunning -> { // Do Nothing
+                }
+                is NoNetwork -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    )
+                }
+                is RequestFailed -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    )
                 }
             }
         }
