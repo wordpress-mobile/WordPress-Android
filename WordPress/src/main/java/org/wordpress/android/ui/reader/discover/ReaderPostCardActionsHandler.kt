@@ -139,11 +139,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is Started, is Success, is SuccessWithData<*> -> {}
                 is NetworkUnavailable -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(R.string.no_network_message)))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
                 }
                 is RemoteRequestFailure -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(R.string.reader_error_request_failed_title)))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title))))
                 }
             }
         }
