@@ -8,6 +8,7 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
@@ -50,11 +51,17 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 
         val succeeded = suspendCoroutine<Boolean> { cont ->
             continuation = cont
-            updateSubscription(blogId)
+
+            val action = if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
+                DELETE
+            } else {
+                NEW
+            }
+            updateSubscription(blogId, action)
         }
 
         return if (succeeded) {
-            updateBlogInDb(blogId)
+            updateBlogInDb(blogId, readerBlogTableWrapper.isNotificationsEnabled(blogId))
             dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
             Success
         } else {
@@ -72,20 +79,15 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         analyticsUtilsWrapper.trackWithSiteId(trackingEvent, blogId)
     }
 
-    private fun updateBlogInDb(blogId: Long) {
-        val isNotificationEnabledInDb = readerBlogTableWrapper.isNotificationsEnabled(blogId)
-        readerBlogTableWrapper.setNotificationsEnabledByBlogId(
-                blogId,
-                !isNotificationEnabledInDb
-        )
+    fun updateBlogInDb(blogId: Long, isNotificationEnabledForBlog: Boolean) {
+        readerBlogTableWrapper.setNotificationsEnabledByBlogId(blogId, !isNotificationEnabledForBlog)
     }
 
-    private fun updateSubscription(blogId: Long) {
-        val action = if (readerBlogTableWrapper.isNotificationsEnabled(blogId)) {
-            DELETE
-        } else {
-            NEW
-        }
+    fun fetchSubscriptions() {
+        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+    }
+
+    fun updateSubscription(blogId: Long, action: SubscriptionAction) {
         val payload = AddOrDeleteSubscriptionPayload(blogId.toString(), action)
         dispatcher.dispatch(AccountActionBuilder.newUpdateSubscriptionNotificationPostAction(payload))
     }
