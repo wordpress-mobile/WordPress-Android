@@ -479,13 +479,23 @@ workflows:
   Release Build:
     unless: << pipeline.parameters.translation_review_build >>
     jobs:
-      - gutenberg-bundle-build
+      - gutenberg-bundle-build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
       - lint:
           requires:
             - gutenberg-bundle-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
       - Release Build:
           requires:
-            - gutenberg-bundle-build
+            - lint 
           filters:
             branches:
               ignore: /.*/
