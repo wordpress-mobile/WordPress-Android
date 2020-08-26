@@ -6,10 +6,10 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.Failed.NoNetwork
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.Failed.RequestFailed
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.ReaderPostData
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.Success
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
@@ -19,7 +19,7 @@ import kotlin.coroutines.suspendCoroutine
 /**
  * This class handles reader post follow click events.
  */
-class ReaderPostFollowUseCase @Inject constructor(
+class ReaderSiteFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper

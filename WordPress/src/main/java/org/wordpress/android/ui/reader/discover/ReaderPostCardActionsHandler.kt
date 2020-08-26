@@ -37,9 +37,9 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_S
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
@@ -59,7 +59,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
-    private val followUseCase: ReaderPostFollowUseCase,
+    private val followUseCase: ReaderSiteFollowUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
