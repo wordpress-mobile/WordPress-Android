@@ -160,7 +160,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                         )
                                         // show snackbar
                                         _snackbarEvents.postValue(
-                                                Event(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
+                                                Event(SnackbarMessageHolder(
+                                                        UiStringRes(R.string.reader_error_request_failed_title)))
                                         )
                                     }
                                 }
