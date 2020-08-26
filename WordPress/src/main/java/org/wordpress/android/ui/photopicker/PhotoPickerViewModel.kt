@@ -59,6 +59,8 @@ import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel}")
 class PhotoPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
