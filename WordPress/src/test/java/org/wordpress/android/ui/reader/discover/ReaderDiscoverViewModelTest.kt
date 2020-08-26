@@ -194,7 +194,26 @@ class ReaderDiscoverViewModelTest {
             }
 
     @Test
-    fun `if WelcomeBannerCard exists then ReaderWelcomeBannerCardUiState will be present in the ContentUiState`() =
+    fun `if welcome card exists with other cards, ReaderWelcomeBannerCardUiState is present in ContentUiState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard()
+                        .plus(createDummyReaderPostCardList()))
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
+            }
+
+    @Test
+    fun `if welcome card exists and the only card in the feed then ContentUiState is not shown`() =
             test {
                 // Arrange
                 val uiStates = mutableListOf<DiscoverUiState>()
@@ -207,8 +226,8 @@ class ReaderDiscoverViewModelTest {
                 fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
 
                 // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
+                assertThat(uiStates.size).isEqualTo(1)
+                assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
             }
 
     @Test
@@ -222,7 +241,8 @@ class ReaderDiscoverViewModelTest {
                 viewModel.start()
 
                 // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard()
+                        .plus(createDummyReaderPostCardList()))
 
                 // Assert
                 val contentUiState = uiStates[1] as ContentUiState

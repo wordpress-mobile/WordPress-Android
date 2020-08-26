@@ -85,38 +85,43 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
-            _uiState.value = ContentUiState(
-                    posts.cards.map {
-                        when (it) {
-                            is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                                    titleRes = R.string.reader_welcome_banner
-                            )
-                            is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                                    post = it.post,
-                                    isDiscover = true,
-                                    photonWidth = photonWidth,
-                                    photonHeight = photonHeight,
-                                    isBookmarkList = false,
-                                    onButtonClicked = this::onButtonClicked,
-                                    onItemClicked = this::onPostItemClicked,
-                                    onItemRendered = this::onItemRendered,
-                                    onDiscoverSectionClicked = this::onDiscoverClicked,
-                                    onMoreButtonClicked = this::onMoreButtonClicked,
-                                    onVideoOverlayClicked = this::onVideoOverlayClicked,
-                                    onPostHeaderViewClicked = this::onPostHeaderClicked,
-                                    onTagItemClicked = this::onTagItemClicked,
-                                    postListType = TAG_FOLLOWED
-                            )
-                            is InterestsYouMayLikeCard -> {
-                                postUiStateBuilder.mapTagListToReaderInterestUiState(
-                                        it.interests,
-                                        this::onReaderTagClicked
+            val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
+                    posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
+
+            if (!discoverFeedContainsOnlyWelcomeCard) {
+                _uiState.value = ContentUiState(
+                        posts.cards.map {
+                            when (it) {
+                                is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
+                                        titleRes = R.string.reader_welcome_banner
                                 )
+                                is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                                        post = it.post,
+                                        isDiscover = true,
+                                        photonWidth = photonWidth,
+                                        photonHeight = photonHeight,
+                                        isBookmarkList = false,
+                                        onButtonClicked = this::onButtonClicked,
+                                        onItemClicked = this::onPostItemClicked,
+                                        onItemRendered = this::onItemRendered,
+                                        onDiscoverSectionClicked = this::onDiscoverClicked,
+                                        onMoreButtonClicked = this::onMoreButtonClicked,
+                                        onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                        onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                        onTagItemClicked = this::onTagItemClicked,
+                                        postListType = TAG_FOLLOWED
+                                )
+                                is InterestsYouMayLikeCard -> {
+                                    postUiStateBuilder.mapTagListToReaderInterestUiState(
+                                            it.interests,
+                                            this::onReaderTagClicked
+                                    )
+                                }
                             }
-                        }
-                    },
-                    swipeToRefreshIsRefreshing = false
-            )
+                        },
+                        swipeToRefreshIsRefreshing = false
+                )
+            }
         }
 
         readerDiscoverDataProvider.communicationChannel.observeForever { data ->
