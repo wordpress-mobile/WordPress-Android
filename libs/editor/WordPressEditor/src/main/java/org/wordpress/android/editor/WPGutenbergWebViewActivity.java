@@ -3,6 +3,8 @@ package org.wordpress.android.editor;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.webkit.WebView;
 
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.util.AppLog;
@@ -23,6 +25,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     public static final String ARG_BLOCK_CONTENT = "block_content";
 
     private boolean mIsJetpackSsoEnabled;
+    private boolean mIsJetpackSsoRedirected;
     private String mUrlToLoad;
     private long mUserId;
 
@@ -133,13 +136,23 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     }
 
     @Override
-    protected boolean isJetpackSsoEnabled() {
-        return mIsJetpackSsoEnabled;
-    }
+    protected boolean isUrlOverridden(WebView view, String url) {
+        if (mIsJetpackSsoEnabled) {
+            if (!mIsJetpackSsoRedirected) {
+                mIsJetpackSsoRedirected = true;
+                view.loadUrl(mUrlToLoad);
+                return true;
+            }
 
-    @Override
-    protected String urlToLoad() {
-        return mUrlToLoad;
+            if (url.contains(mUrlToLoad)) {
+                mForegroundView.setVisibility(View.VISIBLE);
+                mIsRedirected = true;
+            }
+
+            return false;
+        } else {
+            return super.isUrlOverridden(view, url);
+        }
     }
 
     @Override public long getUserId() {
