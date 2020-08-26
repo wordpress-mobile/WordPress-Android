@@ -110,7 +110,7 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
-import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.ReaderPostData;
+import org.wordpress.android.ui.reader.usecases.ReaderPostFollowUseCase.FollowSiteState.ReaderPostData;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
