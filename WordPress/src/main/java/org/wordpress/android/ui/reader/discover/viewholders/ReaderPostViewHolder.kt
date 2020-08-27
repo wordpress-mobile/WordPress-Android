@@ -8,6 +8,9 @@ import androidx.appcompat.widget.ListPopupWindow
 import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_CARD_TAPPED
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
@@ -52,7 +55,7 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, state.dateLine)
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
-        image_more.setOnClickListener { onMoreClicked(uiState, uiState.moreMenuItems, it) }
+        image_more.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
         layout_post_header.setBackgroundResource(
                 layout_post_header.context.getDrawableResIdFromAttribute(uiState.postHeaderClickData?.background ?: 0)
         )
@@ -79,7 +82,10 @@ class ReaderPostViewHolder(
         // Content section
         uiHelpers.setTextOrHide(text_title, state.title)
         uiHelpers.setTextOrHide(text_excerpt, state.excerpt)
-        post_container.setOnClickListener { state.onItemClicked(uiState.postId, uiState.blogId) }
+        post_container.setOnClickListener {
+            AnalyticsTracker.track(READER_POST_CARD_TAPPED)
+            state.onItemClicked(uiState.postId, uiState.blogId)
+        }
 
         // Discover section
         updateDiscoverSection(state)
@@ -89,6 +95,10 @@ class ReaderPostViewHolder(
         updateActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
         updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
         updateActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
+
+        state.moreMenuItems?.let {
+            renderMoreMenu(state, state.moreMenuItems, image_more)
+        }
 
         state.onItemRendered.invoke(uiState)
     }
@@ -173,8 +183,9 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun onMoreClicked(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
+    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
         // TODO malinjir the popup menu was reused from the legacy implementation. It needs to be refactored.
+        AnalyticsTracker.track(Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
         listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
@@ -186,6 +197,7 @@ class ReaderPostViewHolder(
             val item = actions[position]
             item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
         }
+        listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
         listPopup.show()
     }
 }

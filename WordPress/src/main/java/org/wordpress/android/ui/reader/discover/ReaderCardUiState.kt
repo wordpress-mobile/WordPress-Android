@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
-import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -38,11 +37,12 @@ sealed class ReaderCardUiState {
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
-        val moreMenuItems: List<SecondaryAction>,
+        val moreMenuItems: List<SecondaryAction>? = null,
         val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderCardUiState) -> Unit,
-        val onMoreButtonClicked: (Long, Long, View) -> Unit,
+        val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        val onMoreDismissed: (ReaderPostUiState) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {
         val dotSeparatorVisibility: Boolean = blogUrl != null
@@ -63,6 +63,14 @@ sealed class ReaderCardUiState {
             val discoverAvatarUrl: String,
             val imageType: ImageType,
             val onDiscoverClicked: ((Long, Long) -> Unit)
+        )
+    }
+
+    data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
+        data class ReaderInterestUiState(
+            val interest: String,
+            val isDividerVisible: Boolean,
+            val onClicked: ((String) -> Unit)
         )
     }
 }

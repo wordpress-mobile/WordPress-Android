@@ -39,12 +39,10 @@ import kotlin.coroutines.CoroutineContext
 /*
  * StoryMediaSaveUploadBridge listens for StorySaveResult events triggered from the StorySaveService, and
  * then transforms its result data into something the UploadService can use to upload the Story frame media
- * first, then obtain the media Ids and collect them, and finally create a Post with the Story block (
- * (simple WP gallery for alpha) with the obtained media Ids.
+ * first, then obtain the media Ids and collect them, and finally create a Post with the Story block
+ * with the obtained media Ids.
  * This is different than uploading media to a regular Post because we don't need to replace the URLs for final Urls as
  * we do in Aztec / Gutenberg.
- * The gallery is only a collection of media Ids, so we really need to first upload the Media, obtain the remote id,
- * and then only create the post and upload it.
  */
 class StoryMediaSaveUploadBridge @Inject constructor(
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
@@ -65,9 +63,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     @Inject lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
-
-    // TODO remove this variable. We only need to remember this so we can tell if this is the alpha test site
-    private lateinit var currentSiteModel: SiteModel
 
     @Suppress("unused")
     @OnLifecycleEvent(ON_CREATE)
@@ -146,7 +141,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             eventBusWrapper.removeStickyEvent(event)
             event.metadata?.let {
                 val site = it.getSerializable(WordPress.SITE) as SiteModel
-                currentSiteModel = site
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
@@ -160,18 +154,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     }
 
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        // Create a gallery shortcode and placeholders for Media Ids
-        // TODO remove this code, for now it checks whether this is one of our test sites that supports
-        // the new GB block or not. Fallbacks to WP Gallery when not the case.
-        // is it the test site or not?
-        // https://dekervit.wpsandbox.me/
-        // https://particular-wildcat.jurassic.ninja/
-        if (isThisAnAlphaTestSite(mediaFiles.entries.iterator().next().value)) {
-            saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(editPostRepository, mediaFiles)
-        } else {
-            // just create a WP Gallery
-            saveStoryGutenbergBlockUseCase.buildWPGalleryInPost(editPostRepository, mediaFiles)
-        }
+        saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(editPostRepository, mediaFiles)
     }
 
     override fun getImmutablePost(): PostImmutableModel {
@@ -181,20 +164,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
         // no op
         // WARNING: don't remove this, we need to call the listener no matter what, so save & upload actually happen
-        listener?.onPostUpdatedFromUI()
+        listener?.onPostUpdatedFromUI(null)
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
         // no op
-    }
-
-    private fun isThisAnAlphaTestSite(mediaFile: MediaFile): Boolean {
-        val siteUrl = requireNotNull(currentSiteModel.url)
-        return (Uri.parse(siteUrl).host in alphaSites && mediaFile.blogId.toInt() == currentSiteModel.id)
-    }
-
-    companion object {
-        val alphaSites =
-                arrayOf("particular-wildcat.jurassic.ninja", "dekervit.wpsandbox.me")
     }
 }
