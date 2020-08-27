@@ -45,7 +45,7 @@ import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
@@ -82,8 +82,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
 
-    private val _refreshPost = MediatorLiveData<ReaderPostData>()
-    val refreshPost: LiveData<ReaderPostData> = _refreshPost
+    private val _followStatusUpdated = MediatorLiveData<PostFollowStatusChanged>()
+    val followStatusUpdated: LiveData<PostFollowStatusChanged> = _followStatusUpdated
 
     init {
         dispatcher.register(siteNotificationsUseCase)
@@ -148,8 +148,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     }
                     is FollowSiteState.Success -> { // Do nothing
                     }
-                    is ReaderPostData -> {
-                        _refreshPost.postValue(it)
+                    is PostFollowStatusChanged -> {
+                        _followStatusUpdated.postValue(it)
                         siteNotificationsUseCase.fetchSubscriptions()
 
                         if (it.showEnableNotification) {

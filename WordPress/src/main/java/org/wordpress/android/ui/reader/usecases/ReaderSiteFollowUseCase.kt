@@ -8,7 +8,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Success
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -35,7 +35,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
             val isAskingToFollow = !readerPostTableWrapper.isPostFollowed(post)
             val showEnableNotification = !readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId) &&
                     !post.isFollowedByCurrentUser
-            emit(ReaderPostData(post.blogId, isAskingToFollow, showEnableNotification))
+            emit(PostFollowStatusChanged(post.blogId, isAskingToFollow, showEnableNotification))
 
             performAction(post, isAskingToFollow)
         }
@@ -44,7 +44,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
     private suspend fun FlowCollector<FollowSiteState>.performAction(post: ReaderPost, isAskingToFollow: Boolean) {
         val succeeded = followSiteAndWaitForResult(post, isAskingToFollow)
         if (!succeeded) {
-            emit(ReaderPostData(post.blogId, !isAskingToFollow))
+            emit(PostFollowStatusChanged(post.blogId, !isAskingToFollow))
             emit(RequestFailed)
         } else {
             emit(Success)
@@ -64,7 +64,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
     }
 
     sealed class FollowSiteState {
-        data class ReaderPostData(
+        data class PostFollowStatusChanged(
             val blogId: Long,
             val following: Boolean,
             val showEnableNotification: Boolean = false

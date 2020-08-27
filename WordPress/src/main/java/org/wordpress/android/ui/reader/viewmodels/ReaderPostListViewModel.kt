@@ -20,7 +20,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -50,8 +50,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents = _preloadPostEvents
 
-    private val _refreshPost = MediatorLiveData<ReaderPostData>()
-    val refreshPost: LiveData<ReaderPostData> = _refreshPost
+    private val _updateFollowStatus = MediatorLiveData<PostFollowStatusChanged>()
+    val updateFollowStatus: LiveData<PostFollowStatusChanged> = _updateFollowStatus
 
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
@@ -81,8 +81,8 @@ class ReaderPostListViewModel @Inject constructor(
             _preloadPostEvents.value = event
         }
 
-        _refreshPost.addSource(readerPostCardActionsHandler.refreshPost) { data ->
-            _refreshPost.value = data
+        _updateFollowStatus.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
+            _updateFollowStatus.value = data
         }
     }
 
