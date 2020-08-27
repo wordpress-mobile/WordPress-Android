@@ -1808,6 +1808,28 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
                 return "prepublishing_bottom_sheet_dismissed";
+            case SELECT_INTERESTS_SHOWN:
+                return "select_interests_shown";
+            case SELECT_INTERESTS_PICKED:
+                return "select_interests_picked";
+            case READER_DISCOVER_SHOWN:
+                return "reader_discover_shown";
+            case READER_DISCOVER_PAGINATED:
+                return "reader_discover_paginated";
+            case READER_DISCOVER_TOPIC_TAPPED:
+                return "reader_discover_topic_tapped";
+            case READER_POST_CARD_TAPPED:
+                return "reader_post_card_tapped";
+            case READER_PULL_TO_REFRESH:
+                return "reader_pull_to_refresh";
+            case POST_CARD_MORE_TAPPED:
+                return "post_card_more_tapped";
+            case READER_CHIPS_MORE_TOGGLED:
+                return "reader_chips_more_toggled";
+            case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:
+                return "encrypted_logging_upload_successful";
+            case ENCRYPTED_LOGGING_UPLOAD_FAILED:
+                return "encrypted_logging_upload_failed";
         }
         return null;
     }

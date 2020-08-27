@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.map
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.throttle
@@ -88,7 +89,9 @@ class StatsViewAllViewModel(
             if (statsSiteProvider.hasLoadedSite()) {
                 useCase.fetch(refresh, forced)
             } else {
-                mutableSnackbarMessage.postValue(Event(SnackbarMessageHolder(R.string.stats_site_not_loaded_yet)))
+                mutableSnackbarMessage.postValue(
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.stats_site_not_loaded_yet)))
+                )
             }
         }
     }

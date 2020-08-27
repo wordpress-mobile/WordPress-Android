@@ -12,7 +12,6 @@ Language: gl_ES
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
     <string name="gutenberg_native_remove_block">Eliminar bloque</string>
-    <string name="gutenberg_native_paste_block">Pegar bloque</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
     <string name="gutenberg_native_copy_block">Copiar bloque</string>
     <string name="gutenberg_native_copied_block">Bloque copiado</string>
@@ -270,8 +269,6 @@ Language: gl_ES
     <string name="gutenberg_native_gallery_caption_s">Lenda da galería. %s</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. O valor actual é %2$s</string>
     <string name="create_post_page_fab_tooltip">Crear unha entrada ou páxina</string>
-    <string name="quick_start_dialog_create_new_post_message_short_posts">Toca en %1$s Engadir entrada %2$s para crear unha nova entrada.</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Toca en %1$s Entradas do blog %2$s para continuar.</string>
     <string name="content_description_person_building_website">Creador da web</string>
     <string name="post_signup_interstitial_not_right_now">Agora non</string>
     <string name="post_signup_interstitial_subtitle">Calquera cousa que queiras crear ou compartir, axudarémosche a facelo aquí mesmo.</string>
