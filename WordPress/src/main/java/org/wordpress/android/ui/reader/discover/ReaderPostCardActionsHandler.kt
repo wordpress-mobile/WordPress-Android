@@ -83,7 +83,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
+    suspend fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
         withContext(bgDispatcher) {
             when (type) {
                 FOLLOW -> handleFollowClicked(post)
@@ -161,18 +161,16 @@ class ReaderPostCardActionsHandler @Inject constructor(
         AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
-    private fun handleLikeClicked(post: ReaderPost) {
-        defaultScope.launch {
-            when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
-                is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {}
-                is NetworkUnavailable -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
-                }
-                is RemoteRequestFailure -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title))))
-                }
+    private suspend fun handleLikeClicked(post: ReaderPost) {
+        when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
+            is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {}
+            is NetworkUnavailable -> {
+                _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
+            }
+            is RemoteRequestFailure -> {
+                _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                )
             }
         }
     }
