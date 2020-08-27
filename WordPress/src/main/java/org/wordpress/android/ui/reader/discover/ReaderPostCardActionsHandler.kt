@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -40,6 +39,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
@@ -60,6 +60,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val blockBlogUseCase: BlockBlogUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
+    private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
     private val dispatcher: Dispatcher,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
@@ -176,7 +177,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                                 UiStringRes(R.string.undo),
                                                 {
                                                     defaultScope.launch {
-                                                        ReaderBlogActions.undoBlockBlogFromReader(it.blockedBlogData)
+                                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
                                                         _refreshPosts.postValue(Event(Unit))
                                                     }
                                                 })
