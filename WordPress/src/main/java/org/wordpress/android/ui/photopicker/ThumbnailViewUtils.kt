@@ -19,6 +19,8 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import java.util.Locale
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.photopicker.mediapicker.ThumbnailViewUtils}")
 class ThumbnailViewUtils(val imageManager: ImageManager) {
     fun setupThumbnailImage(
         imgThumbnail: ImageView,

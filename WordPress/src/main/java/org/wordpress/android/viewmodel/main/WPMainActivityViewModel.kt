@@ -135,7 +135,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun disableTooltip(site: SiteModel) {
+    private fun disableTooltip(site: SiteModel?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
 
         val oldState = _fabUiState.value
@@ -148,7 +148,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(site: SiteModel, shouldShowQuickStartFocusPoint: Boolean = false) {
+    fun onFabClicked(site: SiteModel?, shouldShowQuickStartFocusPoint: Boolean = false) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
@@ -177,15 +177,15 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onPageChanged(showFab: Boolean, site: SiteModel) {
+    fun onPageChanged(showFab: Boolean, site: SiteModel?) {
         setMainFabUiState(showFab, site)
     }
 
-    fun onTooltipTapped(site: SiteModel) {
+    fun onTooltipTapped(site: SiteModel?) {
         disableTooltip(site)
     }
 
-    fun onFabLongPressed(site: SiteModel) {
+    fun onFabLongPressed(site: SiteModel?) {
         disableTooltip(site)
     }
 
@@ -193,7 +193,7 @@ class WPMainActivityViewModel @Inject constructor(
         _startLoginFlow.value = Event(true)
     }
 
-    fun onResume(site: SiteModel) {
+    fun onResume(site: SiteModel?) {
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
