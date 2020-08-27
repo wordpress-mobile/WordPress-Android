@@ -15,13 +15,13 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/prominent_toolbar_with_tabs_height"
-        app:liftOnScroll="false">
+        android:layout_height="@dimen/prominent_toolbar_with_tabs_height">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             android:layout_height="@dimen/prominent_toolbar_height">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -38,8 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:visibility="visible"
-            app:layout_collapseMode="pin"
-            app:layout_scrollFlags="noScroll"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:tabGravity="fill"
             app:tabMode="scrollable" />
 
