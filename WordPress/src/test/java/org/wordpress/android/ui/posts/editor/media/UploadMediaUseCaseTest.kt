@@ -83,7 +83,7 @@ class UploadMediaUseCaseTest {
 
         private fun createEditorMediaListener() = mock<EditorMediaListener> {
             on { syncPostObjectWithUiAndSaveIt(any()) }.thenAnswer { invocation ->
-                (invocation.getArgument(0) as OnPostUpdatedFromUIListener).onPostUpdatedFromUI()
+                (invocation.getArgument(0) as OnPostUpdatedFromUIListener).onPostUpdatedFromUI(null)
             }
         }
 

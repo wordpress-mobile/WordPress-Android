@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.text.TextUtils;
+import android.util.Pair;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -13,9 +14,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.util.AppLog;
@@ -25,11 +29,13 @@ import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.net.HttpURLConnection;
+import java.util.Map;
 
 public class ReaderBlogActions {
     public static class BlockedBlogResult {
         public long blogId;
-        public ReaderPostList deletedPosts;
+        // Key: Pair<ReaderTagSlug, ReaderTagType>, Value: ReaderPostList
+        public Map<Pair<String, ReaderTagType>, ReaderPostList> deleteRows;
         public boolean wasFollowing;
     }
 
@@ -443,7 +449,7 @@ public class ReaderBlogActions {
     public static BlockedBlogResult blockBlogFromReader(final long blogId, final ActionListener actionListener) {
         final BlockedBlogResult blockResult = new BlockedBlogResult();
         blockResult.blogId = blogId;
-        blockResult.deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0, false);
+        blockResult.deleteRows = ReaderPostTable.getTagPostMap(blogId);
         blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
 
         ReaderPostTable.deletePostsInBlog(blogId);
@@ -459,7 +465,7 @@ public class ReaderBlogActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
+                undoBlockBlogLocal(blockResult);
                 if (blockResult.wasFollowing) {
                     ReaderBlogTable.setIsFollowedBlogId(blogId, true);
                 }
@@ -478,9 +484,7 @@ public class ReaderBlogActions {
         if (blockResult == null) {
             return;
         }
-        if (blockResult.deletedPosts != null) {
-            ReaderPostTable.addOrUpdatePosts(null, blockResult.deletedPosts);
-        }
+       undoBlockBlogLocal(blockResult);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -506,86 +510,12 @@ public class ReaderBlogActions {
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
     }
 
-    /**
-     * Updates the imageUrl for a feed. Since the /read/feed/{feedId} endpoint does not have this data,
-     * the request is made to the /read/sites/{blogId} endpoint.
-     * @param blogId
-     * @param blogUrl
-     * @param feedId
-     * @param infoListener
-     */
-    public static void updateImageForFeedByBlog(long blogId,
-                                      final String blogUrl,
-                                      final long feedId,
-                                      final UpdateBlogInfoListener infoListener) {
-        // must pass either a valid id or url
-        final boolean hasBlogId = (blogId != 0);
-        final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
-        if (!hasBlogId && !hasBlogUrl) {
-            AppLog.w(T.READER, "cannot get blog info without either id or url");
-            if (infoListener != null) {
-                infoListener.onResult(null);
+    private static void undoBlockBlogLocal(final BlockedBlogResult blockResult) {
+        if (blockResult.deleteRows != null) {
+            for (Pair<String, ReaderTagType> tagInfo : blockResult.deleteRows.keySet()) {
+                ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
+                ReaderPostTable.addOrUpdatePosts(tag, blockResult.deleteRows.get(tagInfo));
             }
-            return;
-        }
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                updateImageForFeedInfoResponse(feedId, jsonObject, infoListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                // authentication error may indicate that API access has been disabled for this blog
-                int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
-                boolean isAuthErr = (statusCode == HttpURLConnection.HTTP_FORBIDDEN);
-                // if we failed to get the blog info using the id and this isn't an authentication
-                // error, try again using just the domain
-                if (!isAuthErr && hasBlogId && hasBlogUrl) {
-                    AppLog.w(T.READER, "failed to get blog info by id, retrying with url");
-                    updateImageForFeedByBlog(0, blogUrl, feedId, infoListener);
-                } else {
-                    AppLog.e(T.READER, volleyError);
-                    if (infoListener != null) {
-                        infoListener.onResult(null);
-                    }
-                }
-            }
-        };
-
-        if (hasBlogId) {
-            WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
-        } else {
-            WordPress.getRestClientUtilsV1_1()
-                     .get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
-        }
-    }
-
-    /**
-     * updateImageForFeedInfoResponse is executed on return of updateImageForFeedByBlog. It sends a request
-     * to the readerBlogTable to update the entry using feedId
-     * @param feedId
-     * @param jsonObject
-     * @param infoListener
-     */
-    private static void updateImageForFeedInfoResponse(
-            long feedId, JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
-        if (jsonObject == null) {
-            if (infoListener != null) {
-                infoListener.onResult(null);
-            }
-            return;
-        }
-
-        ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
-        if (blogInfo.hasImageUrl()) {
-            ReaderBlogTable.updateImageByFeedId(feedId, blogInfo.getImageUrl());
-        }
-
-        if (infoListener != null) {
-            infoListener.onResult(blogInfo);
         }
     }
 }

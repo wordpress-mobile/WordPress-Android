@@ -918,15 +918,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void removeMedia(String mediaId) {
     }
 
-    // Getting the content from the HTML editor can take time and the UI seems to be unresponsive.
+    // Getting the content from the editor can take time and the UI seems to be unresponsive.
     // Show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
     @Override
     public boolean showSavingProgressDialogIfNeeded() {
         if (!isAdded()) {
             return false;
         }
-
-        if (!mHtmlModeEnabled) return false;
 
         if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
             // Already on the screen? no need to show it again.
