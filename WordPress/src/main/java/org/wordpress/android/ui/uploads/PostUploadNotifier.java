@@ -33,7 +33,7 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListActivityKt;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashLoggingUtils;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
@@ -823,8 +823,7 @@ class PostUploadNotifier {
                 mSystemNotificationsTracker.trackShownNotification(notificationType);
             }
         } catch (RuntimeException runtimeException) {
-            CrashLoggingUtils.logException(runtimeException, AppLog.T.UTILS, "See issue #2858 / #3966");
-            AppLog.d(AppLog.T.POSTS, "See issue #2858 / #3966; notify failed with:" + runtimeException);
+            AppLog.e(T.POSTS, "doNotify failed; See issue #2858 / #3966", runtimeException);
         }
     }
 

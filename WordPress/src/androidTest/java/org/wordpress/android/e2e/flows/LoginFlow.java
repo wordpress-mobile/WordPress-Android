@@ -16,7 +16,6 @@ import static androidx.test.core.app.ApplicationProvider.getApplicationContext;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
@@ -27,27 +26,27 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class LoginFlow {
-    public LoginFlow chooseLogin() {
-        // Login Prologue – We want to log in, not sign up
+    public LoginFlow chooseContinueWithWpCom() {
+        // Login Prologue – We want to Continue with WordPress.com, not a site address
         // See LoginPrologueFragment
-        clickOn(R.id.login_button);
+        clickOn(R.id.first_button);
         return this;
     }
 
     public LoginFlow enterEmailAddress() {
-        // Email Address Screen – Fill it in and click "Next"
+        // Email Address Screen – Fill it in and click "Continue"
         // See LoginEmailFragment
         populateTextField(R.id.input, E2E_WP_COM_USER_EMAIL);
-        clickOn(R.id.primary_button);
+        clickOn(R.id.login_continue_button);
         return this;
     }
 
     public LoginFlow enterPassword() {
-        // Receive Magic Link or Enter Password Screen – Choose "Enter Password"
+        // Receive Magic Link or Enter Password Screen – Choose "Or type your password"
         // See LoginMagicLinkRequestFragment
         clickOn(R.id.login_enter_password);
 
-        // Password Screen – Fill it in and click "Next"
+        // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
         populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
         clickOn(R.id.primary_button);
@@ -70,11 +69,12 @@ public class LoginFlow {
     }
 
     public LoginFlow chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
-        // Receive Magic Link or Enter Password Screen – Choose "Send Link"
+        // Receive Magic Link or Enter Password Screen – Choose "Send link by email"
         // See LoginMagicLinkRequestFragment
         clickOn(R.id.login_request_magic_link);
 
-        // Should See Open Mail button
+        // Should see "Check email" button
+        // See LoginMagicLinkSentFragment
         waitForElementToBeDisplayed(R.id.login_open_email_client);
 
         // Follow the magic link to continue login
@@ -97,8 +97,16 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow chooseAndEnterSiteAddress(String siteAddress) {
-        clickOn(onView(withText(R.string.enter_site_address_instead)));
+    public LoginFlow chooseEnterYourSiteAddress() {
+        // Login Prologue – We want to continue with a site address not a WordPress.com account
+        // See LoginPrologueFragment
+        clickOn(R.id.second_button);
+        return this;
+    }
+
+    public LoginFlow enterSiteAddress(String siteAddress) {
+        // Site Address Screen – Fill it in and click "Continue"
+        // See LoginSiteAddressFragment
         populateTextField(R.id.input, siteAddress);
         clickOn(R.id.primary_button);
         return this;

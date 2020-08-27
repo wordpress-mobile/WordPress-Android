@@ -4,8 +4,6 @@
     <attr name="longClickHint" format="string" />
 
     <!-- Semantic colors -->
-    <attr name="wpColorText" format="reference|color" />
-    <attr name="wpColorTextSubtle" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
     <attr name="wpColorSuccess" format="reference|color" />
     <attr name="wpColorAppBar" format="reference|color" />
@@ -14,6 +12,12 @@
     <attr name="wpColorWarningDark" format="reference|color" />
     <attr name="wpColorWarningLight" format="reference|color" />
     <attr name="wpColorActionModeIcon" format="reference|color" />
+
+    <attr name="wpColorSurfaceSecondary" format="reference|color" />
+
+    <!-- Gutenberg colors-->
+    <attr name="colorGutenbergDivider" format="reference|color" />
+    <attr name="colorGutenbergBackground" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
@@ -82,6 +86,7 @@
         <attr name="readerIcon" format="enum">
             <enum name="like" value="0" />
             <enum name="comment" value="1" />
+            <enum name="reblog" value="2" />
         </attr>
     </declare-styleable>
 
@@ -90,6 +95,10 @@
     -->
     <declare-styleable name="ReaderFollowButton">
         <attr name="wpShowFollowButtonCaption" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="ReaderFollowButtonStyle">
+        <attr name="followButtonStyle" format="reference"/>
     </declare-styleable>
 
     <!--
@@ -147,8 +156,12 @@
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
         <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
-        <!-- Optional: Default to false. Activate filtering by Tabs instead of Spinner -->
-        <attr name="wpUseTabsForFiltering" format="boolean"/>
+        <!-- Optional: Default to false. Hide the AppBarLayout. This flag was added as part of
+        ReaderPostListFragment refactoring. We don't need to use the FilteredRecyclerView in the
+        Reader anymore, but since it's planned to iteratively rewrite the ReaderPostListFragment
+        it's not worth replacing the FilteredRecyclerView with something else now. Therefore we
+        opted for a simple flag which hides the filtering options from the FilteredRecyclerView -->
+        <attr name="wpHideAppBarLayout" format="boolean"/>
     </declare-styleable>
 
     <!--
@@ -175,6 +188,8 @@
         <attr name="aevButton" format="string"/>
         <!-- Optional: resource id of image -->
         <attr name="aevImage" format="reference"/>
+        <!-- Optional: defines if image should be hidden in landscape mode -->
+        <attr name="aevImageHiddenInLandscape" format="boolean" />
         <!-- Optional: string text of subtitle -->
         <attr name="aevSubtitle" format="string"/>
         <!-- Required: string text of title -->

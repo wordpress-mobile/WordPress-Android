@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.Version;
@@ -50,7 +49,6 @@ public class PluginUtils {
                     String.format("An IllegalArgumentException occurred while trying to compare site plugin version: %s"
                                   + " with wporg plugin version: %s", installedVersionStr, availableVersionStr);
             AppLog.e(AppLog.T.PLUGINS, errorStr, e);
-            CrashLoggingUtils.logException(e, AppLog.T.PLUGINS, errorStr);
             // If the versions are not in the expected format, we can assume that an update is available if the version
             // values for the site plugin and wporg plugin are not the same
             return !installedVersionStr.equalsIgnoreCase(availableVersionStr);

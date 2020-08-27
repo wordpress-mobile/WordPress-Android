@@ -193,7 +193,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
                         searchInputUiState = createSearchInputUiState(
                                 showProgress = state is Loading,
                                 showClearButton = isNonEmptyUserQuery,
-                                showDivider = state.data.isNotEmpty()
+                                showDivider = state.data.isNotEmpty(),
+                                showKeyboard = true
                         ),
                         contentState = createDomainsUiContentState(query, state),
                         createSiteButtonContainerVisibility = selectedDomain != null
@@ -298,13 +299,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private fun createSearchInputUiState(
         showProgress: Boolean,
         showClearButton: Boolean,
-        showDivider: Boolean
+        showDivider: Boolean,
+        showKeyboard: Boolean
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
                 hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
                 showProgress = showProgress,
                 showClearButton = showClearButton,
-                showDivider = showDivider
+                showDivider = showDivider,
+                showKeyboard = showKeyboard
         )
     }
 

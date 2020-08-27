@@ -37,7 +37,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
 
         if (view == null) {
             val inflater = LayoutInflater.from(parent.context)
-            view = inflater.inflate(R.layout.post_list_author_selection_dropdown, parent, false)
+            view = inflater.inflate(R.layout.author_selection_dropdown, parent, false)
             holder = DropdownViewHolder(view)
             view.tag = holder
         } else {
@@ -67,7 +67,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
 
         if (view == null) {
             val inflater = LayoutInflater.from(parent.context)
-            view = inflater.inflate(R.layout.post_list_author_selection, parent, false)
+            view = inflater.inflate(R.layout.author_selection, parent, false)
             holder = NormalViewHolder(view)
             view.tag = holder
         } else {
@@ -92,7 +92,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
     }
 
     private open class NormalViewHolder(protected val itemView: View) {
-        protected val image: AppCompatImageView = itemView.findViewById(R.id.post_list_author_selection_image)
+        protected val image: AppCompatImageView = itemView.findViewById(R.id.author_selection_image)
 
         @CallSuper
         open fun bind(
@@ -126,7 +126,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
     }
 
     private class DropdownViewHolder(itemView: View) : NormalViewHolder(itemView) {
-        private val text: AppCompatTextView = itemView.findViewById(R.id.post_list_author_selection_text)
+        private val text: AppCompatTextView = itemView.findViewById(R.id.author_selection_text)
 
         override fun bind(
             state: AuthorFilterListItemUIState,

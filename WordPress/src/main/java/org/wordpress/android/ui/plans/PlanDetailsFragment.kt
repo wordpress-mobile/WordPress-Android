@@ -93,7 +93,7 @@ class PlanDetailsFragment : Fragment(), FullScreenDialogContent {
         return true
     }
 
-    override fun onViewCreated(controller: FullScreenDialogController) {
+    override fun setController(controller: FullScreenDialogController) {
         dialogController = controller
     }
 }

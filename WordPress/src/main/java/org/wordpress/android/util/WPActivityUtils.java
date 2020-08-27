@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.view.WindowManager;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -105,6 +108,23 @@ public class WPActivityUtils {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(window.getContext().getResources().getColor(color));
+    }
+
+    public static void setLightStatusBar(Window window, boolean showInLightMode) {
+        Context context = window.getContext();
+        boolean isDarkTheme = ConfigurationExtensionsKt.isDarkTheme(context.getResources().getConfiguration());
+        if (!isDarkTheme) {
+            int newColor = showInLightMode ? ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface)
+                    : ContextCompat.getColor(context, R.color.status_bar);
+            window.setStatusBarColor(newColor);
+
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                int systemVisibility = window.getDecorView().getSystemUiVisibility();
+                int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                : systemVisibility ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                window.getDecorView().setSystemUiVisibility(newSystemVisibility);
+            }
+        }
     }
 
     public static Context getThemedContext(Context context) {

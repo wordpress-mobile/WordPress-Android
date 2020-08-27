@@ -1,15 +1,20 @@
 package org.wordpress.android.imageeditor
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import java.io.File
 
 class ImageEditor private constructor(
     private val loadIntoImageViewWithResultListener: (
-        (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
+        (String, ImageView, ScaleType, String?, RequestListener<Drawable>) -> Unit
     ),
-    private val loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
+    private val loadIntoFileWithResultListener: ((Uri, RequestListener<File>) -> Unit),
+    private val loadIntoImageView: ((String, ImageView, ScaleType) -> Unit),
+    private val onEditorAction: ((EditorAction) -> Unit)
 ) {
     interface RequestListener<T> {
         /**
@@ -33,17 +38,43 @@ class ImageEditor private constructor(
         imageUrl: String,
         imageView: ImageView,
         scaleType: ScaleType,
-        thumbUrl: String,
+        thumbUrl: String?,
         listener: RequestListener<Drawable>
     ) {
         loadIntoImageViewWithResultListener.invoke(imageUrl, imageView, scaleType, thumbUrl, listener)
     }
 
     fun loadIntoFileWithResultListener(
-        imageUrl: String,
+        imageUri: Uri,
         listener: RequestListener<File>
     ) {
-        loadIntoFileWithResultListener.invoke(imageUrl, listener)
+        loadIntoFileWithResultListener.invoke(imageUri, listener)
+    }
+
+    fun loadIntoImageView(imageUrl: String, imageView: ImageView, scaleType: ScaleType) {
+        loadIntoImageView.invoke(imageUrl, imageView, scaleType)
+    }
+
+    fun onEditorAction(action: EditorAction) {
+        onEditorAction.invoke(action)
+    }
+
+    sealed class EditorAction {
+        // General actions
+        data class EditorShown(val numOfImages: Int) : EditorAction()
+        object EditorCancelled : EditorAction()
+        data class EditorFinishedEditing(val outputDataList: List<OutputData>) :
+                EditorAction()
+
+        // Preview screen actions
+        data class PreviewImageSelected(val highResImageUrl: String, val selectedPosition: Int) : EditorAction()
+        data class PreviewInsertImagesClicked(val outputDataList: List<OutputData>) : EditorAction()
+        object PreviewCropMenuClicked : EditorAction()
+
+        // Crop screen actions
+        object CropOpened : EditorAction()
+        data class CropDoneMenuClicked(val outputData: OutputData) : EditorAction()
+        data class CropSuccessful(val cropResult: CropResult) : EditorAction()
     }
 
     companion object {
@@ -53,13 +84,17 @@ class ImageEditor private constructor(
 
         fun init(
             loadIntoImageViewWithResultListener: (
-                (String, ImageView, ScaleType, String, RequestListener<Drawable>) -> Unit
+                (String, ImageView, ScaleType, String?, RequestListener<Drawable>) -> Unit
             ),
-            loadIntoFileWithResultListener: ((String, RequestListener<File>) -> Unit)
+            loadIntoFileWithResultListener: ((Uri, RequestListener<File>) -> Unit),
+            loadIntoImageView: ((String, ImageView, ScaleType) -> Unit),
+            onEditorAction: ((EditorAction) -> Unit)
         ) {
             INSTANCE = ImageEditor(
                 loadIntoImageViewWithResultListener,
-                loadIntoFileWithResultListener
+                loadIntoFileWithResultListener,
+                loadIntoImageView,
+                onEditorAction
             )
         }
     }

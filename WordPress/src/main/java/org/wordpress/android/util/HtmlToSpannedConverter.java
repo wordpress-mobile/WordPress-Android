@@ -32,6 +32,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.helpers.WPUnderlineSpan;
@@ -356,7 +357,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 }
             }
         } catch (OutOfMemoryError e) {
-            CrashLoggingUtils.logException(e, AppLog.T.UTILS);
+            AppLog.e(T.UTILS, "Out of memory in HtmlToSpannedConverter.startImg", e);
         }
 
         if (resizedBitmap != null) {

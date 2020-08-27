@@ -13,7 +13,7 @@
         android:layout_height="@dimen/avatar_sz_small"
         android:contentDescription="@null"
         android:background="@drawable/bg_oval_transparent_stroke_white"
-        android:padding="@dimen/posts_list_spinner_avatar_padding"
+        android:padding="@dimen/me_avatar_padding"
         android:src="@drawable/ic_user_white_24dp"/>
 
 </LinearLayout>

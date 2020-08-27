@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="0dp"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_extra_medium_large"
+    android:paddingBottom="@dimen/margin_medium"
+    tools:ignore="UnusedAttribute">
+    <!-- UnusedAttribute is ignored since foreground was added in API 23, however the impact of the missing foreground
+         on lower APIs will be minimal -->
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/author_selection_image"
+        android:layout_width="@dimen/author_spinner_avatar_size"
+        android:layout_height="@dimen/author_spinner_avatar_size"
+        android:layout_marginStart="@dimen/author_spinner_dropdown_avatar_horizontal_margin"
+        android:layout_marginEnd="@dimen/author_spinner_dropdown_avatar_horizontal_margin"
+        android:importantForAccessibility="no"
+        android:padding="@dimen/author_spinner_avatar_padding"
+        tools:src="@drawable/bg_oval_neutral_30_multiple_users_white_40dp"
+        tools:tint="@color/neutral_50" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/author_selection_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="?attr/textAppearanceBody1"
+        tools:text="@string/everyone" />
+</LinearLayout>

@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -36,10 +38,12 @@ class PageListEventListener(
     private val bgDispatcher: CoroutineDispatcher,
     private val postStore: PostStore,
     private val eventBusWrapper: EventBusWrapper,
+    private val siteStore: SiteStore,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
     private val handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
-    private val invalidateUploadStatus: (List<LocalId>) -> Unit
+    private val invalidateUploadStatus: (List<LocalId>) -> Unit,
+    private val handleHomepageSettingsChange: (SiteModel) -> Unit
 ) : CoroutineScope {
     init {
         dispatcher.register(this)
@@ -166,6 +170,19 @@ class PageListEventListener(
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = MAIN)
+    fun onSiteChanged(event: OnSiteChanged) {
+        if (!event.isError) {
+            val updatedSite = siteStore.getSiteByLocalId(site.id)
+            if (updatedSite.showOnFront != site.showOnFront ||
+                    updatedSite.pageForPosts != site.pageForPosts ||
+                    updatedSite.pageOnFront != site.pageForPosts) {
+                handleHomepageSettingsChange(updatedSite)
+            }
+        }
+    }
+
     private fun uploadStatusChanged(vararg localPostIds: LocalId) {
         invalidateUploadStatus.invoke(localPostIds.toList())
     }
@@ -176,20 +193,24 @@ class PageListEventListener(
             bgDispatcher: CoroutineDispatcher,
             postStore: PostStore,
             eventBusWrapper: EventBusWrapper,
+            siteStore: SiteStore,
             site: SiteModel,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadFinished: (RemoteId, Boolean) -> Unit
+            handlePostUploadFinished: (RemoteId, Boolean) -> Unit,
+            handleHomepageSettingsChange: (SiteModel) -> Unit
         ): PageListEventListener {
             return PageListEventListener(
                     dispatcher = dispatcher,
                     bgDispatcher = bgDispatcher,
                     postStore = postStore,
                     eventBusWrapper = eventBusWrapper,
+                    siteStore = siteStore,
                     site = site,
                     invalidateUploadStatus = invalidateUploadStatus,
                     handleRemoteAutoSave = handleRemoteAutoSave,
-                    handlePostUploadFinished = handlePostUploadFinished
+                    handlePostUploadFinished = handlePostUploadFinished,
+                    handleHomepageSettingsChange = handleHomepageSettingsChange
             )
         }
     }

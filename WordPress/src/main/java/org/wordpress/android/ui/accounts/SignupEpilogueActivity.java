@@ -30,6 +30,8 @@ public class SignupEpilogueActivity extends LocaleAwareActivity implements Signu
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
+
         setContentView(R.layout.signup_epilogue_activity);
 
         if (savedInstanceState == null) {

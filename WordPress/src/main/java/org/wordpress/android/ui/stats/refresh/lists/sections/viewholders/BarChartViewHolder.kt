@@ -14,8 +14,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -30,10 +30,12 @@ private const val MIN_COLUMN_COUNT = 5
 private const val MIN_VALUE = 5f
 
 private typealias BarCount = Int
+
 class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_bar_chart_item
 ) {
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
     private val chart = itemView.findViewById<BarChart>(R.id.chart)
     private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
     private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
@@ -41,7 +43,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     fun bind(item: BarChartItem) {
         chart.setNoDataText("")
-        GlobalScope.launch(Dispatchers.Main) {
+        coroutineScope.launch {
             delay(50)
             val barCount = chart.draw(item, labelStart, labelEnd)
             chart.post {

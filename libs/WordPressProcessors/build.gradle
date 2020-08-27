@@ -1,0 +1,25 @@
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
+ext.kotlinPoetVersion = '1.6.0'
+ext.autoServiceVersion = '1.0-rc6'
+
+kapt {
+    generateStubs = true
+}
+
+dependencies {
+    implementation project(':libs:WordPressAnnotations')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "com.google.auto.service:auto-service:$autoServiceVersion"
+    kapt "com.google.auto.service:auto-service:$autoServiceVersion"
+    implementation "com.squareup:kotlinpoet:$kotlinPoetVersion"
+
+    testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

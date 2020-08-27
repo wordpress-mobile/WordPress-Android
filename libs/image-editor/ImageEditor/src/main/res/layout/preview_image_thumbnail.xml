@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/thumbnailLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/preview_image_thumbnail_selector">
+
+    <ImageView
+        android:id="@+id/thumbnailImageView"
+        android:layout_width="@dimen/preview_image_thumbnail_size"
+        android:layout_height="@dimen/preview_image_thumbnail_size"
+        android:contentDescription="@string/preview_image_thumbnail_description"/>
+
+</FrameLayout>
+

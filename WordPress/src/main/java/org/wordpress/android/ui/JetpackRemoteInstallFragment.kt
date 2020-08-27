@@ -30,12 +30,12 @@ class JetpackRemoteInstallFragment : Fragment() {
     private lateinit var viewModel: JetpackRemoteInstallViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component()!!.inject(this)
+        (requireActivity().application as WordPress).component()!!.inject(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity!!.let { activity ->
+        requireActivity().let { activity ->
             viewModel = ViewModelProviders.of(this, viewModelFactory)
                     .get<JetpackRemoteInstallViewModel>(JetpackRemoteInstallViewModel::class.java)
 
@@ -44,7 +44,7 @@ class JetpackRemoteInstallFragment : Fragment() {
             val source = intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
             val retrievedState = savedInstanceState?.getSerializable(VIEW_STATE) as? JetpackRemoteInstallViewState.Type
             viewModel.start(site, retrievedState)
-            viewModel.liveViewState.observe(this, Observer { viewState ->
+            viewModel.liveViewState.observe(viewLifecycleOwner, Observer { viewState ->
                 if (viewState != null) {
                     if (viewState is JetpackRemoteInstallViewState.Error) {
                         AppLog.e(AppLog.T.JETPACK_REMOTE_INSTALL, "An error occurred while installing Jetpack")
@@ -68,7 +68,7 @@ class JetpackRemoteInstallFragment : Fragment() {
                     jetpack_install_progress.visibility = if (viewState.progressBarVisible) View.VISIBLE else View.GONE
                 }
             })
-            viewModel.liveActionOnResult.observe(this, Observer { result ->
+            viewModel.liveActionOnResult.observe(viewLifecycleOwner, Observer { result ->
                 if (result != null) {
                     when (result.action) {
                         MANUAL_INSTALL -> {
@@ -104,7 +104,7 @@ class JetpackRemoteInstallFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {
-            val site = activity!!.intent!!.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = requireActivity().intent!!.getSerializableExtra(WordPress.SITE) as SiteModel
             viewModel.onLogin(site.id)
         }
     }

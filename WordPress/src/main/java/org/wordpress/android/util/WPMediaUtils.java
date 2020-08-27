@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ViewConfiguration;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +27,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.utils.MimeTypes;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
@@ -199,7 +204,15 @@ public class WPMediaUtils {
             case PARSE_ERROR:
                 return context.getString(R.string.error_media_parse_error);
             case GENERIC_ERROR:
-                return context.getString(R.string.error_generic_error);
+                // This error happens when the user tries to upload a file that's not allowed on their user plan.
+                // Unfortunately it still has the standard 400 error code so there is no other way to differentiate it.
+                if ("Sorry, this file type is not permitted for security reasons.".equals(error.message)) {
+                    return context.getString(R.string.media_error_file_not_allowed_on_free_plan);
+                } else {
+                    return context.getString(R.string.error_generic_error);
+                }
+            case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
+                return context.getString(R.string.error_media_quota_exceeded);
         }
         return null;
     }
@@ -227,6 +240,11 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
+    public static void launchFileLibrary(Activity activity, boolean multiSelect) {
+        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect),
+                RequestCodes.FILE_LIBRARY);
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
@@ -244,6 +262,16 @@ public class WPMediaUtils {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_media));
+    }
+
+    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getAllTypes());
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_file));
     }
 
     public static void launchVideoCamera(Activity activity) {
@@ -369,7 +397,7 @@ public class WPMediaUtils {
         } else if (MediaUtils.isAudio(url)) {
             return R.drawable.ic_audio_white_24dp;
         } else {
-            return 0;
+            return R.drawable.ic_image_multiple_white_24dp;
         }
     }
 
@@ -459,9 +487,8 @@ public class WPMediaUtils {
             return MediaUtils.downloadExternalMedia(context, mediaUri);
         } catch (IllegalStateException e) {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-            AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-            CrashLoggingUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
-                                                             + " See issue #5823");
+            AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString()
+                                     + " See issue #5823", e);
 
             return null;
         }
@@ -486,6 +513,23 @@ public class WPMediaUtils {
         }
     }
 
+    public static List<Uri> retrieveImageEditorResult(Intent data) {
+        if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
+            return convertEditImageOutputToListOfUris(data.getParcelableArrayListExtra(
+                    PreviewImageFragment.ARG_EDIT_IMAGE_DATA));
+        } else {
+            return new ArrayList<Uri>();
+        }
+    }
+
+    private static List<Uri> convertEditImageOutputToListOfUris(List<EditImageData.OutputData> data) {
+        List<Uri> uris = new ArrayList<>(data.size());
+        for (EditImageData.OutputData item : data) {
+            uris.add(Uri.parse(item.getOutputFilePath()));
+        }
+        return uris;
+    }
+
     public static List<Uri> retrieveMediaUris(Intent data) {
         ClipData clipData = data.getClipData();
         ArrayList<Uri> uriList = new ArrayList<>();
@@ -498,5 +542,26 @@ public class WPMediaUtils {
             uriList.add(data.getData());
         }
         return uriList;
+    }
+
+    public static ArrayList<EditImageData.InputData> createListOfEditImageInputData(Context ctx, List<Uri> uris) {
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(uris.size());
+        for (Uri uri : uris) {
+            String outputFileExtension = getFileExtension(ctx, uri);
+            inputData.add(new EditImageData.InputData(uri.toString(), null, outputFileExtension));
+        }
+        return inputData;
+    }
+
+    public static String getFileExtension(Context ctx, Uri uri) {
+        String fileExtension;
+        if (uri.getScheme() != null && uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = ctx.getContentResolver();
+            String mimeType = cr.getType(uri);
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        } else {
+            fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+        }
+        return fileExtension;
     }
 }

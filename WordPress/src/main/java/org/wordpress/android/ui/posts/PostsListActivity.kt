@@ -28,46 +28,52 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.android.synthetic.main.main_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
-import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
-import org.wordpress.android.widgets.WPDialogSnackbar
+import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
+const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
 
 class PostsListActivity : LocaleAwareActivity(),
+        EditPostActivityHook,
+        PrepublishingBottomSheetListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface {
@@ -81,10 +87,16 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
-    @Inject internal lateinit var quickStartStore: QuickStartStore
+    @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
+    @Inject internal lateinit var editPostRepository: EditPostRepository
 
     private lateinit var site: SiteModel
+
+    override fun getSite() = site
+    override fun getEditPostRepository() = editPostRepository
+
     private lateinit var viewModel: PostListMainViewModel
+    private lateinit var postListCreateMenuViewModel: PostListCreateMenuViewModel
 
     private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
     private lateinit var authorSelection: AppCompatSpinner
@@ -97,8 +109,6 @@ class PostsListActivity : LocaleAwareActivity(),
     private lateinit var fab: FloatingActionButton
     private lateinit var searchActionButton: MenuItem
     private lateinit var toggleViewLayoutMenuItem: MenuItem
-
-    private var quickStartEvent: QuickStartEvent? = null
 
     private var restorePreviousSearch = false
 
@@ -152,12 +162,17 @@ class PostsListActivity : LocaleAwareActivity(),
             PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
         }
 
+        val currentBottomSheetPostId = if (savedInstanceState == null) {
+            LocalId(0)
+        } else {
+            LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
+        }
+
         setupActionBar()
         setupContent()
-        initViewModel(initPreviewState)
+        initViewModel(initPreviewState, currentBottomSheetPostId)
+        initCreateMenuViewModel()
         loadIntentData(intent)
-
-        quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
     }
 
     private fun setupActionBar() {
@@ -212,24 +227,72 @@ class PostsListActivity : LocaleAwareActivity(),
         tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(onPageChangeListener)
         fab = findViewById(R.id.fab_button)
-        fab.setOnClickListener { viewModel.newPost() }
-        fab.setOnLongClickListener {
-            if (fab.isHapticFeedbackEnabled) {
-                fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            }
+        fab.setOnClickListener {
+            viewModel.fabClicked()
+        }
 
-            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+        fab.setOnLongClickListener {
+            viewModel.onFabLongPressed()
             return@setOnLongClickListener true
         }
+
         fab.redirectContextClickToLongPressListener()
+
+        fab_tooltip.setOnClickListener {
+            postListCreateMenuViewModel.onTooltipTapped()
+        }
 
         postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
         pager.adapter = postsPagerAdapter
     }
 
-    private fun initViewModel(initPreviewState: PostListRemotePreviewState) {
+    private fun initCreateMenuViewModel() {
+        postListCreateMenuViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(PostListCreateMenuViewModel::class.java)
+
+        postListCreateMenuViewModel.isBottomSheetShowing.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { isBottomSheetShowing ->
+                var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
+                if (createMenuFragment == null) {
+                    if (isBottomSheetShowing) {
+                        createMenuFragment = PostListCreateMenuFragment.newInstance()
+                        createMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
+                    }
+                } else {
+                    if (!isBottomSheetShowing) {
+                        createMenuFragment as PostListCreateMenuFragment
+                        createMenuFragment.dismiss()
+                    }
+                }
+            }
+        })
+
+        postListCreateMenuViewModel.fabUiState.observe(this, Observer { fabUiState ->
+            val message = resources.getString(fabUiState.CreateContentMessageId)
+
+            if (fabUiState.isFabTooltipVisible) {
+                fab_tooltip.setMessage(message)
+                fab_tooltip.show()
+            } else {
+                fab_tooltip.hide()
+            }
+
+            fab.contentDescription = message
+        })
+
+        postListCreateMenuViewModel.createAction.observe(this, Observer { createAction ->
+            when (createAction) {
+                CREATE_NEW_POST -> viewModel.newPost()
+                CREATE_NEW_STORY -> viewModel.newStoryPost()
+            }
+        })
+
+        postListCreateMenuViewModel.start(site)
+    }
+
+    private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site, initPreviewState)
+        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository, this)
 
         viewModel.viewState.observe(this, Observer { state ->
             state?.let {
@@ -259,15 +322,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
         viewModel.postListAction.observe(this, Observer { postListAction ->
             postListAction?.let { action ->
-                QuickStartUtils.completeTaskAndRemindNextOne(
-                        quickStartStore,
-                        QuickStartTask.PUBLISH_POST,
-                        dispatcher,
-                        site,
-                        quickStartEvent,
-                        this@PostsListActivity
-                )
-
                 handlePostListAction(
                         this@PostsListActivity,
                         action,
@@ -313,6 +367,39 @@ class PostsListActivity : LocaleAwareActivity(),
                 )
             }
         })
+        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
+                if (fragment == null) {
+                    val prepublishingFragment = newInstance(
+                            site = site,
+                            isPage = editPostRepository.isPage,
+                            isStoryPost = false
+                    )
+                    prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
+                }
+            }
+        })
+
+        viewModel.onFabClicked.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                postListCreateMenuViewModel.onFabClicked()
+            }
+        })
+
+        viewModel.onFabLongPressedForCreateMenu.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                postListCreateMenuViewModel.onFabLongPressed()
+            }
+            Toast.makeText(fab.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
+        })
+
+        viewModel.onFabLongPressedForPostList.observe(this, Observer {
+            if (fab.isHapticFeedbackEnabled) {
+                fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+            Toast.makeText(fab.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
@@ -321,12 +408,12 @@ class PostsListActivity : LocaleAwareActivity(),
                     SnackbarItem(
                             SnackbarItem.Info(
                                 view = parent,
-                                textRes = UiStringRes(holder.messageRes),
+                                textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                             ),
-                            holder.buttonTitleRes?.let {
+                            holder.buttonTitle?.let {
                                 SnackbarItem.Action(
-                                    textRes = UiStringRes(holder.buttonTitleRes),
+                                    textRes = holder.buttonTitle,
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },
@@ -337,6 +424,12 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun loadIntentData(intent: Intent) {
+        if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+            val notificationType: NotificationType =
+                    intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+            systemNotificationTracker.trackTappedNotification(notificationType)
+        }
+
         val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)
         if (targetPostId != -1) {
             viewModel.showTargetPost(targetPostId)
@@ -346,6 +439,7 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
+        postListCreateMenuViewModel.onResume()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -365,6 +459,8 @@ class PostsListActivity : LocaleAwareActivity(),
             viewModel.handleEditPostResult(data)
         } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
             viewModel.handleRemotePreviewClosing()
+        } else if (requestCode == RequestCodes.PHOTO_PICKER && resultCode == Activity.RESULT_OK && data != null) {
+            StoriesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
         }
     }
 
@@ -393,15 +489,8 @@ class PostsListActivity : LocaleAwareActivity(),
 
             searchActionButton = it.findItem(R.id.toggle_post_search)
 
-            viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
-                if (isAvailable) {
-                    initSearchFragment()
-                    initSearchView()
-                    searchActionButton.isVisible = true
-                } else {
-                    searchActionButton.isVisible = false
-                }
-            })
+            initSearchFragment()
+            initSearchView()
         }
         return true
     }
@@ -484,6 +573,9 @@ class PostsListActivity : LocaleAwareActivity(),
         viewModel.previewState.value?.let {
             outState.putInt(STATE_KEY_PREVIEW_STATE, it.value)
         }
+        viewModel.currentBottomSheetPostId?.let {
+            outState.putInt(STATE_KEY_BOTTOMSHEET_POST_ID, it.value)
+        }
     }
 
     // BasicDialogFragment Callbacks
@@ -512,41 +604,7 @@ class PostsListActivity : LocaleAwareActivity(),
         return menuItem.setTitle(uiHelpers.getTextOfUiString(this@PostsListActivity, title))
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
-    fun onEvent(event: QuickStartEvent) {
-        val view = findViewById<View>(R.id.coordinator)
-
-        if (view == null) {
-            return
-        }
-
-        EventBus.getDefault().removeStickyEvent(event)
-        quickStartEvent = event
-
-        if (quickStartEvent?.task == QuickStartTask.PUBLISH_POST) {
-            view.post {
-                val title = QuickStartUtils.stylizeQuickStartPrompt(
-                        this,
-                        R.string.quick_start_dialog_create_new_post_message_short_posts,
-                        R.drawable.ic_create_white_24dp
-                )
-
-                WPDialogSnackbar.make(
-                        view, title,
-                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-                ).show()
-            }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
+    override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        viewModel.onBottomSheetPublishButtonClicked()
     }
 }

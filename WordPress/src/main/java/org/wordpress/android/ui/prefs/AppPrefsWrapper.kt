@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs
 
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
@@ -30,6 +31,14 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getNewsCardShownVersion()
         set(version) = AppPrefs.setNewsCardShownVersion(version)
 
+    var featureAnnouncementShownVersion: Int
+        get() = AppPrefs.getFeatureAnnouncementShownVersion()
+        set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
+
+    var lastFeatureAnnouncementAppVersionCode: Int
+        get() = AppPrefs.getLastFeatureAnnouncementAppVersionCode()
+        set(version) = AppPrefs.setLastFeatureAnnouncementAppVersionCode(version)
+
     var avatarVersion: Int
         get() = AppPrefs.getAvatarVersion()
         set(version) = AppPrefs.setAvatarVersion(version)
@@ -54,10 +63,24 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldShowPostSignupInterstitial()
         set(shouldShow) = AppPrefs.setShouldShowPostSignupInterstitial(shouldShow)
 
+    var readerTagsUpdatedTimestamp: Long
+        get() = AppPrefs.getReaderTagsUpdatedTimestamp()
+        set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
+
+    var readerCssUpdatedTimestamp: Long
+        get() = AppPrefs.getReaderCssUpdatedTimestamp()
+        set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
+
+    var readerCardsPageHandle: String?
+        get() = AppPrefs.getReaderCardsPageHandle()
+        set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
     fun isGutenbergEditorEnabled() = AppPrefs.isGutenbergEditorEnabled()
+    fun getReaderCardsRefreshCounter() = AppPrefs.getReaderCardsRefreshCounter()
+    fun incrementReaderCardsRefreshCounter() = AppPrefs.incrementReaderCardsRefreshCounter()
 
     fun getAppWidgetColor(appWidgetId: Int): Color? {
         return when (AppPrefs.getStatsWidgetColorModeId(appWidgetId)) {
@@ -107,6 +130,8 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.setStatsWidgetHasData(hasData, appWidgetId)
     }
 
+    fun getSelectedSite(): Int = AppPrefs.getSelectedSite()
+
     fun removeAppWidgetHasData(appWidgetId: Int) = AppPrefs.removeStatsWidgetHasData(appWidgetId)
 
     fun isMainFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
@@ -121,6 +146,19 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
     fun setLastReaderKnownUserId(userId: Long) = AppPrefs.setLastReaderKnownUserId(userId)
+
+    fun getLastAppVersionCode() = AppPrefs.getLastAppVersionCode()
+
+    fun setReaderTag(selectedTag: ReaderTag?) = AppPrefs.setReaderTag(selectedTag)
+    fun getReaderTag(): ReaderTag? = AppPrefs.getReaderTag()
+
+    fun isReaderImprovementsPhase2Enabled(): Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
+
+    fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
+    fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
+
+    fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
+    fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

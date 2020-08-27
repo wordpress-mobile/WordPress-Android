@@ -30,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPSnackbar
@@ -39,6 +40,7 @@ private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private val selectedTabListener: SelectedTabListener
@@ -54,7 +56,7 @@ class StatsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
         initializeViews(nonNullActivity)
@@ -104,26 +106,36 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(this, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
-                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                if (holder.buttonTitle == null) {
+                    WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    ).show()
                 } else {
-                    val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                    val snackbar = WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    )
+                    snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
+                        holder.buttonAction()
+                    }
                     snackbar.show()
                 }
             }
         })
 
-        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
             app_bar_layout.postDelayed(
                     {
                         if (app_bar_layout != null) {
@@ -139,7 +151,7 @@ class StatsFragment : DaggerFragment() {
             )
         })
 
-        viewModel.siteChanged.observe(this, Observer { siteChangedEvent ->
+        viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->
             siteChangedEvent?.applyIfNotHandled {
                 when (this) {
                     is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
@@ -148,13 +160,13 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.hideToolbar.observe(this, Observer { event ->
+        viewModel.hideToolbar.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { hideToolbar ->
                 app_bar_layout.setExpanded(!hideToolbar, true)
             }
         })
 
-        viewModel.selectedSection.observe(this, Observer { selectedSection ->
+        viewModel.selectedSection.observe(viewLifecycleOwner, Observer { selectedSection ->
             selectedSection?.let {
                 val position = when (selectedSection) {
                     INSIGHTS -> 0

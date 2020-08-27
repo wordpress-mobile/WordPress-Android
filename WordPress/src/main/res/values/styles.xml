@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Material theme -->
@@ -20,16 +20,21 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorControlActivated">@color/primary_30</item>
 
+        <item name="toolbarIconNormalColor">@color/grey_darken_20</item>
+        <item name="toolbarIconHighlightColor">@color/almost_black</item>
+        <item name="toolbarIconDisabledColor">@color/grey_lighten_20</item>
+
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
 
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
-        <item name="wpColorText">@color/neutral_70</item>
-        <item name="wpColorTextSubtle">@color/neutral</item>
+        <item name="followButtonStyle">@style/Reader.Follow.Button</item>
+
         <item name="wpColorError">@color/error</item>
         <item name="wpColorSuccess">@color/green_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
@@ -37,6 +42,10 @@
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+        <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
+
+        <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
+        <item name="colorGutenbergBackground">@android:color/white</item>
 
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
@@ -77,6 +86,13 @@
     <style name="WordPress.NoActionBar" parent="WordPress">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:immersive">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
 
     <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
@@ -136,6 +152,14 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
+    <style name="WordPressNoDisplay" parent="WordPress.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
     <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Material.ActionBar.TabBar">
         <item name="android:showDividers">middle</item>
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
@@ -153,9 +177,7 @@
         </item>
     </style>
 
-    <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">
-        <item name="android:textColor">?attr/wpColorText</item>
-    </style>
+    <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText" />
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
@@ -251,7 +273,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:gravity">center_horizontal|center_vertical</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
@@ -505,7 +527,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="QuickStartDivider">
@@ -554,7 +577,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <!--People Management Styles-->
@@ -681,7 +705,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textColor">@color/neutral_40</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
@@ -874,19 +898,19 @@
     <style name="DomainRegistrationFormTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
     </style>
 
     <style name="DomainRegistrationFormSubTitle">
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
     </style>
 
@@ -905,74 +929,25 @@
         <item name="android:layout_weight">20</item>
     </style>
 
-    <!-- Overload of Login Theme -->
-    <style name="LoginTheme" parent="WordPress.NoActionBar">
-        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
-    </style>
-
-    <style name="LoginTheme.ActionBar" parent="WordPress.ActionBar">
-        <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
-    </style>
-
-    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary" />
-
-    <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView">
-        <item name="cardElevation">@dimen/appbar_elevation</item>
-        <item name="cardCornerRadius">0dp</item>
-    </style>
-
-    <style name="LoginTheme.Button.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-    </style>
-
-    <style name="LoginTheme.Button.SignUp" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="LoginTheme.TextLabel.Icon">
-        <item name="tint">?attr/colorPrimary</item>
-        <item name="android:tintMode">src_in</item>
-    </style>
-
-    <style name="LoginTheme.TextLabel" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:lineSpacingExtra">2dp</item>
-    </style>
-
-    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="startIconTint">?attr/colorPrimary</item>
-        <item name="endIconTint">?attr/colorPrimary</item>
-        <item name="endIconDrawable">@drawable/ic_arrow_left_white_24dp</item>
-    </style>
-
-    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline6">
+    <!-- To use with the LoginFlow Theme -->
+    <style name="Widget.LoginFlow.TextView.PromoTitle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:gravity">center</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-        <item name="android:textColor">?attr/colorSurface</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:maxLines">2</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
+        <item name="fixWidowWords">true</item>
     </style>
 
-    <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
-
-    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1" />
-
-    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption" />
-
-    <style name="LoginEpilogueSitesList">
-        <item name="colorControlHighlight">@android:color/transparent</item>
+    <style name="Widget.LoginFlow.TextView.PromoSubtitle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textSize">@dimen/prologue_promo_text_size</item>
+        <item name="fixWidowWords">true</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
     <!-- Main actions styles -->
@@ -982,10 +957,15 @@
 
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentStart">true</item>
     </style>
 
     <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
     <!-- Reader styles -->
@@ -1094,6 +1074,126 @@
         <item name="strokeColor">@color/on_surface_divider</item>
         <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
         <item name="contentPadding">@dimen/unelevated_card_stroke_width</item>
+    </style>
+
+    <style name="FullScreenDialogFragmentAnimation" parent="@android:style/Theme.Panel">
+        <item name="android:windowEnterAnimation">@anim/full_screen_dialog_fragment_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/full_screen_dialog_fragment_slide_down</item>
+    </style>
+
+    <style name="FeatureAnnouncementDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
+    </style>
+
+    <!-- Overload of Aztec theme -->
+    <style name="FormatBarButton">
+        <item name="android:minWidth">@dimen/format_bar_height</item>
+        <item name="android:minHeight">@dimen/format_bar_height</item>
+        <item name="android:textOn">""</item>
+        <item name="android:textOff">""</item>
+        <item name="android:backgroundTint">@color/aztec_format_button_selector_color</item>
+        <item name="android:backgroundTintMode">src_in</item>
+    </style>
+
+    <!-- Homepage settings -->
+    <style name="SettingsDialogTitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    </style>
+
+    <style name="SettingsDialogText">
+        <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="SettingsDialogError">
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
+    <style name="SettingsDialogHeader">
+        <item name="android:textColor">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="SettingsDialogDropDownField">
+        <item name="android:textColor">@color/on_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:drawableEnd">@drawable/ic_dropdown_primary_30_24dp</item>
+        <item name="android:drawableTint">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:drawablePadding">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_small_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+    </style>
+
+    <!-- Modal Layout Picker Styles -->
+    <style name="ModalLayoutPickerHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    </style>
+
+    <style name="ModalLayoutPickerTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ModalLayoutPickerSubtitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:alpha">0.6</item>
+    </style>
+
+    <style name="Widget.ModalLayoutPicker.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:backgroundTint">?attr/colorSecondary</item>
+    </style>
+
+    <style name="Widget.ModalLayoutPicker.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ModalLayoutPickerLayoutsTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">top</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginStart">@dimen/mlp_layouts_title_start_margin</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+    </style>
+
+    <style name="ModalLayoutPickerLayoutsSeparatorLine">
+        <item name="android:background">@color/gray_5</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
 </resources>

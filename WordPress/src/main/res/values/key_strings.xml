@@ -22,6 +22,7 @@
     <string name="pref_key_app_theme" translatable="false">wp_pref_app_theme</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
+    <string name="pref_key_whats_new" translatable="false">wp_pref_whats_new</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_blogs_followed" translatable="false">pref_notification_blogs_followed</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
@@ -91,6 +92,9 @@
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
     <string name="pref_key_change_password" translatable="false">pref_key_change_password</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
+    <!-- Front page settings -->
+    <string name="pref_key_homepage" translatable="false">wp_pref_key_homepage</string>
+    <string name="pref_key_homepage_settings" translatable="false">wp_pref_key_homepage_settings</string>
     <!-- Speed up your site -->
     <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
     <string name="pref_key_lazy_load_images_nested" translatable="false">wp_pref_lazy_load_images_nested</string>

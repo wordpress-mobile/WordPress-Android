@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,18 +31,24 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
 
     fun start(type: ReaderTrackerType) {
         trackers[type]?.let {
-            trackers[type] = it.copy(startDate = dateProvider.getCurrentDate())
+            if (!isRunning(type)) {
+                AppLog.d(MAIN, "ReaderTracker: started $type")
+                trackers[type] = it.copy(startDate = dateProvider.getCurrentDate())
+            }
         }
     }
 
     fun stop(type: ReaderTrackerType) {
         trackers[type]?.let { trackerInfo ->
-            trackerInfo.startDate?.let { startDate ->
-                val accumulatedTime = trackerInfo.accumulatedTime +
-                        DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
-                // let reset the startDate to null
-                trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
-            } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
+            if (isRunning(type)) {
+                AppLog.d(MAIN, "ReaderTracker: stopped $type")
+                trackerInfo.startDate?.let { startDate ->
+                    val accumulatedTime = trackerInfo.accumulatedTime +
+                            DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
+                    // let reset the startDate to null
+                    trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
+                } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
+            }
         }
     }
 

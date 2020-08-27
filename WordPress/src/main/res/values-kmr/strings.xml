@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-04-06 15:11:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ku_TR
 -->
 <resources>
@@ -38,7 +38,6 @@ Language: ku_TR
     <string name="post_notification_off">Girtî</string>
     <string name="post_settings_add_to_calendar">Salnameyê tevlî bike</string>
     <string name="post_settings_notification">Danezan</string>
-    <string name="post_settings_time_and_date">Dem û Dîrok</string>
     <string name="login_need_help_finding_connected_email">Alîkarî hewce ye ji bo dîtina e-peyama ku tu pê dihate girêdan?</string>
     <string name="enter_wordpress_site">Malpera di vê adrêsê de ne malpereke WordPressê ye. Ji bo ku em karibin pê re têkiliyê deynin divê ser malperê WordPress sazkirî be.</string>
     <string name="login_invalid_site_url">Xêra xwe temamiya adrêsa malperê têkeve, mîna \"example.com\".</string>
@@ -89,10 +88,6 @@ Language: ku_TR
     <string name="stats_widget_all_time_title">Herdem</string>
     <string name="stats_widget_views_title">Dîtinên vê hefteyê</string>
     <string name="stats_widget_add">Alavok tevlî bike</string>
-    <string name="dialog_confirm_update_yes">Aniha hildemîne</string>
-    <string name="dialog_confirm_update_message_page">Ev rûpela weşandî wê aniha were hildemandin.</string>
-    <string name="dialog_confirm_update_message_post">Ev şandiya weşandî wê aniha were hildemandin.</string>
-    <string name="dialog_confirm_update_title">Ji bo hildemandinê amade yî?</string>
     <string name="plugin_fetching_error_after_at">Nûyandina hûrgiliyên pêvekan ji her tim bêhtir dewam dike. Ji kerema xwe paşê dîsa kontrol bike.</string>
     <string name="plugin_install_site_ineligible_default_error">Eger te navperek nû tomar kiribe, ji kerema xwe li bende be heta em sazkirina wê biqedînin û paşê dîsa biceribîne.\n\nEger na, wisa dixuyê ku şaşiyek pêk hatiye û dibe ku taybetiya pêvekê ji bo vê malperê ne guncan be.</string>
     <string name="domain_contact_information_state_not_available_hint">Herêm(Tune Ye)</string>
@@ -138,8 +133,6 @@ Language: ku_TR
     <string name="editor_failed_to_insert_media_tap_to_retry">Tevlîkirina medyayê bi serneket.\nJi bo ceribandineke din, bitepîne.</string>
     <string name="editor_uploading_draft">Reşnivîsa te tê hilxistin</string>
     <string name="post_uploading_draft">Reşnivîs tê hilxistin</string>
-    <string name="post_list_author_everyone">Her kes</string>
-    <string name="post_list_author_me">Min</string>
     <string name="error_restoring_post">Di vegerandina şandiyê de çewtiyek pêk hat</string>
     <string name="backdated_for">Vegeriya ser: %s</string>
     <string name="stats_insights_management_title">Tenê rêjejimarên herî pêwendîdar bibîne. Kûrbînên xwe tevlî jêr bike û serast bike.</string>
@@ -159,7 +152,6 @@ Language: ku_TR
     <string name="post_restoring">Şandî tê vegerandin</string>
     <string name="post_restored">Şandî hat vegerandin</string>
     <string name="post_trashing">Şandî tê jêbirin</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê dê guhertinên xwecihî biavêje, bi rastî jî tu dixwazî bidomîne?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Guhertinên xwecihî</string>
     <string name="button_move_to_draft">Vegerîne Reşnîvîsê</string>
     <string name="post_list_toggle_item_layout_list_view">Derbasî xuyanga lîsteyê bibe</string>
@@ -235,7 +227,6 @@ Language: ku_TR
     <string name="quick_start_dialog_upload_icon_message">Mêvanên te dê nîşaneka te di gerokên xwe de bibînin. Ji bo xuyangeke birqonek û profesyonel nîşanekeke taybet tevlî bike.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo plana derbasdar û ên din ên berdest bibînî pê li  %1$s Plan %2$s ê bike</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Ji bo rûpeleke nû biafirînî pêlî %1$s Rûpel Tevlî Bike %2$s yê bike.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Ji bo domandinê pêlî %1$s Rûpelên Malperê %2$s bike.</string>
     <string name="quick_start_dialog_check_stats_message_short">Ji bo performansa malpera xwe bibîne pêlî %1$s Rêjejimar %2$sê bike.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din bar bike, pêlî %1$s Nîşaneka Te ya Malperê %2$s bike</string>
     <string name="quick_start_dialog_publish_post_message">Yekem şandiya xwe bike reşnivîs û biweşîne.</string>
@@ -401,7 +392,6 @@ Language: ku_TR
     <string name="pages_delete_permanently">Bi Mayînde Jê Bîbe</string>
     <string name="pages_move_to_trash">Veguzîne Jêbirdankê</string>
     <string name="pages_move_to_draft">Vegerîne Reşnivîsê</string>
-    <string name="pages_publish_now">Niha Biweşîne</string>
     <string name="pages_set_parent">Dêûbavan diyar bike</string>
     <string name="pages_view">Bibîne</string>
     <string name="pages_trashed">Hat jêbirin</string>
@@ -487,7 +477,6 @@ Language: ku_TR
     <string name="reader_empty_posts_liked_title">Hîn ti tişt nehatiye ecibandin</string>
     <string name="reader_empty_followed_blogs_button_followed">Here şopandinên xwe</string>
     <string name="reader_empty_followed_blogs_button_discover">Malperan vebibîne</string>
-    <string name="reader_empty_followed_blogs_description">Te hîn ti malper neşopandiye. Çima niha malperekê naşopînî?</string>
     <string name="reader_empty_followed_blogs_title">Malperên tu dişopîne tune</string>
     <string name="notifications_empty_likes">Hîn ecibandin tune</string>
     <string name="notifications_empty_followers">Hîna şopîner tune</string>
@@ -654,7 +643,6 @@ Language: ku_TR
     <string name="menu_html_mode_done_snackbar">Derbasî moda HTML bû</string>
     <string name="menu_html_mode">Moda HTML</string>
     <string name="menu_preview">Pêşdîtin</string>
-    <string name="menu_publish_now">Niha Biweşîne</string>
     <string name="menu_save_as_draft">Wekî Reşnivîs Tomar Bike</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -717,10 +705,6 @@ Language: ku_TR
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d rûpel û %2$d ji %3$d ê pelgeh man</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 şande û %1$d ji %2$d ê pelgeh man</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 rûpel û %1$d ji %2$d ê pelgeh man</string>
-    <string name="dialog_confirm_publish_yes">Niha biweşîne</string>
-    <string name="dialog_confirm_publish_message_page">Ev rûpel dê aniha were weşandin.</string>
-    <string name="dialog_confirm_publish_message_post">Ev şandî dê aniha were weşandin</string>
-    <string name="dialog_confirm_publish_title">Ji Weşandinê re amade ye?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d şandî / rûpel nehatin hilxistin</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d rûpel nehatin hilxistin</string>
     <string name="media_file_page_singular_only_not_uploaded">Rûpelek nehat hilxistin</string>
@@ -738,7 +722,6 @@ Language: ku_TR
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 şande bi 1 pelgeh ve nehatin barkirin</string>
     <string name="untitled_in_parentheses">(Bêsernav)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Malperê biafirîne</string>
     <string name="notification_site_creation_created">Ji bo domandinê bitepîne.</string>
@@ -759,7 +742,6 @@ Language: ku_TR
     <string name="signup_updating_account">Ajimêr tê hildemandin…</string>
     <string name="signup_terms_of_service_text">Bi tomarbûnê tu %1$sMerc û Xizmet%2$sên me dipejirîne.</string>
     <string name="signup_magic_link_progress">Epeyam tê şandin</string>
-    <string name="signup_magic_link_message">Me ji te re girêdaneke sêhrî ya tomarê şand! Epeyama xwe ya li ser vê amûrê venêre û ji bo temamkirina tomarê li girêdana nav epeyamê bitepîne.</string>
     <string name="signup_magic_link_error_button_positive">Dîsa Bîceribîne</string>
     <string name="signup_magic_link_error_button_negative">Bigire</string>
     <string name="signup_magic_link_error">Di şandina epeyamê de pirsgirêk çebû. Tu dikarî niha dîsa biceribîne an jî bigire û piştre biceribîne.</string>
@@ -767,7 +749,6 @@ Language: ku_TR
     <string name="signup_epilogue_hint_password_detail">Tu dikarî her tim bi girêdaneke efsûnî têketinê bike wekî ku te bîska din kir, lê heke tu bixwazî dikarî pêborîneke jî saz bikî.</string>
     <string name="signup_epilogue_hint_password">Pêborîn (li gor daxwazê)</string>
     <string name="signup_epilogue_hint_display">Navê Xuya</string>
-    <string name="signup_epilogue_heading">Ajimêra nû</string>
     <string name="signup_epilogue_error_button_positive">Dîsa biceribîne</string>
     <string name="signup_epilogue_error_button_negative">Vegerîne</string>
     <string name="signup_epilogue_error_generic">Di hildemandina ajimêra te de hinek pirsgirêk çêbûn. Ji bo domandinê tu dikarî guhertinên xwe vegerîne an jî dîsa biceribîne.</string>
@@ -876,7 +857,6 @@ Language: ku_TR
     <string name="notification_login_title_success">Têketin pêk hat!</string>
     <string name="login_error_generic_start">Têketina Googleê nehat destpêkirin.</string>
     <string name="login_empty_password">Ji kerema xwe pêborînekê têxîne</string>
-    <string name="login_text_otp_another">Ji min re kodeke din bişîne.</string>
     <string name="enter_verification_code_sms">Em ji telefona te yê ku bi %s re diqede re peyameke nivîsî şandin. Xêra xwe koda rastandinê yê di SMSê de têkeve.</string>
     <string name="image_size">Mezinahî</string>
     <string name="uploading_subtitle_media_only_one">Pelgeyek maye</string>
@@ -944,8 +924,6 @@ Language: ku_TR
     <string name="media_edit_filename_caption">Navê Pelgeyê</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Nivîsa alternatîv</string>
-    <string name="copy">Kopî bike</string>
-    <string name="connect_site">Malper Girêde</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Şewqê veke - bigire</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Amûrê biricifîne</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Deng bibijêre</string>
@@ -989,7 +967,6 @@ Language: ku_TR
     <string name="connection_to_server_lost">Girêdana bi rajakerê re qut bû</string>
     <string name="login_epilogue_mysites_other">Malperên Min</string>
     <string name="login_epilogue_mysites_one">Malpera min</string>
-    <string name="login_logged_in_as">Tu têketî wek</string>
     <string name="login_email_client_not_found">Sepana te ya epeyam-wergir bikare were tesbîtkirin</string>
     <string name="login_empty_2fa">Ji kerema xwe kodeke rastandinê têxîne</string>
     <string name="login_empty_username">Ji kerema xwe navekî bikarhêner têxîne</string>
@@ -1002,26 +979,16 @@ Language: ku_TR
     <string name="login_site_address_help">Ji bo dîtina navnîşana malpera te alîkarî hewce ye?</string>
     <string name="login_site_address">Navnîşana malperê</string>
     <string name="enter_site_address">Navnîşana Malpera WordPressê ya ku tu dixwaze pê gire bide têxîne.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Jixwe di WordPress.comê de têketin pêk hatiye</string>
     <string name="login_continue">Bidomîne</string>
-    <string name="connect_more">Malpereke Din Girêde</string>
     <string name="enter_wpcom_password">Pêborîna xwe ya WordPress.comê têxîne.</string>
     <string name="login_magic_link_email_requesting">Epeyama têketinê tê xwestin</string>
-    <string name="login_magic_links_sent_label">Girêdana te ya sêhrî hat şandin! Epeyama xwe ya li ser vê amûrê venêre û li girêdana epeyamê bitepîne ya ku ji WordPress.comê hatiye şandin.</string>
-    <string name="login_magic_links_label">Em ê epeyama girêdana sêhrî bişîne te ya ku bê pêborînê tu yê karibî di heman demê de têketinê bike. Êdî nêçirî neke û nenikûlîne!</string>
     <string name="password_incorrect">Wisa dixuye ku ev pêborîn xelet e. Ji kerema xwe agahiyên xwe du caran kontrol bike û careke din biceribîne.</string>
     <string name="requesting_otp">Xwestina kodeke rastandinê bi riya SMSê.</string>
-    <string name="login_text_otp">Li şûna vê kodeke bişîne min.</string>
     <string name="enter_verification_code">Hema bêje temam bû. Xêra xwe koda rastandinê têkeve ji sepana xwe ya rastkar.</string>
     <string name="open_mail">Epeyamê veke</string>
     <string name="next">Pêşve</string>
     <string name="enter_email_wordpress_com">Ji bo ku tu hemû malperên xwe yên WordPressê bi rê ve bibe di WordPress.comê de bi navnîşaneke epeyamê têketinê bike.</string>
-    <string name="login_promo_text_jetpack">Di çûyînê de malpera xwe ya bi Jetpackê hatiye hêzdarkirin bi rê ve bibe  —  di bêrîka te de WordPress heye.</string>
-    <string name="login_promo_text_notifications">Danezanên te bi te re digerin — şîroveyan û ecibandinan zûtirîn bîbîne.</string>
-    <string name="login_promo_text_anytime">Xwe bigihîne malperên xwe yên favorî û tevlî gotûbêjan bibe, li her derî û her demî.</string>
-    <string name="login_promo_text_realtime">Xwînerên ji seranserê dinyayê temaşe bike, yên ku dixwînin û têkiliyê datînin bi malpera te re — bi zemanê rastîn.</string>
-    <string name="login_promo_text_onthego">Ji parkê biweşîne. Ji rêbusê blog çeke. Ji kafeye şîrove bike. Tu bi ku ve biçe WordPress bi te re ye.</string>
     <string name="image_optimization_promo_desc">Optîmîzasyona wêneyan, wêneyan biçûk dike ji bo hilxistina zûtir\nTu herdem dikarî vê biguherînî ji sazkariyên malperê.</string>
     <string name="image_optimization_promo_title">Bila optimizasyona wêneyê vebe?</string>
     <string name="leave_off">Girtî bihêle</string>
@@ -1057,7 +1024,6 @@ Language: ku_TR
     <string name="post_settings_not_set">Nesazandî</string>
     <string name="post_settings_more_options">Vebijêrkên Bêhtir</string>
     <string name="post_settings_categories_and_tags">Beş û Nîşank</string>
-    <string name="post_settings_status">Rewş</string>
     <string name="notifications_tab_title_all">Hemû</string>
     <string name="top_level_category_name">Asta jor</string>
     <string name="category_parent">Beşa esasî (gor daxwazê):</string>
@@ -1181,7 +1147,6 @@ Language: ku_TR
     <string name="media_upload_state_deleting">Tê jêbirin</string>
     <string name="media_upload_state_uploading">Tê hilxistin</string>
     <string name="media_upload_state_queued">Di dorê de</string>
-    <string name="keep_editing">Serastkirinê bidomîne</string>
     <string name="image_quality">Qalîteya Wêneyê</string>
     <string name="error_all_media_upload_canceled">Ji ber sedema çewtiyeke nediyar hilxistina hemû medayayan betal bû. Ji kerema xwe hilxistinê dîsa biceribîne</string>
     <string name="error_unknown_post_type">Dirûva şandiya nenas</string>
@@ -1208,8 +1173,6 @@ Language: ku_TR
     <string name="pending_draft_one_week_1">Reşnivisa te \'%1$s\' li hêviya te ye - pê emîn be ku te wê weşandiye!</string>
     <string name="pending_draft_one_day_2">Te dizanibû ku \'%1$s\' hê jî reşnivîsek e? Hema biweşîne!</string>
     <string name="pending_draft_one_day_1">Te do \'%1$s\' kir reşnivîs. Weşandina wê ji bîr nekî!</string>
-    <string name="reader_photo_by">Wêneya ji aliye %s ve hatiye kişandin</string>
-    <string name="reader_label_visit">Serdan bike</string>
     <string name="swipe_for_more">Ji bo zêdetir bişemitîne</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Tu nehatî destûrdarkirin bo dîtina vê şandiyê. Pêşî biceribîne ku tu têkevî WordPress.comê an jî li şûna wê bo vekirina gerokeke webê, bişkoka çalakiya jorîn bi kar bîne.</string>
     <string name="reader_err_get_post_not_authorized_signin">Tu ne destûrdayî yî bo dîtina vê şandiyê. Pêşî biceribîne ku tu têkevî WordPress.comê.</string>
@@ -1700,7 +1663,6 @@ Language: ku_TR
     <string name="reader_hint_add_tag_or_url">Ji bo şopandinê URL an nîşankek binivîse</string>
     <string name="reader_page_followed_blogs">Malperên şopandî</string>
     <string name="reader_page_followed_tags">Nîşankên şopandî</string>
-    <string name="reader_title_tag_preview">Nîşankê xwînerê</string>
     <string name="reader_title_blog_preview">Malpera xwînerê</string>
     <string name="ssl_certificate_ask_trust">Eger tu bi pirranî bêyî pirsgirêkek karibî werî girêdan li vê malperê, ev dibe ku were maneya yek dixwaze malpera te teqlîd bike, û tu nikaribî dewam bikî. Dîsa jî dixwazî bi sertîfîkayê bawer bibî?</string>
     <string name="ssl_certificate_error">Sertîfîkaya SSLê ya nederbasdar</string>
@@ -1843,7 +1805,6 @@ Language: ku_TR
     <string name="httppassword">Pêborîna HTTP</string>
     <string name="httpuser">Navê bikarhêner yê HTTP</string>
     <string name="error_media_upload">Di hilbarkirina medyayê de çewtiyek rû da.</string>
-    <string name="publish_date">Biweşîne</string>
     <string name="incorrect_credentials">Navê bikarhêner an jî pêborîna çewt.</string>
     <string name="log_in">Têkevê</string>
     <string name="username">Navê bikarhêner</string>

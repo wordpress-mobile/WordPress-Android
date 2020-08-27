@@ -42,8 +42,8 @@ public class ReaderXPostUtils {
         String subtitle = String.format(
                 isCommentXPost ? FMT_COMMENT_XPOST : FMT_SITE_XPOST,
                 "<strong>" + name + "</strong>",
-                getFromSiteName(post),
-                getToSiteName(post));
+                "<strong>" + getFromSiteName(post) + "</strong>",
+                "<strong>" + getToSiteName(post) + "</strong>");
 
         return Html.fromHtml(subtitle);
     }

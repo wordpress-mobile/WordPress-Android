@@ -37,7 +37,7 @@ public class ReaderPostLogic {
                             ReaderTag tag, long blogId, long feedId) {
         mListenerCompanion = companion;
 
-        EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
+        EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action, tag));
 
         if (tag != null) {
             updatePostsWithTag(tag, action);

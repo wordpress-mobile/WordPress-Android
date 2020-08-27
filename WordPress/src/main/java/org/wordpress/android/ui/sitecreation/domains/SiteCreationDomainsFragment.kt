@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.AppCompatButton
@@ -12,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.site_creation_domains_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -24,15 +24,8 @@ import javax.inject.Inject
 
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var searchInputWithHeader: SearchInputWithHeader
-    private lateinit var emptyView: View
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var createSiteButtonContainer: View
+    private var searchInputWithHeader: SearchInputWithHeader? = null
     private lateinit var viewModel: SiteCreationDomainsViewModel
-
-    private lateinit var domainsScreenListener: DomainsScreenListener
-    private lateinit var helpClickedListener: OnHelpClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
@@ -45,8 +38,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
-        domainsScreenListener = context
-        helpClickedListener = context
     }
 
     @LayoutRes
@@ -60,12 +51,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 rootView = rootView,
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
-        emptyView = rootView.findViewById(R.id.domain_list_empty_view)
-        createSiteButtonContainer = rootView.findViewById(R.id.create_site_button_container)
         rootView.findViewById<AppCompatButton>(R.id.create_site_button).setOnClickListener {
             viewModel.createSiteBtnClicked()
         }
-        initRecyclerView(rootView)
+        initRecyclerView()
         initViewModel()
     }
 
@@ -80,7 +69,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        nonNullActivity = activity!!
+        nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
     }
 
@@ -88,20 +77,17 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         super.onViewStateRestored(savedInstanceState)
         // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
-        searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
+        searchInputWithHeader?.onTextChanged = { viewModel.updateQuery(it) }
     }
 
-    private fun initRecyclerView(rootView: ViewGroup) {
-        recyclerView = rootView.findViewById(R.id.recycler_view)
-        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        linearLayoutManager = layoutManager
-        recyclerView.layoutManager = linearLayoutManager
+    private fun initRecyclerView() {
+        recycler_view.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         initAdapter()
     }
 
     private fun initAdapter() {
         val adapter = SiteCreationDomainsAdapter(uiHelpers)
-        recyclerView.adapter = adapter
+        recycler_view.adapter = adapter
     }
 
     private fun initViewModel() {
@@ -110,36 +96,41 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
-                searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
+                searchInputWithHeader?.updateHeader(nonNullActivity, uiState.headerUiState)
+                searchInputWithHeader?.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(create_site_button_container, uiState.createSiteButtonContainerVisibility)
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
-            searchInputWithHeader.setInputText("")
+            searchInputWithHeader?.setInputText("")
         })
         viewModel.createSiteBtnClicked.observe(this, Observer { domain ->
-            domain?.let { domainsScreenListener.onDomainSelected(domain) }
+            domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(domain) }
         })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
+            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
         })
         viewModel.start(getSegmentIdFromArguments())
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
-        uiHelpers.updateVisibility(emptyView, contentState.emptyViewVisibility)
+        uiHelpers.updateVisibility(domain_list_empty_view, contentState.emptyViewVisibility)
         if (contentState.items.isNotEmpty()) {
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
         }
-        (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
+        (recycler_view.adapter as SiteCreationDomainsAdapter).update(contentState.items)
     }
 
     private fun getSegmentIdFromArguments(): Long {
         return requireNotNull(arguments?.getLong(EXTRA_SEGMENT_ID)) {
             "SegmentId is missing. Have you created the fragment using SiteCreationDomainsFragment.newInstance(..)?"
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchInputWithHeader = null
     }
 
     companion object {

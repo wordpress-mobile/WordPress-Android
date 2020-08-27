@@ -3,7 +3,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
@@ -20,6 +20,7 @@ class NewsCardHandler
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val statsStore: StatsStore
 ) {
+    private val coroutineScope = CoroutineScope(mainDispatcher)
     private val mutableCardDismissed = MutableLiveData<Event<StatsType>>()
     val cardDismissed: LiveData<Event<StatsType>> = mutableCardDismissed
 
@@ -29,7 +30,7 @@ class NewsCardHandler
     private val mutableHideToolbar = MutableLiveData<Event<Boolean>>()
     val hideToolbar: LiveData<Event<Boolean>> = mutableHideToolbar
 
-    fun dismiss() = GlobalScope.launch(mainDispatcher) {
+    fun dismiss() = coroutineScope.launch {
         if (statsStore.isInsightsManagementNewsCardShowing()) {
             statsStore.hideInsightsManagementNewsCard()
             mutableCardDismissed.value = Event(ManagementType.NEWS_CARD)

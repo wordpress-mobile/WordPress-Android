@@ -2,10 +2,9 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -84,17 +83,17 @@ class FollowersUseCase(
         forced: Boolean,
         fetchMode: PagedMode
     ): State<Pair<FollowersModel, FollowersModel>> {
-        runBlocking(mainDispatcher) {
+        withContext(mainDispatcher) {
             updateUiState { it.copy(isLoading = true) }
         }
-        val deferredWpComResponse = GlobalScope.async(bgDispatcher) {
+        val deferredWpComResponse = async(bgDispatcher) {
             followersStore.fetchWpComFollowers(
                     statsSiteProvider.siteModel,
                     fetchMode,
                     forced
             )
         }
-        val deferredEmailResponse = GlobalScope.async(bgDispatcher) {
+        val deferredEmailResponse = async(bgDispatcher) {
             followersStore.fetchEmailFollowers(
                     statsSiteProvider.siteModel,
                     fetchMode,
@@ -107,7 +106,7 @@ class FollowersUseCase(
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
-        runBlocking(mainDispatcher) {
+        withContext(mainDispatcher) {
             updateUiState { it.copy(isLoading = false) }
         }
         return when {

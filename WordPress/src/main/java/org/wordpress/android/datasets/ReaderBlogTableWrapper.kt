@@ -8,4 +8,7 @@ class ReaderBlogTableWrapper
     fun getFollowedBlogs(): List<ReaderBlog> = ReaderBlogTable.getFollowedBlogs()!!
     fun getBlogInfo(blogId: Long): ReaderBlog? = ReaderBlogTable.getBlogInfo(blogId)
     fun getFeedInfo(feedId: Long): ReaderBlog? = ReaderBlogTable.getFeedInfo(feedId)
+    fun isNotificationsEnabled(blogId: Long): Boolean = ReaderBlogTable.isNotificationsEnabled(blogId)
+    fun setNotificationsEnabledByBlogId(blogId: Long, isEnabled: Boolean) =
+            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, isEnabled)
 }

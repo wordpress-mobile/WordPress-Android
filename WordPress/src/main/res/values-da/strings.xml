@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-06-14 08:40:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: da_DK
 -->
 <resources>
@@ -158,7 +158,6 @@ Language: da_DK
     <string name="schedule_verb">Planlæg</string>
     <string name="update_verb">Opdater</string>
     <string name="reader_page_followed_tags">Fulgte tags</string>
-    <string name="reader_title_tag_preview">Forhåndsvis tag</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
     <string name="reader_hint_add_tag_or_url">Indtast en URL eller et tag for at følge</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
@@ -285,7 +284,6 @@ Language: da_DK
     <string name="httppassword">HTTP-adgangskode</string>
     <string name="httpuser">HTTP-brugernavn</string>
     <string name="error_media_upload">Der opstod en fejl under overførsel af medie</string>
-    <string name="publish_date">Udgiv</string>
     <string name="incorrect_credentials">Forkert brugernavn eller adgangskode.</string>
     <string name="password">Kodeord</string>
     <string name="username">Brugernavn</string>

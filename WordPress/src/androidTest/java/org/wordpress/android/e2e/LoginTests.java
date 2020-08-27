@@ -1,4 +1,5 @@
 package org.wordpress.android.e2e;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
@@ -31,23 +32,23 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void loginWithEmailPassword() {
-        new LoginFlow().chooseLogin()
-                 .enterEmailAddress()
-                 .enterPassword()
-                 .confirmLogin();
+        new LoginFlow().chooseContinueWithWpCom()
+                       .enterEmailAddress()
+                       .enterPassword()
+                       .confirmLogin();
     }
 
     @Test
     public void loginWithSiteAddress() {
-        new LoginFlow().chooseLogin()
-                 .chooseAndEnterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
-                 .enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD)
-                 .confirmLogin();
+        new LoginFlow().chooseEnterYourSiteAddress()
+                       .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
+                       .enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD)
+                       .confirmLogin();
     }
 
     @Test
     public void loginWithMagicLink() {
-        new LoginFlow().chooseLogin()
+        new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress()
                        .chooseMagicLink(mMagicLinkActivityTestRule)
                        .confirmLogin();
@@ -55,10 +56,10 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void loginWithSelfHostedAccount() {
-        new LoginFlow().chooseLogin()
-                .chooseAndEnterSiteAddress(E2E_SELF_HOSTED_USER_SITE_ADDRESS)
-                .enterUsernameAndPassword(E2E_SELF_HOSTED_USER_USERNAME, E2E_SELF_HOSTED_USER_PASSWORD)
-                .confirmLogin();
+        new LoginFlow().chooseEnterYourSiteAddress()
+                       .enterSiteAddress(E2E_SELF_HOSTED_USER_SITE_ADDRESS)
+                       .enterUsernameAndPassword(E2E_SELF_HOSTED_USER_USERNAME, E2E_SELF_HOSTED_USER_PASSWORD)
+                       .confirmLogin();
     }
 
     @After

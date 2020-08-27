@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/action_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/top_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@id/action_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintBottom_toTopOf="@id/action_result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_divider"
+        app:layout_constraintVertical_chainStyle="spread"
+        tools:text="Action Type" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/action_result"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:textAlignment="viewStart"
+        android:textColor="@color/neutral_30"
+        android:textAppearance="?attr/textAppearanceBody1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/action_type"
+        tools:text="Action result" />
+</androidx.constraintlayout.widget.ConstraintLayout>

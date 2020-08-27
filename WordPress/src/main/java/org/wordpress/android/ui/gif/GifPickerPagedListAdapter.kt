@@ -14,7 +14,8 @@ class GifPickerPagedListAdapter(
     private val imageManager: ImageManager,
     private val thumbnailViewDimensions: ThumbnailViewDimensions,
     private val onMediaViewClickListener: (GifMediaViewModel?) -> Unit,
-    private val onMediaViewLongClickListener: (GifMediaViewModel) -> Unit
+    private val onMediaViewLongClickListener: (GifMediaViewModel) -> Unit,
+    private val isMultiSelectEnabled: Boolean
 ) : PagedListAdapter<GifMediaViewModel, GifMediaViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GifMediaViewHolder {
         return GifMediaViewHolder.create(
@@ -22,7 +23,8 @@ class GifPickerPagedListAdapter(
                 onClickListener = onMediaViewClickListener,
                 onLongClickListener = onMediaViewLongClickListener,
                 parent = parent,
-                thumbnailViewDimensions = thumbnailViewDimensions
+                thumbnailViewDimensions = thumbnailViewDimensions,
+                isMultiSelectEnabled = isMultiSelectEnabled
         )
     }
 

@@ -334,9 +334,13 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                                 // and the PostModel contains Gutenberg blocks.
                                 // As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The choice is
                                 // loosely made knowing the other check ("contains blocks") is in place.
-                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost.getContent(),
-                                        selectedSite)
-                                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
+                                // NOTE: added now first check if this post contains a WP Story and mark it created
+                                // like so.
+                                PostUtils.contentContainsWPStoryGutenbergBlocks(mPost.getContent())
+                                        ? SiteUtils.WP_STORIES_CREATOR_NAME
+                                        : (PostUtils.shouldShowGutenbergEditor(
+                                                    mPost.isLocalDraft(), mPost.getContent(), selectedSite
+                                                ) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
                     }
                 }
                 if (hasGallery()) {
@@ -654,7 +658,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             Context context = WordPress.getContext();
             String errorMessage = mUiHelpers.getTextOfUiString(context,
                     UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
-                            event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post)));
+                            event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post))).toString();
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
             mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
                     mMediaStore.getMediaForPost(event.post));
@@ -675,9 +679,12 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                 } else {
                     sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
                 }
-                PostUtils.addPostTypeToAnalyticsProperties(event.post, sCurrentUploadingPostAnalyticsProperties);
+                PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(
+                        event.post, sCurrentUploadingPostAnalyticsProperties);
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                         PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
+                sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_WP_STORIES_BLOCKS_KEY,
+                        PostUtils.contentContainsWPStoryGutenbergBlocks(event.post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                         mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
                         sCurrentUploadingPostAnalyticsProperties);

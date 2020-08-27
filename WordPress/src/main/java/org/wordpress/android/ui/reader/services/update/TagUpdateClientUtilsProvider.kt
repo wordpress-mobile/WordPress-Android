@@ -12,4 +12,8 @@ class TagUpdateClientUtilsProvider @Inject constructor() {
     fun getTagUpdateEndpointURL(): String {
         return WordPress.getRestClientUtilsV1_2().restClient.endpointURL
     }
+
+    fun getRestClientForInterestTags(): RestClientUtils {
+        return WordPress.getRestClientUtilsV2()
+    }
 }

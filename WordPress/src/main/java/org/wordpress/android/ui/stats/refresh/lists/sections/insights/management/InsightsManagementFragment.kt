@@ -66,7 +66,7 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun setupObservers() {
-        viewModel.addedInsights.observe(this, Observer {
+        viewModel.addedInsights.observe(viewLifecycleOwner, Observer {
             it?.let { items ->
                 updateAddedInsights(items)
 
@@ -78,11 +78,11 @@ class InsightsManagementFragment : DaggerFragment() {
             }
         })
 
-        viewModel.closeInsightsManagement.observe(this, Observer {
+        viewModel.closeInsightsManagement.observe(viewLifecycleOwner, Observer {
             requireActivity().finish()
         })
 
-        viewModel.isMenuVisible.observe(this, Observer { isMenuVisible ->
+        viewModel.isMenuVisible.observe(viewLifecycleOwner, Observer { isMenuVisible ->
             isMenuVisible?.let {
                 menu?.findItem(R.id.save_insights)?.isVisible = isMenuVisible
             }

@@ -5,11 +5,14 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -48,6 +51,7 @@ public class AppPrefs {
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
+        READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
@@ -123,8 +127,10 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
+        GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
+        LAST_SKIPPED_QUICK_START_TASK,
 
         POST_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
@@ -137,6 +143,17 @@ public class AppPrefs {
 
         // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
+
+        // timestamp of the last update of the reader css styles
+        READER_CSS_UPDATED_TIMESTAMP,
+        // Identifier of the next page for the discover /cards endpoint
+        READER_CARDS_ENDPOINT_PAGE_HANDLE,
+        // used to tell the server to return a different set of data so the content on discover tab doesn't look static
+        READER_CARDS_ENDPOINT_REFRESH_COUNTER,
+
+        // Used to delete recommended tags saved as followed tags in tbl_tags
+        // Need to be done just once for a logged out user
+        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
     }
 
     /**
@@ -215,6 +232,18 @@ public class AppPrefs {
 
         // used to indicate that we do not need to show the main FAB tooltip
         IS_MAIN_FAB_TOOLTIP_DISABLED,
+
+        // version of the last shown feature announcement
+        FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
+
+        // last app version code feature announcement was shown for
+        LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
+
+        // feature flag for Reader Improvements Phase 2
+        FF_READER_IMPROVEMENTS_PHASE_2,
+
+        // used to indicate that we do not need to show the Post List FAB tooltip
+        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
     }
 
     private static SharedPreferences prefs() {
@@ -842,6 +871,14 @@ public class AppPrefs {
         remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
+    public static void setGutenbergStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+        setBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, tooltipShown);
+    }
+
+    public static boolean getGutenbergStarterPageTemplatesTooltipShown() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, false);
+    }
+
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -955,6 +992,15 @@ public class AppPrefs {
     public static boolean isMainFabTooltipDisabled() {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
+
+    public static void setPostListFabTooltipDisabled(Boolean disable) {
+        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
+    }
+
+    public static boolean isPostListFabTooltipDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+    }
+
 
     public static void setQuickStartMigrationDialogShown(Boolean shown) {
         setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
@@ -1092,6 +1138,78 @@ public class AppPrefs {
         return Arrays.asList(idsAsString.split(","));
     }
 
+    public static void setFeatureAnnouncementShownVersion(int version) {
+        setInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, version);
+    }
+
+    public static int getFeatureAnnouncementShownVersion() {
+        return getInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, -1);
+    }
+
+    public static int getLastFeatureAnnouncementAppVersionCode() {
+        return getInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE);
+    }
+
+    public static void setLastFeatureAnnouncementAppVersionCode(int version) {
+        setInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE, version);
+    }
+
+    public static long getReaderTagsUpdatedTimestamp() {
+        return getLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, -1);
+    }
+
+    public static void setReaderTagsUpdatedTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, timestamp);
+    }
+
+    public static long getReaderCssUpdatedTimestamp() {
+        return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
+    }
+
+    public static void setReaderCssUpdatedTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
+    }
+
+    public static String getReaderCardsPageHandle() {
+        return getString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderCardsPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, pageHandle);
+    }
+
+    public static int getReaderCardsRefreshCounter() {
+        return getInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, 0);
+    }
+
+    public static void incrementReaderCardsRefreshCounter() {
+        setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
+    }
+
+    public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
+        return getBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, false);
+    }
+
+    public static void setReaderRecommendedTagsDeletedForLoggedOutUser(boolean deleted) {
+        setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
+    }
+
+    public static QuickStartTask getLastSkippedQuickStartTask() {
+        String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
+        if (TextUtils.isEmpty(taskName)) {
+            return null;
+        }
+        return QuickStartTask.Companion.fromString(taskName);
+    }
+
+    public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {
+        if (task == null) {
+            remove(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
+            return;
+        }
+        setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1117,5 +1235,18 @@ public class AppPrefs {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Feature Flag for Reader Improvements Phase 2. Both BuildTime and RunTime feature flag is used.
+     *
+     * BuildTime feature flag is used to make sure we never enable the feature in production builds - even when the
+     * user manually overrides the shared preferences record using adb.
+     *
+     * RunTime feature flag is used for us to enable the feature during development.
+     */
+    public static boolean isReaderImprovementsPhase2Enabled() {
+        return BuildConfig.READER_IMPROVEMENTS_PHASE_2 && getBoolean(UndeletablePrefKey.FF_READER_IMPROVEMENTS_PHASE_2,
+                false);
     }
 }

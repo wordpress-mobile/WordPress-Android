@@ -1,54 +1,88 @@
+<de-DE>
+15.5:
+* Block-Editor: Benutzernamen-@mentions werden im Block-Editor für WordPress.com und Jetpack-Websites auto-vervollständigt. Gib das @-Zeichen ein und du siehst ein Popup-Menü mit Benutzernamen. Bearbeite Medien im Cover-Block. Fehlerbehebung am Überschriftsblock entfernt weißen Schatten im Dunkelmodus an Überschriften mit Link und String-Formatierung.
+* Suche nach selbst gehosteten Websites in der Beitragsliste.
+* Lade Audio- und Dokumentdateien in die Medienbibliothek hoch.
+
+</de-DE>
 <en-US>
-14.6:
-Block editor enhancements: Added Cover block. Enabled crop, zoom, and rotate for images in posts. Tweaked “Take a Video” icon to differentiate from “Take a Photo.” Removed dimming effect on unselected blocks. Added toolbar for alignment options in Paragraph, Image, and MediaText blocks.
+15.5:
+* Block Editor: Username @mentions now auto-complete in the Block Editor on WordPress.com and Jetpack sites. Type the “@” character to see a username popup. Edit media in the Cover block. A Heading block bug fix removes an unwanted white shadow on headings with a link and string formatting in dark mode.
+* Search for self-hosted sites on the post list.
+* Upload audio and document files to the media library.
 
-Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.
-
-General improvements: Dark Theme support.
 </en-US>
-<es-ES>
-14.6:
-Mejoras en el editor de bloques: Añadido el bloque de portada. Activado el recorte, zoom y rotación de imágenes en las entradas. Retocado el icono «Hacer un vídeo» para diferenciarlo de «Hacer una foto». Eliminado el efecto de oscurecimiento en los bloques no seleccionados. Añadida una barra de herramientas para las opciones de alineación en los bloques de párrafo, imagen y medios y texto.
+<iw-IL>
+15.5:
+* עורך הבלוקים: הפעלנו השלמה אוטומטית של אזכורים לשמות משתמש בהקשת @ בעורך הבלוקים באתרים של WordPress.com ו-Jetpack. יש להקליד את התו '@' כדי להציג רשימה קופצת על שמות המשתמשים. לערוך מדיה בבלוק הכיסוי. תיקנו באג בבלוק הכותרת העליונה כדי להסיר צל לבן מיותר בכותרות עליונות עם עיצוב של קישור ומחרוזות במצב כהה.
+* ניתן לחפש אתרים באחסון עצמי ברשימת הפוסטים.
+* ניתן להעלות קבצים של אודיו ומסמכים לספריית המדיה.
 
-Correcciones: Problema por el que los enlaces «wordpress://» en un navegador no abrían la aplicación, problema por el que al abrir una página se abría un editor vacío.
+</iw-IL>
+<id>
+15,5:
+* Penyunting Blok: Penyebutan @namapengguna kini dapat dilengkapi otomatis di Penyunting Blok untuk situs WordPress.com dan Jetpack. Ketik karakter “@” untuk menampilkan popup nama pengguna. Sunting media di blok Sampul. Perbaikan bug blok Judul menghilangkan bayangan putih pada judul dengan format tautan dan string pada mode gelap.
+* Cari situs hosting sendiri pada daftar pos.
+* Unggah file audio dan dokumen ke pustaka media.
 
-Mejoras generales: Compatibilidad para el tema oscuro.
-</es-ES>
-<fr-CA>
-14.6 :
-Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
+</id>
+<ja-JP>
+115.5:
+* Block Editor: WordPress.com と Jetpack サイトの Block Editor で「@」を入力するとユーザー名がオートコンプリートされるようになりました。 「@」と入力するとユーザー名が表示されます。 カバーブロックでメディアを編集しましょう。 見出しブロックのバグ修正により、リンクと文字の書式が設定された見出しにダークモードで白い影が表示されなくなりました。
+* 投稿リストでインストール型サイトを検索してください。
+* メディアライブラリに音声ファイルとドキュメントファイルをアップロードしてください。
 
-Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
+</ja-JP>
+<ko-KR>
+15.5:
+* 블록 편집기: 이제 워드프레스닷컴과 젯팩 사이트의 블록 편집기에서 이용자명 @mentions가 자동완성합니다. “@” 문자를 입력하여 떠오르는 이용자명을 볼 수 있습니다. 표지 블록에서 미디어를 편집하세요. 헤딩 블록 버그 수정이 어두운 모드에서 링크와 문자열 서식이 있는 헤딩에 원하지 않는 흰 그림자를 제거합니다.
+* 글 목록에서 자체 호스팅 사이트를 검색하세요.
+* 오디오와 문서 파일을 미디어 라이브러리로 업로드하세요.
 
-Améliorations générales : Prise en charge du thème sombre.
-</fr-CA>
-<fr-FR>
-14.6 :
-Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
+</ko-KR>
+<nl-NL>
+15.5:
+* Blok editor: gebruikersnaam @mentions worden nu automatisch aangevuld in de blok editor op WordPress.com en Jetpack sites. Typ het teken "@" om een ​​pop-up venster met gebruikersnaam te zien. Bewerk media in het cover blok. Een bugfix voor het heading blok verwijdert een ongewenste witte schaduw op headers met een link en string opmaak in de donkere modus.
+* Zoek naar zelf gehoste sites op de berichtenlijst.
+* Upload audio- en document bestanden naar de mediabibliotheek.
+</nl-NL>
+<pl-PL>
+15.5:
+* Edytor blokowy: Nazwy użytkownika @mentions mają teraz autouzupełnianie w edytorze blokowym na stronach WordPressa i Jetpacka. Wprowadź z klawiatury znak “@” , aby wyskoczyło okienko z nazwą użytkownika. Edytuj materiały użyte w bloku okładki. Rozwiązanie problemu buga w bloku nagłówka usunęło niepożądany biały cień na nagłówkach formatowanych w trybie ciemnym. 
+* Wyszukiwanie samodzielnych witryn na liście postów.
+* Wgrywanie plików audio i dokumentów do biblioteki mediów.
 
-Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
-
-Améliorations générales : Prise en charge du thème sombre.
-</fr-FR>
+</pl-PL>
+<pt-BR>
+15.5:
+* Editor de blocos: Agora @menções são auto-completadas no editor de blocos em sites no WordPress.com e Jetpack. Digite "@" para abrir um popup de nomes de usuários. Edição de mídia no bloco Cobertura. Corrigimos um erro de formatação no bloco Título para remover uma sombra branca adicionada sem necessidade ao usar o modo escuro.
+* Pesquise por sites auto-hospedados na lista de posts
+* Envie arquivos de áudio e documentos para a biblioteca de mídias.
+</pt-BR>
 <ru-RU>
-14.6:
-Улучшения блоков: Добавлен блок обложки, включены инструменты обрезки, увеличения и поворота изображений. Изменен значок для захвата видео, убраны эффекты затемнения на невыбранных блоках. Добавлена панель инструментов для выравнивания блоков заголовка, параграфа, изображения и медиа+текст.
-Исправление:  ссылки “wordpress://”  не открывались в приложении из браузера, открытие пустой страницы в редакторе.
-Добавлена поддержка тёмной темы.
+15.5:
+* Редактор блоков: Автодополнение @упоминаний для сайтов с Jetpack и на WordPress.com. Введите символ “@” для выпадающего списка имен пользователей. Редактирование медиафайлов в блоке обложки, блок заголовка более не выводит нежелательную белую тень в заголовке со ссылкой в темном режиме.
+* Поиск самостоятельно размещенных сайтов в списке записей.
+* Возможность загрузки аудиофайлов и документов в медиатеку.
 </ru-RU>
 <sv-SE>
-14.6:
-Förbättringar i blockredigeraren: Nytt omslagsblock. Bilder i inlägg kan beskäras, zoomas och roteras. Ikonen ”spela in video” har gjorts tydligare för att inte likna ”ta en bild”. Ej valda block tonas inte längre ned. Ny verktygslist för justering i sidled i rubrik-, text- bild- och mediatextblock.
+15.5:
+* Blockredigeraren: Nu kompletteras @taggning av användarnamn automatiskt i blockredigeraren på hos WordPress.com webbplatser med Jetpack. När du skriver tecknet ”@” visas en lista med användarnamn. Redigera media i omslagsblocket. Rättat ett fel i rubrikblocket där länkade rubriker med formaterad text i mörkt läge hade vit skugga.
+* Sökning efter webbplatser på webbhotell i inläggslistan.
+* Uppladdning av ljud- och dokumentfiler till mediabiblioteket.
 
-Rättat: Länkar till ”wordpress://” i webbläsaren öppnade inte appen och ett problem där en sida man öppnade ledde till ett tomt redigeringsfönster.
-
-Allmänn förbättring: stöd för mörkt tema.
 </sv-SE>
-<tr-TR>
-14.6:
-Blok düzenleyici geliştirmeleri: Kapak bloğu eklendi. Yazılardaki görseller için kırpma, yakınlaştırma ve döndürme etkinleştirildi. "Fotoğraf Çek" den ayırt etmek için "Video Çek" simgesinde düzeltme yapıldı. Seçili olmayan bloklar üzerindeki karartma efekti kaldırıldı. Başlık, Paragraf, Resim ve MediaText bloklarındaki hizalama seçenekleri için araç çubuğu eklendi.
+<zh-CN>
+15.5:
+* 区块编辑器：在 WordPress.com 和 Jetpack 站点的区块编辑器中，输入用于提及用户名的 @ 符号的操作现在会自动完成。 输入“@”字符后，系统会弹出显示用户名的窗口。 在“封面”区块中编辑媒体。 修复了一个“标题”区块错误，消除了带有链接和字符串格式的标题在夜间模式下错误显示的白色阴影。
+* 在文章列表中搜索自托管站点。
+* 上传音频和文档文件至媒体库。
 
-Düzeltmeler: Bir tarayıcıdaki “wordpress://” bağlantılarının uygulamayı açmadığı, sayfa açmanın boş bir düzenleyici açtığı sorun.
+</zh-CN>
+<zh-TW>
+15.5：
+* 區塊編輯器：現在於 WordPress.com 和 Jetpack 網站的區塊編輯器中使用 @mentions 提及功能，使用者名稱將會自動完成。 輸入「@」字元，即會彈出使用者名稱。 在封面區塊中編輯媒體。 我們修正標題區塊中的錯誤，移除含連結和字串格式的標題在深色模式下出現的白色陰影。
+* 在文章清單中搜尋自助託管網站。
+* 將音訊和文件檔案上傳到媒體庫。
 
-Genel geliştirmeler: Koyu tema desteği.
-</tr-TR>
+</zh-TW>

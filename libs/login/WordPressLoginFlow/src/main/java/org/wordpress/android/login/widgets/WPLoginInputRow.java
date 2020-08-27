@@ -79,8 +79,8 @@ public class WPLoginInputRow extends RelativeLayout {
                     mEditText.setHintTextColor(getResources().getColor(android.R.color.transparent));
                 }
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {
-                    mTextInputLayout.setPasswordVisibilityToggleEnabled(
-                            a.getBoolean(R.styleable.wpLoginInputRow_passwordToggleEnabled, false));
+                    mTextInputLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+                    mTextInputLayout.setEndIconDrawable(R.drawable.selector_password_visibility);
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {

@@ -6,7 +6,7 @@
 
     <stroke
         android:color="@android:color/white"
-        android:width="@dimen/posts_list_spinner_avatar_padding">
+        android:width="@dimen/me_avatar_width">
     </stroke>
 
 </shape>

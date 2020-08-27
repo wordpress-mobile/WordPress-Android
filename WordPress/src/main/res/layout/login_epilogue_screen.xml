@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,9 +8,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_buttons"
-        android:scrollbars="vertical"
-        android:theme="@style/LoginEpilogueSitesList" />
+        android:layout_above="@+id/primary_button"
+        android:scrollbars="vertical" />
 
     <ProgressBar
         android:id="@+id/sites_progress"
@@ -26,38 +24,18 @@
         android:id="@+id/bottom_shadow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_container_shadow_height"
-        android:layout_above="@+id/bottom_buttons"
+        android:layout_above="@+id/primary_button"
         android:background="@drawable/login_shadow" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottom_buttons"
-        style="@style/LoginTheme.BottomBar"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/primary_button"
+        style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="@dimen/appbar_elevation">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_large">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/secondary_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/connect_more"
-                style="@style/LoginTheme.Button.SignUp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/primary_button"
-                style="@style/WordPress.Button.Primary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_continue" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+        android:layout_marginBottom="@dimen/margin_medium_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium_large"
+        android:text="@string/login_done" />
 </RelativeLayout>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: bg
 -->
 <resources>
@@ -38,7 +38,6 @@ Language: bg
     <string name="pages_move_to_trash">Преместване в кошчето</string>
     <string name="pages_move_to_draft">Преместване в чернова</string>
     <string name="news_card_announcement_action_sample_announcement">[Научете още]</string>
-    <string name="pages_publish_now">Публикуване сега</string>
     <string name="pages_view">Преглед</string>
     <string name="pages_trashed">В кошчето</string>
     <string name="pages_drafts">Чернови</string>
@@ -90,7 +89,6 @@ Language: bg
     <string name="confirm_delete_media_video">Да се изтрие ли това видео?</string>
     <string name="confirm_delete_media_image">Да се изтрие ли това изображение?</string>
     <string name="media_title_document_details">Детайли на документа</string>
-    <string name="connect_site">Свързване на сайт</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Изберете мелодия</string>
     <string name="notification_settings_item_other_comments_other_blogs">Коментари на други сайтове</string>
     <string name="notification_settings_category_other">Други</string>
@@ -122,7 +120,6 @@ Language: bg
     <string name="connection_to_server_lost">Връзката със сървъра бе прекъсната</string>
     <string name="login_epilogue_mysites_other">Моите сайтове</string>
     <string name="login_epilogue_mysites_one">Моя сайт</string>
-    <string name="login_logged_in_as">Влезли сте от името на</string>
     <string name="login_empty_2fa">Моля въведете потвърждаващия код</string>
     <string name="login_email_client_not_found">Не можахме да засечем вашия имейл клиент</string>
     <string name="login_empty_username">Въведете име</string>
@@ -131,11 +128,9 @@ Language: bg
     <string name="login_site_address_help_title">Какъв е адресът на сайта ми?</string>
     <string name="login_site_address_help">Трябва ви помощ, за да намерите адреса на сайта си?</string>
     <string name="login_site_address">Адрес на сайта</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Вече сте влезли в WordPress.com</string>
     <string name="enter_wpcom_password">Въведете вашата WordPress.com парола.</string>
     <string name="login_continue">Напред</string>
-    <string name="connect_more">Свързане на друг сайт</string>
     <string name="password_incorrect">Изглежда вашата парола е грешна. Моля проверете информацията повторно и пробвайте отново.</string>
     <string name="enter_verification_code">Моля, въведете кода за потвърждение от вашето приложение Authenticator.</string>
     <string name="next">Следващ</string>
@@ -165,7 +160,6 @@ Language: bg
     <string name="post_settings_more_options">Повече настройки</string>
     <string name="post_settings_categories_and_tags">Категории и етикети</string>
     <string name="notifications_tab_title_all">Всички</string>
-    <string name="post_settings_status">Състояние</string>
     <string name="category_parent">Родителска категория (не задължително):</string>
     <string name="media_error_timeout">Отне твърде много време на сървъра да отговори</string>
     <string name="media_error_exceeds_memory_limit">Файлът е твърде голям, за да бъде качен на сайта</string>
@@ -257,7 +251,6 @@ Language: bg
     <string name="media_upload_state_uploading">Качва се</string>
     <string name="media_upload_state_queued">В опашката</string>
     <string name="image_quality">Качество на изображението</string>
-    <string name="keep_editing">Продължете да редактирате</string>
     <string name="error_all_media_upload_canceled">Качването на всички файлове беше прекъснато по неизвестна причина. Моля повторете качването</string>
     <string name="error_unknown_post_type">Непознат формат на публикацията</string>
     <string name="submit_for_review">Изпращане</string>
@@ -271,8 +264,6 @@ Language: bg
     <string name="confirm">Потвърждение</string>
     <string name="pending_draft_one_week_2">\'%1$s\' все още е чернова. Не забравяйте да го публикувате.</string>
     <string name="pending_draft_one_week_1">Вашата чернова \'%1$s\' ви очаква да я публикувате!</string>
-    <string name="reader_photo_by">Снимка от %s</string>
-    <string name="reader_label_visit">Посетете</string>
     <string name="swipe_for_more">Плъзнете за повече</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com или използвайте горния бутон, за да я отворите в браузъра.</string>
     <string name="reader_err_get_post_not_authorized_signin">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com.</string>
@@ -733,7 +724,6 @@ Language: bg
     <string name="reader_page_followed_tags">Следени етикети</string>
     <string name="reader_page_followed_blogs">Следени сайтове</string>
     <string name="reader_hint_add_tag_or_url">Въведете етикет или адрес за следване</string>
-    <string name="reader_title_tag_preview">Етикет от Reader</string>
     <string name="forgot_password">Изгубена парола?</string>
     <string name="help">Помощ</string>
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
@@ -870,7 +860,6 @@ Language: bg
     <string name="httppassword">HTTP Парола</string>
     <string name="httpuser">Потребител за HTTP</string>
     <string name="error_media_upload">Грешка при качването на медийния файл</string>
-    <string name="publish_date">Публикуване</string>
     <string name="incorrect_credentials">Грешно име и/или парола</string>
     <string name="password">Парола</string>
     <string name="username">Име</string>

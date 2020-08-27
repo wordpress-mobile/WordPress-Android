@@ -31,6 +31,8 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
+        LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
+
         setContentView(R.layout.login_epilogue_activity);
 
         if (savedInstanceState == null) {

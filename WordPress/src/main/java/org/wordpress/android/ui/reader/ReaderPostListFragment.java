@@ -2,25 +2,20 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,11 +24,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.ListPopupWindow;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -42,7 +35,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -51,7 +43,6 @@ import com.google.android.material.tabs.TabLayout.Tab;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -80,49 +71,56 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
-import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.BottomNavController;
-import org.wordpress.android.ui.main.MainToolbarFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
+import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
+import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
-import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -138,8 +136,6 @@ import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,13 +146,15 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
+import kotlin.Unit;
+
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
-        ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
+        ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        MainToolbarFragment {
+        ReblogActionListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -175,7 +173,6 @@ public class ReaderPostListFragment extends Fragment
     private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
-    private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
 
     private View mSubFilterComponent;
@@ -190,6 +187,7 @@ public class ReaderPostListFragment extends Fragment
     private BottomNavController mBottomNavController;
 
     private ReaderTag mCurrentTag;
+    private ReaderTag mTagFragmentStartedWith = null;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
     private String mCurrentSearchQuery;
@@ -208,7 +206,6 @@ public class ReaderPostListFragment extends Fragment
     private boolean mIsAnimatingOutNewPostsBar;
 
     private static boolean mHasPurgedReaderDb;
-    private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -216,7 +213,10 @@ public class ReaderPostListFragment extends Fragment
     private QuickStartEvent mQuickStartEvent;
 
     private ReaderPostListViewModel mViewModel;
-    private WPMainActivityViewModel mWPMainActivityViewModel;
+    // This VM is initialized only on the Following tab
+    private SubFilterViewModel mSubFilterViewModel;
+    private NewsCardViewModel mNewsCardViewModel;
+    private ReaderViewModel mReaderViewModel = null;
 
     private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
         @Override public void onChanged(@Nullable NewsItem newsItem) {
@@ -283,6 +283,9 @@ public class ReaderPostListFragment extends Fragment
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
+        // Tag this fragment is started with
+        args.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, tag);
+        // Tag this fragment is started with but also used for savedState
         args.putSerializable(ReaderConstants.ARG_TAG, tag);
         args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType);
         args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel);
@@ -291,6 +294,18 @@ public class ReaderPostListFragment extends Fragment
         fragment.setArguments(args);
         fragment.trackTagLoaded(tag);
 
+        return fragment;
+    }
+
+    static ReaderPostListFragment newInstanceForSearch() {
+        AppLog.d(T.READER, "reader post list > newInstance (search)");
+
+        Bundle args = new Bundle();
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
+        args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, false);
+
+        ReaderPostListFragment fragment = new ReaderPostListFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -339,6 +354,9 @@ public class ReaderPostListFragment extends Fragment
         if (args != null) {
             if (args.containsKey(ReaderConstants.ARG_TAG)) {
                 mCurrentTag = (ReaderTag) args.getSerializable(ReaderConstants.ARG_TAG);
+            }
+            if (args.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
+                mTagFragmentStartedWith = (ReaderTag) args.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG);
             }
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -400,113 +418,210 @@ public class ReaderPostListFragment extends Fragment
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // we need to pass activity, since this fragment extends Android Native fragment (we can pass `this` as soon as
-        // this fragment extends Support fragment.
-        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
-
+        mNewsCardViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
+                                               .get(NewsCardViewModel.class);
         if (mIsTopLevel) {
-            mWPMainActivityViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
-                                                         .get(WPMainActivityViewModel.class);
-
-            mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
-                if (isCurrentTagManagedInFollowingTab()
-                    && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                    mViewModel.onSubfilterSelected(subfilterListItem);
-                    if (shouldShowEmptyViewForSelfHostedCta()) {
-                        setEmptyTitleDescriptionAndButton(false);
-                        showEmptyView();
-                    }
-                }
-            });
-
-            mViewModel.getShouldShowSubFilters().observe(this, show -> {
-                mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
-                mSettingsButton.setVisibility(mAccountStore.hasAccessToken() ? View.VISIBLE : View.GONE);
-            });
-
-            mViewModel.getReaderModeInfo().observe(this, readerModeInfo -> {
-                if (readerModeInfo != null) {
-                    changeReaderMode(readerModeInfo, true);
-
-                    if (readerModeInfo.getLabel() != null) {
-                        mSubFilterTitle.setText(
-                                mUiHelpers.getTextOfUiString(
-                                        requireActivity(),
-                                        readerModeInfo.getLabel()
-                                )
-                        );
-                    }
-
-                    if (readerModeInfo.isFiltered()) {
-                        mRemoveFilterButton.setVisibility(View.VISIBLE);
-                    } else {
-                        mRemoveFilterButton.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            mViewModel.getChangeBottomSheetVisibility().observe(this, event -> {
-                event.applyIfNotHandled(isShowing -> {
-                    FragmentManager fm = getFragmentManager();
-                    if (fm != null) {
-                        SubfilterBottomSheetFragment bottomSheet =
-                                (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
-                        if (isShowing && bottomSheet == null) {
-                            mViewModel.loadSubFilters();
-                            bottomSheet = new SubfilterBottomSheetFragment();
-                            bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
-                        } else if (!isShowing && bottomSheet != null) {
-                            bottomSheet.dismiss();
-                        }
-                    }
-                    return null;
-                });
-            });
-
-            mViewModel.getBottomSheetEmptyViewAction().observe(this, event -> {
-                event.applyIfNotHandled(action -> {
-                    if (action instanceof OpenSubsAtPage) {
-                        ReaderActivityLauncher.showReaderSubs(
-                                requireActivity(),
-                                ((OpenSubsAtPage) action).getTabIndex()
-                        );
-                    } else {
-                        mWPMainActivityViewModel.onOpenLoginPage();
-                    }
-
-                    return null;
-                });
-            });
-
-            mViewModel.getUpdateTagsAndSites().observe(this, event -> {
-                event.applyIfNotHandled(tasks -> {
-                    if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                        ReaderUpdateServiceStarter.startService(getActivity(), tasks);
-                    }
-                    return null;
-                });
-            });
+            mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
+                                                 .get(ReaderViewModel.class);
         }
 
-        mViewModel.getShouldCollapseToolbar().observe(this, collapse -> {
-            if (collapse) {
-                mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-            } else {
-                mRecyclerView.setToolbarScrollFlags(0);
+        if (isFollowingScreen()) {
+            initSubFilterViewModel();
+        }
+
+        mViewModel.getNavigationEvents().observe(getViewLifecycleOwner(),
+                event -> event.applyIfNotHandled(navTarget -> {
+                    if (navTarget instanceof ShowSitePickerForResult) {
+                        ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
+                        ActivityLauncher.showSitePickerForResult(
+                                ReaderPostListFragment.this,
+                                data.getSite(),
+                                data.getMode()
+                        );
+                    } else if (navTarget instanceof OpenEditorForReblog) {
+                        OpenEditorForReblog data = (OpenEditorForReblog) navTarget;
+                        ActivityLauncher.openEditorForReblog(
+                                getActivity(),
+                                data.getSite(),
+                                data.getPost(),
+                                data.getSource()
+                        );
+                    } else if (navTarget instanceof ShowNoSitesToReblog) {
+                        ReaderActivityLauncher.showNoSiteToReblog(getActivity());
+                    } else if (navTarget instanceof ShowBookmarkedTab) {
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        if (requireActivity() instanceof WPMainActivity) {
+                            requireActivity().overridePendingTransition(0, 0);
+                        }
+                    } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
+                        showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
+                    } else {
+                        throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
+                    }
+                    return Unit.INSTANCE;
+                }));
+
+        mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    showSnackbar(holder);
+                    return Unit.INSTANCE;
+                })
+        );
+
+        mViewModel.getPreloadPostEvents().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    addWebViewCachingFragment(holder.getBlogId(), holder.getPostId());
+                    return Unit.INSTANCE;
+                })
+        );
+
+        mViewModel.start(mReaderViewModel);
+
+        if (isFollowingScreen()) {
+            mSubFilterViewModel.onUserComesToReader();
+        }
+
+        if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            mRecyclerView.showAppBarLayout();
+            mSearchMenuItem.expandActionView();
+            mRecyclerView.setToolbarScrollFlags(0);
+        }
+    }
+
+    private void showSnackbar(SnackbarMessageHolder holder) {
+        WPSnackbar snackbar = WPSnackbar.make(
+                getSnackbarParent(),
+                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
+                Snackbar.LENGTH_LONG
+        );
+        if (holder.getButtonTitle() != null) {
+            snackbar.setAction(
+                    mUiHelpers.getTextOfUiString(requireContext(), holder.getButtonTitle()),
+                    v -> holder.getButtonAction().invoke()
+            );
+        }
+        snackbar.show();
+    }
+
+    private void addWebViewCachingFragment(Long blogId, Long postId) {
+        String tag = blogId + "" + postId;
+
+        if (getParentFragmentManager().findFragmentByTag(tag) == null) {
+            getParentFragmentManager().beginTransaction()
+                                 .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                 .commit();
+        }
+    }
+
+    private void initSubFilterViewModel() {
+        WPMainActivityViewModel wpMainActivityViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
+                                                     .get(WPMainActivityViewModel.class);
+        mSubFilterViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
+                                                     .get(SubFilterViewModel.class);
+
+        mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
+            if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
+                mSubFilterViewModel.onSubfilterSelected(subfilterListItem);
+                if (shouldShowEmptyViewForSelfHostedCta()) {
+                    setEmptyTitleDescriptionAndButton(false);
+                    showEmptyView();
+                }
             }
         });
 
-        mViewModel.start(
-                mCurrentTag,
-                isCurrentTagManagedInFollowingTab() && mIsTopLevel,
-                mIsTopLevel
-        );
+        mSubFilterViewModel.getReaderModeInfo().observe(getViewLifecycleOwner(), readerModeInfo -> {
+            if (readerModeInfo != null) {
+                changeReaderMode(readerModeInfo, true);
 
-        if (mIsTopLevel) {
-            mViewModel.onUserComesToReader();
-        }
+                if (readerModeInfo.getLabel() != null) {
+                    mSubFilterTitle.setText(
+                            mUiHelpers.getTextOfUiString(
+                                    requireActivity(),
+                                    readerModeInfo.getLabel()
+                            )
+                    );
+                }
+
+                if (readerModeInfo.isFiltered()) {
+                    mRemoveFilterButton.setVisibility(View.VISIBLE);
+                } else {
+                    mRemoveFilterButton.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        mSubFilterViewModel.getChangeBottomSheetVisibility().observe(getViewLifecycleOwner(), event -> {
+            event.applyIfNotHandled(isShowing -> {
+                FragmentManager fm = getFragmentManager();
+                if (fm != null) {
+                    SubfilterBottomSheetFragment bottomSheet =
+                            (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
+                    if (isShowing && bottomSheet == null) {
+                        mSubFilterViewModel.loadSubFilters();
+                        bottomSheet = new SubfilterBottomSheetFragment();
+                        bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                    } else if (!isShowing && bottomSheet != null) {
+                        bottomSheet.dismiss();
+                    }
+                }
+                return null;
+            });
+        });
+
+        mSubFilterViewModel.getBottomSheetEmptyViewAction().observe(getViewLifecycleOwner(), event -> {
+            event.applyIfNotHandled(action -> {
+                if (action instanceof OpenSubsAtPage) {
+                    ReaderActivityLauncher.showReaderSubs(
+                            requireActivity(),
+                            ((OpenSubsAtPage) action).getTabIndex()
+                    );
+                } else {
+                    wpMainActivityViewModel.onOpenLoginPage();
+                }
+
+                return null;
+            });
+        });
+
+        mSubFilterViewModel.getUpdateTagsAndSites().observe(getViewLifecycleOwner(), event -> {
+            event.applyIfNotHandled(tasks -> {
+                if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                    ReaderUpdateServiceStarter.startService(getActivity(), tasks);
+                }
+                return null;
+            });
+        });
+        mSubFilterViewModel.start(mCurrentTag);
+    }
+
+    private void initSubFilterViews(ViewGroup rootView, LayoutInflater inflater) {
+        mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
+        ((ViewGroup) rootView.findViewById(R.id.sub_filter_component_container)).addView(mSubFilterComponent);
+        mSettingsButton = mSubFilterComponent.findViewById(R.id.filter_settings_button);
+        mSettingsButton.setOnClickListener(v -> {
+            showSettings();
+        });
+
+        mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
+        mSubFiltersListButton.setOnClickListener(v -> {
+            mSubFilterViewModel.onSubFiltersListButtonClicked();
+        });
+
+        mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
+
+        mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
+        mRemoveFilterButton.setOnClickListener(v -> {
+            mSubFilterViewModel.setDefaultSubfilter();
+        });
+        mSubFilterComponent.setVisibility(isFollowingScreen() ? View.VISIBLE : View.GONE);
+        mSettingsButton.setVisibility(isFollowingScreen() && mAccountStore.hasAccessToken() ? View.VISIBLE : View.GONE);
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
+        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
+        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
+        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
     }
 
     private void changeReaderMode(ReaderModeInfo readerModeInfo, boolean onlyOnChanges) {
@@ -551,15 +666,18 @@ public class ReaderPostListFragment extends Fragment
         }
         mWasPaused = true;
 
-        mViewModel.onFragmentPause(mIsTopLevel);
+        mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
+                isFollowingScreen());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        checkPostAdapter();
-
+        /*
+         * This is a workaround for https://github.com/wordpress-mobile/WordPress-Android/issues/11985.
+         * The RecyclerView doesn't get redrawn correctly when the adapter finishes its initialization in onStart.
+         */
+        getPostAdapter().notifyDataSetChanged();
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
@@ -593,7 +711,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderTag readerTag = AppPrefs.getReaderTag();
 
             if (discoverTag != null && discoverTag.equals(readerTag)) {
-                setCurrentTag(readerTag, mIsTopLevel);
+                setCurrentTag(readerTag);
                 updateCurrentTag();
             } else if (discoverTag == null) {
                 AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
@@ -605,35 +723,23 @@ public class ReaderPostListFragment extends Fragment
             showEmptyView();
         }
 
-        mViewModel.onFragmentResume(mIsTopLevel, isCurrentTagManagedInFollowingTab());
+        mViewModel.onFragmentResume(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
+                isFollowingScreen(), isFollowingScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
     }
 
     /*
      * called when fragment is resumed and we're looking at posts in a followed tag
      */
     private void resumeFollowedTag() {
-        Object event = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
-        if (event != null) {
+        TagAdded addedTag = EventBus.getDefault().getStickyEvent(ReaderEvents.TagAdded.class);
+        if (isFollowingScreen() && addedTag != null) {
+            EventBus.getDefault().removeStickyEvent(addedTag);
             // user just added a tag so switch to it.
-            String tagName = ((ReaderEvents.TagAdded) event).getTagName();
-            EventBus.getDefault().removeStickyEvent(event);
-            ReaderTag newTag = ReaderUtils.getTagFromTagName(tagName, ReaderTagType.FOLLOWED);
-            setCurrentTag(newTag);
-            if (mIsTopLevel) {
-                mViewModel.setSubfilterFromTag(newTag);
-            }
-        } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
-            // current tag no longer exists, revert to default
-            AppLog.d(T.READER, "reader post list > current tag no longer valid");
-            ReaderTag tag;
-            tag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(requireActivity(), mTagUpdateClientUtilsProvider);
-
-            setCurrentTag(tag);
-            if (mIsTopLevel) {
-                if (tag.isFollowedSites() || tag.isDefaultInMemoryTag()) {
-                    mViewModel.setDefaultSubfilter();
-                }
-            }
+            ReaderTag newTag = ReaderUtils.getTagFromTagName(addedTag.getTagName(), ReaderTagType.FOLLOWED);
+            mSubFilterViewModel.setSubfilterFromTag(newTag);
+        } else if (isFollowingScreen() && !ReaderTagTable.tagExists(getCurrentTag())) {
+            // user just removed a tag which was selected in the subfilter
+            mSubFilterViewModel.setDefaultSubfilter();
         } else {
             // otherwise, refresh posts to make sure any changes are reflected and auto-update
             // posts in the current tag if it's time
@@ -646,8 +752,8 @@ public class ReaderPostListFragment extends Fragment
     private Site getSiteIfBlogPreview() {
         Site currentSite = null;
 
-        if (mIsTopLevel && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-            currentSite = mViewModel.getCurrentSubfilterValue() instanceof Site ? (Site) (mViewModel
+        if (isFollowingScreen() && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+            currentSite = mSubFilterViewModel.getCurrentSubfilterValue() instanceof Site ? (Site) (mSubFilterViewModel
                     .getCurrentSubfilterValue()) : null;
         }
 
@@ -668,13 +774,15 @@ public class ReaderPostListFragment extends Fragment
         if (isSiteStillAvailable) {
             refreshPosts();
         } else {
-            mViewModel.setDefaultSubfilter();
+            if (isFollowingScreen()) {
+                mSubFilterViewModel.setDefaultSubfilter();
+            }
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
@@ -702,13 +810,15 @@ public class ReaderPostListFragment extends Fragment
         // there's a connection to avoid removing posts the user would expect to see offline
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
             purgeDatabaseIfNeeded();
-            updateFollowedTagsAndBlogsIfNeeded();
         }
+
+        checkPostAdapter();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        mNewPostsBar.clearAnimation();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
@@ -719,7 +829,7 @@ public class ReaderPostListFragment extends Fragment
     private void checkPostAdapter() {
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
-
+            refreshPosts();
             if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
                 mHasUpdatedPosts = true;
                 if (getPostListType().isTagType()) {
@@ -740,11 +850,6 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
-    }
-
-    @Override
-    public void setTitle(@NonNull String title) {
-        // Do nothing - no title for this toolbar
     }
 
     @SuppressWarnings("unused")
@@ -789,15 +894,20 @@ public class ReaderPostListFragment extends Fragment
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
-            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator), title,
+            WPDialogSnackbar snackbar = WPDialogSnackbar.make(getSnackbarParent(), title,
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
+
+            if (getSelectedSite() != null) {
+                QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
+                        mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
+            }
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (mCurrentTag != null) {
@@ -818,8 +928,10 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasUpdatedPosts);
         outState.putBoolean(ReaderConstants.KEY_FIRST_LOAD, mFirstLoad);
-        outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
-        outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
+        if (mRecyclerView != null) {
+            outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
+            outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
+        }
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         outState.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, mIsTopLevel);
         outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
@@ -891,7 +1003,7 @@ public class ReaderPostListFragment extends Fragment
         mActionableEmptyView = rootView.findViewById(R.id.empty_custom_view);
 
         mRecyclerView.setLogT(AppLog.T.READER);
-        mRecyclerView.setCustomEmptyView(mActionableEmptyView);
+        mRecyclerView.setCustomEmptyView();
         mRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
@@ -901,11 +1013,13 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onLoadFilterCriteriaOptionsAsync(
                     FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                loadTags(listener);
             }
 
             @Override
             public void onLoadData(boolean forced) {
+                if (forced) {
+                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                }
                 updatePosts(forced);
             }
 
@@ -922,7 +1036,7 @@ public class ReaderPostListFragment extends Fragment
                         String discoverLabel = requireActivity().getString(R.string.reader_discover_display_name);
 
                         if (discoverTag != null && discoverTag.getTagDisplayName().equals(discoverLabel)) {
-                            setCurrentTag(discoverTag, mIsTopLevel);
+                            setCurrentTag(discoverTag);
                         }
                     }
                 }
@@ -991,9 +1105,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // add a menu to the filtered recycler's toolbar
-        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                                               || getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                                               || mIsTopLevel)) {
+        if (mAccountStore.hasAccessToken() && getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             setupRecyclerToolbar();
         }
 
@@ -1019,30 +1131,10 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setRefreshing(true);
         }
 
-        mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
-        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
-        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
 
-        if (mIsTopLevel) {
-            mRecyclerView.getAppBarLayout().addView(mSubFilterComponent);
 
-            mSettingsButton = mSubFilterComponent.findViewById(R.id.filter_settings_button);
-            mSettingsButton.setOnClickListener(v -> {
-                showSettings();
-            });
-
-            mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
-            mSubFiltersListButton.setOnClickListener(v -> {
-                mViewModel.onSubFiltersListButtonClicked();
-            });
-
-            mSubFilterTitle = mSubFilterComponent.findViewById(R.id.selected_filter_name);
-
-            mRemoveFilterButton = mSubFilterComponent.findViewById(R.id.remove_filter_button);
-            mRemoveFilterButton.setOnClickListener(v -> {
-                mViewModel.setDefaultSubfilter();
-            });
+        if (isFollowingScreen()) {
+            initSubFilterViews(rootView, inflater);
         }
 
         return rootView;
@@ -1058,20 +1150,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void setupRecyclerToolbar() {
         Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
-        mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
         mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
-
-        if (mIsTopLevel) {
-            mSettingsMenuItem.setVisible(false);
-        } else {
-            mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    showSettings();
-                    return true;
-                }
-            });
-        }
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
@@ -1100,21 +1179,9 @@ public class ReaderPostListFragment extends Fragment
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 populateSearchSuggestions(null);
                 showSearchMessageOrSuggestions();
-                mSettingsMenuItem.setVisible(false);
-                mRecyclerView.setTabLayoutVisibility(false);
-                mViewModel.changeSubfiltersVisibility(false);
-                if (mIsTopLevel) {
-                    mViewModel.onSearchMenuCollapse(false);
-                }
-
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
-                }
-
-                if (getSelectedSite() != null) {
-                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
-                            mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
                 }
 
                 return true;
@@ -1122,37 +1189,8 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                hideSearchMessage();
-                hideSearchSuggestions();
-                hideSearchTabs();
-                resetSearchSuggestions();
-                if (!mIsTopLevel) {
-                    mSettingsMenuItem.setVisible(true);
-                }
-                mCurrentSearchQuery = null;
-
-                if (mBottomNavController != null) {
-                    mBottomNavController.onRequestShowBottomNavigation();
-                }
-
-
-                if (mIsTopLevel) {
-                    if (isCurrentTagManagedInFollowingTab()) {
-                        mViewModel.onSubfilterReselected();
-                    } else {
-                        // return to the followed tag that was showing prior to searching
-                        resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-                    }
-
-                    mRecyclerView.setTabLayoutVisibility(true);
-                    mViewModel.changeSubfiltersVisibility(isCurrentTagManagedInFollowingTab());
-                    mViewModel.onSearchMenuCollapse(true);
-                } else {
-                    // return to the followed tag that was showing prior to searching
-                    resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-                }
-
-                return true;
+                requireActivity().finish();
+                return false;
             }
         });
 
@@ -1272,7 +1310,7 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
-        if (!isAdded()) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1431,11 +1469,6 @@ public class ReaderPostListFragment extends Fragment
         populateSearchSuggestionRecyclerAdapter(null); // always passing null as there's no need to filter
     }
 
-    private void resetSearchSuggestions() {
-        resetSearchSuggestionAdapter();
-        resetSearchSuggestionRecyclerAdapter();
-    }
-
     /*
      * create and assign the suggestion adapter for the search view
      */
@@ -1546,7 +1579,7 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
-        if (!isAdded()) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1558,7 +1591,7 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
-        if (!isAdded()) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1654,25 +1687,11 @@ public class ReaderPostListFragment extends Fragment
      * parent to be the main activity's CoordinatorLayout
      */
     private View getSnackbarParent() {
-        View coordinator = getActivity().findViewById(R.id.coordinator);
+        View coordinator = getActivity().findViewById(R.id.coordinator_layout);
         if (coordinator != null) {
             return coordinator;
         }
         return getView();
-    }
-
-    private int getEmptyViewTopMargin() {
-        int totalMargin = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-
-        if (mIsTopLevel) {
-            totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-            if (isCurrentTagManagedInFollowingTab()) {
-                totalMargin += getActivity().getResources()
-                                            .getDimensionPixelSize(R.dimen.reader_subfilter_component_height);
-            }
-        }
-
-        return totalMargin;
     }
 
     private void setEmptyTitleDescriptionAndButton(boolean requestFailed) {
@@ -1682,12 +1701,15 @@ public class ReaderPostListFragment extends Fragment
 
         int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-        mActionableEmptyView.updateLayoutForSearch(false, getEmptyViewTopMargin());
+        mActionableEmptyView.updateLayoutForSearch(false, 0);
         mActionableEmptyView.subtitle.setContentDescription(null);
         boolean isSearching = false;
         String title;
         String description = null;
         ActionableEmptyViewButtonType button = null;
+
+        // Ensure the default image is reset for empty views before applying logic
+        mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
@@ -1716,7 +1738,8 @@ public class ReaderPostListFragment extends Fragment
                             title = getString(R.string.reader_empty_followed_blogs_title);
                             description = getString(R.string.reader_empty_followed_blogs_description);
                         }
-
+                        mActionableEmptyView.image.setImageResource(
+                                R.drawable.img_illustration_following_empty_results_196dp);
                         button = ActionableEmptyViewButtonType.DISCOVER;
                     } else if (getCurrentTag().isPostsILike()) {
                         title = getString(R.string.reader_empty_posts_liked_title);
@@ -1768,7 +1791,6 @@ public class ReaderPostListFragment extends Fragment
         SpannableStringBuilder ssb = new SpannableStringBuilder(description);
         int imagePlaceholderPosition = description.indexOf("%s");
         addBookmarkImageSpan(ssb, imagePlaceholderPosition);
-
         mActionableEmptyView.image.setVisibility(View.VISIBLE);
         mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
         mActionableEmptyView.subtitle.setText(ssb);
@@ -1785,9 +1807,8 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private boolean shouldShowEmptyViewForSelfHostedCta() {
-        return mIsTopLevel
-               && !mAccountStore.hasAccessToken() && mViewModel.getCurrentSubfilterValue() instanceof SiteAll
-               && isCurrentTagManagedInFollowingTab();
+        return isFollowingScreen() && !mAccountStore.hasAccessToken() && mSubFilterViewModel
+                .getCurrentSubfilterValue() instanceof SiteAll;
     }
 
     private void setEmptyTitleAndDescriptionForSelfHostedCta() {
@@ -1864,37 +1885,22 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private boolean isEmptyViewShowing() {
-        return isAdded() && mActionableEmptyView.getVisibility() == View.VISIBLE;
-    }
-
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
-        ReaderTag tag;
+            ReaderTag tag = null;
 
-        switch (button) {
-            case DISCOVER:
-                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                break;
-            case FOLLOWED:
-                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
-                break;
-            default:
+            switch (button) {
+                case DISCOVER:
+                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+                    break;
+                case FOLLOWED:
+                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
+                    break;
+            }
+            if (tag == null) {
                 tag = ReaderUtils.getDefaultTag();
-        }
+            }
 
-        mRecyclerView.refreshFilterCriteriaOptions();
-
-        if (!ReaderTagTable.tagExists(tag)) {
-            tag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
-                    requireActivity(),
-                    mTagUpdateClientUtilsProvider
-            );
-        }
-
-        setCurrentTag(tag, mIsTopLevel);
-        mViewModel.changeSubfiltersVisibility(
-                mIsTopLevel
-                && (tag.isFollowedSites() || tag.isDefaultInMemoryTag()));
+            mViewModel.onEmptyStateButtonTapped(tag);
     }
 
     /*
@@ -1929,34 +1935,7 @@ public class ReaderPostListFragment extends Fragment
     };
 
     private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            new ReaderInterfaces.OnPostBookmarkedListener() {
-                @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
-                                                               boolean isCachingActionRequired) {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    String tag = Long.toString(blogId) + Long.toString(postId);
-
-                    if (NetworkUtils.isNetworkAvailable(getActivity())
-                        && isCachingActionRequired && isBookmarked
-                        && getFragmentManager().findFragmentByTag(tag) == null) {
-                        getFragmentManager().beginTransaction()
-                                            .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
-                                            .commit();
-                    }
-
-                    if (isBookmarked && !isBookmarksList()) {
-                        if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
-                            AppPrefs.setBookmarksSavedLocallyDialogShown();
-                            showBookmarksSavedLocallyDialog();
-                        } else {
-                            // show snackbar when not in saved posts list
-                            showBookmarkSnackbar();
-                        }
-                    }
-                }
-            };
+            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
 
     private void announceListStateForAccessibility() {
         if (getView() != null) {
@@ -1965,15 +1944,11 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void showBookmarksSavedLocallyDialog() {
-        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(getActivity())
-                .setTitle(getString(R.string.reader_save_posts_locally_dialog_title))
-                .setMessage(getString(R.string.reader_save_posts_locally_dialog_message))
-                .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        showBookmarkSnackbar();
-                    }
-                })
+    private void showBookmarksSavedLocallyDialog(ShowBookmarkedSavedOnlyLocallyDialog holder) {
+        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(getString(holder.getTitle()))
+                .setMessage(getString(holder.getMessage()))
+                .setPositiveButton(holder.getButtonLabel(), (dialog, which) -> holder.getOkButtonAction().invoke())
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
@@ -1982,26 +1957,6 @@ public class ReaderPostListFragment extends Fragment
     private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
                && (mCurrentTag != null && mCurrentTag.isBookmarked());
-    }
-
-    private void showBookmarkSnackbar() {
-        if (!isAdded()) {
-            return;
-        }
-
-        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                  .setAction(R.string.reader_bookmark_snack_btn,
-                          new View.OnClickListener() {
-                              @Override public void onClick(View view) {
-                                  AnalyticsTracker
-                                          .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                                  ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                                  if (getActivity() instanceof WPMainActivity) {
-                                      getActivity().overridePendingTransition(0, 0);
-                                  }
-                              }
-                          })
-                  .show();
     }
 
     /*
@@ -2054,24 +2009,6 @@ public class ReaderPostListFragment extends Fragment
                 }
             };
 
-    private final NewsCardListener mNewsCardListener = new NewsCardListener() {
-        @Override public void onItemShown(@NotNull NewsItem item) {
-            mViewModel.onNewsCardShown(item, getCurrentTag());
-        }
-
-        @Override public void onItemClicked(@NotNull NewsItem item) {
-            mViewModel.onNewsCardExtendedInfoRequested(item);
-            Activity activity = getActivity();
-            if (activity != null) {
-                WPWebViewActivity.openURL(activity, item.getActionUrl());
-            }
-        }
-
-        @Override public void onDismissClicked(NewsItem item) {
-            mViewModel.onNewsCardDismissed(item);
-        }
-    };
-
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
@@ -2080,22 +2017,24 @@ public class ReaderPostListFragment extends Fragment
                     context,
                     getPostListType(),
                     mImageManager,
+                    mUiHelpers,
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
+            mPostAdapter.setReblogActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
-            mPostAdapter.setOnPostPopupListener(this);
+            mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
-            mPostAdapter.setOnNewsCardListener(mNewsCardListener);
+            mPostAdapter.setOnNewsCardListener(mNewsCardViewModel.getNewsCardListener());
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
-            mViewModel.getNewsDataSource().removeObserver(mNewsItemObserver);
+            mNewsCardViewModel.getNewsDataSource(mCurrentTag).removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
-                mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), mNewsItemObserver);
+                mNewsCardViewModel.getNewsDataSource(mCurrentTag).observe(getViewLifecycleOwner(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
@@ -2155,10 +2094,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setCurrentTag(final ReaderTag tag) {
-        setCurrentTag(tag, false);
-    }
-
-    private void setCurrentTag(final ReaderTag tag, boolean manageSubfilter) {
         if (tag == null) {
             return;
         }
@@ -2172,9 +2107,9 @@ public class ReaderPostListFragment extends Fragment
 
         mCurrentTag = tag;
 
-        if (manageSubfilter) {
+        if (isFollowingScreen()) {
             if (mCurrentTag.isFollowedSites() || mCurrentTag.isDefaultInMemoryTag()) {
-                mViewModel.onSubfilterReselected();
+                mSubFilterViewModel.onSubfilterReselected();
             } else {
                 changeReaderMode(new ReaderModeInfo(
                                 tag,
@@ -2189,8 +2124,6 @@ public class ReaderPostListFragment extends Fragment
                 );
             }
         }
-
-        mViewModel.onTagChanged(mCurrentTag);
 
         ReaderTag validTag;
 
@@ -2225,7 +2158,6 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setCurrentTag(mCurrentTag);
-        mViewModel.changeSubfiltersVisibility(mIsTopLevel && isCurrentTagManagedInFollowingTab());
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
@@ -2267,20 +2199,6 @@ public class ReaderPostListFragment extends Fragment
         setCurrentTag(newTag);
 
         return true;
-    }
-
-    /*
-     * load tags on which the main data will be filtered
-     */
-    private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        ReaderTag defaultTag = null;
-
-        defaultTag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
-                requireActivity(),
-                mTagUpdateClientUtilsProvider
-        );
-
-        new LoadTagsTask(listener, defaultTag).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -2333,7 +2251,10 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-
+        // check if the event is related to this instance of the ReaderPostListFragment
+        if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
+            return;
+        }
         setIsUpdating(true, event.getAction());
         setEmptyTitleDescriptionAndButton(false);
     }
@@ -2344,11 +2265,11 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-
-        setIsUpdating(false, event.getAction());
+        // check if the event is related to this instance of the ReaderPostListFragment
         if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
             return;
         }
+        setIsUpdating(false, event.getAction());
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
@@ -2494,7 +2415,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             hideNewPostsBar();
         }
@@ -2647,7 +2568,7 @@ public class ReaderPostListFragment extends Fragment
 
         trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
-        setCurrentTag(tag, mIsTopLevel);
+        setCurrentTag(tag);
     }
 
     private void trackTagLoaded(ReaderTag tag) {
@@ -2674,83 +2595,37 @@ public class ReaderPostListFragment extends Fragment
         AnalyticsTracker.track(stat, properties);
     }
 
-    /*
-     * called when user taps "..." icon next to a post
-     */
     @Override
-    public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null || !isAdded()) {
-            return;
-        }
-
-        List<Integer> menuItems = new ArrayList<>();
-
-        if (ReaderPostTable.isPostFollowed(post)) {
-            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
-
-            // When blogId and feedId are not equal, post is not a feed so show notifications option.
-            if (post.blogId != post.feedId) {
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
+    public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
+        switch (actionType) {
+            case FOLLOW:
+                if (post.isFollowedByCurrentUser) {
+                    onFollowingTapped();
                 } else {
-                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
+                    onFollowTapped(getView(), post.getBlogName(), post.blogId);
                 }
-            }
-        } else {
-            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+                toggleFollowStatusForPost(post);
+                break;
+            case SITE_NOTIFICATIONS:
+                mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
+                break;
+            case SHARE:
+                AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
+                sharePost(post);
+                break;
+            case VISIT_SITE:
+                AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+                ReaderActivityLauncher.openPost(getContext(), post);
+                break;
+            case BLOCK_SITE:
+                blockBlogForPost(post);
+                break;
+            case BOOKMARK:
+            case LIKE:
+            case REBLOG:
+            case COMMENTS:
+                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
         }
-
-        menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
-
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
-        }
-
-        Context context = view.getContext();
-        final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
-        listPopup.setDropDownGravity(Gravity.END);
-        listPopup.setAnchorView(view);
-        listPopup.setModal(true);
-        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!isAdded()) {
-                    return;
-                }
-
-                listPopup.dismiss();
-                switch ((int) id) {
-                    case ReaderMenuAdapter.ITEM_FOLLOW:
-                        onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
-                        onFollowingTapped();
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_BLOCK:
-                        blockBlogForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
-                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-                        updateSubscription(SubscriptionAction.DELETE, post.blogId);
-                        break;
-                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
-                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-                        updateSubscription(SubscriptionAction.NEW, post.blogId);
-                        break;
-                    case ReaderMenuAdapter.ITEM_SHARE:
-                        AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
-                        sharePost(post);
-                        break;
-                }
-            }
-        });
-        listPopup.show();
     }
 
     @Override
@@ -2761,20 +2636,22 @@ public class ReaderPostListFragment extends Fragment
                 ? getString(R.string.reader_followed_blog_notifications_this)
                 : blogName;
 
-        WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
-                "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
-                  .setAction(getString(R.string.reader_followed_blog_notifications_action),
-                          new View.OnClickListener() {
-                              @Override public void onClick(View view) {
-                                  AnalyticsUtils
-                                          .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
-                                  AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
-                                          String.valueOf(blogId), SubscriptionAction.NEW);
-                                  mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-                                  ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
-                              }
-                          })
-                  .show();
+        if (blogId > 0) {
+            WPSnackbar.make(getSnackbarParent(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                    "<b>", blog, "</b>")), Snackbar.LENGTH_LONG)
+                      .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                              new View.OnClickListener() {
+                                  @Override public void onClick(View view) {
+                                      AnalyticsUtils
+                                              .trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId);
+                                      AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(
+                                              String.valueOf(blogId), SubscriptionAction.NEW);
+                                      mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
+                                      ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true);
+                                  }
+                              })
+                      .show();
+        }
     }
 
     @Override
@@ -2808,11 +2685,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void updateSubscription(SubscriptionAction action, long blogId) {
-        AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(String.valueOf(blogId), action);
-        mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-    }
-
     /*
      * purge reader db if it hasn't been done yet
      */
@@ -2824,22 +2696,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    /*
-     * start background service to get the latest followed tags and blogs if it's time to do so
-     */
-    private void updateFollowedTagsAndBlogsIfNeeded() {
-        if (mLastAutoUpdateDt != null) {
-            int minutesSinceLastUpdate = DateTimeUtils.minutesBetween(mLastAutoUpdateDt, new Date());
-            if (minutesSinceLastUpdate < 120) {
-                return;
-            }
-        }
-
-        AppLog.d(T.READER, "reader post list > updating tags and blogs");
-        mLastAutoUpdateDt = new Date();
-        ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
-    }
-
     @Override
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
@@ -2847,56 +2703,21 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    // reset the timestamp that determines when followed tags/blogs are updated so they're
-    // updated when the fragment is recreated (necessary after signin/disconnect)
-    public static void resetLastUpdateDate() {
-        mLastAutoUpdateDt = null;
+    @Override
+    public void reblog(ReaderPost post) {
+        mViewModel.onReblogButtonClicked(post, isBookmarksList());
     }
 
-    private boolean isCurrentTagManagedInFollowingTab() {
-        return ReaderUtils.isTagManagedInFollowingTab(
-                mCurrentTag,
-                mIsTopLevel,
-                mRecyclerView
-        );
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
+            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            mViewModel.onReblogSiteSelected(siteLocalId);
+        }
     }
 
-    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
-        private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
-        private ReaderTag mDefaultTag;
-
-        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, ReaderTag defaultTag) {
-            mFilterCriteriaLoaderListener = listener;
-            mDefaultTag = defaultTag;
-        }
-
-        @Override
-        protected ReaderTagList doInBackground(Void... voids) {
-            ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-
-            tagList.addAll(ReaderTagTable.getCustomListTags());
-
-            if (!mIsTopLevel) {
-                tagList.addAll(ReaderTagTable.getFollowedTags());
-            }
-
-            tagList.addAll(ReaderTagTable.getBookmarkTags());
-
-            if (mIsTopLevel) {
-                if (!tagList.containsFollowingTag()) {
-                    tagList.add(mDefaultTag);
-                }
-            }
-
-            return mIsTopLevel ? ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo()) : tagList;
-        }
-
-        @Override
-        protected void onPostExecute(ReaderTagList tagList) {
-            if (mFilterCriteriaLoaderListener != null && isAdded()) {
-                //noinspection unchecked
-                mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
-            }
-        }
+    private boolean isFollowingScreen() {
+        return mTagFragmentStartedWith != null && mTagFragmentStartedWith.isFollowedSites();
     }
 }

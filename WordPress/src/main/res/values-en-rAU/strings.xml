@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-11-20 03:34:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: en_AU
 -->
 <resources>
@@ -108,7 +108,6 @@ Language: en_AU
     <string name="post_notification_off">Off</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
     <string name="post_settings_notification">Notification</string>
-    <string name="post_settings_time_and_date">Time and Date</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
@@ -160,10 +159,6 @@ Language: en_AU
     <string name="stats_widget_all_time_title">All-time</string>
     <string name="stats_widget_views_title">Views This Week</string>
     <string name="stats_widget_add">Add widget</string>
-    <string name="dialog_confirm_update_yes">Update now</string>
-    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
-    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
-    <string name="dialog_confirm_update_title">Ready to Update?</string>
     <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
@@ -209,8 +204,6 @@ Language: en_AU
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
-    <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
     <string name="backdated_for">Backdated for: %s</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
@@ -230,7 +223,6 @@ Language: en_AU
     <string name="post_restoring">Post is being restored</string>
     <string name="post_restored">Post restored</string>
     <string name="post_trashing">Post is being trashed</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
@@ -306,7 +298,6 @@ Language: en_AU
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tap %1$s Site Pages %2$s to continue.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
@@ -472,7 +463,6 @@ Language: en_AU
     <string name="pages_delete_permanently">Delete Permanently</string>
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_move_to_draft">Move to Draft</string>
-    <string name="pages_publish_now">Publish Now</string>
     <string name="pages_set_parent">Set parent</string>
     <string name="pages_view">View</string>
     <string name="pages_trashed">Trashed</string>
@@ -558,7 +548,6 @@ Language: en_AU
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
     <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
-    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
@@ -725,7 +714,6 @@ Language: en_AU
     <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
-    <string name="menu_publish_now">Publish Now</string>
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -788,10 +776,6 @@ Language: en_AU
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d pages, and %2$d of %3$d files remaining</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 post, and %1$d of %2$d files remaining</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 page, and %1$d of %2$d files remaining</string>
-    <string name="dialog_confirm_publish_yes">Publish now</string>
-    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
-    <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
-    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d posts / pages not uploaded</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pages not uploaded</string>
     <string name="media_file_page_singular_only_not_uploaded">1 page not uploaded</string>
@@ -809,7 +793,6 @@ Language: en_AU
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post with 1 file not uploaded</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
@@ -830,7 +813,6 @@ Language: en_AU
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_magic_link_progress">Sending email</string>
-    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
@@ -838,7 +820,6 @@ Language: en_AU
     <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
-    <string name="signup_epilogue_heading">New account</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
@@ -947,7 +928,6 @@ Language: en_AU
     <string name="notification_login_title_success">Logged in!</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_empty_password">Please enter a password</string>
-    <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="image_size">Size</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
@@ -1015,8 +995,6 @@ Language: en_AU
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt text</string>
-    <string name="copy">Copy</string>
-    <string name="connect_site">Connect Site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
@@ -1060,7 +1038,6 @@ Language: en_AU
     <string name="connection_to_server_lost">The connection to the server was lost</string>
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_epilogue_mysites_one">My site</string>
-    <string name="login_logged_in_as">Logged in as</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_empty_username">Please enter a username</string>
@@ -1073,26 +1050,16 @@ Language: en_AU
     <string name="login_site_address_help">Need help finding your site address?</string>
     <string name="login_site_address">Site address</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_continue">Continue</string>
-    <string name="connect_more">Connect Another Site</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
-    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="login_text_otp">Text me a code instead.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="open_mail">Open mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
-    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
-    <string name="login_promo_text_anytime">Catch up with your favourite sites and join the conversation anywhere, any time.</string>
-    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
-    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
     <string name="image_optimization_promo_title">Turn on image optimisation?</string>
     <string name="leave_off">Leave off</string>
@@ -1128,7 +1095,6 @@ Language: en_AU
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">All</string>
     <string name="top_level_category_name">Top level</string>
     <string name="category_parent">Parent category (optional):</string>
@@ -1252,7 +1218,6 @@ Language: en_AU
     <string name="media_upload_state_deleting">Deleting</string>
     <string name="media_upload_state_uploading">Uploading</string>
     <string name="media_upload_state_queued">Queued</string>
-    <string name="keep_editing">Keep editing</string>
     <string name="image_quality">Image Quality</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
     <string name="error_unknown_post_type">Unknown post format</string>
@@ -1279,8 +1244,6 @@ Language: en_AU
     <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
-    <string name="reader_photo_by">Photo by %s</string>
-    <string name="reader_label_visit">Visit</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_authorized_signin">You\'re not authorised to view this post. Try signing in to WordPress.com first.</string>
@@ -1771,7 +1734,6 @@ Language: en_AU
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
@@ -1914,7 +1876,6 @@ Language: en_AU
     <string name="httppassword">HTTP password</string>
     <string name="httpuser">HTTP username</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
-    <string name="publish_date">Publish</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="log_in">Log In</string>
     <string name="username">Username</string>

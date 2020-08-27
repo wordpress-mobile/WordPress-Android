@@ -18,7 +18,7 @@
             android:layout_height="36dp"
             android:layout_marginEnd="12dp"
             android:contentDescription="@null"
-            android:src="@drawable/bg_rectangle_neutral_10_user_32dp" />
+            android:src="@drawable/bg_rectangle_placeholder_user_32dp" />
 
         <ImageView
             android:id="@+id/activityJetpackActorIcon"
@@ -45,7 +45,6 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/wpColorText"
                 tools:text="John Smith" />
 
             <org.wordpress.android.widgets.WPTextView

@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.uploads
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
@@ -67,6 +67,7 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
     private val postStore: PostStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private val coroutineScope = CoroutineScope(bgDispatcher)
     private val postStatusContinuations = HashMap<RemoteId, Continuation<OnPostStatusFetched>>()
     private val autoSaveContinuations = HashMap<RemoteId, Continuation<OnPostChanged>>()
 
@@ -89,7 +90,7 @@ class AutoSavePostIfNotDraftUseCase @Inject constructor(
                             "or update draft action while another one is going on."
             )
         }
-        GlobalScope.launch(bgDispatcher) {
+        coroutineScope.launch {
             val onPostStatusFetched = fetchRemotePostStatus(remotePostPayload)
             val result = when {
                 onPostStatusFetched.isError -> {

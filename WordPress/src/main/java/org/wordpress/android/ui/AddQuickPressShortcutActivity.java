@@ -219,7 +219,7 @@ public class AddQuickPressShortcutActivity extends LocaleAwareActivity {
                     StringEscapeUtils.unescapeHtml4(blogNames[position]));
             blogUrl.setText(
                     StringEscapeUtils.unescapeHtml4(blogUrls[position]));
-            blavatar.setErrorImageResId(R.drawable.bg_rectangle_neutral_10_globe_32dp);
+            blavatar.setErrorImageResId(R.drawable.bg_rectangle_placeholder_globe_32dp);
             blavatar.setImageUrl(blavatars[position], mImageLoader);
 
             return view;

@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.PlanOffersAction.FETCH_PLAN_OFFERS
 import org.wordpress.android.fluxc.generated.PlanOffersActionBuilder
@@ -17,6 +18,7 @@ import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.plans.PlansViewModel.PlansListStatus.DONE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -25,7 +27,8 @@ class PlansViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused")
     private var plansStore: PlanOffersStore,
-    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
+    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     enum class PlansListStatus {
         DONE,
@@ -77,6 +80,7 @@ class PlansViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: PlanOffersModel) {
+        analyticsTrackerWrapper.track(Stat.OPENED_PLANS_COMPARISON)
         _showDialog.value = item
     }
 

@@ -13,7 +13,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AniUtils;
@@ -24,13 +23,14 @@ import org.wordpress.android.util.image.ImageType;
 
 import java.util.EnumSet;
 
+import static org.wordpress.android.ui.reader.ReaderConstants.MIN_GALLERY_IMAGE_WIDTH;
+import static org.wordpress.android.ui.reader.ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT;
+
 /**
  * displays a row of image thumbnails from a reader post - only shows when two or more images
  * of a minimum size are found
  */
 public class ReaderThumbnailStrip extends LinearLayout {
-    public static final int IMAGE_COUNT = 4;
-
     private ViewGroup mView;
     private int mThumbnailHeight;
     private int mThumbnailWidth;
@@ -61,19 +61,22 @@ public class ReaderThumbnailStrip extends LinearLayout {
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int margins = context.getResources().getDimensionPixelSize(R.dimen.reader_card_content_padding) * 2;
-        mThumbnailWidth = (displayWidth - margins) / IMAGE_COUNT;
+        mThumbnailWidth = (displayWidth - margins) / THUMBNAIL_STRIP_IMG_COUNT;
     }
 
     public void loadThumbnails(long blogId, long postId, boolean isPrivate) {
-        // get rid of any views already added
-        mView.removeAllViews();
-
         // get this post's content and scan it for images suitable in a gallery
         final String content = ReaderPostTable.getPostText(blogId, postId);
         final ReaderImageList imageList =
                 new ReaderImageScanner(content, isPrivate)
-                        .getImageList(IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH);
-        if (imageList.size() < IMAGE_COUNT) {
+                        .getImageList(THUMBNAIL_STRIP_IMG_COUNT, MIN_GALLERY_IMAGE_WIDTH);
+        loadThumbnails(imageList, isPrivate, content);
+    }
+
+    public void loadThumbnails(ReaderImageList imageList, boolean isPrivate, String content) {
+        // get rid of any views already added
+        mView.removeAllViews();
+        if (imageList.size() < THUMBNAIL_STRIP_IMG_COUNT) {
             mView.setVisibility(View.GONE);
             return;
         }
@@ -94,6 +97,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
             String photonUrl = PhotonUtils.getPhotonImageUrl(imageUrl, mThumbnailWidth, mThumbnailHeight);
             ImageManager.getInstance().load(imageView, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP);
 
+            // TODO malinjir move this logic to viewholder + vm
             // tapping a thumbnail opens the photo viewer
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -110,7 +114,7 @@ public class ReaderThumbnailStrip extends LinearLayout {
             });
 
             numAdded++;
-            if (numAdded >= IMAGE_COUNT) {
+            if (numAdded >= THUMBNAIL_STRIP_IMG_COUNT) {
                 break;
             }
         }

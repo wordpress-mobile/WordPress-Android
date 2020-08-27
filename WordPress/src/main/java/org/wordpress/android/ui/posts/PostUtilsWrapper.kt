@@ -2,8 +2,10 @@ package org.wordpress.android.ui.posts
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.reader.utils.DateProvider
 import javax.inject.Inject
 
 /**
@@ -14,7 +16,7 @@ import javax.inject.Inject
  *
  */
 @Reusable
-class PostUtilsWrapper @Inject constructor() {
+class PostUtilsWrapper @Inject constructor(private val dateProvider: DateProvider) {
     fun isPublishable(post: PostImmutableModel) = PostUtils.isPublishable(post)
 
     fun isPostInConflictWithRemote(post: PostImmutableModel) =
@@ -37,4 +39,16 @@ class PostUtilsWrapper @Inject constructor() {
 
     fun trackSavePostAnalytics(post: PostImmutableModel?, site: SiteModel) =
             PostUtils.trackSavePostAnalytics(post, site)
+
+    fun preparePostForPublish(post: PostModel, site: SiteModel) =
+            PostUtils.preparePostForPublish(post, site)
+
+    fun isPublishDateInTheFuture(dateCreated: String) =
+            PostUtils.isPublishDateInTheFuture(dateCreated, dateProvider.getCurrentDate())
+
+    fun isPublishDateInThePast(dateCreated: String) =
+            PostUtils.isPublishDateInThePast(dateCreated, dateProvider.getCurrentDate())
+
+    fun shouldPublishImmediatelyOptionBeAvailable(status: PostStatus?) =
+            PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)
 }

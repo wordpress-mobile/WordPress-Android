@@ -12,6 +12,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.ImageViewCompat
 
 object ColorUtils {
+    @JvmStatic
     fun applyTintToDrawable(context: Context, @DrawableRes drawableResId: Int, @ColorRes colorResId: Int): Drawable {
         val drawable = context.resources.getDrawable(drawableResId, context.theme)
         val color = ContextCompat.getColor(context, colorResId)
@@ -20,6 +21,7 @@ object ColorUtils {
         return drawable
     }
 
+    @JvmStatic
     fun setImageResourceWithTint(imageView: ImageView, @DrawableRes drawableResId: Int, @ColorRes colorResId: Int) {
         imageView.setImageDrawable(ContextCompat.getDrawable(imageView.context, drawableResId))
         ImageViewCompat.setImageTintList(

@@ -1,0 +1,24 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    ext.kotlinVersion = '1.3.61'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+repositories {
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

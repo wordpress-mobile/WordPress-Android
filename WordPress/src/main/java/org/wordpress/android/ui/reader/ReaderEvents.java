@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.reader;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.util.StringUtils;
 
@@ -18,9 +22,14 @@ public class ReaderEvents {
     }
 
     public static class FollowedTagsChanged {
-    }
+        private final boolean mDidSucceed;
 
-    public static class RecommendedTagsChanged {
+        public FollowedTagsChanged(boolean didSucceed) {
+            mDidSucceed = didSucceed;
+        }
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
     }
 
     public static class TagAdded {
@@ -41,18 +50,65 @@ public class ReaderEvents {
     public static class RecommendedBlogsChanged {
     }
 
+    public static class InterestTagsFetchEnded {
+        private final ReaderTagList mInterestTags;
+        private final boolean mDidSucceed;
+
+        public InterestTagsFetchEnded(ReaderTagList interestTags, boolean didSucceed) {
+            mInterestTags = interestTags;
+            mDidSucceed = didSucceed;
+        }
+
+        public ReaderTagList getInterestTags() {
+            return mInterestTags;
+        }
+
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
+    }
+
+    public static class FetchDiscoverCardsEnded {
+        final UpdateResult mResult;
+        final DiscoverTasks mTask;
+
+        public FetchDiscoverCardsEnded(DiscoverTasks task, UpdateResult result) {
+            this.mResult = result;
+            this.mTask = task;
+        }
+
+        public ReaderActions.UpdateResult getResult() {
+            return mResult;
+        }
+
+        public DiscoverTasks getTask() {
+            return mTask;
+        }
+    }
+
     public static class SinglePostDownloaded {
     }
 
     public static class UpdatePostsStarted {
+        private final ReaderTag mReaderTag;
         private final ReaderPostServiceStarter.UpdateAction mAction;
+
+        public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action, final ReaderTag readerTag) {
+            mAction = action;
+            mReaderTag = readerTag;
+        }
 
         public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action) {
             mAction = action;
+            mReaderTag = null;
         }
 
         public ReaderPostServiceStarter.UpdateAction getAction() {
             return mAction;
+        }
+
+        public @Nullable ReaderTag getReaderTag() {
+            return mReaderTag;
         }
     }
 

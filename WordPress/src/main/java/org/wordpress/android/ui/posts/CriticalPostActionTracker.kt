@@ -4,7 +4,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.CrashLoggingUtils
 
 class CriticalPostActionTracker(
     private val onStateChanged: () -> Unit,
@@ -24,8 +23,6 @@ class CriticalPostActionTracker(
             AppLog.e(T.POSTS, errorMessage)
             if (shouldCrashOnUnexpectedAction) {
                 throw IllegalStateException(errorMessage)
-            } else {
-                CrashLoggingUtils.log(errorMessage)
             }
         }
         map[localPostId] = criticalPostAction

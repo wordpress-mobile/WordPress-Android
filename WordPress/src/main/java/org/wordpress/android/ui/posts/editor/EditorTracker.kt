@@ -6,7 +6,7 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -71,7 +71,12 @@ class EditorTracker @Inject constructor(
         AnalyticsUtils.trackWithSiteDetails(stat, site, null)
     }
 
-    fun trackEditorEvent(event: TrackableEvent, editorName: String) {
+    @JvmOverloads
+    fun trackEditorEvent(
+        event: TrackableEvent,
+        editorName: String,
+        properties: Map<String, String> = mapOf()
+    ) {
         val currentStat = when (event) {
             TrackableEvent.BOLD_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_BOLD
             TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_BLOCKQUOTE
@@ -104,8 +109,13 @@ class EditorTracker @Inject constructor(
             TrackableEvent.UNDERLINE_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_UNDERLINE
             TrackableEvent.REDO_TAPPED -> Stat.EDITOR_TAPPED_REDO
             TrackableEvent.UNDO_TAPPED -> Stat.EDITOR_TAPPED_UNDO
+            TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED ->
+                Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED
+            TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN ->
+                Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN
         }
 
-        analyticsTrackerWrapper.track(currentStat, mapOf("editor" to editorName))
+        val updatedProperties = properties + ("editor" to editorName)
+        analyticsTrackerWrapper.track(currentStat, updatedProperties)
     }
 }

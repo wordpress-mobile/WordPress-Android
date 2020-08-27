@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ms
 -->
 <resources>
@@ -13,7 +13,6 @@ Language: ms
     <string name="plugin_remove_progress_dialog_message">Membuang %s…</string>
     <string name="plugin_remove_dialog_title">Buang Pemalam</string>
     <string name="login_empty_password">Sila masukkan kata laluan</string>
-    <string name="login_text_otp_another">Sebaliknya tekskan saya kod sekali lagi.</string>
     <string name="enter_verification_code_sms">Kami telah menghantar mesej teks ke nombor telefon berakhir dengan %s. Sila masukkan kod pengesahan dalam SMS.</string>
     <string name="uploading_subtitle_media_only">Tinggal %1$d daripada %2$d fail</string>
     <string name="uploading_subtitle_media_only_one">Tinggal 1 fail</string>
@@ -80,9 +79,7 @@ Language: ms
     <string name="media_edit_filetype_caption">Jenis Fail</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
-    <string name="copy">Salin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lampu kelip</string>
-    <string name="connect_site">Sambung Laman</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gegarkan peranti</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Pilih bunyi</string>
     <string name="notification_settings_category_sights_and_sounds">Penglihatan dan Bunyian</string>
@@ -123,7 +120,6 @@ Language: ms
     <string name="button_retry">Cuba Semula</string>
     <string name="connection_to_server_lost">Sambungan ke pelayan telah hilang</string>
     <string name="uploading_post">Memuat naik \"%s\"</string>
-    <string name="login_logged_in_as">Dilog masuk sebagai</string>
     <string name="login_epilogue_mysites_one">Laman saya</string>
     <string name="login_epilogue_mysites_other">Laman-laman saya</string>
     <string name="login_email_client_not_found">Tidak dapat mengesan aplikasi klien emel anda</string>
@@ -137,26 +133,16 @@ Language: ms
     <string name="login_site_address_help_title">Apa alamat laman saya?</string>
     <string name="login_site_address_help">Perlu bantuan mencari alamat laman anda?</string>
     <string name="login_site_address">Alamat laman</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Telahpun log masuk ke WordPress.com</string>
-    <string name="connect_more">Sambung Laman Lain</string>
     <string name="login_continue">Teruskan</string>
     <string name="enter_wpcom_password">Masukkan kata laluan WordPress.com anda.</string>
     <string name="login_magic_link_email_requesting">Memohon emel log masuk</string>
-    <string name="login_magic_links_sent_label">Pautan sihir anda sedang dalam perjalanan! Semak e-mel anda pada peranti ini dan ketik pautan dalam e-mel yang anda terima dari WordPress.com.</string>
-    <string name="login_magic_links_label">Kami akan mengemel anda pautan ajaib yang akan melog masuk anda dengan serta-merta, tiada kata laluan diperlukan. Tidak perlu lagi mengetik!</string>
     <string name="password_incorrect">Nampaknya seperti kata laluan ini tidak betul. Sila periksa semula maklumat anda dan cuba lagi.</string>
     <string name="requesting_otp">Memohon ko pengesahan melalui SMS.</string>
-    <string name="login_text_otp">Sebaliknya tekskan saya kod.</string>
     <string name="enter_verification_code">Hampir di sana! Sila masukkan kod pengesahan daripada aplikasi Authenticator anda.</string>
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
     <string name="open_mail">Buka surat</string>
-    <string name="login_promo_text_jetpack">Urus laman anda yang dikuasakan Jetpack di mana sahaja — anda ada WordPress dalam saku anda.</string>
-    <string name="login_promo_text_notifications">Pemberitahuan anda merantau dengan anda - lihat ulasan dan sukaan apabila ia berlaku.</string>
-    <string name="login_promo_text_anytime">Ikuti laman kegemaran anda dan ikuti perbincangan di mana-mana, pada bila-bila masa.</string>
-    <string name="login_promo_text_realtime">Tonton pembaca dari seluruh dunia membaca dan berinteraksi dengan laman anda — dalam masa nyata.</string>
-    <string name="login_promo_text_onthego">Terbitkan dari taman. Blog dari bas. Ulas dari kedai kopi. WordPress ada di mana anda berada.</string>
     <string name="image_optimization_promo_desc">Pengoptimuman imej menecutkan imej untuk muat naik yang lebih laju.\n\nAnda boleh mengubahnya bila-bila masa dalam tetapan laman.</string>
     <string name="image_optimization_promo_title">Hidupkan pengoptimuman imej?</string>
     <string name="leave_off">Biarkan mati</string>
@@ -193,7 +179,6 @@ Language: ms
     <string name="post_settings_more_options">Pilihan Lebih Lanjut</string>
     <string name="post_settings_not_set">Tidak Ditetapkan</string>
     <string name="notifications_tab_title_all">Semua</string>
-    <string name="post_settings_status">Status</string>
     <string name="category_parent">Kategori induk (pilihan):</string>
     <string name="top_level_category_name">Paras Atas</string>
     <string name="media_empty_audio_list">Anda tidak mempunyai audio</string>
@@ -316,7 +301,6 @@ Language: ms
     <string name="media_upload_state_failed">Muat Naik Gagal</string>
     <string name="media_upload_state_uploading">Memuat naik</string>
     <string name="image_quality">Kualiti Imej</string>
-    <string name="keep_editing">Teruskan menyunting</string>
     <string name="error_all_media_upload_canceled">Semua muat naik media telah dibatalkan disebabkan ralat yang tidak diketahui. Sila cuba muat naik semula</string>
     <string name="error_unknown_post_type">Format kiriman tidak diketahui</string>
     <string name="submit_for_review">Hantar</string>
@@ -341,8 +325,6 @@ Language: ms
     <string name="pending_draft_one_week_1">Draf anda \'%1$s\' sedang menunggu anda - pastikan anda menerbitkannya!</string>
     <string name="pending_draft_one_day_2">Tahukah anda bahawa \'%1$s\' masih lagi suatu draf? Terbitkannya!</string>
     <string name="pending_draft_one_day_1">Anda telah mendraf \'%1$s\' semalam. Jangan lupa untuk menerbitkannya!</string>
-    <string name="reader_photo_by">Gambar oleh %s</string>
-    <string name="reader_label_visit">Lawat</string>
     <string name="swipe_for_more">Sapu untuk seterusnya</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu atau sebaliknya gunakan butang aksi di atas untuk membuka di pelayar.</string>
     <string name="reader_err_get_post_not_authorized_signin">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu.</string>
@@ -803,7 +785,6 @@ Language: ms
     <string name="reader_page_followed_tags">Tag yang diikuti</string>
     <string name="reader_hint_add_tag_or_url">Masukkan tag atau URL untuk diikuti</string>
     <string name="reader_page_followed_blogs">Laman yang diikuti</string>
-    <string name="reader_title_tag_preview">Tag Pembaca</string>
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sijil SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika anda biasanya berhubung ke laman ini tanpa masalah, ralat ini mungkin bermakna bahawa seseorang sedang cuba menyamar sebagai laman ini, dan anda tidak sepatutnya teruskan. Adakah anda masih ingin mempercayai sijil ini?</string>
@@ -941,7 +922,6 @@ Language: ms
     <string name="httpuser">Nama pengguna HTTP</string>
     <string name="httppassword">Kata laluan HTTP</string>
     <string name="error_media_upload">Ralat berlaku semasa memuat naik media</string>
-    <string name="publish_date">Terbit</string>
     <string name="incorrect_credentials">Nama pengguna atau kata laluan tidak betul.</string>
     <string name="username">Nama pengguna</string>
     <string name="password">Kata laluan</string>

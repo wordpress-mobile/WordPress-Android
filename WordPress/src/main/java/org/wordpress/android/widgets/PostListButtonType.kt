@@ -35,7 +35,8 @@ enum class PostListButtonType constructor(
             R.string.pages_and_posts_cancel_auto_upload,
             R.drawable.ic_undo_white_24dp,
             R.attr.wpColorWarningDark
-    );
+    ),
+    BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(15, 0, 0, 0);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }

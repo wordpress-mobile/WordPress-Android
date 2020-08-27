@@ -25,10 +25,11 @@ class StatsWidgetDataTypeSelectionDialogFragment : AppCompatDialogFragment() {
     private lateinit var viewModel: StatsDataTypeSelectionViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        val nonNullActivity = requireActivity()
+        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsDataTypeSelectionViewModel::class.java)
-        val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
-        val view = activity!!.layoutInflater.inflate(R.layout.stats_data_type_selector, null) as RadioGroup
+        val alertDialogBuilder = MaterialAlertDialogBuilder(nonNullActivity)
+        val view = nonNullActivity.layoutInflater.inflate(R.layout.stats_data_type_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
             checkedId.toDataType()?.let { viewModel.selectDataType(it) }
         }

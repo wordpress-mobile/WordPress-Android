@@ -499,6 +499,53 @@ object TestContent {
 <!-- /wp:cover -->
 """
 
+    const val oldCoverBlockWithVideo = """<!-- wp:cover {"url":"$localVideoUrl","id":$localMediaId,"backgroundType":"video"} -->
+<div class="wp-block-cover has-background-dim">
+  <video class="wp-block-cover__video-background" autoplay muted loop playsinline src="$localVideoUrl"></video>
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlockWithVideo = """<!-- wp:cover {"url":"$remoteVideoUrl","id":$remoteMediaId,"backgroundType":"video"} -->
+<div class="wp-block-cover has-background-dim">
+  <video class="wp-block-cover__video-background" autoplay muted loop playsinline src="$remoteVideoUrl"></video>
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val imageBlockWithJsonNullId = """<!-- wp:image {"id":null,"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="https://example.com" alt="" class="wp-image-77">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+"""
+    const val galleryBlockWithJsonNullId = """<!-- wp:gallery {"ids":[203,null,369]} -->
+<figure class="wp-block-gallery columns-3 is-cropped">
+  <ul class="blocks-gallery-grid">
+    <li class="blocks-gallery-item">
+      <figure><img src="https://example.com" alt="" data-id="203" data-full-url="https://example.com" data-link="https://example.com" class="wp-image-203"></figure>
+    </li>
+    <li class="blocks-gallery-item">
+      <figure><img src="https://example.com" alt="" data-id="77" data-full-url="https://example.com" data-link="https://example.com" class="wp-image-77"></figure>
+    </li>
+    <li class="blocks-gallery-item">
+      <figure><img src="https://example.com" alt="" data-id="369" data-full-url="https://example.com" data-link="https://example.com" class="wp-image-369"></figure>
+    </li>
+  </ul>
+</figure>
+<!-- /wp:gallery -->
+"""
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock
@@ -509,4 +556,8 @@ object TestContent {
     const val newPostGallery = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostCover = paragraphBlock + newImageBlock + oldCoverBlock + newMediaTextBlock + oldGalleryBlock
     const val newPostCover = paragraphBlock + newImageBlock + newCoverBlock + newMediaTextBlock + newGalleryBlock
+    const val oldPostWithJsonNullId = paragraphBlock + oldImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
+    const val newPostWithJsonNullId = paragraphBlock + newImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
+    const val oldPostWithGalleryJsonNullId = paragraphBlock + oldImageBlock + galleryBlockWithJsonNullId
+    const val newPostWithGalleryJsonNullId = paragraphBlock + newImageBlock + galleryBlockWithJsonNullId
 }

@@ -4,11 +4,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
@@ -24,7 +24,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class InsightsManagementViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) val insightsUseCase: BaseListUseCase,
     private val siteProvider: StatsSiteProvider,
     private val statsStore: StatsStore,
@@ -72,9 +73,8 @@ class InsightsManagementViewModel @Inject constructor(
     }
 
     fun onSaveInsights() {
-        // This has to be GlobalScope because otherwise the coroutine gets killed with the ViewModel
         analyticsTrackerWrapper.track(Stat.STATS_INSIGHTS_MANAGEMENT_SAVED)
-        GlobalScope.launch {
+        insightsUseCase.launch(defaultDispatcher) {
             statsStore.updateTypes(siteProvider.siteModel, addedInsightTypes.toList())
 
             insightsUseCase.loadData()

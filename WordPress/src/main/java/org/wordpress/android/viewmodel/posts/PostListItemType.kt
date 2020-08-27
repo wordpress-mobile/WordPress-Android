@@ -50,7 +50,7 @@ data class PostListItemUiStateData(
     val title: UiString?,
     val excerpt: UiString?,
     val imageUrl: String?,
-    val dateAndAuthor: UiString?,
+    val postInfo: List<UiString>?,
     @ColorRes val statusesColor: Int?,
     val statuses: List<UiString>,
     val statusesDelimiter: UiString,

@@ -53,7 +53,7 @@ class StorePostViewModel
         editPostRepository: EditPostRepository,
         site: SiteModel
     ): ActivityFinishState {
-        savePostToDbUseCase.savePostToDb(context, editPostRepository, site)
+        savePostToDbUseCase.savePostToDb(editPostRepository, site)
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
                     editPostRepository.getPost(),
@@ -65,6 +65,8 @@ class StorePostViewModel
             SAVED_LOCALLY
         }
     }
+
+    fun isAutosavePending(): Boolean = saveJob?.isActive ?: false
 
     fun savePostWithDelay() {
         saveJob?.cancel()
@@ -79,11 +81,10 @@ class StorePostViewModel
     }
 
     fun savePostToDb(
-        context: Context,
         postRepository: EditPostRepository,
         site: SiteModel
     ) {
-        savePostToDbUseCase.savePostToDb(context, postRepository, site)
+        savePostToDbUseCase.savePostToDb(postRepository, site)
     }
 
     fun updatePostObjectWithUIAsync(

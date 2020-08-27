@@ -7,15 +7,18 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/Widget.LoginFlow.Toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:theme="@style/LoginTheme.ActionBar">
+        android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/toolbar_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:contentDescription="@null"
+            android:tint="?attr/colorControlNormal"
+            android:visibility="gone"
             app:srcCompat="@drawable/login_toolbar_icon" />
 
     </com.google.android.material.appbar.MaterialToolbar>

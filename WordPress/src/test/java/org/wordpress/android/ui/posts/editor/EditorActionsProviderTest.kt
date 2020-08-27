@@ -1,22 +1,14 @@
 package org.wordpress.android.ui.posts.editor
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.util.CrashLoggingUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class EditorActionsProviderTest {
-    private val crashLoggingUtilsWrapper: CrashLoggingUtilsWrapper = mock()
-    private val actionsProvider: EditorActionsProvider = EditorActionsProvider(
-            crashLoggingUtilsWrapper
-    )
+    private val actionsProvider: EditorActionsProvider = EditorActionsProvider()
 
     @Test
     fun `All secondary actions but NONE have isVisible set to TRUE`() {
@@ -56,14 +48,6 @@ class EditorActionsProviderTest {
     }
 
     @Test
-    fun `Verify an error is logged when the user doesn't have publishing rights and works with a PUBLISHED post`() {
-        // Arrange & Act
-        getPrimaryAndSecondaryActions(PostStatus.PUBLISHED, userCanPublish = false)
-        // Assert
-        verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
-    }
-
-    @Test
     fun `Verify actions of a SCHEDULED post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
@@ -74,14 +58,6 @@ class EditorActionsProviderTest {
     }
 
     @Test
-    fun `Verify an error is logged when the user doesn't have publishing rights and works with a SCHEDULED post`() {
-        // Arrange & Act
-        getPrimaryAndSecondaryActions(PostStatus.SCHEDULED, userCanPublish = false)
-        // Assert
-        verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
-    }
-
-    @Test
     fun `Verify actions of a TRASHED post`() {
         // Arrange & Act
         val (primaryAction, secondaryAction) =
@@ -89,14 +65,6 @@ class EditorActionsProviderTest {
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.SAVE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.SAVE_AS_DRAFT)
-    }
-
-    @Test
-    fun `Verify an error is logged when the user doesn't have publishing rights and works with a TRASHED post`() {
-        // Arrange & Act
-        getPrimaryAndSecondaryActions(PostStatus.TRASHED, userCanPublish = false)
-        // Assert
-        verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
 
     @Test
@@ -128,14 +96,6 @@ class EditorActionsProviderTest {
         // Assert
         assertThat(primaryAction).isEqualTo(PrimaryEditorAction.UPDATE)
         assertThat(secondaryAction).isEqualTo(SecondaryEditorAction.NONE)
-    }
-
-    @Test
-    fun `Verify an error is logged when the user doesn't have publishing rights and works with a PRIVATE post`() {
-        // Arrange & Act
-        getPrimaryAndSecondaryActions(PostStatus.PRIVATE, userCanPublish = false)
-        // Assert
-        verify(crashLoggingUtilsWrapper, times(2)).log(any<String?>())
     }
 
     @Test

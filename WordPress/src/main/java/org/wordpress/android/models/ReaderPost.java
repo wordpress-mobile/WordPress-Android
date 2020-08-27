@@ -11,6 +11,7 @@ import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -38,6 +39,7 @@ public class ReaderPost {
     private String mBlogImageUrl;
     private String mPostAvatar;
 
+    private ReaderTagList mTags = new ReaderTagList();
     private String mPrimaryTag; // most popular tag on this post based on usage in blog
     private String mSecondaryTag; // second most popular tag on this post based on usage in blog
 
@@ -82,13 +84,13 @@ public class ReaderPost {
 
         ReaderPost post = new ReaderPost();
 
-        post.postId = json.optLong("ID");
-        post.blogId = json.optLong("site_ID");
+        post.postId = json.optLong(ReaderConstants.POST_ID);
+        post.blogId = json.optLong(ReaderConstants.POST_SITE_ID);
         post.feedId = json.optLong("feed_ID");
         post.feedItemId = json.optLong("feed_item_ID");
 
-        if (json.has("pseudo_ID")) {
-            post.mPseudoId = JSONUtils.getString(json, "pseudo_ID"); // read/ endpoint
+        if (json.has(ReaderConstants.POST_PSEUDO_ID)) {
+            post.mPseudoId = JSONUtils.getString(json, ReaderConstants.POST_PSEUDO_ID); // read/ endpoint
         } else {
             post.mPseudoId = JSONUtils.getString(json, "global_ID"); // sites/ endpoint
         }
@@ -301,9 +303,13 @@ public class ReaderPost {
         String nextMostPopularTag = null;
         int popularCount = 0;
 
+        ReaderTagList tags = new ReaderTagList();
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
             String thisTagName = UrlUtils.urlDecode(JSONUtils.getString(jsonThisTag, "slug"));
+
+            ReaderTag tag = ReaderUtils.getTagFromTagName(thisTagName, ReaderTagType.DEFAULT);
+            tags.add(tag);
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -323,6 +329,7 @@ public class ReaderPost {
             post.setPrimaryTag(mostPopularTag);
         }
         post.setSecondaryTag(nextMostPopularTag);
+        post.setTags(tags);
     }
 
     /*
@@ -514,6 +521,14 @@ public class ReaderPost {
 
     public void setDateTagged(String dateStr) {
         this.mDateTagged = StringUtils.notNullStr(dateStr);
+    }
+
+    public ReaderTagList getTags() {
+        return mTags;
+    }
+
+    public void setTags(ReaderTagList tagList) {
+        mTags = tagList;
     }
 
     public String getPrimaryTag() {
@@ -769,6 +784,13 @@ public class ReaderPost {
     public java.util.Date getDisplayDate() {
         if (mDateDisplay == null) {
             mDateDisplay = DateTimeUtils.dateFromIso8601(this.mDatePublished);
+        }
+        return mDateDisplay;
+    }
+
+    public java.util.Date getDisplayDate(DateTimeUtilsWrapper dateTimeUtilsWrapper) {
+        if (mDateDisplay == null) {
+            mDateDisplay = dateTimeUtilsWrapper.dateFromIso8601(this.mDatePublished);
         }
         return mDateDisplay;
     }

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/menu_reader_settings"
-        android:icon="@drawable/ic_cog_white_24dp"
-        android:title="@string/reader_menu_tags"
-        app:showAsAction="always" />
-
     <item
         android:id="@+id/menu_reader_search"
         android:icon="@drawable/ic_search_white_24dp"

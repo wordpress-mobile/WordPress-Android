@@ -29,7 +29,7 @@
             android:textAlignment="textStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/date_and_author"
+            app:layout_constraintBottom_toTopOf="@+id/post_info"
             app:layout_constraintEnd_toStartOf="@+id/image_featured"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             tools:text="Porro totam quia architecto ducimus laudantium minus autem" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/date_and_author"
+            android:id="@+id/post_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
@@ -63,7 +63,7 @@
             android:layout_marginEnd="@dimen/page_item_horizontal_padding"
             android:background="@color/transparent"
             android:contentDescription="@string/featured_image_desc"
-            app:layout_constraintBottom_toBottomOf="@+id/date_and_author"
+            app:layout_constraintBottom_toBottomOf="@+id/post_info"
             app:layout_constraintEnd_toStartOf="@+id/more_button"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +112,7 @@
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/date_and_author"
+            app:layout_constraintTop_toBottomOf="@+id/post_info"
             tools:text="Facere molestiae est maxime. Laborum nihil voluptatem qui est aut ut. Nisi eveniet id sit voluptatem. Id doloribus itaque sequi eum molestias id repellendus." />
 
         <ProgressBar

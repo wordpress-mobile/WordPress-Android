@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
-import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.util.HtmlUtils;
 
 /**
@@ -39,7 +38,8 @@ public enum ReaderCardType {
         if (!post.hasFeaturedImage()
             && post.hasImages()
             && new ReaderImageScanner(post.getText(), post.isPrivate)
-                    .hasUsableImageCount(ReaderThumbnailStrip.IMAGE_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
+                    .hasUsableImageCount(ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT,
+                            ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)) {
             return GALLERY;
         }
 

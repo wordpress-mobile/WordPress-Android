@@ -93,35 +93,35 @@ public class PluginListFragment extends Fragment {
 
     private void setupObservers() {
         mViewModel.getSitePluginsLiveData()
-                  .observe(this, listState -> {
+                  .observe(getViewLifecycleOwner(), listState -> {
                       if (mListType == PluginListType.SITE) {
                           refreshPluginsAndProgressBars(listState);
                       }
                   });
 
         mViewModel.getFeaturedPluginsLiveData()
-                  .observe(this, listState -> {
+                  .observe(getViewLifecycleOwner(), listState -> {
                       if (mListType == PluginListType.FEATURED) {
                           refreshPluginsAndProgressBars(listState);
                       }
                   });
 
         mViewModel.getPopularPluginsLiveData()
-                  .observe(this, listState -> {
+                  .observe(getViewLifecycleOwner(), listState -> {
                       if (mListType == PluginListType.POPULAR) {
                           refreshPluginsAndProgressBars(listState);
                       }
                   });
 
         mViewModel.getNewPluginsLiveData()
-                  .observe(this, listState -> {
+                  .observe(getViewLifecycleOwner(), listState -> {
                       if (mListType == PluginListType.NEW) {
                           refreshPluginsAndProgressBars(listState);
                       }
                   });
 
         mViewModel.getSearchResultsLiveData()
-                  .observe(this, listState -> {
+                  .observe(getViewLifecycleOwner(), listState -> {
                       if (mListType == PluginListType.SEARCH) {
                           refreshPluginsAndProgressBars(listState);
 

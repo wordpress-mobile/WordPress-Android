@@ -23,7 +23,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_weight="0"
         android:contentDescription="@null"
-        tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+        tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
     <LinearLayout
         android:id="@+id/layout_content"

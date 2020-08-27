@@ -1,31 +1,31 @@
 WordPress untuk Android memberikan kekuatan publikasi web di saku Anda. Ini adalah kreator situs web dan masih banyak fungsi lainnya!
 
-BUAT
-- Sediakan wadah untuk ide-ide besar Anda di web. WordPress untuk Android adalah pembangun situs web dan pembuat blog. Gunakan untuk membuat situs web Anda.
+CIPTAKAN
+- Buatlah rumah bagi ide besar Anda di web. WordPress untuk Android adalah pembangun situs web dan pembuat blog. Gunakan untuk membuat situs web Anda.
 - Pilih tampilan dan suasana yang tepat dari sekian banyak pilihan tema WordPress, lalu sesuaikan dengan foto, warna, dan font sehingga hasilnya khas sentuhan Anda.
-- Tips Mulai Cepat bawaan akan memandu Anda melalui dasar penyiapan untuk menyiapkan situs web baru Anda agar bisa sukses. (Kami bukan hanya kreator situs web -- kami adalah mitra dan tim penghibur Anda!)
+- Tips Mulai Cepat bawaan akan memandu Anda melalui dasar penyiapan untuk menyiapkan situs web baru Anda agar bisa sukses. (Kami lebih dari sekadar pembuat situs web. Kami adalah mitra dan penyemangat Anda!)
 
 STATISTIK
-- Periksa statistik situs web Anda secara real time untuk terus melacak aktivitas di situs Anda.
+- Periksa statistik situs web Anda secara real time untuk menelusuri aktivitas di situs Anda.
 - Lacak pos dan halaman mana yang paling ramai lalu lintasnya dari waktu ke waktu dengan menelusuri wawasan harian, mingguan, bulanan, dan tahunan.
 - Gunakan peta lalu lintas untuk melihat dari negara mana pengunjung Anda berasal.
 
 PEMBERITAHUAN
-- Dapatkan pemberitahuan untuk komentar, suka, dan pengikut baru sehingga Anda bisa melihat orang-orang memberikan tanggapan terhadap situs web Anda saat itu juga.
+- Dapatkan pemberitahuan atas komentar, suka, dan pengikut baru sehingga Anda bisa melihat tanggapan orang terhadap situs web Anda saat itu juga.
 - Balas komentar baru begitu komentar tersebut muncul agar percakapan berjalan mengalir dan Anda bisa mengenali para pembaca Anda.
 
-PUBLIKASIKAN
-- Buat pembaruan, cerita, dan pengumuman esai foto -- apa pun! -- dengan penyunting.
+TERBITKAN
+- Buat pembaruan, cerita, pengumuman esai foto, atau apa pun dengan penyunting!
 - Jadikan pos dan halaman Anda lebih hidup dengan foto dan video dari kamera dan album Anda, atau temukan gambar yang sempurna dengan koleksi dalam aplikasi dari fotografi pro yang gratis untuk digunakan.
 - Simpan ide sebagai konsep dan buka lagi saat inspirasi kembali muncul, atau jadwalkan pos baru untuk masa mendatang sehingga situs Anda selalu segar dan interaktif.
 - Tambahkan tag dan kategori untuk membantu pembaca baru menemukan pos Anda, dan lihat perkembangan audiens Anda.
 
 PEMBACA
-- WordPress lebih dari sekadar pembuat blog — gunakan agar bisa terhubung dengan komunitas penulis di Pembaca WordPress. Jelajahi ribuan topik dengan tag, temukan penulis dan organisasi baru, dan ikuti yang menarik minat Anda.
+- WordPress lebih dari sekadar pembuat blog. Gunakan WordPress agar dapat terhubung dengan komunitas penulis di Pembaca WordPress. Jelajahi ribuan topik dengan tag, temukan penulis dan organisasi baru, dan ikuti yang menarik minat Anda.
 - Pertahankan pos yang memikat dengan fitur Simpan untuk nanti.
 
 BAGIKAN
-- Setel berbagi otomatis untuk memberi tahu pengikut Anda di media sosial saat Anda memublikasikan pos baru. Kirim pos lintas platform secara otomatis ke Facebook, Twitter, dan sebagainya.
+- Atur berbagi otomatis untuk memberi tahu pengikut Anda di media sosial saat Anda memublikasikan pos baru. Kirim pos lintas platform secara otomatis ke Facebook, Twitter, dan sebagainya.
 - Tambahkan tombol berbagi ke media sosial pada pos Anda sehingga pengunjung bisa membagikan pos Anda melalui jejaring sosial mereka, dan biarkan para penggemar tersebut menjadi duta Anda.
 
 Kenapa WordPress?
@@ -34,10 +34,12 @@ Ada banyak layanan blogging, pembuat situs web, dan jejaring sosial di luar sana
 
 WordPress mendukung lebih dari sepertiga web. Digunakan oleh blog hobi, bisnis skala kecil, toko online, bahkan situs berita terbesar di internet. Yang menjadi peluang adalah bahwa banyak dari situs web favorit Anda dijalankan di WordPress.
 
-Di WordPress, Anda bisa memiliki konten Anda sendiri. Jejaring sosial lain memperlakukan Anda sebagai sebuah komoditas, dan menganggap kepemilikan konten yang Anda pos menjadi milik mereka. Namun dengan WordPress, apa pun yang Anda publikasikan adalah menjadi milik Anda, dan Anda dapat memanfaatkannya di mana pun yang Anda inginkan.
+Di WordPress, Anda bisa memiliki konten Anda sendiri.  Jejaring sosial lain memperlakukan Anda sebagai sebuah komoditas, dan menganggap kepemilikan konten yang Anda pos menjadi milik mereka. Namun dengan WordPress, apa pun yang Anda publikasikan adalah menjadi milik Anda, dan Anda dapat memanfaatkannya di mana pun yang Anda inginkan.
 
-WordPress adalah kreator situs web sumber terbuka, yang berarti siapa pun bisa melihat bagaimana ia dibuat, dan bahkan ikut berkontribusi. Layanan dan jejaring sosial lain bersifat kepemilikan pribadi, dengan sistem tertutup, dan Anda tidak pernah bisa yakin secara pasti bagaimana cara kerjanya atau apa yang dilakukan -- dan bisa saja menghilang!
+WordPress adalah kreator situs web sumber terbuka, yang berarti siapa pun bisa melihat bagaimana ia dibuat, dan bahkan ikut berkontribusi.  Layanan dan jejaring sosial lain bersifat kepemilikan pribadi, dengan sistem tertutup, dan Anda tidak pernah bisa yakin secara pasti bagaimana cara kerjanya atau apa yang dilakukan -- dan bisa saja menghilang!
 
 Entah Anda membutuhkan pembuat situs web untuk menghasilkan situs web atau sebagai pembuat blog sederhana, WordPress bisa membantu. Memberikan desain yang indah, fitur yang hebat, dan kebebasan membuat apa pun yang Anda inginkan.
 
-WordPress untuk Android mendukung situs yang di-hosting sendiri yang menjalankan WordPress 4.0 dan yang lebih baru, serta mendukung semua situs yang ada di WordPress.com. Sama seperti WordPress, WordPress untuk Android merupakan sumber terbuka. Pelajari selengkapnya di https://apps.wordpress.com/contribute/. Butuh bantuan terkait aplikasi? Kirim tweet ke kami di @WPAndroid, atau kunjungi forum kami di https://android.forums.wordpress.org/forum/troubleshooting.
+WordPress untuk Android mendukung situs yang di-hosting sendiri yang menjalankan WordPress 4.0 dan yang lebih baru, serta mendukung semua situs yang ada di WordPress.com. Sama seperti WordPress, WordPress untuk Android merupakan sumber terbuka. Pelajari selengkapnya di https://wp.me/P7jrAc-tJ.  Memerlukan bantuan berkaitan dengan aplikasi? Kirim tweet ke kami di @WPAndroid, atau kunjungi forum kami di https://android.forums.wordpress.org/forum/troubleshooting.
+
+Pemberitahuan privasi pengguna di California: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -76,6 +77,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
+    @Inject AuthenticationUtils mAuthenticationUtils;
 
     /**
      * @param site       optional site this media is associated with
@@ -83,9 +85,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      */
     public static MediaPreviewFragment newInstance(
             @Nullable SiteModel site,
-            @NonNull String contentUri) {
+            @NonNull String contentUri,
+            boolean autoPlay) {
         Bundle args = new Bundle();
         args.putString(ARG_MEDIA_CONTENT_URI, contentUri);
+        args.putBoolean(ARG_AUTOPLAY, autoPlay);
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
         }
@@ -195,11 +199,15 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
-        } else if (mIsAudio || mIsVideo) {
+        } else if (mIsAudio) {
             if (mAutoPlay) {
                 playMedia();
-            } else if (mIsVideo && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
+            }
+        } else if (mIsVideo) {
+            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl);
+            } else {
+                playMedia();
             }
         } else {
             loadImage(mContentUri);
@@ -347,7 +355,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 if (isAdded()) {
                     showProgress(false);
                     mImageView.setVisibility(View.GONE);
-                    mp.start();
+                    if (mAutoPlay) {
+                        mp.start();
+                    }
                     if (position > 0) {
                         mp.seekTo(position);
                     }
@@ -357,7 +367,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         });
 
         initControls();
-        mVideoView.setVideoURI(Uri.parse(mediaUri));
+        mVideoView.setVideoURI(Uri.parse(mediaUri), mAuthenticationUtils.getAuthHeaders(mediaUri));
         mVideoView.requestFocus();
     }
 

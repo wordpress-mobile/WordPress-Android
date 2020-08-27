@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -10,13 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.EnumSet;
@@ -97,7 +101,7 @@ public class ReaderActivityLauncher {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
 
-        if (feedId != 0) {
+        if (ReaderUtils.isExternalFeed(siteId, feedId)) {
             intent.putExtra(ReaderConstants.ARG_FEED_ID, feedId);
             intent.putExtra(ReaderConstants.ARG_IS_FEED, true);
         } else {
@@ -132,6 +136,11 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
+        context.startActivity(intent);
+    }
+
+    public static void showReaderSearch(Context context) {
+        Intent intent = new Intent(context, ReaderSearchActivity.class);
         context.startActivity(intent);
     }
 
@@ -179,6 +188,16 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
         context.startActivity(intent);
+    }
+
+    /**
+     * Presents the [ReaderPostNoSiteToReblog] activity
+     *
+     * @param activity the calling activity
+     */
+    public static void showNoSiteToReblog(Activity activity) {
+        Intent intent = new Intent(activity, NoSiteToReblogActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE);
     }
 
     /*
@@ -270,6 +289,17 @@ public class ReaderActivityLauncher {
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }
+    }
+
+    public static void sharePost(Context context, ReaderPost post) throws ActivityNotFoundException {
+        String url = (post.hasShortUrl() ? post.getShortUrl() : post.getUrl());
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {

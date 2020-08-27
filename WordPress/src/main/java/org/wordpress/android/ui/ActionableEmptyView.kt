@@ -7,9 +7,9 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
 import org.wordpress.android.R
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
 
 /**
@@ -26,6 +26,7 @@ class ActionableEmptyView : LinearLayout {
     lateinit var layout: View
     lateinit var subtitle: WPTextView
     lateinit var title: WPTextView
+
     /**
      * Image shown at the bottom after the subtitle.
      *
@@ -71,13 +72,19 @@ class ActionableEmptyView : LinearLayout {
                     R.styleable.ActionableEmptyView_aevImage,
                     0
             )
+            val hideImageInLandscape = typedArray.getBoolean(
+                    R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
+                    false
+            )
             val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
             val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
             val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
 
             if (imageResource != 0) {
                 image.setImageResource(imageResource)
-                image.visibility = View.VISIBLE
+                if (!hideImageInLandscape || !DisplayUtils.isLandscape(context)) {
+                    image.visibility = View.VISIBLE
+                }
             }
 
             if (!titleAttribute.isNullOrEmpty()) {
@@ -109,13 +116,12 @@ class ActionableEmptyView : LinearLayout {
      * @param topMargin top margin in pixels to offset with other views (e.g. toolbar or tabs)
      */
     fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
-        val params: RelativeLayout.LayoutParams
+        val params = layout.layoutParams as MarginLayoutParams
 
         if (isSearching) {
-            params = RelativeLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT
-            )
+            params.width = MarginLayoutParams.MATCH_PARENT
+            params.height = MarginLayoutParams.WRAP_CONTENT
+
             layout.setPadding(
                     0,
                     context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large),
@@ -126,10 +132,8 @@ class ActionableEmptyView : LinearLayout {
             image.visibility = View.GONE
             button.visibility = View.GONE
         } else {
-            params = RelativeLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT
-            )
+            params.width = MarginLayoutParams.MATCH_PARENT
+            params.height = MarginLayoutParams.MATCH_PARENT
             layout.setPadding(0, 0, 0, 0)
         }
 

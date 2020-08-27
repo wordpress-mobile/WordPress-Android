@@ -6,7 +6,7 @@
             android:shape="ring"
             android:thickness="@dimen/promo_indicator_bullet_size"
             android:useLevel="false">
-            <solid android:color="@color/white_translucent_40"/>
+            <solid android:color="@color/promo_indicator_color_default" />
         </shape>
     </item>
 </layer-list>

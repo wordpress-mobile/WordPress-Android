@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_extra_medium_large"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/feature_item_icon_container"
+        android:layout_width="@dimen/feature_announcement_icon_size"
+        android:layout_height="@dimen/feature_announcement_icon_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/feature_item_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            tools:src="@drawable/ic_plans_white_24dp" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/feature_description_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/feature_item_icon_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/feature_item_icon_container"
+        app:layout_constraintTop_toTopOf="@+id/feature_item_icon_container">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/feature_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="Amazing Feature" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/feature_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            tools:text="Great explanation of feature" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

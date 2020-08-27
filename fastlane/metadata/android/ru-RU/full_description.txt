@@ -40,4 +40,6 @@ WordPress - это программное обеспечение для созд
 
 Вне зависимости от того, нужен ли вам конструктор комплексного веб-сайта или простого блога, WordPress может помочь. Он дает вам красивое оформление, мощные возможности и свободу создавать что угодно.
 
-WordPress для Android поддерживает как сайты на WordPress.com, так и сайты на вашем хостинге, при использовании WordPress 4.0 и выше. Точно также как и WordPress, WordPress для Android является программным обеспечением с открытым кодом, узнайте больше по ссылке https://apps.wordpress.com/contribute/. А если вам потребуется помощь с приложением, то вы можете написать в Twitter на @WPAndroid или посетить наши форумы: https://android.forums.wordpress.org/forum/troubleshooting.
+WordPress для Android поддерживает как сайты на WordPress.com, так и сайты на вашем хостинге, при использовании WordPress 4.0 и выше. Точно также как и WordPress, WordPress для Android является программным обеспечением с открытым кодом, узнайте больше по ссылке https://wp.me/P7jrAc-tJ . А если вам потребуется помощь с приложением, то вы можете написать в Twitter на @WPAndroid или посетить наши форумы: https://android.forums.wordpress.org/forum/troubleshooting.
+
+Заметка о конфиденциальности для резидентов штата Калифорния: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

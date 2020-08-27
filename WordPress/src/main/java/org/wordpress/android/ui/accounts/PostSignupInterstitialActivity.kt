@@ -24,6 +24,8 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
+        LoginFlowThemeHelper.injectMissingCustomAttributes(theme)
+
         setContentView(R.layout.post_signup_interstitial_activity)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
@@ -49,7 +51,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
     }
 
     private fun startSiteCreationFlow() {
-        ActivityLauncher.newBlogForResult(this)
+        ActivityLauncher.showMainActivityAndSiteCreationActivity(this)
         finish()
     }
 

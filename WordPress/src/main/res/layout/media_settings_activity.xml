@@ -349,7 +349,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="@dimen/margin_extra_large"
-                            android:text="@string/copy" />
+                            android:text="@string/copy_text" />
 
 
                     </RelativeLayout>

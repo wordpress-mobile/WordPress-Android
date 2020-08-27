@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
@@ -19,6 +20,7 @@ import org.wordpress.persistentedittext.PersistentEditTextHelper;
 public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextView {
     PersistentEditTextHelper mPersistentEditTextHelper;
     private OnEditTextBackListener mBackListener;
+    private SuggestionTokenizer mSuggestionTokenizer;
 
     public interface OnEditTextBackListener {
         void onEditTextBack();
@@ -40,11 +42,32 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
     }
 
     private void init(Context context) {
-        setTokenizer(new SuggestionTokenizer());
+        mSuggestionTokenizer = new SuggestionTokenizer();
+        setTokenizer(mSuggestionTokenizer);
         setThreshold(1);
         mPersistentEditTextHelper = new PersistentEditTextHelper(context);
         // When TYPE_TEXT_FLAG_AUTO_COMPLETE is set, autocorrection is disabled.
         setRawInputType(getInputType() & ~EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+    }
+
+    @Override
+    public boolean enoughToFilter() {
+        Editable text = getText();
+
+        int end = getSelectionEnd();
+        if (end < 0) {
+            return false;
+        }
+
+        int start = mSuggestionTokenizer.findTokenStart(text, end);
+
+        return start > 0
+               && (end - start >= 1
+                             || (start == end && text.charAt(start - 1) == '@'));
+    }
+
+    public void forceFiltering(CharSequence text) {
+        performFiltering(text, 0);
     }
 
     public PersistentEditTextHelper getAutoSaveTextHelper() {

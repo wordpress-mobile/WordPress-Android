@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -9,6 +13,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -29,6 +34,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -94,6 +100,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -133,13 +140,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
     private View mBtnModerateComment;
-    private View mBtnEditComment;
     private ImageView mBtnModerateIcon;
     private TextView mBtnModerateTextView;
     private View mBtnSpamComment;
     private TextView mBtnSpamCommentText;
-    private View mBtnTrashComment;
-    private TextView mBtnTrashCommentText;
+    private View mBtnMoreComment;
+    private View mSnackbarAnchor;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
@@ -264,11 +270,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
         mBtnModerateIcon = mLayoutButtons.findViewById(R.id.btn_moderate_icon);
         mBtnModerateTextView = mLayoutButtons.findViewById(R.id.btn_moderate_text);
-        mBtnEditComment = mLayoutButtons.findViewById(R.id.btn_edit);
         mBtnSpamComment = mLayoutButtons.findViewById(R.id.btn_spam);
         mBtnSpamCommentText = mLayoutButtons.findViewById(R.id.btn_spam_text);
-        mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
-        mBtnTrashCommentText = mLayoutButtons.findViewById(R.id.btn_trash_text);
+        mBtnMoreComment = mLayoutButtons.findViewById(R.id.btn_more);
+        mSnackbarAnchor = view.findViewById(R.id.layout_bottom);
 
         // As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
         // CommentDetailFragment itself:
@@ -400,36 +405,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        mBtnTrashComment.setOnClickListener(v -> {
-            if (mComment == null) {
-                return;
-            }
-
-            CommentStatus status = CommentStatus.fromString(mComment.getStatus());
-            // If the comment status is trash or spam, next deletion is a permanent deletion.
-            if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
-                AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
-                dialogBuilder.setTitle(getResources().getText(R.string.delete));
-                dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
-                dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                        (dialog, whichButton) -> {
-                            moderateComment(CommentStatus.DELETED);
-                            announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
-                        });
-                dialogBuilder.setNegativeButton(
-                        getResources().getText(R.string.no),
-                        null);
-                dialogBuilder.setCancelable(true);
-                dialogBuilder.create().show();
-            } else {
-                moderateComment(CommentStatus.TRASH);
-                announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
-            }
-        });
-
         mBtnLikeComment.setOnClickListener(v -> likeComment(false));
 
-        mBtnEditComment.setOnClickListener(v -> editComment());
+        mBtnMoreComment.setOnClickListener(v -> showMoreMenu(v));
+        // hide more button until we know it can be enabled
+        mBtnMoreComment.setVisibility(View.GONE);
 
         setupSuggestionServiceAndAdapter();
 
@@ -1026,22 +1006,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canTrash()) {
-            mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
                 ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_undo_white_24dp,
                         ContextExtensionsKt
                                 .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorOnSurface));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
-                mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
-            } else {
-                mBtnTrashCommentText.setText(R.string.mnu_comment_trash);
             }
-        } else {
-            mBtnTrashComment.setVisibility(View.GONE);
         }
 
-        if (canEdit()) {
-            mBtnEditComment.setVisibility(View.VISIBLE);
+        if (canShowMore()) {
+            mBtnMoreComment.setVisibility(View.VISIBLE);
+        } else {
+            mBtnMoreComment.setVisibility(View.GONE);
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
@@ -1114,6 +1090,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean canLike() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE)
                 && mSite != null && SiteUtils.isAccessedViaWPComRest(mSite));
+    }
+
+    /*
+    * The more button contains controls which only moderates can use
+     */
+    private boolean canShowMore() {
+        return canModerate();
     }
 
     /*
@@ -1365,5 +1348,112 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (resId != -1 && getView() != null) {
             getView().announceForAccessibility(getText(resId));
         }
+    }
+
+    // Handle More Menu
+    private void showMoreMenu(View view) {
+        androidx.appcompat.widget.PopupMenu morePopupMenu =
+                new androidx.appcompat.widget.PopupMenu(requireContext(), view);
+        morePopupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_edit) {
+                editComment();
+                return true;
+            }
+            if (item.getItemId() == R.id.action_trash) {
+                trashComment();
+                return true;
+            }
+            if (item.getItemId() == R.id.action_copy_link_address) {
+                copyCommentLinkAddress();
+                return true;
+            }
+            return false;
+        });
+
+        morePopupMenu.inflate(R.menu.menu_comment_more);
+
+        MenuItem trashMenuItem = morePopupMenu.getMenu().findItem(R.id.action_trash);
+        MenuItem copyLinkAddress = morePopupMenu.getMenu().findItem(R.id.action_copy_link_address);
+        if (canTrash()) {
+            CommentStatus commentStatus = CommentStatus.fromString(mComment.getStatus());
+            if (commentStatus == CommentStatus.TRASH) {
+                copyLinkAddress.setVisible(false);
+                trashMenuItem.setTitle(R.string.mnu_comment_delete_permanently);
+            } else {
+                trashMenuItem.setTitle(R.string.mnu_comment_trash);
+                if (commentStatus == CommentStatus.SPAM) {
+                    copyLinkAddress.setVisible(false);
+                } else {
+                    copyLinkAddress.setVisible(true);
+                }
+            }
+        } else {
+            trashMenuItem.setVisible(false);
+            copyLinkAddress.setVisible(false);
+        }
+
+        MenuItem editMenuItem = morePopupMenu.getMenu().findItem(R.id.action_edit);
+        editMenuItem.setVisible(false);
+        if (canEdit()) {
+            editMenuItem.setVisible(true);
+        }
+        morePopupMenu.show();
+    }
+
+    private void trashComment() {
+        if (!isAdded() || mComment == null) {
+            return;
+        }
+
+        CommentStatus status = CommentStatus.fromString(mComment.getStatus());
+        // If the comment status is trash or spam, next deletion is a permanent deletion.
+        if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
+            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.delete));
+            dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                    (dialog, whichButton) -> {
+                        moderateComment(CommentStatus.DELETED);
+                        announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
+                    });
+            dialogBuilder.setNegativeButton(
+                    getResources().getText(R.string.no),
+                    null);
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+        } else {
+            moderateComment(CommentStatus.TRASH);
+            announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
+        }
+    }
+
+    private void copyCommentLinkAddress() {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", mComment.getUrl()));
+            showSnackBar(getString(R.string.comment_q_action_copied_url));
+        } catch (Exception e) {
+            AppLog.e(T.UTILS, e);
+            showSnackBar(getString(R.string.error_copy_to_clipboard));
+        }
+    }
+
+    private void showSnackBar(String message) {
+        WPSnackbar snackBar = WPSnackbar.make(getView(), message, Snackbar.LENGTH_LONG)
+                                        .setAction(getString(R.string.share_action),
+                                                v -> {
+                                                    try {
+                                                        Intent intent = new Intent(Intent.ACTION_SEND);
+                                                        intent.setType("text/plain");
+                                                        intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
+                                                        startActivity(Intent.createChooser(intent,
+                                                                getString(R.string.comment_share_link_via)));
+                                                    } catch (ActivityNotFoundException exception) {
+                                                        ToastUtils.showToast(getContext(),
+                                                                R.string.comment_toast_err_share_intent);
+                                                    }
+                                                })
+                                        .setAnchorView(mSnackbarAnchor);
+        snackBar.show();
     }
 }

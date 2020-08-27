@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_trash"
+        android:orderInCategory="100"
+        android:title="@string/trash"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_edit"
+        android:orderInCategory="100"
+        android:title="@string/edit"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_copy_link_address"
+        android:orderInCategory="100"
+        android:title="@string/copy_link_address"
+        app:showAsAction="never"/>
+</menu>

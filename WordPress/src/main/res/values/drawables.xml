@@ -5,6 +5,5 @@
         Aliases for login library.
     -->
     <drawable name="login_email_alert">@drawable/img_illustration_email_alert_120dp</drawable>
-    <drawable name="insights_management_feature_resource">@drawable/insights_management_feature_image</drawable>
 
 </resources>

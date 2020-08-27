@@ -96,21 +96,14 @@ public class FluxCUtils {
         String path = MediaUtils.getRealPathFromURI(context, uri);
 
         if (TextUtils.isEmpty(path)) {
-            // For now, we're wrapping up the actual log into an exception to reduce possibility
-            // of information not travelling to our Crash Logging Service.
-            // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-            CrashLoggingUtils.logException(
-                    new FluxCUtilsLoggingException("The input URI " + uri.toString() + " can't be read."),
-                    T.UTILS);
+            AppLog.d(T.UTILS, "The input URI " + uri.toString() + " can't be read.");
             return null;
         }
 
         File file = new File(path);
         if (!file.exists()) {
-            CrashLoggingUtils.logException(
-                    new FluxCUtilsLoggingException("The input URI " + uri.toString() + ", converted locally to " + path
-                                                   + " doesn't exist."),
-                    T.UTILS);
+            AppLog.d(T.UTILS, "The input URI " + uri.toString() + ", converted locally to " + path
+                           + " doesn't exist.");
             return null;
         }
 

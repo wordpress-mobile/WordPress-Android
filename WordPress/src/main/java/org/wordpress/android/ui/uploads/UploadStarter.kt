@@ -26,7 +26,7 @@ import org.wordpress.android.testing.OpenForTesting
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.DO_NOTHING
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.CrashLoggingUtils
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.skip
@@ -101,7 +101,7 @@ class UploadStarter @Inject constructor(
         try {
             checkConnectionAndUpload(sites = sites)
         } catch (e: Exception) {
-            CrashLoggingUtils.log(e)
+            AppLog.e(T.MEDIA, e)
         }
     }
 
@@ -112,7 +112,7 @@ class UploadStarter @Inject constructor(
         try {
             checkConnectionAndUpload(sites = listOf(site))
         } catch (e: Exception) {
-            CrashLoggingUtils.log(e)
+            AppLog.e(T.MEDIA, e)
         }
     }
 

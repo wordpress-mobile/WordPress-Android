@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_main" />
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/noSiteToReblogView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/toolbar_height"
+        app:aevButton="@string/reader_no_site_to_reblog_action"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevImageHiddenInLandscape="true"
+        app:aevSubtitle="@string/reader_no_site_to_reblog_detail"
+        app:aevTitle="@string/reader_no_site_to_reblog_title" />
+
+</RelativeLayout>

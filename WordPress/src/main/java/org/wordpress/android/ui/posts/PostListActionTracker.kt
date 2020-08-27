@@ -14,6 +14,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
@@ -45,6 +46,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         BUTTON_MORE -> "more"
         BUTTON_MOVE_TO_DRAFT -> "move_to_draft"
         BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> "cancel_pending_auto_upload"
+        BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG -> "show_move_trashed_post_to_draft_post_dialog"
     }
 
     AnalyticsUtils.trackWithSiteDetails(statsEvent, site, properties)

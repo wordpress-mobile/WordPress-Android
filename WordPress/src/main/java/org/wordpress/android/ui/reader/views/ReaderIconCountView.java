@@ -25,6 +25,7 @@ public class ReaderIconCountView extends LinearLayout {
     // these must match the same values in attrs.xml
     private static final int ICON_LIKE = 0;
     private static final int ICON_COMMENT = 1;
+    private static final int ICON_REBLOG = 2;
 
     public ReaderIconCountView(Context context) {
         super(context);
@@ -70,6 +71,14 @@ public class ReaderIconCountView extends LinearLayout {
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context,
                                 R.drawable.ic_comment_white_24dp));
                         mTextCount.setTextColor(commentColor);
+                        break;
+                    case ICON_REBLOG:
+                        ColorStateList reblogColor = AppCompatResources
+                                .getColorStateList(context, R.color.on_surface_primary_selector);
+                        ImageViewCompat.setImageTintList(mImageView, reblogColor);
+                        mImageView.setImageDrawable(ContextCompat.getDrawable(context,
+                                R.drawable.ic_reblog_white_24dp));
+                        mTextCount.setTextColor(reblogColor);
                         break;
                 }
             } finally {

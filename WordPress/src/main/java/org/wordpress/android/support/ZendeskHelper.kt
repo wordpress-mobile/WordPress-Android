@@ -27,6 +27,7 @@ import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.logInformation
 import org.wordpress.android.util.stateLogInformation
+import org.wordpress.android.util.validateEmail
 import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.PushRegistrationProvider
@@ -46,7 +47,8 @@ private const val enablePushNotificationsDelayAfterIdentityChange: Long = 2500
 class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    private val supportHelper: SupportHelper
+    private val supportHelper: SupportHelper,
+    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
@@ -74,8 +76,12 @@ class ZendeskHelper(
      * is changed and another Zendesk action happens before the identity change could be completed. In order to avoid
      * such issues, we check both Zendesk identity and the [supportEmail] to decide whether identity is set.
      */
-    private val isIdentitySet: Boolean
-        get() = !supportEmail.isNullOrEmpty() && zendeskInstance.identity != null
+    private fun isIdentitySet(): Boolean {
+        val hasValidEmail = supportEmail?.let { validateEmail(it) } ?: false
+        val identityEmail = (zendeskInstance.identity as? AnonymousIdentity)?.email
+        val hasIdentityWithValidEmail = identityEmail?.let { validateEmail(it) } ?: false
+        return hasValidEmail && hasIdentityWithValidEmail
+    }
 
     /**
      * This function sets up the Zendesk singleton instance with the passed in credentials. This step is required
@@ -117,6 +123,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
+        val isIdentitySet = isIdentitySet()
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
                 .withContactUsButtonVisible(isIdentitySet)
@@ -124,7 +131,17 @@ class ZendeskHelper(
                 .withShowConversationsMenuButton(isIdentitySet)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
         if (isIdentitySet) {
-            builder.show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
+            builder.show(
+                context,
+                buildZendeskConfig(
+                    context,
+                    siteStore.sites,
+                    origin,
+                    selectedSite,
+                    extraTags,
+                    zendeskPlanFieldHelper
+                )
+            )
         } else {
             builder.show(context)
         }
@@ -148,7 +165,17 @@ class ZendeskHelper(
         requireIdentity(context, selectedSite) {
             AnalyticsTracker.track(Stat.SUPPORT_NEW_REQUEST_VIEWED)
             RequestActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
+                .show(
+                    context,
+                    buildZendeskConfig(
+                        context,
+                        siteStore.sites,
+                        origin,
+                        selectedSite,
+                        extraTags,
+                        zendeskPlanFieldHelper
+                    )
+                )
         }
     }
 
@@ -169,7 +196,17 @@ class ZendeskHelper(
         requireIdentity(context, selectedSite) {
             AnalyticsTracker.track(Stat.SUPPORT_TICKET_LIST_VIEWED)
             RequestListActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
+                .show(
+                    context,
+                    buildZendeskConfig(
+                        context,
+                        siteStore.sites,
+                        origin,
+                        selectedSite,
+                        extraTags,
+                        zendeskPlanFieldHelper
+                    )
+                )
         }
     }
 
@@ -198,7 +235,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (!isIdentitySet) {
+        if (!isIdentitySet()) {
             // identity should be set before registering the device token
             return
         }
@@ -226,7 +263,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (!isIdentitySet) {
+        if (!isIdentitySet()) {
             // identity should be set before removing the device token
             return
         }
@@ -263,7 +300,7 @@ class ZendeskHelper(
         selectedSite: SiteModel?,
         onIdentitySet: () -> Unit
     ) {
-        if (isIdentitySet) {
+        if (isIdentitySet()) {
             // identity already available
             onIdentitySet()
             return
@@ -306,13 +343,13 @@ class ZendeskHelper(
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
 
             /**
-             * When we change the identity in Zendesk, it seems to be making an asynchronous call to a server to
+             * When we change the identity in Zendesk, it seems tobe making an asynchronous call to a server to
              * receive a different access token. During this time, if there is a call to Zendesk with the previous
              * access token, it could fail with a 401 error which seems to be clearing the identity. In order to avoid
              * such cases, we put a delay on enabling push notifications for the new identity.
              *
              * [enablePushNotifications] will check if the identity is set, before making the actual call, so if the
-             * identity is cleared through [clearIdentity], this call will simply be ignored.
+             * identity is cleared through [clearIdentity], this  call will simply be ignored.
              */
             timer.schedule(enablePushNotificationsDelayAfterIdentityChange) {
                 enablePushNotifications()
@@ -342,13 +379,17 @@ private fun buildZendeskConfig(
     allSites: List<SiteModel>?,
     origin: Origin?,
     selectedSite: SiteModel? = null,
-    extraTags: List<String>? = null
+    extraTags: List<String>? = null,
+    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ): UiConfig {
     return RequestActivity.builder()
-            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, allSites, selectedSite))
-            .withRequestSubject(ZendeskConstants.ticketSubject)
-            .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
-            .config()
+        .withTicketForm(
+            TicketFieldIds.form,
+            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper)
+        )
+        .withRequestSubject(ZendeskConstants.ticketSubject)
+        .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
+        .config()
 }
 
 /**
@@ -358,7 +399,8 @@ private fun buildZendeskConfig(
 private fun buildZendeskCustomFields(
     context: Context,
     allSites: List<SiteModel>?,
-    selectedSite: SiteModel?
+    selectedSite: SiteModel?,
+    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
@@ -366,16 +408,28 @@ private fun buildZendeskCustomFields(
         "not_selected"
     }
 
-    return listOf(
-            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
-            CustomField(TicketFieldIds.currentSite, currentSiteInformation),
-            CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
-            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
-            CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
-            CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
-            CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
+    val customFields = arrayListOf(
+        CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
+        CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
+        CustomField(TicketFieldIds.currentSite, currentSiteInformation),
+        CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
+        CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
+        CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
+        CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
+        CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
     )
+    allSites?.let {
+        val planIds = it.map { site -> site.planId }.distinct()
+            .filter { planId -> planId != 0L }
+        if (planIds.isNotEmpty()) {
+            val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
+            if (highestPlan != UNKNOWN_PLAN) {
+                customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
+            }
+        }
+    }
+
+    return customFields
 }
 
 /**
@@ -429,10 +483,6 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
         if (it.any { site -> site.isJetpackConnected }) {
             tags.add(ZendeskConstants.jetpackTag)
         }
-
-        // Find distinct plans and add them
-        val plans = it.mapNotNull { site -> site.planShortName }.distinct()
-        tags.addAll(plans)
     }
     tags.add(origin.toString())
     // Add Android tag to make it easier to filter tickets by platform
@@ -498,6 +548,7 @@ private object TicketFieldIds {
     const val currentSite = 360000103103L
     const val appLanguage = 360008583691L
     const val sourcePlatform = 360009311651L
+    const val highestPlan = 25175963L
 }
 
 object ZendeskExtraTags {

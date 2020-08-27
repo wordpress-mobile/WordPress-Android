@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.stats.LimitMode
@@ -86,21 +85,21 @@ class FollowerTotalsUseCase
         forced: Boolean,
         fetchMode: PagedMode
     ): State<Map<FollowerType, Int>> {
-        val deferredWpComResponse = GlobalScope.async(bgDispatcher) {
+        val deferredWpComResponse = async(bgDispatcher) {
             followersStore.fetchWpComFollowers(
                     statsSiteProvider.siteModel,
                     fetchMode,
                     forced
             )
         }
-        val deferredEmailResponse = GlobalScope.async(bgDispatcher) {
+        val deferredEmailResponse = async(bgDispatcher) {
             followersStore.fetchEmailFollowers(
                     statsSiteProvider.siteModel,
                     fetchMode,
                     forced
             )
         }
-        val deferredPublicizeResponse = GlobalScope.async(bgDispatcher) {
+        val deferredPublicizeResponse = async(bgDispatcher) {
             publicizeStore.fetchPublicizeData(
                     statsSiteProvider.siteModel,
                     LimitMode.All,

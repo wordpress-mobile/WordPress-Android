@@ -32,7 +32,7 @@
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
-                    android:background="@color/neutral_10"
+                    android:background="@color/placeholder"
                     android:contentDescription="@string/plugin_detail_banner_desc" />
 
                 <ImageView

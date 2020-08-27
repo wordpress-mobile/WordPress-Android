@@ -42,6 +42,12 @@
             app:url="https://www.automattic.com/privacy" />
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
+            android:title="@string/ccpa_privacy_notice_header"
+            app:button="@string/ccpa_privacy_notice_read"
+            app:caption="@string/ccpa_privacy_notice_caption"
+            app:url="https://automattic.com/privacy/#california-consumer-privacy-act-ccpa" />
+
+        <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/third_party_policy_learn_more_header"
             app:button="@string/learn_more"
             app:caption="@string/third_party_policy_learn_more_caption"
@@ -132,6 +138,10 @@
         <Preference
             android:key="@string/pref_key_oss_licenses"
             android:title="@string/open_source_licenses" />
+
+        <Preference
+            android:key="@string/pref_key_whats_new"
+            android:title="@string/whats_new_in_version_title" />
 
     </PreferenceCategory>
 </PreferenceScreen>

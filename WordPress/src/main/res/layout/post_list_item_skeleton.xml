@@ -48,7 +48,7 @@
                 app:layout_constraintWidth_percent="0.85" />
 
             <View
-                android:id="@+id/skeleton_date_and_author"
+                android:id="@+id/skeleton_post_info"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/post_list_row_skeleton_view_date_height"
                 android:layout_marginStart="@dimen/margin_extra_large"
@@ -71,7 +71,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/skeleton_date_and_author">
+                app:layout_constraintTop_toBottomOf="@+id/skeleton_post_info">
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/skeleton_button_edit"

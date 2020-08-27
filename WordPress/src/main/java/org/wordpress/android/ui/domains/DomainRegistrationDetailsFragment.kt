@@ -70,7 +70,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component()?.inject(this)
     }
 
@@ -85,14 +85,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
         val domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS) as DomainProductDetails
-        val site = activity!!.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = requireActivity().intent?.getSerializableExtra(WordPress.SITE) as SiteModel
 
         viewModel.start(site, domainProductDetails)
 
@@ -168,7 +168,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this,
+        viewModel.uiState.observe(viewLifecycleOwner,
                 Observer { uiState ->
                     uiState?.let {
                         toggleFormProgressIndictor(uiState.isFormProgressIndicatorVisible)
@@ -196,7 +196,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 })
 
         viewModel.domainContactForm.observe(
-                this,
+                viewLifecycleOwner,
                 Observer<DomainContactFormModel> { domainContactFormModel ->
                     val currentModel = getDomainContactFormModel()
                     if (currentModel != domainContactFormModel) {
@@ -204,21 +204,21 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     }
                 })
 
-        viewModel.showCountryPickerDialog.observe(this,
+        viewModel.showCountryPickerDialog.observe(viewLifecycleOwner,
                 Observer {
                     if (it != null && it.isNotEmpty()) {
                         showCountryPicker(it)
                     }
                 })
 
-        viewModel.showStatePickerDialog.observe(this,
+        viewModel.showStatePickerDialog.observe(viewLifecycleOwner,
                 Observer {
                     if (it != null && it.isNotEmpty()) {
                         showStatePicker(it)
                     }
                 })
 
-        viewModel.formError.observe(this,
+        viewModel.formError.observe(viewLifecycleOwner,
                 Observer { error ->
                     var affectedInputFields: Array<TextInputEditText>? = null
 
@@ -249,17 +249,17 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     affectedInputFields?.firstOrNull { it.requestFocus() }
                 })
 
-        viewModel.showErrorMessage.observe(this,
+        viewModel.showErrorMessage.observe(viewLifecycleOwner,
                 Observer { errorMessage ->
                     ToastUtils.showToast(context, errorMessage)
                 })
 
-        viewModel.handleCompletedDomainRegistration.observe(this,
+        viewModel.handleCompletedDomainRegistration.observe(viewLifecycleOwner,
                 Observer { domainRegisteredEvent ->
                     mainViewModel.completeDomainRegistration(domainRegisteredEvent)
                 })
 
-        viewModel.showTos.observe(this,
+        viewModel.showTos.observe(viewLifecycleOwner,
                 Observer {
                     ActivityLauncher.openUrlExternal(
                             context,
@@ -440,7 +440,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            states = arguments!!.getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
+            states = requireArguments().getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
                     as ArrayList<SupportedStateResponse>
         }
 

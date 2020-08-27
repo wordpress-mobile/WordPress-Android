@@ -33,16 +33,6 @@
 
         </com.google.android.material.appbar.MaterialToolbar>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:layout_gravity="start"
-            android:visibility="gone"
-            app:tabGravity="fill"
-            app:tabMode="scrollable"
-            tools:visibility="visible" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout

@@ -271,7 +271,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
         if (media != null) {
             fragment = MediaPreviewFragment.newInstance(mSite, media, true);
         } else {
-            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri);
+            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri, true);
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
@@ -423,7 +423,7 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
                     break;
                 case MULTI_IMAGE_URLS:
                     String imageUrl = mMediaIdOrUrlList.get(position);
-                    fragment = MediaPreviewFragment.newInstance(null, imageUrl);
+                    fragment = MediaPreviewFragment.newInstance(null, imageUrl, false);
                     break;
                 default:
                     // should never get here

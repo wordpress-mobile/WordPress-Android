@@ -4,11 +4,12 @@ import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.util.CrashLoggingUtilsWrapper
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 
 @Reusable
-class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: CrashLoggingUtilsWrapper) {
+class EditorActionsProvider @Inject constructor() {
     fun getPrimaryAction(postStatus: PostStatus, userCanPublish: Boolean): PrimaryEditorAction {
         return if (userCanPublish) {
             when (postStatus) {
@@ -24,23 +25,15 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 PostStatus.TRASHED -> {
-                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
-                    //  instead of returning a valid action.
-                    remoteLoggingUtils.log(
-                            "User shouldn't be able to open a trashed post in an editor " +
-                                    "without publishing rights."
-                    )
+                    AppLog.e(T.EDITOR, "User shouldn't be able to open a trashed post in an editor " +
+                            "without publishing rights.")
                     PrimaryEditorAction.SAVE
                 }
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
-                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
-                    //  instead of returning a valid action.
-                    remoteLoggingUtils.log(
-                            "User shouldn't be able to open a public ($postStatus) post in an editor " +
-                                    "without publishing rights."
-                    )
+                    AppLog.e(T.EDITOR, "User shouldn't be able to open a public ($postStatus) post in an editor " +
+                            "without publishing rights.")
                     PrimaryEditorAction.SUBMIT_FOR_REVIEW
                 }
             }
@@ -65,23 +58,15 @@ class EditorActionsProvider @Inject constructor(private val remoteLoggingUtils: 
                 PostStatus.PENDING,
                 PostStatus.UNKNOWN -> SecondaryEditorAction.NONE
                 PostStatus.TRASHED -> {
-                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
-                    //  instead of returning a valid action.
-                    remoteLoggingUtils.log(
-                            "User shouldn't be able to open a trashed post in an editor " +
-                                    "without publishing rights."
-                    )
+                    AppLog.e(T.EDITOR, "User shouldn't be able to open a trashed post in an editor " +
+                            "without publishing rights.")
                     SecondaryEditorAction.SAVE_AS_DRAFT
                 }
                 PostStatus.PUBLISHED,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
-                    // TODO if this log doesn't appear in Sentry, we should start throwing IllegalStateException
-                    //  instead of returning a valid action.
-                    remoteLoggingUtils.log(
-                            "User shouldn't be able to open a public ($postStatus) post in an editor " +
-                                    "without publishing rights."
-                    )
+                    AppLog.e(T.EDITOR, "User shouldn't be able to open a public ($postStatus) post in an editor " +
+                            "without publishing rights.")
                     SecondaryEditorAction.NONE
                 }
             }

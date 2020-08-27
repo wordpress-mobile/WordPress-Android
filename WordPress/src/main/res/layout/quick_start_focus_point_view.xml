@@ -5,6 +5,7 @@
     android:id="@+id/quick_start_focus_point"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:elevation="100dp"
     android:layout_gravity="center_vertical|center"
     android:contentDescription="@string/quick_start_focus_point_description"
     tools:ignore="RtlSymmetry"/>

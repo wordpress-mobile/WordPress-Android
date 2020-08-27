@@ -60,6 +60,19 @@
 
     </PreferenceCategory>
 
+    <!-- Homepage settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_homepage"
+        android:key="@string/pref_key_homepage"
+        android:title="@string/site_settings_homepage">
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_homepage_settings"
+            android:key="@string/pref_key_homepage_settings"
+            android:title="@string/site_settings_homepage_settings" />
+
+    </PreferenceCategory>
+
     <!-- Account settings; only used with .org sites -->
     <PreferenceCategory
         android:id="@+id/pref_site_account"

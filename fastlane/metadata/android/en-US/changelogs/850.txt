@@ -1,6 +1,0 @@
-14.6:
-Block editor enhancements: Added Cover block. Enabled crop, zoom, and rotate for images in posts. Tweaked “Take a Video” icon to differentiate from “Take a Photo.” Removed dimming effect on unselected blocks. Added toolbar for alignment options in Paragraph, Image, and MediaText blocks.
-
-Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.
-
-General improvements: Dark Theme support.

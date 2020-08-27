@@ -18,6 +18,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withHint;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
@@ -40,6 +41,10 @@ public class EditorPage {
 
     public EditorPage() {
         editor.check(matches(isDisplayed()));
+    }
+
+    public void hasTitle(String title) {
+        checkViewHasText(titleField, title);
     }
 
     public void enterTitle(String postTitle) {
@@ -110,5 +115,10 @@ public class EditorPage {
         clickOn(onView(withText("PUBLISH NOW")));
         waitForElementToBeDisplayed(publishConfirmation);
         return isElementDisplayed(publishConfirmation);
+    }
+
+    public void previewPost() {
+        clickOn(optionsButton);
+        clickOn(onView(withText(R.string.menu_preview)));
     }
 }

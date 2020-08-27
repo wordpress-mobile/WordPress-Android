@@ -27,8 +27,8 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
@@ -145,18 +145,18 @@ class SearchListViewModelTest {
     @Test
     fun `passes action to page view model on menu action`() {
         val clickedPage = PageItem.PublishedPage(
-                1,
-                1,
-                "title",
-                Date(),
-                listOf(),
-                0,
-                0,
-                null,
-                mock(),
-                false,
-                ProgressBarUiState.Hidden,
-                false
+                remoteId = 1,
+                localId = 1,
+                title = "title",
+                date = Date(),
+                labels = listOf(),
+                labelsColor = 0,
+                indent = 0,
+                imageUrl = null,
+                actions = mock(),
+                actionsEnabled = false,
+                progressBarUiState = ProgressBarUiState.Hidden,
+                showOverlay = false
         )
         val action = VIEW_PAGE
 
@@ -168,18 +168,18 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1,
-                1,
-                "title",
-                Date(),
-                listOf(),
-                0,
-                0,
-                null,
-                mock(),
-                false,
-                ProgressBarUiState.Hidden,
-                false
+                remoteId = 1,
+                localId = 1,
+                title = "title",
+                date = Date(),
+                labels = listOf(),
+                labelsColor = 0,
+                indent = 0,
+                imageUrl = null,
+                actions = mock(),
+                actionsEnabled = false,
+                progressBarUiState = ProgressBarUiState.Hidden,
+                showOverlay = false
         )
 
         viewModel.onItemTapped(clickedPage)

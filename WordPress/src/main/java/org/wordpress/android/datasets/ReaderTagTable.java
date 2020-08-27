@@ -21,7 +21,6 @@ import java.util.Date;
 
 /**
  * tbl_tags stores the list of tags the user subscribed to or has by default
- * tbl_tags_recommended stores the list of recommended tags returned by the api
  */
 public class ReaderTagTable {
     protected static void createTables(SQLiteDatabase db) {
@@ -34,20 +33,10 @@ public class ReaderTagTable {
                    + " date_updated TEXT,"
                    + " PRIMARY KEY (tag_slug, tag_type)"
                    + ")");
-
-        db.execSQL("CREATE TABLE tbl_tags_recommended ("
-                   + " tag_slug TEXT COLLATE NOCASE,"
-                   + " tag_display_name TEXT COLLATE NOCASE,"
-                   + " tag_title TEXT COLLATE NOCASE,"
-                   + " tag_type INTEGER DEFAULT 0,"
-                   + " endpoint TEXT,"
-                   + " PRIMARY KEY (tag_slug, tag_type)"
-                   + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_tags");
-        db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended");
     }
 
     /*
@@ -115,7 +104,7 @@ public class ReaderTagTable {
         addOrUpdateTags(tags);
     }
 
-    private static void addOrUpdateTags(ReaderTagList tagList) {
+    public static void addOrUpdateTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
@@ -291,8 +280,27 @@ public class ReaderTagTable {
         if (tag == null) {
             return;
         }
-        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_slug=? AND tag_type=?", args);
+        ReaderTagList tags = new ReaderTagList();
+        tags.add(tag);
+        deleteTags(tags);
+    }
+
+    public static void deleteTags(ReaderTagList tagList) {
+        if (tagList == null || tagList.size() == 0) {
+            return;
+        }
+
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            for (ReaderTag tag : tagList) {
+                String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+                ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_slug=? AND tag_type=?", args);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
 
@@ -354,64 +362,5 @@ public class ReaderTagTable {
 
         Date dtNow = new Date();
         return DateTimeUtils.minutesBetween(dtUpdated, dtNow);
-    }
-
-    /**
-     * recommended tags - stored in a separate table from default/subscribed tags, but have the same column names
-     **/
-    public static ReaderTagList getRecommendedTags(boolean excludeSubscribed) {
-        Cursor c;
-        if (excludeSubscribed) {
-            c = ReaderDatabase.getReadableDb().rawQuery(
-                    "SELECT * FROM tbl_tags_recommended WHERE tag_slug NOT IN (SELECT tag_slug FROM tbl_tags) "
-                    + "ORDER BY tag_slug", null);
-        } else {
-            c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags_recommended ORDER BY tag_slug", null);
-        }
-        try {
-            ReaderTagList tagList = new ReaderTagList();
-            if (c.moveToFirst()) {
-                do {
-                    tagList.add(getTagFromCursor(c));
-                } while (c.moveToNext());
-            }
-            return tagList;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    public static void setRecommendedTags(ReaderTagList tagList) {
-        if (tagList == null) {
-            return;
-        }
-
-        SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_tags_recommended (tag_slug, tag_display_name, "
-                                                   + "tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4,?5)");
-        db.beginTransaction();
-        try {
-            try {
-                // first delete all recommended tags
-                db.execSQL("DELETE FROM tbl_tags_recommended");
-
-                // then insert the passed ones
-                for (ReaderTag tag : tagList) {
-                    stmt.bindString(1, tag.getTagSlug());
-                    stmt.bindString(2, tag.getTagDisplayName());
-                    stmt.bindString(3, tag.getTagTitle());
-                    stmt.bindLong(4, tag.tagType.toInt());
-                    stmt.bindString(5, tag.getEndpoint());
-                    stmt.execute();
-                }
-
-                db.setTransactionSuccessful();
-            } catch (SQLException e) {
-                AppLog.e(T.READER, e);
-            }
-        } finally {
-            SqlUtils.closeStatement(stmt);
-            db.endTransaction();
-        }
     }
 }

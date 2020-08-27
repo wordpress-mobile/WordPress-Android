@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -34,6 +35,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_P
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -50,18 +52,24 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity
 class QuickStartUtils {
     companion object {
         private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
+        const val ICON_NOT_SET = -1
 
         /**
          * Formats the string, to highlight text between %1$s and %2$s with specified color, and add an icon
          * in front of it if necessary
          *
          * @param context Context used to access resources
-         * @param messageId resources id of the message to display
+         * @param messageId resources id of the message to display. If string contains basic HTML tags inside
+         * <![CDATA[ ]]>, they will be converted to Spans.
          * @param iconId resource if of the icon that goes before the highlighted area
          */
         @JvmStatic
         @JvmOverloads
-        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1): Spannable {
+        fun stylizeQuickStartPrompt(
+            context: Context,
+            messageId: Int,
+            iconId: Int = ICON_NOT_SET
+        ): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
             var formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
@@ -83,7 +91,9 @@ class QuickStartUtils {
             formattedMessage = formattedMessage.replaceFirst(spanTagEnd, "")
             formattedMessage = formattedMessage.replaceFirst("  ", " ")
 
-            val mutableSpannedMessage = SpannableStringBuilder(formattedMessage)
+            val mutableSpannedMessage = SpannableStringBuilder(
+                    HtmlCompat.fromHtml(formattedMessage, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            )
             // nothing to highlight
             if (startOfHighlight != -1 && endOfHighlight != -1) {
                 val highlightColor = ContextCompat.getColor(context, android.R.color.white)
@@ -233,7 +243,12 @@ class QuickStartUtils {
                 AppPrefs.setQuickStartNoticeRequired(true)
             } else {
                 if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
-                    val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
+                    val nextTask =
+                            getNextUncompletedQuickStartTaskForReminderNotification(
+                                    quickStartStore,
+                                    siteId,
+                                    task.taskType
+                            )
                     if (nextTask != null) {
                         startQuickStartReminderTimer(context, nextTask)
                     }
@@ -245,6 +260,7 @@ class QuickStartUtils {
         fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+                UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
                 CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
@@ -266,6 +282,7 @@ class QuickStartUtils {
                 // completed when Quick Start v2 begins since it is initiated when a new site is created.  The task case
                 // is included here for completeness.
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+                UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
                 CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_SKIPPED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED
@@ -283,6 +300,7 @@ class QuickStartUtils {
         private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
+                UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
                 VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
                 CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
@@ -336,7 +354,7 @@ class QuickStartUtils {
          * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
          */
         @JvmStatic
-        fun getNextUncompletedQuickStartTask(
+        fun getNextUncompletedQuickStartTaskForReminderNotification(
             quickStartStore: QuickStartStore,
             siteId: Long,
             taskType: QuickStartTaskType
@@ -361,6 +379,47 @@ class QuickStartUtils {
             }
 
             return nextTask
+        }
+
+        /**
+         * This method tries to return the next uncompleted task from complete tasks pool
+         */
+        @JvmStatic
+        fun getNextUncompletedQuickStartTask(
+            quickStartStore: QuickStartStore,
+            siteId: Long,
+            taskType: QuickStartTaskType
+        ): QuickStartTask? {
+            // get all the uncompleted tasks for all task types
+            val uncompletedTasks = ArrayList<QuickStartTask>()
+            QuickStartTaskType.values().forEach { type ->
+                if (type != UNKNOWN) {
+                    uncompletedTasks.addAll(quickStartStore.getUncompletedTasksByType(siteId, type))
+                }
+            }
+            uncompletedTasks.sortBy { it.order }
+
+            // Looks like we completed all the tasks. Nothing in the pipeline!
+            if (uncompletedTasks.isEmpty()) {
+                return null
+            }
+
+            // Only one task remaining, no need for extra logic.
+            if (uncompletedTasks.size == 1) {
+                return uncompletedTasks.first()
+            }
+
+            // if we have not skipped a task yet, return the first available task from the list
+            val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask()
+                    ?: return uncompletedTasks.first()
+
+            // look for a task that follows the one we skipped
+            val taskThatFollowsSkippedOne = uncompletedTasks.firstOrNull {
+                it.order > lastSkippedTask.order
+            }
+
+            // if we reached the end of the list (no tasks after skipped one) return task from the top of the list
+            return taskThatFollowsSkippedOne ?: uncompletedTasks.first()
         }
     }
 }

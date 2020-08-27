@@ -23,10 +23,10 @@ class StatsWidgetColorSelectionDialogFragment : AppCompatDialogFragment() {
     private lateinit var viewModel: StatsColorSelectionViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(StatsColorSelectionViewModel::class.java)
         val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
-        val view = activity!!.layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
+        val view = requireActivity().layoutInflater.inflate(R.layout.stats_color_selector, null) as RadioGroup
         view.setOnCheckedChangeListener { _, checkedId ->
             checkedId.toColor()?.let { viewModel.selectColor(it) }
         }

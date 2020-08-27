@@ -813,9 +813,9 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                   .show();
     }
 
-    private void showSuccessfulPluginRemovedSnackbar() {
+    private void showSuccessfulPluginRemovedSnackbar(String pluginDisplayName) {
         WPSnackbar.make(mContainer,
-                getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
+                getString(R.string.plugin_removed_successfully, pluginDisplayName),
                 Snackbar.LENGTH_LONG)
                   .show();
     }
@@ -1130,13 +1130,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             return;
         }
 
+        String pluginDisplayName = mPlugin.getDisplayName();
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
             AppLog.e(T.PLUGINS, "An error occurred while removing the plugin with type: "
                                 + event.error.type + " and message: " + event.error.message);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
-                    mPlugin.getDisplayName(), event.error.message);
+                    pluginDisplayName, event.error.message);
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
             return;
         }
@@ -1151,7 +1152,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             refreshViews();
             invalidateOptionsMenu();
         }
-        showSuccessfulPluginRemovedSnackbar();
+        showSuccessfulPluginRemovedSnackbar(pluginDisplayName);
     }
 
     // This check should only handle events for already installed plugins - onSitePluginConfigured,

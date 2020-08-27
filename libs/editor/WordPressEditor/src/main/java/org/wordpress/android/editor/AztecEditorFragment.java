@@ -68,6 +68,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.aztec.AlignmentRendering;
 import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecContentChangeWatcher.AztecTextChangeObserver;
@@ -993,6 +994,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void showContentInfo() throws EditorFragmentNotAddedException {
+        // not implemented for Aztec
+    }
+
+    @Override
     public LiveData<Editable> getTitleOrContentChanged() {
         return mTextWatcher.getAfterTextChanged();
     }
@@ -1395,30 +1401,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId, final EditorFragmentAbstract.MediaType
-            mediaType, final String errorMessage) {
+    public void onMediaUploadFailed(final String localMediaId) {
         if (!isAdded() || mContent == null) {
             return;
         }
-        if (mediaType != null) {
-            switch (mediaType) {
-                case IMAGE:
-                case VIDEO:
-                    MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-                    AttributesWithClass attributesWithClass = getAttributesWithClass(
-                            mContent.getElementAttributes(localMediaIdPredicate));
+        MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+        AttributesWithClass attributesWithClass = getAttributesWithClass(
+                mContent.getElementAttributes(localMediaIdPredicate));
 
-                    attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-                    attributesWithClass.addClass(ATTR_STATUS_FAILED);
+        attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+        attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
-                    mContent.clearOverlays(localMediaIdPredicate);
-                    overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
-                    mContent.resetAttributedMediaSpan(localMediaIdPredicate);
-                    break;
-            }
-            mFailedMediaIds.add(localMediaId);
-            mUploadingMediaProgressMax.remove(localMediaId);
-        }
+        mContent.clearOverlays(localMediaIdPredicate);
+        overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
+        mContent.resetAttributedMediaSpan(localMediaIdPredicate);
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
     }
 
     @Override
@@ -2331,7 +2329,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         plugins.add(new CaptionShortcodePlugin());
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
-        return new AztecParser(plugins);
+        return new AztecParser(AlignmentRendering.SPAN_LEVEL, plugins);
     }
 
     private Drawable getLoadingImagePlaceholder() {

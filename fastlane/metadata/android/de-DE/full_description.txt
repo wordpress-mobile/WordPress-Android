@@ -1,7 +1,7 @@
 Mit WordPress für Android hast du alles, was du zum Veröffentlichen brauchst, stets dabei. Es ist ein Website-Ersteller und so viel mehr!
 
 ERSTELLEN
-- Schaffe deinen großen Ideen ein Zuhause im Web. WordPress für Android ist ein Tool zur Erstellung von Websites und Blogs. Erstelle damit deine Website.
+ – Schaffe deinen gro-artigen Ideen ein Zuhause im Web. WordPress für Android ist ein Tool zur Erstellung von Websites und Blogs. Erstelle damit deine Website.
 - Wähle aus einer breiten Palette von WordPress-Themes das richtige Erscheinungsbild aus und passe es dann mit Fotos, Farben und Schriften genau an deine Vorstellungen an.
 - Anhand von integrierten Schnellstart-Tipps wirst du durch die grundlegende Einrichtung einer neuen erfolgreichen Website geführt. (Wir sind nicht nur ein Website-Ersteller: Wir sind auch dein Partner und möchten dir zum Erfolg verhelfen!)
 
@@ -11,21 +11,21 @@ STATISTIKEN
 - Verwende die Traffic-Karte, um zu sehen, aus welchen Ländern deine Besucher kommen.
 
 BENACHRICHTIGUNGEN
-- Erhalte Benachrichtigungen zu Kommentaren, Likes und neuen Followern, sodass du in Echtzeit erfährst, wie Personen auf deine Website reagieren.
+ – Erhalte Benachrichtigungen zu Kommentaren, Likes und neuen Followern, sodass du in Echtzeit erfährst, wie Personen auf deine Website reagieren.
 - Antworte auf neue Kommentare, wenn sie angezeigt werden, um das Gespräch im Gang zu halten und deinen Lesern Anerkennung zu geben.
 
 VERÖFFENTLICHEN
-- Erstelle Updates, Stories, Aufsätze mit Fotos, Ankündigungen – einfach alles! – mit dem Editor.
+ – Erstelle mit dem Editor Updates, Stories, Aufsätze mit Fotos, Ankündigungen und vieles mehr.
 - Erwecke deine Beiträge und Seiten mit Fotos und Videos von deiner Kamera und deinen Alben zum Leben oder finde mit der in die App integrierten Sammlung kostenloser professioneller Bilder das perfekte Foto.
 - Speichere Ideen als Entwürfe und kehre zu ihnen zurück, wenn du wieder Muse hast, oder plane neue Beiträge für die Zukunft, damit deine Website immer interessant und ansprechend bleibt.
 - Füge Schlagwörter und Kategorien hinzu, damit neue Leser deine Beiträge entdecken können und deine Leserschaft wachsen kann.
 
 READER
-- WordPress ist mehr als ein Tool zur Erstellung von Blogs. Verwende WordPress, um dich im WordPress Reader mit einer Community von Autoren zu verbinden. Recherchiere Tausende von Themen nach Schlagwort, entdecke neue Autoren und Organisationen und folge denen, die dich interessieren.
+ – WordPress ist mehr als ein Tool zur Erstellung von Blogs. Verwende WordPress, um dich im WordPress Reader mit einer Community von Autoren zu verbinden. Recherchiere Tausende von Themen nach Schlagwort, entdecke neue Autoren und Organisationen und folge denen, die dich interessieren.
 - Mit der Funktion „Für später speichern“ kannst du Beiträge vormerken, die dich begeistern.
 
 TEILEN
-- Richte automatisches Teilen ein, damit deine Follower auf Social Media wissen, wenn du einen neuen Beitrag veröffentlichst. Veröffentliche Beiträge gleichzeitig auf Facebook, Twitter und anderen Plattformen.
+ – Richte automatisches Teilen ein, damit deine Follower auf Social Media wissen, wenn du einen neuen Beitrag veröffentlichst. Veröffentliche Beiträge gleichzeitig auf Facebook, Twitter und anderen Plattformen.
 - Füge deinen Beiträgen Social Sharing-Buttons hinzu, damit deine Besucher sie in ihrem Netzwerk teilen können. So werden deine Fans zu deinen Botschaftern.
 
 Gründe für WordPress
@@ -34,10 +34,12 @@ Es gibt jede Menge Blogging-Dienste, Website-Ersteller und soziale Netzwerke. Wa
 
 Über ein Drittel aller Websites werden mit WordPress betrieben. WordPress wird von hobbymäßigen Bloggern, Unternehmen jeglicher Größe, Onlineshops und sogar den größten Nachrichten-Websites im Internet verwendet. Die Wahrscheinlichkeit ist hoch, dass viele deiner Lieblingswebsites mit WordPress betrieben werden.
 
-Bei WordPress gehören dir deine eigenen Inhalte. Bei anderen sozialen Netzwerke wirst du eher als Ressource behandelt und die Inhaberschaft deiner veröffentlichten Inhalte geht an sie über. Bei WordPress dagegen gehören alle Inhalte, die du veröffentlichst, dir und du kannst sie überall hin mitnehmen.
+Bei WordPress gehören dir deine eigenen Inhalte.  Bei anderen sozialen Netzwerke wirst du eher als Ressource behandelt und die Inhaberschaft deiner veröffentlichten Inhalte geht an sie über. Bei WordPress dagegen gehören alle Inhalte, die du veröffentlichst, dir und du kannst sie überall hin mitnehmen.
 
-WordPress ist ein Open-Source-System zur Website-Erstellung, was bedeutet, dass jeder sehen kann, wie es entwickelt wurde, und sogar mitarbeiten kann. Andere Dienste und sozialen Netzwerke sind proprietäre, geschlossene Systeme. Du kannst dir nie sicher sein, wie sie arbeiten oder was sie tun. Und sie können verschwinden!
+WordPress ist ein Open-Source-System zur Website-Erstellung, was bedeutet, dass jeder sehen kann, wie es entwickelt wurde, und sogar mitarbeiten kann.  Andere Dienste und sozialen Netzwerke sind proprietäre, geschlossene Systeme. Du kannst dir nie sicher sein, wie sie arbeiten oder was sie tun. Und sie können verschwinden!
 
 Ganz gleich, ob du einen Baukasten zur Website-Erstellung benötigst oder ein einfaches Tool zur Erstellung von Blogs: WordPress kann dir helfen. WordPress bietet dir wunderschöne Designs, leistungsstarke Funktionen und die Freiheit, alle deine Ideen zu verwirklichen.
 
-WordPress für Android unterstützt selbst gehostete Websites mit WordPress 4.0 oder höher und alle Websites auf WordPress.com. Wie WordPress ist WordPress für Android ein Open-Source-System. Weitere Informationen erhältst du unter https://apps.wordpress.com/contribute/. Du benötigst Hilfe mit der App? Sende uns einen Tweet an @WPAndroid oder besuche unsere Foren unter https://android.forums.wordpress.org/forum/troubleshooting.
+WordPress für Android unterstützt selbst gehostete Websites mit WordPress 4.0 oder höher und alle Websites auf WordPress.com. Wie WordPress ist WordPress für Android ein Open-Source-System. Weitere Informationen unter https://wp.me/P7jrAc-tJ.  Du benötigst Hilfe mit der App? Sende uns einen Tweet an @WPAndroid oder besuche unsere Foren unter https://android.forums.wordpress.org/forum/troubleshooting.
+
+Datenschutzhinweis für Benutzer in Kalifornien: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

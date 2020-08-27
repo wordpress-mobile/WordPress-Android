@@ -31,7 +31,7 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textAlignment="textStart"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/time_posted"
+            app:layout_constraintBottom_toTopOf="@+id/page_subtitle"
             app:layout_constraintEnd_toStartOf="@+id/featured_image"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
             tools:text="Porro totam quia architecto ducimus laudantium minus autem"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/time_posted"
+            android:id="@+id/page_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/page_item_horizontal_padding"
@@ -65,7 +65,7 @@
             android:layout_marginEnd="@dimen/page_item_horizontal_padding"
             android:background="@color/transparent"
             android:contentDescription="@string/featured_image_desc"
-            app:layout_constraintBottom_toBottomOf="@+id/time_posted"
+            app:layout_constraintBottom_toBottomOf="@+id/page_subtitle"
             app:layout_constraintEnd_toStartOf="@+id/page_more"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,7 +112,7 @@
             app:layout_constraintStart_toStartOf="@+id/page_title"
             app:layout_constraintEnd_toEndOf="@+id/page_title"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintTop_toBottomOf="@+id/time_posted"
+            app:layout_constraintTop_toBottomOf="@+id/page_subtitle"
             app:layout_constraintBottom_toTopOf="@+id/upload_progress"
             tools:text="Facere molestiae est maxime. Laborum nihil voluptatem qui est aut ut. Nisi eveniet id sit voluptatem. Id doloribus itaque sequi eum molestias id repellendus."/>
 

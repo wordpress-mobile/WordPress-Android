@@ -10,7 +10,7 @@ public class GravatarUtils {
     // it's up to the caller to catch the 404 and provide a suitable default image
     private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.MYSTERY_MAN;
 
-    private enum DefaultImage {
+    public enum DefaultImage {
         MYSTERY_MAN,
         STATUS_404,
         IDENTICON,
