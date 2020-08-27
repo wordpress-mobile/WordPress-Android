@@ -215,7 +215,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackPasswordFormViewed();
+            mAnalyticsListener.trackPasswordFormViewed(mIsSocialLogin);
 
             if (!TextUtils.isEmpty(mPassword)) {
                 mPasswordInput.setText(mPassword);
