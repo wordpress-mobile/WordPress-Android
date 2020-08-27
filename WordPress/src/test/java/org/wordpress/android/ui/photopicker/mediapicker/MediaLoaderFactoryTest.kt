@@ -32,7 +32,9 @@ class MediaLoaderFactoryTest {
     @Test
     fun `throws exception on not implemented sources`() {
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy { mediaLoaderFactory.build(GIF_LIBRARY) }
-        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy { mediaLoaderFactory.build(STOCK_LIBRARY) }
+        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
+            mediaLoaderFactory.build(STOCK_LIBRARY)
+        }
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy { mediaLoaderFactory.build(WP_LIBRARY) }
     }
 }
