@@ -1,9 +1,7 @@
 package org.wordpress.android.widgets
 
 import android.content.Context
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import org.wordpress.android.R
 
@@ -12,7 +10,9 @@ import org.wordpress.android.R
  * When the title is long, and wraps to the next line text size is reduced.
  */
 class MySiteNameLabelTextView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : androidx.appcompat.widget.AppCompatTextView(context, attrs, defStyleAttr) {
     private val singleLineTextSize = resources.getDimensionPixelSize(R.dimen.my_site_name_label_single_line_text_size)
     private val doubleLineTextSize = resources.getDimensionPixelSize(R.dimen.my_site_name_label_double_line_text_size)
