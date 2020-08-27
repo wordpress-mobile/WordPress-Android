@@ -33,6 +33,9 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
 import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
+import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import android.provider.Settings;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -50,6 +53,7 @@ public class WPScreenshotTest extends BaseTest {
     @Test
     public void wPScreenshotTest() {
         mActivityTestRule.launchActivity(null);
+        Screengrab.setDefaultScreenshotStrategy(new UiAutomatorScreenshotStrategy());
 
         // Enable Demo Mode
         mDemoModeEnabler.enable();
@@ -170,10 +174,24 @@ public class WPScreenshotTest extends BaseTest {
 
     private void takeScreenshot(String screenshotName) {
         try {
-            ScreenShotter.takeScreenshot(screenshotName, getCurrentActivity());
+            if (runningInTestLab()) {
+                ScreenShotter.takeScreenshot(screenshotName, getCurrentActivity());
+            } else {
+                // Fallback to screengrab
+                Screengrab.screenshot(screenshotName);
+            }
         } catch (RuntimeException r) {
-            // Screenshots will fail when running outside of FTL, so this is safe to ignore.
+            // Screenshots will fail when running outside of Fastlane or FTL, so this is safe to ignore.
         }
+    }
+
+    private boolean runningInTestLab() {
+        // https://firebase.google.com/docs/test-lab/android/android-studio#modify_instrumented_test_behavior_for
+        String testLabSetting = Settings.System.getString(
+                getCurrentActivity().getContentResolver(),
+                "firebase.test.lab"
+        );
+        return "true".equals(testLabSetting);
     }
 
     private boolean editPostActivityIsNoLongerLoadingImages() {

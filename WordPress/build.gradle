@@ -283,8 +283,11 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidxTestVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"
-    androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
+    androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
+        exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
+    }
     androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
