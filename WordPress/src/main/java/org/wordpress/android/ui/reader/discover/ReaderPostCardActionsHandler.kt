@@ -38,19 +38,12 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
-import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.AlreadyRunning
-import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.NoNetwork
-import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed.RequestFailed
-import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
-import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Success
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -137,14 +130,14 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun handleSiteNotificationsClicked(blogId: Long) {
         defaultScope.launch {
             when (siteNotificationsUseCase.toggleNotification(blogId)) {
-                is SiteNotificationState.Success, AlreadyRunning -> { // Do Nothing
+                is SiteNotificationState.Success, SiteNotificationState.Failed.AlreadyRunning -> { // Do Nothing
                 }
-                is NoNetwork -> {
+                is SiteNotificationState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                     )
                 }
-                is RequestFailed -> {
+                is SiteNotificationState.Failed.RequestFailed -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                     )
@@ -171,27 +164,30 @@ class ReaderPostCardActionsHandler @Inject constructor(
         defaultScope.launch {
             blockBlogUseCase.blockBlog(blogId).collect {
                 when (it) {
-                    is SiteBlockedInLocalDb -> {
+                    is BlockSiteState.SiteBlockedInLocalDb -> {
                         _refreshPosts.postValue(Event(Unit))
                         _snackbarEvents.postValue(
                                 Event(
-                                        SnackbarMessageHolder(R.string.reader_toast_blog_blocked, R.string.undo, {
-                                            defaultScope.launch {
-                                                ReaderBlogActions.undoBlockBlogFromReader(it.blockedBlogData)
-                                                _refreshPosts.postValue(Event(Unit))
-                                            }
-                                        })
+                                        SnackbarMessageHolder(
+                                                UiStringRes(R.string.reader_toast_blog_blocked),
+                                                UiStringRes(R.string.undo),
+                                                {
+                                                    defaultScope.launch {
+                                                        ReaderBlogActions.undoBlockBlogFromReader(it.blockedBlogData)
+                                                        _refreshPosts.postValue(Event(Unit))
+                                                    }
+                                                })
                                 )
                         )
                     }
-                    Success, AlreadyRunning -> {
+                    BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
                     } // do nothing
-                    NoNetwork -> {
-                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_toast_err_block_blog)))
+                    BlockSiteState.Failed.NoNetwork -> {
+                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog))))
                     }
-                    RequestFailed -> {
+                    BlockSiteState.Failed.RequestFailed -> {
                         _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_toast_err_block_blog)))
+                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog))))
                     }
                 }
             }
