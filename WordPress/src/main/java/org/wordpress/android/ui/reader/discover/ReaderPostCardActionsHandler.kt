@@ -183,11 +183,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
                     } // do nothing
                     BlockSiteState.Failed.NoNetwork -> {
-                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog))))
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        )
                     }
                     BlockSiteState.Failed.RequestFailed -> {
                         _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog))))
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        )
                     }
                 }
             }
