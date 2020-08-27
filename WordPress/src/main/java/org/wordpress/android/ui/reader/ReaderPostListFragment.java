@@ -1017,6 +1017,9 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public void onLoadData(boolean forced) {
+                if (forced) {
+                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                }
                 updatePosts(forced);
             }
 
@@ -2604,15 +2607,7 @@ public class ReaderPostListFragment extends Fragment
                 toggleFollowStatusForPost(post);
                 break;
             case SITE_NOTIFICATIONS:
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-                    updateSubscription(SubscriptionAction.DELETE, post.blogId);
-                } else {
-                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-                    updateSubscription(SubscriptionAction.NEW, post.blogId);
-                }
+                mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
                 break;
             case SHARE:
                 AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
@@ -2688,11 +2683,6 @@ public class ReaderPostListFragment extends Fragment
         } catch (android.content.ActivityNotFoundException ex) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_share_intent);
         }
-    }
-
-    private void updateSubscription(SubscriptionAction action, long blogId) {
-        AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(String.valueOf(blogId), action);
-        mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
     }
 
     /*
