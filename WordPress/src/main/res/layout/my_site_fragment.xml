@@ -81,8 +81,6 @@
                                 style="@style/MySiteBlavatarImageView"
                                 android:layout_width="@dimen/my_site_blavatar_sz"
                                 android:layout_height="@dimen/my_site_blavatar_sz"
-                                android:layout_centerVertical="true"
-                                android:layout_gravity="center"
                                 android:contentDescription="@string/my_site_icon_content_description"
                                 android:foreground="?attr/selectableItemBackgroundBorderless"
                                 android:gravity="center_vertical"
