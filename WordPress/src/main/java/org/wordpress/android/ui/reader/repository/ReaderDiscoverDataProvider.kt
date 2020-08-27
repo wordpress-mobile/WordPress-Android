@@ -47,8 +47,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         get() = ioDispatcher + job
 
     private var isStarted = false
-
-    // Indicates that the data were changed in the db while no-one was subscribed to the feed.
+    // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
 
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(

@@ -8,28 +8,16 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/error_retry"
-        style="@style/WordPress.Button.Primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        style="@style/Reader.Button.Error"
         android:text="@string/retry"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/error_title" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/error_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:gravity="center"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?attr/wpColorOnSurfaceMedium"
-        app:fixWidowWords="true"
+        style="@style/Reader.TextView.Error"
         app:layout_constraintBottom_toTopOf="@+id/error_retry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
