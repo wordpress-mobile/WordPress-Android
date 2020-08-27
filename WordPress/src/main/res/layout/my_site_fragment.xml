@@ -61,33 +61,44 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/blavatar_container"
-                        android:layout_width="@dimen/my_site_blavatar_sz"
-                        android:layout_height="@dimen/my_site_blavatar_sz"
-                        app:cardCornerRadius="@dimen/my_site_blavatar_corner_radius"
-                        app:cardElevation="0dp">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_horizontal"
+                        app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/material_on_surface_disabled"
+                        app:strokeWidth="@dimen/my_site_blavatar_container_border_width">
 
-                        <ProgressBar
-                            android:id="@+id/my_site_icon_progress"
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="@dimen/my_site_blavatar_sz"
                             android:layout_height="@dimen/my_site_blavatar_sz"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/margin_large"
-                            android:gravity="center_vertical"
-                            android:indeterminate="true"
-                            android:visibility="gone" />
+                            app:cardCornerRadius="@dimen/my_site_blavatar_corner_radius"
+                            app:cardElevation="0dp">
 
-                        <ImageView
-                            android:id="@+id/my_site_blavatar"
-                            android:layout_width="@dimen/my_site_blavatar_sz"
-                            android:layout_height="@dimen/my_site_blavatar_sz"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/my_site_icon_content_description"
-                            android:foreground="?attr/selectableItemBackgroundBorderless"
-                            android:gravity="center_vertical"
-                            android:background="@color/material_on_surface_disabled"
-                            tools:ignore="UnusedAttribute"
-                            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
+                            <ImageView
+                                android:id="@+id/my_site_blavatar"
+                                style="@style/MySiteBlavatarImageView"
+                                android:layout_width="@dimen/my_site_blavatar_sz"
+                                android:layout_height="@dimen/my_site_blavatar_sz"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="center"
+                                android:contentDescription="@string/my_site_icon_content_description"
+                                android:foreground="?attr/selectableItemBackgroundBorderless"
+                                android:gravity="center_vertical"
+                                tools:ignore="UnusedAttribute"
+                                tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
+
+                            <ProgressBar
+                                android:id="@+id/my_site_icon_progress"
+                                android:layout_width="@dimen/my_site_blavatar_sz"
+                                android:layout_height="@dimen/my_site_blavatar_sz"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="@dimen/margin_large"
+                                android:gravity="center_vertical"
+                                android:indeterminate="true"
+                                android:visibility="gone" />
+                        </com.google.android.material.card.MaterialCardView>
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout

@@ -524,6 +524,12 @@
         <item name="android:layout_marginStart">@dimen/content_margin</item>
     </style>
 
+    <style name="MySiteBlavatarImageView">
+        <!-- We need to specify both bg and bg ting for this to work in all cases -->
+        <item name="android:backgroundTint">@color/material_on_surface_disabled</item>
+        <item name="android:background">@color/material_on_surface_disabled</item>
+    </style>
+
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
     <style name="DialogAnimations">
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
