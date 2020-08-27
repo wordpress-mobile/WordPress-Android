@@ -4,6 +4,8 @@ import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type.PHOTO
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type.VIDEO
 import org.wordpress.android.util.UriWrapper
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.photopicker.mediapicker.MedaPickerUiItem}")
 sealed class PhotoPickerUiItem(
     val type: Type,
     open val id: Long,
