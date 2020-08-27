@@ -108,7 +108,6 @@
                             tools:text="Example " />
 
                         <com.google.android.material.button.MaterialButton
-                            android:layout_marginTop="@dimen/margin_small"
                             android:id="@+id/my_site_subtitle_label"
                             style="@style/MySiteSubtitleLabel"
                             android:layout_width="wrap_content"
