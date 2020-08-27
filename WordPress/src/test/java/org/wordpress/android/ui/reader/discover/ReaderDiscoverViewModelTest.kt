@@ -216,7 +216,7 @@ class ReaderDiscoverViewModelTest {
             }
 
     @Test
-    fun `if welcome card exists and the only card in the feed then ContentUiState is not shown`() =
+    fun `if welcome card exists as the only card in the feed then ContentUiState is not shown`() =
             test {
                 // Arrange
                 val uiStates = mutableListOf<DiscoverUiState>()
