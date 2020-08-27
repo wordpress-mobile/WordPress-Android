@@ -30,13 +30,19 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -50,6 +56,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
@@ -86,7 +93,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
             BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
-            LIKE -> handleLikeClicked(post.postId, post.blogId)
+            LIKE -> handleLikeClicked(post)
             BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
             REBLOG -> handleReblogClicked(post)
             COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
@@ -111,13 +118,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
+        // todo: Annmarie add tracking dependent upon implementation (tracked in ReaderBlogActions)
         AppLog.d(AppLog.T.READER, "Follow not implemented")
     }
 
+    // todo: Annmarie add tracking dependent upon implementation
     private fun handleSiteNotificationsClicked(blogId: Long) {
         defaultScope.launch {
             when (siteNotificationsUseCase.toggleNotification(blogId)) {
-                is Success, AlreadyRunning -> { // Do Nothing
+                is SiteNotificationState.Success, AlreadyRunning -> { // Do Nothing
                 }
                 is NoNetwork -> {
                     _snackbarEvents.postValue(
@@ -148,14 +157,31 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBlockSiteClicked(postId: Long, blogId: Long) {
+        // todo: Annmarie add tracking dependent upon implementation
         AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
-    private fun handleLikeClicked(postId: Long, blogId: Long) {
-        AppLog.d(AppLog.T.READER, "Like not implemented")
+    private fun handleLikeClicked(post: ReaderPost) {
+        defaultScope.launch {
+            when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
+                is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {
+                }
+                is NetworkUnavailable -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+                    )
+                }
+                is RemoteRequestFailure -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                    )
+                }
+            }
+        }
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
+        // todo: Annmarie add tracking dependent upon implementation
         defaultScope.launch {
             bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
         }

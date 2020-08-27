@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideo
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
@@ -51,6 +52,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
