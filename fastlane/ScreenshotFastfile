@@ -183,6 +183,8 @@ platform :android do
   #####################################################################################
   desc "Download raw screenshots from Firebase Test Lab / Google Storage"
   lane :download_raw_screenshots do |options|
+    folder_mapping = { options[:phone] => 'phoneScreenshots', options[:tenInch] => 'tenInchScreenshots' }
+
     FileUtils.rm_rf(RAW_SCREENSHOTS_DIR)
     FileUtils.mkdir_p(RAW_SCREENSHOTS_DIR)
 
@@ -194,11 +196,12 @@ platform :android do
 
     gsutil_cp = ["gsutil", (is_ci? ? '-m' : nil), "cp", "-cU"].compact
     device_dirs.each do |device_dir|
-      subdir = File.basename(device_dir)
-      subdir.gsub!(/^#{options[:phone]}-([a-zA-Z_]+)-.*/, '\1/images/phoneScreenshots/')
-      subdir.gsub!(/^#{options[:tenInch]}-([a-zA-Z_]+)-.*/, '\1/images/tenInchScreenshots/')
-      subdir.gsub!('_','-')
-      dest = File.join( RAW_SCREENSHOTS_DIR, subdir )
+      parts = File.basename(device_dir).split('-')
+      model_and_api = parts[0..1].join('-')
+      subdir = folder_mapping[model_and_api]
+      next if subdir.nil?
+      locale = parts[2].gsub('_','-')
+      dest = File.join( RAW_SCREENSHOTS_DIR, locale, 'images', subdir )
       FileUtils.mkdir_p(dest)
       sh( *gsutil_cp, File.join(device_dir, "artifacts/*.jpg"), dest ) do |ok, res|
         UI.error("Failed to download artifacts for #{subdir} (status: #{res.exitstatus})") unless ok
