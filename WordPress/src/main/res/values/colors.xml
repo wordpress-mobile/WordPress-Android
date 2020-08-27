@@ -332,8 +332,8 @@
     <color name="reader_welcome_green_dot">@color/green_20</color>
     <color name="reader_welcome_purple_dot">@color/purple_20</color>
     <color name="reader_welcome_yellow_dot">@color/yellow_20</color>
-    <color name="reader_welcome_blue_dot">#007AFF</color>
-    <color name="reader_welcome_red_dot">#FF2D55</color>
+    <color name="reader_welcome_blue_dot">@color/blue_30</color>
+    <color name="reader_welcome_red_dot">@color/red_50</color>
 
 
 </resources>
