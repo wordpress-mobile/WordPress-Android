@@ -8,6 +8,9 @@ import org.wordpress.android.R
 /*
  * ViewHolder containing a device thumbnail
  */
+
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.photopicker.mediapicker.PhotoThumbnailViewHolder}")
 class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils: ThumbnailViewUtils) :
         ThumbnailViewHolder(parent, R.layout.photo_picker_thumbnail) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)

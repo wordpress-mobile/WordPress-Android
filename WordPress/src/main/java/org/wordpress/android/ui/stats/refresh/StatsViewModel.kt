@@ -39,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -169,7 +170,7 @@ class StatsViewModel
             }
         } else {
             _isRefreshing.value = false
-            _showSnackbarMessage.value = SnackbarMessageHolder(R.string.no_network_title)
+            _showSnackbarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.no_network_title))
         }
     }
 

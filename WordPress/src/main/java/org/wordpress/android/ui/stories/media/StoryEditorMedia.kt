@@ -85,7 +85,7 @@ class StoryEditorMedia @Inject constructor(
                                             // when finished composing
             )
             if (!allMediaSucceed) {
-                _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
+                _snackBarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.gallery_error)))
             }
             _uiState.value = AddingMediaToStoryIdle
         }

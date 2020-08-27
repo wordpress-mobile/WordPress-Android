@@ -1310,6 +1310,9 @@
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
+    <string name="reader_discover_interests_header">You might like</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1740,7 +1743,7 @@
     <string name="reader_label_followed_blog">Site followed</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_view_original">View original article</string>
-    <string name="reader_label_follow_count">%,d followers</string>
+    <string name="reader_label_follow_count">%,d Followers</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
@@ -1875,7 +1878,6 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
-    <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -1883,6 +1885,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
+    <string name="contact_fragment_title">@string/contact_support</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -2234,7 +2237,7 @@
     <string name="start_over_email_intent_error">Unable to send an email</string>
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
-    <string name="contact_support">Contact support</string>
+    <string name="contact_support">Contact Support</string>
     <string name="confirm_delete_site">Confirm Delete Site</string>
     <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
     <string name="site_settings_export_content_title">Export content</string>
@@ -2773,10 +2776,12 @@
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
 
-    <!--  these are needed while WPStories sits behind a feature flag  -->
-    <!--  TODO we'll need to replace them when the feature flag is gone -->
-    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Create a post, page or story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Create a post or story</string>
+    <string name="create_post_fab_tooltip">Create a post</string>
+    <string name="create_page_fab_tooltip">Create a page</string>
+    <string name="create_post_story_fab_tooltip">Create a post or story</string>
+
+    <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page or story</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
@@ -2987,7 +2992,6 @@
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
-    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
@@ -3090,7 +3094,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
-    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
@@ -3117,7 +3121,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_project_name" tools:ignore="UnusedResources">Project Name</string>
     <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">Remove annotations</string>
     <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
-    <string name="gutenberg_native_remove_image" tools:ignore="UnusedResources">Remove Image</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
@@ -3137,6 +3140,7 @@ translators: sample content for "Services" page template -->
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_samuel_the_dog" tools:ignore="UnusedResources">Samuel the Dog</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
     <!-- translators: title for "Services" page template -->
     <string name="gutenberg_native_services" tools:ignore="UnusedResources">Services</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
