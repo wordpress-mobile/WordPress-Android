@@ -10,7 +10,7 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 
-class MediaLoader(private val mediaSource: MediaSource) {
+data class MediaLoader(private val mediaSource: MediaSource) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
             var state = DomainState()

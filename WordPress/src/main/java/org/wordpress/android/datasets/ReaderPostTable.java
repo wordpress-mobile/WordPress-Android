@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
@@ -26,7 +27,10 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * tbl_posts contains all reader posts - the primary key is pseudo_id + tag_name + tag_type,
@@ -949,6 +953,16 @@ public class ReaderPostTable {
         }
     }
 
+    public static Map<Pair<String, ReaderTagType>, ReaderPostList> getTagPostMap(long blogId) {
+        String sql = "SELECT * FROM tbl_posts WHERE blog_id=?";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            return getTagPostMapFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
     public static ReaderPostList getPostsInFeed(long feedId, int maxPosts, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql =
@@ -1049,6 +1063,16 @@ public class ReaderPostTable {
         }
     }
 
+    private static Pair<String, ReaderTagType> getTagNameAndTypeFromCursor(Cursor c) {
+        if (c == null) {
+            throw new IllegalArgumentException("getPostFromCursor > null cursor");
+        }
+        return new Pair<>(
+                c.getString(c.getColumnIndex("tag_name")),
+                ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")))
+        );
+    }
+
     private static ReaderPost getPostFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
@@ -1138,6 +1162,25 @@ public class ReaderPostTable {
         return posts;
     }
 
+    private static Map<Pair<String, ReaderTagType>, ReaderPostList> getTagPostMapFromCursor(Cursor cursor) {
+        Map<Pair<String, ReaderTagType>, ReaderPostList> posts = new LinkedHashMap<>();
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    ReaderPost post = getPostFromCursor(cursor);
+                    Pair<String, ReaderTagType> tagNameAndType = getTagNameAndTypeFromCursor(cursor);
+                    if (!posts.containsKey(tagNameAndType)) {
+                        posts.put(tagNameAndType, new ReaderPostList());
+                    }
+                    Objects.requireNonNull(posts.get(tagNameAndType)).add(post);
+                } while (cursor.moveToNext());
+            }
+        } catch (IllegalStateException e) {
+            AppLog.e(AppLog.T.READER, e);
+        }
+        return posts;
+    }
+
     /**
      * Currently "is_bookmarked" field is not supported by the server, therefore posts from the server have always
      * is_bookmarked set to false. This method is a workaround which makes sure, that the field is always up to date
@@ -1156,19 +1199,5 @@ public class ReaderPostTable {
 
     private static ReaderBlogIdPostIdList getBookmarkedPostIds() {
         return getBlogIdPostIdsWithTagType(ReaderTagType.BOOKMARKED, 99999);
-    }
-
-    /**
-     * getBlogIdForFeed is a helper method that will query the post table for a post with the requested
-     * feedId. It will return a limit of 1
-     * @param feedId
-     * @return The associated blogId
-     */
-    public static Long getBlogIdForFeed(long feedId) {
-        ReaderPost post = getPost("feed_id=?", new String[]{Long.toString(feedId)}, true);
-        if (post != null) {
-            return post.blogId;
-        }
-        return 0L;
     }
 }

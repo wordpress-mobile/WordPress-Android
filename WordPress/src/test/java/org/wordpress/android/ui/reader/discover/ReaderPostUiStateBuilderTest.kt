@@ -28,6 +28,8 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_P
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -59,7 +61,6 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
@@ -72,7 +73,6 @@ class ReaderPostUiStateBuilderTest {
                 dateTimeUtilsWrapper,
                 readerImageScannerProvider,
                 readerUtilsWrapper,
-                readerPostMoreButtonUiStateBuilder,
                 readerPostTagsUiStateBuilder,
                 appPrefsWrapper
         )
@@ -756,6 +756,62 @@ class ReaderPostUiStateBuilderTest {
         // Assert
         assertThat(uiState.commentsAction.count).isEqualTo(numReplies)
     }
+
+    @Test
+    fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() {
+        // arrange
+        val expectedInterestListSize = 5
+        val currentReaderTagListSize = 6
+
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
+    }
+
+    @Test
+    fun `Ensures that there are three interests within the uiState when the ReaderTagList contains 3`() {
+        // arrange
+        val expectedInterestListSize = 3
+        val currentReaderTagListSize = 3
+
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
+    }
+
+    @Test
+    fun `Ensures that the first InterestUiState has isDividerVisible set to true`() {
+        // arrange
+        val currentReaderTagListSize = 2
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.first().isDividerVisible).isTrue()
+    }
+
+    @Test
+    fun `Ensures that the last InterestUiState has isDividerVisible set to false`() {
+        // arrange
+        val currentReaderTagListSize = 2
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.last().isDividerVisible).isFalse()
+    }
     // endregion
 
     // region Private methods
@@ -779,7 +835,8 @@ class ReaderPostUiStateBuilderTest {
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
                 onPostHeaderViewClicked = mock(),
-                onTagItemClicked = mock()
+                onTagItemClicked = mock(),
+                onMoreDismissed = mock()
         )
     }
 
@@ -834,5 +891,20 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
         return post
     }
+
+    private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
+        for (x in 0 until numOfTags) {
+            add(createReaderTag())
+        }
+    }
+
+    private fun createReaderTag() = ReaderTag(
+            "",
+            "",
+            "",
+            null,
+            mock(),
+            false
+    )
     // endregion
 }

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,14 +11,12 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.FragmentTransaction
 import kotlinx.android.synthetic.main.toolbar_main.*
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
 import org.wordpress.android.ui.RequestCodes.MULTI_SELECT_MEDIA_PICKER
@@ -55,7 +54,6 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.ListUtils
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPMediaUtils
 import java.io.File
 import java.util.ArrayList
@@ -63,6 +61,7 @@ import javax.inject.Inject
 
 class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     private var mediaCapturePath: String? = null
+    private lateinit var mediaPickerSetup: MediaPickerSetup
     private lateinit var browserType: MediaBrowserType
 
     // note that the site isn't required and may be null
@@ -109,16 +108,18 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
         if (savedInstanceState == null) {
             browserType = intent.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+            mediaPickerSetup = MediaPickerSetup.fromIntent(intent)
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
             localPostId = intent.getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         } else {
             browserType = savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+            mediaPickerSetup = MediaPickerSetup.fromBundle(savedInstanceState)
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             localPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         }
         var fragment = pickerFragment
         if (fragment == null) {
-            fragment = newInstance(this, browserType, site)
+            fragment = newInstance(this, mediaPickerSetup, site)
             supportFragmentManager.beginTransaction()
                     .replace(
                             R.id.fragment_container,
@@ -130,13 +131,15 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         } else {
             fragment.setMediaPickerListener(this)
         }
-        updateTitle(browserType, requireNotNull(actionBar))
+        updateTitle(mediaPickerSetup, requireNotNull(actionBar))
     }
 
-    private fun updateTitle(browserType: MediaBrowserType, actionBar: ActionBar) {
-        if (browserType.isImagePicker && browserType.isVideoPicker) {
+    private fun updateTitle(mediaPickerSetup: MediaPickerSetup, actionBar: ActionBar) {
+        val isImagePicker = mediaPickerSetup.allowedTypes.contains(MediaType.IMAGE)
+        val isVideoPicker = mediaPickerSetup.allowedTypes.contains(MediaType.VIDEO)
+        if (isImagePicker && isVideoPicker) {
             actionBar.setTitle(R.string.photo_picker_photo_or_video_title)
-        } else if (browserType.isVideoPicker) {
+        } else if (isVideoPicker) {
             actionBar.setTitle(R.string.photo_picker_video_title)
         } else {
             actionBar.setTitle(R.string.photo_picker_title)
@@ -156,6 +159,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
+        mediaPickerSetup.toBundle(outState)
         outState.putInt(LOCAL_POST_ID, localPostId)
         if (site != null) {
             outState.putSerializable(WordPress.SITE, site)
@@ -225,40 +229,6 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 doMediaUrisSelected(uris, APP_PICKER)
             }
         }
-    }
-
-    private fun launchCameraForImage() {
-        WPMediaUtils.launchCamera(
-                this, BuildConfig.APPLICATION_ID
-        ) { mediaCapturePath: String? -> this.mediaCapturePath = mediaCapturePath }
-    }
-
-    private fun launchCameraForVideo() {
-        WPMediaUtils.launchVideoCamera(this)
-    }
-
-    private fun launchPictureLibrary(multiSelect: Boolean) {
-        WPMediaUtils.launchPictureLibrary(this, multiSelect)
-    }
-
-    private fun launchVideoLibrary(multiSelect: Boolean) {
-        WPMediaUtils.launchVideoLibrary(this, multiSelect)
-    }
-
-    private fun launchWPMediaLibrary() {
-        site?.let {
-            ActivityLauncher.viewMediaPickerForResult(this, it, browserType)
-        } ?: ToastUtils.showToast(this, R.string.blog_not_found)
-    }
-
-    private fun launchStockMediaPicker() {
-        site?.let {
-            ActivityLauncher.showStockMediaPickerForResult(
-                    this,
-                    it,
-                    STOCK_MEDIA_PICKER_SINGLE_SELECT
-            )
-        } ?: ToastUtils.showToast(this, R.string.blog_not_found)
     }
 
     private fun launchWPStoriesCamera() {
@@ -378,5 +348,24 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     companion object {
         private const val PICKER_FRAGMENT_TAG = "picker_fragment_tag"
         private const val KEY_MEDIA_CAPTURE_PATH = "media_capture_path"
+
+        fun buildIntent(
+            context: Context,
+            browserType: MediaBrowserType,
+            mediaPickerSetup: MediaPickerSetup,
+            site: SiteModel? = null,
+            localPostId: Int? = null
+        ): Intent {
+            val intent = Intent(context, MediaPickerActivity::class.java)
+            intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
+            mediaPickerSetup.toIntent(intent)
+            if (site != null) {
+                intent.putExtra(WordPress.SITE, site)
+            }
+            if (localPostId != null) {
+                intent.putExtra(LOCAL_POST_ID, localPostId)
+            }
+            return intent
+        }
     }
 }
