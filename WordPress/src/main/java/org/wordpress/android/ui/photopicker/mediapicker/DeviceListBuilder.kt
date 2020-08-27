@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.content.Context
 import android.database.Cursor
@@ -16,18 +16,16 @@ import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.DeviceListBuilder}")
-class DeviceMediaListBuilder
+class DeviceListBuilder
 @Inject constructor(
     val context: Context,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun buildDeviceMedia(
         browserType: MediaBrowserType
-    ): List<PhotoPickerItem> {
+    ): List<MediaItem> {
         return withContext(bgDispatcher) {
-            val result = mutableListOf<PhotoPickerItem>()
+            val result = mutableListOf<MediaItem>()
             // images
             if (browserType.isImagePicker) {
                 result.addAll(addMedia(Media.EXTERNAL_CONTENT_URI, false))
@@ -42,10 +40,10 @@ class DeviceMediaListBuilder
         }
     }
 
-    private fun addMedia(baseUri: Uri, isVideo: Boolean): List<PhotoPickerItem> {
+    private fun addMedia(baseUri: Uri, isVideo: Boolean): List<MediaItem> {
         val projection = arrayOf(ID_COL)
         var cursor: Cursor? = null
-        val result = mutableListOf<PhotoPickerItem>()
+        val result = mutableListOf<MediaItem>()
         try {
             cursor = context.contentResolver.query(
                     baseUri,
@@ -64,7 +62,7 @@ class DeviceMediaListBuilder
             val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idIndex)
-                val item = PhotoPickerItem(
+                val item = MediaItem(
                         id,
                         UriWrapper(Uri.withAppendedPath(baseUri, "" + id)),
                         isVideo

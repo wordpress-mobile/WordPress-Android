@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,10 +9,7 @@ import org.wordpress.android.R.id
 /*
  * ViewHolder containing a device thumbnail
  */
-
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.VideoThumbnailViewHolder}")
-class VideoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils: ThumbnailViewUtils) :
+class VideoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
         ThumbnailViewHolder(
                 parent,
                 R.layout.photo_picker_thumbnail
@@ -21,9 +18,9 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
     private val txtSelectionCount: TextView = itemView.findViewById(id.text_selection_count)
     private val videoOverlay: ImageView = itemView.findViewById(id.image_video_overlay)
 
-    fun bind(item: PhotoPickerUiItem.VideoItem, animateSelection: Boolean, updateCount: Boolean) {
+    fun bind(item: MediaPickerUiItem.VideoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
-        thumbnailViewUtils.setupTextSelectionCount(
+        mediaThumbnailViewUtils.setupTextSelectionCount(
                 txtSelectionCount,
                 isSelected,
                 item.selectedOrder,
@@ -34,7 +31,7 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
         if (updateCount) {
             return
         }
-        thumbnailViewUtils.setupThumbnailImage(
+        mediaThumbnailViewUtils.setupThumbnailImage(
                 imgThumbnail,
                 item.uri.toString(),
                 item.isSelected,
@@ -42,6 +39,6 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
                 item.toggleAction,
                 animateSelection
         )
-        thumbnailViewUtils.setupVideoOverlay(videoOverlay, item.clickAction)
+        mediaThumbnailViewUtils.setupVideoOverlay(videoOverlay, item.clickAction)
     }
 }

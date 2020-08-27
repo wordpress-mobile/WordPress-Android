@@ -79,5 +79,12 @@ class ReaderDiscoverAdapter(
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldItems[oldItemPosition] == newItems[newItemPosition]
         }
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            /* Returning true suppresses the default item animation. That's all we need - posts in Reader are static
+            except of the like/follow/bookmark/... action states. We don't want to play the default animation when
+            one of these states changes. */
+            return true
+        }
     }
 }

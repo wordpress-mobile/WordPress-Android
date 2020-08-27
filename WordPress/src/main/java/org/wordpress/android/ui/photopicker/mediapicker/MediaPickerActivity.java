@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker;
+package org.wordpress.android.ui.photopicker.mediapicker;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -46,13 +46,8 @@ import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
-/**
- * This class is being refactored, if you implement any change, please also update
- * {@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity}
- */
-@Deprecated
-public class PhotoPickerActivity extends LocaleAwareActivity
-        implements PhotoPickerFragment.PhotoPickerListener {
+public class MediaPickerActivity extends LocaleAwareActivity
+        implements MediaPickerFragment.MediaPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
 
@@ -80,16 +75,16 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject ImageEditorTracker mImageEditorTracker;
 
-    public enum PhotoPickerMediaSource {
+    public enum MediaPickerMediaSource {
         ANDROID_CAMERA,
         ANDROID_PICKER,
         APP_PICKER,
         WP_MEDIA_PICKER,
         STOCK_MEDIA_PICKER;
 
-        public static PhotoPickerMediaSource fromString(String strSource) {
+        public static MediaPickerMediaSource fromString(String strSource) {
             if (strSource != null) {
-                for (PhotoPickerMediaSource source : PhotoPickerMediaSource.values()) {
+                for (MediaPickerMediaSource source : MediaPickerMediaSource.values()) {
                     if (source.name().equalsIgnoreCase(strSource)) {
                         return source;
                     }
@@ -124,15 +119,15 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             mLocalPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         }
 
-        PhotoPickerFragment fragment = getPickerFragment();
+        MediaPickerFragment fragment = getPickerFragment();
         if (fragment == null) {
-            fragment = PhotoPickerFragment.newInstance(this, mBrowserType, mSite);
+            fragment = MediaPickerFragment.newInstance(this, mBrowserType, mSite);
             getSupportFragmentManager().beginTransaction()
-                                       .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
-                                       .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                       .commitAllowingStateLoss();
+                                .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .commitAllowingStateLoss();
         } else {
-            fragment.setPhotoPickerListener(this);
+            fragment.setMediaPickerListener(this);
         }
         updateTitle(mBrowserType, actionBar);
     }
@@ -147,10 +142,10 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private PhotoPickerFragment getPickerFragment() {
+    private MediaPickerFragment getPickerFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(PICKER_FRAGMENT_TAG);
         if (fragment != null) {
-            return (PhotoPickerFragment) fragment;
+            return (MediaPickerFragment) fragment;
         }
         return null;
     }
@@ -197,7 +192,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
-                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
+                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), MediaPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:
@@ -205,7 +200,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                     WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
                     File f = new File(mMediaCapturePath);
                     List<Uri> capturedImageUri = Collections.singletonList(Uri.fromFile(f));
-                    doMediaUrisSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
+                    doMediaUrisSelected(capturedImageUri, MediaPickerMediaSource.ANDROID_CAMERA);
                 } catch (RuntimeException e) {
                     AppLog.e(AppLog.T.MEDIA, e);
                 }
@@ -216,7 +211,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                     ArrayList<Long> ids =
                             ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
-                    doMediaIdsSelected(ids, PhotoPickerMediaSource.WP_MEDIA_PICKER);
+                    doMediaIdsSelected(ids, MediaPickerMediaSource.WP_MEDIA_PICKER);
                 }
                 break;
             // user selected a stock photo
@@ -225,13 +220,13 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                     long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
                     ArrayList<Long> ids = new ArrayList<>();
                     ids.add(mediaId);
-                    doMediaIdsSelected(ids, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
+                    doMediaIdsSelected(ids, MediaPickerMediaSource.STOCK_MEDIA_PICKER);
                 }
                 break;
             case IMAGE_EDITOR_EDIT_IMAGE:
                 if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
                     List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
-                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
+                    doMediaUrisSelected(uris, MediaPickerMediaSource.APP_PICKER);
                 }
                 break;
         }
@@ -278,48 +273,48 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         finish();
     }
 
-    private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
+    private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull MediaPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             Uri mediaUri = mediaUris.get(0);
             final String mimeType = getContentResolver().getType(mediaUri);
 
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                    mLocalPostId
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
             );
 
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
-                    new WPMediaUtils.MediaFetchDoNext() {
-                        @Override
-                        public void doNext(Uri uri) {
-                            EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
-                                    .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
-                                            mimeType);
-                            // we intentionally display a toast instead of a snackbar as a
-                            // Snackbar is tied to an Activity and the activity is finished
-                            // right after this call
-                            switch (queueImageResult) {
-                                case FILE_NOT_FOUND:
-                                    Toast.makeText(getApplicationContext(),
-                                            R.string.file_not_found, Toast.LENGTH_SHORT)
-                                         .show();
-                                    break;
-                                case INVALID_POST_ID:
-                                    Toast.makeText(getApplicationContext(),
-                                            R.string.error_generic, Toast.LENGTH_SHORT)
-                                         .show();
-                                    break;
-                                case SUCCESS:
-                                    // noop
-                                    break;
-                            }
-                            Intent intent = new Intent()
-                                    .putExtra(EXTRA_MEDIA_QUEUED, true);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    });
+                                             new WPMediaUtils.MediaFetchDoNext() {
+                                                 @Override
+                                                 public void doNext(Uri uri) {
+                                                     EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
+                                                             .queueFeaturedImageForUpload(mLocalPostId, mSite, uri,
+                                                                     mimeType);
+                                                     // we intentionally display a toast instead of a snackbar as a
+                                                     // Snackbar is tied to an Activity and the activity is finished
+                                                     // right after this call
+                                                     switch (queueImageResult) {
+                                                         case FILE_NOT_FOUND:
+                                                             Toast.makeText(getApplicationContext(),
+                                                                     R.string.file_not_found, Toast.LENGTH_SHORT)
+                                                                  .show();
+                                                             break;
+                                                         case INVALID_POST_ID:
+                                                             Toast.makeText(getApplicationContext(),
+                                                                     R.string.error_generic, Toast.LENGTH_SHORT)
+                                                                  .show();
+                                                             break;
+                                                         case SUCCESS:
+                                                             // noop
+                                                             break;
+                                                     }
+                                                     Intent intent = new Intent()
+                                                             .putExtra(EXTRA_MEDIA_QUEUED, true);
+                                                     setResult(RESULT_OK, intent);
+                                                     finish();
+                                                 }
+                                             });
         } else {
             Intent intent = new Intent()
                     .putExtra(EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))
@@ -331,7 +326,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
+    private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull MediaPickerMediaSource source) {
         if (mediaIds != null && mediaIds.size() > 0) {
             if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
                 // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
@@ -362,14 +357,14 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onPhotoPickerMediaChosen(@NonNull List<? extends Uri> uriList) {
+    public void onMediaChosen(@NonNull List<? extends Uri> uriList) {
         if (uriList.size() > 0) {
-            doMediaUrisSelected(uriList, PhotoPickerMediaSource.APP_PICKER);
+            doMediaUrisSelected(uriList, MediaPickerMediaSource.APP_PICKER);
         }
     }
 
     @Override
-    public void onPhotoPickerIconClicked(@NonNull PhotoPickerFragment.PhotoPickerIcon icon, boolean multiple) {
+    public void onIconClicked(@NonNull MediaPickerFragment.MediaPickerIcon icon, boolean multiple) {
         switch (icon) {
             case ANDROID_CAPTURE_PHOTO:
                 launchCameraForImage();

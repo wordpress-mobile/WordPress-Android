@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker
+package org.wordpress.android.ui.photopicker.mediapicker
 
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -8,17 +8,14 @@ import org.wordpress.android.R
 /*
  * ViewHolder containing a device thumbnail
  */
-
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.PhotoThumbnailViewHolder}")
-class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils: ThumbnailViewUtils) :
+class PhotoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
         ThumbnailViewHolder(parent, R.layout.photo_picker_thumbnail) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
 
-    fun bind(item: PhotoPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
+    fun bind(item: MediaPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
-        thumbnailViewUtils.setupTextSelectionCount(
+        mediaThumbnailViewUtils.setupTextSelectionCount(
                 txtSelectionCount,
                 isSelected,
                 item.selectedOrder,
@@ -29,7 +26,7 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
         if (updateCount) {
             return
         }
-        thumbnailViewUtils.setupThumbnailImage(
+        mediaThumbnailViewUtils.setupThumbnailImage(
                 imgThumbnail,
                 item.uri.toString(),
                 item.isSelected,
