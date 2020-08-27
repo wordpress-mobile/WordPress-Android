@@ -76,8 +76,8 @@ class ReaderDiscoverViewModelTest {
                 readerDiscoverDataProvider,
                 reblogUseCase,
                 readerUtilsWrapper,
-                analyticsTrackerWrapper,
                 appPrefsWrapper,
+                analyticsTrackerWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
