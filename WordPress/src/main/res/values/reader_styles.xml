@@ -240,9 +240,6 @@
         <item name="android:layout_width">@dimen/blavatar_sz_extra_large</item>
         <item name="android:layout_height">@dimen/blavatar_sz_extra_large</item>
     </style>
-    <style name="ReaderWelcomeBannerImageView" parent="ReaderImageView">
-        <item name="android:src">@drawable/bg_colorful_dots</item>
-    </style>
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />

@@ -16,7 +16,7 @@
             android:id="@+id/welcome_banner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/ReaderWelcomeBannerImageView"
+            android:src="@drawable/bg_colorful_dots"
             android:contentDescription="@string/reader_welcome_banner_content_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

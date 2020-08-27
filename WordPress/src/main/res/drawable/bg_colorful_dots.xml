@@ -1,21 +1,29 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="516dp"
-    android:height="157dp"
-    android:viewportWidth="516"
-    android:viewportHeight="157">
-  <path
-      android:pathData="M67.613,140.956m-4.584,0a4.584,4.584 0,1 1,9.168 0a4.584,4.584 0,1 1,-9.168 0"
-      android:fillColor="@color/reader_welcome_green_dot"/>
-  <path
-      android:pathData="M332.909,126.631m-2.865,0a2.865,2.865 0,1 1,5.73 0a2.865,2.865 0,1 1,-5.73 0"
-      android:fillColor="@color/reader_welcome_purple_dot"/>
-  <path
-      android:pathData="M81.938,127.777m-2.865,0a2.865,2.865 0,1 1,5.73 0a2.865,2.865 0,1 1,-5.73 0"
-      android:fillColor="@color/reader_welcome_yellow_dot"/>
-  <path
-      android:pathData="M57.872,23.493m-2.865,0a2.865,2.865 0,1 1,5.73 0a2.865,2.865 0,1 1,-5.73 0"
-      android:fillColor="@color/reader_welcome_blue_dot"/>
-  <path
-      android:pathData="M342.077,20.055m-6.303,0a6.303,6.303 0,1 1,12.606 0a6.303,6.303 0,1 1,-12.606 0"
-      android:fillColor="@color/reader_welcome_red_dot"/>
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:top="@dimen/margin_extra_large"
+      android:left="@dimen/margin_extra_large"
+      android:right="@dimen/margin_extra_large"
+      android:bottom="@dimen/margin_extra_large">
+    <vector
+        android:width="549dp"
+        android:height="112dp"
+        android:viewportWidth="549"
+        android:viewportHeight="112">
+      <path
+          android:pathData="M11,107m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+          android:fillColor="@color/reader_welcome_green_dot"/>
+      <path
+          android:pathData="M527.5,109.5m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
+          android:fillColor="@color/reader_welcome_purple_dot"/>
+      <path
+          android:pathData="M23.5,95.5m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
+          android:fillColor="@color/reader_welcome_yellow_dot"/>
+      <path
+          android:pathData="M2.5,4.5m-2.5,0a2.5,2.5 0,1 1,5 0a2.5,2.5 0,1 1,-5 0"
+          android:fillColor="@color/reader_welcome_blue_dot"/>
+      <path
+          android:pathData="M543.5,5.5m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0"
+          android:fillColor="@color/reader_welcome_red_dot"/>
+    </vector>
+  </item>
+</layer-list>
+
