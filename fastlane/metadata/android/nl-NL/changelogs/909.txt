@@ -1,0 +1,4 @@
+15.5:
+* Blok editor: gebruikersnaam @mentions worden nu automatisch aangevuld in de blok editor op WordPress.com en Jetpack sites. Typ het teken "@" om een ​​pop-up venster met gebruikersnaam te zien. Bewerk media in het cover blok. Een bugfix voor het heading blok verwijdert een ongewenste witte schaduw op headers met een link en string opmaak in de donkere modus.
+* Zoek naar zelf gehoste sites op de berichtenlijst.
+* Upload audio- en document bestanden naar de mediabibliotheek.

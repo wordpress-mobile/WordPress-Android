@@ -9,8 +9,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class ReaderExpandableTagsView @JvmOverloads constructor(
@@ -19,6 +21,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ChipGroup(context, attrs, defStyleAttr) {
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val tagChips
         get() = (0 until childCount - 1).map { getChildAt(it) as Chip }
@@ -53,7 +56,10 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private fun addOverflowIndicatorChip() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val chip = inflater.inflate(R.layout.reader_expandable_tags_view_overflow_chip, this, false) as Chip
-        chip.setOnCheckedChangeListener { _, isChecked -> expandLayout(isChecked) }
+        chip.setOnCheckedChangeListener { _, isChecked ->
+            analyticsTrackerWrapper.track(Stat.READER_CHIPS_MORE_TOGGLED)
+            expandLayout(isChecked)
+        }
         addView(chip)
     }
 

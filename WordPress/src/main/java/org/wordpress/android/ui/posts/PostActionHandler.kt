@@ -28,6 +28,7 @@ import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -127,7 +128,7 @@ class PostActionHandler(
 
     private fun cancelPendingAutoUpload(post: PostModel) {
         val msgRes = UploadUtils.cancelPendingAutoUpload(post, dispatcher)
-        showSnackbar.invoke(SnackbarMessageHolder(msgRes))
+        showSnackbar.invoke(SnackbarMessageHolder(UiStringRes(msgRes)))
     }
 
     fun newPost() {
@@ -189,7 +190,7 @@ class PostActionHandler(
         criticalPostActionTracker.add(localPostId, MOVING_POST_TO_DRAFT)
 
         val snackBarHolder = SnackbarMessageHolder(
-                messageRes = R.string.post_moving_to_draft,
+                message = UiStringRes(R.string.post_moving_to_draft),
                 onDismissAction = {
                     criticalPostActionTracker.remove(localPostId, MOVING_POST_TO_DRAFT)
                 }
@@ -285,7 +286,7 @@ class PostActionHandler(
             TRASHING_POST
         }
 
-        showSnackbar.invoke(SnackbarMessageHolder(R.string.post_trashing))
+        showSnackbar.invoke(SnackbarMessageHolder(UiStringRes(R.string.post_trashing)))
         criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = criticalPostAction)
 
         triggerPostUploadAction.invoke(CancelPostAndMediaUpload(post))
@@ -307,8 +308,8 @@ class PostActionHandler(
         } else {
             val snackBarHolder = when (criticalAction) {
                 TRASHING_POST -> SnackbarMessageHolder(
-                        messageRes = R.string.post_trashed,
-                        buttonTitleRes = R.string.undo,
+                        message = UiStringRes(R.string.post_trashed),
+                        buttonTitle = UiStringRes(R.string.undo),
                         buttonAction = {
                             val post = postStore.getPostByLocalPostId(localPostId.value)
                             if (post != null) {
@@ -316,7 +317,7 @@ class PostActionHandler(
                             }
                         }
                 )
-                TRASHING_POST_WITH_LOCAL_CHANGES -> SnackbarMessageHolder(messageRes = R.string.post_trashed)
+                TRASHING_POST_WITH_LOCAL_CHANGES -> SnackbarMessageHolder(message = UiStringRes(R.string.post_trashed))
                 else -> throw IllegalStateException("Unexpected action in handlePostTrashed(): $criticalAction")
             }
             showSnackbar.invoke(snackBarHolder)
@@ -328,7 +329,7 @@ class PostActionHandler(
         if (!checkNetworkConnection.invoke()) {
             return
         }
-        showSnackbar.invoke(SnackbarMessageHolder(messageRes = R.string.post_restoring))
+        showSnackbar.invoke(SnackbarMessageHolder(message = UiStringRes(R.string.post_restoring)))
         criticalPostActionTracker.add(localPostId = LocalId(post.id), criticalPostAction = RESTORING_POST)
         dispatcher.dispatch(PostActionBuilder.newRestorePostAction(RemotePostPayload(post, site)))
     }
@@ -345,7 +346,7 @@ class PostActionHandler(
         if (isError) {
             showToast.invoke(ToastMessageHolder(R.string.error_restoring_post, Duration.SHORT))
         } else {
-            showSnackbar.invoke(SnackbarMessageHolder(messageRes = R.string.post_restored))
+            showSnackbar.invoke(SnackbarMessageHolder(message = UiStringRes(R.string.post_restored)))
         }
     }
 
