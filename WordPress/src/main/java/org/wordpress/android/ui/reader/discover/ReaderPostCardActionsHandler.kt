@@ -47,9 +47,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.ReaderPostData
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.AlreadyRunning
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
@@ -170,12 +167,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
             when (siteNotificationsUseCase.toggleNotification(blogId)) {
                 is Success, AlreadyRunning -> { // Do Nothing
                 }
-                is Failed.NoNetwork -> {
+                is NoNetwork -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                     )
                 }
-                is Failed.RequestFailed -> {
+                is RequestFailed -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                     )
