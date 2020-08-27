@@ -43,8 +43,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val INITIATE_LOAD_MORE_OFFSET = 3
-const val PHOTON_WIDTH_QUALITY_RATION = 1/2L // load images in 1/2 screen width to save users's data
-const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 9/16L
+const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users's data
+const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 class ReaderDiscoverViewModel @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
@@ -78,7 +78,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     /**
-     * Don't recalculate the size after the device orientation change so we can use the cached images.
+     * Don't recalculate the size after a device orientation change as it'd result in change of the url -> it wouldn't
+     * use cached images.
      */
     private val photonWidth: Int = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
     private val photonHeight: Int = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
