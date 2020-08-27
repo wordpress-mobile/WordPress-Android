@@ -67,9 +67,10 @@
         <item name="android:actionModeBackground">?attr/wpColorAppBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
-        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
 
         <item name="colorButtonNormal">@color/light_gray</item>
+        <item name="android:windowLightStatusBar">true</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
