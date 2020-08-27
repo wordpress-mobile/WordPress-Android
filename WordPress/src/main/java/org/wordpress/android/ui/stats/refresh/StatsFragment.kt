@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.animation.StateListAnimator
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -21,6 +21,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -37,7 +38,7 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment() {
+class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -127,12 +128,21 @@ class StatsFragment : DaggerFragment() {
             app_bar_layout.postDelayed(
                     {
                         if (app_bar_layout != null) {
-                            val elevation = if (hasShadow == true) {
-                                resources.getDimension(R.dimen.appbar_elevation)
-                            } else {
-                                0f
+                            val originalStateListAnimator = app_bar_layout.stateListAnimator
+                            if (originalStateListAnimator != null) {
+                                app_bar_layout.setTag(
+                                        R.id.appbar_layout_original_animator_tag_key,
+                                        originalStateListAnimator
+                                )
                             }
-                            ViewCompat.setElevation(app_bar_layout, elevation)
+
+                            if (hasShadow == true) {
+                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
+                                        R.id.appbar_layout_original_animator_tag_key
+                                ) as StateListAnimator
+                            } else {
+                                app_bar_layout.stateListAnimator = null
+                            }
                         }
                     },
                     100
@@ -175,9 +185,16 @@ class StatsFragment : DaggerFragment() {
             }
         })
     }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        app_bar_layout.liftOnScrollTargetViewId = containerId
+    }
 }
 
-class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
+        fm,
+        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+) {
     override fun getCount(): Int = statsSections.size
 
     override fun getItem(position: Int): Fragment {

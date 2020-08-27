@@ -29,6 +29,7 @@
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
     <dimen name="divider_size">1dp</dimen>
+    <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
     <dimen name="list_with_fab_endlist_indicator_height">86dp</dimen>

@@ -163,6 +163,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
+import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
@@ -501,6 +502,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(TodayWidgetBlockListProviderFactory object);
 
     void inject(StatsActivity object);
+
+    void inject(StatsListFragment object);
 
     void inject(DomainRegistrationActivity object);
 

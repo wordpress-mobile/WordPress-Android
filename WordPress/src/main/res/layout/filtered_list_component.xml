@@ -15,7 +15,7 @@
             android:id="@+id/toolbar_with_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/tab_bottom_divider"
+            android:background="@drawable/tab_layout_background"
             android:focusableInTouchMode="true"
             app:contentInsetStart="0dp"
             app:layout_scrollFlags="scroll"
