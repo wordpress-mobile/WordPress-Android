@@ -124,9 +124,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
+        // todo: Annmarie add tracking dependent upon implementation (tracked in ReaderBlogActions)
         AppLog.d(AppLog.T.READER, "Follow not implemented")
     }
 
+    // todo: Annmarie add tracking dependent upon implementation
     private fun handleSiteNotificationsClicked(blogId: Long) {
         defaultScope.launch {
             when (siteNotificationsUseCase.toggleNotification(blogId)) {
@@ -161,6 +163,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBlockSiteClicked(blogId: Long) {
+        // todo: Annmarie add tracking dependent upon implementation
         defaultScope.launch {
             blockBlogUseCase.blockBlog(blogId).collect {
                 when (it) {
@@ -201,20 +204,24 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun handleLikeClicked(post: ReaderPost) {
         defaultScope.launch {
             when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
-                is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {}
+                is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {
+                }
                 is NetworkUnavailable -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+                    )
                 }
                 is RemoteRequestFailure -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title))))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                    )
                 }
             }
         }
     }
 
     private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
+        // todo: Annmarie add tracking dependent upon implementation
         defaultScope.launch {
             bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
         }
