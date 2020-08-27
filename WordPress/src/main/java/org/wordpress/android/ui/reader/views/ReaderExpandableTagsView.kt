@@ -124,6 +124,13 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         } else {
             resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
         }
+
+        val chipBackgroundColorRes = if (isSingleLine) {
+            R.color.on_surface_divider
+        } else {
+            R.color.transparent
+        }
+        overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
     }
 
     private fun View.preLayout(what: () -> Unit) {
