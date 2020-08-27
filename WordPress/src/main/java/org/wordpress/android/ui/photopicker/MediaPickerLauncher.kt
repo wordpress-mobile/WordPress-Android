@@ -55,14 +55,14 @@ class MediaPickerLauncher
         }
     }
 
-    fun showGravatarPicker(activity: Activity) {
+    fun showGravatarPicker(fragment: Fragment) {
         val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            Intent(activity, MediaPickerActivity::class.java)
+            Intent(fragment.requireContext(), MediaPickerActivity::class.java)
         } else {
-            Intent(activity, PhotoPickerActivity::class.java)
+            Intent(fragment.requireContext(), PhotoPickerActivity::class.java)
         }
         intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, GRAVATAR_IMAGE_PICKER)
-        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+        fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
     private fun createShowPhotoPickerIntent(
