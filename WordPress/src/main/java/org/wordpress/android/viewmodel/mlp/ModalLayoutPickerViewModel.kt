@@ -80,7 +80,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
 
         demoLayouts.categories.forEach { category ->
-            val layouts = demoLayouts.layouts(category.slug).map { layout ->
+            val layouts = demoLayouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == _selectedLayoutSlug.value
                 LayoutListItem(layout.slug, layout.title, layout.preview, selected)
             }
