@@ -2583,8 +2583,6 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
-        } else if (tag.isBookmarked()) {
-            stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
         } else {
             return;
         }
