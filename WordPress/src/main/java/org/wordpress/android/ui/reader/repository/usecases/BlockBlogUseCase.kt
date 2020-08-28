@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_BLOG_BLOCKED
-import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
@@ -17,7 +14,6 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Succes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -25,23 +21,21 @@ import kotlin.coroutines.suspendCoroutine
 class BlockBlogUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val readerBlogActionsWrapper: ReaderBlogActionsWrapper,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+    private val readerBlogActionsWrapper: ReaderBlogActionsWrapper
 ) {
     private var continuation: Continuation<Boolean>? = null
 
+    // TODO use .flowOn(ioDispatcher) when the experimental flag is removed
     suspend fun blockBlog(blogId: Long) = flow<BlockSiteState> {
-        withContext(ioDispatcher) {
-            // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
-            if (continuation == null) {
-                if (!networkUtilsWrapper.isNetworkAvailable()) {
-                    emit(NoNetwork)
-                } else {
-                    performAction(blogId)
-                }
+        // Blocking multiple sites in parallel isn't supported as the user would lose the ability to undo the action
+        if (continuation == null) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(NoNetwork)
             } else {
-                emit(AlreadyRunning)
+                performAction(blogId)
             }
+        } else {
+            emit(AlreadyRunning)
         }
     }
 
