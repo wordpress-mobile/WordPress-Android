@@ -15,21 +15,21 @@
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:liftOnScrollTargetViewId="@+id/nested_scroll_view">
+            app:liftOnScrollTargetViewId="@+id/webView">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:duplicateParentState="true"
-                android:background="@drawable/tab_layout_background"
                 android:layout_height="wrap_content"
+                android:background="@drawable/tab_layout_background"
+                android:duplicateParentState="true"
                 app:contentInsetEnd="@dimen/toolbar_content_offset_end"
                 app:contentInsetLeft="@dimen/toolbar_content_offset"
                 app:contentInsetRight="@dimen/toolbar_content_offset_end"
                 app:contentInsetStart="@dimen/toolbar_content_offset"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:subtitleTextColor="?attr/wpColorOnSurfaceMedium"
-                app:theme="@style/WordPress.WebPreview.ActionBar" />
+                app:theme="@style/WordPress.ActionBar" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -39,20 +39,10 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nested_scroll_view"
+            <org.wordpress.android.widgets.NestedWebView
+                android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/navbar_container"
-                android:layout_alignParentTop="true">
-
-                <org.wordpress.android.ui.WPWebView
-                    android:id="@+id/webView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:nestedScrollingEnabled="true" />
-
-            </androidx.core.widget.NestedScrollView>
+                android:layout_height="match_parent" />
 
             <include
                 layout="@layout/progress_layout"
@@ -61,14 +51,6 @@
                 android:layout_above="@+id/navbar_container"
                 android:layout_alignParentTop="true"
                 tools:visibility="gone" />
-
-
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/snackbar_anchor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/navbar_container" />
-
 
         </RelativeLayout>
 
@@ -93,9 +75,7 @@
             android:progressDrawable="@drawable/progressbar_horizontal"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
     <TextView
         android:id="@+id/desktop_preview_hint"
