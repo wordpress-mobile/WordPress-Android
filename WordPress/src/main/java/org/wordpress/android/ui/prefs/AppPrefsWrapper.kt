@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
+import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -151,6 +152,9 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setReaderTag(selectedTag: ReaderTag?) = AppPrefs.setReaderTag(selectedTag)
     fun getReaderTag(): ReaderTag? = AppPrefs.getReaderTag()
+
+    fun setReaderActiveTab(selectedTab: ReaderTab?) = AppPrefs.setReaderActiveTab(selectedTab)
+    fun getReaderActiveTab(): ReaderTab? = AppPrefs.getReaderActiveTab()
 
     fun isReaderImprovementsPhase2Enabled(): Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
 
