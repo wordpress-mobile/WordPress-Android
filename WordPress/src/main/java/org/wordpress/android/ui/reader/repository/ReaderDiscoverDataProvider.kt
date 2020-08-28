@@ -26,6 +26,8 @@ import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUs
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -49,7 +51,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private var isStarted = false
     // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
-
+    private var isLoadMoreRequestInProgress = false
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
@@ -78,11 +80,20 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     suspend fun loadMoreCards() {
-        // TODO malinjir check that the request isn't already in progress
+        if (isLoadMoreRequestInProgress) {
+            AppLog.w(READER, "reader discover load more cards task is already running")
+            return
+        }
+
+        isLoadMoreRequestInProgress = true
+
         if (hasMoreCards) {
             withContext(ioDispatcher) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
                 _communicationChannel.postValue(Event(response))
+                if (response is ReaderDiscoverCommunication.Error) {
+                    isLoadMoreRequestInProgress = false
+                }
             }
         }
     }
@@ -115,6 +126,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     // Handlers for ReaderPostServices
     private fun onUpdated(task: DiscoverTasks?) {
         hasMoreCards = true
+        if (task != null && task == REQUEST_MORE) isLoadMoreRequestInProgress = false
         launch {
             reloadPosts()
             if (task != null) {
@@ -128,12 +140,14 @@ class ReaderDiscoverDataProvider @Inject constructor(
         _communicationChannel.postValue(
                 Event(Success(task))
         )
+        if (task == REQUEST_MORE) isLoadMoreRequestInProgress = false
     }
 
     private fun onFailed(task: DiscoverTasks) {
         _communicationChannel.postValue(
                 Event(RemoteRequestFailure(task))
         )
+        if (task == REQUEST_MORE) isLoadMoreRequestInProgress = false
     }
 
     // React to discoverFeed observers
