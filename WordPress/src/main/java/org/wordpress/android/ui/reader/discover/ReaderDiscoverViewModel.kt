@@ -13,10 +13,13 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
@@ -50,6 +53,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -95,37 +99,45 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             if (posts != null && posts.cards.isNotEmpty()) {
-                _uiState.value = ContentUiState(
-                        posts.cards.map {
-                            when (it) {
-                                is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                                        post = it.post,
-                                        isDiscover = true,
-                                        photonWidth = photonWidth,
-                                        photonHeight = photonHeight,
-                                        isBookmarkList = false,
-                                        onButtonClicked = this::onButtonClicked,
-                                        onItemClicked = this::onPostItemClicked,
-                                        onItemRendered = this::onItemRendered,
-                                        onDiscoverSectionClicked = this::onDiscoverClicked,
-                                        onMoreButtonClicked = this::onMoreButtonClicked,
-                                        onMoreDismissed = this::onMoreMenuDismissed,
-                                        onVideoOverlayClicked = this::onVideoOverlayClicked,
-                                        onPostHeaderViewClicked = this::onPostHeaderClicked,
-                                        onTagItemClicked = this::onTagItemClicked,
-                                        postListType = TAG_FOLLOWED
-                                )
-                                is InterestsYouMayLikeCard -> {
-                                    postUiStateBuilder.mapTagListToReaderInterestUiState(
-                                            it.interests,
-                                            this::onReaderTagClicked
+                val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
+                        posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
+
+                if (!discoverFeedContainsOnlyWelcomeCard) {
+                    _uiState.value = ContentUiState(
+                            posts.cards.map {
+                                when (it) {
+                                    is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
+                                            titleRes = R.string.reader_welcome_banner
                                     )
+                                    is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                                            post = it.post,
+                                            isDiscover = true,
+                                            photonWidth = photonWidth,
+                                            photonHeight = photonHeight,
+                                            isBookmarkList = false,
+                                            onButtonClicked = this::onButtonClicked,
+                                            onItemClicked = this::onPostItemClicked,
+                                            onItemRendered = this::onItemRendered,
+                                            onDiscoverSectionClicked = this::onDiscoverClicked,
+                                            onMoreButtonClicked = this::onMoreButtonClicked,
+                                            onMoreDismissed = this::onMoreMenuDismissed,
+                                            onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                            onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                            onTagItemClicked = this::onTagItemClicked,
+                                            postListType = TAG_FOLLOWED
+                                    )
+                                    is InterestsYouMayLikeCard -> {
+                                        postUiStateBuilder.mapTagListToReaderInterestUiState(
+                                                it.interests,
+                                                this::onReaderTagClicked
+                                        )
+                                    }
                                 }
-                            }
-                        },
-                        reloadProgressVisibility = false,
-                        loadMoreProgressVisibility = false
-                )
+                            },
+                            reloadProgressVisibility = false,
+                            loadMoreProgressVisibility = false
+                    )
+                }
             }
         }
 
@@ -319,6 +331,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         super.onCleared()
         readerDiscoverDataProvider.stop()
         readerPostCardActionsHandler.onCleared()
+
+        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun swipeToRefresh() {
@@ -326,6 +340,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
+
+        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun onRetryButtonClick() {
