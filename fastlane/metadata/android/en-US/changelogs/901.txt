@@ -1,4 +1,0 @@
-15.4:
-<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.
-
-<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color.

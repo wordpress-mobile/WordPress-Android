@@ -204,7 +204,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun updateLoadingTextWithFadeAnimation(newText: String) {
+    private fun updateLoadingTextWithFadeAnimation(newText: CharSequence) {
         val animationDuration = AniUtils.Duration.SHORT
         val fadeOut = AniUtils.getFadeOutAnim(progress_text_layout, animationDuration, View.VISIBLE)
         val fadeIn = AniUtils.getFadeInAnim(progress_text_layout, animationDuration)

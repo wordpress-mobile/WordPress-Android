@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -49,6 +48,8 @@ import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment}")
 class PhotoPickerFragment : Fragment() {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),
@@ -103,7 +104,7 @@ class PhotoPickerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
         var selectedIds: List<Long>? = null
         var lastTappedIcon: PhotoPickerIcon? = null
         if (savedInstanceState != null) {
@@ -229,9 +230,9 @@ class PhotoPickerFragment : Fragment() {
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter
-            val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+            val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
-            recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
         }
     }
 

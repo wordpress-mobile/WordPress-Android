@@ -35,6 +35,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
@@ -46,6 +47,7 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
@@ -106,6 +108,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
     private ReblogActionListener mReblogActionListener;
+    private BlockSiteActionListener mBlockSiteActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -132,6 +135,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
+    @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
 
     /*
      * cross-post
@@ -264,7 +268,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ReaderPostViewHolder) {
-            renderPost(position, (ReaderPostViewHolder) holder);
+            renderPost(position, (ReaderPostViewHolder) holder, false);
         } else if (holder instanceof ReaderXPostViewHolder) {
             renderXPost(position, (ReaderXPostViewHolder) holder);
         } else if (holder instanceof ReaderRemovedPostViewHolder) {
@@ -382,7 +386,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void renderPost(final int position, final ReaderPostViewHolder holder) {
+    private void renderPost(final int position, final ReaderPostViewHolder holder, boolean showMoreMenu) {
         final ReaderPost post = getItem(position);
         ReaderPostListType postListType = getPostListType();
         if (post == null) {
@@ -395,7 +399,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     switch (type) {
                         case BOOKMARK:
                             toggleBookmark(post.blogId, post.postId);
-                            renderPost(position, holder);
+                            renderPost(position, holder, false);
                             break;
                         case LIKE:
                             toggleLike(ctx, post, position, holder);
@@ -406,13 +410,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case COMMENTS:
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
+                        case BLOCK_SITE:
+                            mBlockSiteActionListener.blockSite(post);
+                            break;
                         case FOLLOW:
                         case SITE_NOTIFICATIONS:
                         case SHARE:
                         case VISIT_SITE:
-                        case BLOCK_SITE:
                             mOnPostListItemButtonListener.onButtonClicked(post, type);
-                            renderPost(position, holder);
+                            renderPost(position, holder, false);
                             break;
                     }
                     return Unit.INSTANCE;
@@ -455,8 +461,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return Unit.INSTANCE;
         };
-        Function3<Long, Long, View, Unit> onMoreButtonClicked = (postId, blogId, view) -> {
-            // noop
+        Function1<ReaderPostUiState, Unit> onMoreButtonClicked = (uiState) -> {
+            renderPost(position, holder, true);
+            return Unit.INSTANCE;
+        };
+
+        Function1<ReaderPostUiState, Unit> onMoreDismissed = (uiState) -> {
+            renderPost(position, holder, false);
             return Unit.INSTANCE;
         };
 
@@ -488,9 +499,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onItemRendered,
                         onDiscoverSectionClicked,
                         onMoreButtonClicked,
+                        onMoreDismissed,
                         onVideoOverlayClicked,
                         onPostHeaderClicked,
-                        onTagItemClicked
+                        onTagItemClicked,
+                        showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
+                                .buildMoreMenuItems(post, postListType, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -557,6 +571,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setReblogActionListener(ReblogActionListener reblogActionListener) {
         mReblogActionListener = reblogActionListener;
+    }
+
+    public void setBlockSiteActionListener(BlockSiteActionListener blockSiteActionListener) {
+        mBlockSiteActionListener = blockSiteActionListener;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -772,7 +790,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
         if (updatedPost != null && positionInReaderPostList > -1) {
             mPosts.set(positionInReaderPostList, updatedPost);
-            renderPost(listPosition, holder);
+            renderPost(listPosition, holder, false);
         }
     }
 

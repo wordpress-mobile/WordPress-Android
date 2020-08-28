@@ -1,32 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-06 18:54:13+0000
+Translation-Revision-Date: 2020-08-18 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
-    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Chargez une image ou choisissez-en une dans votre bibliothèque de médias pour en faire le logo de votre site.</string>
-    <string name="gutenberg_native_site_tagline">Description du site</string>
-    <string name="gutenberg_native_site_logo_settings">Réglages du logo du site</string>
-    <string name="gutenberg_native_site_logo">Logo pour votre site</string>
-    <string name="gutenberg_native_site_icon">Icône de site</string>
-    <string name="gutenberg_native_show_a_site_logo">Afficher un logo de site</string>
+    <string name="gutenberg_native_updates_the_title">Mise à jour du titre.</string>
+    <string name="gutenberg_native_paste_block_after">Coller le bloc après</string>
+    <string name="camera_error">Cet appareil ne prend pas en charge l’API Camera2.</string>
+    <string name="toast_error_saving_video">La vidéo n’a pas pu être enregistrée</string>
+    <string name="toast_error_saving_image">Erreur lors de l’enregistrement de l’image</string>
+    <string name="toast_capture_operation_in_progress">Opération en cours, réessayez</string>
+    <string name="toast_story_page_not_found">Diapositive Story introuvable</string>
+    <string name="dialog_insufficient_device_storage_error_message">Nous devons enregistrer la story sur votre appareil avant de pouvoir la publier. Vérifiez les réglages de votre stockage et supprimez des fichiers pour libérer de l’espace.</string>
+    <string name="dialog_insufficient_device_storage_error_title">Stockage de l’appareil insuffisant</string>
+    <string name="dialog_story_saving_error_message">Réessayez d’enregistrer ou supprimez les diapositives, puis essayez de publier à nouveau votre story.</string>
+    <string name="dialog_story_saving_error_title_plural">Impossible d’enregistrer les %1$d diapositives</string>
+    <string name="story_saving_failed_message_plural">%1$d les diapositives nécessitent une action</string>
+    <string name="story_saving_failed_message_singular">une diapositive nécessite une action</string>
+    <string name="story_saving_failed_title">Impossible de charger « %1$s »</string>
+    <string name="story_saving_snackbar_finished_with_error">Impossible de charger « %1$s »</string>
+    <string name="story_saving_snackbar_finished_successfully">« %1$s » publié</string>
+    <string name="story_saving_snackbar_started">Chargement de « %1$s »…</string>
+    <string name="story_saving_subtitle_frames_remaining_plural">%1$d diapositives restantes</string>
+    <string name="story_saving_subtitle_frames_remaining_singular">une diapositive restante</string>
+    <string name="story_saving_title_several">plusieurs stories</string>
+    <string name="story_saving_title">Enregistrement de « %1$s »…</string>
+    <string name="story_saving_untitled">Sans titre</string>
+    <string name="dialog_discard_story_message">Votre story ne sera pas enregistrée en tant que brouillon.</string>
+    <string name="dialog_discard_story_title">Annuler la publication de la story ?</string>
+    <string name="dialog_discard_errored_page_message">Cette diapositive n’a pas encore été enregistrée. Si vous supprimez cette diapositive, vous perdrez toutes les modifications que vous avez apportées.</string>
+    <string name="dialog_discard_page_message">Cette diapositive sera supprimée de votre story.</string>
+    <string name="dialog_discard_page_title">Supprimer la diapositive de la story ?</string>
+    <string name="menu_delete_page">Supprimer la diapositive</string>
+    <string name="label_text_color_button">Modifier la couleur du texte</string>
+    <string name="label_text_alignment_button">Modifier l’alignement du texte</string>
+    <string name="label_frame_errored">erroné</string>
+    <string name="label_share_to">Partager vers</string>
+    <string name="label_snackbar_share">PARTAGER</string>
+    <string name="label_snackbar_loop_frame_saved">Enregistré dans les photos</string>
+    <string name="label_control_retry">Réessayer</string>
+    <string name="label_control_saved">Enregistré</string>
+    <string name="label_control_saving">Enregistrement</string>
+    <string name="label_control_flash">Flash</string>
+    <string name="label_control_flip_camera">Retourner</string>
+    <string name="flash_button_alt">Flash</string>
+    <string name="flip_button_alt">Retourner l’appareil photo</string>
+    <string name="capture_button_alt">Capturer</string>
+    <string name="mlp_preview_page">Prévisualiser</string>
+    <string name="mlp_create_page">Créer une page</string>
+    <string name="mlp_create_blank_page">Créer une page vide</string>
+    <string name="mlp_choose_layout_subtitle">Commencez en choisissant parmi une large variété de mises en page prédéfinies. Ou commencez simplement avec une page vide.</string>
+    <string name="mlp_choose_layout_title">Choisissez une mise en page</string>
+    <string name="prepublishing_nudges_story_title_hint">Donnez un titre à votre story</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Créez un article ou une story</string>
+    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Créez un article, une page ou une story</string>
+    <string name="quick_start_dialog_create_new_post_message_short">Appuyez sur %1$s Créer. %2$s Puis sélectionnez &lt;b>Article de blog&lt;/b></string>
+    <string name="photo_picker_choose_file">Choisir depuis l’appareil</string>
+    <string name="my_site_bottom_sheet_add_story">Publication de story</string>
+    <string name="my_site_icon_dialog_change_requires_jetpack_message">La modification d’icônes de site sur des sites WordPress auto-hébergés requiert l’extension Jetpack.</string>
+    <string name="reader_toast_err_page_jump_not_found">Lien d’ancrage lié introuvable</string>
+    <string name="error_media_quota_exceeded_toast">Impossible de charger le fichier.\nQuota de stockage dépassé.</string>
+    <string name="error_media_quota_exceeded">Quota de stockage dépassé</string>
+    <string name="media_error_file_not_allowed_on_free_plan">Ce type de fichier n’est pas autorisé sur un plan gratuit</string>
     <string name="gutenberg_native_replace_video">Remplacer la vidéo</string>
     <string name="gutenberg_native_replace_image_or_video">Remplacer l’image ou la vidéo</string>
-    <string name="gutenberg_native_open_the_block_list_view">Ouvrez la vue Liste des blocs.</string>
-    <string name="gutenberg_native_media_preview">Aperçu du média</string>
-    <string name="gutenberg_native_image_width">Largeur de l’image</string>
-    <string name="gutenberg_native_description">description</string>
-    <string name="gutenberg_native_delete_site_logo">Supprimer le logo du site</string>
-    <string name="gutenberg_native_coordinated_universal_time">Temps universel coordonné</string>
-    <string name="gutenberg_native_convert_to_blocks">Convertir en blocs</string>
     <string name="gutenberg_native_choose_video">Choisir une vidéo</string>
     <string name="gutenberg_native_choose_image_or_video">Choisir une image ou une vidéo</string>
     <string name="gutenberg_native_choose_image">Choisir une image</string>
-    <string name="gutenberg_native_child_blocks">Blocs enfants</string>
     <string name="gutenberg_native_block_removed">Bloc supprimé</string>
-    <string name="gutenberg_native_base">Base</string>
     <string name="content_description_logo">Logo WordPress</string>
     <string name="enter_your_site_address">Saisissez l’adresse de votre site</string>
     <string name="continue_with_wpcom">Continuer avec WordPress.com</string>
@@ -53,14 +96,12 @@ Language: fr
     <string name="login_promo_text_unlock_the_power">Libérez la puissance de l’outil de création de sites Web le plus flexible.</string>
     <string name="login_promo_title_37_percent">37\% du Web est intégré à WordPress.</string>
     <string name="reset_your_password">Réinitialiser votre mot de passe</string>
-    <string name="reader_error_generic_title">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
     <string name="quick_start_list_update_site_title_subtitle">Donnez à votre site un nom qui reflète sa personnalité et son thème. La première impression est importante !</string>
     <string name="quick_start_list_update_site_title_title">Définir un titre pour votre site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Appuyer sur &lt;b>%1$s&lt;/b> pour définir un nouveau titre</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Supprimer cet article va également supprimer les modifications locales, confirmez-vous vous vouloir continuer ?</string>
     <string name="gutenberg_native_s_block_options">Option du bloc %s</string>
     <string name="gutenberg_native_remove_block">Supprimer le bloc</string>
-    <string name="gutenberg_native_paste_block">Copier le bloc</string>
     <string name="gutenberg_native_duplicate_block">Dupliquer le bloc</string>
     <string name="gutenberg_native_copy_block">Copier le bloc</string>
     <string name="gutenberg_native_copied_block">Bloc copié</string>
@@ -349,8 +390,6 @@ Language: fr
     <string name="gutenberg_native_gallery_caption_s">Légende de la galerie. %s</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. La valeur actuelle est %2$s</string>
     <string name="create_post_page_fab_tooltip">Créer un article ou une page</string>
-    <string name="quick_start_dialog_create_new_post_message_short_posts">Appuyez sur %1$s Ajouter un article %2$s pour créer un article.</string>
-    <string name="quick_start_dialog_create_new_post_message_short">Appuyez sur %1$s Articles de blog %2$s pour continuer.</string>
     <string name="content_description_person_building_website">Personne en pleine création d\'un site Web</string>
     <string name="post_signup_interstitial_not_right_now">Pas maintenant</string>
     <string name="post_signup_interstitial_subtitle">Quoi que vous vouliez créer ou partager, nous vous y aiderons.</string>
