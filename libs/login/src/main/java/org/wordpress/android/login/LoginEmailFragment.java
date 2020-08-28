@@ -626,7 +626,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             }
         } else {
             if (mLoginListener != null) {
-                mLoginListener.gotWpcomEmail(email, false, event.isPasswordless);
+                mLoginListener
+                        .gotWpcomEmail(email, false, new AuthOptions(event.isPasswordless, event.isEmailVerified));
             }
         }
     }
