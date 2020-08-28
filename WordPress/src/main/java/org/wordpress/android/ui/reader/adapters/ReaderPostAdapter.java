@@ -35,6 +35,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
@@ -107,6 +108,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
     private ReblogActionListener mReblogActionListener;
+    private BlockSiteActionListener mBlockSiteActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -408,11 +410,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case COMMENTS:
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
+                        case BLOCK_SITE:
+                            mBlockSiteActionListener.blockSite(post);
+                            break;
                         case FOLLOW:
                         case SITE_NOTIFICATIONS:
                         case SHARE:
                         case VISIT_SITE:
-                        case BLOCK_SITE:
                             mOnPostListItemButtonListener.onButtonClicked(post, type);
                             renderPost(position, holder, false);
                             break;
@@ -567,6 +571,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setReblogActionListener(ReblogActionListener reblogActionListener) {
         mReblogActionListener = reblogActionListener;
+    }
+
+    public void setBlockSiteActionListener(BlockSiteActionListener blockSiteActionListener) {
+        mBlockSiteActionListener = blockSiteActionListener;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
