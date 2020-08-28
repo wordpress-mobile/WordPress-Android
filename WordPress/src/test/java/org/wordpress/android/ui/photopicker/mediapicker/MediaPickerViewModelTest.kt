@@ -27,9 +27,8 @@ import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PI
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.MediaPickerUiState
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -37,7 +36,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -49,7 +47,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var uriWrapper1: UriWrapper
     @Mock lateinit var uriWrapper2: UriWrapper
     @Mock lateinit var permissionsHandler: PermissionsHandler
-    @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Mock lateinit var context: Context
     @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: MediaPickerViewModel
@@ -71,7 +68,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,
                 permissionsHandler,
-                tenorFeatureConfig,
                 context,
                 resourceProvider
         )
@@ -88,7 +84,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(2)
         assertDataList(singleSelectBrowserType, selectedItems = listOf(), domainItems = listOf(firstItem))
-        assertSingleIconMediaBottomBarVisible()
         assertActionModeHidden()
     }
 
@@ -104,7 +99,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertSingleIconMediaBottomBarVisible()
         assertActionModeHidden()
 
         selectItem(0)
@@ -115,7 +109,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertInsertEditBottomBarVisible()
         assertActionModeVisible(UiStringRes(R.string.photo_picker_use_photo))
     }
 
@@ -127,8 +120,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertInsertEditBottomBarVisible()
-
         viewModel.clearSelection()
 
         assertThat(uiStates).hasSize(4)
@@ -138,7 +129,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertSingleIconMediaBottomBarVisible()
     }
 
     @Test
@@ -180,7 +170,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertSingleIconMediaBottomBarVisible()
         selectItem(1)
 
         assertDataList(
@@ -188,7 +177,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(secondItem),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertInsertEditBottomBarVisible()
         selectItem(0)
 
         assertDataList(
@@ -196,7 +184,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(secondItem, firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertInsertEditBottomBarVisible()
 
         selectItem(1)
 
@@ -205,7 +192,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertInsertEditBottomBarVisible()
     }
 
     @Test
@@ -240,7 +226,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(3)
 
         assertSoftAskUiModelVisible()
-        assertBottomBarHidden()
     }
 
     @Test
@@ -290,7 +275,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `action mode shows confirmation action in EDITOR PICKER`() = test {
+    fun `action mode hides edit action in EDITOR PICKER`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(firstItem, secondItem), EDITOR_PICKER)
 
@@ -298,7 +283,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringText("1 selected"), showConfirmationAction = true)
+        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
     }
 
     private fun selectItem(position: Int) {
@@ -402,43 +387,17 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(this.uri).isEqualTo(domainItem.uri)
     }
 
-    private fun assertBottomBarHidden() {
-        uiStates.last().apply {
-            assertThat(bottomBarUiModel.type).isEqualTo(BottomBar.NONE)
-        }
-    }
-
-    private fun assertSingleIconMediaBottomBarVisible() {
-        uiStates.last().apply {
-            assertThat(bottomBarUiModel.type).isEqualTo(BottomBar.MEDIA_SOURCE)
-            assertThat(bottomBarUiModel.canShowInsertEditBottomBar).isTrue()
-            assertThat(bottomBarUiModel.hideMediaBottomBarInPortrait).isFalse()
-            assertThat(bottomBarUiModel.showCameraButton).isFalse()
-            assertThat(bottomBarUiModel.showWPMediaIcon).isFalse()
-        }
-    }
-
-    private fun assertInsertEditBottomBarVisible() {
-        uiStates.last().apply {
-            assertThat(bottomBarUiModel.type).isEqualTo(BottomBar.INSERT_EDIT)
-            assertThat(bottomBarUiModel.canShowInsertEditBottomBar).isTrue()
-            assertThat(bottomBarUiModel.hideMediaBottomBarInPortrait).isFalse()
-            assertThat(bottomBarUiModel.showCameraButton).isFalse()
-            assertThat(bottomBarUiModel.showWPMediaIcon).isFalse()
-        }
-    }
-
     private fun assertActionModeHidden() {
         uiStates.last().actionModeUiModel.let { model ->
             assertThat(model is ActionModeUiModel.Hidden).isTrue()
         }
     }
 
-    private fun assertActionModeVisible(title: UiString, showConfirmationAction: Boolean = false) {
+    private fun assertActionModeVisible(title: UiString, showEditAction: Boolean = true) {
         uiStates.last().actionModeUiModel.let {
             val model = it as ActionModeUiModel.Visible
             assertThat(model.actionModeTitle).isEqualTo(title)
-            assertThat(model.showConfirmAction).isEqualTo(showConfirmationAction)
+            assertThat(model.showEditAction).isEqualTo(showEditAction)
         }
     }
 }

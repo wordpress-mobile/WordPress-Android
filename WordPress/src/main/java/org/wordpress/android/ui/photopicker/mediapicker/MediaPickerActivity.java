@@ -27,6 +27,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
+import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
@@ -361,28 +362,8 @@ public class MediaPickerActivity extends LocaleAwareActivity
 
     @Override
     public void onIconClicked(@NonNull MediaPickerFragment.MediaPickerIcon icon, boolean multiple) {
-        switch (icon) {
-            case ANDROID_CAPTURE_PHOTO:
-                launchCameraForImage();
-                break;
-            case ANDROID_CHOOSE_PHOTO:
-                launchPictureLibrary(multiple);
-                break;
-            case ANDROID_CAPTURE_VIDEO:
-                launchCameraForVideo();
-                break;
-            case ANDROID_CHOOSE_VIDEO:
-                launchVideoLibrary(multiple);
-                break;
-            case WP_MEDIA:
-                launchWPMediaLibrary();
-                break;
-            case STOCK_MEDIA:
-                launchStockMediaPicker();
-                break;
-            case WP_STORIES_CAPTURE:
-                launchWPStoriesCamera();
-                break;
+        if (icon == MediaPickerIcon.WP_STORIES_CAPTURE) {
+            launchWPStoriesCamera();
         }
     }
 

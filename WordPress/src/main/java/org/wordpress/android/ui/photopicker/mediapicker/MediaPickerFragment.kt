@@ -15,8 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.photo_picker_fragment.*
-import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
+import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,12 +23,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.BottomBarUiModel.BottomBar.NONE
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
@@ -40,8 +34,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
-import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
@@ -49,20 +41,8 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class MediaPickerFragment : Fragment() {
-    enum class MediaPickerIcon(private val mRequiresUploadPermission: Boolean) {
-        ANDROID_CHOOSE_PHOTO(true),
-        ANDROID_CHOOSE_VIDEO(true),
-        ANDROID_CAPTURE_PHOTO(true),
-        ANDROID_CAPTURE_VIDEO(true),
-        ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
-        WP_MEDIA(false),
-        STOCK_MEDIA(true),
-        GIF(true),
-        WP_STORIES_CAPTURE(true);
-
-        fun requiresUploadPermission(): Boolean {
-            return mRequiresUploadPermission
-        }
+    enum class MediaPickerIcon {
+        WP_STORIES_CAPTURE;
     }
 
     /*
@@ -92,7 +72,7 @@ class MediaPickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(
-                R.layout.photo_picker_fragment,
+                R.layout.media_picker_fragment,
                 container,
                 false
         )
@@ -130,7 +110,6 @@ class MediaPickerFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             it?.let { uiState ->
                 setupPhotoList(uiState.photoListUiModel)
-                setupBottomBar(uiState.bottomBarUiModel)
                 setupSoftAskView(uiState.softAskViewUiModel)
                 if (uiState.actionModeUiModel is ActionModeUiModel.Visible && !isShowingActionMode) {
                     isShowingActionMode = true
@@ -155,6 +134,16 @@ class MediaPickerFragment : Fragment() {
                         uri.toString()
                 )
                 AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
+            }
+        })
+
+        viewModel.onNavigateToEdit.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { uris ->
+                val inputData = WPMediaUtils.createListOfEditImageInputData(
+                        requireContext(),
+                        uris.map { wrapper -> wrapper.uri }
+                )
+                ActivityLauncher.openImageEditor(activity, inputData)
             }
         })
 
@@ -245,69 +234,6 @@ class MediaPickerFragment : Fragment() {
         }
     }
 
-    private fun setupBottomBar(uiModel: BottomBarUiModel) {
-        if (!canShowMediaSourceBottomBar(uiModel.hideMediaBottomBarInPortrait)) {
-            hideBottomBar(container_media_source_bar)
-        } else {
-            if (!uiModel.showCameraButton) {
-                container_media_source_bar.icon_camera.visibility = View.GONE
-            } else {
-                container_media_source_bar.icon_camera.setOnClickListener {
-                    viewModel.onCameraClicked(ViewWrapper(it))
-                }
-            }
-            container_media_source_bar.icon_picker
-                    ?.setOnClickListener {
-                        uiModel.onIconPickerClicked(ViewWrapper(it))
-                    }
-
-            if (uiModel.showWPMediaIcon) {
-                container_media_source_bar.icon_wpmedia.setOnClickListener {
-                    viewModel.clickIcon(WP_MEDIA)
-                }
-            } else {
-                container_media_source_bar.icon_wpmedia.visibility = View.GONE
-            }
-        }
-        if (uiModel.canShowInsertEditBottomBar) {
-            container_insert_edit_bar.text_edit
-                    .setOnClickListener {
-                        val inputData = WPMediaUtils.createListOfEditImageInputData(
-                                requireContext(),
-                                viewModel.selectedURIs().map { it.uri }
-                        )
-                        ActivityLauncher.openImageEditor(activity, inputData)
-                    }
-            container_insert_edit_bar.text_insert.setOnClickListener { viewModel.performInsertAction() }
-        }
-        val editTextVisible = if (uiModel.insertEditTextBarVisible) View.VISIBLE else View.GONE
-        container_insert_edit_bar.text_edit.visibility = editTextVisible
-        when (uiModel.type) {
-            INSERT_EDIT -> {
-                hideBottomBar(container_media_source_bar)
-                showBottomBar(container_insert_edit_bar)
-            }
-            MEDIA_SOURCE -> {
-                if (canShowMediaSourceBottomBar(uiModel.hideMediaBottomBarInPortrait)) {
-                    showBottomBar(container_media_source_bar)
-                } else {
-                    hideBottomBar(container_media_source_bar)
-                }
-                hideBottomBar(container_insert_edit_bar)
-            }
-            NONE -> {
-                hideBottomBar(container_insert_edit_bar)
-                hideBottomBar(container_media_source_bar)
-            }
-        }
-    }
-
-    private fun canShowMediaSourceBottomBar(
-        hideMediaBottomBarInPortrait: Boolean
-    ): Boolean {
-        return !hideMediaBottomBarInPortrait || DisplayUtils.isLandscape(activity)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(
@@ -328,36 +254,8 @@ class MediaPickerFragment : Fragment() {
         checkStoragePermission()
     }
 
-    fun performActionOrShowPopup(view: View) {
-        viewModel.performActionOrShowPopup(ViewWrapper(view))
-    }
-
-    fun showCameraPopupMenu(view: View) {
-        viewModel.showCameraPopupMenu(ViewWrapper(view))
-    }
-
     fun setMediaPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
-    }
-
-    private fun showBottomBar(bottomBar: View) {
-        if (!isBottomBarShowing(bottomBar)) {
-            AniUtils.animateBottomBar(bottomBar, true)
-        }
-    }
-
-    private fun hideBottomBar(bottomBar: View) {
-        if (isBottomBarShowing(bottomBar)) {
-            AniUtils.animateBottomBar(bottomBar, false)
-        }
-    }
-
-    private fun isBottomBarShowing(bottomBar: View): Boolean {
-        return bottomBar.visibility == View.VISIBLE
-    }
-
-    private fun hasAdapter(): Boolean {
-        return recycler.adapter != null
     }
 
     /*
@@ -421,14 +319,6 @@ class MediaPickerFragment : Fragment() {
                 viewModel.clickOnLastTappedIcon()
             }
         }
-    }
-
-    fun finishActionMode() {
-        viewModel.clearSelection()
-    }
-
-    fun doIconClicked(wpMedia: MediaPickerIcon) {
-        viewModel.clickIcon(wpMedia)
     }
 
     companion object {
