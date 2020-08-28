@@ -82,6 +82,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String ARG_OPTIONAL_SITE_CREDS_LAYOUT = "ARG_OPTIONAL_SITE_CREDS_LAYOUT";
 
     public static final String TAG = "login_email_fragment_tag";
+    public static final String TAG_ALT_LAYOUT = "login_email_fragment_alternate_layout_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
     private ArrayList<Integer> mOldSitesIDs = new ArrayList<>();
@@ -162,7 +163,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 }
                 break;
             case WOO_LOGIN_MODE:
-                label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                if (mOptionalSiteCredsLayout) {
+                    label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                } else {
+                    label.setText(getString(R.string.enter_email_wordpress_com));
+                }
                 break;
             case JETPACK_STATS:
                 label.setText(R.string.login_to_to_connect_jetpack);
