@@ -6,9 +6,9 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{now format='yyyy-MM-dd'}}",
+            "date": "{{fnow format='yyyy-MM-dd'}}",
             "days": {
-                "{{now format='yyyy-MM-dd'}}": {
+                "{{fnow format='yyyy-MM-dd'}}": {
                     "postviews": [
                         {
                             "id": 0,
@@ -16,7 +16,7 @@
                             "date": null,
                             "title": "Home page / Archives",
                             "type": "homepage",
-                            "views": 183,
+                            "views": 1832,
                             "video_play": false
                         }
                     ],
