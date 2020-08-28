@@ -47,8 +47,6 @@ class ReaderInterestsViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
-    private var userTagsFetchedSuccessfully = false
-
     fun start(parentViewModel: ReaderViewModel, currentLanguage: String) {
         this.parentViewModel = parentViewModel
         if (isStarted && isLanguageSame(currentLanguage)) {
@@ -64,23 +62,11 @@ class ReaderInterestsViewModel @Inject constructor(
     private fun loadUserTags() {
         updateUiState(InitialLoadingUiState)
         viewModelScope.launch {
-            when (val result = readerTagRepository.getUserTags()) {
-                is SuccessWithData<*> -> {
-                    userTagsFetchedSuccessfully = true
-                    val userTags = result.data as ReaderTagList
-                    if (userTags.isEmpty()) {
-                        loadInterests()
-                    } else {
-                        parentViewModel.onCloseReaderInterests()
-                    }
-                }
-                is Error -> {
-                    if (result is NetworkUnavailable) {
-                        updateUiState(ConnectionErrorUiState)
-                    } else if (result is RemoteRequestFailure) {
-                        updateUiState(RequestFailedErrorUiState)
-                    }
-                }
+            val userTags = readerTagRepository.getUserTags()
+            if (userTags.isEmpty()) {
+                loadInterests()
+            } else {
+                parentViewModel.onCloseReaderInterests()
             }
         }
     }
@@ -169,11 +155,7 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     fun onRetryButtonClick() {
-        if (!userTagsFetchedSuccessfully) {
-            loadUserTags()
-        } else {
-            loadInterests()
-        }
+        loadInterests()
     }
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
