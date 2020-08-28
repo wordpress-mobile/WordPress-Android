@@ -47,10 +47,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                val currentUiState = it as ContentUiState
-                val selectedTag = currentUiState.readerTagList[position]
-                newsCardViewModel.onTagChanged(selectedTag)
-                viewModel.onTagChanged(selectedTag)
+                if (it is ContentUiState) {
+                    val selectedTag = it.readerTagList[position]
+                    newsCardViewModel.onTagChanged(selectedTag)
+                    viewModel.onTagChanged(selectedTag)
+                }
             }
         }
     }
