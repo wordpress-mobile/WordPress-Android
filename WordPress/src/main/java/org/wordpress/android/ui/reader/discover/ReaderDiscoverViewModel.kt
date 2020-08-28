@@ -10,7 +10,7 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -45,7 +45,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -197,7 +197,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onReaderTagClicked(tag: String) {
-        launch(bgDispatcher) {
+        launch(ioDispatcher) {
             val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
         }
@@ -228,7 +228,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onTagItemClicked(tagSlug: String) {
-        launch(bgDispatcher) {
+        launch(ioDispatcher) {
             val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
         }
@@ -259,7 +259,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val closeToEndIndex = it.size - INITIATE_LOAD_MORE_OFFSET
             if (closeToEndIndex > 0) {
                 val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
-                if (isCardCloseToEnd) launch(bgDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
+                if (isCardCloseToEnd) launch(ioDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
             }
         }
     }
