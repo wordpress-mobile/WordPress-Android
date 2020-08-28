@@ -577,7 +577,7 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
-            android:name="org.wordpress.android.ui.mediapicker.MediaPickerActivity"
+            android:name=".ui.mediapicker.MediaPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
