@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
@@ -35,7 +37,10 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
+import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
@@ -53,8 +58,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val blockBlogUseCase: BlockBlogUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
+    private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
     private val dispatcher: Dispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -65,7 +72,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
-    val preloadPostEvents = _preloadPostEvents
+    val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
+
+    // Used only in legacy ReaderPostListFragment. The discover tab observes reactive ReaderDiscoverDataProvider.
+    private val _refreshPosts = MediatorLiveData<Event<Unit>>()
+    val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
     init {
         dispatcher.register(siteNotificationsUseCase)
@@ -90,7 +101,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
                 SHARE -> handleShareClicked(post)
                 VISIT_SITE -> handleVisitSiteClicked(post)
-                BLOCK_SITE -> handleBlockSiteClicked(post.postId, post.blogId)
+                BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
                 LIKE -> handleLikeClicked(post)
                 BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
                 REBLOG -> handleReblogClicked(post)
@@ -159,9 +170,43 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
-    private fun handleBlockSiteClicked(postId: Long, blogId: Long) {
+    private fun handleBlockSiteClicked(blogId: Long) {
         // todo: Annmarie add tracking dependent upon implementation
-        AppLog.d(AppLog.T.READER, "Block site not implemented")
+        defaultScope.launch {
+            blockBlogUseCase.blockBlog(blogId).collect {
+                when (it) {
+                    is BlockSiteState.SiteBlockedInLocalDb -> {
+                        _refreshPosts.postValue(Event(Unit))
+                        _snackbarEvents.postValue(
+                                Event(
+                                        SnackbarMessageHolder(
+                                                UiStringRes(R.string.reader_toast_blog_blocked),
+                                                UiStringRes(R.string.undo),
+                                                {
+                                                    defaultScope.launch {
+                                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
+                                                        _refreshPosts.postValue(Event(Unit))
+                                                    }
+                                                })
+                                )
+                        )
+                    }
+                    BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
+                    } // do nothing
+                    BlockSiteState.Failed.NoNetwork -> {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        )
+                    }
+                    BlockSiteState.Failed.RequestFailed -> {
+                        _refreshPosts.postValue(Event(Unit))
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        )
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun handleLikeClicked(post: ReaderPost) {

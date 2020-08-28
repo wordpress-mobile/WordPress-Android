@@ -13,11 +13,14 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
@@ -49,6 +52,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -95,11 +99,15 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
                 if (posts != null && posts.cards.isNotEmpty()) {
-                    _uiState.value = ContentUiState(
-                            convertCardsToUiStates(posts),
-                            reloadProgressVisibility = false,
-                            loadMoreProgressVisibility = false
-                    )
+                    val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
+                            posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
+                    if (!discoverFeedContainsOnlyWelcomeCard) {
+                        _uiState.value = ContentUiState(
+                                convertCardsToUiStates(posts),
+                                reloadProgressVisibility = false,
+                                loadMoreProgressVisibility = false
+                        )
+                    }
                 }
             }
         }
@@ -175,6 +183,9 @@ class ReaderDiscoverViewModel @Inject constructor(
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
         return posts.cards.map {
             when (it) {
+                is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
+                        titleRes = R.string.reader_welcome_banner
+                )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                         post = it.post,
                         isDiscover = true,
@@ -332,6 +343,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         super.onCleared()
         readerDiscoverDataProvider.stop()
         readerPostCardActionsHandler.onCleared()
+
+        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun swipeToRefresh() {
@@ -339,6 +352,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
+
+        appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
     fun onRetryButtonClick() {
