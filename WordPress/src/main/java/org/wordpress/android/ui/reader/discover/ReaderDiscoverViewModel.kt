@@ -5,7 +5,6 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
@@ -81,7 +80,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     fun start() {
         if (isStarted) return
         isStarted = true
-        analyticsTrackerWrapper.track(Stat.READER_DISCOVER_SHOWN)
         init()
     }
 
