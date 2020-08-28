@@ -204,7 +204,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onReaderTagClicked(tag: String) {
         launch(ioDispatcher) {
-            bgDispatcher
+            analyticsTrackerWrapper.track(READER_DISCOVER_TOPIC_TAPPED)
             val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
         }
