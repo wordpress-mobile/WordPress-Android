@@ -101,7 +101,6 @@
     <string name="delete_yes">Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
-    <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
