@@ -4,9 +4,10 @@ import android.content.ActivityNotFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
@@ -15,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -63,7 +65,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
     private val dispatcher: Dispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -170,40 +173,38 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
-    private fun handleBlockSiteClicked(blogId: Long) {
+    private suspend fun handleBlockSiteClicked(blogId: Long) {
         // todo: Annmarie add tracking dependent upon implementation
-        defaultScope.launch {
-            blockBlogUseCase.blockBlog(blogId).collect {
-                when (it) {
-                    is BlockSiteState.SiteBlockedInLocalDb -> {
-                        _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(
-                                Event(
-                                        SnackbarMessageHolder(
-                                                UiStringRes(R.string.reader_toast_blog_blocked),
-                                                UiStringRes(R.string.undo),
-                                                {
-                                                    defaultScope.launch {
-                                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
-                                                        _refreshPosts.postValue(Event(Unit))
-                                                    }
-                                                })
-                                )
-                        )
-                    }
-                    BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
-                    } // do nothing
-                    BlockSiteState.Failed.NoNetwork -> {
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
-                        )
-                    }
-                    BlockSiteState.Failed.RequestFailed -> {
-                        _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
-                        )
-                    }
+        blockBlogUseCase.blockBlog(blogId).collect {
+            when (it) {
+                is BlockSiteState.SiteBlockedInLocalDb -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                            Event(
+                                    SnackbarMessageHolder(
+                                            UiStringRes(R.string.reader_toast_blog_blocked),
+                                            UiStringRes(R.string.undo),
+                                            {
+                                                uiScope.launch {
+                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
+                                                    _refreshPosts.postValue(Event(Unit))
+                                                }
+                                            })
+                            )
+                    )
+                }
+                BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
+                } // do nothing
+                BlockSiteState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                    )
+                }
+                BlockSiteState.Failed.RequestFailed -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                    )
                 }
             }
         }
