@@ -278,7 +278,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnDiscoverClicked")
     }
 
-    // TODO malinjir get rid of the view reference
     private fun onMoreButtonClicked(postUiState: ReaderPostUiState) {
         AppLog.d(T.READER, "OnMoreButtonClicked")
         changeMoreMenuVisibility(postUiState, true)
@@ -315,8 +314,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     fun onReblogSiteSelected(siteLocalId: Int) {
-        // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
-        //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
         val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {

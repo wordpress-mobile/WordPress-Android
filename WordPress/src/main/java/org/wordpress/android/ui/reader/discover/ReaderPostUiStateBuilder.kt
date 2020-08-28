@@ -53,15 +53,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
-    // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
         post: ReaderPost,
         isDiscover: Boolean = false, // set to true for new discover tab
         photonWidth: Int,
         photonHeight: Int,
-            // TODO malinjir try to refactor/remove this parameter
         postListType: ReaderPostListType,
-            // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
@@ -208,7 +205,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         discoverData: ReaderPostDiscoverData,
         onDiscoverSectionClicked: (Long, Long) -> Unit
     ): DiscoverLayoutUiState {
-        // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                 discoverData.avatarUrl,

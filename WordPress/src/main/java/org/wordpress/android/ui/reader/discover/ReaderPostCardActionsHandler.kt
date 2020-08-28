@@ -52,7 +52,6 @@ import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
 
-// TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
 class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,

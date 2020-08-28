@@ -80,8 +80,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     }
 
     private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
-        // TODO malinjir replace direct db access with access to repository.
-        //  Also make sure PostUpdated event is emitted when we change the state of the post.
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
                 ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
