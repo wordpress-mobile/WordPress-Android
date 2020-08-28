@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.reader.subfilter
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -21,7 +19,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
-import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
@@ -42,8 +39,6 @@ class SubFilterViewModelTest {
     @JvmField
     val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var observer: Observer<NewsItem>
-    @Mock private lateinit var item: NewsItem
     /**
      * First tag for which the card was shown.
      */
@@ -57,7 +52,6 @@ class SubFilterViewModelTest {
     @Mock private lateinit var siteStore: SiteStore
 
     private lateinit var viewModel: SubFilterViewModel
-    private val liveData = MutableLiveData<NewsItem>()
 
     @Before
     fun setUp() {

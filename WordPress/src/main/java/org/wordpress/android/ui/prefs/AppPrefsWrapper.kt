@@ -23,14 +23,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class AppPrefsWrapper @Inject constructor() {
-    var newsCardDismissedVersion: Int
-        get() = AppPrefs.getNewsCardDismissedVersion()
-        set(version) = AppPrefs.setNewsCardDismissedVersion(version)
-
-    var newsCardShownVersion: Int
-        get() = AppPrefs.getNewsCardShownVersion()
-        set(version) = AppPrefs.setNewsCardShownVersion(version)
-
     var featureAnnouncementShownVersion: Int
         get() = AppPrefs.getFeatureAnnouncementShownVersion()
         set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
