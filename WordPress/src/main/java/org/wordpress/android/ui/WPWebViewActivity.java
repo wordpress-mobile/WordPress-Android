@@ -946,7 +946,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         if (event.isError()) {
             AppLog.e(AppLog.T.MAIN,
                     "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
-            WPSnackbar.make(findViewById(R.id.snackbar_anchor), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+            WPSnackbar.make(findViewById(R.id.webview_wrapper), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                       .show();
         } else {
             CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
@@ -962,7 +962,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     @Override
     public void onCookieProgressDialogCancelled() {
-        WPSnackbar.make(findViewById(R.id.snackbar_anchor), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+        WPSnackbar.make(findViewById(R.id.webview_wrapper), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                   .show();
         loadWebContent();
     }
