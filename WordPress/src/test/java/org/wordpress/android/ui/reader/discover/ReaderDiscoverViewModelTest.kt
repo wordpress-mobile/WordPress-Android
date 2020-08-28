@@ -295,7 +295,7 @@ class ReaderDiscoverViewModelTest {
                 avatarOrBlavatarUrl = "",
                 blogName = "",
                 excerpt = "",
-                title = "",
+                title = mock(),
                 photoFrameVisibility = false,
                 photoTitle = "",
                 featuredImageUrl = "",

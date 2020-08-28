@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -187,8 +188,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     post.cardType != GALLERY
 
     // TODO malinjir show title only when buildPhotoTitle == null
-    private fun buildTitle(post: ReaderPost) =
-            post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
+    private fun buildTitle(post: ReaderPost): UiString? {
+        return if (post.cardType != PHOTO) {
+            post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
+                    ?: UiStringRes(R.string.untitled_in_parentheses)
+        } else {
+            null
+        }
+    }
 
     // TODO malinjir show excerpt only when buildPhotoTitle == null
     private fun buildExcerpt(post: ReaderPost) =
