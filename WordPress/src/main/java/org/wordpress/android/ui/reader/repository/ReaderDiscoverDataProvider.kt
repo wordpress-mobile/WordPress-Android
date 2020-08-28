@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import java.util.concurrent.atomic.AtomicBoolean
@@ -58,7 +60,12 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private var hasMoreCards = true
 
     private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
-    val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel
+    val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel.perform {
+        if (it.peekContent().isRequestMore() && it.peekContent() !is Started) {
+            AppLog.w(READER, "reader discover load more cards task is finished")
+            isLoadMoreRequestInProgress = false
+        }
+    }
 
     fun start() {
         if (isStarted) return
@@ -91,9 +98,6 @@ class ReaderDiscoverDataProvider @Inject constructor(
             withContext(ioDispatcher) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
                 _communicationChannel.postValue(Event(response))
-                if (response is ReaderDiscoverCommunication.Error) {
-                    isLoadMoreRequestInProgress = false
-                }
             }
         }
     }
@@ -126,7 +130,6 @@ class ReaderDiscoverDataProvider @Inject constructor(
     // Handlers for ReaderPostServices
     private fun onUpdated(task: DiscoverTasks?) {
         hasMoreCards = true
-        if (task != null && task == REQUEST_MORE) isLoadMoreRequestInProgress = false
         launch {
             reloadPosts()
             if (task != null) {
@@ -140,14 +143,12 @@ class ReaderDiscoverDataProvider @Inject constructor(
         _communicationChannel.postValue(
                 Event(Success(task))
         )
-        if (task == REQUEST_MORE) isLoadMoreRequestInProgress = false
     }
 
     private fun onFailed(task: DiscoverTasks) {
         _communicationChannel.postValue(
                 Event(RemoteRequestFailure(task))
         )
-        if (task == REQUEST_MORE) isLoadMoreRequestInProgress = false
     }
 
     // React to discoverFeed observers

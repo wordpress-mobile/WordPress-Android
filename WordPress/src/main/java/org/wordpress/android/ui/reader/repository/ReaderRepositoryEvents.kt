@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.reader.repository
 
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 
 sealed class ReaderRepositoryEvent {
     object ReaderPostTableActionEnded : ReaderRepositoryEvent()
@@ -10,11 +14,28 @@ sealed class ReaderRepositoryEvent {
         val isAskingToLike: Boolean,
         val wpComUserId: Long
     ) : ReaderRepositoryEvent() {
-        class PostLikeSuccess(postId: Long, blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
+        class PostLikeSuccess(
+            postId: Long,
+            blogId: Long,
+            isAskingToLike: Boolean,
+            wpComUserId: Long
+        ) :
                 PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-        class PostLikeFailure(postId: Long, blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
+
+        class PostLikeFailure(
+            postId: Long,
+            blogId: Long,
+            isAskingToLike: Boolean,
+            wpComUserId: Long
+        ) :
                 PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-        class PostLikeUnChanged(postId: Long, blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
+
+        class PostLikeUnChanged(
+            postId: Long,
+            blogId: Long,
+            isAskingToLike: Boolean,
+            wpComUserId: Long
+        ) :
                 PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
     }
 }
@@ -39,5 +60,13 @@ sealed class ReaderDiscoverCommunication {
     sealed class Error(open val task: DiscoverTasks) : ReaderDiscoverCommunication() {
         data class NetworkUnavailable(override val task: DiscoverTasks) : Error(task)
         data class RemoteRequestFailure(override val task: DiscoverTasks) : Error(task)
+        data class ServiceNotStarted(override val task: DiscoverTasks) : Error(task)
     }
 }
+
+fun ReaderDiscoverCommunication.isRequestMore(): Boolean =
+        when (this) {
+            is Success -> this.task == REQUEST_MORE
+            is Started -> this.task == REQUEST_MORE
+            is Error -> this.task == REQUEST_MORE
+        }
