@@ -211,6 +211,24 @@
         <item name="android:minWidth">@dimen/min_touch_target_sz</item>
     </style>
 
+    <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="Reader.TextView.Error"  parent="Widget.MaterialComponents.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="fixWidowWords">true</item>
+    </style>
     <!-- EditTexts -->
 
     <style name="ReaderEditText">

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
+import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -76,6 +78,9 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
         WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
             viewModel.swipeToRefresh()
         }
+        error_retry.setOnClickListener {
+            viewModel.onRetryButtonClick()
+        }
     }
 
     private fun initViewModel() {
@@ -85,12 +90,17 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                 is ContentUiState -> {
                     (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
                 }
+                is ErrorUiState -> {
+                    uiHelpers.setTextOrHide(error_title, it.titleResId)
+                }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
-            uiHelpers.updateVisibility(progress_bar, it.progressVisibility)
-            uiHelpers.updateVisibility(progress_text, it.progressVisibility)
+            uiHelpers.updateVisibility(progress_bar, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(error_layout, it.fullscreenErrorVisibility)
+            uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
-            ptr_layout.isRefreshing = it.swipeToRefreshIsRefreshing
+            ptr_layout.isRefreshing = it.reloadProgressVisibility
         })
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
@@ -139,8 +149,8 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
             MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(getString(bookmarkDialog.title))
                     .setMessage(getString(bookmarkDialog.message))
-                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) {
-                        _, _ -> bookmarkDialog.okButtonAction.invoke()
+                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                        bookmarkDialog.okButtonAction.invoke()
                     }
                     .setOnDismissListener {
                         bookmarksSavedLocallyDialog = null

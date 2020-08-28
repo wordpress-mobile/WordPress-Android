@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
+
 sealed class ReaderRepositoryEvent {
     object ReaderPostTableActionEnded : ReaderRepositoryEvent()
     sealed class PostLikeEnded(
@@ -28,5 +30,14 @@ sealed class ReaderRepositoryCommunication {
 
     override fun toString(): String {
         return "${this.javaClass.simpleName})"
+    }
+}
+
+sealed class ReaderDiscoverCommunication {
+    data class Started(val task: DiscoverTasks) : ReaderDiscoverCommunication()
+    data class Success(val task: DiscoverTasks) : ReaderDiscoverCommunication()
+    sealed class Error(open val task: DiscoverTasks) : ReaderDiscoverCommunication() {
+        data class NetworkUnavailable(override val task: DiscoverTasks) : Error(task)
+        data class RemoteRequestFailure(override val task: DiscoverTasks) : Error(task)
     }
 }
