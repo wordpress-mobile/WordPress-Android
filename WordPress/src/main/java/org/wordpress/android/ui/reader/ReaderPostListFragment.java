@@ -492,7 +492,7 @@ public class ReaderPostListFragment extends Fragment
 
     private void showSnackbar(SnackbarMessageHolder holder) {
         WPSnackbar snackbar = WPSnackbar.make(
-                requireView(),
+                getSnackbarParent(),
                 mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG
         );
@@ -894,7 +894,7 @@ public class ReaderPostListFragment extends Fragment
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
-            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator), title,
+            WPDialogSnackbar snackbar = WPDialogSnackbar.make(getSnackbarParent(), title,
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
@@ -1017,6 +1017,9 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public void onLoadData(boolean forced) {
+                if (forced) {
+                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                }
                 updatePosts(forced);
             }
 
