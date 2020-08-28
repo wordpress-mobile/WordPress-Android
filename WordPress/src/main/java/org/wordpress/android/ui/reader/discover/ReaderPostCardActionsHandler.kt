@@ -123,9 +123,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
+        // todo: Annmarie add tracking dependent upon implementation (tracked in ReaderBlogActions)
         AppLog.d(AppLog.T.READER, "Follow not implemented")
     }
 
+    // todo: Annmarie add tracking dependent upon implementation
     private suspend fun handleSiteNotificationsClicked(blogId: Long) {
         when (siteNotificationsUseCase.toggleNotification(blogId)) {
             is SiteNotificationState.Success, SiteNotificationState.Failed.AlreadyRunning -> { // Do Nothing
@@ -158,6 +160,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleBlockSiteClicked(postId: Long, blogId: Long) {
+        // todo: Annmarie add tracking dependent upon implementation
         AppLog.d(AppLog.T.READER, "Block site not implemented")
     }
 
@@ -176,6 +179,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
+        // todo: Annmarie add tracking dependent upon implementation
         bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
     }
 
