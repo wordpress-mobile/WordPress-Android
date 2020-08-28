@@ -334,6 +334,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
 
     private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
 
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
@@ -456,8 +457,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Set up the action bar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -659,18 +660,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                     AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackgroundResource(R.drawable.tab_layout_background);
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mEditPostRepository.isPage() ? R.string.page_settings : R.string.post_settings);
                     mEditorPhotoPicker.hidePhotoPicker();
                     mAppBarLayout.setLiftOnScrollTargetViewId(R.id.settings_fragment_root);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_PUBLISH_SETTINGS) {
                     setTitle(R.string.publish_date);
                     mEditorPhotoPicker.hidePhotoPicker();
                     AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     mEditorPhotoPicker.hidePhotoPicker();
                     mAppBarLayout.setLiftOnScrollTargetViewId(R.id.empty_recycler_view);
+                    mToolbar.setBackground(null);
                 }
             }
         });

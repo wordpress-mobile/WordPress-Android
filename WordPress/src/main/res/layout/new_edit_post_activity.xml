@@ -14,6 +14,8 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
+            android:duplicateParentState="true"
+            android:background="@drawable/tab_layout_background"
             android:layout_height="wrap_content"
             app:theme="@style/WordPress.ActionBar" />
 
