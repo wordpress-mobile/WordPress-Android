@@ -8,7 +8,6 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/webview_wrapper"
         android:layout_width="match_parent"
-
         android:layout_height="match_parent"
         android:layout_above="@+id/navbar_container">
 
@@ -21,6 +20,8 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
+                android:duplicateParentState="true"
+                android:background="@drawable/tab_layout_background"
                 android:layout_height="wrap_content"
                 app:contentInsetEnd="@dimen/toolbar_content_offset_end"
                 app:contentInsetLeft="@dimen/toolbar_content_offset"
