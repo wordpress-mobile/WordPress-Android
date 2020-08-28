@@ -8,3 +8,7 @@ import android.net.Uri
 class UriWrapper(val uri: Uri) {
     override fun toString() = uri.toString()
 }
+
+fun Uri?.toWrapper(): UriWrapper? {
+    return this?.let { UriWrapper(it) }
+}

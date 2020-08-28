@@ -5,12 +5,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
 import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.AudioItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.DocumentItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.util.image.ImageManager
 
-class MediaPickerAdapter internal constructor(private val imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
+class MediaPickerAdapter internal constructor(imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
     private val thumbnailViewUtils = MediaThumbnailViewUtils(imageManager)
     private var mediaList = listOf<MediaPickerUiItem>()
 
@@ -30,14 +32,12 @@ class MediaPickerAdapter internal constructor(private val imageManager: ImageMan
         return mediaList.size
     }
 
-    override fun getItemId(position: Int): Long {
-        return mediaList[position].id
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailViewHolder {
         return when (viewType) {
             Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils)
             Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils)
+            Type.AUDIO.ordinal -> AudioThumbnailViewHolder(parent, thumbnailViewUtils)
+            Type.DOCUMENT.ordinal -> DocumentThumbnailViewHolder(parent, thumbnailViewUtils)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -65,6 +65,8 @@ class MediaPickerAdapter internal constructor(private val imageManager: ImageMan
         when (item) {
             is PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(item, animateSelection, updateCount)
             is VideoItem -> (holder as VideoThumbnailViewHolder).bind(item, animateSelection, updateCount)
+            is AudioItem -> (holder as AudioThumbnailViewHolder).bind(item, animateSelection, updateCount)
+            is DocumentItem -> (holder as DocumentThumbnailViewHolder).bind(item, animateSelection, updateCount)
         }
     }
 

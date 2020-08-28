@@ -23,6 +23,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
+import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
@@ -59,7 +61,7 @@ class MediaPickerViewModel @Inject constructor(
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
     private val _photoPickerItems = MutableLiveData<List<MediaItem>>()
-    private val _selectedIds = MutableLiveData<List<Long>>()
+    private val _selectedUris = MutableLiveData<List<UriWrapper>>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
@@ -72,20 +74,20 @@ class MediaPickerViewModel @Inject constructor(
     val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
-    val selectedIds: LiveData<List<Long>> = _selectedIds
+    val selectedUris: LiveData<List<UriWrapper>> = _selectedUris
 
     val uiState: LiveData<MediaPickerUiState> = merge(
             _photoPickerItems.distinct(),
-            _selectedIds.distinct(),
+            _selectedUris.distinct(),
             _softAskRequest
-    ) { photoPickerItems, selectedIds, softAskRequest ->
+    ) { photoPickerItems, selectedUris, softAskRequest ->
         MediaPickerUiState(
-                buildUiModel(photoPickerItems, selectedIds),
+                buildUiModel(photoPickerItems, selectedUris),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
-                buildActionModeUiModel(selectedIds, photoPickerItems)
+                buildActionModeUiModel(selectedUris, photoPickerItems)
         )
     }
 
@@ -95,23 +97,22 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun buildUiModel(
         data: List<MediaItem>?,
-        selectedIds: List<Long>?
+        selectedUris: List<UriWrapper>?
     ): PhotoListUiModel {
         return if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = mediaPickerSetup.canMultiselect
-                val toggleAction = ToggleAction(it.id, showOrderCounter, this::toggleItem)
-                val clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
-                val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.id)) {
-                    val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.id) + 1 else null
+                val toggleAction = ToggleAction(it.uri, showOrderCounter, this::toggleItem)
+                val clickAction = ClickAction(it.uri, it.type == VIDEO, this::clickItem)
+                val (selectedOrder, isSelected) = if (selectedUris != null && selectedUris.contains(it.uri)) {
+                    val selectedOrder = if (showOrderCounter) selectedUris.indexOf(it.uri) + 1 else null
                     val isSelected = true
                     selectedOrder to isSelected
                 } else {
                     null to false
                 }
-                if (it.isVideo) {
-                    MediaPickerUiItem.VideoItem(
-                            id = it.id,
+                when (it.type) {
+                    IMAGE -> MediaPickerUiItem.PhotoItem(
                             uri = it.uri,
                             isSelected = isSelected,
                             selectedOrder = selectedOrder,
@@ -119,10 +120,28 @@ class MediaPickerViewModel @Inject constructor(
                             toggleAction = toggleAction,
                             clickAction = clickAction
                     )
-                } else {
-                    MediaPickerUiItem.PhotoItem(
-                            id = it.id,
+                    VIDEO -> MediaPickerUiItem.VideoItem(
                             uri = it.uri,
+                            isSelected = isSelected,
+                            selectedOrder = selectedOrder,
+                            showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction,
+                            clickAction = clickAction
+                    )
+                    AUDIO -> MediaPickerUiItem.AudioItem(
+                            uri = it.uri,
+                            fileName = it.name ?: "",
+                            mimeType = it.mimeType ?: "",
+                            isSelected = isSelected,
+                            selectedOrder = selectedOrder,
+                            showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction,
+                            clickAction = clickAction
+                    )
+                    DOCUMENT -> MediaPickerUiItem.DocumentItem(
+                            uri = it.uri,
+                            fileName = it.name ?: "",
+                            mimeType = it.mimeType ?: "",
                             isSelected = isSelected,
                             selectedOrder = selectedOrder,
                             showOrderCounter = showOrderCounter,
@@ -138,11 +157,11 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     private fun buildActionModeUiModel(
-        selectedIds: List<Long>?,
+        selectedUris: List<UriWrapper>?,
         items: List<MediaItem>?
     ): ActionModeUiModel {
-        val numSelected = selectedIds?.size ?: 0
-        if (selectedIds.isNullOrEmpty()) {
+        val numSelected = selectedUris?.size ?: 0
+        if (selectedUris.isNullOrEmpty()) {
             return ActionModeUiModel.Hidden
         }
         val title: UiString? = when {
@@ -162,7 +181,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
         }
-        val isVideoSelected = items?.any { it.isVideo && selectedIds.contains(it.id) } ?: false
+        val isVideoSelected = items?.any { it.type == VIDEO && selectedUris.contains(it.uri) } ?: false
         return ActionModeUiModel.Visible(
                 title,
                 showEditAction = mediaPickerSetup.allowedTypes.contains(IMAGE) && !isVideoSelected
@@ -179,20 +198,20 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun clearSelection() {
-        if (!_selectedIds.value.isNullOrEmpty()) {
-            _selectedIds.postValue(listOf())
+        if (!_selectedUris.value.isNullOrEmpty()) {
+            _selectedUris.postValue(listOf())
         }
     }
 
     fun start(
-        selectedIds: List<Long>?,
+        selectedUris: List<UriWrapper>?,
         mediaPickerSetup: MediaPickerSetup,
         lastTappedIcon: MediaPickerIcon?,
         site: SiteModel?
     ) {
         this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup.dataSource)
-        selectedIds?.let {
-            _selectedIds.value = selectedIds
+        selectedUris?.let {
+            _selectedUris.value = selectedUris
         }
         this.mediaPickerSetup = mediaPickerSetup
         this.lastTappedIcon = lastTappedIcon
@@ -210,35 +229,34 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun numSelected(): Int {
-        return _selectedIds.value?.size ?: 0
+        return _selectedUris.value?.size ?: 0
     }
 
     fun selectedURIs(): List<UriWrapper> {
-        val items = (uiState.value?.photoListUiModel as? PhotoListUiModel.Data)?.items
-        return _selectedIds.value?.mapNotNull { id -> items?.find { it.id == id }?.uri } ?: listOf()
+        return _selectedUris.value ?: listOf()
     }
 
-    private fun toggleItem(id: Long, canMultiselect: Boolean) {
-        val updatedIds = _selectedIds.value?.toMutableList() ?: mutableListOf()
-        if (updatedIds.contains(id)) {
-            updatedIds.remove(id)
+    private fun toggleItem(uri: UriWrapper, canMultiselect: Boolean) {
+        val updatedIds = _selectedUris.value?.toMutableList() ?: mutableListOf()
+        if (updatedIds.contains(uri)) {
+            updatedIds.remove(uri)
         } else {
             if (updatedIds.isNotEmpty() && !canMultiselect) {
                 updatedIds.clear()
             }
-            updatedIds.add(id)
+            updatedIds.add(uri)
         }
-        _selectedIds.postValue(updatedIds)
+        _selectedUris.postValue(updatedIds)
     }
 
-    private fun clickItem(id: Long, uri: UriWrapper?, isVideo: Boolean) {
-        trackOpenPreviewScreenEvent(id, uri, isVideo)
+    private fun clickItem(uri: UriWrapper?, isVideo: Boolean) {
+        trackOpenPreviewScreenEvent(uri, isVideo)
         uri?.let {
             _navigateToPreview.postValue(Event(it))
         }
     }
 
-    private fun trackOpenPreviewScreenEvent(id: Long, uri: UriWrapper?, isVideo: Boolean) {
+    private fun trackOpenPreviewScreenEvent(uri: UriWrapper?, isVideo: Boolean) {
         launch(bgDispatcher) {
             val properties = analyticsUtilsWrapper.getMediaProperties(
                     isVideo,

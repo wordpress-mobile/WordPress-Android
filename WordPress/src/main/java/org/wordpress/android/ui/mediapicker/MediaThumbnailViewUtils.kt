@@ -1,19 +1,25 @@
 package org.wordpress.android.ui.mediapicker
 
+import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
+import org.wordpress.android.R
 import org.wordpress.android.R.anim
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
+import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
+import org.wordpress.android.util.ColorUtils.setImageResourceWithTint
+import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
@@ -35,6 +41,39 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
                 url,
                 FIT_CENTER
         )
+        addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
+        imgThumbnail.setOnClickListener {
+            toggleAction.toggle()
+            PhotoPickerUtils.announceSelectedImageForAccessibility(
+                    imgThumbnail,
+                    isSelected
+            )
+        }
+        imgThumbnail.setOnLongClickListener {
+            clickAction.click()
+            true
+        }
+        imgThumbnail.redirectContextClickToLongPressListener()
+        displaySelection(animateSelection, isSelected, imgThumbnail)
+    }
+
+    fun setupFileImageView(
+        imgThumbnail: ImageView,
+        fileName: String,
+        isSelected: Boolean,
+        clickAction: ClickAction,
+        toggleAction: ToggleAction,
+        animateSelection: Boolean
+    ) {
+        imageManager.cancelRequestAndClearImageView(imgThumbnail)
+
+        // not an image or video, so show file name and file type
+        val placeholderResId = WPMediaUtils.getPlaceholder(fileName)
+        setImageResourceWithTint(
+                imgThumbnail, placeholderResId,
+                R.color.neutral_30
+        )
+
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()

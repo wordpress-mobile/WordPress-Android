@@ -13,6 +13,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
+import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
@@ -83,6 +85,8 @@ class MediaPickerLauncher
         if (browserType.isVideoPicker) {
             allowedTypes.add(VIDEO)
         }
+        allowedTypes.add(AUDIO)
+        allowedTypes.add(DOCUMENT)
         return MediaPickerSetup(DEVICE, browserType.canMultiselect(), allowedTypes, browserType.isWPStoriesPicker)
     }
 }
