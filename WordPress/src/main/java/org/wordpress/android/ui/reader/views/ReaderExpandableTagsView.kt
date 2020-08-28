@@ -131,6 +131,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             R.color.transparent
         }
         overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
+        overflowIndicatorChip.setRippleColorResource(R.color.on_surface_disabled_transparent_selector)
     }
 
     private fun View.preLayout(what: () -> Unit) {
