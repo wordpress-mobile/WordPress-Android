@@ -117,7 +117,7 @@ sealed class PostListItemViewHolder(
             if (isClickEnabled.getAndSet(false)) {
                 view.postDelayed({
                     isClickEnabled.set(true)
-                },1000 )
+                }, 1000)
                 return true
             }
             return false
