@@ -104,7 +104,9 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onBlockSiteButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
-        readerPostCardActionsHandler.onAction(post, BLOCK_SITE, bookmarksList)
+        launch {
+            readerPostCardActionsHandler.onAction(post, BLOCK_SITE, bookmarksList)
+        }
     }
 
     fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
