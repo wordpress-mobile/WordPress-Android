@@ -14,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISI
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.DEFAULT_SCOPE
@@ -154,6 +155,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
                         if (it.showEnableNotification) {
                             val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
                             action.invoke()
+                        } else if (it.deleteNotificationSubscription) {
+                            siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
+                            siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(it.blogId, false)
                         }
                     }
                 }
@@ -256,7 +260,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                             analyticsTrackerWrapper
                                                 .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)
-                                            siteNotificationsUseCase.updateBlogInDb(blogId, false)
+                                            siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
                                         }
                                     }
                             )
