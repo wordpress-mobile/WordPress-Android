@@ -114,7 +114,9 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     private fun updateLastVisibleTagChip() {
         lastVisibleTagChip?.let {
-            uiHelpers.updateVisibility(it, !isOverflowIndicatorChipOutsideBounds)
+            if (lastVisibleTagChipIndex > 0) {
+                uiHelpers.updateVisibility(it, !isOverflowIndicatorChipOutsideBounds)
+            }
         }
     }
 
