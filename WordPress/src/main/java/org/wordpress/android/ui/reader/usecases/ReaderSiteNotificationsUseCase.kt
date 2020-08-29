@@ -38,8 +38,6 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
 
     suspend fun toggleNotification(blogId: Long): SiteNotificationState {
         if (continuation != null) {
-            // Toggling notification for multiple sites in parallel isn't supported
-            // as the user would lose the ability to undo the action
             return AlreadyRunning
         }
         if (!networkUtilsWrapper.isNetworkAvailable()) {

@@ -253,10 +253,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     UiStringText(notificationMessage),
                                     UiStringRes(R.string.reader_followed_blog_notifications_action),
                                     buttonAction = {
-                                        analyticsTrackerWrapper
+                                        defaultScope.launch {
+                                            analyticsTrackerWrapper
                                                 .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
-                                        siteNotificationsUseCase.updateSubscription(blogId, NEW)
-                                        siteNotificationsUseCase.updateBlogInDb(blogId, false)
+                                            siteNotificationsUseCase.updateSubscription(blogId, NEW)
+                                            siteNotificationsUseCase.updateBlogInDb(blogId, false)
+                                        }
                                     }
                             )
                     )
