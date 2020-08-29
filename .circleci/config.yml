@@ -532,6 +532,8 @@ workflows:
   Screenshots:
     when: << pipeline.parameters.generate_screenshots >>
     jobs:
-      - raw-screenshots
+      - gutenberg-bundle-build
+      - raw-screenshots:
+          requires: [gutenberg-bundle-build]
       - promo-screenshots:
-          requires: [ raw-screenshots ]
+          requires: [raw-screenshots]
