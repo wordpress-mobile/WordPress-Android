@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.content.ActivityNotFoundException
-import android.text.TextUtils
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -238,7 +237,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun prepareEnableNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
         return {
             val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
-            val blog: String? = if (TextUtils.isEmpty(blogName)) thisSite else blogName
+            val blog = if (blogName?.isEmpty() == true) thisSite else blogName
             val notificationMessage = HtmlCompat.fromHtml(
                     String.format(
                             resourceProvider.getString(R.string.reader_followed_blog_notifications),
