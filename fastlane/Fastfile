@@ -1,6 +1,8 @@
 default_platform(:android)
 fastlane_require 'dotenv'
 
+# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
+# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
 SUPPORTED_LOCALES = [
   { glotpress: "ar",    google_play: "ar",     promo_config: {} },
   { glotpress: "de",    google_play: "de-DE",  promo_config: {} },

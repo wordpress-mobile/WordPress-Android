@@ -305,9 +305,11 @@ jobs:
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
           test-targets: package org.wordpress.android.ui.screenshots
+          # NOTE: When updating this list of devices, ensure to also update the `phone:` and `tenInch:` parameters in "Download Raw Screenshots from Google Storage"
           devices: |
             model=blueline,version=28,orientation=portrait
             model=gts3lltevzw,version=28,orientation=default
+          # NOTE: When updating this list of locales, ensure to also update the `promo_config:` keys accordingly in the `SUPPORTED_LOCALES` in `fastlane/Fastfile`
           locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
           project: api-project-108380595987
           timeout: 30m
