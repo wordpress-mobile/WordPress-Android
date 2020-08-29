@@ -59,8 +59,8 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         }
 
         return if (succeeded) {
-            updateBlogInDb(blogId, readerBlogTableWrapper.isNotificationsEnabled(blogId))
-            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
+            updateNotificationEnabledForBlogInDb(blogId, !readerBlogTableWrapper.isNotificationsEnabled(blogId))
+            fetchSubscriptions()
             Success
         } else {
             RequestFailed
@@ -77,8 +77,8 @@ class ReaderSiteNotificationsUseCase @Inject constructor(
         analyticsUtilsWrapper.trackWithSiteId(trackingEvent, blogId)
     }
 
-    fun updateBlogInDb(blogId: Long, isNotificationEnabledForBlog: Boolean) {
-        readerBlogTableWrapper.setNotificationsEnabledByBlogId(blogId, !isNotificationEnabledForBlog)
+    fun updateNotificationEnabledForBlogInDb(blogId: Long, isNotificationEnabledForBlog: Boolean) {
+        readerBlogTableWrapper.setNotificationsEnabledByBlogId(blogId, isNotificationEnabledForBlog)
     }
 
     fun fetchSubscriptions() {
