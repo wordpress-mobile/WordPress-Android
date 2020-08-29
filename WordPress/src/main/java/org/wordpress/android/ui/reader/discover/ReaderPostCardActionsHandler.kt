@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.content.ActivityNotFoundException
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +50,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.S
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState.Success
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
@@ -71,6 +71,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
+    private val htmlMessageUtils: HtmlMessageUtils,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -242,14 +243,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
         return {
             val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
             val blog = if (blogName?.isEmpty() == true) thisSite else blogName
-            val notificationMessage = HtmlCompat.fromHtml(
-                    String.format(
-                            resourceProvider.getString(R.string.reader_followed_blog_notifications),
+            val notificationMessage = htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.reader_followed_blog_notifications,
                             "<b>",
                             blog,
                             "</b>"
-                    ), HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
+                    )
             _snackbarEvents.postValue(
                     Event(
                             SnackbarMessageHolder(
