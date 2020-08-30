@@ -130,8 +130,6 @@ class EditorPhotoPicker(
             val displayHeight = DisplayUtils.getDisplayPixelHeight(activity)
             updatePickerContainerHeight((displayHeight * 0.5f).toInt())
         }
-
-        photoPickerFragment?.reload()
     }
 
     override fun onMediaToolbarButtonClicked(action: MediaToolbarAction?) {

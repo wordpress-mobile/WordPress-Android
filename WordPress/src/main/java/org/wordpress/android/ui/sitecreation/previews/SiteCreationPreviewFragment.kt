@@ -204,7 +204,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         }
     }
 
-    private fun updateLoadingTextWithFadeAnimation(newText: String) {
+    private fun updateLoadingTextWithFadeAnimation(newText: CharSequence) {
         val animationDuration = AniUtils.Duration.SHORT
         val fadeOut = AniUtils.getFadeOutAnim(progress_text_layout, animationDuration, View.VISIBLE)
         val fadeIn = AniUtils.getFadeInAnim(progress_text_layout, animationDuration)
@@ -279,7 +279,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableTitle.setSpan(
-                ForegroundColorSpan(context.getColorFromAttribute(R.attr.wpColorTextSubtle)),
+                ForegroundColorSpan(context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)),
                 domainSpan.first,
                 domainSpan.second,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

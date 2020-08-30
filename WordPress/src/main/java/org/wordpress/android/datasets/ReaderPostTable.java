@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
@@ -22,10 +23,14 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * tbl_posts contains all reader posts - the primary key is pseudo_id + tag_name + tag_type,
@@ -81,7 +86,8 @@ public class ReaderPostTable {
             + "card_type," // 44
             + "use_excerpt," // 45
             + "is_bookmarked," // 46
-            + "is_private_atomic"; // 47
+            + "is_private_atomic," // 47
+            + "tags"; // 48
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -130,7 +136,8 @@ public class ReaderPostTable {
             + "card_type," // 43
             + "use_excerpt," // 44
             + "is_bookmarked," // 45
-            + "is_private_atomic"; // 46
+            + "is_private_atomic," // 46
+            + "tags"; // 47
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -181,6 +188,7 @@ public class ReaderPostTable {
                    + " use_excerpt INTEGER DEFAULT 0,"
                    + " is_bookmarked INTEGER DEFAULT 0,"
                    + " is_private_atomic INTEGER DEFAULT 0,"
+                   + " tags TEXT,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -822,7 +830,8 @@ public class ReaderPostTable {
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
-                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47)");
+                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47,"
+                + "?48)");
 
         db.beginTransaction();
         try {
@@ -882,6 +891,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
                 stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
+                stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
                 stmtPosts.execute();
             }
 
@@ -938,6 +948,16 @@ public class ReaderPostTable {
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
         try {
             return getPostListFromCursor(cursor);
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    public static Map<Pair<String, ReaderTagType>, ReaderPostList> getTagPostMap(long blogId) {
+        String sql = "SELECT * FROM tbl_posts WHERE blog_id=?";
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            return getTagPostMapFromCursor(cursor);
         } finally {
             SqlUtils.closeCursor(cursor);
         }
@@ -1043,6 +1063,16 @@ public class ReaderPostTable {
         }
     }
 
+    private static Pair<String, ReaderTagType> getTagNameAndTypeFromCursor(Cursor c) {
+        if (c == null) {
+            throw new IllegalArgumentException("getPostFromCursor > null cursor");
+        }
+        return new Pair<>(
+                c.getString(c.getColumnIndex("tag_name")),
+                ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")))
+        );
+    }
+
     private static ReaderPost getPostFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
@@ -1110,6 +1140,11 @@ public class ReaderPostTable {
 
         post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
 
+        String commaSeparatedTags = (c.getString(c.getColumnIndex("tags")));
+        if (commaSeparatedTags != null) {
+            post.setTags(ReaderUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
+        }
+
         return post;
     }
 
@@ -1119,6 +1154,25 @@ public class ReaderPostTable {
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     posts.add(getPostFromCursor(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (IllegalStateException e) {
+            AppLog.e(AppLog.T.READER, e);
+        }
+        return posts;
+    }
+
+    private static Map<Pair<String, ReaderTagType>, ReaderPostList> getTagPostMapFromCursor(Cursor cursor) {
+        Map<Pair<String, ReaderTagType>, ReaderPostList> posts = new LinkedHashMap<>();
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    ReaderPost post = getPostFromCursor(cursor);
+                    Pair<String, ReaderTagType> tagNameAndType = getTagNameAndTypeFromCursor(cursor);
+                    if (!posts.containsKey(tagNameAndType)) {
+                        posts.put(tagNameAndType, new ReaderPostList());
+                    }
+                    Objects.requireNonNull(posts.get(tagNameAndType)).add(post);
                 } while (cursor.moveToNext());
             }
         } catch (IllegalStateException e) {

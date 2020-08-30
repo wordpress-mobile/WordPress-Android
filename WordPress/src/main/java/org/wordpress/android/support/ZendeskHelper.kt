@@ -27,6 +27,7 @@ import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.logInformation
 import org.wordpress.android.util.stateLogInformation
+import org.wordpress.android.util.validateEmail
 import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.PushRegistrationProvider
@@ -75,8 +76,12 @@ class ZendeskHelper(
      * is changed and another Zendesk action happens before the identity change could be completed. In order to avoid
      * such issues, we check both Zendesk identity and the [supportEmail] to decide whether identity is set.
      */
-    private val isIdentitySet: Boolean
-        get() = !supportEmail.isNullOrEmpty() && zendeskInstance.identity != null
+    private fun isIdentitySet(): Boolean {
+        val hasValidEmail = supportEmail?.let { validateEmail(it) } ?: false
+        val identityEmail = (zendeskInstance.identity as? AnonymousIdentity)?.email
+        val hasIdentityWithValidEmail = identityEmail?.let { validateEmail(it) } ?: false
+        return hasValidEmail && hasIdentityWithValidEmail
+    }
 
     /**
      * This function sets up the Zendesk singleton instance with the passed in credentials. This step is required
@@ -118,6 +123,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
+        val isIdentitySet = isIdentitySet()
         val builder = HelpCenterActivity.builder()
                 .withArticlesForCategoryIds(ZendeskConstants.mobileCategoryId)
                 .withContactUsButtonVisible(isIdentitySet)
@@ -229,7 +235,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (!isIdentitySet) {
+        if (!isIdentitySet()) {
             // identity should be set before registering the device token
             return
         }
@@ -257,7 +263,7 @@ class ZendeskHelper(
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
         }
-        if (!isIdentitySet) {
+        if (!isIdentitySet()) {
             // identity should be set before removing the device token
             return
         }
@@ -294,7 +300,7 @@ class ZendeskHelper(
         selectedSite: SiteModel?,
         onIdentitySet: () -> Unit
     ) {
-        if (isIdentitySet) {
+        if (isIdentitySet()) {
             // identity already available
             onIdentitySet()
             return
@@ -337,13 +343,13 @@ class ZendeskHelper(
             zendeskInstance.setIdentity(createZendeskIdentity(email, name))
 
             /**
-             * When we change the identity in Zendesk, it seems to be making an asynchronous call to a server to
+             * When we change the identity in Zendesk, it seems tobe making an asynchronous call to a server to
              * receive a different access token. During this time, if there is a call to Zendesk with the previous
              * access token, it could fail with a 401 error which seems to be clearing the identity. In order to avoid
              * such cases, we put a delay on enabling push notifications for the new identity.
              *
              * [enablePushNotifications] will check if the identity is set, before making the actual call, so if the
-             * identity is cleared through [clearIdentity], this call will simply be ignored.
+             * identity is cleared through [clearIdentity], this  call will simply be ignored.
              */
             timer.schedule(enablePushNotificationsDelayAfterIdentityChange) {
                 enablePushNotifications()

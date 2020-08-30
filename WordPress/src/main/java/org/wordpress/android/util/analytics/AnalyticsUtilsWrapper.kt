@@ -2,10 +2,11 @@ package org.wordpress.android.util.analytics
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import dagger.Reusable
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
 /**
@@ -17,9 +18,11 @@ import javax.inject.Inject
  */
 @Reusable
 class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context) {
-    fun getMediaProperties(isVideo: Boolean, mediaURI: Uri?, path: String?): MutableMap<String, Any?> =
-            AnalyticsUtils.getMediaProperties(appContext, isVideo, mediaURI, path)
+    fun getMediaProperties(isVideo: Boolean, mediaURI: UriWrapper?, path: String?): MutableMap<String, Any?> =
+            AnalyticsUtils.getMediaProperties(appContext, isVideo, mediaURI?.uri, path)
 
     fun trackEditorCreatedPost(action: String?, intent: Intent, site: SiteModel, post: PostImmutableModel?) =
             AnalyticsUtils.trackEditorCreatedPost(action, intent, site, post)
+
+    fun trackWithSiteId(stat: AnalyticsTracker.Stat, blogId: Long) = AnalyticsUtils.trackWithSiteId(stat, blogId)
 }

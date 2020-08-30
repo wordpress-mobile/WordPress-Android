@@ -40,6 +40,6 @@ WordPress é um criador de site de código aberto, isso significa que qualquer p
 
 Se você precisa criar um site ou até mesmo um blog, o WordPress pode te ajudar. Temos lindos designs, recursos poderosos e a liberdade para que você construa o que quiser.
 
-WordPress para Android suporta sites auto-hospedados com o WordPress 4.0 ou mais recente e todos os sites feitos no WordPress.com. Assim como o próprio WordPress, o aplicativo para Android também é código aberto. Saiba mais sobre isso aqui https://apps.wordpress.com/contribute/.  Precisa de ajuda com o aplicativo? Mande um tuíte para @WPAndroid ou visite nosso fórum https://android.forums.wordpress.org/forum/troubleshooting.
+WordPress para Android suporta sites auto-hospedados com o WordPress 4.0 ou mais recente e todos os sites feitos no WordPress.com. Assim como o próprio WordPress, o aplicativo para Android também é código aberto. Saiba mais sobre isso aqui https://wp.me/P7jrAc-tJ.  Precisa de ajuda com o aplicativo? Mande um tuíte para @WPAndroid ou visite nosso fórum https://android.forums.wordpress.org/forum/troubleshooting.
 
 Aviso de privacidade para usuários da California/USA: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

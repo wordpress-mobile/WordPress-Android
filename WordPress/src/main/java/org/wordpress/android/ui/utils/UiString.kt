@@ -7,7 +7,7 @@ import androidx.annotation.StringRes
  * represented as both string resource and text.
  */
 sealed class UiString {
-    data class UiStringText(val text: String) : UiString()
+    data class UiStringText(val text: CharSequence) : UiString()
     data class UiStringRes(@StringRes val stringRes: Int) : UiString()
     data class UiStringResWithParams(@StringRes val stringRes: Int, val params: List<UiString>) : UiString()
 }

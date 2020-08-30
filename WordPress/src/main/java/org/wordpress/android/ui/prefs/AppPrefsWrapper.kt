@@ -75,10 +75,16 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
+    var readerDiscoverWelcomeBannerShown: Boolean
+        get() = AppPrefs.getReaderDiscoverWelcomeBannerShown()
+        set(showBanner) = AppPrefs.setReaderDiscoverWelcomeBannerShown(showBanner)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
     fun isGutenbergEditorEnabled() = AppPrefs.isGutenbergEditorEnabled()
+    fun getReaderCardsRefreshCounter() = AppPrefs.getReaderCardsRefreshCounter()
+    fun incrementReaderCardsRefreshCounter() = AppPrefs.incrementReaderCardsRefreshCounter()
 
     fun getAppWidgetColor(appWidgetId: Int): Color? {
         return when (AppPrefs.getStatsWidgetColorModeId(appWidgetId)) {

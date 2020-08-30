@@ -38,7 +38,6 @@ Language: ku_TR
     <string name="post_notification_off">Girtî</string>
     <string name="post_settings_add_to_calendar">Salnameyê tevlî bike</string>
     <string name="post_settings_notification">Danezan</string>
-    <string name="post_settings_time_and_date">Dem û Dîrok</string>
     <string name="login_need_help_finding_connected_email">Alîkarî hewce ye ji bo dîtina e-peyama ku tu pê dihate girêdan?</string>
     <string name="enter_wordpress_site">Malpera di vê adrêsê de ne malpereke WordPressê ye. Ji bo ku em karibin pê re têkiliyê deynin divê ser malperê WordPress sazkirî be.</string>
     <string name="login_invalid_site_url">Xêra xwe temamiya adrêsa malperê têkeve, mîna \"example.com\".</string>
@@ -743,7 +742,6 @@ Language: ku_TR
     <string name="signup_updating_account">Ajimêr tê hildemandin…</string>
     <string name="signup_terms_of_service_text">Bi tomarbûnê tu %1$sMerc û Xizmet%2$sên me dipejirîne.</string>
     <string name="signup_magic_link_progress">Epeyam tê şandin</string>
-    <string name="signup_magic_link_message">Me ji te re girêdaneke sêhrî ya tomarê şand! Epeyama xwe ya li ser vê amûrê venêre û ji bo temamkirina tomarê li girêdana nav epeyamê bitepîne.</string>
     <string name="signup_magic_link_error_button_positive">Dîsa Bîceribîne</string>
     <string name="signup_magic_link_error_button_negative">Bigire</string>
     <string name="signup_magic_link_error">Di şandina epeyamê de pirsgirêk çebû. Tu dikarî niha dîsa biceribîne an jî bigire û piştre biceribîne.</string>
@@ -751,7 +749,6 @@ Language: ku_TR
     <string name="signup_epilogue_hint_password_detail">Tu dikarî her tim bi girêdaneke efsûnî têketinê bike wekî ku te bîska din kir, lê heke tu bixwazî dikarî pêborîneke jî saz bikî.</string>
     <string name="signup_epilogue_hint_password">Pêborîn (li gor daxwazê)</string>
     <string name="signup_epilogue_hint_display">Navê Xuya</string>
-    <string name="signup_epilogue_heading">Ajimêra nû</string>
     <string name="signup_epilogue_error_button_positive">Dîsa biceribîne</string>
     <string name="signup_epilogue_error_button_negative">Vegerîne</string>
     <string name="signup_epilogue_error_generic">Di hildemandina ajimêra te de hinek pirsgirêk çêbûn. Ji bo domandinê tu dikarî guhertinên xwe vegerîne an jî dîsa biceribîne.</string>
@@ -860,7 +857,6 @@ Language: ku_TR
     <string name="notification_login_title_success">Têketin pêk hat!</string>
     <string name="login_error_generic_start">Têketina Googleê nehat destpêkirin.</string>
     <string name="login_empty_password">Ji kerema xwe pêborînekê têxîne</string>
-    <string name="login_text_otp_another">Ji min re kodeke din bişîne.</string>
     <string name="enter_verification_code_sms">Em ji telefona te yê ku bi %s re diqede re peyameke nivîsî şandin. Xêra xwe koda rastandinê yê di SMSê de têkeve.</string>
     <string name="image_size">Mezinahî</string>
     <string name="uploading_subtitle_media_only_one">Pelgeyek maye</string>
@@ -928,7 +924,6 @@ Language: ku_TR
     <string name="media_edit_filename_caption">Navê Pelgeyê</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Nivîsa alternatîv</string>
-    <string name="connect_site">Malper Girêde</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Şewqê veke - bigire</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Amûrê biricifîne</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Deng bibijêre</string>
@@ -972,7 +967,6 @@ Language: ku_TR
     <string name="connection_to_server_lost">Girêdana bi rajakerê re qut bû</string>
     <string name="login_epilogue_mysites_other">Malperên Min</string>
     <string name="login_epilogue_mysites_one">Malpera min</string>
-    <string name="login_logged_in_as">Tu têketî wek</string>
     <string name="login_email_client_not_found">Sepana te ya epeyam-wergir bikare were tesbîtkirin</string>
     <string name="login_empty_2fa">Ji kerema xwe kodeke rastandinê têxîne</string>
     <string name="login_empty_username">Ji kerema xwe navekî bikarhêner têxîne</string>
@@ -985,17 +979,12 @@ Language: ku_TR
     <string name="login_site_address_help">Ji bo dîtina navnîşana malpera te alîkarî hewce ye?</string>
     <string name="login_site_address">Navnîşana malperê</string>
     <string name="enter_site_address">Navnîşana Malpera WordPressê ya ku tu dixwaze pê gire bide têxîne.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Jixwe di WordPress.comê de têketin pêk hatiye</string>
     <string name="login_continue">Bidomîne</string>
-    <string name="connect_more">Malpereke Din Girêde</string>
     <string name="enter_wpcom_password">Pêborîna xwe ya WordPress.comê têxîne.</string>
     <string name="login_magic_link_email_requesting">Epeyama têketinê tê xwestin</string>
-    <string name="login_magic_links_sent_label">Girêdana te ya sêhrî hat şandin! Epeyama xwe ya li ser vê amûrê venêre û li girêdana epeyamê bitepîne ya ku ji WordPress.comê hatiye şandin.</string>
-    <string name="login_magic_links_label">Em ê epeyama girêdana sêhrî bişîne te ya ku bê pêborînê tu yê karibî di heman demê de têketinê bike. Êdî nêçirî neke û nenikûlîne!</string>
     <string name="password_incorrect">Wisa dixuye ku ev pêborîn xelet e. Ji kerema xwe agahiyên xwe du caran kontrol bike û careke din biceribîne.</string>
     <string name="requesting_otp">Xwestina kodeke rastandinê bi riya SMSê.</string>
-    <string name="login_text_otp">Li şûna vê kodeke bişîne min.</string>
     <string name="enter_verification_code">Hema bêje temam bû. Xêra xwe koda rastandinê têkeve ji sepana xwe ya rastkar.</string>
     <string name="open_mail">Epeyamê veke</string>
     <string name="next">Pêşve</string>

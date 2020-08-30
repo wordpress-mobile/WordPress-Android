@@ -54,7 +54,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:textAllCaps="true"
-                android:textColor="?attr/wpColorText"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/text_sz_small"
                 android:textStyle="bold"
                 tools:text="PDF" />
@@ -67,7 +67,7 @@
                 android:ellipsize="end"
                 android:gravity="center_horizontal"
                 android:singleLine="true"
-                android:textColor="?attr/wpColorText"
+                android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/text_sz_extra_small"
                 tools:text="filename" />
         </LinearLayout>

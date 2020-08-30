@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -101,7 +102,8 @@ class EditorMediaTest : BaseUnitTest() {
         editorMedia.addNewMediaItemsToEditorAsync(mock(), false)
         // Assert
         verify(observer, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue.getContentIfNotHandled()?.messageRes).isEqualTo(R.string.gallery_error)
+        val message = captor.firstValue.getContentIfNotHandled()?.message as? UiStringRes
+        assertThat(message?.stringRes).isEqualTo(R.string.gallery_error)
     }
 
     @Test

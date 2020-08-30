@@ -69,7 +69,7 @@ class ReaderDiscoverLogic(
     fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
         listenerCompanion = companion
         requestDataForDiscover(task, UpdateResultListener {
-            EventBus.getDefault().post(FetchDiscoverCardsEnded(it))
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(task, it))
             completionListener.onCompleted(listenerCompanion)
         })
     }
@@ -80,7 +80,15 @@ class ReaderDiscoverLogic(
             params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
 
             when (taskType) {
-                REQUEST_FIRST_PAGE -> appPrefsWrapper.readerCardsPageHandle = null
+                REQUEST_FIRST_PAGE -> {
+                    appPrefsWrapper.readerCardsPageHandle = null
+                    /* "refresh" parameter is used to tell the server to return a different set of data so we don't
+                    present a static content to the user. We need to include it only for the first page (when
+                    page_handle is empty). The server will take care of including the "refresh" parameter within the
+                    page_handle so the user will stay on the same shard while they’re paging through the cards. */
+                    params["refresh"] = appPrefsWrapper.getReaderCardsRefreshCounter().toString()
+                    appPrefsWrapper.incrementReaderCardsRefreshCounter()
+                }
                 REQUEST_MORE -> {
                     val pageHandle = appPrefsWrapper.readerCardsPageHandle
                     if (pageHandle?.isNotEmpty() == true) {

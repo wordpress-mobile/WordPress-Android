@@ -45,7 +45,6 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/wpColorText"
                 tools:text="John Smith" />
 
             <org.wordpress.android.widgets.WPTextView

@@ -148,10 +148,14 @@ public class AppPrefs {
         READER_CSS_UPDATED_TIMESTAMP,
         // Identifier of the next page for the discover /cards endpoint
         READER_CARDS_ENDPOINT_PAGE_HANDLE,
+        // used to tell the server to return a different set of data so the content on discover tab doesn't look static
+        READER_CARDS_ENDPOINT_REFRESH_COUNTER,
 
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
-        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
+        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
+
+        READER_DISCOVER_WELCOME_BANNER_SHOWN
     }
 
     /**
@@ -1176,12 +1180,28 @@ public class AppPrefs {
         setString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, pageHandle);
     }
 
+    public static int getReaderCardsRefreshCounter() {
+        return getInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, 0);
+    }
+
+    public static void incrementReaderCardsRefreshCounter() {
+        setInt(DeletablePrefKey.READER_CARDS_ENDPOINT_REFRESH_COUNTER, getReaderCardsRefreshCounter() + 1);
+    }
+
     public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
         return getBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, false);
     }
 
     public static void setReaderRecommendedTagsDeletedForLoggedOutUser(boolean deleted) {
         setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
+    }
+
+    public static boolean getReaderDiscoverWelcomeBannerShown() {
+        return getBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, false);
+    }
+
+    public static void setReaderDiscoverWelcomeBannerShown(boolean shown) {
+        setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {
