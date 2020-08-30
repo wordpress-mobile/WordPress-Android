@@ -562,25 +562,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        boolean successfullyRetried = true;
-                        if (mFailedMediaIds.contains(String.valueOf(mediaId))) {
-                            successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(String.valueOf(mediaId));
-                        }
-                        if (successfullyRetried) {
-                            mFailedMediaIds.remove(String.valueOf(mediaId));
-                            mUploadingMediaProgressMax.put(String.valueOf(mediaId), 0f);
-                            getGutenbergContainerFragment().mediaFileUploadProgress(mediaId,
-                                    mUploadingMediaProgressMax.get(String.valueOf(mediaId)));
-                        }
+                        mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
                     }
                 });
-
-        builder.setNeutralButton(R.string.retry_failed_upload_retry_all, new OnClickListener() {
-            @Override public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mEditorFragmentListener.onMediaRetryAllClicked(mFailedMediaIds);
-            }
-        });
 
         builder.setNegativeButton(R.string.retry_failed_upload_remove, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
