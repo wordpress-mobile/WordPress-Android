@@ -1,10 +1,6 @@
 package org.wordpress.android.ui.reader.repository
 
-import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
-import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
-import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 
 sealed class ReaderRepositoryEvent {
     object ReaderPostTableActionEnded : ReaderRepositoryEvent()
@@ -55,18 +51,12 @@ sealed class ReaderRepositoryCommunication {
 }
 
 sealed class ReaderDiscoverCommunication {
-    data class Started(val task: DiscoverTasks) : ReaderDiscoverCommunication()
-    data class Success(val task: DiscoverTasks) : ReaderDiscoverCommunication()
-    sealed class Error(open val task: DiscoverTasks) : ReaderDiscoverCommunication() {
-        data class NetworkUnavailable(override val task: DiscoverTasks) : Error(task)
-        data class RemoteRequestFailure(override val task: DiscoverTasks) : Error(task)
-        data class ServiceNotStarted(override val task: DiscoverTasks) : Error(task)
+    abstract val task: DiscoverTasks
+    data class Started(override val task: DiscoverTasks) : ReaderDiscoverCommunication()
+    data class Success(override val task: DiscoverTasks) : ReaderDiscoverCommunication()
+    sealed class Error : ReaderDiscoverCommunication() {
+        data class NetworkUnavailable(override val task: DiscoverTasks) : Error()
+        data class RemoteRequestFailure(override val task: DiscoverTasks) : Error()
+        data class ServiceNotStarted(override val task: DiscoverTasks) : Error()
     }
 }
-
-fun ReaderDiscoverCommunication.isRequestMore(): Boolean =
-        when (this) {
-            is Success -> this.task == REQUEST_MORE
-            is Started -> this.task == REQUEST_MORE
-            is Error -> this.task == REQUEST_MORE
-        }

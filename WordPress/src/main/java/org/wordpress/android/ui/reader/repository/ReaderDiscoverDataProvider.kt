@@ -60,12 +60,13 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private var hasMoreCards = true
 
     private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
-    val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel.perform {
-        if (it.peekContent().isRequestMore() && it.peekContent() !is Started) {
-            AppLog.w(READER, "reader discover load more cards task is finished")
-            isLoadMoreRequestInProgress = false
-        }
-    }
+    val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel
+            .perform {
+                if (it.peekContent().task == REQUEST_MORE && it.peekContent() !is Started) {
+                    AppLog.w(READER, "reader discover load more cards task is finished")
+                    isLoadMoreRequestInProgress = false
+                }
+            }
 
     fun start() {
         if (isStarted) return
