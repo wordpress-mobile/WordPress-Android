@@ -121,8 +121,8 @@
                             style="@style/MySiteSubtitleLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:iconGravity="textEnd"
                             app:icon="@drawable/ic_external_white_24dp"
+                            app:iconGravity="textEnd"
                             tools:text="example.wordpress.com" />
                     </LinearLayout>
 
@@ -136,7 +136,7 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/my_site_btn_switch_site"
                         android:src="@drawable/ic_chevron_down_white_24dp"
-                        android:tint="?attr/wpColorOnSurfaceMedium" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
 
                 </RelativeLayout>
 
