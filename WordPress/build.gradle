@@ -92,7 +92,7 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "15.6-rc-5"
+                versionName "15.6-rc-6"
             }
             versionCode 902000
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
