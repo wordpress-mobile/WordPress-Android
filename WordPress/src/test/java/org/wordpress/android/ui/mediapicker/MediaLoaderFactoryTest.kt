@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
@@ -7,10 +7,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {

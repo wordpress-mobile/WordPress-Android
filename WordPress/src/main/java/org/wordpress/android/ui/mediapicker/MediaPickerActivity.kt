@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.app.Activity
 import android.content.Context
@@ -35,15 +35,15 @@ import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUE
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_URIS
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.LOCAL_POST_ID
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.MediaPickerMediaSource.STOCK_MEDIA_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.Companion.newInstance
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerListener
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.STOCK_MEDIA_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
 import org.wordpress.android.ui.posts.EMPTY_LOCAL_POST_ID
 import org.wordpress.android.ui.posts.FeaturedImageHelper
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult.FILE_NOT_FOUND

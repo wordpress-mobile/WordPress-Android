@@ -9,12 +9,12 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerSetup
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.IMAGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 

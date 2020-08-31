@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
 import android.content.Context
@@ -18,13 +18,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.photopicker.PermissionsHandler
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ClickAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ToggleAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.IMAGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.content.Intent
 import android.os.Bundle
@@ -42,7 +42,12 @@ data class MediaPickerSetup(
             }.toSet()
             val multipleSelectionAllowed = bundle.getBoolean(KEY_CAN_MULTISELECT)
             val cameraAllowed = bundle.getBoolean(KEY_CAMERA_ENABLED)
-            return MediaPickerSetup(dataSource, multipleSelectionAllowed, allowedTypes, cameraAllowed)
+            return MediaPickerSetup(
+                    dataSource,
+                    multipleSelectionAllowed,
+                    allowedTypes,
+                    cameraAllowed
+            )
         }
 
         fun fromIntent(intent: Intent): MediaPickerSetup {
@@ -54,7 +59,12 @@ data class MediaPickerSetup(
             }.toSet()
             val multipleSelectionAllowed = intent.getBooleanExtra(KEY_CAN_MULTISELECT, false)
             val cameraAllowed = intent.getBooleanExtra(KEY_CAMERA_ENABLED, false)
-            return MediaPickerSetup(dataSource, multipleSelectionAllowed, allowedTypes, cameraAllowed)
+            return MediaPickerSetup(
+                    dataSource,
+                    multipleSelectionAllowed,
+                    allowedTypes,
+                    cameraAllowed
+            )
         }
     }
 }
