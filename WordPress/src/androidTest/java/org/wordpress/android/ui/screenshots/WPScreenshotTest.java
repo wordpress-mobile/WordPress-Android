@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.screenshots;
 
+import android.provider.Settings;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -32,10 +36,8 @@ import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDis
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
 
-import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
-import android.provider.Settings;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
