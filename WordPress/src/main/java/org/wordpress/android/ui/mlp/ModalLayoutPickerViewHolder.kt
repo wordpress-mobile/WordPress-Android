@@ -67,8 +67,7 @@ class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
  */
 class LayoutsItemViewHolder(
     parent: ViewGroup,
-    private val scrollStates: SparseIntArray,
-    private val layoutSelectionListener: LayoutSelectionListener
+    private val scrollStates: SparseIntArray
 ) :
         ModalLayoutPickerViewHolder(
                 parent,
@@ -83,7 +82,7 @@ class LayoutsItemViewHolder(
                     RecyclerView.HORIZONTAL,
                     false
             ).apply { initialPrefetchItemCount = 4 }
-            adapter = LayoutsAdapter(context, layoutSelectionListener)
+            adapter = LayoutsAdapter(context)
             setRecycledViewPool(RecyclerView.RecycledViewPool())
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

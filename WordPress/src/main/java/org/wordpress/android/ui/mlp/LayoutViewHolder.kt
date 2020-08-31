@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
@@ -30,8 +29,7 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
 
     fun onBind(
         uiState: LayoutListItemUiState,
-        imageManager: ImageManager,
-        selectionListener: LayoutSelectionListener
+        imageManager: ImageManager
     ) {
         imageManager.load(preview, ImageType.THEME, uiState.preview, FIT_CENTER)
         selected.setVisible(uiState.selected)
@@ -42,8 +40,5 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
         }
-        selectionListener.selectedItemData.observe(selectionListener.lifecycleOwner, Observer {
-            selected.setVisible(it == uiState.slug)
-        })
     }
 }

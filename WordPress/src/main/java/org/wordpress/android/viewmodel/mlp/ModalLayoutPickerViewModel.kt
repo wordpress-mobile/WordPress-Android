@@ -126,6 +126,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         } else {
             _selectedLayoutSlug.value = layoutSlug
         }
+        loadListItems()
     }
 
     /**

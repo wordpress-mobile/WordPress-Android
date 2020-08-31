@@ -14,9 +14,7 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType
 /**
  * Renders the rows of the Modal Layout Picker
  */
-class ModalLayoutPickerAdapter(
-    private val layoutSelectionListener: LayoutSelectionListener
-) : Adapter<ModalLayoutPickerViewHolder>() {
+class ModalLayoutPickerAdapter : Adapter<ModalLayoutPickerViewHolder>() {
     private var items: List<ModalLayoutPickerListItem> = listOf()
     private val scrollStates = SparseIntArray()
 
@@ -46,7 +44,7 @@ class ModalLayoutPickerAdapter(
         ViewType.TITLE.id -> TitleItemViewHolder(parent)
         ViewType.SUBTITLE.id -> SubtitleItemViewHolder(parent)
         ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent)
-        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, scrollStates, layoutSelectionListener)
+        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, scrollStates)
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }
 
