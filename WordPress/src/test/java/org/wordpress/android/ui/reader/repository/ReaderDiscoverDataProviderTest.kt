@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCa
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.ui.reader.utils.ReaderTagWrapper
 import org.wordpress.android.util.EventBusWrapper
 
 private const val NUMBER_OF_ITEMS = 10L
@@ -44,17 +46,20 @@ class ReaderDiscoverDataProviderTest {
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var dataProvider: ReaderDiscoverDataProvider
+    private lateinit var readerTag: ReaderTag
 
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
     @Mock private lateinit var shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
     @Mock private lateinit var fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
+    @Mock private lateinit var readerTagWrapper: ReaderTagWrapper
 
     @Before
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
                 TEST_DISPATCHER,
                 eventBusWrapper,
+                readerTagWrapper,
                 getDiscoverCardsUseCase,
                 shouldAutoUpdateTagUseCase,
                 fetchDiscoverCardsUseCase
@@ -158,6 +163,20 @@ class ReaderDiscoverDataProviderTest {
         coroutineScope.resumeDispatcher()
     }
 
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when observers connect request is started and posted to comm channel`() = test {
+        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)).thenReturn(Started(REQUEST_FIRST_PAGE))
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(true)
+
+        dataProvider.communicationChannel.observeForever { }
+        dataProvider.discoverFeed.observeForever{ }
+
+        val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
+        Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
+    }
+
     // Helper functions lifted from ReaderDiscoverViewModelTest because why reinvent the wheel
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
         return ReaderDiscoverCards(createDummyReaderPostCardList(numberOfItems))
@@ -171,4 +190,6 @@ class ReaderDiscoverDataProviderTest {
         this.blogId = id
         this.title = "DummyPost"
     }
+
+    private fun createDummyReaderTag() = readerTagWrapper.createDiscoverPostCardsTag()
 }

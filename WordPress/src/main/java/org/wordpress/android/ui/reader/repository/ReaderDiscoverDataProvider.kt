@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUs
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.ui.reader.utils.ReaderTagWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.EventBusWrapper
@@ -41,6 +42,7 @@ import kotlin.coroutines.CoroutineContext
 class ReaderDiscoverDataProvider @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
+    private val readerTagWrapper: ReaderTagWrapper,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
@@ -67,6 +69,9 @@ class ReaderDiscoverDataProvider @Inject constructor(
                     isLoadMoreRequestInProgress = false
                 }
             }
+
+    val readerTag: ReaderTag
+            get()  = readerTagWrapper.createDiscoverPostCardsTag()
 
     fun start() {
         if (isStarted) return
@@ -108,7 +113,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         withContext(ioDispatcher) {
             val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
-            val refresh = shouldAutoUpdateTagUseCase.get(ReaderTag.createDiscoverPostCardsTag())
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
             if (forceReload || !existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
