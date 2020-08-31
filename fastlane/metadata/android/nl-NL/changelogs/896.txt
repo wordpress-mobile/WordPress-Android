@@ -1,4 +1,0 @@
-15.3:
-Block editor updates: Alle blokken hebben nu de functies Kopiëren, Knippen, Plakken en Dupliceren. Niet ondersteunde blokken kunnen afzonderlijk worden bewerkt. (Opmerking: niet ondersteunde blokbewerking is niet beschikbaar voor zelf gehoste sites of sites die standaard de klassieke editor gebruiken.)
-
-UI updates: Verduidelijkte bewoordingen en toegevoegde bevestiging dialogen bij het verplaatsen van berichten naar de prullenbak.

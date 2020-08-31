@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
@@ -71,8 +72,10 @@ class PostConflictResolver(
             }
         }
         val snackBarHolder = SnackbarMessageHolder(
-                R.string.snackbar_conflict_web_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+                UiStringRes(R.string.snackbar_conflict_web_version_discarded),
+                UiStringRes(R.string.snackbar_conflict_undo),
+                undoAction,
+                onDismissAction
         )
         showSnackbar.invoke(snackBarHolder)
     }
@@ -109,8 +112,10 @@ class PostConflictResolver(
             originalPostCopyForConflictUndo = null
         }
         val snackBarHolder = SnackbarMessageHolder(
-                R.string.snackbar_conflict_local_version_discarded,
-                R.string.snackbar_conflict_undo, undoAction, onDismissAction
+                UiStringRes(R.string.snackbar_conflict_local_version_discarded),
+                UiStringRes(R.string.snackbar_conflict_undo),
+                undoAction,
+                onDismissAction
         )
         showSnackbar.invoke(snackBarHolder)
     }

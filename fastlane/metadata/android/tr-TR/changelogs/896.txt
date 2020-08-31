@@ -1,4 +1,0 @@
-15.3:
-Blok düzenleyici güncellemeleri: Artık tüm bloklar kopyala, kes, yapıştır ve çoğalt işlevlerine sahiptir. Desteklenmeyen bloklar ayrı ayrı düzenlenebilir. (Not: Desteklenmeyen blok düzenleme, kendi kendine barındırılan siteler veya varsayılan olarak klasik düzenleyiciye sahip siteler için kullanılamaz.)
-
-Kullanıcı arayüzü güncellemeleri: Mesajları çöp kutusuna gönderirken açıklamalı ifadeler ve onay iletişim kutuları eklendi.

@@ -28,19 +28,35 @@
         app:layout_constraintTop_toBottomOf="@+id/progress_bar"
         app:layout_constraintVertical_bias="0" />
 
+    <include layout="@layout/reader_fullscreen_error_with_retry"/>
+
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            style="@style/ReaderRecyclerView" />
+
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_loading_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

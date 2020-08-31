@@ -9,8 +9,10 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.AppLog.T.READER
 import javax.inject.Inject
@@ -22,6 +24,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
     private val readerDiscoverCardsTableWrapper: ReaderDiscoverCardsTableWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend fun get(): ReaderDiscoverCards =
@@ -33,6 +36,10 @@ class GetDiscoverCardsUseCase @Inject constructor(
                     val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(
                             cardJsonList
                     )
+
+                    if (!appPrefsWrapper.readerDiscoverWelcomeBannerShown) {
+                        cards.add(WelcomeBannerCard)
+                    }
 
                     forLoop@ for (i in 0 until jsonObjects.length()) {
                         val cardJson = jsonObjects.getJSONObject(i)

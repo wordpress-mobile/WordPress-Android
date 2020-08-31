@@ -56,6 +56,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginAutofillCredentialsFilled() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+        mUnifiedLoginTracker.track(Flow.SMART_LOCK_LOGIN, Step.START);
     }
 
     @Override
@@ -134,9 +135,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackPasswordFormViewed() {
+    public void trackPasswordFormViewed(boolean isSocialChallenge) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
-        mUnifiedLoginTracker.track(Flow.LOGIN_PASSWORD, Step.START);
+        if (isSocialChallenge) {
+            mUnifiedLoginTracker.track(Flow.GOOGLE_LOGIN, Step.PASSWORD_CHALLENGE);
+        } else {
+            mUnifiedLoginTracker.track(Flow.LOGIN_PASSWORD, Step.START);
+        }
     }
 
     @Override

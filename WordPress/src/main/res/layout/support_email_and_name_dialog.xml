@@ -1,54 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/margin_dialog" >
+    android:padding="@dimen/margin_dialog">
 
     <TextView
         android:id="@+id/support_identity_input_dialog_message"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_dialog"
-        android:layout_width="wrap_content"
-        android:textColor="@color/neutral_40"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         android:textSize="@dimen/text_sz_large"
-        tools:text="@string/support_identity_input_dialog_enter_email_and_name" >
-    </TextView>
+        tools:text="@string/support_identity_input_dialog_enter_email_and_name" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/support_identity_input_dialog_email_edit_text"
-            android:hint="@string/support_identity_input_dialog_email_label"
-            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
-            android:layout_width="match_parent"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_medium" >
-        </com.google.android.material.textfield.TextInputEditText>
+            android:hint="@string/support_identity_input_dialog_email_label"
+            android:inputType="textEmailAddress"
+            android:textAppearance="?attr/textAppearanceBody2" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/support_identity_input_dialog_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:hint="@string/support_identity_input_dialog_name_label"
             android:inputType="text"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
             android:maxLength="@integer/max_length_support_name"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_medium" >
-        </com.google.android.material.textfield.TextInputEditText>
+            android:textAppearance="?attr/textAppearanceBody2" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

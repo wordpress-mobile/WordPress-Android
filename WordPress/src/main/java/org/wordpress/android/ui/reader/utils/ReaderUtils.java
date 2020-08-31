@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -15,8 +16,8 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -424,5 +425,37 @@ public class ReaderUtils {
 
     public static boolean isDefaultInMemoryTag(ReaderTag tag) {
         return tag != null && tag.isDefaultInMemoryTag();
+    }
+
+    public static String getCommaSeparatedTagSlugs(ReaderTagList tags) {
+        StringBuilder slugs = new StringBuilder();
+        for (ReaderTag tag : tags) {
+            if (slugs.length() > 0) {
+                slugs.append(",");
+            }
+            final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
+            slugs.append(tagNameForApi);
+        }
+        return slugs.toString();
+    }
+
+    public static ReaderTagList getTagsFromCommaSeparatedSlugs(@NotNull String commaSeparatedTagSlugs) {
+        ReaderTagList tags = new ReaderTagList();
+        if (!commaSeparatedTagSlugs.trim().equals("")) {
+            for (String slug : commaSeparatedTagSlugs.split(",", -1)) {
+                ReaderTag tag = ReaderUtils.getTagFromTagName(slug, ReaderTagType.DEFAULT);
+                tags.add(tag);
+            }
+        }
+        return tags;
+    }
+
+    /**
+    * isExternalFeed identifies an external RSS feed
+     * blogId will be empty for feeds and in some instances, it is explicitly
+     * setting blogId equal to the feedId  
+     */
+    public static boolean isExternalFeed(long blogId, long feedId) {
+         return (blogId == 0 && feedId != 0) || blogId == feedId;
     }
 }

@@ -497,7 +497,6 @@ Language: cs_CZ
     <string name="signup_updating_account">Probíhá aktualizace účtu…</string>
     <string name="signup_terms_of_service_text">Registrací zároveň souhlasíte se %1$sSmluvními podmínkami%2$s.</string>
     <string name="signup_magic_link_progress">Odesílání emailu</string>
-    <string name="signup_magic_link_message">Poslali jsme vám magický odkaz na přihlášení! Zkontrolujte email na tomto zařízení a klepnutím na odkaz v emailu dokončete registraci.</string>
     <string name="signup_magic_link_error_button_positive">Opakovat</string>
     <string name="signup_magic_link_error_button_negative">Zavřít</string>
     <string name="signup_magic_link_error">Při odesílání emailu došlo k určitým potížím. Můžete zkusit znovu nebo zavřít a zkusit to později.</string>
@@ -505,7 +504,6 @@ Language: cs_CZ
     <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí magického odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (volitelné)</string>
     <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
-    <string name="signup_epilogue_heading">Nový účet</string>
     <string name="signup_epilogue_error_button_positive">Opakovat</string>
     <string name="signup_epilogue_error_button_negative">Zpět</string>
     <string name="signup_epilogue_error_generic">Objevili se potíže při aktualizaci vašeho účtu. Můžete to zkusit znovu nebo vrátit změny.</string>
@@ -614,7 +612,6 @@ Language: cs_CZ
     <string name="notification_login_title_success">Přihlášeno!</string>
     <string name="login_error_generic_start">Přihlášení pomocí Google nemůže být spuštěno.</string>
     <string name="login_empty_password">Zadejte heslo</string>
-    <string name="login_text_otp_another">Pošlete mi nový kód.</string>
     <string name="enter_verification_code_sms">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
     <string name="image_size">Velikost</string>
     <string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
@@ -682,7 +679,6 @@ Language: cs_CZ
     <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
-    <string name="connect_site">Web pro připojení</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Zvolit zvuk</string>
@@ -726,7 +722,6 @@ Language: cs_CZ
     <string name="connection_to_server_lost">Připojení k serveru bylo ztraceno</string>
     <string name="login_epilogue_mysites_other">Moje weby</string>
     <string name="login_epilogue_mysites_one">Můj web</string>
-    <string name="login_logged_in_as">Přihlášený uživatel</string>
     <string name="login_email_client_not_found">Nepodařilo se najít emailovou aplikaci</string>
     <string name="login_empty_2fa">Vložte ověřovací kód</string>
     <string name="login_empty_username">Vložte uživatelské jméno</string>
@@ -739,17 +734,12 @@ Language: cs_CZ
     <string name="login_site_address_help">Potřebujete poradit jak najít adresu webu?</string>
     <string name="login_site_address">Adresa webu</string>
     <string name="enter_site_address">Zadejte adresu WordPress webu, ke kterému se chcete připojit.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Již jste přihlášeni na WordPress.com</string>
     <string name="login_continue">Pokračovat</string>
-    <string name="connect_more">Připojit se k jinému webu</string>
     <string name="enter_wpcom_password">Zadejte heslo k WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Je vyžadován přihlašovací email</string>
-    <string name="login_magic_links_sent_label">Váš magický odkaz pro potvrzení, je na cestě! Zkontrolujte email a klikněte na odkaz v emailu, který jste obdrželi z aplikace WordPress.com.</string>
-    <string name="login_magic_links_label">Zašleme vám email, který vás okamžitě přihlásí, bez hesla.</string>
     <string name="password_incorrect">Zdá se, že zadané heslo je nesprávné. Zkontrolujte prosím své údaje a zkuste to znovu.</string>
     <string name="requesting_otp">Vyžádání ověřovacího kódu pomocí SMS.</string>
-    <string name="login_text_otp">Pošlete mi raději kód.</string>
     <string name="enter_verification_code">Téměř hotovo! Zadejte ověřovací kód z aplikace Authenticator.</string>
     <string name="open_mail">Otevřít email</string>
     <string name="next">Další</string>

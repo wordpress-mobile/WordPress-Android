@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -85,35 +86,35 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `fab visible when asked`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = true, hasFullAccessToContent = true)
+        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab hidden when asked`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = false, hasFullAccessToContent = true)
+        viewModel.onPageChanged(showFab = false, site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value?.isFabVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip visible when asked`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = true, hasFullAccessToContent = true)
+        viewModel.onPageChanged(showFab = true, site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(true)
     }
 
     @Test
     fun `fab tooltip hidden when asked`() {
         startViewModelWithDefaultParameters()
-        viewModel.onPageChanged(showFab = false, hasFullAccessToContent = true)
+        viewModel.onPageChanged(showFab = false, site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
 
     @Test
     fun `fab tooltip disabled when tapped`() {
         startViewModelWithDefaultParameters()
-        viewModel.onTooltipTapped(true)
+        viewModel.onTooltipTapped(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -122,7 +123,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `fab tooltip disabled when user without full access to content uses the fab`() {
         startViewModelWithDefaultParameters()
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
-        viewModel.onFabClicked(false)
+        viewModel.onFabClicked(initSite(hasFullAccessToContent = false))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -131,7 +132,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `fab tooltip disabled when bottom sheet opened`() {
         startViewModelWithDefaultParameters()
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(true)
-        viewModel.onFabClicked(true)
+        viewModel.onFabClicked(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -139,7 +140,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `fab tooltip disabled when fab long pressed`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabLongPressed(true)
+        viewModel.onFabLongPressed(initSite(hasFullAccessToContent = true))
         verify(appPrefsWrapper).setMainFabTooltipDisabled(true)
         assertThat(viewModel.fabUiState.value?.isFabTooltipVisible).isEqualTo(false)
     }
@@ -165,7 +166,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `bottom sheet action is new story when new story is tapped if stories enabled`() {
         setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
-        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
+        viewModel.start(isFabVisible = true, site = initSite(hasFullAccessToContent = true))
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_STORY } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_STORY)
@@ -173,10 +174,10 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet is visualized when user has full access to content if stories disabled`() {
+    fun `bottom sheet is shown when user has full access to content if stories feature flag disabled`() {
         setupWPStoriesFeatureConfigEnabled(buildConfigValue = false)
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
     }
@@ -184,7 +185,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `bottom sheet does not show quick start focus point by default`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
@@ -194,7 +195,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = true, shouldShowQuickStartFocusPoint = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
@@ -213,7 +214,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = true, shouldShowQuickStartFocusPoint = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 true
@@ -233,7 +234,16 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `new post action is triggered from FAB when user has not full access to content if stories disabled`() {
         setupWPStoriesFeatureConfigEnabled(buildConfigValue = false)
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = false)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
+        assertThat(viewModel.isBottomSheetShowing.value).isNull()
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
+    }
+
+    @Test
+    fun `new post action is triggered from FAB when no full access to content if stories enabled but unavailable`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, supportsStories = false))
         assertThat(viewModel.isBottomSheetShowing.value).isNull()
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
     }
@@ -242,7 +252,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet is visualized when user has full access to content and has all 3 options if stories enabled`() {
         setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = true)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
@@ -252,7 +262,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet is visualized when user has partial access and has only 2 options if stories enabled`() {
         setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
         startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(hasFullAccessToContent = false)
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
@@ -270,7 +280,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `onResume set expected content message when user has full access to content if stories not enabled`() {
         setupWPStoriesFeatureConfigEnabled(false)
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip)
     }
 
@@ -278,7 +288,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `onResume set expected content message when user has not full access to content if stories not enabled`() {
         setupWPStoriesFeatureConfigEnabled(false)
         startViewModelWithDefaultParameters()
-        viewModel.onResume(false)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
                 .isEqualTo(R.string.create_post_page_fab_tooltip_contributors)
     }
@@ -287,18 +297,18 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `onResume set expected content message when user has full access to content if stories enabled`() {
         setupWPStoriesFeatureConfigEnabled(true)
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
-                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_feature_flag_on)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_enabled)
     }
 
     @Test
     fun `onResume set expected content message when user has not full access to content if stories enabled`() {
         setupWPStoriesFeatureConfigEnabled(true)
         startViewModelWithDefaultParameters()
-        viewModel.onResume(false)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
-                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
     }
 
     @Test
@@ -310,7 +320,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
         verify(analyticsTrackerWrapper).track(FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
@@ -325,7 +335,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
         verify(analyticsTrackerWrapper).track(FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
@@ -339,7 +349,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
         verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
@@ -350,7 +360,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(0)
 
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
         verify(appPrefsWrapper).lastFeatureAnnouncementAppVersionCode = 850
@@ -362,7 +372,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
 
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
     }
@@ -377,7 +387,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 )
 
                 startViewModelWithDefaultParameters()
-                viewModel.onResume(true)
+                viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
                 verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
                 verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
@@ -392,7 +402,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
 
         startViewModelWithDefaultParameters()
-        viewModel.onResume(true)
+        viewModel.onResume(site = initSite(hasFullAccessToContent = true))
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
 
@@ -402,7 +412,14 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     private fun startViewModelWithDefaultParameters() {
-        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
+        viewModel.start(isFabVisible = true, site = initSite(hasFullAccessToContent = true, supportsStories = true))
+    }
+
+    private fun initSite(hasFullAccessToContent: Boolean = true, supportsStories: Boolean = true): SiteModel {
+        return SiteModel().apply {
+            hasCapabilityEditPages = hasFullAccessToContent
+            setIsWPCom(supportsStories)
+        }
     }
 
     private fun setupWPStoriesFeatureConfigEnabled(buildConfigValue: Boolean) {

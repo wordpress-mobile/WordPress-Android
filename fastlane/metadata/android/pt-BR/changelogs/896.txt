@@ -1,4 +1,0 @@
-15.3:
-Atualizações do editor de bloco: Todos os blocos agora têm a funcionalidade Copiar, Recortar, Colar e Duplicar. Blocos não suportados podem ser editados individualmente. (Nota: A edição de bloco não suportados não está disponível para sites auto-hospedados ou sites com o padrão do editor clássico.)
-
-Atualizações na interface de usuário: Formulação esclarecida e caixas de diálogo de confirmação adicionadas ao enviar mensagens para a lixeira.
