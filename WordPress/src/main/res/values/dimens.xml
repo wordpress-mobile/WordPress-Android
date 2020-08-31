@@ -25,6 +25,8 @@
 
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
+    <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+
     <dimen name="divider_size">1dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
@@ -150,6 +152,10 @@
     <!-- padding inside the tag header view -->
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
+
+    <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
+        @dimen/emphasis_extra_low
+    </item>
 
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>

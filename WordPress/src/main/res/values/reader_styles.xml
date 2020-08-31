@@ -320,7 +320,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="ensureMinTouchTargetSize">false</item>
         <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_radius</item>
-        <item name="chipBackgroundColor">@color/on_surface_divider</item>
+        <item name="chipBackgroundColor">@color/on_surface_chip</item>
     </style>
 
 </resources>
