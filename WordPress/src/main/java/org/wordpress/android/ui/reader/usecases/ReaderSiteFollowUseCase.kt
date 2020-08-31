@@ -49,7 +49,10 @@ class ReaderSiteFollowUseCase @Inject constructor(
         } else {
             val deleteNotificationSubscription = !readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId) &&
                     !isAskingToFollow
-            emit(PostFollowStatusChanged(post.blogId, isAskingToFollow, deleteNotificationSubscription))
+            emit(PostFollowStatusChanged(
+                    post.blogId,
+                    isAskingToFollow,
+                    deleteNotificationSubscription = deleteNotificationSubscription))
             emit(Success)
         }
     }
