@@ -14,7 +14,8 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.models.discover.ReaderDiscoverCards
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -36,8 +37,6 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -56,7 +55,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -98,45 +97,17 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
-            if (posts != null && posts.cards.isNotEmpty()) {
-                val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
-                        posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
-
-                if (!discoverFeedContainsOnlyWelcomeCard) {
-                    _uiState.value = ContentUiState(
-                            posts.cards.map {
-                                when (it) {
-                                    is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                                            titleRes = R.string.reader_welcome_banner
-                                    )
-                                    is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                                            post = it.post,
-                                            isDiscover = true,
-                                            photonWidth = photonWidth,
-                                            photonHeight = photonHeight,
-                                            isBookmarkList = false,
-                                            onButtonClicked = this::onButtonClicked,
-                                            onItemClicked = this::onPostItemClicked,
-                                            onItemRendered = this::onItemRendered,
-                                            onDiscoverSectionClicked = this::onDiscoverClicked,
-                                            onMoreButtonClicked = this::onMoreButtonClicked,
-                                            onMoreDismissed = this::onMoreMenuDismissed,
-                                            onVideoOverlayClicked = this::onVideoOverlayClicked,
-                                            onPostHeaderViewClicked = this::onPostHeaderClicked,
-                                            onTagItemClicked = this::onTagItemClicked,
-                                            postListType = TAG_FOLLOWED
-                                    )
-                                    is InterestsYouMayLikeCard -> {
-                                        postUiStateBuilder.mapTagListToReaderInterestUiState(
-                                                it.interests,
-                                                this::onReaderTagClicked
-                                        )
-                                    }
-                                }
-                            },
-                            reloadProgressVisibility = false,
-                            loadMoreProgressVisibility = false
-                    )
+            launch {
+                if (posts != null && posts.cards.isNotEmpty()) {
+                    val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
+                            posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
+                    if (!discoverFeedContainsOnlyWelcomeCard) {
+                        _uiState.value = ContentUiState(
+                                convertCardsToUiStates(posts),
+                                reloadProgressVisibility = false,
+                                loadMoreProgressVisibility = false
+                        )
+                    }
                 }
             }
         }
@@ -178,8 +149,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                                         )
                                         // show snackbar
                                         _snackbarEvents.postValue(
-                                                Event(SnackbarMessageHolder(
-                                                        UiStringRes(R.string.reader_error_request_failed_title)))
+                                                Event(
+                                                        SnackbarMessageHolder(
+                                                                UiStringRes(R.string.reader_error_request_failed_title)
+                                                        )
+                                                )
                                         )
                                     }
                                 }
@@ -206,10 +180,45 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
+    private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
+        return posts.cards.map {
+            when (it) {
+                is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
+                        titleRes = R.string.reader_welcome_banner
+                )
+                is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                        post = it.post,
+                        isDiscover = true,
+                        photonWidth = photonWidth,
+                        photonHeight = photonHeight,
+                        isBookmarkList = false,
+                        onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
+                        onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
+                        onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
+                        onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
+                        onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
+                        onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
+                        onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
+                        onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
+                        onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
+                        postListType = TAG_FOLLOWED
+                )
+                is InterestsYouMayLikeCard -> {
+                    postUiStateBuilder.mapTagListToReaderInterestUiState(
+                            it.interests,
+                            this@ReaderDiscoverViewModel::onReaderTagClicked
+                    )
+                }
+            }
+        }
+    }
+
     private fun onReaderTagClicked(tag: String) {
-        analyticsTrackerWrapper.track(READER_DISCOVER_TOPIC_TAPPED)
-        val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
-        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+        launch(ioDispatcher) {
+            analyticsTrackerWrapper.track(READER_DISCOVER_TOPIC_TAPPED)
+            val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
+            _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+        }
     }
 
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
@@ -237,8 +246,10 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onTagItemClicked(tagSlug: String) {
-        val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
-        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+        launch(ioDispatcher) {
+            val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
+            _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
+        }
     }
 
     private fun onPostItemClicked(postId: Long, blogId: Long) {
@@ -268,19 +279,17 @@ class ReaderDiscoverViewModel @Inject constructor(
                 val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
                 if (isCardCloseToEnd) {
                     analyticsTrackerWrapper.track(READER_DISCOVER_PAGINATED)
-                    launch(bgDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
+                    launch(ioDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
                 }
             }
         }
     }
 
     private fun onDiscoverClicked(postId: Long, blogId: Long) {
-        AppLog.d(T.READER, "OnDiscoverClicked")
+        // TODO malinjir: add on discover clicked listener
     }
 
-    // TODO malinjir get rid of the view reference
     private fun onMoreButtonClicked(postUiState: ReaderPostUiState) {
-        AppLog.d(T.READER, "OnMoreButtonClicked")
         changeMoreMenuVisibility(postUiState, true)
     }
 
@@ -289,17 +298,18 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun changeMoreMenuVisibility(currentUiState: ReaderPostUiState, show: Boolean) {
-        findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-            val updatedUiState = currentUiState.copy(
-                    moreMenuItems = if (show) readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                            post,
-                            TAG_FOLLOWED,
-                            this::onButtonClicked
+        launch {
+            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                val moreMenuItems = if (show) {
+                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
+                            post, TAG_FOLLOWED, this@ReaderDiscoverViewModel::onButtonClicked
                     )
-                    else null
-            )
+                } else {
+                    null
+                }
 
-            replaceUiStateItem(currentUiState, updatedUiState)
+                replaceUiStateItem(currentUiState, currentUiState.copy(moreMenuItems = moreMenuItems))
+            }
         }
     }
 
@@ -315,16 +325,18 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     fun onReblogSiteSelected(siteLocalId: Int) {
-        // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
-        //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
-        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
-        val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
-        if (navigationTarget != null) {
-            _navigationEvents.postValue(Event(navigationTarget))
-        } else {
-            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error))))
+        launch {
+            // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
+            //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
+            val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
+            val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
+            if (navigationTarget != null) {
+                _navigationEvents.value = Event(navigationTarget)
+            } else {
+                _snackbarEvents.value = Event(SnackbarMessageHolder(UiStringRes(R.string.reader_reblog_error)))
+            }
+            pendingReblogPost = null
         }
-        pendingReblogPost = null
     }
 
     override fun onCleared() {

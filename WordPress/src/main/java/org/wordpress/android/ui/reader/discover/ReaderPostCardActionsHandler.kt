@@ -3,9 +3,11 @@ package org.wordpress.android.ui.reader.discover
 import android.content.ActivityNotFoundException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
@@ -16,7 +18,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -73,6 +77,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
@@ -107,35 +113,43 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
-        when (type) {
-            FOLLOW -> handleFollowClicked(post)
-            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
-            SHARE -> handleShareClicked(post)
-            VISIT_SITE -> handleVisitSiteClicked(post)
-            BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
-            LIKE -> handleLikeClicked(post)
-            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
-            REBLOG -> handleReblogClicked(post)
-            COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+    suspend fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
+        withContext(bgDispatcher) {
+            when (type) {
+                FOLLOW -> handleFollowClicked(post)
+                SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
+                SHARE -> handleShareClicked(post)
+                VISIT_SITE -> handleVisitSiteClicked(post)
+                BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
+                LIKE -> handleLikeClicked(post)
+                BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
+                REBLOG -> handleReblogClicked(post)
+                COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+            }
         }
     }
 
-    fun handleOnItemClicked(post: ReaderPost) {
-        incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
+    suspend fun handleOnItemClicked(post: ReaderPost) {
+        withContext(bgDispatcher) {
+            incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
 
-        if (post.isBookmarked) {
-            analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+            if (post.isBookmarked) {
+                analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)
+            }
+            _navigationEvents.postValue(Event(ShowPostDetail(post)))
         }
-        _navigationEvents.postValue(Event(ShowPostDetail(post)))
     }
 
-    fun handleVideoOverlayClicked(videoUrl: String) {
-        _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
+    suspend fun handleVideoOverlayClicked(videoUrl: String) {
+        withContext(bgDispatcher) {
+            _navigationEvents.postValue(Event(ShowVideoViewer(videoUrl)))
+        }
     }
 
-    fun handleHeaderClicked(siteId: Long, feedId: Long) {
-        _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
+    suspend fun handleHeaderClicked(siteId: Long, feedId: Long) {
+        withContext(bgDispatcher) {
+            _navigationEvents.postValue(Event(ShowBlogPreview(siteId, feedId)))
+        }
     }
 
     private fun handleFollowClicked(post: ReaderPost) {
@@ -173,21 +187,19 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     // todo: Annmarie add tracking dependent upon implementation
-    private fun handleSiteNotificationsClicked(blogId: Long) {
-        defaultScope.launch {
-            when (siteNotificationsUseCase.toggleNotification(blogId)) {
-                is SiteNotificationState.Success, SiteNotificationState.Failed.AlreadyRunning -> { // Do Nothing
-                }
-                is SiteNotificationState.Failed.NoNetwork -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
-                    )
-                }
-                is SiteNotificationState.Failed.RequestFailed -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
-                    )
-                }
+    private suspend fun handleSiteNotificationsClicked(blogId: Long) {
+        when (siteNotificationsUseCase.toggleNotification(blogId)) {
+            is SiteNotificationState.Success, SiteNotificationState.Failed.AlreadyRunning -> { // Do Nothing
+            }
+            is SiteNotificationState.Failed.NoNetwork -> {
+                _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                )
+            }
+            is SiteNotificationState.Failed.RequestFailed -> {
+                _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                )
             }
         }
     }
@@ -206,72 +218,63 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
-    private fun handleBlockSiteClicked(blogId: Long) {
+    private suspend fun handleBlockSiteClicked(blogId: Long) {
         // todo: Annmarie add tracking dependent upon implementation
-        defaultScope.launch {
-            blockBlogUseCase.blockBlog(blogId).collect {
-                when (it) {
-                    is BlockSiteState.SiteBlockedInLocalDb -> {
-                        _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(
-                                Event(
-                                        SnackbarMessageHolder(
-                                                UiStringRes(R.string.reader_toast_blog_blocked),
-                                                UiStringRes(R.string.undo),
-                                                {
-                                                    defaultScope.launch {
-                                                        undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
-                                                        _refreshPosts.postValue(Event(Unit))
-                                                    }
-                                                })
-                                )
-                        )
-                    }
-                    BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
-                    } // do nothing
-                    BlockSiteState.Failed.NoNetwork -> {
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
-                        )
-                    }
-                    BlockSiteState.Failed.RequestFailed -> {
-                        _refreshPosts.postValue(Event(Unit))
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    private fun handleLikeClicked(post: ReaderPost) {
-        defaultScope.launch {
-            when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
-                is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {
-                }
-                is NetworkUnavailable -> {
+        blockBlogUseCase.blockBlog(blogId).collect {
+            when (it) {
+                is BlockSiteState.SiteBlockedInLocalDb -> {
+                    _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+                            Event(
+                                    SnackbarMessageHolder(
+                                            UiStringRes(R.string.reader_toast_blog_blocked),
+                                            UiStringRes(R.string.undo),
+                                            {
+                                                uiScope.launch {
+                                                    undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
+                                                    _refreshPosts.postValue(Event(Unit))
+                                                }
+                                            })
+                            )
                     )
                 }
-                is RemoteRequestFailure -> {
+                BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
+                } // do nothing
+                BlockSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                    )
+                }
+                BlockSiteState.Failed.RequestFailed -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
                     )
                 }
             }
         }
     }
 
-    private fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        // todo: Annmarie add tracking dependent upon implementation
-        defaultScope.launch {
-            bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
+    private suspend fun handleLikeClicked(post: ReaderPost) {
+        when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
+            is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {}
+            is NetworkUnavailable -> {
+                _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
+            }
+            is RemoteRequestFailure -> {
+                _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                )
+            }
         }
     }
 
-    private fun handleReblogClicked(post: ReaderPost) {
+    private suspend fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
+        // todo: Annmarie add tracking dependent upon implementation
+        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
+    }
+
+    private suspend fun handleReblogClicked(post: ReaderPost) {
         val state = reblogUseCase.onReblogButtonClicked(post)
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {
@@ -304,7 +307,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     buttonAction = {
                                         defaultScope.launch {
                                             analyticsTrackerWrapper
-                                                .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
+                                                    .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)
                                             siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
                                         }
