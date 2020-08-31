@@ -12,6 +12,8 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.FetchFollowedTagsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.FetchInterestTagsUseCase
@@ -46,9 +48,18 @@ class ReaderTagRepository @Inject constructor(
         }
     }
 
-    suspend fun getUserTags(): ReaderTagList {
+    suspend fun getUserTags(): ReaderRepositoryCommunication {
         return withContext(ioDispatcher) {
-            getFollowedTagsUseCase.get()
+            val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
+            var result: ReaderRepositoryCommunication = Success
+            if (refresh) {
+                result = fetchFollowedTagUseCase.fetch()
+            }
+            if (result is Success) {
+                SuccessWithData(getFollowedTagsUseCase.get())
+            } else {
+                result
+            }
         }
     }
 
