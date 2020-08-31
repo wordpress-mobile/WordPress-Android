@@ -238,7 +238,7 @@ class MySiteFragment : Fragment(),
                 row_activity_log.visibility = View.VISIBLE
             }
 
-            my_site_title_label.isClickable = SiteUtils.isAccessedViaWPComRest(site)
+            site_info_container.title.isClickable = SiteUtils.isAccessedViaWPComRest(site)
         }
         updateQuickStartContainer()
         if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
@@ -331,11 +331,11 @@ class MySiteFragment : Fragment(),
     }
 
     private fun setupClickListeners() {
-        my_site_title_label.setOnClickListener {
+        site_info_container.title.setOnClickListener {
             completeQuickStarTask(UPDATE_SITE_TITLE)
             showTitleChangerDialog()
         }
-        my_site_subtitle_label.setOnClickListener { viewSite() }
+        site_info_container.subtitle.setOnClickListener { viewSite() }
         switch_site.setOnClickListener { showSitePicker() }
         row_view_site.setOnClickListener { viewSite() }
         my_site_register_domain_cta.setOnClickListener { registerDomain() }
@@ -532,7 +532,7 @@ class MySiteFragment : Fragment(),
                 hint,
                 false,
                 canEditTitle,
-                my_site_title_label.id
+                site_info_container.title.id
         )
         inputDialog.setTargetFragment(this@MySiteFragment, 0)
         inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
@@ -993,8 +993,8 @@ class MySiteFragment : Fragment(),
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
-        my_site_title_label.text = blogTitle
-        my_site_subtitle_label.text = homeUrl
+        site_info_container.title.text = blogTitle
+        site_info_container.subtitle.text = "verylongwordpresssiteurl.wordpress.com"
 
         // Hide the Plan item if the Plans feature is not available for this blog
         val planShortName = site.planShortName
@@ -1501,7 +1501,7 @@ class MySiteFragment : Fragment(),
                     HtmlCompat.fromHtml(
                             getString(
                                     R.string.quick_start_dialog_update_site_title_message_short,
-                                    my_site_title_label.text.toString()
+                                    site_info_container.title.text.toString()
                             ), HtmlCompat.FROM_HTML_MODE_COMPACT
                     )
                 } else {
@@ -1565,7 +1565,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onSuccessfulInput(input: String, callbackId: Int) {
-        if (callbackId == my_site_title_label.id && selectedSite != null) {
+        if (callbackId == site_info_container.title.id && selectedSite != null) {
             if (!NetworkUtils.isNetworkAvailable(activity)) {
                 WPSnackbar.make(
                         requireActivity().findViewById(R.id.coordinator),
@@ -1575,7 +1575,7 @@ class MySiteFragment : Fragment(),
                 return
             }
 
-            my_site_title_label.text = input
+            site_info_container.title.text = input
             selectedSite?.name = input
             // save the site locally with updated title
             dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(selectedSite))
@@ -1588,7 +1588,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
-        if (callbackId == my_site_title_label.id) {
+        if (callbackId == site_info_container.title.id) {
             showQuickStartNoticeIfNecessary()
             updateQuickStartContainer()
         }

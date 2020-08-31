@@ -99,32 +99,15 @@
                         </com.google.android.material.card.MaterialCardView>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <LinearLayout
+                    <org.wordpress.android.widgets.MySiteTitleAndSubtitleLabelView
                         android:id="@+id/site_info_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
+                        android:layout_alignTop="@+id/blavatar_container"
+                        android:layout_alignBottom="@+id/blavatar_container"
                         android:layout_marginStart="@dimen/margin_extra_large"
                         android:layout_toStartOf="@+id/switch_site"
-                        android:layout_toEndOf="@+id/blavatar_container"
-                        android:orientation="vertical">
-
-                        <org.wordpress.android.widgets.MySiteNameLabelTextView
-                            android:id="@+id/my_site_title_label"
-                            style="@style/MySiteTitleLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="Example " />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/my_site_subtitle_label"
-                            style="@style/MySiteSubtitleLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:icon="@drawable/ic_external_white_24dp"
-                            app:iconGravity="textEnd"
-                            tools:text="example.wordpress.com" />
-                    </LinearLayout>
+                        android:layout_toEndOf="@+id/blavatar_container" />
 
                     <ImageButton
                         android:id="@+id/switch_site"
