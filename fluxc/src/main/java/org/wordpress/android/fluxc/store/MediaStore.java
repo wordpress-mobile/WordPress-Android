@@ -259,7 +259,25 @@ public class MediaStore extends Store {
                 String[] splitMsg = message.split("\\|", 2);
 
                 if (null != splitMsg && splitMsg.length > 1) {
-                    return splitMsg[1];
+                    String userMessage = splitMsg[1];
+
+                    if (TextUtils.isEmpty(userMessage)) {
+                        return message;
+                    }
+
+                    // Remove the final " Back" if present
+                    // Note that the real string depends on current locale; this is not optimal but
+                    // the two "." sentences separators seem to be always present in this error category messages
+                    String[] splitUserMsg = userMessage.split("\\.");
+
+                    if (null != splitUserMsg && splitUserMsg.length > 2) {
+                        userMessage = userMessage.substring(
+                                0,
+                                userMessage.length() - splitUserMsg[splitUserMsg.length - 1].length()
+                                                           );
+                    }
+
+                    return userMessage;
                 } else {
                     return message;
                 }
