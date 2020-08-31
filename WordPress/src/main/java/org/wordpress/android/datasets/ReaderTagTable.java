@@ -315,11 +315,19 @@ public class ReaderTagTable {
     }
 
     public static void setTagLastUpdated(ReaderTag tag) {
+        updateTagLastUpdated(tag, new Date());
+    }
+
+    public static void clearTagLastUpdated(ReaderTag tag) {
+        updateTagLastUpdated(tag, new Date(0));
+    }
+
+    private static void updateTagLastUpdated(ReaderTag tag, Date newDate) {
         if (tag == null) {
             return;
         }
 
-        String date = DateTimeUtils.iso8601FromDate(new Date());
+        String date = DateTimeUtils.iso8601FromDate(newDate);
         String sql = "UPDATE tbl_tags SET date_updated=?1 WHERE tag_slug=?2 AND tag_type=?3";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
