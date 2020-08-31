@@ -126,7 +126,9 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onFollowSiteClicked(post: ReaderPost, bookmarksList: Boolean) {
-        readerPostCardActionsHandler.onAction(post, FOLLOW, bookmarksList)
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(post, FOLLOW, bookmarksList)
+        }
     }
 
     fun onSiteNotificationMenuClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {

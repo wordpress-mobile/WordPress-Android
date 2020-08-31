@@ -152,34 +152,32 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private fun handleFollowClicked(post: ReaderPost) {
+    private suspend fun handleFollowClicked(post: ReaderPost) {
         // todo: Annmarie add tracking dependent upon implementation (tracked in ReaderBlogActions)
-        defaultScope.launch {
-            followUseCase.toggleFollow(post).collect {
-                when (it) {
-                    is FollowSiteState.Failed.NoNetwork -> {
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
-                        )
-                    }
-                    is FollowSiteState.Failed.RequestFailed -> {
-                        _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
-                        )
-                    }
-                    is FollowSiteState.Success -> { // Do nothing
-                    }
-                    is PostFollowStatusChanged -> {
-                        _followStatusUpdated.postValue(it)
-                        siteNotificationsUseCase.fetchSubscriptions()
+        followUseCase.toggleFollow(post).collect {
+            when (it) {
+                is FollowSiteState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    )
+                }
+                is FollowSiteState.Failed.RequestFailed -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    )
+                }
+                is FollowSiteState.Success -> { // Do nothing
+                }
+                is PostFollowStatusChanged -> {
+                    _followStatusUpdated.postValue(it)
+                    siteNotificationsUseCase.fetchSubscriptions()
 
-                        if (it.showEnableNotification) {
-                            val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
-                            action.invoke()
-                        } else if (it.deleteNotificationSubscription) {
-                            siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
-                            siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(it.blogId, false)
-                        }
+                    if (it.showEnableNotification) {
+                        val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
+                        action.invoke()
+                    } else if (it.deleteNotificationSubscription) {
+                        siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
+                        siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(it.blogId, false)
                     }
                 }
             }
