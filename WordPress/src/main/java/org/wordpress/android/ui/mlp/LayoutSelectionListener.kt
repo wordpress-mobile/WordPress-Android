@@ -10,10 +10,4 @@ import androidx.lifecycle.LiveData
 interface LayoutSelectionListener {
     val lifecycleOwner: LifecycleOwner
     val selectedItemData: LiveData<String?>
-
-    /**
-     * Tap on layout event triggered
-     * @param layout the tapped layout
-     */
-    fun layoutTapped(layout: LayoutListItem)
 }

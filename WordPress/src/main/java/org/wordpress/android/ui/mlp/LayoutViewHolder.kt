@@ -29,21 +29,21 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
     private val selected: ImageView = itemView.selected_overlay
 
     fun onBind(
-        layout: LayoutListItem,
+        uiState: LayoutListItemUiState,
         imageManager: ImageManager,
         selectionListener: LayoutSelectionListener
     ) {
-        imageManager.load(preview, ImageType.THEME, layout.preview, FIT_CENTER)
-        selected.setVisible(layout.selected)
-        preview.contentDescription = if (layout.selected) parent.context.getString(
+        imageManager.load(preview, ImageType.THEME, uiState.preview, FIT_CENTER)
+        selected.setVisible(uiState.selected)
+        preview.contentDescription = if (uiState.selected) parent.context.getString(
                 R.string.mlp_layout_selected,
-                layout.title
-        ) else layout.title
+                uiState.title
+        ) else uiState.title
         container.setOnClickListener {
-            selectionListener.layoutTapped(layout)
+            uiState.onItemTapped.invoke()
         }
         selectionListener.selectedItemData.observe(selectionListener.lifecycleOwner, Observer {
-            selected.setVisible(it == layout.slug)
+            selected.setVisible(it == uiState.slug)
         })
     }
 }

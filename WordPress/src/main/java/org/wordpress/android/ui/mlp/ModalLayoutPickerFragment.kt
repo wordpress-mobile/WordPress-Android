@@ -116,10 +116,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         viewModel.dismiss()
     }
 
-    override fun layoutTapped(layout: LayoutListItem) {
-        viewModel.layoutTapped(layout.slug)
-    }
-
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)

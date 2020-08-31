@@ -17,13 +17,13 @@ class LayoutsAdapter(
 ) : RecyclerView.Adapter<LayoutViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
 
-    private var layouts: List<LayoutListItem> = listOf()
+    private var layouts: List<LayoutListItemUiState> = listOf()
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
 
-    fun setData(data: List<LayoutListItem>) {
+    fun setData(data: List<LayoutListItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(LayoutsDiffCallback(layouts, data))
         layouts = data
         diffResult.dispatchUpdatesTo(this)

@@ -41,6 +41,6 @@ sealed class ModalLayoutPickerListItem(val type: ViewType) {
      * @param description the layout category description
      * @param layouts the layouts list
      */
-    data class LayoutCategory(val title: String, val description: String, val layouts: List<LayoutListItem>) :
+    data class LayoutCategory(val title: String, val description: String, val layouts: List<LayoutListItemUiState>) :
             ModalLayoutPickerListItem(LAYOUTS)
 }

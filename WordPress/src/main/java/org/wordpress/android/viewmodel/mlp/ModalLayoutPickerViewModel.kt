@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
-import org.wordpress.android.ui.mlp.LayoutListItem
+import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -82,7 +82,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
         demoLayouts.categories.forEach { category ->
             val layouts = demoLayouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == _selectedLayoutSlug.value
-                LayoutListItem(layout.slug, layout.title, layout.preview, selected)
+                LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
+                    layoutTapped(layoutSlug = layout.slug)
+                }
             }
             listItems.add(ModalLayoutPickerListItem.LayoutCategory(category.title, category.description, layouts))
         }
@@ -118,7 +120,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    fun layoutTapped(layoutSlug: String) {
+    private fun layoutTapped(layoutSlug: String) {
         if (layoutSlug == _selectedLayoutSlug.value) { // deselect
             _selectedLayoutSlug.value = null
         } else {
