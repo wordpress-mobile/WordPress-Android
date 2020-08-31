@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHAN
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
@@ -163,18 +165,77 @@ class ReaderDiscoverDataProviderTest {
         coroutineScope.resumeDispatcher()
     }
 
+    // The following test the loadData(), which is kicked off when discoverFeed obtains observers
     @ExperimentalCoroutinesApi
     @Test
-    fun `when observers connect request is started and posted to comm channel`() = test {
+    fun `when loadData with refresh request is started and posted to comm channel`() = test {
         whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)).thenReturn(Started(REQUEST_FIRST_PAGE))
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(true)
 
         dataProvider.communicationChannel.observeForever { }
-        dataProvider.discoverFeed.observeForever{ }
+        dataProvider.discoverFeed.observeForever { }
 
         val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
         Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when loadData without refresh no start message posted to comm channel`() = test {
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+
+        dataProvider.communicationChannel.observeForever { }
+        dataProvider.discoverFeed.observeForever { }
+
+        val started = dataProvider.communicationChannel.value?.getContentIfNotHandled()
+        Assertions.assertThat(started).isNull()
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when loadData with forceReload true data posted to discover channel`() = test {
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+
+        // No observer
+        dataProvider.onReaderPostTableAction(ReaderPostTableActionEnded)
+
+        // Add observer
+        dataProvider.discoverFeed.observeForever { }
+
+        val data = dataProvider.discoverFeed.value
+        Assertions.assertThat(data).isNotNull
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when loadData with existsInMemory data posted to discover feed`() = test {
+        val discoverFeedObserver = Observer<ReaderDiscoverCards> { }
+
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+
+        dataProvider.communicationChannel.observeForever { }
+
+        // Force loading of data into discover feed on next observe
+        dataProvider.onReaderPostTableAction(ReaderPostTableActionEnded)
+
+        // connect observers
+        dataProvider.discoverFeed.observeForever(discoverFeedObserver)
+
+        // disconnect observer
+        dataProvider.discoverFeed.removeObserver(discoverFeedObserver)
+
+        // add an observer
+        dataProvider.discoverFeed.observeForever { }
+
+        // Validate that data exists in the feed
+        val data = dataProvider.discoverFeed.value
+        Assertions.assertThat(data).isNotNull
+
+        Assertions.assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
     }
 
     // Helper functions lifted from ReaderDiscoverViewModelTest because why reinvent the wheel
@@ -190,6 +251,4 @@ class ReaderDiscoverDataProviderTest {
         this.blogId = id
         this.title = "DummyPost"
     }
-
-    private fun createDummyReaderTag() = readerTagWrapper.createDiscoverPostCardsTag()
 }

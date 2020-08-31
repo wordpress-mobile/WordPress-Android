@@ -71,7 +71,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
             }
 
     val readerTag: ReaderTag
-            get()  = readerTagWrapper.createDiscoverPostCardsTag()
+        get() = readerTagWrapper.createDiscoverPostCardsTag()
 
     fun start() {
         if (isStarted) return
