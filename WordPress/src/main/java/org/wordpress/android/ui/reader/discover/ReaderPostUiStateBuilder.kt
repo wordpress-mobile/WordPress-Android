@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
@@ -14,6 +16,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -40,6 +43,7 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
 
@@ -52,17 +56,57 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    // TODO malinjir move this to a bg thread
-    fun mapPostToUiState(
+    suspend fun mapPostToUiState(
         post: ReaderPost,
-        isDiscover: Boolean = false, // set to true for new discover tab
+        isDiscover: Boolean = false,
         photonWidth: Int,
         photonHeight: Int,
             // TODO malinjir try to refactor/remove this parameter
         postListType: ReaderPostListType,
             // TODO malinjir try to refactor/remove this parameter
+        isBookmarkList: Boolean,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onTagItemClicked: (String) -> Unit,
+        moreMenuItems: List<SecondaryAction>? = null
+    ): ReaderPostUiState {
+        return withContext(bgDispatcher) {
+            mapPostToUiStateBlocking(
+                    post,
+                    isDiscover,
+                    photonWidth,
+                    photonHeight,
+                    postListType,
+                    isBookmarkList,
+                    onButtonClicked,
+                    onItemClicked,
+                    onItemRendered,
+                    onDiscoverSectionClicked,
+                    onMoreButtonClicked,
+                    onMoreDismissed,
+                    onVideoOverlayClicked,
+                    onPostHeaderViewClicked,
+                    onTagItemClicked,
+                    moreMenuItems
+            )
+        }
+    }
+
+    fun mapPostToUiStateBlocking(
+        post: ReaderPost,
+        isDiscover: Boolean = false,
+        photonWidth: Int,
+        photonHeight: Int,
+        postListType: ReaderPostListType,
         isBookmarkList: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
@@ -110,24 +154,26 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
-    fun mapTagListToReaderInterestUiState(
+    suspend fun mapTagListToReaderInterestUiState(
         interests: ReaderTagList,
         onClicked: ((String) -> Unit)
     ): ReaderInterestsCardUiState {
-        val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
-            interests.size
-        } else {
-            READER_INTEREST_LIST_SIZE_LIMIT
-        }
-        val lastIndex = listSize - 1
+        return withContext(bgDispatcher) {
+            val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
+                interests.size
+            } else {
+                READER_INTEREST_LIST_SIZE_LIMIT
+            }
+            val lastIndex = listSize - 1
 
-        return ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
-            ReaderInterestUiState(
-                    interest.tagTitle,
-                    buildIsDividerVisible(interest, interests, lastIndex),
-                    onClicked
-            )
-        })
+            return@withContext ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
+                ReaderInterestUiState(
+                        interest.tagTitle,
+                        buildIsDividerVisible(interest, interests, lastIndex),
+                        onClicked
+                )
+            })
+        }
     }
 
     private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =

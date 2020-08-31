@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
@@ -15,17 +18,29 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NO
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
+import javax.inject.Named
 
 @Reusable
 class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val readerBlogTableWrapper: ReaderBlogTableWrapper
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    fun buildMoreMenuItems(
+    suspend fun buildMoreMenuItems(
         post: ReaderPost,
         postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
+        return withContext(bgDispatcher) {
+            buildMoreMenuItemsBlocking(post, postListType, onButtonClicked)
+        }
+    }
+
+    fun buildMoreMenuItemsBlocking(
+        post: ReaderPost,
+        postListType: ReaderPostListType,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ): MutableList<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
         if (readerPostTableWrapper.isPostFollowed(post)) {
             menuItems.add(

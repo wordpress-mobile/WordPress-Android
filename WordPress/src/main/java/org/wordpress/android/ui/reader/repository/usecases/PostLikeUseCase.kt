@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
@@ -18,6 +21,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLike
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 
@@ -25,7 +29,8 @@ class PostLikeUseCase @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val accountStore: AccountStore,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val continuations:
             MutableMap<PostLikeRequest, Continuation<ReaderRepositoryCommunication>?> = mutableMapOf()
@@ -38,25 +43,29 @@ class PostLikeUseCase @Inject constructor(
         post: ReaderPost,
         isAskingToLike: Boolean
     ): ReaderRepositoryCommunication {
-        val wpComUserId = accountStore.account.userId
-        val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
+        return withContext(bgDispatcher) {
+            val wpComUserId = accountStore.account.userId
+            val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            return NetworkUnavailable
-        }
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                return@withContext NetworkUnavailable
+            }
 
-        if (continuations[request] != null) {
-            return SuccessWithData(PostLikeUnChanged(
-                    post.postId,
-                    post.blogId,
-                    isAskingToLike,
-                    wpComUserId
-            ))
-        }
+            if (continuations[request] != null) {
+                return@withContext SuccessWithData(
+                        PostLikeUnChanged(
+                                post.postId,
+                                post.blogId,
+                                isAskingToLike,
+                                wpComUserId
+                        )
+                )
+            }
 
-        return suspendCancellableCoroutine { cont ->
-            continuations[request] = cont
-            readerPostActionsWrapper.performLikeAction(post, isAskingToLike, wpComUserId)
+            return@withContext suspendCancellableCoroutine<ReaderRepositoryCommunication> { cont ->
+                continuations[request] = cont
+                readerPostActionsWrapper.performLikeAction(post, isAskingToLike, wpComUserId)
+            }
         }
     }
 
