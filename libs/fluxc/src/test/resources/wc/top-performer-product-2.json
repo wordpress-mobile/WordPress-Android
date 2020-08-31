@@ -1,0 +1,126 @@
+{
+  "id": 22,
+  "name": "Album",
+  "slug": "album",
+  "permalink": "https:\/\/mystagingwebsite.com\/product\/album\/",
+  "date_created": "2020-06-29T23:23:50",
+  "date_created_gmt": "2020-06-29T23:23:50",
+  "date_modified": "2020-07-02T22:59:35",
+  "date_modified_gmt": "2020-07-02T22:59:35",
+  "type": "simple",
+  "status": "publish",
+  "featured": false,
+  "catalog_visibility": "visible",
+  "description": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum sagittis orci ac odio dictum tincidunt. Donec ut metus leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed luctus, dui eu sagittis sodales, nulla nibh sagittis augue, vel porttitor diam enim non metus. Vestibulum aliquam augue neque. Phasellus tincidunt odio eget ullamcorper efficitur. Cras placerat ut turpis pellentesque vulputate. Nam sed consequat tortor. Curabitur finibus sapien dolor. Ut eleifend tellus nec erat pulvinar dignissim. Nam non arcu purus. Vivamus et massa massa.<\/p>\n",
+  "short_description": "<p>This is a simple, virtual product.<\/p>\n",
+  "sku": "woo-album",
+  "price": "15",
+  "regular_price": "15",
+  "sale_price": "",
+  "date_on_sale_from": null,
+  "date_on_sale_from_gmt": null,
+  "date_on_sale_to": null,
+  "date_on_sale_to_gmt": null,
+  "price_html": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>15,00<\/span>",
+  "on_sale": false,
+  "purchasable": true,
+  "total_sales": 2002,
+  "virtual": true,
+  "downloadable": true,
+  "downloads": [
+    {
+      "id": "0130c0d2-0389-4543-9469-cfbca7ba3a08",
+      "name": "Single 1",
+      "file": "https:\/\/demo.woothemes.com\/woocommerce\/wp-content\/uploads\/sites\/56\/2017\/08\/single.jpg"
+    },
+    {
+      "id": "33457f4e-a66b-4976-bf99-4e25606c2752",
+      "name": "Single 2",
+      "file": "https:\/\/demo.woothemes.com\/woocommerce\/wp-content\/uploads\/sites\/56\/2017\/08\/album.jpg"
+    }
+  ],
+  "download_limit": 1,
+  "download_expiry": 1,
+  "external_url": "",
+  "button_text": "",
+  "tax_status": "taxable",
+  "tax_class": "",
+  "manage_stock": false,
+  "stock_quantity": null,
+  "stock_status": "instock",
+  "backorders": "no",
+  "backorders_allowed": false,
+  "backordered": false,
+  "sold_individually": false,
+  "weight": "",
+  "dimensions": {
+    "length": "",
+    "width": "",
+    "height": ""
+  },
+  "shipping_required": false,
+  "shipping_taxable": false,
+  "shipping_class": "",
+  "shipping_class_id": 0,
+  "reviews_allowed": true,
+  "average_rating": "0.00",
+  "rating_count": 0,
+  "related_ids": [
+    23
+  ],
+  "upsell_ids": [
+  ],
+  "cross_sell_ids": [
+  ],
+  "parent_id": 0,
+  "purchase_note": "",
+  "categories": [
+    {
+      "id": 20,
+      "name": "Music",
+      "slug": "music"
+    }
+  ],
+  "tags": [
+  ],
+  "images": [
+    {
+      "id": 51,
+      "date_created": "2020-06-29T23:23:55",
+      "date_created_gmt": "2020-06-29T23:23:55",
+      "date_modified": "2020-06-29T23:23:55",
+      "date_modified_gmt": "2020-06-29T23:23:55",
+      "src": "https:\/\/mystagingwebsite.com\/wp-content\/uploads\/2020\/06\/album-1.jpg",
+      "name": "album-1.jpg",
+      "alt": ""
+    }
+  ],
+  "attributes": [
+  ],
+  "default_attributes": [
+  ],
+  "variations": [
+  ],
+  "grouped_products": [
+  ],
+  "menu_order": 0,
+  "meta_data": [
+    {
+      "id": 554,
+      "key": "_wpcom_is_markdown",
+      "value": "1"
+    }
+  ],
+  "_links": {
+    "self": [
+      {
+        "href": "https:\/\/mystagingwebsite.com\/wp-json\/wc\/v3\/products\/22"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https:\/\/mystagingwebsite.com\/wp-json\/wc\/v3\/products"
+      }
+    ]
+  }
+}
