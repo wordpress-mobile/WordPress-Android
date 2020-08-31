@@ -20,9 +20,9 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{now format='yyyy-MM-dd'}}",
+            "date": "{{fnow format='yyyy-MM-dd'}}",
             "days": {
-                "{{now format='yyyy-MM-dd'}}": {
+                "{{fnow format='yyyy-MM-dd'}}": {
                     "views": [
                         {
                             "country_code": "CA",
