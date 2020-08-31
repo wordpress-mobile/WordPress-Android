@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This is a special color with different alpha values in light and dark mode
+    for a chip in expandable tags view -->
+    <item android:alpha="@dimen/expandable_chips_view_chip_alpha" android:color="?attr/colorOnSurface" />
+</selector>
