@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
@@ -39,6 +40,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val selectedLayoutSlug: LiveData<String?> = _selectedLayoutSlug
 
     /**
+     * Tracks the visibility of the action buttons
+     */
+    private val _buttonsUiState = MutableLiveData<ButtonsUiState>()
+    val buttonsUiState: LiveData<ButtonsUiState> = _buttonsUiState
+
+    /**
      * Tracks the Modal Layout Picker list items
      */
     private val _listItems = MutableLiveData<List<ModalLayoutPickerListItem>>()
@@ -55,6 +62,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     fun init(landscape: Boolean) {
         landscapeMode = landscape
         loadListItems()
+        updateButtonsUiState()
     }
 
     private fun loadListItems() {
@@ -126,7 +134,16 @@ class ModalLayoutPickerViewModel @Inject constructor(
         } else {
             _selectedLayoutSlug.value = layoutSlug
         }
+        updateButtonsUiState()
         loadListItems()
+    }
+
+    /**
+     * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
+     */
+    private fun updateButtonsUiState() {
+        val selection = _selectedLayoutSlug.value != null
+        _buttonsUiState.value = ButtonsUiState(!selection, selection, selection)
     }
 
     /**

@@ -124,12 +124,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                 }
         )
 
-        viewModel.selectedLayoutSlug.observe(this,
+        viewModel.buttonsUiState.observe(this,
                 Observer {
-                    val selection = it != null
-                    createBlankPageButton.setVisible(!selection)
-                    createPageButton.setVisible(selection)
-                    previewButton.setVisible(selection)
+                    createBlankPageButton.setVisible(it.createBlankPageVisible)
+                    createPageButton.setVisible(it.createPageVisible)
+                    previewButton.setVisible(it.previewVisible)
                 }
         )
     }
