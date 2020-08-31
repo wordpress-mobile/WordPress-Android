@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
+import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -24,18 +26,25 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -45,6 +54,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +70,16 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     private fun setupViews() {
         recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler_view.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+
+        val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
+        val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
+        recycler_view.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
+
         WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
             viewModel.swipeToRefresh()
+        }
+        error_retry.setOnClickListener {
+            viewModel.onRetryButtonClick()
         }
     }
 
@@ -72,16 +90,22 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                 is ContentUiState -> {
                     (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
                 }
+                is ErrorUiState -> {
+                    uiHelpers.setTextOrHide(error_title, it.titleResId)
+                }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
-            uiHelpers.updateVisibility(progress_bar, it.progressVisibility)
-            uiHelpers.updateVisibility(progress_text, it.progressVisibility)
+            uiHelpers.updateVisibility(progress_bar, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(error_layout, it.fullscreenErrorVisibility)
+            uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
-            ptr_layout.isRefreshing = it.swipeToRefreshIsRefreshing
+            ptr_layout.isRefreshing = it.reloadProgressVisibility
         })
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {
+                    is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, post.blogId, post.postId)
                     is SharePost -> ReaderActivityLauncher.sharePost(context, post)
                     is OpenPost -> ReaderActivityLauncher.openPost(context, post)
                     is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
@@ -97,6 +121,13 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                         }
                     }
                     is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+                    is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+                    is ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(context, this.videoUrl)
+                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                            context,
+                            this.siteId,
+                            this.feedId
+                    )
                 }
             }
         })
@@ -118,8 +149,8 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
             MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(getString(bookmarkDialog.title))
                     .setMessage(getString(bookmarkDialog.message))
-                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) {
-                        _, _ -> bookmarkDialog.okButtonAction.invoke()
+                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                        bookmarkDialog.okButtonAction.invoke()
                     }
                     .setOnDismissListener {
                         bookmarksSavedLocallyDialog = null
@@ -134,9 +165,13 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(constraint_layout, getString(this.messageRes), Snackbar.LENGTH_LONG)
-        if (this.buttonTitleRes != null) {
-            snackbar.setAction(getString(this.buttonTitleRes)) {
+        val snackbar = WPSnackbar.make(
+                constraint_layout,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
+        )
+        if (this.buttonTitle != null) {
+            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
                 this.buttonAction.invoke()
             }
         }

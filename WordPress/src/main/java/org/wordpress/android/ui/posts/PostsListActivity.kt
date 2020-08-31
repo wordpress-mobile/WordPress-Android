@@ -45,6 +45,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
@@ -58,7 +59,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
@@ -90,6 +90,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
+    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
 
     private lateinit var site: SiteModel
 
@@ -288,7 +289,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start()
+        postListCreateMenuViewModel.start(site)
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
@@ -327,7 +328,8 @@ class PostsListActivity : LocaleAwareActivity(),
                         this@PostsListActivity,
                         action,
                         remotePreviewLogicHelper,
-                        previewStateHelper
+                        previewStateHelper,
+                        mediaPickerLauncher
                 )
             }
         })
@@ -392,13 +394,14 @@ class PostsListActivity : LocaleAwareActivity(),
             event.applyIfNotHandled {
                 postListCreateMenuViewModel.onFabLongPressed()
             }
+            Toast.makeText(fab.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.onFabLongPressedForPostList.observe(this, Observer {
             if (fab.isHapticFeedbackEnabled) {
                 fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
-            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+            Toast.makeText(fab.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -408,12 +411,12 @@ class PostsListActivity : LocaleAwareActivity(),
                     SnackbarItem(
                             SnackbarItem.Info(
                                 view = parent,
-                                textRes = UiStringRes(holder.messageRes),
+                                textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                             ),
-                            holder.buttonTitleRes?.let {
+                            holder.buttonTitle?.let {
                                 SnackbarItem.Action(
-                                    textRes = UiStringRes(holder.buttonTitleRes),
+                                    textRes = holder.buttonTitle,
                                     clickListener = OnClickListener { holder.buttonAction() }
                                 )
                             },

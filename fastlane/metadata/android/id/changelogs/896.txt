@@ -1,4 +1,0 @@
-15.3:
-Pembaruan penyunting blok: Semua blok kini memiliki fungsionalitas Salin, Potong, Tempel, dan Duplikasi. Blok yang tidak didukung dapat diedit secara individual. (Catatan: Pengeditan blok yang tidak didukung belum tersedia untuk situs yang di-hosting sendiri atau situs yang menggunakan editor lama sebagai editor asal.)
-
-Pembaruan UI: Susunan kata yang lebih jelas dan penambahan dialog konfirmasi ketika membuang pos.
