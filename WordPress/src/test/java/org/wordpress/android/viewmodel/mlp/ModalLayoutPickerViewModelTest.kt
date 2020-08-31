@@ -128,4 +128,43 @@ class ModalLayoutPickerViewModelTest {
         viewModel.dismiss()
         assertThat(viewModel.selectedLayoutSlug.value).isNull()
     }
+
+    @Test
+    fun `when no layout is selected the create blank page button is visible`() {
+        viewModel.init(false)
+        assertThat(viewModel.buttonsUiState.value?.createBlankPageVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `when a layout is selected the create blank page button is not visible`() {
+        viewModel.init(false)
+        viewModel.layoutTapped("about-1")
+        assertThat(viewModel.buttonsUiState.value?.createBlankPageVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when no layout is selected the create page button is not visible`() {
+        viewModel.init(false)
+        assertThat(viewModel.buttonsUiState.value?.createPageVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when a layout is selected the create page button is visible`() {
+        viewModel.init(false)
+        viewModel.layoutTapped("about-1")
+        assertThat(viewModel.buttonsUiState.value?.createPageVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `when no layout is selected the preview button is not visible`() {
+        viewModel.init(false)
+        assertThat(viewModel.buttonsUiState.value?.previewVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when a layout is selected the preview button is visible`() {
+        viewModel.init(false)
+        viewModel.layoutTapped("about-1")
+        assertThat(viewModel.buttonsUiState.value?.previewVisible).isEqualTo(true)
+    }
 }
