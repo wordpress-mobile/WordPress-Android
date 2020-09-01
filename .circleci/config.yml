@@ -290,6 +290,12 @@ jobs:
           command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+      - run: 
+          name: Setup assets
+          command: |
+            INDEX_BUNDLE_PATH="libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle"
+            mkdir -p "$(dirname "${CIRCLE_WORKING_DIRECTORY}/${INDEX_BUNDLE_PATH}")"
+            cp ~/project/"${INDEX_BUNDLE_PATH}" "${CIRCLE_WORKING_DIRECTORY}/${INDEX_BUNDLE_PATH}"
       - run:
           name: Build
           environment:
