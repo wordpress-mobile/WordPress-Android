@@ -559,7 +559,6 @@
     <dimen name="mlp_layout_card_height">204dp</dimen>
     <dimen name="mlp_layout_card_width">136dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
-    <dimen name="mlp_layout_card_margin_bottom">29dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
     <dimen name="mlp_category_horizontal_margin">12dp</dimen>
