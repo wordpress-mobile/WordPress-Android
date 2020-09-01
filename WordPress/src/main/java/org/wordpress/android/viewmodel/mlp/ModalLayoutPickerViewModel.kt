@@ -35,10 +35,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
 
     /**
-     * Tracks the selected category slug
+     * Tracks the selected categories
      */
-    private val _selectedCategorySlug = MutableLiveData<String?>()
-    val selectedCategorySlug: LiveData<String?> = _selectedCategorySlug
+    val selectedCategoriesSlugs = arrayListOf<String>()
 
     /**
      * Tracks the selected layout slug
@@ -97,12 +96,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     it.slug,
                     it.title,
                     it.emoji,
-                    it.slug == _selectedCategorySlug.value
+                    selectedCategoriesSlugs.contains(it.slug)
             ) { categoryTapped(it.slug) }
         }))
 
-        val selectedCategories = if (_selectedCategorySlug.value != null)
-            demoLayouts.categories.filter { it.slug == _selectedCategorySlug.value }
+        val selectedCategories = if (selectedCategoriesSlugs.isNotEmpty())
+            demoLayouts.categories.filter { selectedCategoriesSlugs.contains(it.slug) }
         else demoLayouts.categories
 
         selectedCategories.forEach { category ->
@@ -137,7 +136,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         _isModalLayoutPickerShowing.postValue(Event(false))
         _isHeaderVisible.postValue(Event(true))
         _selectedLayoutSlug.value = null
-        _selectedCategorySlug.value = null
+        selectedCategoriesSlugs.clear()
     }
 
     /**
@@ -155,10 +154,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param categorySlug the slug of the tapped category
      */
     fun categoryTapped(categorySlug: String) {
-        if (categorySlug == _selectedCategorySlug.value) { // deselect
-            _selectedCategorySlug.value = null
+        if (selectedCategoriesSlugs.contains(categorySlug)) { // deselect
+            selectedCategoriesSlugs.remove(categorySlug)
         } else {
-            _selectedCategorySlug.value = categorySlug
+            selectedCategoriesSlugs.add(categorySlug)
         }
         loadListItems()
     }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mlp
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView

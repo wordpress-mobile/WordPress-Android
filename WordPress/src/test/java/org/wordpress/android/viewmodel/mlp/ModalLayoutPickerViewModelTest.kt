@@ -12,7 +12,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Categories
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.LayoutCategory
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.CATEGORIES
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.LAYOUTS
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.SUBTITLE
@@ -148,14 +147,14 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts no category is selected`() {
         viewModel.init(false)
-        assertThat(viewModel.selectedCategorySlug.value).isNull()
+        assertThat(viewModel.selectedCategoriesSlugs).isEmpty()
     }
 
     @Test
     fun `when the user taps on a category the category is selected`() {
         viewModel.init(false)
         viewModel.categoryTapped("about")
-        assertThat(viewModel.selectedCategorySlug.value).isEqualTo("about")
+        assertThat(viewModel.selectedCategoriesSlugs).contains("about")
     }
 
     @Test
@@ -163,7 +162,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.init(false)
         viewModel.categoryTapped("about")
         viewModel.categoryTapped("about")
-        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+        assertThat(viewModel.selectedCategoriesSlugs).doesNotContain("about")
     }
 
     @Test
@@ -171,23 +170,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.init(false)
         viewModel.categoryTapped("about")
         viewModel.dismiss()
-        assertThat(viewModel.selectedLayoutSlug.value).isNull()
-    }
-
-    @Test
-    fun `when the user taps on a category only one layout category is shown`() {
-        viewModel.init(false)
-        viewModel.categoryTapped("about")
-        val layoutCategories = viewModel.listItems.value?.filter { it.type == LAYOUTS }
-        assertThat(layoutCategories?.size).isEqualTo(1)
-    }
-
-    @Test
-    fun `when the user taps on a category only this layout category is shown`() {
-        viewModel.init(false)
-        viewModel.categoryTapped("about")
-        val layoutCategory = viewModel.listItems.value?.first { it.type == LAYOUTS } as? LayoutCategory
-        assertThat(layoutCategory?.slug).isEqualTo("about")
+        assertThat(viewModel.selectedCategoriesSlugs).isEmpty()
     }
 
     fun `when no layout is selected the create blank page button is visible`() {
