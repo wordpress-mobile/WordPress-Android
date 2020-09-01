@@ -8,6 +8,7 @@
         style="@style/MySiteTitleLabel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:gravity="bottom"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Site Title" />
@@ -19,8 +20,9 @@
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_external_white_24dp"
         app:iconGravity="textEnd"
+        android:gravity="top"
+        android:layout_gravity="top"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_site_title_label"
         tools:text="example.wordpress.com" />
 
