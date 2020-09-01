@@ -57,7 +57,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         if (isStarted) return
         isStarted = true
 
-        val text:TextView
+        val text: TextView
         this.site = site
         this.currentScreen = currentScreenFromSavedState ?: HOME
 
