@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
 import android.net.Uri
@@ -20,15 +20,13 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.FabUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -81,7 +79,7 @@ class MediaPickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+        val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
         var selectedIds: List<Long>? = null
         var lastTappedIcon: MediaPickerIcon? = null
@@ -184,7 +182,7 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+        viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
     }
 
     private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
@@ -328,11 +326,11 @@ class MediaPickerFragment : Fragment() {
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(
             listener: MediaPickerListener,
-            browserType: MediaBrowserType,
+            mediaPickerSetup: MediaPickerSetup,
             site: SiteModel?
         ): MediaPickerFragment {
             val args = Bundle()
-            args.putSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
+            mediaPickerSetup.toBundle(args)
             if (site != null) {
                 args.putSerializable(WordPress.SITE, site)
             }

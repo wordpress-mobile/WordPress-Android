@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
 import android.content.Context
@@ -17,15 +17,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.photopicker.PermissionsHandler
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ClickAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.ToggleAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.IMAGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -83,7 +82,7 @@ class MediaPickerViewModel @Inject constructor(
         MediaPickerUiState(
                 buildUiModel(photoPickerItems, selectedIds),
                 buildSoftAskView(softAskRequest),
-                FabUiModel(browserType.isWPStoriesPicker) {
+                FabUiModel(mediaPickerSetup.cameraEnabled) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
                 buildActionModeUiModel(selectedIds, photoPickerItems)
@@ -91,7 +90,7 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     var lastTappedIcon: MediaPickerIcon? = null
-    private lateinit var browserType: MediaBrowserType
+    private lateinit var mediaPickerSetup: MediaPickerSetup
     private var site: SiteModel? = null
 
     private fun buildUiModel(
@@ -100,7 +99,7 @@ class MediaPickerViewModel @Inject constructor(
     ): PhotoListUiModel {
         return if (data != null) {
             val uiItems = data.map {
-                val showOrderCounter = browserType.canMultiselect()
+                val showOrderCounter = mediaPickerSetup.canMultiselect
                 val toggleAction = ToggleAction(it.id, showOrderCounter, this::toggleItem)
                 val clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
                 val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.id)) {
@@ -148,13 +147,15 @@ class MediaPickerViewModel @Inject constructor(
         }
         val title: UiString? = when {
             numSelected == 0 -> null
-            browserType.canMultiselect() -> {
+            mediaPickerSetup.canMultiselect -> {
                 UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
             else -> {
-                if (browserType.isImagePicker && browserType.isVideoPicker) {
+                val isImagePicker = mediaPickerSetup.allowedTypes.contains(IMAGE)
+                val isVideoPicker = mediaPickerSetup.allowedTypes.contains(VIDEO)
+                if (isImagePicker && isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_media)
-                } else if (browserType.isVideoPicker) {
+                } else if (isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_video)
                 } else {
                     UiStringRes(R.string.photo_picker_use_photo)
@@ -164,7 +165,7 @@ class MediaPickerViewModel @Inject constructor(
         val isVideoSelected = items?.any { it.isVideo && selectedIds.contains(it.id) } ?: false
         return ActionModeUiModel.Visible(
                 title,
-                showEditAction = browserType.isGutenbergPicker && !isVideoSelected
+                showEditAction = mediaPickerSetup.allowedTypes.contains(IMAGE) && !isVideoSelected
         )
     }
 
@@ -185,15 +186,15 @@ class MediaPickerViewModel @Inject constructor(
 
     fun start(
         selectedIds: List<Long>?,
-        browserType: MediaBrowserType,
+        mediaPickerSetup: MediaPickerSetup,
         lastTappedIcon: MediaPickerIcon?,
         site: SiteModel?
     ) {
-        this.mediaLoader = mediaLoaderFactory.build()
+        this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup.dataSource)
         selectedIds?.let {
             _selectedIds.value = selectedIds
         }
-        this.browserType = browserType
+        this.mediaPickerSetup = mediaPickerSetup
         this.lastTappedIcon = lastTappedIcon
         this.site = site
         launch(bgDispatcher) {
@@ -204,14 +205,7 @@ class MediaPickerViewModel @Inject constructor(
             }
         }
         launch(bgDispatcher) {
-            val mediaTypes = mutableSetOf<MediaType>()
-            if (browserType.isVideoPicker) {
-                mediaTypes.add(VIDEO)
-            }
-            if (browserType.isImagePicker) {
-                mediaTypes.add(IMAGE)
-            }
-            loadActions.send(LoadAction.Start(mediaTypes))
+            loadActions.send(LoadAction.Start(mediaPickerSetup.allowedTypes))
         }
     }
 
@@ -291,7 +285,7 @@ class MediaPickerViewModel @Inject constructor(
             }
             AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
         }
-        _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
+        _onIconClicked.postValue(Event(IconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {

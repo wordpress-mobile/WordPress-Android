@@ -926,6 +926,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 mApplicationOpenedDate = null;
             }
             properties.putAll(mReaderTracker.getAnalyticsData());
+
+            mReaderTracker.onAppGoesToBackground();
+
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
             // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the

@@ -123,6 +123,10 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private fun updateOverflowIndicatorChip() {
         val showOverflowIndicatorChip = hiddenTagChipsCount > 0 || !isSingleLine
         uiHelpers.updateVisibility(overflowIndicatorChip, showOverflowIndicatorChip)
+        overflowIndicatorChip.contentDescription = String.format(
+                resources.getString(R.string.show_n_hidden_items_desc),
+                hiddenTagChipsCount
+        )
 
         overflowIndicatorChip.text = if (isSingleLine) {
             String.format(

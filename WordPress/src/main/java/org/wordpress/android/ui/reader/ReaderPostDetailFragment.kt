@@ -44,7 +44,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETA
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
@@ -603,7 +603,7 @@ class ReaderPostDetailFragment : Fragment(),
                         R.string.reader_bookmark_snack_btn
                 ) {
                     AnalyticsTracker
-                            .track(READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE)
+                            .track(READER_SAVED_LIST_SHOWN, mapOf("source" to "post_details_saved_post_notice"))
                     ActivityLauncher.viewSavedPostsListInReader(activity)
                 }
                 .show()

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.any
@@ -18,18 +18,15 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.media.MediaBrowserType.EDITOR_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_MEDIA_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER
 import org.wordpress.android.ui.photopicker.PermissionsHandler
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.DomainModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.MediaPickerUiState
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -52,11 +49,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: MediaPickerViewModel
     private var uiStates = mutableListOf<MediaPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
-    private val singleSelectBrowserType = GUTENBERG_SINGLE_IMAGE_PICKER
-    private val multiSelectBrowserType = MediaBrowserType.GUTENBERG_IMAGE_PICKER
+    private val singleSelectMediaPickerSetup = MediaPickerSetup(DEVICE, false, setOf(IMAGE), false)
+    private val multiSelectMediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false)
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
+    private lateinit var videoItem: MediaItem
 
     @InternalCoroutinesApi
     @Before
@@ -74,28 +72,29 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.clear()
         firstItem = MediaItem(1, uriWrapper1)
         secondItem = MediaItem(2, uriWrapper2)
+        videoItem = MediaItem(3, uriWrapper1, isVideo = true)
     }
 
     @Test
     fun `loads data on refresh`() = test {
-        setupViewModel(listOf(firstItem), singleSelectBrowserType)
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup)
 
         viewModel.refreshData(false)
 
         assertThat(uiStates).hasSize(2)
-        assertDataList(singleSelectBrowserType, selectedItems = listOf(), domainItems = listOf(firstItem))
+        assertDataList(singleSelectMediaPickerSetup, selectedItems = listOf(), domainItems = listOf(firstItem))
         assertActionModeHidden()
     }
 
     @Test
     fun `selects single item with single selection available`() = test {
-        setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
+        setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
 
         viewModel.refreshData(false)
 
         assertThat(uiStates).hasSize(2)
         assertDataList(
-                singleSelectBrowserType,
+                singleSelectMediaPickerSetup,
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
@@ -105,7 +104,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(3)
         assertDataList(
-                singleSelectBrowserType,
+                singleSelectMediaPickerSetup,
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
@@ -114,7 +113,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `clears selection`() = test {
-        setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
+        setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
 
         viewModel.refreshData(false)
 
@@ -125,7 +124,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(4)
 
         assertDataList(
-                singleSelectBrowserType,
+                singleSelectMediaPickerSetup,
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
@@ -133,26 +132,26 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `unselects first item when second item selected with single selection available`() = test {
-        setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
+        setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
 
         viewModel.refreshData(false)
 
         assertDataList(
-                singleSelectBrowserType,
+                singleSelectMediaPickerSetup,
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
         selectItem(0)
 
         assertDataList(
-                singleSelectBrowserType,
+                singleSelectMediaPickerSetup,
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
         selectItem(1)
 
         assertDataList(
-                singleSelectBrowserType,
+                singleSelectMediaPickerSetup,
                 selectedItems = listOf(secondItem),
                 domainItems = listOf(firstItem, secondItem)
         )
@@ -161,26 +160,26 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `selects two items with multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType)
+        setupViewModel(listOf(firstItem, secondItem), multiSelectMediaPickerSetup)
 
         viewModel.refreshData(false)
 
         assertDataList(
-                multiSelectBrowserType,
+                multiSelectMediaPickerSetup,
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
         selectItem(1)
 
         assertDataList(
-                multiSelectBrowserType,
+                multiSelectMediaPickerSetup,
                 selectedItems = listOf(secondItem),
                 domainItems = listOf(firstItem, secondItem)
         )
         selectItem(0)
 
         assertDataList(
-                multiSelectBrowserType,
+                multiSelectMediaPickerSetup,
                 selectedItems = listOf(secondItem, firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
@@ -188,7 +187,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         selectItem(1)
 
         assertDataList(
-                multiSelectBrowserType,
+                multiSelectMediaPickerSetup,
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
@@ -196,7 +195,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `navigates to preview on item click`() = test {
-        setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
+        setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
         whenever(
                 analyticsUtilsWrapper.getMediaProperties(
                         eq(firstItem.isVideo),
@@ -217,7 +216,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `shows soft ask screen when storage permissions are turned off`() = test {
-        setupViewModel(listOf(), singleSelectBrowserType, hasStoragePermissions = false)
+        setupViewModel(listOf(), singleSelectMediaPickerSetup, hasStoragePermissions = false)
         whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
         whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_label)).thenReturn("Soft ask label")
 
@@ -230,7 +229,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Photo when photo browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_SINGLE_IMAGE_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, false, setOf(IMAGE), false))
 
         viewModel.refreshData(false)
 
@@ -241,18 +240,18 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Video when video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_SINGLE_VIDEO_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, false, setOf(VIDEO), false))
 
         viewModel.refreshData(false)
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_video))
+        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_video), showEditAction = false)
     }
 
     @Test
     fun `action mode title is Use Media when image and video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_MEDIA_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, false, setOf(IMAGE, VIDEO), false))
 
         viewModel.refreshData(false)
 
@@ -264,7 +263,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode title is Select N items when multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem, secondItem), GUTENBERG_IMAGE_PICKER)
+        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE), false))
 
         viewModel.refreshData(false)
 
@@ -275,9 +274,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `action mode hides edit action in EDITOR PICKER`() = test {
+    fun `action mode hides edit action when video item selected`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem, secondItem), EDITOR_PICKER)
+        setupViewModel(listOf(videoItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false))
 
         viewModel.refreshData(false)
 
@@ -295,7 +294,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     private fun assertDataList(
-        browserType: MediaBrowserType,
+        mediaPickerSetup: MediaPickerSetup,
         selectedItems: List<MediaItem>,
         domainItems: List<MediaItem>
     ) {
@@ -310,7 +309,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                             isSelected = isSelected,
                             domainItem = photoPickerItem,
                             selectedOrder = selectedItems.indexOfFirst { it.id == photoPickerItem.id },
-                            isMultiSelection = browserType.canMultiselect()
+                            isMultiSelection = mediaPickerSetup.canMultiselect
                     )
                 }
             }
@@ -337,13 +336,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     private suspend fun setupViewModel(
         domainModel: List<MediaItem>,
-        browserType: MediaBrowserType,
+        mediaPickerSetup: MediaPickerSetup,
         hasStoragePermissions: Boolean = true
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
-        whenever(mediaLoaderFactory.build()).thenReturn(mediaLoader)
+        whenever(mediaLoaderFactory.build(mediaPickerSetup.dataSource)).thenReturn(mediaLoader)
         whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel)) })
-        viewModel.start(listOf(), browserType, null, site)
+        viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
             if (it != null) {
                 uiStates.add(it)
