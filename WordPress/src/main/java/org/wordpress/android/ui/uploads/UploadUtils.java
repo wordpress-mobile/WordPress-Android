@@ -51,6 +51,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
@@ -161,7 +162,7 @@ public class UploadUtils {
         if (errorMessage.length() > 0) {
             String firstLetter = errorMessage.substring(0, 1);
             String restOfMessage = errorMessage.length() > 1 ? errorMessage.substring(1) : "";
-            errorMessage = firstLetter.toUpperCase() + restOfMessage;
+            errorMessage = firstLetter.toUpperCase(Locale.getDefault()) + restOfMessage;
         }
 
         return errorMessage;
