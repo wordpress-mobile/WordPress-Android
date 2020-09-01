@@ -175,7 +175,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.home) {
+        if (item.itemId == android.R.id.home) {
             setResult(Activity.RESULT_CANCELED)
             finish()
             return true
