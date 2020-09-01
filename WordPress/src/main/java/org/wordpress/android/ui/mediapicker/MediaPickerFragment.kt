@@ -80,7 +80,7 @@ class MediaPickerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
-        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
         var selectedIds: List<Long>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {

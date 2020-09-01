@@ -50,7 +50,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = ModalLayoutPickerAdapter(requireActivity())
+        recyclerView.adapter = ModalLayoutPickerAdapter()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
@@ -70,6 +70,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             closeModal()
             viewModel.createPage()
         }
+        createPageButton.setOnClickListener { /* TODO */ }
+        previewButton.setOnClickListener { /* TODO */ }
 
         setupViewModel()
 
@@ -119,6 +121,14 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                     event.applyIfNotHandled {
                         title.setVisible(this)
                     }
+                }
+        )
+
+        viewModel.buttonsUiState.observe(this,
+                Observer {
+                    createBlankPageButton.setVisible(it.createBlankPageVisible)
+                    createPageButton.setVisible(it.createPageVisible)
+                    previewButton.setVisible(it.previewVisible)
                 }
         )
     }
