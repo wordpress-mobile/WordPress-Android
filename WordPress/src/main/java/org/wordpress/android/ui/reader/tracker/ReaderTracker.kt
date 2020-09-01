@@ -78,7 +78,7 @@ class ReaderTracker @Inject constructor(
     }
 
     fun trackReaderTabIfNecessary(readerTab: ReaderTab) {
-        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled() && readerTab != appPrefsWrapper.getReaderActiveTab()) {
+        if (readerTab != appPrefsWrapper.getReaderActiveTab()) {
             when (readerTab) {
                 FOLLOWING -> analyticsTrackerWrapper.track(READER_FOLLOWING_SHOWN)
                 DISCOVER -> analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
