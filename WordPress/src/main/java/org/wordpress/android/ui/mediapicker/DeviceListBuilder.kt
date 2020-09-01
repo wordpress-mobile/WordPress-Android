@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
 import android.database.Cursor
@@ -11,11 +11,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.photopicker.mediapicker.MediaSource.MediaLoadingResult
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.AUDIO
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.DOCUMENT
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.IMAGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
+import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.SqlUtils

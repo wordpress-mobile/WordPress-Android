@@ -1,16 +1,16 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction.Filter
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction.NextPage
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction.Refresh
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction.Start
-import org.wordpress.android.ui.photopicker.mediapicker.MediaSource.MediaLoadingResult.Failure
-import org.wordpress.android.ui.photopicker.mediapicker.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Filter
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 
-class MediaLoader(private val mediaSource: MediaSource) {
+data class MediaLoader(private val mediaSource: MediaSource) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
             var state = DomainState()

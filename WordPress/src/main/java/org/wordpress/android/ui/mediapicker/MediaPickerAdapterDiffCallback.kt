@@ -1,8 +1,8 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import androidx.recyclerview.widget.DiffUtil
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
+import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
+import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
 
 class MediaPickerAdapterDiffCallback(
     private val oldItems: List<MediaPickerUiItem>,
