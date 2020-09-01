@@ -20,6 +20,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
+import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -56,6 +57,9 @@ public class AppPrefs {
         READER_TAG_NAME,
         READER_TAG_TYPE,
         READER_TAG_WAS_FOLLOWING,
+
+        // currently active tab on the main Reader screen when the user is in Reader
+        READER_ACTIVE_TAB,
 
         // last selected subfilter in the reader
         READER_SUBFILTER,
@@ -117,10 +121,6 @@ public class AppPrefs {
         SUPPORT_EMAIL,
         SUPPORT_NAME,
 
-        // Store a version of the last dismissed News Card
-        NEWS_CARD_DISMISSED_VERSION,
-        // Store a version of the last shown News Card
-        NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
         USER_IN_GUTENBERG_ROLLOUT_GROUP,
@@ -153,7 +153,9 @@ public class AppPrefs {
 
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
-        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
+        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
+
+        READER_DISCOVER_WELCOME_BANNER_SHOWN
     }
 
     /**
@@ -373,6 +375,15 @@ public class AppPrefs {
                    .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
                    .apply();
         }
+    }
+
+    public static void setReaderActiveTab(ReaderTab readerTab) {
+        setInt(DeletablePrefKey.READER_ACTIVE_TAB, readerTab != null ? readerTab.getId() : 0);
+    }
+
+    public static ReaderTab getReaderActiveTab() {
+        int lastTabId = getInt(DeletablePrefKey.READER_ACTIVE_TAB);
+        return lastTabId != 0 ? ReaderTab.Companion.fromId(lastTabId) : null;
     }
 
     public static String getReaderSubfilter() {
@@ -961,22 +972,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
-    public static void setNewsCardDismissedVersion(int version) {
-        setInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, version);
-    }
-
-    public static int getNewsCardDismissedVersion() {
-        return getInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, -1);
-    }
-
-    public static void setNewsCardShownVersion(int version) {
-        setInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, version);
-    }
-
-    public static int getNewsCardShownVersion() {
-        return getInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, -1);
-    }
-
     public static void setQuickStartDisabled(Boolean isDisabled) {
         setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
     }
@@ -1192,6 +1187,14 @@ public class AppPrefs {
 
     public static void setReaderRecommendedTagsDeletedForLoggedOutUser(boolean deleted) {
         setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
+    }
+
+    public static boolean getReaderDiscoverWelcomeBannerShown() {
+        return getBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, false);
+    }
+
+    public static void setReaderDiscoverWelcomeBannerShown(boolean shown) {
+        setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {

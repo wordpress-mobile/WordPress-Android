@@ -183,7 +183,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             @Override
             public void onClick(View view) {
                 mUnifiedLoginTracker.trackClick(Click.SELECT_AVATAR);
-                mMediaPickerLauncher.showGravatarPicker(requireActivity());
+                mMediaPickerLauncher.showGravatarPicker(SignupEpilogueFragment.this);
             }
         });
         headerAvatarLayout.setOnLongClickListener(new View.OnLongClickListener() {

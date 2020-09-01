@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -37,6 +38,10 @@ public class DisplayUtils {
     public static int getDisplayPixelHeight(Context context) {
         Point size = getDisplayPixelSize(context);
         return (size.y);
+    }
+
+    public static int getDisplayPixelWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
 
     public static float spToPx(Context context, float sp) {

@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
+import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -113,8 +113,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun updateErrorLayout(uiState: ErrorUiState) {
         with(uiHelpers) {
             setTextOrHide(error_title, uiState.titleResId)
-            setTextOrHide(error_subtitle, uiState.subtitleResId)
-            updateVisibility(contact_support, uiState.showContactSupport)
         }
     }
 
