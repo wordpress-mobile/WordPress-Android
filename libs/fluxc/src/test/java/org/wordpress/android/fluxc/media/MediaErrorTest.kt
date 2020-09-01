@@ -35,7 +35,20 @@ class MediaErrorTest {
 
         assertThat(userMessage).isNotEmpty()
         assertThat(userMessage).isEqualTo("You have used your space quota. " +
-                "Please delete files before uploading.")
+                "Please delete files before uploading. Back")
+    }
+
+    @Test
+    fun `user message not extracted on BAD_REQUEST and API user message not available`() {
+        mediaError.type = BAD_REQUEST
+        mediaError.message = "You have used your space quota. " +
+                "Please delete files before uploading. Back"
+
+        val userMessage = mediaError.apiUserMessageIfAvailable
+
+        assertThat(userMessage).isNotEmpty()
+        assertThat(userMessage).isEqualTo("You have used your space quota. " +
+                "Please delete files before uploading. Back")
     }
 
     @Test
