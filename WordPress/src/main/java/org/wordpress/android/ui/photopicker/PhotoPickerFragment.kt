@@ -49,7 +49,7 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment}")
+        "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}")
 class PhotoPickerFragment : Fragment() {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),

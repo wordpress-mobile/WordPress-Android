@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_PREVIEW
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @InternalCoroutinesApi
@@ -32,10 +33,16 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     private lateinit var builder: ReaderPostMoreButtonUiStateBuilder
     @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+    @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Before
     fun setUp() = test {
-        builder = ReaderPostMoreButtonUiStateBuilder(readerPostTableWrapper, readerBlogTableWrapper, TEST_DISPATCHER)
+        builder = ReaderPostMoreButtonUiStateBuilder(
+                readerPostTableWrapper,
+                readerBlogTableWrapper,
+                readerUtilsWrapper,
+                TEST_DISPATCHER
+        )
     }
 
     @Test
@@ -92,6 +99,8 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     fun `does not contain site notifications action for feeds`() = test {
         // Arrange
         val post = init(isFeed = true, isFollowed = true)
+        whenever(readerUtilsWrapper.isExternalFeed(post.feedId, post.blogId)).thenReturn(true)
+
         // Act
         val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
         // Assert

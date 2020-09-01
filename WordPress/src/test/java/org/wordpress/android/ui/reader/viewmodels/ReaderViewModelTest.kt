@@ -31,7 +31,6 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -52,7 +51,6 @@ class ReaderViewModelTest {
     @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = ReaderTagList().apply {
@@ -72,8 +70,7 @@ class ReaderViewModelTest {
                 loadReaderTabsUseCase,
                 readerTracker,
                 accountStore,
-                getFollowedTagsUseCase,
-                analyticsTrackerWrapper
+                getFollowedTagsUseCase
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))

@@ -8,7 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -113,8 +113,10 @@ class ReaderPostBookmarkUseCase @Inject constructor(
                                     UiStringRes(R.string.reader_bookmark_snack_title),
                                     UiStringRes(R.string.reader_bookmark_snack_btn),
                                     buttonAction = {
-                                        analyticsTrackerWrapper
-                                                .track(READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE)
+                                        analyticsTrackerWrapper.track(
+                                                READER_SAVED_LIST_SHOWN,
+                                                mapOf("source" to "post_list_saved_post_notice")
+                                        )
                                         _navigationEvents.postValue(Event(ShowBookmarkedTab))
                                     })
                     )

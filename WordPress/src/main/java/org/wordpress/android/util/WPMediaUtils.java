@@ -204,13 +204,7 @@ public class WPMediaUtils {
             case PARSE_ERROR:
                 return context.getString(R.string.error_media_parse_error);
             case GENERIC_ERROR:
-                // This error happens when the user tries to upload a file that's not allowed on their user plan.
-                // Unfortunately it still has the standard 400 error code so there is no other way to differentiate it.
-                if ("Sorry, this file type is not permitted for security reasons.".equals(error.message)) {
-                    return context.getString(R.string.media_error_file_not_allowed_on_free_plan);
-                } else {
-                    return context.getString(R.string.error_generic_error);
-                }
+                return context.getString(R.string.error_generic_error);
             case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
                 return context.getString(R.string.error_media_quota_exceeded);
         }
