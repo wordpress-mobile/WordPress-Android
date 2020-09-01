@@ -52,15 +52,20 @@ class ReaderTagRepository @Inject constructor(
 
     suspend fun getUserTags(): ReaderRepositoryCommunication {
         return withContext(ioDispatcher) {
-            val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
-            var result: ReaderRepositoryCommunication = Success
-            if (refresh) {
-                result = fetchFollowedTagUseCase.fetch()
-            }
-            if (result is Success) {
-                SuccessWithData(getFollowedTagsUseCase.get())
+            val userTags = getFollowedTagsUseCase.get()
+            if (userTags.isNotEmpty()) {
+                SuccessWithData(userTags)
             } else {
-                result
+                val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
+                var result: ReaderRepositoryCommunication = Success
+                if (refresh) {
+                    result = fetchFollowedTagUseCase.fetch()
+                }
+                if (result is Success) {
+                    SuccessWithData(getFollowedTagsUseCase.get())
+                } else {
+                    result
+                }
             }
         }
     }
