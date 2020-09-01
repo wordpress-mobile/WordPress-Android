@@ -311,7 +311,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
                 isFollowButtonEnabled,
-                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
+                mAccountStore.hasAccessToken()
             )
         );
         tagHolder.onBind(uiState);

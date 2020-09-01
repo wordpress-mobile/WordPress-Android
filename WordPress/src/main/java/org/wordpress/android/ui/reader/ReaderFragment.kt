@@ -186,7 +186,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun getItemCount(): Int = tags.size
 
         override fun createFragment(position: Int): Fragment {
-            return if (AppPrefs.isReaderImprovementsPhase2Enabled() && tags[position].isDiscover) {
+            return if (tags[position].isDiscover) {
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)
