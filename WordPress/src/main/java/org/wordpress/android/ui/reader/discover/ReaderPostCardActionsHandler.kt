@@ -10,12 +10,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
@@ -45,12 +49,17 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.AppLog
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
@@ -60,13 +69,17 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
     private val bookmarkUseCase: ReaderPostBookmarkUseCase,
+    private val followUseCase: ReaderSiteFollowUseCase,
     private val blockBlogUseCase: BlockBlogUseCase,
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
     private val dispatcher: Dispatcher,
+    private val resourceProvider: ResourceProvider,
+    private val htmlMessageUtils: HtmlMessageUtils,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -76,6 +89,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
+
+    private val _followStatusUpdated = MediatorLiveData<PostFollowStatusChanged>()
+    val followStatusUpdated: LiveData<PostFollowStatusChanged> = _followStatusUpdated
 
     // Used only in legacy ReaderPostListFragment. The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
@@ -136,9 +152,36 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private fun handleFollowClicked(post: ReaderPost) {
+    private suspend fun handleFollowClicked(post: ReaderPost) {
         // todo: Annmarie add tracking dependent upon implementation (tracked in ReaderBlogActions)
-        AppLog.d(AppLog.T.READER, "Follow not implemented")
+        followUseCase.toggleFollow(post).collect {
+            when (it) {
+                is FollowSiteState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    )
+                }
+                is FollowSiteState.Failed.RequestFailed -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    )
+                }
+                is FollowSiteState.Success -> { // Do nothing
+                }
+                is PostFollowStatusChanged -> {
+                    _followStatusUpdated.postValue(it)
+                    siteNotificationsUseCase.fetchSubscriptions()
+
+                    if (it.showEnableNotification) {
+                        val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
+                        action.invoke()
+                    } else if (it.deleteNotificationSubscription) {
+                        siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
+                        siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(it.blogId, false)
+                    }
+                }
+            }
+        }
     }
 
     // todo: Annmarie add tracking dependent upon implementation
@@ -241,6 +284,36 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleCommentsClicked(postId: Long, blogId: Long) {
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
+    }
+
+    private fun prepareEnableNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
+        return {
+            val thisSite = resourceProvider.getString(R.string.reader_followed_blog_notifications_this)
+            val blog = if (blogName?.isEmpty() == true) thisSite else blogName
+            val notificationMessage = htmlMessageUtils
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.reader_followed_blog_notifications,
+                            "<b>",
+                            blog,
+                            "</b>"
+                    )
+            _snackbarEvents.postValue(
+                    Event(
+                            SnackbarMessageHolder(
+                                    UiStringText(notificationMessage),
+                                    UiStringRes(R.string.reader_followed_blog_notifications_action),
+                                    buttonAction = {
+                                        defaultScope.launch {
+                                            analyticsTrackerWrapper
+                                                    .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
+                                            siteNotificationsUseCase.updateSubscription(blogId, NEW)
+                                            siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(blogId, true)
+                                        }
+                                    }
+                            )
+                    )
+            )
+        }
     }
 
     fun onCleared() {
