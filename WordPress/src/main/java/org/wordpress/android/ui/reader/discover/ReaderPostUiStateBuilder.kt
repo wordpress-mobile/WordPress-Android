@@ -280,21 +280,23 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
-        val contentDescription = if (post.isBookmarked) {
-            R.string.reader_remove_bookmark
-        } else {
-            R.string.reader_add_bookmark
-        }
+        val contentDescription = UiStringRes(
+                if (post.isBookmarked) {
+                    R.string.reader_remove_bookmark
+                } else {
+                    R.string.reader_add_bookmark
+                }
+        )
         return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                     isEnabled = true,
                     isSelected = post.isBookmarked,
-                    contentDescription = UiStringRes(contentDescription),
+                    contentDescription = contentDescription,
                     onClicked = onClicked,
                     type = BOOKMARK
             )
         } else {
-            PrimaryAction(isEnabled = false, type = BOOKMARK)
+            PrimaryAction(isEnabled = false, contentDescription = contentDescription, type = BOOKMARK)
         }
     }
 
@@ -325,12 +327,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onReblogClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val canReblog = !post.isPrivate && accountStore.hasAccessToken()
-        return if (canReblog) {
-            // TODO Add content description
-            PrimaryAction(isEnabled = true, onClicked = onReblogClicked, type = REBLOG)
-        } else {
-            PrimaryAction(isEnabled = false, type = REBLOG)
-        }
+        return PrimaryAction(
+                isEnabled = canReblog,
+                contentDescription = UiStringRes(R.string.reader_view_reblog),
+                onClicked = if (canReblog) onReblogClicked else null,
+                type = REBLOG
+        )
     }
 
     private fun buildCommentsSection(
@@ -346,18 +348,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
             !accountStore.hasAccessToken() -> post.numReplies > 0
             else -> post.isWP && (post.isCommentsOpen || post.numReplies > 0)
         }
+        val contentDescription = UiStringRes(R.string.comments)
 
         // TODO Add content description
         return if (showComments) {
             PrimaryAction(
                     isEnabled = true,
                     count = post.numReplies,
+                    contentDescription = contentDescription,
                     onClicked = onCommentsClicked,
                     type = ReaderPostCardActionType.COMMENTS
             )
         } else {
             PrimaryAction(
                     isEnabled = false,
+                    contentDescription = contentDescription,
                     type = ReaderPostCardActionType.COMMENTS
             )
         }
