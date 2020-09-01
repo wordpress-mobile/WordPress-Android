@@ -318,12 +318,18 @@ dependencies {
     }
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils' 
     }
-    implementation project(path:':libs:analytics:WordPressAnalytics')
-    implementation project(path:':libs:editor:WordPressEditor')
+    implementation (project(path:':libs:analytics:WordPressAnalytics')) {
+        exclude group: 'org.wordpress', module: 'utils' 
+    }
+    implementation (project(path:':libs:editor:WordPressEditor')) {
+        exclude group: 'org.wordpress', module: 'utils' 
+    }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
+        exclude group: 'org.wordpress', module: 'utils' 
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
@@ -363,7 +369,6 @@ dependencies {
 configurations.all {
     // Exclude packaged wordpress sub projects, force the use of the source project
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
-    //exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
