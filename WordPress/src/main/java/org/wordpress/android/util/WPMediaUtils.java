@@ -248,6 +248,7 @@ public class WPMediaUtils {
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -257,7 +258,7 @@ public class WPMediaUtils {
     private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoAndImageTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -291,6 +292,7 @@ public class WPMediaUtils {
     private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -300,6 +302,7 @@ public class WPMediaUtils {
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
         return Intent.createChooser(intent, title);
     }
 
