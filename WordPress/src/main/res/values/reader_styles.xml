@@ -228,7 +228,7 @@
         <item name="iconPadding">@dimen/margin_small</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/primary_success_selector</item>
-        <item name="android:backgroundTint">@color/transparent</item>
+        <item name="backgroundTint">@color/transparent</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="strokeColor">@color/transparent</item>
         <item name="iconTint">@color/primary_success_selector</item>
@@ -240,7 +240,7 @@
 
     <style name="Reader.Follow.Button.New" parent="Reader.Follow.Button">
         <item name="android:textColor">@color/on_secondary_on_background_selector</item>
-        <item name="android:backgroundTint">@color/secondary_surface_selector</item>
+        <item name="backgroundTint">@color/secondary_surface_selector</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
         <item name="strokeColor">@color/transparent_on_background_selector</item>
         <item name="iconTint">@color/on_secondary_on_background_selector</item>
