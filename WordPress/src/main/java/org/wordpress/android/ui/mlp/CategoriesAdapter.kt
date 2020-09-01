@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.modal_layout_picker_category.view.*
 import org.wordpress.android.R
@@ -18,10 +17,7 @@ import org.wordpress.android.util.setVisible
 /**
  * Renders the Layout categories tab bar
  */
-class CategoriesAdapter(
-    private val context: Context,
-    private val selectionListener: LayoutSelectionListener
-) : RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {
+class CategoriesAdapter(private val context: Context) : RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {
     private val categories: ArrayList<CategoryListItem> = arrayListOf()
 
     fun setData(data: List<CategoryListItem>) {
@@ -54,12 +50,10 @@ class CategoriesAdapter(
                 category.title
         ) else category.title
         holder.container.setOnClickListener {
-            selectionListener.categoryTapped(category)
+            category.onItemTapped.invoke()
         }
         holder.container.backgroundTintList
-        selectionListener.selectedCategoryData.observe(selectionListener.lifecycleOwner, Observer {
-            setSelectedStateUI(holder, it == category.slug)
-        })
+        setSelectedStateUI(holder, category.selected)
     }
 
     private fun setSelectedStateUI(holder: ViewHolder, selected: Boolean) {

@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -28,7 +29,13 @@ class ReaderPostListViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ReaderPostListViewModel(readerPostCardActionsHandler, reblogUseCase, readerTracker)
+        viewModel = ReaderPostListViewModel(
+                readerPostCardActionsHandler,
+                reblogUseCase,
+                readerTracker,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
+        )
     }
 
     @Test

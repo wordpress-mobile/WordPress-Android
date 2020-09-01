@@ -2,11 +2,7 @@ package org.wordpress.android.ui.mlp
 
 import androidx.recyclerview.widget.DiffUtil.Callback
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.LayoutCategory
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Title
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.CATEGORIES
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.LAYOUTS
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.SUBTITLE
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.TITLE
 
 /**
  * Implements the Recyclerview list items diff to avoid unneeded UI refresh
@@ -20,19 +16,7 @@ class ModalLayoutPickerListDiffCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        if (newItem.type == oldItem.type) {
-            return when (newItem.type) {
-                TITLE -> (newItem as? Title)?.visible == (oldItem as? Title)?.visible
-                SUBTITLE -> true
-                CATEGORIES -> true // for now
-                LAYOUTS -> {
-                    val newLayoutCategory = (newItem as? LayoutCategory)
-                    val oldLayoutCategory = (oldItem as? LayoutCategory)
-                    return newLayoutCategory?.description == oldLayoutCategory?.description &&
-                            newLayoutCategory?.layouts?.size == oldLayoutCategory?.layouts?.size
-                }
-            }
-        } else return false
+        return newItem.type == oldItem.type
     }
 
     override fun getOldListSize(): Int = oldList.size

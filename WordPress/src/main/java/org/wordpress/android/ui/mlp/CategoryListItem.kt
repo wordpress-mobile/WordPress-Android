@@ -7,5 +7,6 @@ data class CategoryListItem(
     val slug: String,
     val title: String,
     val emoji: String,
-    val selected: Boolean
+    val selected: Boolean,
+    val onItemTapped: (() -> Unit)
 )

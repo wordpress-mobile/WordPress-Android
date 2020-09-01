@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -32,18 +30,9 @@ import javax.inject.Inject
 /**
  * Implements the Modal Layout Picker UI based on the [BottomSheetDialogFragment] to inherit the container behavior
  */
-class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionListener {
+class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
-
-    override val lifecycleOwner: LifecycleOwner
-        get() = this
-
-    override val selectedCategoryData: LiveData<String?>
-        get() = viewModel.selectedCategorySlug
-
-    override val selectedLayoutData: LiveData<String?>
-        get() = viewModel.selectedLayoutSlug
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
@@ -61,7 +50,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = ModalLayoutPickerAdapter(this)
+        recyclerView.adapter = ModalLayoutPickerAdapter()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
@@ -109,10 +98,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun categoryTapped(category: CategoryListItem) {
-        viewModel.categoryTapped(category.slug)
-    }
-
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         closeModal()
@@ -121,10 +106,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     private fun closeModal() {
         WPActivityUtils.setLightStatusBar(activity?.window, false)
         viewModel.dismiss()
-    }
-
-    override fun layoutTapped(layout: LayoutListItem) {
-        viewModel.layoutTapped(layout.slug)
     }
 
     private fun setupViewModel() {
@@ -143,12 +124,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
                 }
         )
 
-        viewModel.selectedLayoutSlug.observe(this,
+        viewModel.buttonsUiState.observe(this,
                 Observer {
-                    val selection = it != null
-                    createBlankPageButton.setVisible(!selection)
-                    createPageButton.setVisible(selection)
-                    previewButton.setVisible(selection)
+                    createBlankPageButton.setVisible(it.createBlankPageVisible)
+                    createPageButton.setVisible(it.createPageVisible)
+                    previewButton.setVisible(it.previewVisible)
                 }
         )
     }

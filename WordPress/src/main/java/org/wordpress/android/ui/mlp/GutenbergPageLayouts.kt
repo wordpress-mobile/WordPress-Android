@@ -4,7 +4,7 @@ data class GutenbergPageLayouts(
     val layouts: List<GutenbergLayout>,
     val categories: List<GutenbergLayoutCategory>
 ) {
-    fun layouts(categorySlug: String) =
+    fun getFilteredLayouts(categorySlug: String) =
             layouts.filter { l -> l.categories.any { c -> c.slug == categorySlug } }
 }
 

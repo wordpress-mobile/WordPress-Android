@@ -47,7 +47,6 @@ sealed class ModalLayoutPickerListItem(val type: ViewType) {
         val slug: String,
         val title: String,
         val description: String,
-        val layouts: List<LayoutListItem>
-    ) :
-            ModalLayoutPickerListItem(LAYOUTS)
+        val layouts: List<LayoutListItemUiState>
+    ) : ModalLayoutPickerListItem(LAYOUTS)
 }

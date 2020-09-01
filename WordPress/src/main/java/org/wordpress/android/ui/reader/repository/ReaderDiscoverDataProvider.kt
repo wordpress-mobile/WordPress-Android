@@ -17,13 +17,20 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import java.util.concurrent.atomic.AtomicBoolean
@@ -46,17 +53,20 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private var isStarted = false
     // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
-
+    private var isLoadMoreRequestInProgress = false
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
     private var hasMoreCards = true
 
-    private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
-    val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
-
-    // TODO malinjir/annmarie The UI might need to know if a request is in progress, wdyt?
-    // TODO malinjir/annmarie The UI might need to know if there are more data (next page) available
+    private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
+    val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel
+            .perform {
+                if (it.peekContent().task == REQUEST_MORE && it.peekContent() !is Started) {
+                    AppLog.w(READER, "reader discover load more cards task is finished")
+                    isLoadMoreRequestInProgress = false
+                }
+            }
 
     fun start() {
         if (isStarted) return
@@ -78,7 +88,13 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     suspend fun loadMoreCards() {
-        // TODO malinjir check that the request isn't already in progress
+        if (isLoadMoreRequestInProgress) {
+            AppLog.w(READER, "reader discover load more cards task is already running")
+            return
+        }
+
+        isLoadMoreRequestInProgress = true
+
         if (hasMoreCards) {
             withContext(ioDispatcher) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
@@ -113,20 +129,26 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     // Handlers for ReaderPostServices
-    private fun onUpdated() {
+    private fun onUpdated(task: DiscoverTasks?) {
         hasMoreCards = true
         launch {
             reloadPosts()
+            if (task != null) {
+                _communicationChannel.postValue(Event(Success(task)))
+            }
         }
     }
 
-    private fun onUnchanged() {
+    private fun onUnchanged(task: DiscoverTasks) {
         hasMoreCards = false
+        _communicationChannel.postValue(
+                Event(Success(task))
+        )
     }
 
-    private fun onFailed() {
+    private fun onFailed(task: DiscoverTasks) {
         _communicationChannel.postValue(
-                Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure)
+                Event(RemoteRequestFailure(task))
         )
     }
 
@@ -146,7 +168,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_discoverFeed.hasObservers()) {
             isDirty.compareAndSet(true, false)
-            onUpdated()
+            onUpdated(null)
         } else {
             isDirty.compareAndSet(false, true)
         }
@@ -156,9 +178,9 @@ class ReaderDiscoverDataProvider @Inject constructor(
     fun onCardsUpdated(event: FetchDiscoverCardsEnded) {
         event.result?.let {
             when (it) {
-                HAS_NEW, CHANGED -> onUpdated()
-                UNCHANGED -> onUnchanged()
-                FAILED -> onFailed()
+                HAS_NEW, CHANGED -> onUpdated(event.task)
+                UNCHANGED -> onUnchanged(event.task)
+                FAILED -> onFailed(event.task)
             }
         }
     }

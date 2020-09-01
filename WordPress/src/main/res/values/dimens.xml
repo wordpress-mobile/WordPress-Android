@@ -25,6 +25,8 @@
 
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
+    <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+
     <dimen name="divider_size">1dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
@@ -151,6 +153,10 @@
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
+    <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
+        @dimen/emphasis_extra_low
+    </item>
+
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
@@ -214,6 +220,8 @@
     <dimen name="reader_chip_radius">8dp</dimen>
     <dimen name="reader_chip_height">44dp</dimen>
     <dimen name="reader_site_header_avatar_padding">2dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_radius">4dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_height">24dp</dimen>
 
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
@@ -539,28 +547,28 @@
 
     <!-- Modal Layout Picker Styles -->
     <dimen name="mlp_header_scroll_snap_threshold">24dp</dimen>
-    <dimen name="mlp_layouts_handle_margin_bottom">8dp</dimen>
+    <dimen name="mlp_layouts_handle_margin_bottom">@dimen/margin_medium</dimen>
     <dimen name="mlp_layouts_row_height">281dp</dimen>
-    <dimen name="mlp_bottom_shadow_height">5dp</dimen>
-    <dimen name="mlp_bottom_shadow_height_overlap">-5dp</dimen>
-    <dimen name="mlp_bottom_button_vertical_margin">16dp</dimen>
-    <dimen name="mlp_bottom_button_horizontal_margin">20dp</dimen>
-    <dimen name="mlp_bottom_button_horizontal_central_margin">16dp</dimen>
+    <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
+    <dimen name="mlp_bottom_shadow_height_overlap">@dimen/negative_margin_medium</dimen>
+    <dimen name="mlp_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
+    <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_categories_row_height">52dp</dimen>
     <dimen name="mlp_categories_bar_height">53dp</dimen>
     <dimen name="mlp_layout_card_height">204dp</dimen>
     <dimen name="mlp_layout_card_width">136dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
-    <dimen name="mlp_layout_card_margin_end">8dp</dimen>
     <dimen name="mlp_layout_card_margin_bottom">29dp</dimen>
-    <dimen name="mlp_layout_card_margin_top">16dp</dimen>
-    <dimen name="mlp_layout_card_elevation">4dp</dimen>
-    <dimen name="mlp_layout_card_radius">4dp</dimen>
-    <dimen name="mlp_layouts_line_separator_height">1dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
     <dimen name="mlp_category_horizontal_margin">12dp</dimen>
     <dimen name="mlp_category_horizontal_central_margin">8dp</dimen>
     <dimen name="mlp_categories_margin">8dp</dimen>
     <dimen name="mlp_categories_emoji_size">18dp</dimen>
+    <dimen name="mlp_layout_card_margin_end">@dimen/margin_medium</dimen>
+    <dimen name="mlp_layout_card_margin_top">@dimen/margin_extra_large</dimen>
+    <dimen name="mlp_layout_card_elevation">@dimen/margin_small</dimen>
+    <dimen name="mlp_layout_card_radius">@dimen/margin_small</dimen>
+    <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
 </resources>

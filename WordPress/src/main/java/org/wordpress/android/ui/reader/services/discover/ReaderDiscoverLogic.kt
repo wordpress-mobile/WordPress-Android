@@ -69,7 +69,7 @@ class ReaderDiscoverLogic(
     fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
         listenerCompanion = companion
         requestDataForDiscover(task, UpdateResultListener {
-            EventBus.getDefault().post(FetchDiscoverCardsEnded(it))
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(task, it))
             completionListener.onCompleted(listenerCompanion)
         })
     }

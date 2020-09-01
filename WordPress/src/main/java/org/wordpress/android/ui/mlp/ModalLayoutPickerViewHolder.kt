@@ -72,6 +72,8 @@ abstract class HorizontalRecyclerViewHolder(
                     RecyclerView.HORIZONTAL,
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
+            adapter = LayoutsAdapter(context)
+
             setRecycledViewPool(RecyclerView.RecycledViewPool())
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -97,12 +99,11 @@ abstract class HorizontalRecyclerViewHolder(
  */
 class CategoriesItemViewHolder(
     parent: ViewGroup,
-    scrollStates: SparseIntArray,
-    layoutSelectionListener: LayoutSelectionListener
+    scrollStates: SparseIntArray
 ) : HorizontalRecyclerViewHolder(
         parent,
         scrollStates,
-        CategoriesAdapter(parent.context, layoutSelectionListener),
+        CategoriesAdapter(parent.context),
         R.layout.modal_layout_picker_categories_row,
         R.id.categories_recycler_view
 ) {
@@ -117,12 +118,11 @@ class CategoriesItemViewHolder(
  */
 class LayoutsItemViewHolder(
     parent: ViewGroup,
-    private val scrollStates: SparseIntArray,
-    private val layoutSelectionListener: LayoutSelectionListener
+    scrollStates: SparseIntArray
 ) : HorizontalRecyclerViewHolder(
         parent,
         scrollStates,
-        LayoutsAdapter(parent.context, layoutSelectionListener),
+        LayoutsAdapter(parent.context),
         R.layout.modal_layout_picker_layouts_row,
         R.id.layouts_recycler_view
 ) {

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/mlp_layouts_row_height"
-    android:layout_marginBottom="@dimen/mlp_layout_card_margin_bottom"
     android:orientation="vertical">
 
     <View style="@style/ModalLayoutPickerLayoutsSeparatorLine" />

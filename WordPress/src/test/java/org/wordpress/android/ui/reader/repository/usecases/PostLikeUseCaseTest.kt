@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.repository.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Rule
@@ -9,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
@@ -18,6 +20,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PostLikeUseCaseTest {
     @Rule
@@ -37,7 +40,8 @@ class PostLikeUseCaseTest {
                 eventBusWrapper,
                 readerPostActionsWrapper,
                 accountStore,
-                networkUtilsWrapper
+                networkUtilsWrapper,
+                TEST_DISPATCHER
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val account = AccountModel()

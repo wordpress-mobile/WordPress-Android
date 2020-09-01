@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil.Callback
  * Implements the Recyclerview list items diff to avoid unneeded UI refresh
  */
 class LayoutsDiffCallback(
-    private val oldList: List<LayoutListItem>,
-    private val newList: List<LayoutListItem>
+    private val oldList: List<LayoutListItemUiState>,
+    private val newList: List<LayoutListItemUiState>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
             newList[newItemPosition].slug == oldList[oldItemPosition].slug

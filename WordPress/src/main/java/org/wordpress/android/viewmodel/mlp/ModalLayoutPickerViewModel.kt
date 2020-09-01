@@ -6,8 +6,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItem
+import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
-import org.wordpress.android.ui.mlp.LayoutListItem
+import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -46,6 +47,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val selectedLayoutSlug: LiveData<String?> = _selectedLayoutSlug
 
     /**
+     * Tracks the visibility of the action buttons
+     */
+    private val _buttonsUiState = MutableLiveData<ButtonsUiState>()
+    val buttonsUiState: LiveData<ButtonsUiState> = _buttonsUiState
+
+    /**
      * Tracks the Modal Layout Picker list items
      */
     private val _listItems = MutableLiveData<List<ModalLayoutPickerListItem>>()
@@ -62,6 +69,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     fun init(landscape: Boolean) {
         landscapeMode = landscape
         loadListItems()
+        updateButtonsUiState()
     }
 
     private fun loadListItems() {
@@ -89,8 +97,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     it.slug,
                     it.title,
                     it.emoji,
-                    false
-            )
+                    it.slug == _selectedCategorySlug.value
+            ) { categoryTapped(it.slug) }
         }))
 
         val selectedCategories = if (_selectedCategorySlug.value != null)
@@ -98,9 +106,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
         else demoLayouts.categories
 
         selectedCategories.forEach { category ->
-            val layouts = demoLayouts.layouts(category.slug).map { layout ->
+            val layouts = demoLayouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == _selectedLayoutSlug.value
-                LayoutListItem(layout.slug, layout.title, layout.preview, selected)
+                LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
+                    layoutTapped(layoutSlug = layout.slug)
+                }
             }
             listItems.add(
                     ModalLayoutPickerListItem.LayoutCategory(
@@ -163,6 +173,16 @@ class ModalLayoutPickerViewModel @Inject constructor(
         } else {
             _selectedLayoutSlug.value = layoutSlug
         }
+        updateButtonsUiState()
+        loadListItems()
+    }
+
+    /**
+     * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
+     */
+    private fun updateButtonsUiState() {
+        val selection = _selectedLayoutSlug.value != null
+        _buttonsUiState.value = ButtonsUiState(!selection, selection, selection)
     }
 
     /**
