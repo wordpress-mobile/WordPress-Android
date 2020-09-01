@@ -265,17 +265,10 @@ public class MediaStore extends Store {
                         return message;
                     }
 
-                    // Remove the final " Back" if present
-                    // Note that the real string depends on current locale; this is not optimal but
-                    // the two "." sentences separators seem to be always present in this error category messages
-                    String[] splitUserMsg = userMessage.split("\\.");
-
-                    if (null != splitUserMsg && splitUserMsg.length > 2) {
-                        userMessage = userMessage.substring(
-                                0,
-                                userMessage.length() - splitUserMsg[splitUserMsg.length - 1].length()
-                                                           );
-                    }
+                    // NOTE: It seems the backend is sending a final " Back" string in the message
+                    // Note that the real string depends on current locale; this is not optimal and we thought to
+                    // try to filter it out in the client app but at the end it can be not reliable so we are
+                    // keeping it. We can try to get it filtered on the backend side.
 
                     return userMessage;
                 } else {
