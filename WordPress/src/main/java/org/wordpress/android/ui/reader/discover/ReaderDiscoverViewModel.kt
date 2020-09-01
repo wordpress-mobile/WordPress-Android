@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -89,6 +90,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun init() {
+        val textView: TextView
         // Start with loading state
         _uiState.value = LoadingUiState
 
