@@ -1,6 +1,8 @@
 15.7
 -----
- 
+ * [***] Reader: Introduced a new Discover tab tailored for each user.
+ * [*] Reader: Added "(un)follow" button to the site and topic detail screens.
+
 15.6
 -----
 * [**] Block Editor: Add settings to allow changing column widths
