@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -371,14 +370,5 @@ public class ReaderTagTable {
 
         Date dtNow = new Date();
         return DateTimeUtils.minutesBetween(dtUpdated, dtNow);
-    }
-
-    public static void deleteRecommendedTagsAddedAsFollowedTags() {
-        // Delete recommended tags which were saved as followed tags for logged out user
-        // before we allowed following tags using interests picker
-        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-            deleteTags(getFollowedTags());
-            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
-        }
     }
 }

@@ -191,7 +191,6 @@ public class ReaderUpdateLogic {
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
                     if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
-                        ReaderTagTable.deleteRecommendedTagsAddedAsFollowedTags();
                         // Do not delete locally saved tags for logged out user
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {
