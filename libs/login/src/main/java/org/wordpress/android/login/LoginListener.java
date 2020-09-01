@@ -16,6 +16,7 @@ public interface LoginListener {
     }
 
     LoginMode getLoginMode();
+    void startOver();
 
     // Login Email input callbacks
     void gotWpcomEmail(String email, boolean verifyEmail);
