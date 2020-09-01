@@ -1,0 +1,57 @@
+package org.wordpress.android.ui.mlp
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.modal_layout_picker_category.view.*
+import org.wordpress.android.R
+import org.wordpress.android.R.attr
+import org.wordpress.android.login.util.getColorStateListFromAttribute
+import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.setVisible
+
+/**
+ * Renders the Layout Category header button
+ */
+class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+                R.layout.modal_layout_picker_category,
+                parent,
+                false
+        )
+) {
+    val container: View = itemView.category_container
+    val category: TextView = itemView.category
+    val emoji: TextView = itemView.emoji
+    val check: ImageView = itemView.check
+
+    fun onBind(uiState: CategoryListItemUiState) {
+        category.text = uiState.title
+        emoji.text = uiState.emoji
+        container.contentDescription = if (uiState.selected) parent.context.getString(
+                R.string.mlp_layout_selected,
+                uiState.title
+        ) else uiState.title
+        container.setOnClickListener {
+            uiState.onItemTapped.invoke()
+        }
+        container.backgroundTintList
+        setSelectedStateUI(uiState.selected)
+    }
+
+    private fun setSelectedStateUI(selected: Boolean) {
+        check.setVisible(selected)
+        emoji.setVisible(!selected)
+        container.backgroundTintList = parent.context.getColorStateListFromAttribute(
+                if (selected) attr.categoriesButtonBackgroundSelected else attr.categoriesButtonBackground
+        )
+        category.setTextColor(
+                parent.context.getColorFromAttribute(
+                        if (selected) attr.categoriesButtonTextSelected else attr.categoriesButtonText
+                )
+        )
+    }
+}

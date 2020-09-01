@@ -3,7 +3,7 @@ package org.wordpress.android.ui.mlp
 /**
  * The category list item
  */
-data class CategoryListItem(
+data class CategoryListItemUiState(
     val slug: String,
     val title: String,
     val emoji: String,

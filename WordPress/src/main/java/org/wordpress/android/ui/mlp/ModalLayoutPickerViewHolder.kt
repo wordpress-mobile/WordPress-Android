@@ -72,8 +72,6 @@ abstract class HorizontalRecyclerViewHolder(
                     RecyclerView.HORIZONTAL,
                     false
             ).apply { initialPrefetchItemCount = prefetchItemCount }
-            adapter = LayoutsAdapter(context)
-
             setRecycledViewPool(RecyclerView.RecycledViewPool())
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -103,7 +101,7 @@ class CategoriesItemViewHolder(
 ) : HorizontalRecyclerViewHolder(
         parent,
         scrollStates,
-        CategoriesAdapter(parent.context),
+        CategoriesAdapter(),
         R.layout.modal_layout_picker_categories_row,
         R.id.categories_recycler_view
 ) {

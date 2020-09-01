@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.mlp.CategoryListItem
+import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
@@ -93,7 +93,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
 
         listItems.add(ModalLayoutPickerListItem.Categories(demoLayouts.categories.map {
-            CategoryListItem(
+            CategoryListItemUiState(
                     it.slug,
                     it.title,
                     it.emoji,
