@@ -6,6 +6,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.androidx_work_version = "2.0.1"
     ext.buildGutenbergMobileJSBundle = 1
+    ext.buildUtilsFromLocalDirectory = false
 
     repositories {
         google()

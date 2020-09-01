@@ -301,13 +301,21 @@ dependencies {
 
     implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
-    implementation 'org.wordpress.android:WordPressUtils'
-    testImplementation 'org.wordpress.android:WordPressUtils'
-    debugImplementation 'org.wordpress.android:WordPressUtils'
+
+    if (buildUtilsFromLocalDirectory) {
+        implementation 'org.wordpress.android:WordPressUtils'
+        testImplementation 'org.wordpress.android:WordPressUtils'
+        debugImplementation 'org.wordpress.android:WordPressUtils'
+    } else {
+        implementation 'org.wordpress:utils:1.29'
+        testImplementation 'org.wordpress:utils:1.29'
+        debugImplementation 'org.wordpress:utils:1.29'
+    }
 //    implementation project(path:':libs:utils:WordPressUtils')
 //    testImplementation project(path:':libs:utils:WordPressUtils')
 //    debugImplementation project(path:':libs:utils:WordPressUtils')
@@ -358,7 +366,7 @@ dependencies {
 configurations.all {
     // Exclude packaged wordpress sub projects, force the use of the source project
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
-    exclude group: 'org.wordpress', module: 'utils'
+    //exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
 }
 
