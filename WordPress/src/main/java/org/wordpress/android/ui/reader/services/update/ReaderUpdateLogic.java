@@ -196,8 +196,8 @@ public class ReaderUpdateLogic {
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {
                         // if any local topics have been removed from the server, make sure to delete
-                        // them locally (including their posts)
-                        ReaderTagTable.deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // them locally
+                        ReaderTagTable.deleteTags(localTopics.getDeletions(serverTopics));
                         // now replace local topics with the server topics
                         ReaderTagTable.replaceTags(serverTopics);
                     }

@@ -377,26 +377,8 @@ public class ReaderTagTable {
         // Delete recommended tags which were saved as followed tags for logged out user
         // before we allowed following tags using interests picker
         if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-            deleteTagsAndPostsWithTags(getFollowedTags());
+            deleteTags(getFollowedTags());
             AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
-        }
-    }
-
-    public static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
-        if (tagList == null || tagList.size() == 0) {
-            return;
-        }
-        deleteTags(tagList);
-
-        SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        db.beginTransaction();
-        try {
-            for (ReaderTag tag : tagList) {
-                ReaderPostTable.deletePostsWithTag(tag);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
     }
 }
