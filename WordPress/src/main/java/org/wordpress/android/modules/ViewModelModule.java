@@ -7,7 +7,7 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerViewModel;
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
@@ -21,7 +21,6 @@ import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
-import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -328,11 +327,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderInterestsViewModel.class)
     abstract ViewModel readerInterestsViewModel(ReaderInterestsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(NewsCardViewModel.class)
-    abstract ViewModel newsCardViewModel(NewsCardViewModel viewModel);
 
     @Binds
     @IntoMap

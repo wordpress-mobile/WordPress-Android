@@ -28,7 +28,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +71,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -110,8 +108,8 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
@@ -216,14 +214,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListViewModel mViewModel;
     // This VM is initialized only on the Following tab
     private SubFilterViewModel mSubFilterViewModel;
-    private NewsCardViewModel mNewsCardViewModel;
     private ReaderViewModel mReaderViewModel = null;
-
-    private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
-        @Override public void onChanged(@Nullable NewsItem newsItem) {
-            getPostAdapter().updateNewsCardItem(newsItem);
-        }
-    };
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject AccountStore mAccountStore;
@@ -421,8 +412,6 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
-        mNewsCardViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
-                                               .get(NewsCardViewModel.class);
         if (mIsTopLevel) {
             mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
                                                  .get(ReaderViewModel.class);
@@ -485,6 +474,8 @@ public class ReaderPostListFragment extends Fragment
                 })
         );
 
+        mViewModel.getUpdateFollowStatus().observe(getViewLifecycleOwner(), this::setFollowStatusForBlog);
+
         mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
@@ -496,6 +487,13 @@ public class ReaderPostListFragment extends Fragment
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
         }
+    }
+
+    private void setFollowStatusForBlog(PostFollowStatusChanged readerData) {
+        if (!hasPostAdapter()) {
+            return;
+        }
+        getPostAdapter().setFollowStatusForBlog(readerData.getBlogId(), readerData.getFollowing());
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
@@ -1994,14 +1992,11 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
-            mPostAdapter.setOnNewsCardListener(mNewsCardViewModel.getNewsCardListener());
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
-            mNewsCardViewModel.getNewsDataSource(mCurrentTag).removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
-                mNewsCardViewModel.getNewsDataSource(mCurrentTag).observe(getViewLifecycleOwner(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
@@ -2550,8 +2545,6 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
-        } else if (tag.isBookmarked()) {
-            stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
         } else {
             return;
         }
@@ -2566,12 +2559,7 @@ public class ReaderPostListFragment extends Fragment
     public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
         switch (actionType) {
             case FOLLOW:
-                if (post.isFollowedByCurrentUser) {
-                    onFollowingTapped();
-                } else {
-                    onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                }
-                toggleFollowStatusForPost(post);
+                mViewModel.onFollowSiteClicked(post, isBookmarksList());
                 break;
             case SITE_NOTIFICATIONS:
                 mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
