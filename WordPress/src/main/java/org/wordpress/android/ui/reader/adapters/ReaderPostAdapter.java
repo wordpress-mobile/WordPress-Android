@@ -487,7 +487,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
-                .mapPostToUiState(
+                .mapPostToUiStateBlocking(
                         post,
                         false,
                         mPhotonWidth,
@@ -504,7 +504,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItems(post, postListType, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, postListType, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }

@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -61,6 +62,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
@@ -78,6 +80,7 @@ class ReaderDiscoverViewModelTest {
                 readerUtilsWrapper,
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
+                displayUtilsWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
@@ -210,8 +213,10 @@ class ReaderDiscoverViewModelTest {
                 viewModel.start()
 
                 // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard()
-                        .plus(createDummyReaderPostCardList()))
+                fakeDiscoverFeed.value = ReaderDiscoverCards(
+                        createWelcomeBannerCard()
+                                .plus(createDummyReaderPostCardList())
+                )
 
                 // Assert
                 val contentUiState = uiStates[1] as ContentUiState
@@ -247,8 +252,10 @@ class ReaderDiscoverViewModelTest {
                 viewModel.start()
 
                 // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard()
-                        .plus(createDummyReaderPostCardList()))
+                fakeDiscoverFeed.value = ReaderDiscoverCards(
+                        createWelcomeBannerCard()
+                                .plus(createDummyReaderPostCardList())
+                )
 
                 // Assert
                 val contentUiState = uiStates[1] as ContentUiState

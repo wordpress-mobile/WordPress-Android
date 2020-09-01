@@ -279,15 +279,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 predefinedEventProperties.put("source", "other_post_list");
                 break;
-            case READER_SAVED_LIST_VIEWED_FROM_FILTER:
-                predefinedEventProperties.put("source", "reader_filter");
-                break;
-            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
-                predefinedEventProperties.put("source", "post_list_saved_post_notice");
-                break;
-            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
-                predefinedEventProperties.put("source", "post_details_saved_post_notice");
-                break;
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -732,10 +723,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST:
             case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 return "reader_saved_post_opened";
-            case READER_SAVED_LIST_VIEWED_FROM_FILTER:
-            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
-            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
-                return "reader_saved_list_viewed";
             case READER_SITE_SHARED:
                 return "reader_site_shared";
             case EDITOR_CREATED_POST:
@@ -1812,6 +1799,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "select_interests_shown";
             case SELECT_INTERESTS_PICKED:
                 return "select_interests_picked";
+            case READER_FOLLOWING_SHOWN:
+                return "reader_following_shown";
+            case READER_LIKED_SHOWN:
+                return "reader_liked_shown";
+            case READER_SAVED_LIST_SHOWN:
+                return "reader_saved_list_shown";
+            case READER_CUSTOM_TAB_SHOWN:
+                return "reader_custom_tab_shown";
             case READER_DISCOVER_SHOWN:
                 return "reader_discover_shown";
             case READER_DISCOVER_PAGINATED:

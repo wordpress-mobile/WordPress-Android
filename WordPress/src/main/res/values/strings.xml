@@ -1796,8 +1796,8 @@
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this site</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
-    <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
-    <string name="reader_toast_err_block_blog">Unable to block this site</string>
+    <string name="reader_toast_blog_blocked" tools:ignore="UnusedResources">Posts from this site will no longer be shown</string>
+    <string name="reader_toast_err_block_blog" tools:ignore="UnusedResources">Unable to block this site</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
@@ -2882,6 +2882,7 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
+    <string name="mlp_layout_selected">%s selected</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
