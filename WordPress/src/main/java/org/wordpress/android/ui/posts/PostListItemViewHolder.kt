@@ -114,7 +114,7 @@ sealed class PostListItemViewHolder(
         }
 
         // Purpose of this method is to prevent 2 Editors
-        // from being launched simultaneously and then producing a crash, etc
+        // from being launched simultaneously and then producing a crash
         private fun isSafeClick(view: View): Boolean {
             if (isClickEnabled.getAndSet(false)) {
                 view.postDelayed({
