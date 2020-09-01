@@ -4,11 +4,15 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.wordpress.android.WordPress
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
+import org.wordpress.android.imageeditor.crop.CropViewModel.Companion.MEDIA_EDITING
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -17,8 +21,8 @@ import java.io.File
 class ImageEditorInitializer {
     companion object {
         private const val IMAGE_STRING_URL_MSG = "ImageEditor requires a not-null string image url."
-        private const val ACTIONS = "actions"
-        private const val NUMBER_OF_IMAGES = "number_of_images"
+        private const val ONE_DAY = 24 * 60 * 60 * 1000.toLong()
+        private const val ONE_WEEK = ONE_DAY * 7
 
         // The actions made in a session.
         val actions = arrayListOf<Action>()
@@ -27,7 +31,18 @@ class ImageEditorInitializer {
             object Crop : Action("crop")
         }
 
-        fun init(imageManager: ImageManager, imageEditorTracker: ImageEditorTracker) {
+        fun init(
+            imageManager: ImageManager,
+            imageEditorTracker: ImageEditorTracker,
+            imageEditorFileUtils: ImageEditorFileUtils,
+            defaultScope: CoroutineScope
+        ) {
+            // Delete old output images
+            val mediaEditingDirectoryPath = WordPress.getContext().cacheDir.path + "/" + MEDIA_EDITING
+            defaultScope.launch {
+                imageEditorFileUtils.deleteFilesOlderThanDurationFromDirectory(mediaEditingDirectoryPath, ONE_WEEK)
+            }
+
             ImageEditor.init(
                 loadIntoImageViewWithResultListener(imageManager),
                 loadIntoFileWithResultListener(imageManager),
