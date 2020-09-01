@@ -7,13 +7,19 @@ include ':photoeditor'
 project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/stories-android/photoeditor')
 
 include ':libs:image-editor:ImageEditor'
-includeBuild('../WordPress-Utils-Android')
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
 include ':libs:login:WordPressLoginFlow'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
+
+def includedBuilds = new File('./included-builds.txt')
+if (includedBuilds.exists()) {
+    includedBuilds.eachLine { line ->
+        includeBuild(line)
+    }
+}
 
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
