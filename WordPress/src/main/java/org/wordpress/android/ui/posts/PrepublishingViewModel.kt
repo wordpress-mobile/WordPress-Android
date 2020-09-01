@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -56,6 +57,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         if (isStarted) return
         isStarted = true
 
+        val text:TextView
         this.site = site
         this.currentScreen = currentScreenFromSavedState ?: HOME
 
