@@ -156,6 +156,14 @@ public class UploadUtils {
             errorMessage = TextUtils.isEmpty(msg) ? error.type.toString() : msg;
         }
 
+        // Capitalize message first letter; this is done since some messages
+        // (like a few got from FluxC) are not capitalized.
+        if (errorMessage.length() > 0) {
+            String firstLetter = errorMessage.substring(0, 1);
+            String restOfMessage = errorMessage.length() > 1 ? errorMessage.substring(1) : "";
+            errorMessage = firstLetter.toUpperCase() + restOfMessage;
+        }
+
         return errorMessage;
     }
 
