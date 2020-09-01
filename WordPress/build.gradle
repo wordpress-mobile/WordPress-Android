@@ -312,13 +312,10 @@ dependencies {
         testImplementation 'org.wordpress.android:WordPressUtils'
         debugImplementation 'org.wordpress.android:WordPressUtils'
     } else {
-        implementation 'org.wordpress:utils:1.29'
-        testImplementation 'org.wordpress:utils:1.29'
-        debugImplementation 'org.wordpress:utils:1.29'
+        implementation "org.wordpress:utils:$wordPressUtilsVersion"
+        testImplementation "org.wordpress:utils:$wordPressUtilsVersion"
+        debugImplementation "org.wordpress:utils:$wordPressUtilsVersion"
     }
-//    implementation project(path:':libs:utils:WordPressUtils')
-//    testImplementation project(path:':libs:utils:WordPressUtils')
-//    debugImplementation project(path:':libs:utils:WordPressUtils')
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
     }
