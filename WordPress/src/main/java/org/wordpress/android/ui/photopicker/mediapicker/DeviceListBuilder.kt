@@ -9,6 +9,7 @@ import android.provider.MediaStore.Video
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.photopicker.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.photopicker.mediapicker.MediaType.AUDIO
@@ -70,13 +71,16 @@ class DeviceListBuilder
             val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idIndex)
+                val completeUri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = MediaItem(
                         id,
-                        UriWrapper(Uri.withAppendedPath(baseUri, "" + id)),
+                        UriWrapper(completeUri),
                         "",
                         isVideo
                 )
-                result.add(item)
+                if (MediaUtils.isSupportedMimeType(context.contentResolver.getType(completeUri))) {
+                    result.add(item)
+                }
             }
         } finally {
             SqlUtils.closeCursor(cursor)
