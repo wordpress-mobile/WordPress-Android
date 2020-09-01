@@ -325,7 +325,7 @@ dependencies {
 
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
 
-    lintChecks 'org.wordpress:lint:1.0.1'
+    lintChecks 'org.wordpress:lint:1.0.2'
 
     // Sentry
     implementation 'io.sentry:sentry-android:2.1.3'
