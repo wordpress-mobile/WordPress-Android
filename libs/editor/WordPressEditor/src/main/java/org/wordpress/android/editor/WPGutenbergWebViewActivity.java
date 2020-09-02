@@ -6,11 +6,11 @@ import android.text.TextUtils;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.mobile.FileUtils;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergWebViewActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.List;
 
 public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
@@ -116,7 +116,15 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     }
 
     @Override
-    protected List<String> getExternalSources() {
-        return FileUtils.getAssetFileList(this, "unsupported-block-editor");
+    protected List<String> getOnGutenbergReadyExternalSources() {
+        String file = getFileContentFromAssets("unsupported-block-editor/remove-nux.js");
+        return Arrays.asList(file);
+    }
+
+    @Override protected List<String> getOnPageLoadExternalSources() {
+        long userId = getIntent().getExtras().getLong(ARG_USER_ID, 0);
+        String file = getFileContentFromAssets("unsupported-block-editor/extra-localstorage-entries.js")
+                .replace("%@", Long.toString(userId));
+        return Arrays.asList(file);
     }
 }
