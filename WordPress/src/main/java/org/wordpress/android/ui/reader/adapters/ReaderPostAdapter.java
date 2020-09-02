@@ -309,8 +309,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                mAccountStore.hasAccessToken()
+                isFollowButtonEnabled
             )
         );
         tagHolder.onBind(uiState);
