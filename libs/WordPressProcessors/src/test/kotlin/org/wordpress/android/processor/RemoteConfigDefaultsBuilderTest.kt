@@ -18,7 +18,7 @@ class RemoteConfigDefaultsBuilderTest {
 
         val fileContent = remoteConfigDefaultsBuilder.getContent()
 
-        assertThat(fileContent.toString()).isEqualTo(
+        assertThat(fileContent.toString().trimIndent()).isEqualTo(
                 """
             // Automatically generated file. DO NOT MODIFY
             package org.wordpress.android.util.config
@@ -28,12 +28,11 @@ class RemoteConfigDefaultsBuilderTest {
             import kotlin.collections.Map
             
             object RemoteConfigDefaults {
-              val remoteConfigDefaults: Map<String, Any> = mapOf(
-                  "$keyA" to "$valueA",
-                  "$keyB" to "$valueB"
-                  )
+                val remoteConfigDefaults: Map<String, Any> = mapOf(
+                        "$keyA" to "$valueA",
+                        "$keyB" to "$valueB"
+                        )
             }
-            
         """.trimIndent()
         )
     }
