@@ -6,9 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
 
-/*
- * ViewHolder containing a device thumbnail
- */
 class FileThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
         ThumbnailViewHolder(parent, R.layout.media_picker_file_item) {
     private val container: View = itemView.findViewById(R.id.media_grid_item_file_container)
