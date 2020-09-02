@@ -344,6 +344,12 @@ class MediaPickerViewModel @Inject constructor(
         }
     }
 
+    fun onSearch(query: String) {
+        launch(bgDispatcher) {
+            loadActions.send(LoadAction.Filter(query))
+        }
+    }
+
     data class MediaPickerUiState(
         val photoListUiModel: PhotoListUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,

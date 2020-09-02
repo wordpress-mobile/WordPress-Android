@@ -6,10 +6,14 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -63,6 +67,7 @@ class MediaPickerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaPickerViewModel::class.java)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -185,6 +190,31 @@ class MediaPickerFragment : Fragment() {
         })
 
         viewModel.start(selectedUris, mediaPickerSetup, lastTappedIcon, site)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_search, menu)
+
+        val actionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
+            "Menu does not contain mandatory search item"
+        }
+        initializeSearchView(actionMenuItem)
+    }
+
+    private fun initializeSearchView(actionMenuItem: MenuItem) {
+        val searchView = actionMenuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+        })
     }
 
     private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {

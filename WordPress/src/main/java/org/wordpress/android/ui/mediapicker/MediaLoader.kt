@@ -9,8 +9,9 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.util.LocaleManagerWrapper
 
-data class MediaLoader(private val mediaSource: MediaSource) {
+data class MediaLoader(private val mediaSource: MediaSource, private val localeManagerWrapper: LocaleManagerWrapper) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
             var state = DomainState()
@@ -80,7 +81,15 @@ data class MediaLoader(private val mediaSource: MediaSource) {
 
     private fun buildDomainModel(state: DomainState): DomainModel {
         return if (!state.filter.isNullOrEmpty()) {
-            DomainModel(state.items.filter { it.name?.contains(state.filter) == true }, state.error, state.hasMore)
+            val filter = state.filter.toLowerCase(localeManagerWrapper.getLocale())
+            DomainModel(
+                    state.items.filter {
+                        it.name?.toLowerCase(localeManagerWrapper.getLocale())
+                                ?.contains(filter) == true
+                    },
+                    state.error,
+                    state.hasMore
+            )
         } else {
             DomainModel(state.items, state.error, state.hasMore)
         }
