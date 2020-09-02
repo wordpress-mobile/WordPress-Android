@@ -18,7 +18,7 @@ class RemoteConfigDefaultsBuilderTest {
 
         val fileContent = remoteConfigDefaultsBuilder.getContent()
 
-        assertThat(fileContent.toString().trimIndent()).isEqualTo(
+        assertThat(fileContent.toString()).isEqualTo(
                 """
             // Automatically generated file. DO NOT MODIFY
             package org.wordpress.android.util.config
@@ -33,6 +33,7 @@ class RemoteConfigDefaultsBuilderTest {
                         "$keyB" to "$valueB"
                         )
             }
+            
         """.trimIndent()
         )
     }
