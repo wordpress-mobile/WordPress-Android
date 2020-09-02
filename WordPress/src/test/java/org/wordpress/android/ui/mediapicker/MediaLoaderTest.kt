@@ -14,6 +14,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.UriWrapper
 
@@ -29,8 +30,8 @@ class MediaLoaderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         mediaLoader = MediaLoader(mediaSource)
-        firstMediaItem = MediaItem(1, uri1, "first item", false)
-        secondMediaItem = MediaItem(2, uri2, "second item", true)
+        firstMediaItem = MediaItem(uri1, "first item", IMAGE, "image/jpeg", 1)
+        secondMediaItem = MediaItem(uri2, "second item", VIDEO, "video/mpeg", 2)
     }
 
     @Test

@@ -17,7 +17,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
@@ -27,11 +26,13 @@ import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPPermissionUtils
@@ -54,6 +55,7 @@ class MediaPickerViewModel @Inject constructor(
     private val permissionsHandler: PermissionsHandler,
     private val context: Context,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var mediaLoader: MediaLoader
@@ -115,7 +117,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
 
                 val fileExtension = it.mimeType?.let { mimeType ->
-                    MediaUtils.getExtensionForMimeType(mimeType).toUpperCase(localeManagerWrapper.getLocale())
+                    mediaUtilsWrapper.getExtensionForMimeType(mimeType)?.toUpperCase(localeManagerWrapper.getLocale())
                 }
                 when (it.type) {
                     IMAGE -> MediaPickerUiItem.PhotoItem(
