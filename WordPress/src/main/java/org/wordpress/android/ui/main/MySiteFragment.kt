@@ -994,7 +994,7 @@ class MySiteFragment : Fragment(),
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
         site_info_container.title.text = blogTitle
-        site_info_container.subtitle.text = "verylongwordpresssiteurl.wordpress.com"
+        site_info_container.subtitle.text = homeUrl
 
         // Hide the Plan item if the Plans feature is not available for this blog
         val planShortName = site.planShortName
