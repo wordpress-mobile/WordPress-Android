@@ -58,7 +58,7 @@ class DeviceListBuilder
     }
 
     private fun addMedia(baseUri: Uri, mediaType: MediaType): List<MediaItem> {
-        val projection = arrayOf(ID_COL, ID_DATE_MODIFIED)
+        val projection = arrayOf(ID_COL, ID_DATE_MODIFIED, ID_TITLE)
         var cursor: Cursor? = null
         val result = mutableListOf<MediaItem>()
         try {
@@ -78,13 +78,15 @@ class DeviceListBuilder
         try {
             val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
             val dateIndex = cursor.getColumnIndexOrThrow(ID_DATE_MODIFIED)
+            val titleIndex = cursor.getColumnIndexOrThrow(ID_TITLE)
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idIndex)
                 val dateModified = cursor.getLong(dateIndex)
+                val title = cursor.getString(titleIndex)
                 val uri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = MediaItem(
                         UriWrapper(uri),
-                        "",
+                        title,
                         mediaType,
                         getMimeType(uri),
                         dateModified
@@ -104,7 +106,7 @@ class DeviceListBuilder
         val allowedMimeTypes = mimeTypes.getAllTypes()
         return@withContext storagePublicDirectory.listFiles()
                 .mapNotNull { file ->
-                    val uri = parse(file.name)
+                    val uri = parse(file.toURI().toString())
                     val mimeType = getMimeType(uri)
                     if (mimeType != null && allowedMimeTypes.contains(mimeType)) {
                         MediaItem(UriWrapper(uri), file.name, DOCUMENT, mimeType, file.lastModified())
@@ -126,5 +128,6 @@ class DeviceListBuilder
     companion object {
         private const val ID_COL = Media._ID
         private const val ID_DATE_MODIFIED = MediaColumns.DATE_MODIFIED
+        private const val ID_TITLE = MediaColumns.TITLE
     }
 }
