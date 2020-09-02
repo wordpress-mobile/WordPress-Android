@@ -315,9 +315,8 @@ jobs:
             model=blueline,version=28,orientation=portrait
             model=gts3lltevzw,version=28,orientation=default
           # NOTE: When updating this list of locales, ensure to also update the `promo_config:` keys accordingly in the `SUPPORTED_LOCALES` in `fastlane/Fastfile`
-          # [Trial Limitation] Free plan I use to experiment with Firebase Test Lab has a quota of 5 tests/day. {2 devices} x {2 locales} is already 4.
           # locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
-          locales: ar en_US
+          locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
           project: api-project-108380595987
           timeout: 30m
           num-flaky-test-attempts: 2
