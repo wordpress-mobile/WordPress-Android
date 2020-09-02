@@ -366,8 +366,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void undoPostUnbookmarked(final ReaderPost post, final int position) {
         if (!post.isBookmarked) {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
+            mOnPostBookmarkedListener.onBookmarkClicked(post.blogId, post.postId);
         }
     }
 
@@ -383,8 +382,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     //noinspection EnumSwitchStatementWhichMissesCases
                     switch (type) {
                         case BOOKMARK:
-                            toggleBookmark(post.blogId, post.postId);
-                            renderPost(position, holder, false);
+                            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
                             break;
                         case LIKE:
                             toggleLike(ctx, post, position, holder);
@@ -762,23 +760,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (updatedPost != null && positionInReaderPostList > -1) {
             mPosts.set(positionInReaderPostList, updatedPost);
             renderPost(listPosition, holder, false);
-        }
-    }
-
-    /*
-     * triggered when user taps the bookmark post button
-     */
-    private void toggleBookmark(final long blogId, final long postId) {
-        // update post in array and on screen
-        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
-        int position = mPosts.indexOfPost(post);
-        if (post != null && position > -1) {
-            post.isBookmarked = !post.isBookmarked;
-            mPosts.set(position, post);
-        }
-
-        if (mOnPostBookmarkedListener != null) {
-            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
         }
     }
 
