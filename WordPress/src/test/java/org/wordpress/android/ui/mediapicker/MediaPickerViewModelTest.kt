@@ -390,7 +390,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     private fun MediaPickerUiItem.assertEqualToDomainItem(domainItem: MediaItem) {
         assertThat(this.uri).isEqualTo(domainItem.uri)
-        when(domainItem.type) {
+        when (domainItem.type) {
             IMAGE -> assertThat(this is MediaPickerUiItem.PhotoItem)
             VIDEO -> assertThat(this is MediaPickerUiItem.VideoItem)
             DOCUMENT, AUDIO -> assertThat(this is MediaPickerUiItem.FileItem)
