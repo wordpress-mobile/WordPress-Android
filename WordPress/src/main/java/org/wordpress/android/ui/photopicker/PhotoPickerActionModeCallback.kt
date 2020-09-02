@@ -17,7 +17,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MedaPickerActionModeCallback}")
+        "{@link org.wordpress.android.ui.mediapicker.MedaPickerActionModeCallback}")
 class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel) : Callback,
         LifecycleOwner {
     private lateinit var lifecycleRegistry: LifecycleRegistry

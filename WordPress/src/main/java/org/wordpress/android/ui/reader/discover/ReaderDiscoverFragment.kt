@@ -16,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -43,6 +44,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -68,6 +70,11 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     private fun setupViews() {
         recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler_view.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+
+        val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
+        val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
+        recycler_view.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
+
         WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
             viewModel.swipeToRefresh()
         }

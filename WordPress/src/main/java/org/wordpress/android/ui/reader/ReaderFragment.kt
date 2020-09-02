@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,7 +18,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
@@ -27,7 +25,6 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragmen
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
-import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
@@ -39,7 +36,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ReaderViewModel
-    private lateinit var newsCardViewModel: NewsCardViewModel
 
     private var searchMenuItem: MenuItem? = null
 
@@ -49,7 +45,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             viewModel.uiState.value?.let {
                 if (it is ContentUiState) {
                     val selectedTag = it.readerTagList[position]
-                    newsCardViewModel.onTagChanged(selectedTag)
                     viewModel.onTagChanged(selectedTag)
                 }
             }
@@ -111,8 +106,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
-        newsCardViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(NewsCardViewModel::class.java)
         startObserving()
     }
 
@@ -162,15 +155,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             }
         })
 
-        newsCardViewModel.openUrlEvent.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { url ->
-                val activity: Activity? = activity
-                if (activity != null) {
-                    WPWebViewActivity.openURL(activity, url)
-                }
-            }
-        })
-
         viewModel.start()
     }
 
@@ -199,12 +183,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment == null) {
             childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.interests_fragment_container,
-                    ReaderInterestsFragment(),
-                    ReaderInterestsFragment.TAG
-                )
-                .commitNow()
+                    .replace(
+                            R.id.interests_fragment_container,
+                            ReaderInterestsFragment(),
+                            ReaderInterestsFragment.TAG
+                    )
+                    .commitNow()
         }
     }
 
@@ -212,8 +196,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment?.isAdded == true) {
             childFragmentManager.beginTransaction()
-                .remove(readerInterestsFragment)
-                .commitNow()
+                    .remove(readerInterestsFragment)
+                    .commitNow()
         }
     }
 }
