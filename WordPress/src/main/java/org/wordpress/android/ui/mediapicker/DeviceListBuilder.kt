@@ -103,12 +103,11 @@ class DeviceListBuilder
 
     private suspend fun addDownloads(): List<MediaItem> = withContext(bgDispatcher) {
         val storagePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val allowedMimeTypes = mimeTypes.getAllTypes()
         return@withContext storagePublicDirectory.listFiles()
                 .mapNotNull { file ->
                     val uri = parse(file.toURI().toString())
                     val mimeType = getMimeType(uri)
-                    if (mimeType != null && allowedMimeTypes.contains(mimeType)) {
+                    if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)) {
                         MediaItem(UriWrapper(uri), file.name, DOCUMENT, mimeType, file.lastModified())
                     } else {
                         null
