@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.mlp
 
 import android.os.Bundle
+import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 
@@ -63,13 +65,41 @@ class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 /**
  * Modal Layout Picker layouts view holder
  */
-class LayoutsItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
-        parent,
-        R.layout.modal_layout_picker_layouts_row
-) {
+class LayoutsItemViewHolder(
+    parent: ViewGroup,
+    private val scrollStates: SparseIntArray
+) :
+        ModalLayoutPickerViewHolder(
+                parent,
+                R.layout.modal_layout_picker_layouts_row
+        ) {
     private val title: TextView = itemView.findViewById(R.id.title)
 
-    fun bind(item: ModalLayoutPickerListItem.Layouts) {
-        title.text = item.title
+    val recycler: RecyclerView by lazy {
+        itemView.findViewById<RecyclerView>(R.id.layouts_recycler_view).apply {
+            layoutManager = LinearLayoutManager(
+                    context,
+                    RecyclerView.HORIZONTAL,
+                    false
+            ).apply { initialPrefetchItemCount = 4 }
+            adapter = LayoutsAdapter(context)
+            setRecycledViewPool(RecyclerView.RecycledViewPool())
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val firstVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    scrollStates.put(adapterPosition, firstVisibleItem)
+                }
+            })
+        }
+    }
+
+    fun bind(item: ModalLayoutPickerListItem.LayoutCategory) {
+        title.text = item.description
+        (recycler.adapter as LayoutsAdapter).setData(item.layouts)
+        val lastSeenFirstPosition = scrollStates.get(layoutPosition, 0)
+        if (lastSeenFirstPosition >= 0) {
+            recycler.scrollToPosition(lastSeenFirstPosition)
+        }
     }
 }

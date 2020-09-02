@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -83,7 +82,6 @@ import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
-import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -92,6 +90,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
@@ -105,6 +104,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -127,8 +127,8 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -200,7 +200,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
-    @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
@@ -209,6 +208,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject ReaderTracker mReaderTracker;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -253,7 +254,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
-        registeNewsItemObserver();
         boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         if (savedInstanceState == null) {
@@ -623,16 +623,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void registeNewsItemObserver() {
-        mNewsManager.notificationBadgeVisibility().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean showBadge) {
-                mBottomNav.showReaderBadge(showBadge != null ? showBadge : false);
-            }
-        });
-        mNewsManager.pull(false);
-    }
-
     private void launchZendeskMyTickets() {
         if (isFinishing()) {
             return;
@@ -865,6 +855,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     // user switched pages in the bottom navbar
     @Override
     public void onPageChanged(int position) {
+        mReaderTracker.onBottomNavigationTabChanged();
         PageType pageType = WPMainNavigationView.getPageType(position);
         trackLastVisiblePage(pageType, true);
         if (getMySiteFragment() != null) {
@@ -922,7 +913,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (site != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.showPhotoPickerForResult(
+            mMediaPickerLauncher.showPhotoPickerForResult(
                     this,
                     MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                     site,

@@ -49,7 +49,7 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerFragment}")
+        "{@link org.wordpress.android.ui.mediapicker.MediaPickerFragment}")
 class PhotoPickerFragment : Fragment() {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
         ANDROID_CHOOSE_PHOTO(true),
@@ -104,7 +104,7 @@ class PhotoPickerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
         var selectedIds: List<Long>? = null
         var lastTappedIcon: PhotoPickerIcon? = null
         if (savedInstanceState != null) {

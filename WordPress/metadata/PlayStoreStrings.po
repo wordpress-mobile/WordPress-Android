@@ -11,6 +11,12 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_156"
+msgid ""
+"15.6:\n"
+"Block Editor improvements: Added settings for changing column widths to the Column block, added media editing support in the Gallery block, and improved the logic for undo/redo while drafting — enjoy smarter undoing in chunks, instead of undoing a few letters or tiny changes at a time.\n"
+msgstr ""
+
 msgctxt "release_note_155"
 msgid ""
 "15.5:\n"
@@ -18,14 +24,6 @@ msgid ""
 "* Search for self-hosted sites on the post list.\n"
 "* Upload audio and document files to the media library.\n"
 "\n"
-msgstr ""
-
-msgctxt "release_note_154"
-msgid ""
-"15.4:\n"
-"<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.\n"
-"\n"
-"<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

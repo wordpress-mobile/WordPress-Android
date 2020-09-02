@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@android:color/white">
+    >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/wp_stories_take_picture"
@@ -13,8 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:visibility="gone"
-        android:backgroundTint="@color/pink_50"
-        android:tint="@color/white"
         android:src="@drawable/ic_photo_camera_24px"
         android:layout_margin="@dimen/fab_margin"
         tools:ignore="InconsistentLayout"/>
