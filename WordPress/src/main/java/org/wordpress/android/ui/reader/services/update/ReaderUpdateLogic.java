@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.services.update;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -12,7 +11,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -193,18 +191,12 @@ public class ReaderUpdateLogic {
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
                     if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
-                        // Delete recommended tags which got saved as followed tags for logged out user
-                        // before we allowed following tags using interests picker
-                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
-                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
-                        }
                         // Do not delete locally saved tags for logged out user
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {
                         // if any local topics have been removed from the server, make sure to delete
-                        // them locally (including their posts)
-                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // them locally
+                        ReaderTagTable.deleteTags(localTopics.getDeletions(serverTopics));
                         // now replace local topics with the server topics
                         ReaderTagTable.replaceTags(serverTopics);
                     }
@@ -279,24 +271,6 @@ public class ReaderUpdateLogic {
         }
 
         return interestTags;
-    }
-
-    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
-        if (tagList == null || tagList.size() == 0) {
-            return;
-        }
-        ReaderTagTable.deleteTags(tagList);
-
-        SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        db.beginTransaction();
-        try {
-            for (ReaderTag tag : tagList) {
-                ReaderPostTable.deletePostsWithTag(tag);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
     }
 
     private void fetchInterestTags() {

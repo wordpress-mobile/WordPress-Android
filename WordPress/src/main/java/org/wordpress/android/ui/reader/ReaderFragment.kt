@@ -43,9 +43,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                val currentUiState = it as ContentUiState
-                val selectedTag = currentUiState.readerTagList[position]
-                viewModel.onTagChanged(selectedTag)
+                if (it is ContentUiState) {
+                    val selectedTag = it.readerTagList[position]
+                    viewModel.onTagChanged(selectedTag)
+                }
             }
         }
     }
@@ -182,12 +183,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment == null) {
             childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.interests_fragment_container,
-                    ReaderInterestsFragment(),
-                    ReaderInterestsFragment.TAG
-                )
-                .commitNow()
+                    .replace(
+                            R.id.interests_fragment_container,
+                            ReaderInterestsFragment(),
+                            ReaderInterestsFragment.TAG
+                    )
+                    .commitNow()
         }
     }
 
@@ -195,8 +196,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment?.isAdded == true) {
             childFragmentManager.beginTransaction()
-                .remove(readerInterestsFragment)
-                .commitNow()
+                    .remove(readerInterestsFragment)
+                    .commitNow()
         }
     }
 }
