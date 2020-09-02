@@ -8,7 +8,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.BookmarkPostState.RefreshPosts
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -27,8 +26,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     suspend fun toggleBookmark(blogId: Long, postId: Long, isBookmarkList: Boolean) = flow<BookmarkPostState> {
         val bookmarked = updatePostInDb(blogId, postId)
         trackEvent(bookmarked, isBookmarkList)
-        // The refresh posts action needs to be invoked so the (legacy) ReaderPostList adapter refreshes its content
-        emit(RefreshPosts)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
         emit(Success(bookmarked))
     }
@@ -72,7 +69,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
 }
 
 sealed class BookmarkPostState {
-    object RefreshPosts : BookmarkPostState()
     data class PreLoadPostContent(val blogId: Long, val postId: Long) : BookmarkPostState()
     data class Success(val bookmarked: Boolean) : BookmarkPostState()
 }

@@ -52,7 +52,6 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.BookmarkPostState.RefreshPosts
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
@@ -263,8 +262,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList).collect {
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
-                is RefreshPosts -> _refreshPosts.postValue(Event(Unit))
                 is Success -> {
+                    // Content needs to be manually refreshed in the legacy ReaderPostListAdapter
+                    _refreshPosts.postValue(Event(Unit))
+
                     val showSnackbarAction = {
                         _snackbarEvents.postValue(
                                 Event(
