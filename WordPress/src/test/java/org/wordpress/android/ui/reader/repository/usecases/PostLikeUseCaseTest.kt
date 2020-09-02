@@ -62,7 +62,7 @@ class PostLikeUseCaseTest {
     }
 
     private fun createDummyReaderPost(
-        id: Long = 1,
+        id: Long = POST_AND_BLOG_ID,
         isLikedByCurrentUser: Boolean = false
     ): ReaderPost =
             ReaderPost().apply {
