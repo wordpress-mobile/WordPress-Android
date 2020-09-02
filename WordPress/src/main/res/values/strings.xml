@@ -101,7 +101,6 @@
     <string name="delete_yes">Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
-    <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
@@ -155,7 +154,6 @@
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
-    <string name="media_error_file_not_allowed_on_free_plan">This file type is not allowed on a free plan</string>
     <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
@@ -1311,7 +1309,9 @@
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
-    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">hide all</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
+    <string name="reader_discover_interests_header">You might like</string>
+    <string name="show_n_hidden_items_desc">%1$s more items</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1597,6 +1597,8 @@
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
+    <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
+    <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1751,6 +1753,7 @@
     <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
+    <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
 
     <string name="reader_excerpt_link">Visit %s for more</string>
 
@@ -1792,8 +1795,8 @@
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this site</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
-    <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
-    <string name="reader_toast_err_block_blog">Unable to block this site</string>
+    <string name="reader_toast_blog_blocked" tools:ignore="UnusedResources">Posts from this site will no longer be shown</string>
+    <string name="reader_toast_err_block_blog" tools:ignore="UnusedResources">Unable to block this site</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
@@ -1877,7 +1880,6 @@
     <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
-    <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
     <string name="application_log_button">Application log</string>
@@ -1885,6 +1887,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
+    <string name="contact_fragment_title">@string/contact_support</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -2236,7 +2239,7 @@
     <string name="start_over_email_intent_error">Unable to send an email</string>
     <string name="let_us_help">Let Us Help</string>
     <string name="start_over_text">If you want a site but don\'t want any of the posts and pages you have now, our support team can delete your posts, pages, media and comments for you.\n\nThis will keep your site and URL active, but give you a fresh start on your content creation. Just contact us to have your current content cleared out.</string>
-    <string name="contact_support">Contact support</string>
+    <string name="contact_support">Contact Support</string>
     <string name="confirm_delete_site">Confirm Delete Site</string>
     <string name="confirm_delete_site_prompt">Please type in %1$s in the field below to confirm. Your site will then be gone forever.</string>
     <string name="site_settings_export_content_title">Export content</string>
@@ -2775,25 +2778,12 @@
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
 
-    <!--  these are needed while WPStories sits behind a feature flag  -->
-    <!--  TODO we'll need to replace them when the feature flag is gone -->
-    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Create a post, page or story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Create a post or story</string>
+    <string name="create_post_fab_tooltip">Create a post</string>
+    <string name="create_page_fab_tooltip">Create a page</string>
+    <string name="create_post_story_fab_tooltip">Create a post or story</string>
 
-    <!-- News Card -->
-    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
-    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
-    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
-    the out-of-date announcement might redirect the user to the new feature. -->
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
-    <!-- END (News Card) -->
+    <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page or story</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
 
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
@@ -2876,6 +2866,7 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
+    <string name="mlp_layout_selected">%s selected</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
@@ -2911,8 +2902,8 @@
     <string name="dialog_discard_story_title">Discard story post?</string>
     <string name="dialog_discard_story_message">Your story post will not be saved as a draft.</string>
     <string name="dialog_discard_story_ok_button">Discard</string>
-    <string name="pref_camera_selection">pref_camera_selection</string>
-    <string name="pref_flash_mode_selection">pref_flash_mode_selection</string>
+    <string name="pref_camera_selection" translatable="false">pref_camera_selection</string>
+    <string name="pref_flash_mode_selection" translatable="false">pref_flash_mode_selection</string>
     <string name="story_saving_untitled">Untitled</string>
     <string name="story_saving_title">Saving "%1$s"…</string>
     <string name="story_saving_title_several">several stories</string>
@@ -2989,7 +2980,6 @@
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
-    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
@@ -3092,7 +3082,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
-    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
@@ -3119,7 +3109,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_project_name" tools:ignore="UnusedResources">Project Name</string>
     <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">Remove annotations</string>
     <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
-    <string name="gutenberg_native_remove_image" tools:ignore="UnusedResources">Remove Image</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
@@ -3139,6 +3128,7 @@ translators: sample content for "Services" page template -->
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_samuel_the_dog" tools:ignore="UnusedResources">Samuel the Dog</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
+    <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
     <!-- translators: title for "Services" page template -->
     <string name="gutenberg_native_services" tools:ignore="UnusedResources">Services</string>
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>

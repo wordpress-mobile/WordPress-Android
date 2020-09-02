@@ -1,10 +1,11 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: eaca947d0c41602d2048d0a54afb8528f8398c62
-  tag: 0.9.13
+  revision: dd4dd1b1af753f7369f08715343d031be09a2c27
+  tag: 0.9.14
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.9.13)
+    fastlane-plugin-wpmreleasetoolkit (0.9.14)
       activesupport (~> 4)
+      bigdecimal (~> 1.4)
       chroma (= 0.2.0)
       diffy (~> 3.3)
       git (~> 1.3)
@@ -45,6 +46,7 @@ GEM
     aws-sigv4 (1.2.2)
       aws-eventstream (~> 1, >= 1.0.2)
     babosa (1.0.3)
+    bigdecimal (1.4.4)
     chroma (0.2.0)
     claide (1.0.3)
     colored (1.2)
@@ -52,10 +54,10 @@ GEM
     commander-fastlane (4.4.6)
       highline (~> 1.7.2)
     concurrent-ruby (1.1.7)
-    declarative (0.0.20)
+    declarative (0.0.10)
     declarative-option (0.1.0)
     diffy (3.4.0)
-    digest-crc (0.6.0)
+    digest-crc (0.5.1)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
@@ -152,8 +154,8 @@ GEM
     mini_magick (4.10.1)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.14.1)
-    multi_json (1.15.0)
+    minitest (5.14.2)
+    multi_json (1.14.1)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.0)
@@ -162,7 +164,7 @@ GEM
     octokit (4.18.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
-    oj (3.10.8)
+    oj (3.10.13)
     optimist (3.0.1)
     options (2.3.2)
     os (1.1.1)

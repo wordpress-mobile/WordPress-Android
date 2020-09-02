@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -79,8 +80,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     }
 
     private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
-        // TODO malinjir replace direct db access with access to repository.
-        //  Also make sure PostUpdated event is emitted when we change the state of the post.
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
                 ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
@@ -110,11 +109,13 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             _snackbarEvents.postValue(
                     Event(
                             SnackbarMessageHolder(
-                                    string.reader_bookmark_snack_title,
-                                    string.reader_bookmark_snack_btn,
+                                    UiStringRes(R.string.reader_bookmark_snack_title),
+                                    UiStringRes(R.string.reader_bookmark_snack_btn),
                                     buttonAction = {
-                                        analyticsTrackerWrapper
-                                                .track(READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE)
+                                        analyticsTrackerWrapper.track(
+                                                READER_SAVED_LIST_SHOWN,
+                                                mapOf("source" to "post_list_saved_post_notice")
+                                        )
                                         _navigationEvents.postValue(Event(ShowBookmarkedTab))
                                     })
                     )

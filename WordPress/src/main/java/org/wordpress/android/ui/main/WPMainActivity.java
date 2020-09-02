@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -83,7 +82,6 @@ import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
-import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -92,6 +90,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
@@ -105,6 +104,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -127,8 +127,8 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -200,7 +200,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
-    @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
@@ -209,6 +208,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject ReaderTracker mReaderTracker;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -253,7 +254,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
-        registeNewsItemObserver();
         boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         if (savedInstanceState == null) {
@@ -484,18 +484,16 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getMySiteFragment().requestNextStepOfActiveQuickStartTask(false);
                 }
             }
-            mViewModel.onFabClicked(hasFullAccessToContent(), shouldShowPublishPostQuickStartTask);
+            mViewModel.onFabClicked(mSelectedSite, shouldShowPublishPostQuickStartTask);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
-            mViewModel.onFabLongPressed(hasFullAccessToContent());
+            mViewModel.onFabLongPressed(mSelectedSite);
 
-            int messageId = hasFullAccessToContent()
-                    ? R.string.create_post_page_fab_tooltip
-                    : R.string.create_post_page_fab_tooltip_contributors;
+            int messageId = mViewModel.getCreateContentMessageId(mSelectedSite);
 
             Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
@@ -504,7 +502,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ViewUtilsKt.redirectContextClickToLongPressListener(mFloatingActionButton);
 
         mFabTooltip.setOnClickListener(v -> {
-            mViewModel.onTooltipTapped(hasFullAccessToContent());
+            mViewModel.onTooltipTapped(mSelectedSite);
         });
 
         mViewModel.isBottomSheetShowing().observe(this, event -> {
@@ -558,10 +556,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
+        // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
+        // initialized with the most restrictive rights case. This is OK and will be frequently checked
+        // to normalize the UI state whenever mSelectedSite changes.
+        // It also means that the ViewModel must accept a nullable SiteModel.
         mViewModel.start(
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
+                mSelectedSite);
 
         mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
@@ -619,16 +621,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
-    }
-
-    private void registeNewsItemObserver() {
-        mNewsManager.notificationBadgeVisibility().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable Boolean showBadge) {
-                mBottomNav.showReaderBadge(showBadge != null ? showBadge : false);
-            }
-        });
-        mNewsManager.pull(false);
     }
 
     private void launchZendeskMyTickets() {
@@ -810,7 +802,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(hasFullAccessToContent());
+        mViewModel.onResume(mSelectedSite);
 
         mFirstResume = false;
     }
@@ -863,6 +855,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     // user switched pages in the bottom navbar
     @Override
     public void onPageChanged(int position) {
+        mReaderTracker.onBottomNavigationTabChanged();
         PageType pageType = WPMainNavigationView.getPageType(position);
         trackLastVisiblePage(pageType, true);
         if (getMySiteFragment() != null) {
@@ -876,8 +869,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onPageChanged(
                 mSiteStore.hasSite() && pageType == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
+                mSelectedSite);
     }
 
     // user tapped the new post button in the bottom navbar
@@ -921,7 +913,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (site != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.showPhotoPickerForResult(
+            mMediaPickerLauncher.showPhotoPickerForResult(
                     this,
                     MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                     site,
@@ -1526,14 +1518,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mQuickStartSnackbar.dismiss();
             mQuickStartSnackbar = null;
         }
-    }
-
-    // The first time this is called in onCreate -> initViewModel we still haven't initialized mSelectedSite,
-    // which hasFullAccessToContent depends on, and as such the state will be initialized with the most restrictive
-    // rights case (that is, will assume hasFullAccessToContent is false). This is OK and will be frequently checked
-    // to normalize the UI state whenever mSelectedSite changes.
-    private boolean hasFullAccessToContent() {
-        return SiteUtils.hasFullAccessToContent(getSelectedSite());
     }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because

@@ -1,8 +1,7 @@
 ## UI tests Overview
 
 WordPress for Android has UI acceptance tests for critical user flows through the app, such as login, 
-signup, and publishing. The tests use mocked network requests with [WireMock](http://wiremock.org/), 
-defined in [WordPressMocks](https://github.com/wordpress-mobile/WordPressMocks).
+signup, and publishing. The tests use mocked network requests with [WireMock](http://wiremock.org/).
 
 ## Running the tests 
 
@@ -40,6 +39,5 @@ When you add a test (or when the app changes), the request definitions for WireM
 
 If you are unsure what network requests need to be mocked for a test, an easy way to find out is to run the app through [Charles Proxy](https://www.charlesproxy.com/) and observe the required requests.
 
-`WordPressMocks` is included as a library in `WordPress-Android` and are located in `libs/mocks/WordPressMocks/`, you can update 
-your local mock files and make changes here. Additionally a pull request updating the mocks 
-here should have an accompanying pull request to the `WordPressMocks` repo so that the mocks can be shared across the platforms. 
+`WordPressMocks` is included as a library in `WordPress-Android` and are located in `libs/mocks/WordPressMocks/`; you can update 
+your local mock files and make changes here.
