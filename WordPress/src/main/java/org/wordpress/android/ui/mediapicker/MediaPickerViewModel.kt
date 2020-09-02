@@ -30,6 +30,7 @@ import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
@@ -52,6 +53,7 @@ class MediaPickerViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
     private val context: Context,
+    private val localeManagerWrapper: LocaleManagerWrapper,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var mediaLoader: MediaLoader
@@ -111,6 +113,10 @@ class MediaPickerViewModel @Inject constructor(
                 } else {
                     null to false
                 }
+
+                val fileExtension = it.mimeType?.let { mimeType ->
+                    MediaUtils.getExtensionForMimeType(mimeType).toUpperCase(localeManagerWrapper.getLocale())
+                }
                 when (it.type) {
                     IMAGE -> MediaPickerUiItem.PhotoItem(
                             uri = it.uri,
@@ -128,20 +134,10 @@ class MediaPickerViewModel @Inject constructor(
                             toggleAction = toggleAction,
                             clickAction = clickAction
                     )
-                    AUDIO -> MediaPickerUiItem.AudioItem(
+                    AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
                             uri = it.uri,
                             fileName = it.name ?: "",
-                            mimeType = it.mimeType ?: "",
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
-                    )
-                    DOCUMENT -> MediaPickerUiItem.DocumentItem(
-                            uri = it.uri,
-                            fileName = it.name ?: "",
-                            mimeType = it.mimeType ?: "",
+                            fileExtension = fileExtension,
                             isSelected = isSelected,
                             selectedOrder = selectedOrder,
                             showOrderCounter = showOrderCounter,
@@ -237,16 +233,16 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     private fun toggleItem(uri: UriWrapper, canMultiselect: Boolean) {
-        val updatedIds = _selectedUris.value?.toMutableList() ?: mutableListOf()
-        if (updatedIds.contains(uri)) {
-            updatedIds.remove(uri)
+        val updatedUris = _selectedUris.value?.toMutableList() ?: mutableListOf()
+        if (updatedUris.contains(uri)) {
+            updatedUris.remove(uri)
         } else {
-            if (updatedIds.isNotEmpty() && !canMultiselect) {
-                updatedIds.clear()
+            if (updatedUris.isNotEmpty() && !canMultiselect) {
+                updatedUris.clear()
             }
-            updatedIds.add(uri)
+            updatedUris.add(uri)
         }
-        _selectedUris.postValue(updatedIds)
+        _selectedUris.postValue(updatedUris)
     }
 
     private fun clickItem(uri: UriWrapper?, isVideo: Boolean) {
@@ -321,10 +317,12 @@ class MediaPickerViewModel @Inject constructor(
         if (softAskRequest != null && softAskRequest.show) {
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
-                        context,
-                        permission.WRITE_EXTERNAL_STORAGE
-                )}</strong>")
+                val permissionName = ("<strong>${
+                    WPPermissionUtils.getPermissionName(
+                            context,
+                            permission.WRITE_EXTERNAL_STORAGE
+                    )
+                }</strong>")
                 String.format(
                         resourceProvider.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
                         permissionName

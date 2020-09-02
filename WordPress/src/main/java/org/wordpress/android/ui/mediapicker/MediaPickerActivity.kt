@@ -109,12 +109,12 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         if (savedInstanceState == null) {
             browserType = intent.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
             mediaPickerSetup = MediaPickerSetup.fromIntent(intent)
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            site = intent.getSerializableExtra(WordPress.SITE) as? SiteModel
             localPostId = intent.getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         } else {
             browserType = savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
             mediaPickerSetup = MediaPickerSetup.fromBundle(savedInstanceState)
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            site = savedInstanceState.getSerializable(WordPress.SITE) as? SiteModel
             localPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         }
         var fragment = pickerFragment

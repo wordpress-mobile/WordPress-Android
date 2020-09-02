@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.AUDIO
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.DOCUMENT
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.FILE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.VIDEO
 import org.wordpress.android.util.UriWrapper
@@ -31,27 +30,16 @@ sealed class MediaPickerUiItem(
         val clickAction: ClickAction
     ) : MediaPickerUiItem(VIDEO, uri, isSelected, selectedOrder, showOrderCounter)
 
-    data class AudioItem(
+    data class FileItem(
         override val uri: UriWrapper? = null,
         val fileName: String,
-        val mimeType: String? = null,
+        val fileExtension: String? = null,
         override val isSelected: Boolean = false,
         override val selectedOrder: Int? = null,
         override val showOrderCounter: Boolean = false,
         val toggleAction: ToggleAction,
         val clickAction: ClickAction
-    ) : MediaPickerUiItem(AUDIO, uri, isSelected, selectedOrder, showOrderCounter)
-
-    data class DocumentItem(
-        override val uri: UriWrapper? = null,
-        val fileName: String,
-        val mimeType: String? = null,
-        override val isSelected: Boolean = false,
-        override val selectedOrder: Int? = null,
-        override val showOrderCounter: Boolean = false,
-        val toggleAction: ToggleAction,
-        val clickAction: ClickAction
-    ) : MediaPickerUiItem(DOCUMENT, uri, isSelected, selectedOrder, showOrderCounter)
+    ) : MediaPickerUiItem(FILE, uri, isSelected, selectedOrder, showOrderCounter)
 
     data class ToggleAction(
         val uri: UriWrapper,
@@ -70,6 +58,6 @@ sealed class MediaPickerUiItem(
     }
 
     enum class Type {
-        PHOTO, VIDEO, AUDIO, DOCUMENT
+        PHOTO, VIDEO, FILE
     }
 }

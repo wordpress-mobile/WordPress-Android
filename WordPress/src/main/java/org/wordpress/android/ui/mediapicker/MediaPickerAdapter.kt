@@ -5,8 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
 import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.AudioItem
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.DocumentItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
@@ -15,10 +14,6 @@ import org.wordpress.android.util.image.ImageManager
 class MediaPickerAdapter internal constructor(imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
     private val thumbnailViewUtils = MediaThumbnailViewUtils(imageManager)
     private var mediaList = listOf<MediaPickerUiItem>()
-
-    init {
-        setHasStableIds(true)
-    }
 
     fun loadData(result: List<MediaPickerUiItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -36,8 +31,7 @@ class MediaPickerAdapter internal constructor(imageManager: ImageManager) : Adap
         return when (viewType) {
             Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils)
             Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils)
-            Type.AUDIO.ordinal -> AudioThumbnailViewHolder(parent, thumbnailViewUtils)
-            Type.DOCUMENT.ordinal -> DocumentThumbnailViewHolder(parent, thumbnailViewUtils)
+            Type.FILE.ordinal -> FileThumbnailViewHolder(parent, thumbnailViewUtils)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -65,8 +59,7 @@ class MediaPickerAdapter internal constructor(imageManager: ImageManager) : Adap
         when (item) {
             is PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(item, animateSelection, updateCount)
             is VideoItem -> (holder as VideoThumbnailViewHolder).bind(item, animateSelection, updateCount)
-            is AudioItem -> (holder as AudioThumbnailViewHolder).bind(item, animateSelection, updateCount)
-            is DocumentItem -> (holder as DocumentThumbnailViewHolder).bind(item, animateSelection, updateCount)
+            is FileItem -> (holder as FileThumbnailViewHolder).bind(item, animateSelection, updateCount)
         }
     }
 

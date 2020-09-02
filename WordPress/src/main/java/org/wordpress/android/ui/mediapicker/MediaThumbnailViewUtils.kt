@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mediapicker
 
-import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
@@ -9,14 +8,12 @@ import org.wordpress.android.R
 import org.wordpress.android.R.anim
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.ColorUtils.setImageResourceWithTint
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.WPMediaUtils
@@ -58,6 +55,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
     }
 
     fun setupFileImageView(
+        container: View,
         imgThumbnail: ImageView,
         fileName: String,
         isSelected: Boolean,
@@ -75,19 +73,19 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         )
 
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
-        imgThumbnail.setOnClickListener {
+        container.setOnClickListener {
             toggleAction.toggle()
             PhotoPickerUtils.announceSelectedImageForAccessibility(
                     imgThumbnail,
                     isSelected
             )
         }
-        imgThumbnail.setOnLongClickListener {
+        container.setOnLongClickListener {
             clickAction.click()
             true
         }
-        imgThumbnail.redirectContextClickToLongPressListener()
-        displaySelection(animateSelection, isSelected, imgThumbnail)
+        container.redirectContextClickToLongPressListener()
+        displaySelection(animateSelection, isSelected, container)
     }
 
     private fun addImageSelectedToAccessibilityFocusedEvent(
@@ -113,18 +111,18 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         }
     }
 
-    private fun displaySelection(animate: Boolean, isSelected: Boolean, imageView: ImageView) {
+    private fun displaySelection(animate: Boolean, isSelected: Boolean, view: View) {
         if (animate) {
             if (isSelected) {
                 AniUtils.scale(
-                        imageView,
+                        view,
                         SCALE_NORMAL,
                         SCALE_SELECTED,
                         ANI_DURATION
                 )
             } else {
                 AniUtils.scale(
-                        imageView,
+                        view,
                         SCALE_SELECTED,
                         SCALE_NORMAL,
                         ANI_DURATION
@@ -132,9 +130,9 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
             }
         } else {
             val scale = if (isSelected) SCALE_SELECTED else SCALE_NORMAL
-            if (imageView.scaleX != scale) {
-                imageView.scaleX = scale
-                imageView.scaleY = scale
+            if (view.scaleX != scale) {
+                view.scaleX = scale
+                view.scaleY = scale
             }
         }
     }
