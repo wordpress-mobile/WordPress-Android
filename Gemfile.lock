@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 8694d3d213e0069e45693437b44f91aa4ac8e435
-  ref: 8694d3d213e0069e45693437b44f91aa4ac8e435
+  revision: dd4dd1b1af753f7369f08715343d031be09a2c27
+  tag: 0.9.14
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.9.13)
+    fastlane-plugin-wpmreleasetoolkit (0.9.14)
       activesupport (~> 4)
       bigdecimal (~> 1.4)
       chroma (= 0.2.0)
@@ -156,7 +156,7 @@ GEM
     mini_magick (4.10.1)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.14.1)
+    minitest (5.14.2)
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
