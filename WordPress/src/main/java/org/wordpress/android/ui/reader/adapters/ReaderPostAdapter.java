@@ -31,7 +31,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
