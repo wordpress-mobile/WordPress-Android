@@ -23,6 +23,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
+    private var tagsUiState: List<TagUiState>? = null
+
     private val tagChips
         get() = (0 until childCount - 1).map { getChildAt(it) as Chip }
 
@@ -46,10 +48,14 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         layoutDirection = View.LAYOUT_DIRECTION_LOCALE
     }
 
-    fun updateUi(tags: List<TagUiState>) {
+    fun updateUi(tagsUiState: List<TagUiState>) {
+        if (this.tagsUiState != null && this.tagsUiState == tagsUiState) {
+            return
+        }
+        this.tagsUiState = tagsUiState
         removeAllViews()
         addOverflowIndicatorChip()
-        addTagChips(tags)
+        addTagChips(tagsUiState)
         expandLayout(false)
     }
 
@@ -63,16 +69,16 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         addView(chip)
     }
 
-    private fun addTagChips(tags: List<TagUiState>) {
-        tags.forEachIndexed { index, tag ->
+    private fun addTagChips(tagsUiState: List<TagUiState>) {
+        tagsUiState.forEachIndexed { index, tagUiState ->
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val chip = inflater.inflate(R.layout.reader_expandable_tags_view_chip, this, false) as Chip
-            chip.tag = tag.slug
-            chip.text = tag.title
-            chip.maxWidth = tag.maxWidth
-            tag.onClick?.let { onClick ->
+            chip.tag = tagUiState.slug
+            chip.text = tagUiState.title
+            chip.maxWidth = tagUiState.maxWidth
+            tagUiState.onClick?.let { onClick ->
                 chip.setOnClickListener {
-                    onClick.invoke(tag.slug)
+                    onClick.invoke(tagUiState.slug)
                 }
             }
             addView(chip, index)
@@ -108,13 +114,19 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     private fun updateLastVisibleTagChip() {
         lastVisibleTagChip?.let {
-            uiHelpers.updateVisibility(it, !isOverflowIndicatorChipOutsideBounds)
+            if (lastVisibleTagChipIndex > 0) {
+                uiHelpers.updateVisibility(it, !isOverflowIndicatorChipOutsideBounds)
+            }
         }
     }
 
     private fun updateOverflowIndicatorChip() {
         val showOverflowIndicatorChip = hiddenTagChipsCount > 0 || !isSingleLine
         uiHelpers.updateVisibility(overflowIndicatorChip, showOverflowIndicatorChip)
+        overflowIndicatorChip.contentDescription = String.format(
+                resources.getString(R.string.show_n_hidden_items_desc),
+                hiddenTagChipsCount
+        )
 
         overflowIndicatorChip.text = if (isSingleLine) {
             String.format(
@@ -124,6 +136,13 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         } else {
             resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
         }
+
+        val chipBackgroundColorRes = if (isSingleLine) {
+            R.color.on_surface_chip
+        } else {
+            R.color.transparent
+        }
+        overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
     }
 
     private fun View.preLayout(what: () -> Unit) {

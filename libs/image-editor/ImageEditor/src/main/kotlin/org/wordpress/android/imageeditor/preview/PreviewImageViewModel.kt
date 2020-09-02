@@ -321,7 +321,7 @@ class PreviewImageViewModel : ViewModel() {
         val id: Long = UUID.randomUUID().hashCode().toLong(),
         val lowResImageUrl: String?,
         val highResImageUrl: String,
-        val outputFileExtension: String
+        val outputFileExtension: String?
     ) {
         fun hasValidLowResImageUrlEqualTo(imageUrl: String): Boolean {
             val hasValidLowResImageUrl = this.lowResImageUrl?.isNotEmpty() == true &&

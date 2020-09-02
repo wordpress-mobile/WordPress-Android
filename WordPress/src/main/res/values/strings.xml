@@ -101,7 +101,6 @@
     <string name="delete_yes">Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
-    <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
@@ -155,7 +154,6 @@
     <string name="media_error_exceeds_memory_limit">File too large to be uploaded on this site</string>
     <string name="media_error_internal_server_error">Upload error. Try changing Optimize Images in your app\'s settings</string>
     <string name="media_error_timeout">Server took too long to respond</string>
-    <string name="media_error_file_not_allowed_on_free_plan">This file type is not allowed on a free plan</string>
     <string name="share_media_permission_required">Permissions required in order to share images or videos</string>
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
@@ -1313,6 +1311,7 @@
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
+    <string name="show_n_hidden_items_desc">%1$s more items</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1598,6 +1597,8 @@
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
+    <string name="error_media_xmlrpc_not_allowed">Operation not allowed</string>
+    <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
@@ -1753,7 +1754,6 @@
     <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
-    <string name="reader_welcome_banner_content_description">Welcome to Reader</string>
 
     <string name="reader_excerpt_link">Visit %s for more</string>
 
@@ -1795,8 +1795,8 @@
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this site</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
-    <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
-    <string name="reader_toast_err_block_blog">Unable to block this site</string>
+    <string name="reader_toast_blog_blocked" tools:ignore="UnusedResources">Posts from this site will no longer be shown</string>
+    <string name="reader_toast_err_block_blog" tools:ignore="UnusedResources">Unable to block this site</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
@@ -2785,21 +2785,6 @@
     <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page or story</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
 
-    <!-- News Card -->
-    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
-    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
-    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
-    the out-of-date announcement might redirect the user to the new feature. -->
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
-    <!--suppress UnusedResources -->
-    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
-    <!-- END (News Card) -->
-
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
@@ -2881,6 +2866,7 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
+    <string name="mlp_layout_selected">%s selected</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
