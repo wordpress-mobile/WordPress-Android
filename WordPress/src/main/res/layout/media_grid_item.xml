@@ -38,7 +38,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/media_grid_item_filetype_image"
+                android:id="@+id/media_item_filetype_image"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
@@ -48,7 +48,7 @@
                 />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_grid_item_filetype"
+                android:id="@+id/media_item_filetype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -60,7 +60,7 @@
                 tools:text="PDF" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/media_grid_item_name"
+                android:id="@+id/media_item_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

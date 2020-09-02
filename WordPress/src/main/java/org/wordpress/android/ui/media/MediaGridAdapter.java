@@ -299,9 +299,9 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             mProgressUpload = mStateContainer.findViewById(R.id.media_grid_item_upload_progress);
 
             mFileContainer = view.findViewById(R.id.media_grid_item_file_container);
-            mTitleView = mFileContainer.findViewById(R.id.media_grid_item_name);
-            mFileTypeView = mFileContainer.findViewById(R.id.media_grid_item_filetype);
-            mFileTypeImageView = mFileContainer.findViewById(R.id.media_grid_item_filetype_image);
+            mTitleView = mFileContainer.findViewById(R.id.media_item_name);
+            mFileTypeView = mFileContainer.findViewById(R.id.media_item_filetype);
+            mFileTypeImageView = mFileContainer.findViewById(R.id.media_item_filetype_image);
 
             mVideoOverlayContainer = view.findViewById(R.id.frame_video_overlay);
             mSelectionCountContainer = view.findViewById(R.id.frame_selection_count);
