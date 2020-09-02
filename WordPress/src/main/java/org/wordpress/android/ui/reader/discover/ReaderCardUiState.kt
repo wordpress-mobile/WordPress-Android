@@ -19,7 +19,7 @@ sealed class ReaderCardUiState {
         val postId: Long,
         val blogId: Long,
         val dateLine: String,
-        val title: String?,
+        val title: UiString?,
         val blogName: String?,
         val excerpt: String?, // mTxtText
         val blogUrl: String?,
