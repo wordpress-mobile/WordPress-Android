@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.channels.Channel
@@ -11,10 +11,10 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.DomainModel
-import org.wordpress.android.ui.photopicker.mediapicker.MediaLoader.LoadAction
-import org.wordpress.android.ui.photopicker.mediapicker.MediaSource.MediaLoadingResult
-import org.wordpress.android.ui.photopicker.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.UriWrapper
 
 class MediaLoaderTest : BaseUnitTest() {

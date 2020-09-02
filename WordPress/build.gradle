@@ -414,6 +414,12 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     ]
 }
 
+task printVersionName {
+    doLast {
+        println android.productFlavors.vanilla.versionName
+    }
+}
+
 def checkGradlePropertiesFile() {
     def inputFile = file("${rootDir}/gradle.properties")
     if (!inputFile.exists()) {

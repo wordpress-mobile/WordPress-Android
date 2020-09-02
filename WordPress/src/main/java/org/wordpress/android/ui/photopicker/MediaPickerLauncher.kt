@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.photopicker
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.fragment.app.Fragment
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 
@@ -24,9 +27,10 @@ class MediaPickerLauncher
         localPostId: Int?
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val intent = createShowPhotoPickerIntent(
+            val intent = MediaPickerActivity.buildIntent(
                     activity,
                     browserType,
+                    buildMediaPickerSetup(browserType),
                     site,
                     localPostId
             )
@@ -43,9 +47,10 @@ class MediaPickerLauncher
         localPostId: Int?
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val intent = createShowPhotoPickerIntent(
+            val intent = MediaPickerActivity.buildIntent(
                     fragment.requireContext(),
                     browserType,
+                    buildMediaPickerSetup(browserType),
                     site,
                     localPostId
             )
@@ -57,28 +62,27 @@ class MediaPickerLauncher
 
     fun showGravatarPicker(fragment: Fragment) {
         val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            Intent(fragment.requireContext(), MediaPickerActivity::class.java)
+            MediaPickerActivity.buildIntent(
+                    fragment.requireContext(),
+                    GRAVATAR_IMAGE_PICKER,
+                    buildMediaPickerSetup(GRAVATAR_IMAGE_PICKER)
+            )
         } else {
-            Intent(fragment.requireContext(), PhotoPickerActivity::class.java)
+            Intent(fragment.requireContext(), PhotoPickerActivity::class.java).apply {
+                this.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, GRAVATAR_IMAGE_PICKER)
+            }
         }
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, GRAVATAR_IMAGE_PICKER)
         fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
-    private fun createShowPhotoPickerIntent(
-        context: Context,
-        browserType: MediaBrowserType,
-        site: SiteModel?,
-        localPostId: Int?
-    ): Intent? {
-        val intent = Intent(context, MediaPickerActivity::class.java)
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType)
-        if (site != null) {
-            intent.putExtra(WordPress.SITE, site)
+    private fun buildMediaPickerSetup(browserType: MediaBrowserType): MediaPickerSetup {
+        val allowedTypes = mutableSetOf<MediaType>()
+        if (browserType.isImagePicker) {
+            allowedTypes.add(IMAGE)
         }
-        if (localPostId != null) {
-            intent.putExtra(MediaPickerConstants.LOCAL_POST_ID, localPostId.toInt())
+        if (browserType.isVideoPicker) {
+            allowedTypes.add(VIDEO)
         }
-        return intent
+        return MediaPickerSetup(DEVICE, browserType.canMultiselect(), allowedTypes, browserType.isWPStoriesPicker)
     }
 }

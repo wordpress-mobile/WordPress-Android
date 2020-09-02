@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -63,9 +64,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         isDiscover: Boolean = false,
         photonWidth: Int,
         photonHeight: Int,
-            // TODO malinjir try to refactor/remove this parameter
         postListType: ReaderPostListType,
-            // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
@@ -233,8 +232,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     post.cardType != GALLERY
 
     // TODO malinjir show title only when buildPhotoTitle == null
-    private fun buildTitle(post: ReaderPost) =
-            post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
+    private fun buildTitle(post: ReaderPost): UiString? {
+        return if (post.cardType != PHOTO) {
+            post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
+                    ?: UiStringRes(R.string.untitled_in_parentheses)
+        } else {
+            null
+        }
+    }
 
     // TODO malinjir show excerpt only when buildPhotoTitle == null
     private fun buildExcerpt(post: ReaderPost) =
@@ -254,7 +259,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         discoverData: ReaderPostDiscoverData,
         onDiscoverSectionClicked: (Long, Long) -> Unit
     ): DiscoverLayoutUiState {
-        // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                 discoverData.avatarUrl,
@@ -280,21 +284,23 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
-        val contentDescription = if (post.isBookmarked) {
-            R.string.reader_remove_bookmark
-        } else {
-            R.string.reader_add_bookmark
-        }
+        val contentDescription = UiStringRes(
+                if (post.isBookmarked) {
+                    R.string.reader_remove_bookmark
+                } else {
+                    R.string.reader_add_bookmark
+                }
+        )
         return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                     isEnabled = true,
                     isSelected = post.isBookmarked,
-                    contentDescription = UiStringRes(contentDescription),
+                    contentDescription = contentDescription,
                     onClicked = onClicked,
                     type = BOOKMARK
             )
         } else {
-            PrimaryAction(isEnabled = false, type = BOOKMARK)
+            PrimaryAction(isEnabled = false, contentDescription = contentDescription, type = BOOKMARK)
         }
     }
 
@@ -325,12 +331,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onReblogClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val canReblog = !post.isPrivate && accountStore.hasAccessToken()
-        return if (canReblog) {
-            // TODO Add content description
-            PrimaryAction(isEnabled = true, onClicked = onReblogClicked, type = REBLOG)
-        } else {
-            PrimaryAction(isEnabled = false, type = REBLOG)
-        }
+        return PrimaryAction(
+                isEnabled = canReblog,
+                contentDescription = UiStringRes(R.string.reader_view_reblog),
+                onClicked = if (canReblog) onReblogClicked else null,
+                type = REBLOG
+        )
     }
 
     private fun buildCommentsSection(
@@ -346,18 +352,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
             !accountStore.hasAccessToken() -> post.numReplies > 0
             else -> post.isWP && (post.isCommentsOpen || post.numReplies > 0)
         }
+        val contentDescription = UiStringRes(R.string.comments)
 
         // TODO Add content description
         return if (showComments) {
             PrimaryAction(
                     isEnabled = true,
                     count = post.numReplies,
+                    contentDescription = contentDescription,
                     onClicked = onCommentsClicked,
                     type = ReaderPostCardActionType.COMMENTS
             )
         } else {
             PrimaryAction(
                     isEnabled = false,
+                    contentDescription = contentDescription,
                     type = ReaderPostCardActionType.COMMENTS
             )
         }

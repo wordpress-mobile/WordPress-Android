@@ -72,7 +72,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
-    val preloadPostEvents = _preloadPostEvents
+    val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -330,8 +330,6 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun onReblogSiteSelected(siteLocalId: Int) {
         launch {
-            // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
-            //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
             val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
             val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
             if (navigationTarget != null) {

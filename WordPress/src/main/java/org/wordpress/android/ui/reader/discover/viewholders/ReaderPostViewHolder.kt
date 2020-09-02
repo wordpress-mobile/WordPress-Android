@@ -42,7 +42,6 @@ class ReaderPostViewHolder(
 
     override fun onBind(uiState: ReaderCardUiState) {
         val state = uiState as ReaderPostUiState
-        // TODO malinjir animate like button on click
 
         // Expandable tags section
         uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
@@ -184,7 +183,6 @@ class ReaderPostViewHolder(
     }
 
     private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
-        // TODO malinjir the popup menu was reused from the legacy implementation. It needs to be refactored.
         AnalyticsTracker.track(Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)

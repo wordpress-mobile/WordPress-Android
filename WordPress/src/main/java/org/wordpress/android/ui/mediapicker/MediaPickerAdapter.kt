@@ -1,13 +1,13 @@
-package org.wordpress.android.ui.photopicker.mediapicker
+package org.wordpress.android.ui.mediapicker
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.PhotoItem
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.Type
-import org.wordpress.android.ui.photopicker.mediapicker.MediaPickerUiItem.VideoItem
+import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
+import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.util.image.ImageManager
 
 class MediaPickerAdapter internal constructor(private val imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
