@@ -80,7 +80,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     }
 
     private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
-        //  Also make sure PostUpdated event is emitted when we change the state of the post.
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
                 ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 

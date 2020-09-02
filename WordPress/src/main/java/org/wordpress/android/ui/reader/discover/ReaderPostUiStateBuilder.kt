@@ -63,9 +63,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         isDiscover: Boolean = false,
         photonWidth: Int,
         photonHeight: Int,
-            // TODO malinjir try to refactor/remove this parameter
         postListType: ReaderPostListType,
-            // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
@@ -254,7 +252,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         discoverData: ReaderPostDiscoverData,
         onDiscoverSectionClicked: (Long, Long) -> Unit
     ): DiscoverLayoutUiState {
-        // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                 discoverData.avatarUrl,
