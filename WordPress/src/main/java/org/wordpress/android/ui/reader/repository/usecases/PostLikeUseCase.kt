@@ -5,6 +5,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
@@ -20,6 +22,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLike
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -28,6 +31,7 @@ import kotlin.coroutines.resume
 class PostLikeUseCase @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val accountStore: AccountStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -60,6 +64,15 @@ class PostLikeUseCase @Inject constructor(
                                 wpComUserId
                         )
                 )
+            }
+
+            if (isAskingToLike) {
+                analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_LIKED, post)
+                // Consider a like to be enough to push a page view - solves a long-standing question
+                // from folks who ask 'why do I have more likes than page views?'.
+                readerPostActionsWrapper.bumpPageViewForPost(post)
+            } else {
+                analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_UNLIKED, post)
             }
 
             return@withContext suspendCancellableCoroutine<ReaderRepositoryCommunication> { cont ->
