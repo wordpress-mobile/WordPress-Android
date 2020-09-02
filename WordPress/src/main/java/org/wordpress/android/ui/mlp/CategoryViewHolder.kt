@@ -14,7 +14,7 @@ import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.setVisible
 
 /**
- * Renders the Layout Category header button
+ * Renders the Layout Category header buttons
  */
 class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(

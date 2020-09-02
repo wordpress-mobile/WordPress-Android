@@ -3,13 +3,12 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
+import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -29,12 +28,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val isModalLayoutPickerShowing: LiveData<Event<Boolean>> = _isModalLayoutPickerShowing
 
     /**
-     * Tracks the header visibility
-     */
-    private val _isHeaderVisible = MutableLiveData<Event<Boolean>>()
-    val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
-
-    /**
      * Tracks the selected categories
      */
     val selectedCategoriesSlugs = arrayListOf<String>()
@@ -52,10 +45,16 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val buttonsUiState: LiveData<ButtonsUiState> = _buttonsUiState
 
     /**
-     * Tracks the Modal Layout Picker list items
+     * Tracks the layout categories
      */
-    private val _listItems = MutableLiveData<List<ModalLayoutPickerListItem>>()
-    val listItems: LiveData<List<ModalLayoutPickerListItem>> = _listItems
+    private val _layoutCategories = MutableLiveData<List<LayoutCategoryUiState>>()
+    val layoutCategories: LiveData<List<LayoutCategoryUiState>> = _layoutCategories
+
+    /**
+     * Tracks the categories
+     */
+    private val _categories = MutableLiveData<List<CategoryListItemUiState>>()
+    val categories: LiveData<List<CategoryListItemUiState>> = _categories
 
     /**
      * Create new page event
@@ -63,43 +62,16 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<Unit>()
     val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
 
-    private var landscapeMode: Boolean = false
-
-    fun init(landscape: Boolean) {
-        landscapeMode = landscape
-        loadListItems()
+    fun init() {
+        loadLayouts()
+        loadCategories()
         updateButtonsUiState()
     }
 
-    private fun loadListItems() {
-        val listItems = ArrayList<ModalLayoutPickerListItem>()
+    private fun loadLayouts() {
+        val listItems = ArrayList<LayoutCategoryUiState>()
 
-        if (!landscapeMode) {
-            val titleVisibility = _isHeaderVisible.value?.peekContent() ?: true
-            listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
-            listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
-        }
-
-        loadLayouts(listItems)
-
-        _listItems.postValue(listItems)
-    }
-
-    /**
-     * Loads DEMO layout data
-     */
-    private fun loadLayouts(listItems: ArrayList<ModalLayoutPickerListItem>) {
         val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
-
-        listItems.add(ModalLayoutPickerListItem.Categories(demoLayouts.categories.map {
-            CategoryListItemUiState(
-                    it.slug,
-                    it.title,
-                    it.emoji,
-                    selectedCategoriesSlugs.contains(it.slug)
-            ) { categoryTapped(it.slug) }
-        }))
-
         val selectedCategories = if (selectedCategoriesSlugs.isNotEmpty())
             demoLayouts.categories.filter { selectedCategoriesSlugs.contains(it.slug) }
         else demoLayouts.categories
@@ -112,7 +84,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 }
             }
             listItems.add(
-                    ModalLayoutPickerListItem.LayoutCategory(
+                    LayoutCategoryUiState(
                             category.slug,
                             category.title,
                             category.description,
@@ -120,6 +92,23 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     )
             )
         }
+
+        _layoutCategories.postValue(listItems)
+    }
+
+    private fun loadCategories() {
+        val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+
+        val listItems: List<CategoryListItemUiState> = demoLayouts.categories.map {
+            CategoryListItemUiState(
+                    it.slug,
+                    it.title,
+                    it.emoji,
+                    selectedCategoriesSlugs.contains(it.slug)
+            ) { categoryTapped(it.slug) }
+        }
+
+        _categories.postValue(listItems)
     }
 
     /**
@@ -134,19 +123,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
-        _isHeaderVisible.postValue(Event(true))
         _selectedLayoutSlug.value = null
         selectedCategoriesSlugs.clear()
-    }
-
-    /**
-     * Sets the header and title visibility
-     * @param headerShouldBeVisible if true the header is shown and the title row hidden
-     */
-    fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return
-        _isHeaderVisible.postValue(Event(headerShouldBeVisible))
-        loadListItems()
     }
 
     /**
@@ -159,7 +137,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
         } else {
             selectedCategoriesSlugs.add(categorySlug)
         }
-        loadListItems()
+        loadCategories()
+        loadLayouts()
     }
 
     /**
@@ -173,7 +152,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
             _selectedLayoutSlug.value = layoutSlug
         }
         updateButtonsUiState()
-        loadListItems()
+        loadLayouts()
     }
 
     /**

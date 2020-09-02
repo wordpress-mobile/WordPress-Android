@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -16,14 +17,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_categories_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_header.*
+import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import javax.inject.Inject
 
@@ -49,8 +51,19 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        categories_recycler_view.apply {
+            layoutManager = LinearLayoutManager(
+                    context,
+                    RecyclerView.HORIZONTAL,
+                    false
+            )
+            setRecycledViewPool(RecyclerView.RecycledViewPool())
+            adapter = CategoriesAdapter()
+            ViewCompat.setNestedScrollingEnabled(this, false)
+        }
+
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = ModalLayoutPickerAdapter()
+        recyclerView.adapter = LayoutCategoryAdapter()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
@@ -84,8 +97,18 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         } else {
             val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
             val offset = recyclerView.computeVerticalScrollOffset()
-            viewModel.setHeaderTitleVisibility(offset > scrollThreshold)
+            setTitleVisibility(offset > scrollThreshold)
         }
+    }
+
+    /**
+     * Sets the header and title visibility
+     * @param visible if true the title is shown and the header is hidden
+     */
+    private fun setTitleVisibility(visible: Boolean) {
+        if (visible == (title.visibility == View.VISIBLE)) return // No change
+        title.setVisible(visible)
+        header.setVisible(!visible)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
@@ -112,17 +135,13 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        viewModel.listItems.observe(this, Observer {
-            (recyclerView?.adapter as? ModalLayoutPickerAdapter)?.update(it ?: listOf())
+        viewModel.layoutCategories.observe(this, Observer {
+            (recyclerView?.adapter as? LayoutCategoryAdapter)?.update(it)
         })
 
-        viewModel.isHeaderVisible.observe(this,
-                Observer { event: Event<Boolean> ->
-                    event.applyIfNotHandled {
-                        title.setVisible(this)
-                    }
-                }
-        )
+        viewModel.categories.observe(this, Observer {
+            (categories_recycler_view.adapter as CategoriesAdapter).setData(it)
+        })
 
         viewModel.buttonsUiState.observe(this,
                 Observer {

@@ -55,24 +55,6 @@
 
             </com.google.android.material.appbar.MaterialToolbar>
 
-            <LinearLayout
-                android:layout_gravity="bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:orientation="vertical">
-
-                <include
-                    layout="@layout/modal_layout_picker_title_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <include
-                    layout="@layout/modal_layout_picker_subtitle_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <include

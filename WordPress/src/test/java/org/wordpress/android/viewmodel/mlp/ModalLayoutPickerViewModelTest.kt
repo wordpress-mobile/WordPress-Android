@@ -11,11 +11,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Categories
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.CATEGORIES
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.LAYOUTS
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.SUBTITLE
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.TITLE
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
 @RunWith(MockitoJUnitRunner::class)
@@ -38,86 +33,54 @@ class ModalLayoutPickerViewModelTest {
     }
 
     @Test
-    fun `the modal layout picker list is populated when initialized`() {
-        viewModel.init(false)
-        assertThat(viewModel.listItems.value!!.size).isGreaterThan(0)
+    fun `when modal layout picker starts the categories are loaded`() {
+        viewModel.init()
+        assertThat(viewModel.categories.value!!.size).isGreaterThan(0)
     }
 
     @Test
-    fun `the modal layout picker contains the title as a first item when initialized in portrait mode`() {
-        viewModel.init(false)
-        assertThat(viewModel.listItems.value!!.first().type).isEqualTo(TITLE)
-    }
-
-    @Test
-    fun `the modal layout picker contains the subtitle as a second item when initialized in portrait mode`() {
-        viewModel.init(false)
-        assertThat(viewModel.listItems.value!!.get(1).type).isEqualTo(SUBTITLE)
-    }
-
-    @Test
-    fun `the modal layout picker contains the categories bar as a first item when initialized in landscape mode`() {
-        viewModel.init(true)
-        assertThat(viewModel.listItems.value!!.first().type).isEqualTo(CATEGORIES)
+    fun `when modal layout picker starts the layouts are loaded`() {
+        viewModel.init()
+        assertThat(viewModel.layoutCategories.value!!.size).isGreaterThan(0)
     }
 
     @Test
     fun `modal layout picker is shown when triggered`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.show()
         assertThat(viewModel.isModalLayoutPickerShowing.value!!.peekContent()).isEqualTo(true)
     }
 
     @Test
     fun `modal layout picker is dismissed when the user hits the back button`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.dismiss()
         assertThat(viewModel.isModalLayoutPickerShowing.value!!.peekContent()).isEqualTo(false)
     }
 
     @Test
-    fun `modal layout picker header is visible when the user scrolls up in portrait mode`() {
-        viewModel.init(false)
-        viewModel.setHeaderTitleVisibility(true)
-        assertThat(viewModel.isHeaderVisible.value!!.peekContent()).isEqualTo(true)
-    }
-
-    @Test
-    fun `modal layout picker header is gone when the user scrolls down in portrait mode`() {
-        viewModel.init(false)
-        viewModel.setHeaderTitleVisibility(false)
-        assertThat(viewModel.isHeaderVisible.value!!.peekContent()).isEqualTo(false)
-    }
-
-    @Test
     fun `when the create page is triggered the page creation flow starts`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.createPage()
         verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
     }
 
     @Test
-    fun `when modal layout picker starts the layouts are loaded`() {
-        viewModel.init(false)
-        assertThat(viewModel.listItems.value?.filter { it.type == LAYOUTS }?.size).isGreaterThan(0)
-    }
-
-    @Test
     fun `when modal layout picker starts no layout is selected`() {
-        viewModel.init(false)
+        viewModel.init()
         assertThat(viewModel.selectedLayoutSlug.value).isNull()
     }
 
     @Test
     fun `when the user taps on a layout the layout is selected`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.layoutTapped("about-1")
         assertThat(viewModel.selectedLayoutSlug.value).isEqualTo("about-1")
     }
 
     @Test
     fun `when the user taps on a selected layout the layout is deselected`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.layoutTapped("about-1")
         viewModel.layoutTapped("about-1")
         assertThat(viewModel.selectedLayoutSlug.value).isNull()
@@ -125,41 +88,28 @@ class ModalLayoutPickerViewModelTest {
 
     @Test
     fun `when the modal layout picker is dismissed the layout is deselected`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.layoutTapped("about-1")
         viewModel.dismiss()
         assertThat(viewModel.selectedLayoutSlug.value).isNull()
     }
 
     @Test
-    fun `when modal layout picker starts the categories are loaded`() {
-        viewModel.init(false)
-        assertThat(viewModel.listItems.value?.filter { it.type == CATEGORIES }?.size).isEqualTo(1)
-    }
-
-    @Test
-    fun `when modal layout picker starts the a non empty categories list is loaded`() {
-        viewModel.init(false)
-        val categories = viewModel.listItems.value?.first { it.type == CATEGORIES } as? Categories
-        assertThat(categories?.categories?.size).isGreaterThan(0)
-    }
-
-    @Test
     fun `when modal layout picker starts no category is selected`() {
-        viewModel.init(false)
+        viewModel.init()
         assertThat(viewModel.selectedCategoriesSlugs).isEmpty()
     }
 
     @Test
     fun `when the user taps on a category the category is selected`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.categoryTapped("about")
         assertThat(viewModel.selectedCategoriesSlugs).contains("about")
     }
 
     @Test
     fun `when the user taps on a selected category the category is deselected`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.categoryTapped("about")
         viewModel.categoryTapped("about")
         assertThat(viewModel.selectedCategoriesSlugs).doesNotContain("about")
@@ -167,46 +117,46 @@ class ModalLayoutPickerViewModelTest {
 
     @Test
     fun `when the modal layout picker is dismissed the category is deselected`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.categoryTapped("about")
         viewModel.dismiss()
         assertThat(viewModel.selectedCategoriesSlugs).isEmpty()
     }
 
     fun `when no layout is selected the create blank page button is visible`() {
-        viewModel.init(false)
+        viewModel.init()
         assertThat(viewModel.buttonsUiState.value?.createBlankPageVisible).isEqualTo(true)
     }
 
     @Test
     fun `when a layout is selected the create blank page button is not visible`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.layoutTapped("about-1")
         assertThat(viewModel.buttonsUiState.value?.createBlankPageVisible).isEqualTo(false)
     }
 
     @Test
     fun `when no layout is selected the create page button is not visible`() {
-        viewModel.init(false)
+        viewModel.init()
         assertThat(viewModel.buttonsUiState.value?.createPageVisible).isEqualTo(false)
     }
 
     @Test
     fun `when a layout is selected the create page button is visible`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.layoutTapped("about-1")
         assertThat(viewModel.buttonsUiState.value?.createPageVisible).isEqualTo(true)
     }
 
     @Test
     fun `when no layout is selected the preview button is not visible`() {
-        viewModel.init(false)
+        viewModel.init()
         assertThat(viewModel.buttonsUiState.value?.previewVisible).isEqualTo(false)
     }
 
     @Test
     fun `when a layout is selected the preview button is visible`() {
-        viewModel.init(false)
+        viewModel.init()
         viewModel.layoutTapped("about-1")
         assertThat(viewModel.buttonsUiState.value?.previewVisible).isEqualTo(true)
     }
