@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
@@ -52,6 +53,10 @@ class PostLikeUseCaseTest {
         whenever(readerPostActionsWrapper.performLikeActionLocal(anyOrNull(), anyBoolean(), anyLong())).thenReturn(true)
         whenever(readerPostActionsWrapper.performLikeActionRemote(anyOrNull(), anyBoolean(), anyLong(), any()))
                 .thenReturn(any())
+    }
+
+    @Test
+    fun foo() {
     }
 
 //    @Test
