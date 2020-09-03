@@ -87,8 +87,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         audioItem = MediaItem(uriWrapper2, "item4", AUDIO, "audio/mp3", 4)
         documentItem = MediaItem(uriWrapper2, "item5", DOCUMENT, "application/pdf", 5)
         whenever(mediaUtilsWrapper.getExtensionForMimeType("image/jpg")).thenReturn("jpg")
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("image/png")).thenReturn("png")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("audio/mp3")).thenReturn("mp3")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("video/mpeg")).thenReturn("mpg")
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("application/pdf")).thenReturn("pdf")
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
