@@ -38,12 +38,14 @@ class PostLikeUseCase @Inject constructor(
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(Failed.NoNetwork(request))
+            emit(Failed.NoNetwork)
+            return@flow
         }
 
         // There is already an action running for this request
         if (continuations[request] != null) {
-            emit(AlreadyRunning(request))
+            emit(AlreadyRunning)
+            return@flow
         }
 
         // track like action
@@ -69,11 +71,11 @@ class PostLikeUseCase @Inject constructor(
                 request.wpComUserId
         )
         if (response) {
-            emit(PostLikeState.PostLikedInLocalDb(request))
+            emit(PostLikeState.PostLikedInLocalDb)
             val postLikeState = performLikeAndWaitForResult(post, request)
             emit(postLikeState)
         } else {
-            emit(Unchanged(request)) // this can be considered a success
+            emit(Unchanged)
         }
     }
 
@@ -83,9 +85,9 @@ class PostLikeUseCase @Inject constructor(
     ): PostLikeState {
         val actionListener = ActionListener { succeeded ->
             val postLikeState = if (succeeded) {
-                Success(request)
+                Success
             } else {
-                RequestFailed(request)
+                RequestFailed
             }
             continuations[request]?.resume(postLikeState)
             continuations[request] = null
@@ -103,15 +105,13 @@ class PostLikeUseCase @Inject constructor(
     }
 
     sealed class PostLikeState {
-        abstract val request: PostLikeRequest
-
-        data class Success(override val request: PostLikeRequest) : PostLikeState()
-        data class PostLikedInLocalDb(override val request: PostLikeRequest) : PostLikeState()
-        data class AlreadyRunning(override val request: PostLikeRequest) : PostLikeState()
-        data class Unchanged(override val request: PostLikeRequest) : PostLikeState()
+        object Success : PostLikeState()
+        object PostLikedInLocalDb : PostLikeState()
+        object AlreadyRunning : PostLikeState()
+        object Unchanged : PostLikeState()
         sealed class Failed : PostLikeState() {
-            data class NoNetwork(override val request: PostLikeRequest) : Failed()
-            data class RequestFailed(override val request: PostLikeRequest) : Failed()
+            object NoNetwork : Failed()
+            object RequestFailed : Failed()
         }
     }
 
