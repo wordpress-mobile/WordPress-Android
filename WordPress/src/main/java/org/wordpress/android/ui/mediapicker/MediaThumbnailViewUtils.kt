@@ -5,9 +5,6 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.R.anim
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.util.AccessibilityUtils
@@ -96,7 +93,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
                 imageView
         ) {
             val imageSelectedText = imageView.context
-                    .getString(string.photo_picker_image_selected)
+                    .getString(R.string.photo_picker_image_selected)
             if (isSelected) {
                 if (!imageView.contentDescription.toString().contains(imageSelectedText)) {
                     imageView.contentDescription = ("${imageView.contentDescription} $imageSelectedText")
@@ -148,7 +145,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
                 showOrderCounter -> {
                     AniUtils.startAnimation(
                             txtSelectionCount,
-                            anim.pop
+                            R.anim.pop
                     )
                 }
                 isSelected -> {
@@ -193,7 +190,7 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
         txtSelectionCount.isSelected = isSelected
         updateSelectionCountForPosition(txtSelectionCount, selectedOrder)
         if (!showOrderCounter) {
-            txtSelectionCount.setBackgroundResource(drawable.photo_picker_circle_pressed)
+            txtSelectionCount.setBackgroundResource(R.drawable.media_picker_circle_pressed)
         }
         displayTextSelectionCount(
                 animateSelection,
