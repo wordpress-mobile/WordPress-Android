@@ -9,6 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="bottom"
+        app:autoSizeMaxTextSize="@dimen/my_site_name_label_single_line_text_size"
+        app:autoSizeMinTextSize="@dimen/my_site_name_label_double_line_text_size"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Site Title" />
