@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.actions;
 
+import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,57 +31,44 @@ public class ReaderTagActions {
     }
 
     public static boolean deleteTag(final ReaderTag tag,
-                                    final ReaderActions.ActionListener actionListener,
-                                    final boolean isLoggedIn) {
+                                    final ReaderActions.ActionListener actionListener) {
         if (tag == null) {
             ReaderActions.callActionListener(actionListener, false);
             return false;
         }
 
-        boolean result;
-        if (!isLoggedIn) {
-            result = deleteTagsLocallyOnly(actionListener, tag);
-        } else {
-            result = deleteTagsLocallyAndRemotely(actionListener, tag);
-        }
-
-        return result;
-    }
-
-    private static boolean deleteTagsLocallyOnly(ActionListener actionListener, ReaderTag tag) {
-        ReaderTagTable.deleteTag(tag);
-        ReaderActions.callActionListener(actionListener, true);
-        EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
-
-        return true;
-    }
-
-    private static boolean deleteTagsLocallyAndRemotely(ActionListener actionListener, ReaderTag tag) {
         final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
         final String path = "read/tags/" + tagNameForApi + "/mine/delete";
 
-        com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
-            AppLog.i(T.READER, "delete tag succeeded");
-            ReaderActions.callActionListener(actionListener, true);
-        };
-
-        RestRequest.ErrorListener errorListener = volleyError -> {
-            // treat it as a success if the error says the user isn't following the deleted tag
-            String error = VolleyUtils.errStringFromVolleyError(volleyError);
-            if (error.equals("not_subscribed")) {
-                AppLog.w(T.READER, "delete tag succeeded with error " + error);
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                AppLog.i(T.READER, "delete tag succeeded");
                 ReaderActions.callActionListener(actionListener, true);
-                return;
             }
-
-            AppLog.w(T.READER, " delete tag failed");
-            AppLog.e(T.READER, volleyError);
-
-            // add back original tag
-            ReaderTagTable.addOrUpdateTag(tag);
-
-            ReaderActions.callActionListener(actionListener, false);
         };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                // treat it as a success if the error says the user isn't following the deleted tag
+                String error = VolleyUtils.errStringFromVolleyError(volleyError);
+                if (error.equals("not_subscribed")) {
+                    AppLog.w(T.READER, "delete tag succeeded with error " + error);
+                    ReaderActions.callActionListener(actionListener, true);
+                    return;
+                }
+
+                AppLog.w(T.READER, " delete tag failed");
+                AppLog.e(T.READER, volleyError);
+
+                // add back original tag
+                ReaderTagTable.addOrUpdateTag(tag);
+
+                ReaderActions.callActionListener(actionListener, false);
+            }
+        };
+
         ReaderTagTable.deleteTag(tag);
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
 
@@ -116,25 +104,21 @@ public class ReaderTagActions {
                     ReaderTagType.FOLLOWED);
             newTags.add(newTag);
         }
-        boolean result;
         if (!isLoggedIn) {
-            result = saveTagsLocallyOnly(actionListener, newTags);
+            saveTagsLocallyOnly(newTags);
         } else {
-            result = saveTagsLocallyAndRemotely(actionListener, newTags);
+            saveTagsLocallyAndRemotely(actionListener, newTags);
         }
-
-        return result;
-    }
-
-    private static boolean saveTagsLocallyOnly(ActionListener actionListener, ReaderTagList newTags) {
-        ReaderTagTable.addOrUpdateTags(newTags);
-        ReaderActions.callActionListener(actionListener, true);
-        EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
 
         return true;
     }
 
-    private static boolean saveTagsLocallyAndRemotely(ActionListener actionListener,
+    private static void saveTagsLocallyOnly(ReaderTagList newTags) {
+        ReaderTagTable.addOrUpdateTags(newTags);
+        EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+    }
+
+    private static void saveTagsLocallyAndRemotely(ActionListener actionListener,
                                                    ReaderTagList newTags) {
         ReaderTagList existingFollowedTags = ReaderTagTable.getFollowedTags();
 
@@ -182,8 +166,6 @@ public class ReaderTagActions {
         params.put("tags", newTagSlugs);
 
         WordPress.getRestClientUtilsV1_2().post(path, params, null, listener, errorListener);
-
-        return true;
     }
 
     /*
