@@ -27,7 +27,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -293,8 +292,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
+                isFollowButtonEnabled
             )
         );
         tagHolder.onBind(uiState);
@@ -321,13 +319,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         boolean success;
+        boolean isLoggedIn = mAccountStore.hasAccessToken();
         if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener, mAccountStore.hasAccessToken());
+            success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
         } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
         }
 
-        if (success) {
+        if (isLoggedIn && success) {
             renderTagHeader(currentTag, tagHolder, false);
         }
     }
@@ -364,8 +363,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void undoPostUnbookmarked(final ReaderPost post, final int position) {
         if (!post.isBookmarked) {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
+            mOnPostBookmarkedListener.onBookmarkClicked(post.blogId, post.postId);
         }
     }
 
@@ -381,8 +379,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     //noinspection EnumSwitchStatementWhichMissesCases
                     switch (type) {
                         case BOOKMARK:
-                            toggleBookmark(post.blogId, post.postId);
-                            renderPost(position, holder, false);
+                            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
                             break;
                         case REBLOG:
                             mReblogActionListener.reblog(post);
@@ -725,23 +722,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
-    }
-
-    /*
-     * triggered when user taps the bookmark post button
-     */
-    private void toggleBookmark(final long blogId, final long postId) {
-        // update post in array and on screen
-        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
-        int position = mPosts.indexOfPost(post);
-        if (post != null && position > -1) {
-            post.isBookmarked = !post.isBookmarked;
-            mPosts.set(position, post);
-        }
-
-        if (mOnPostBookmarkedListener != null) {
-            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
-        }
     }
 
     public void setFollowStatusForBlog(long blogId, boolean isFollowing) {
