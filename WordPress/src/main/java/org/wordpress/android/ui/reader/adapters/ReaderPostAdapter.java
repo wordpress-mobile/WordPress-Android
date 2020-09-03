@@ -321,13 +321,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         boolean success;
+        boolean isLoggedIn = mAccountStore.hasAccessToken();
         if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener, mAccountStore.hasAccessToken());
+            success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
         } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
         }
 
-        if (success) {
+        if (isLoggedIn && success) {
             renderTagHeader(currentTag, tagHolder, false);
         }
     }
