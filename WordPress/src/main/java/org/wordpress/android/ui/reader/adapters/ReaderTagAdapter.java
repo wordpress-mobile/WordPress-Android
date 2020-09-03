@@ -12,9 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -29,14 +27,11 @@ import org.wordpress.android.util.ViewUtilsKt;
 
 import java.lang.ref.WeakReference;
 
-import javax.inject.Inject;
-
 public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagViewHolder> {
     public interface TagDeletedListener {
         void onTagDeleted(ReaderTag tag);
     }
 
-    @Inject AccountStore mAccountStore;
     private final WeakReference<Context> mWeakContext;
     private final ReaderTagList mTags = new ReaderTagList();
     private TagDeletedListener mTagDeletedListener;
@@ -44,7 +39,6 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
 
     public ReaderTagAdapter(Context context) {
         super();
-        ((WordPress) context.getApplicationContext()).component().inject(this);
         setHasStableIds(true);
         mWeakContext = new WeakReference<>(context);
     }
@@ -120,7 +114,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             }
         };
 
-        boolean success = ReaderTagActions.deleteTag(tag, actionListener, mAccountStore.hasAccessToken());
+        boolean success = ReaderTagActions.deleteTag(tag, actionListener);
 
         if (success) {
             int index = mTags.indexOfTagName(tag.getTagSlug());
