@@ -102,10 +102,6 @@ class PostLikeUseCase @Inject constructor(
         }
     }
 
-    fun stop() {
-        continuations.run { clear() }
-    }
-
     sealed class PostLikeState {
         abstract val request: PostLikeRequest
 
