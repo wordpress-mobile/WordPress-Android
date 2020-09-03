@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
+import android.view.View
+import android.widget.PopupMenu
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
@@ -25,12 +27,16 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiSt
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -46,6 +52,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var permissionsHandler: PermissionsHandler
     @Mock lateinit var context: Context
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var viewWrapper: ViewWrapper
     private lateinit var viewModel: MediaPickerViewModel
     private var uiStates = mutableListOf<MediaPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
@@ -283,6 +290,56 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         selectItem(0)
 
         assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+    }
+
+    @Test
+    fun  `System picker opened for photo when allowed types is IMAGE only`() = test {
+        setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+        val menuUiItems = mutableListOf<PopupMenuUiModel>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onShowPopupMenu.observeForever {
+            it.peekContent().let { uiModel ->
+                menuUiItems.add(uiModel)
+            }
+        }
+
+        viewModel.onBrowseForItems(viewWrapper)
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(menuUiItems).hasSize(0)
+    }
+
+    @Test
+    fun  `popup menu opened when allowed types is IMAGE and VIDEO`() = test {
+        setupViewModel(listOf(), multiSelectMediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+        val menuUiItems = mutableListOf<PopupMenuItem>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onShowPopupMenu.observeForever {
+            it.peekContent().let { uiModel ->
+                menuUiItems.addAll(uiModel.items)
+            }
+        }
+
+        viewModel.onBrowseForItems(viewWrapper)
+
+        assertThat(iconClickEvents).hasSize(0)
+        assertThat(menuUiItems).hasSize(2)
     }
 
     private fun selectItem(position: Int) {
