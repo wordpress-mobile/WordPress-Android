@@ -29,12 +29,6 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_URIS
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.LOCAL_POST_ID
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
@@ -42,8 +36,16 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMedia
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_URIS
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.LOCAL_POST_ID
 import org.wordpress.android.ui.posts.EMPTY_LOCAL_POST_ID
 import org.wordpress.android.ui.posts.FeaturedImageHelper
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult.FILE_NOT_FOUND
@@ -231,6 +233,14 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
+    private fun launchPictureLibrary(multiSelect: Boolean) {
+        WPMediaUtils.launchPictureLibrary(this, multiSelect)
+    }
+
+    private fun launchVideoLibrary(multiSelect: Boolean) {
+        WPMediaUtils.launchVideoLibrary(this, multiSelect)
+    }
+
     private fun launchWPStoriesCamera() {
         val intent = Intent()
                 .putExtra(EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true)
@@ -333,6 +343,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
 
     override fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean) {
         when (icon) {
+            ANDROID_CHOOSE_PHOTO -> launchPictureLibrary(allowMultipleSelection)
+            ANDROID_CHOOSE_VIDEO -> launchVideoLibrary(allowMultipleSelection)
             WP_STORIES_CAPTURE -> launchWPStoriesCamera()
         }
     }
