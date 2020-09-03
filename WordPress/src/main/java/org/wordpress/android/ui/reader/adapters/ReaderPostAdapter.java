@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -386,9 +387,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             toggleBookmark(post.blogId, post.postId);
                             renderPost(position, holder, false);
                             break;
-                        case LIKE:
-                            toggleLike(ctx, post, position, holder);
-                            break;
                         case REBLOG:
                             mReblogActionListener.reblog(post);
                             break;
@@ -398,6 +396,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case BLOCK_SITE:
                             mBlockSiteActionListener.blockSite(post);
                             break;
+                        case LIKE:
                         case FOLLOW:
                         case SITE_NOTIFICATIONS:
                         case SHARE:
@@ -729,40 +728,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
-    }
-
-    /*
-     * triggered when user taps the like button (textView)
-     */
-    private void toggleLike(Context context, ReaderPost post, int listPosition, ReaderPostViewHolder holder) {
-        if (post == null || !NetworkUtils.checkConnection(context)) {
-            return;
-        }
-
-        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
-        boolean isAskingToLike = !isCurrentlyLiked;
-
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
-            // Consider a like to be enough to push a page view - solves a long-standing question
-            // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
-        } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, post);
-        }
-
-        // update post in array and on screen
-        int positionInReaderPostList = mPosts.indexOfPost(post);
-        ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
-        if (updatedPost != null && positionInReaderPostList > -1) {
-            mPosts.set(positionInReaderPostList, updatedPost);
-            renderPost(listPosition, holder, false);
-        }
     }
 
     /*
