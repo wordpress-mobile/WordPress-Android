@@ -8,7 +8,7 @@ SUPPORTED_LOCALES = [
   { glotpress: "de",    google_play: "de-DE",  promo_config: {} },
   { glotpress: "en-gb", google_play: "en-US",  promo_config: {} },
   { glotpress: "es",    google_play: "es-ES",  promo_config: {} },
-  { glotpress: "fr",    google_play: "fr-CA",  promo_config: {} },
+  { glotpress: "fr",    google_play: "fr-CA",  promo_config: false },
   { glotpress: "fr",    google_play: "fr-FR",  promo_config: {} },
   { glotpress: "he",    google_play: "iw-IL",  promo_config: {} },
   { glotpress: "id",    google_play: "in",     promo_config: {} },
