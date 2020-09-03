@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
@@ -196,13 +198,35 @@ class MediaPickerFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_search, menu)
 
-        val actionMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
+        val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
-        initializeSearchView(actionMenuItem)
+        initializeSearchView(searchMenuItem)
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            val searchView = searchMenuItem.actionView as SearchView
+            if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
+                searchMenuItem.expandActionView()
+                searchView.setQuery(uiState.searchUiModel.filter, true)
+            } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
+                searchMenuItem.collapseActionView()
+            }
+        })
     }
 
     private fun initializeSearchView(actionMenuItem: MenuItem) {
+        var isExpanding = false
+        actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded()
+                isExpanding = true
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
         val searchView = actionMenuItem.actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -211,7 +235,10 @@ class MediaPickerFragment : Fragment() {
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                viewModel.onSearch(query)
+                if (!isExpanding) {
+                    viewModel.onSearch(query)
+                }
+                isExpanding = false
                 return true
             }
         })

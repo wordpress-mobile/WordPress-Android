@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mediapicker
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.ClearFilter
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Filter
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
@@ -19,7 +20,7 @@ data class MediaLoader(private val mediaSource: MediaSource, private val localeM
                 when (loadAction) {
                     is Start -> {
                         if (state.mediaTypes != loadAction.mediaTypes || state.items.isEmpty() || state.error != null) {
-                            state = refreshData(state, loadAction.mediaTypes)
+                            state = refreshData(state, loadAction.mediaTypes).copy(filter = loadAction.filter)
                         }
                     }
                     is Refresh -> {
@@ -50,6 +51,9 @@ data class MediaLoader(private val mediaSource: MediaSource, private val localeM
                     }
                     is Filter -> {
                         state = state.copy(filter = loadAction.filter)
+                    }
+                    is ClearFilter -> {
+                        state = state.copy(filter = null)
                     }
                 }
                 if (state.isNotInitialState()) {
@@ -88,21 +92,30 @@ data class MediaLoader(private val mediaSource: MediaSource, private val localeM
                                 ?.contains(filter) == true
                     },
                     state.error,
-                    state.hasMore
+                    state.hasMore,
+                    isFilteredResult = true,
+                    filter = state.filter
             )
         } else {
-            DomainModel(state.items, state.error, state.hasMore)
+            DomainModel(state.items, state.error, state.hasMore, isFilteredResult = false, filter = state.filter)
         }
     }
 
     sealed class LoadAction {
-        data class Start(val mediaTypes: Set<MediaType>) : LoadAction()
+        data class Start(val mediaTypes: Set<MediaType>, val filter: String? = null) : LoadAction()
         object Refresh : LoadAction()
         data class Filter(val filter: String) : LoadAction()
         object NextPage : LoadAction()
+        object ClearFilter : LoadAction()
     }
 
-    data class DomainModel(val domainItems: List<MediaItem>, val error: String? = null, val hasMore: Boolean = false)
+    data class DomainModel(
+        val domainItems: List<MediaItem>,
+        val error: String? = null,
+        val hasMore: Boolean = false,
+        val isFilteredResult: Boolean = false,
+        val filter: String? = null
+    )
 
     private data class DomainState(
         val mediaTypes: Set<MediaType>? = null,

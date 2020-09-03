@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.Before
@@ -11,22 +12,26 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
+import org.wordpress.android.util.LocaleManagerWrapper
+import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
     @Mock lateinit var deviceListBuilder: DeviceListBuilder
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
     @Before
     fun setUp() {
-        mediaLoaderFactory = MediaLoaderFactory(deviceListBuilder)
+        mediaLoaderFactory = MediaLoaderFactory(deviceListBuilder, localeManagerWrapper)
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
     fun `returns device list builder on DEVICE source`() {
         val mediaLoader = mediaLoaderFactory.build(DEVICE)
 
-        assertThat(mediaLoader).isEqualTo(MediaLoader(deviceListBuilder))
+        assertThat(mediaLoader).isEqualTo(MediaLoader(deviceListBuilder, localeManagerWrapper))
     }
 
     @Test
