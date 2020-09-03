@@ -565,6 +565,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void showMagicLinkSentScreen(String email, boolean allowPassword) {
+        if (!allowPassword) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
+
         LoginMagicLinkSentFragment loginMagicLinkSentFragment =
                 LoginMagicLinkSentFragment.newInstance(email, allowPassword);
         slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
