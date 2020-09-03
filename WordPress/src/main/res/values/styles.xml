@@ -79,7 +79,7 @@
 
         <item name="actionModeStyle">@style/WordPress.ActionMode</item>
         <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
-        <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
+        <item name="actionMenuTextColor">@color/on_surface_disabled_selector</item>
         <item name="actionOverflowButtonStyle">
             @style/WordPress.ActionMode.OverflowButtonStyle
         </item>
@@ -124,10 +124,6 @@
         <item name="android:immersive">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-    </style>
-
-    <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
-        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
@@ -232,7 +228,7 @@
     <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="android:background">@null</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.DayNight</item>
         <item name="titleTextAppearance">@style/WordPress.ToolBar.Title</item>
         <item name="android:elevation">0dp</item>
         <item name="colorControlNormal">?attr/colorOnSurface</item>
@@ -254,10 +250,6 @@
     <style name="WordPress.ToolBar.Title" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">serif</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="WordPress.WebPreview.ActionBar" parent="Theme.MaterialComponents.DayNight">
-        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">

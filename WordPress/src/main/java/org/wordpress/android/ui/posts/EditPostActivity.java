@@ -38,6 +38,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -163,6 +164,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -330,6 +332,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+
+    private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
+
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
 
@@ -451,12 +457,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Set up the action bar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
@@ -651,15 +659,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackgroundResource(R.drawable.tab_layout_background);
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mEditPostRepository.isPage() ? R.string.page_settings : R.string.post_settings);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.settings_fragment_root);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_PUBLISH_SETTINGS) {
                     setTitle(R.string.publish_date);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.empty_recycler_view);
+                    mToolbar.setBackground(null);
                 }
             }
         });
@@ -963,7 +979,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ((AztecEditorFragment) mEditorFragment).enableMediaMode(false);
         }
     }
-    
+
     /*
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
@@ -1958,7 +1974,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private static final int NUM_PAGES_EDITOR = 4;
         SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
