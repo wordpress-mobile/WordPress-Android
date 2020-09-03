@@ -141,6 +141,24 @@ class MimeTypes {
                 .toTypedArray()
     }
 
+    fun getVideoAndImageTypesOnly(): Array<String> {
+        return (videoTypes.toStrings() + imageTypes.toStrings())
+                .toSet()
+                .toTypedArray()
+    }
+
+    fun getVideoTypesOnly(): Array<String> {
+        return (videoTypes.toStrings())
+                .toSet()
+                .toTypedArray()
+    }
+
+    fun getImageTypesOnly(): Array<String> {
+        return (imageTypes.toStrings())
+                .toSet()
+                .toTypedArray()
+    }
+
     private fun List<MimeType>.toStrings(): List<String> {
         return this.map { mimeType -> mimeType.subtypes.map { print(mimeType.type, it) } }.flatten()
     }
