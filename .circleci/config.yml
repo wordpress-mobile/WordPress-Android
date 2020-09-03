@@ -127,6 +127,11 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
+      - run:
+          name: Test WordPressProcessors
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew :libs:WordPressProcessors:test --stacktrace
       - android/save-gradle-cache
       - android/save-test-results
   lint:
