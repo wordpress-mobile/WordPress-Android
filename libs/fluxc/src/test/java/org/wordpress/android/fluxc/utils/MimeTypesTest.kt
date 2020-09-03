@@ -54,4 +54,58 @@ class MimeTypesTest {
                 )
         )
     }
+
+    @Test
+    fun `returns image and video only mime types as strings`() {
+        val allTypes = mimeTypes.getVideoAndImageTypesOnly()
+
+        assertThat(allTypes).isEqualTo(
+                arrayOf(
+                        "video/mp4",
+                        "video/quicktime",
+                        "video/x-ms-wmv",
+                        "video/avi",
+                        "video/mpeg",
+                        "video/mp2p",
+                        "video/ogg",
+                        "video/3gpp",
+                        "video/3gpp2",
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif"
+                )
+        )
+    }
+
+    @Test
+    fun `returns image only mime types as strings`() {
+        val allTypes = mimeTypes.getImageTypesOnly()
+
+        assertThat(allTypes).isEqualTo(
+                arrayOf(
+                        "image/jpeg",
+                        "image/png",
+                        "image/gif"
+                )
+        )
+    }
+
+    @Test
+    fun `returns video only mime types as strings`() {
+        val allTypes = mimeTypes.getVideoTypesOnly()
+
+        assertThat(allTypes).isEqualTo(
+                arrayOf(
+                        "video/mp4",
+                        "video/quicktime",
+                        "video/x-ms-wmv",
+                        "video/avi",
+                        "video/mpeg",
+                        "video/mp2p",
+                        "video/ogg",
+                        "video/3gpp",
+                        "video/3gpp2"
+                )
+        )
+    }
 }
