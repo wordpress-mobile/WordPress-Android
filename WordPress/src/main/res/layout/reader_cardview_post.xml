@@ -144,6 +144,7 @@
             android:id="@+id/layout_post_header"
             android:layout_width="0dp"
             android:layout_height="@dimen/reader_post_header_height"
+            android:importantForAccessibility="no"
             android:layout_marginEnd="@dimen/margin_medium"
             android:background="?android:selectableItemBackground"
             android:visibility="visible"

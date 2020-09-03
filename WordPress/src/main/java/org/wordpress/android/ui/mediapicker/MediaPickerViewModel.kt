@@ -130,7 +130,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
 
                 val fileExtension = it.mimeType?.let { mimeType ->
-                    mediaUtilsWrapper.getExtensionForMimeType(mimeType)?.toUpperCase(localeManagerWrapper.getLocale())
+                    mediaUtilsWrapper.getExtensionForMimeType(mimeType).toUpperCase(localeManagerWrapper.getLocale())
                 }
                 when (it.type) {
                     IMAGE -> MediaPickerUiItem.PhotoItem(
@@ -192,10 +192,10 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
         }
-        val isVideoSelected = items?.any { it.type == VIDEO && selectedUris.contains(it.uri) } ?: false
+        val onlyImagesSelected = items?.any { it.type != IMAGE && selectedUris.contains(it.uri) } ?: false
         return ActionModeUiModel.Visible(
                 title,
-                showEditAction = mediaPickerSetup.allowedTypes.contains(IMAGE) && !isVideoSelected
+                showEditAction = mediaPickerSetup.allowedTypes.contains(IMAGE) && !onlyImagesSelected
         )
     }
 
