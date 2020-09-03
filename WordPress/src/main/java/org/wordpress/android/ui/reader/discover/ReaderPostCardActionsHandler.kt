@@ -256,8 +256,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
                 }
                 is PostLikeState.Failed.RequestFailed -> {
+                    _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+
                     )
                 }
             }
