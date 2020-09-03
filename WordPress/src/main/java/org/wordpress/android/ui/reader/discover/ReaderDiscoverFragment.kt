@@ -116,9 +116,6 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                             .openEditorForReblog(activity, this.site, this.post, this.source)
                     is ShowBookmarkedTab -> {
                         ActivityLauncher.viewSavedPostsListInReader(activity)
-                        if (requireActivity() is WPMainActivity) {
-                            requireActivity().overridePendingTransition(0, 0)
-                        }
                     }
                     is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
                     is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)

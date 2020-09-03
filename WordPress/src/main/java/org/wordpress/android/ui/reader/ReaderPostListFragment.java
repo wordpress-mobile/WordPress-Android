@@ -442,9 +442,6 @@ public class ReaderPostListFragment extends Fragment
                         ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                     } else if (navTarget instanceof ShowBookmarkedTab) {
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                        if (requireActivity() instanceof WPMainActivity) {
-                            requireActivity().overridePendingTransition(0, 0);
-                        }
                     } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
                         showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
                     } else {
