@@ -1,5 +1,7 @@
 15.7
 -----
+* [**] Block Editor: New block: Pullquote
+* [**] Block Editor: Block settings now immediately reflect changes from menu sliders.
  
 15.6
 -----
