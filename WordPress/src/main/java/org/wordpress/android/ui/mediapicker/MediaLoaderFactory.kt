@@ -8,7 +8,10 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 
 class MediaLoaderFactory
-@Inject constructor(private val deviceListBuilder: DeviceListBuilder, private val localeManagerWrapper: LocaleManagerWrapper) {
+@Inject constructor(
+    private val deviceListBuilder: DeviceListBuilder,
+    private val localeManagerWrapper: LocaleManagerWrapper
+) {
     fun build(mediaSourceType: MediaPickerSetup.DataSource): MediaLoader {
         return when (mediaSourceType) {
             DEVICE -> MediaLoader(deviceListBuilder, localeManagerWrapper)
