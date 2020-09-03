@@ -46,13 +46,13 @@ class PostLikeUseCaseTest {
                 networkUtilsWrapper,
                 TEST_DISPATCHER
         )
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        val account = AccountModel()
-        account.userId = 100
-        whenever(accountStore.account).thenReturn(account)
-        whenever(readerPostActionsWrapper.performLikeActionLocal(anyOrNull(), anyBoolean(), anyLong())).thenReturn(true)
-        whenever(readerPostActionsWrapper.performLikeActionRemote(anyOrNull(), anyBoolean(), anyLong(), any()))
-                .thenReturn(any())
+//        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+//        val account = AccountModel()
+//        account.userId = 100
+//        whenever(accountStore.account).thenReturn(account)
+//        whenever(readerPostActionsWrapper.performLikeActionLocal(anyOrNull(), anyBoolean(), anyLong())).thenReturn(true)
+//        whenever(readerPostActionsWrapper.performLikeActionRemote(anyOrNull(), anyBoolean(), anyLong(), any()))
+//                .thenReturn(any())
     }
 
     @Test
