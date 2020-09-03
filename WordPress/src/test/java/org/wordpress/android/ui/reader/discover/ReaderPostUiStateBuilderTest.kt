@@ -16,6 +16,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType
@@ -44,6 +45,8 @@ import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -420,7 +423,7 @@ class ReaderPostUiStateBuilderTest {
             // Act
             val uiState = mapPostToUiState(post)
             // Assert
-            assertThat(uiState.title).isNotNull()
+            assertThat((uiState.title as UiStringText).text).isEqualTo(post.title)
         }
     }
 
@@ -435,13 +438,13 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `title is not displayed when the post doesn't have a title`() = test {
+    fun `default title is displayed when the post doesn't have a title`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasTitle = false)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.title).isNull()
+        assertThat((uiState.title as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
 
     @Test

@@ -31,14 +31,11 @@ import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent;
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure;
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess;
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -68,13 +65,21 @@ public class ReaderPostActions {
                                             final boolean isAskingToLike,
                                             final long wpComUserId) {
         // do nothing if post's like state is same as passed
+        boolean updateLocalDb = performLikeActionLocal(post, isAskingToLike, wpComUserId);
+        if (!updateLocalDb) return false;
+
+        performLikeActionRemote(post, isAskingToLike, wpComUserId, null);
+
+        return true;
+    }
+
+    public static boolean performLikeActionLocal(final ReaderPost post,
+                                                 final boolean isAskingToLike,
+                                                 final long wpComUserId) {
+        // do nothing if post's like state is same as passed
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         if (isCurrentlyLiked == isAskingToLike) {
             AppLog.w(T.READER, "post like unchanged");
-            final PostLikeUnChanged onPostLikeUnChanged =
-                    new ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged(
-                            post.postId, post.blogId, isAskingToLike, wpComUserId);
-            EventBus.getDefault().post(onPostLikeUnChanged);
             return false;
         }
 
@@ -86,7 +91,13 @@ public class ReaderPostActions {
         }
         ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike, wpComUserId);
+        return true;
+    }
 
+    public static void performLikeActionRemote(final ReaderPost post,
+                                               final boolean isAskingToLike,
+                                               final long wpComUserId,
+                                               final ActionListener actionListener) {
         final String actionName = isAskingToLike ? "like" : "unlike";
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
         if (isAskingToLike) {
@@ -99,10 +110,9 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.READER, String.format("post %s succeeded", actionName));
-                final PostLikeSuccess onPostLikeSuccess =
-                        new ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess(
-                                post.postId, post.blogId, isAskingToLike, wpComUserId);
-                EventBus.getDefault().post(onPostLikeSuccess);
+                if (actionListener != null) {
+                    ReaderActions.callActionListener(actionListener, true);
+                }
             }
         };
 
@@ -118,17 +128,14 @@ public class ReaderPostActions {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
                 ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
-                final PostLikeFailure onPostLikeFailure =
-                        new ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure(
-                                post.postId, post.blogId, isAskingToLike, wpComUserId);
-                EventBus.getDefault().post(onPostLikeFailure);
+                if (actionListener != null) {
+                    ReaderActions.callActionListener(actionListener, false);
+                }
             }
         };
 
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
-        return true;
     }
-
 
     /*
      * get the latest version of this post - note that the post is only considered changed if the

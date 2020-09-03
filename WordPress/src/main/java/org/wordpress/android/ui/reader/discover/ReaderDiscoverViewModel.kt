@@ -5,7 +5,6 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
@@ -34,9 +33,10 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Su
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
-import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -44,6 +44,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val INITIATE_LOAD_MORE_OFFSET = 3
+const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users's data
+const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 class ReaderDiscoverViewModel @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
@@ -54,6 +56,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -69,22 +72,23 @@ class ReaderDiscoverViewModel @Inject constructor(
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
-    val preloadPostEvents = _preloadPostEvents
+    val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
      */
     private var pendingReblogPost: ReaderPost? = null
 
-    /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
-        returns result based on device orientation */
-    private val photonWidth: Int = 500
-    private val photonHeight: Int = 500
+    /**
+     * Don't recalculate the size after a device orientation change as it'd result in change of the url -> it wouldn't
+     * use cached images.
+     */
+    private val photonWidth: Int = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
+    private val photonHeight: Int = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
 
     fun start() {
         if (isStarted) return
         isStarted = true
-        analyticsTrackerWrapper.track(Stat.READER_DISCOVER_SHOWN)
         init()
     }
 
@@ -326,8 +330,6 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun onReblogSiteSelected(siteLocalId: Int) {
         launch {
-            // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
-            //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
             val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
             val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
             if (navigationTarget != null) {

@@ -48,7 +48,7 @@ import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_P
 
 /**
  * This class is being refactored, if you implement any change, please also update
- * {@link org.wordpress.android.ui.photopicker.mediapicker.MediaPickerActivity}
+ * {@link org.wordpress.android.ui.mediapicker.MediaPickerActivity}
  */
 @Deprecated
 public class PhotoPickerActivity extends LocaleAwareActivity
