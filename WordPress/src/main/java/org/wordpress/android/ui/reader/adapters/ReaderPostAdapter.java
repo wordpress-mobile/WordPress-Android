@@ -28,7 +28,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -295,8 +294,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
+                isFollowButtonEnabled
             )
         );
         tagHolder.onBind(uiState);

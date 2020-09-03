@@ -202,7 +202,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     ?.let { post.featuredVideo }
 
     private fun buildExpandedTagsViewVisibility(post: ReaderPost, isDiscover: Boolean) =
-            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty() && isDiscover
+            post.tags.isNotEmpty() && isDiscover
 
     private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
             readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
