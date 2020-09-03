@@ -48,5 +48,5 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
 
     fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
 
-    fun getExtensionForMimeType(mimeType: String?): String? = MediaUtils.getExtensionForMimeType(mimeType)
+    fun getExtensionForMimeType(mimeType: String?): String = MediaUtils.getExtensionForMimeType(mimeType)
 }
