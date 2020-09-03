@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
@@ -20,9 +21,11 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.utils.UiString
@@ -285,6 +288,9 @@ class MediaPickerViewModel @Inject constructor(
             }
             AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
         }
+
+        // Do we need tracking here?; review tracking need.
+
         _onIconClicked.postValue(Event(IconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
 
@@ -296,6 +302,30 @@ class MediaPickerViewModel @Inject constructor(
             }
         } else {
             _softAskRequest.value = SoftAskRequest(show = true, isAlwaysDenied = isAlwaysDenied)
+        }
+    }
+
+    fun onBrowseForItems(anchorView: ViewWrapper) { //see performActionOrShowPopup
+        val items = mutableListOf<PopupMenuItem>()
+        if (mediaPickerSetup.allowedTypes.contains(IMAGE)) {
+            items.add(PopupMenuItem(UiStringRes(string.photo_picker_choose_photo)) {
+                clickIcon(
+                        ANDROID_CHOOSE_PHOTO
+                )
+            })
+        }
+        if (mediaPickerSetup.allowedTypes.contains(VIDEO)) {
+            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_video)) {
+                clickIcon(
+                        MediaPickerIcon.ANDROID_CHOOSE_VIDEO
+                )
+            })
+        }
+
+        if (items.size == 1) {
+            items[0].action()
+        } else {
+            _showPopupMenu.value = Event(PopupMenuUiModel(anchorView, items))
         }
     }
 
