@@ -62,6 +62,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
     private lateinit var videoItem: MediaItem
+    private lateinit var audioItem: MediaItem
+    private lateinit var documentItem: MediaItem
 
     @InternalCoroutinesApi
     @Before
@@ -80,8 +82,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         )
         uiStates.clear()
         firstItem = MediaItem(uriWrapper1, "item1", IMAGE, "image/jpg", 1)
-        secondItem = MediaItem(uriWrapper2, "item2", AUDIO, "audio/mp3", 2)
+        secondItem = MediaItem(uriWrapper2, "item2", IMAGE, "image/png", 2)
         videoItem = MediaItem(uriWrapper1, "item3", VIDEO, "video/mpeg", 3)
+        audioItem = MediaItem(uriWrapper2, "item4", AUDIO, "audio/mp3", 4)
+        documentItem = MediaItem(uriWrapper2, "item5", DOCUMENT, "application/pdf", 5)
         whenever(mediaUtilsWrapper.getExtensionForMimeType("image/jpg")).thenReturn("jpg")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("audio/mp3")).thenReturn("mp3")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("video/mpeg")).thenReturn("mpg")
@@ -290,6 +294,30 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `action mode hides edit action when video item selected`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(videoItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+    }
+
+    @Test
+    fun `action mode hides edit action when audio item selected`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(audioItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, AUDIO), false))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+    }
+
+    @Test
+    fun `action mode hides edit action when document item selected`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(documentItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, DOCUMENT), false))
 
         viewModel.refreshData(false)
 
