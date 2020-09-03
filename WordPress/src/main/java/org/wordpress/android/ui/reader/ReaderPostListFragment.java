@@ -2572,9 +2572,11 @@ public class ReaderPostListFragment extends Fragment
                 AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
+            case LIKE:
+                mViewModel.onLikeButtonClicked(post, isBookmarksList());
+                break;
             case BLOCK_SITE:
             case BOOKMARK:
-            case LIKE:
             case REBLOG:
             case COMMENTS:
                 throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");

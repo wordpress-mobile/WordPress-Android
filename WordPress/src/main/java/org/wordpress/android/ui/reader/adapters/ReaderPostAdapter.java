@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -38,7 +37,6 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
@@ -383,9 +381,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case BOOKMARK:
                             mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
                             break;
-                        case LIKE:
-                            toggleLike(ctx, post, position, holder);
-                            break;
                         case REBLOG:
                             mReblogActionListener.reblog(post);
                             break;
@@ -395,6 +390,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case BLOCK_SITE:
                             mBlockSiteActionListener.blockSite(post);
                             break;
+                        case LIKE:
                         case FOLLOW:
                         case SITE_NOTIFICATIONS:
                         case SHARE:
@@ -726,40 +722,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
-    }
-
-    /*
-     * triggered when user taps the like button (textView)
-     */
-    private void toggleLike(Context context, ReaderPost post, int listPosition, ReaderPostViewHolder holder) {
-        if (post == null || !NetworkUtils.checkConnection(context)) {
-            return;
-        }
-
-        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
-        boolean isAskingToLike = !isCurrentlyLiked;
-
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
-            // Consider a like to be enough to push a page view - solves a long-standing question
-            // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
-        } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, post);
-        }
-
-        // update post in array and on screen
-        int positionInReaderPostList = mPosts.indexOfPost(post);
-        ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
-        if (updatedPost != null && positionInReaderPostList > -1) {
-            mPosts.set(positionInReaderPostList, updatedPost);
-            renderPost(listPosition, holder, false);
-        }
     }
 
     public void setFollowStatusForBlog(long blogId, boolean isFollowing) {

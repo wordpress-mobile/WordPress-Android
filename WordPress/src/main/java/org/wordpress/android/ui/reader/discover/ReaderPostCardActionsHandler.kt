@@ -42,14 +42,10 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
@@ -208,7 +204,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleBlockSiteClicked(blogId: Long) {
-        // todo: Annmarie add tracking dependent upon implementation
         blockBlogUseCase.blockBlog(blogId).collect {
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
@@ -245,15 +240,21 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleLikeClicked(post: ReaderPost) {
-        when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
-            is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> { }
-            is NetworkUnavailable -> {
-                _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
-            }
-            is RemoteRequestFailure -> {
-                _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
-                )
+        likeUseCase.perform(post, !post.isLikedByCurrentUser).collect {
+            when (it) {
+                is PostLikeState.PostLikedInLocalDb -> {
+                    _refreshPosts.postValue(Event(Unit))
+                }
+                is PostLikeState.Success, is PostLikeState.Unchanged, is PostLikeState.AlreadyRunning -> { }
+                is PostLikeState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
+                }
+                is PostLikeState.Failed.RequestFailed -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                    )
+                }
             }
         }
     }

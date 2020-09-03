@@ -16,6 +16,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSiteP
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
@@ -135,6 +136,12 @@ class ReaderPostListViewModel @Inject constructor(
         launch(bgDispatcher) {
             val post = ReaderPostTable.getBlogPost(blogId, postId, true)
             readerPostCardActionsHandler.onAction(post, SITE_NOTIFICATIONS, isBookmarkList)
+        }
+    }
+
+    fun onLikeButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(post, LIKE, bookmarksList)
         }
     }
 
