@@ -21,6 +21,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -352,6 +353,14 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         mAnalyticsListener.trackMagicLinkRequested();
 
         if (mLoginListener != null) {
+            // when magic link request if forced we want to remove this fragment from backstack so user will not be
+            // able to navigate back to it from "Magic Link Sent" Screen
+            if (mForceRequestAtStart) {
+                FragmentManager fragmentManager = getFragmentManager();
+                if (fragmentManager != null) {
+                    fragmentManager.popBackStackImmediate();
+                }
+            }
             mLoginListener.showMagicLinkSentScreen(mEmail, mAllowPassword);
         }
     }
