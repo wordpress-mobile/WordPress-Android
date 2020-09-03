@@ -162,14 +162,14 @@ class ReaderViewModelTest {
         // Arrange
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(nonEmptyReaderTagList[3])
 
-        var tabPosition: TabPosition? = null
+        var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
-            tabPosition = it.getContentIfNotHandled()
+            tabNavigation = it.getContentIfNotHandled()
         }
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(tabPosition).isEqualTo(3)
+        assertThat(tabNavigation!!.position).isEqualTo(3)
     }
 
     @Test
@@ -177,27 +177,27 @@ class ReaderViewModelTest {
         // Arrange
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
 
-        var tabPosition: TabPosition? = null
+        var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
-            tabPosition = it.getContentIfNotHandled()
+            tabNavigation = it.getContentIfNotHandled()
         }
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(tabPosition).isGreaterThan(-1)
+        assertThat(tabNavigation!!.position).isGreaterThan(-1)
     }
 
     @Test
     fun `SelectTab when tags are empty`() = testWithEmptyTags {
         // Arrange
-        var tabPosition: TabPosition? = null
+        var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
-            tabPosition = it.getContentIfNotHandled()
+            tabNavigation = it.getContentIfNotHandled()
         }
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(tabPosition).isNull()
+        assertThat(tabNavigation).isNull()
     }
 
     @Test
@@ -210,9 +210,9 @@ class ReaderViewModelTest {
 
         viewModel.uiState.observeForever { }
 
-        var tabPosition: TabPosition? = null
-            viewModel.selectTab.observeForever {
-                tabPosition = it.getContentIfNotHandled()
+        var tabNavigation: TabNavigation? = null
+        viewModel.selectTab.observeForever {
+            tabNavigation = it.getContentIfNotHandled()
         }
 
         // Act
@@ -220,7 +220,7 @@ class ReaderViewModelTest {
         viewModel.selectedTabChange(readerTag)
 
         // Assert
-        assertThat(tabPosition).isEqualTo(2)
+        assertThat(tabNavigation!!.position).isEqualTo(2)
     }
 
     @Test
@@ -386,6 +386,21 @@ class ReaderViewModelTest {
                 assertThat(viewModel.showReaderInterests.value).isNull()
             }
 
+    @Test
+    fun `Bookmark tab is selected when bookmarkTabRequested is invoked`() = testWithNonMockedNonEmptyTags {
+        // Arrange
+        var tabNavigation: TabNavigation? = null
+        viewModel.uiState.observeForever {}
+        viewModel.selectTab.observeForever {
+            tabNavigation = it.getContentIfNotHandled()
+        }
+        // Act
+        triggerReaderTabContentDisplay()
+        viewModel.bookmarkTabRequested()
+        // Assert
+        assertThat(tabNavigation!!.position).isEqualTo(3)
+    }
+
     private fun triggerReaderTabContentDisplay() {
         viewModel.start()
         if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
@@ -437,7 +452,7 @@ class ReaderViewModelTest {
             add(ReaderTag("Following", "Following", "Following", FOLLOWING_PATH, ReaderTagType.DEFAULT))
             add(ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT))
             add(ReaderTag("Like", "Like", "Like", LIKED_PATH, ReaderTagType.DEFAULT))
-            add(ReaderTag("Saved", "Saved", "Saved", "Saved", ReaderTagType.DEFAULT))
+            add(ReaderTag("Saved", "Saved", "Saved", "Saved", ReaderTagType.BOOKMARKED))
         }
     }
 }
