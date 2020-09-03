@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -32,6 +35,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
@@ -40,6 +44,8 @@ import javax.inject.Inject
 
 class MediaPickerFragment : Fragment() {
     enum class MediaPickerIcon {
+        ANDROID_CHOOSE_PHOTO,
+        ANDROID_CHOOSE_VIDEO,
         WP_STORIES_CAPTURE;
     }
 
@@ -69,6 +75,7 @@ class MediaPickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(
                 R.layout.media_picker_fragment,
                 container,
@@ -317,6 +324,22 @@ class MediaPickerFragment : Fragment() {
                 viewModel.clickOnLastTappedIcon()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        inflater.inflate(R.menu.menu_media_picker, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.mnu_browse_item) {
+            val anchorView = activity?.findViewById<View>(item.itemId)
+            anchorView?.let {
+                viewModel.onBrowseForItems(ViewWrapper(anchorView))
+            }
+        }
+        return true
     }
 
     companion object {
