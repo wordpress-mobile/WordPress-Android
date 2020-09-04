@@ -118,7 +118,7 @@ Language: nl
     <string name="continue_google_button_suffix">Doorgaan met Google</string>
     <string name="login_or">of</string>
     <string name="reset_your_password">Stel je wachtwoord opnieuw in</string>
-    <string name="login_promo_title_37_percent">37% van het web is gebouwd op WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% van het web is gebouwd op WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Ontgrendel de kracht van de meest flexibele sitebouwer.</string>
     <string name="send_link_by_email">Link per e-mail verzenden</string>
     <string name="create_account">Account aanmaken</string>

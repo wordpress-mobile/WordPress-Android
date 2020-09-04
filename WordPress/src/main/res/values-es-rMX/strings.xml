@@ -118,7 +118,7 @@ Language: es_MX
     <string name="continue_google_button_suffix">Continuar con Google</string>
     <string name="login_or">o</string>
     <string name="reset_your_password">Restablecer tu contraseña</string>
-    <string name="login_promo_title_37_percent">El 37 % de la web está creada con WordPress.</string>
+    <string name="login_promo_title_37_percent">El 37\% de la web está creada con WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Desbloquea el poder del creador de webs más flexible.</string>
     <string name="send_link_by_email">Enviar el enlace por correo electrónico</string>
     <string name="create_account">Crear una cuenta</string>
