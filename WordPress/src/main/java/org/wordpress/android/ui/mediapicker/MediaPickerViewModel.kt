@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
@@ -20,6 +22,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
@@ -45,6 +48,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -301,10 +305,19 @@ class MediaPickerViewModel @Inject constructor(
                 lastTappedIcon = icon
                 return
             }
-            AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
         }
 
-        // Do we need tracking here?; review tracking need.
+        when (icon) {
+            ANDROID_CHOOSE_PHOTO -> trackSelectedOtherSourceEvents(
+                    MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
+                    false
+            )
+            ANDROID_CHOOSE_VIDEO -> trackSelectedOtherSourceEvents(
+                    MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
+                    true
+            )
+            WP_STORIES_CAPTURE -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
+        }
 
         _onIconClicked.postValue(Event(IconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
@@ -342,6 +355,12 @@ class MediaPickerViewModel @Inject constructor(
         } else {
             _showPopupMenu.value = Event(PopupMenuUiModel(anchorView, items))
         }
+    }
+
+    private fun trackSelectedOtherSourceEvents(stat: Stat, isVideo: Boolean) {
+        val properties: MutableMap<String, Any?> = HashMap()
+        properties["is_video"] = isVideo
+        AnalyticsTracker.track(stat, properties)
     }
 
     private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
