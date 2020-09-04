@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -36,7 +37,8 @@ class ReaderTagRepository @Inject constructor(
     private val followInterestTagsUseCase: FollowInterestTagsUseCase,
     private val fetchFollowedTagUseCase: FetchFollowedTagsUseCase,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
-    private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
+    private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
+    private val readerTagTableWrapper: ReaderTagTableWrapper
 ) {
     private val mutableRecommendedInterests = MutableLiveData<ReaderTagList>()
     private val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
@@ -50,15 +52,20 @@ class ReaderTagRepository @Inject constructor(
 
     suspend fun getUserTags(): ReaderRepositoryCommunication {
         return withContext(ioDispatcher) {
-            val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
-            var result: ReaderRepositoryCommunication = Success
-            if (refresh) {
-                result = fetchFollowedTagUseCase.fetch()
-            }
-            if (result is Success) {
-                SuccessWithData(getFollowedTagsUseCase.get())
+            val userTags = getFollowedTagsUseCase.get()
+            if (userTags.isNotEmpty()) {
+                SuccessWithData(userTags)
             } else {
-                result
+                val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
+                var result: ReaderRepositoryCommunication = Success
+                if (refresh) {
+                    result = fetchFollowedTagUseCase.fetch()
+                }
+                if (result is Success) {
+                    SuccessWithData(getFollowedTagsUseCase.get())
+                } else {
+                    result
+                }
             }
         }
     }
@@ -66,6 +73,12 @@ class ReaderTagRepository @Inject constructor(
     suspend fun saveInterests(tags: List<ReaderTag>): ReaderRepositoryCommunication {
         return withContext(ioDispatcher) {
             followInterestTagsUseCase.followInterestTags(tags)
+        }
+    }
+
+    suspend fun clearTagLastUpdated(tag: ReaderTag) {
+        withContext(ioDispatcher) {
+            readerTagTableWrapper.clearTagLastUpdated(tag)
         }
     }
 

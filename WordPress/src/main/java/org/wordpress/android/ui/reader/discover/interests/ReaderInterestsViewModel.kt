@@ -143,6 +143,7 @@ class ReaderInterestsViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
+            readerTagRepository.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
             when (val result = readerTagRepository.saveInterests(contentUiState.getSelectedInterests())) {
                 is Success -> {
                     parentViewModel.onCloseReaderInterests()
