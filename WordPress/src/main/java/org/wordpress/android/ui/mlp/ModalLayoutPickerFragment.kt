@@ -19,7 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
-import kotlinx.android.synthetic.main.modal_layout_picker_header.*
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
