@@ -45,11 +45,4 @@ public class ReaderInterfaces {
     public interface OnPostListItemButtonListener {
         void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType);
     }
-
-    /*
-     * used by adapters to notify when post bookmarked state has changed
-     */
-    public interface OnPostBookmarkedListener {
-        void onBookmarkClicked(long blogId, long postId);
-    }
 }

@@ -83,8 +83,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
-import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -1893,9 +1891,6 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
-
     private void announceListStateForAccessibility() {
         if (getView() != null) {
             getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
@@ -1980,13 +1975,10 @@ public class ReaderPostListFragment extends Fragment
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
-            mPostAdapter.setReblogActionListener(this);
-            mPostAdapter.setBlockSiteActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
@@ -2577,6 +2569,8 @@ public class ReaderPostListFragment extends Fragment
                 mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
                 break;
             case BOOKMARK:
+                mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
+                break;
             case COMMENTS:
                 throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
         }

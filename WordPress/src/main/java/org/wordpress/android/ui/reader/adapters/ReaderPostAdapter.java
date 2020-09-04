@@ -94,7 +94,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
-    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
 
@@ -359,7 +358,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void undoPostUnbookmarked(final ReaderPost post, final int position) {
         if (!post.isBookmarked) {
-            mOnPostBookmarkedListener.onBookmarkClicked(post.blogId, post.postId);
+            mOnPostListItemButtonListener.onButtonClicked(post, ReaderPostCardActionType.BOOKMARK);
         }
     }
 
@@ -374,12 +373,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 (postId, blogId, type) -> {
                     //noinspection EnumSwitchStatementWhichMissesCases
                     switch (type) {
-                        case BOOKMARK:
-                            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
-                            break;
                         case COMMENTS:
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
+                        case BOOKMARK:
                         case BLOCK_SITE:
                         case REBLOG:
                         case LIKE:
@@ -545,10 +542,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
         mDataLoadedListener = listener;
-    }
-
-    public void setOnPostBookmarkedListener(ReaderInterfaces.OnPostBookmarkedListener listener) {
-        mOnPostBookmarkedListener = listener;
     }
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
