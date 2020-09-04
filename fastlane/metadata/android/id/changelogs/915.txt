@@ -1,0 +1,2 @@
+15.6:
+Peningkatan Editor Blok: Menambahkan pengaturan untuk mengubah lebar kolom ke blok Kolom, menambahkan dukungan pengeditan media di blok Galeri, dan meningkatkan logika untuk undo/redo saat penyusunan - nikmati undo yang lebih cerdas dalam potongan, daripada membatalkan beberapa huruf atau perubahan kecil pada suatu waktu.

@@ -1,0 +1,2 @@
+15.6:
+Melhorias no editor de blocos: Adicionadas configurações para alterar as larguras das colunas no bloco de colunas, adicionado suporte à edição de mídia no bloco da galeria e melhorada a lógica para desfazer/refazer durante o rascunho, aproveitar para de desfazer usando pedaços mais inteligentes, em vez de desfazer algumas letras ou pequenas alterações por vez.

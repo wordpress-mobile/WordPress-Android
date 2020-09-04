@@ -14,7 +14,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{now format='yyyy-MM-dd'}}",
+            "date": "{{fnow format='yyyy-MM-dd'}}",
             "tags": []
         },
         "headers": {

@@ -21,7 +21,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
@@ -116,9 +115,6 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                             .openEditorForReblog(activity, this.site, this.post, this.source)
                     is ShowBookmarkedTab -> {
                         ActivityLauncher.viewSavedPostsListInReader(activity)
-                        if (requireActivity() is WPMainActivity) {
-                            requireActivity().overridePendingTransition(0, 0)
-                        }
                     }
                     is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
                     is ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)

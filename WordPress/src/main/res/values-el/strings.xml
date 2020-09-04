@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
 -->
 <resources>
-    <string name="gutenberg_native_remove_image">Αφαίρεση εικόνας</string>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Η τρέχουσα τιμή είναι %2$s</string>
@@ -719,7 +718,6 @@ Language: el_GR
     <string name="error_deleting_site">Σφάλμα διαγραφής ιστοτόπου</string>
     <string name="confirm_delete_site_prompt">Παρακαλούμε πληκτρολογήστε %1$s στο παρακάτω πεδίο για επιβεβαίωση. Ο ιστότοπός σας μετά θα εξαφανιστεί για πάντα.</string>
     <string name="site_settings_export_content_title">Εξαγωγή περιεχομένου</string>
-    <string name="contact_support">Επικοινωνία με υποστήριξη</string>
     <string name="confirm_delete_site">Επιβεβαίωση Διαγραφής Ιστοτόπου</string>
     <string name="start_over_text">Αν θέλετε να διατηρήσετε έναν ιστότοπο αλλά δεν θέλετε κανένα από τα άρθρα και τις σελίδες που έχετε τώρα, η ομάδα υποστήριξής μας μπορεί να διαγράψει τα άρθρα, τις σελίδες τα πολυμέσα και τα σχόλια για λογαριασμό σας.\n\nΑυτό θα διατηρήσει ενεργά τον ιστότοπο και το URL σας αλλά θα σας επιτρέψει ένα νέο ξεκίνημα στη δημιουργία περιεχομένου. Απλά επικοινωνήστε μαζί μας για να γίνει εκκαθάριση του τρέχοντος περιεχομένου σας.</string>
     <string name="site_settings_start_over_hint">Ξεκινήστε τον ιστότοπό σας από την αρχή</string>
@@ -944,7 +942,6 @@ Language: el_GR
     <string name="reader_discover_attribution_author_and_blog">Δημοσιεύτηκε αρχικά από %1$s στο %2$s</string>
     <string name="reader_short_like_count_multi">%s \"Like\"</string>
     <string name="reader_short_like_count_one">1 \"Like\"</string>
-    <string name="reader_label_follow_count">%,d ακόλουθοι</string>
     <string name="reader_short_like_count_none">\"Like\"</string>
     <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
@@ -1005,14 +1002,14 @@ Language: el_GR
     <string name="verification_code">Κωδικός επαλήθευσης</string>
     <string name="invalid_verification_code">Μη έγκυρος κωδικός επαλήθευσης</string>
     <string name="auth_required">Συνδεθείτε ξανά για να συνεχίσετε.</string>
-    <string name="pages_fetching">Ανάκτηση σελίδων…</string>
-    <string name="comments_fetching">Ανάκτηση σχολίων…</string>
-    <string name="stats_view_search_terms">Όροι αναζήτησης</string>
-    <string name="stats_view_authors">Συγγραφείς</string>
-    <string name="error_notification_open">Αδύνατον να ανοιχτεί η ειδοποίηση</string>
-    <string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
     <string name="reader_empty_posts_request_failed">Αδυναμία φόρτωσης των άρθρων</string>
     <string name="publisher">Εκδότης:</string>
+    <string name="error_notification_open">Αδύνατον να ανοιχτεί η ειδοποίηση</string>
+    <string name="stats_search_terms_unknown_search_terms">Άγνωστοι όροι αναζήτησης</string>
+    <string name="stats_view_authors">Συγγραφείς</string>
+    <string name="stats_view_search_terms">Όροι αναζήτησης</string>
+    <string name="comments_fetching">Ανάκτηση σχολίων…</string>
+    <string name="pages_fetching">Ανάκτηση σελίδων…</string>
     <string name="posts_fetching">Λήψη άρθρων…</string>
     <string name="media_fetching">Λήψη πολυμέσων…</string>
     <string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
@@ -1070,7 +1067,6 @@ Language: el_GR
     <string name="reader_menu_block_blog">Μπλοκάρισμα του ιστότοπου</string>
     <string name="reader_toast_err_block_blog">Αδυναμία μπλοκαρίσματος αυτού του Ιστότοπου</string>
     <string name="reader_toast_blog_blocked">Δεν εμφανίζονται πλέον άρθρα από αυτόν τον Ιστότοπο</string>
-    <string name="contact_us">Επικοινωνήστε μαζί μας</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
     <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
