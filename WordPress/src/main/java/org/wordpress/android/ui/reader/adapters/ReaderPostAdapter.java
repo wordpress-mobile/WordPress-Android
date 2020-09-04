@@ -33,7 +33,6 @@ import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -99,7 +98,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
-    private ReblogActionListener mReblogActionListener;
     private BlockSiteActionListener mBlockSiteActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
@@ -381,15 +379,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case BOOKMARK:
                             mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
                             break;
-                        case REBLOG:
-                            mReblogActionListener.reblog(post);
-                            break;
                         case COMMENTS:
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
                         case BLOCK_SITE:
                             mBlockSiteActionListener.blockSite(post);
                             break;
+                        case REBLOG:
                         case LIKE:
                         case FOLLOW:
                         case SITE_NOTIFICATIONS:
@@ -545,10 +541,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnFollowListener(OnFollowListener listener) {
         mFollowListener = listener;
-    }
-
-    public void setReblogActionListener(ReblogActionListener reblogActionListener) {
-        mReblogActionListener = reblogActionListener;
     }
 
     public void setBlockSiteActionListener(BlockSiteActionListener blockSiteActionListener) {

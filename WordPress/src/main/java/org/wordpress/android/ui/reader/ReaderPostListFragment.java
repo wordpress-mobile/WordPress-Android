@@ -2572,9 +2572,11 @@ public class ReaderPostListFragment extends Fragment
             case LIKE:
                 mViewModel.onLikeButtonClicked(post, isBookmarksList());
                 break;
+            case REBLOG:
+                mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                break;
             case BLOCK_SITE:
             case BOOKMARK:
-            case REBLOG:
             case COMMENTS:
                 throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
         }
