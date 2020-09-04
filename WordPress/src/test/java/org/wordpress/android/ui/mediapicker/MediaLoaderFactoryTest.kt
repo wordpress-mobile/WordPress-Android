@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mediapicker
 
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.Before
@@ -13,7 +12,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBR
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.util.LocaleManagerWrapper
-import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
