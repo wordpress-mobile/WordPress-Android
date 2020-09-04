@@ -23,7 +23,7 @@
             "date": "2019-07-31",
             "period": "month",
             "days": {
-                "{{now offset='-1 days' format='yyyy-MM-dd'}}": {
+                "{{fnow offset='-1 days' format='yyyy-MM-dd'}}": {
                     "files": [],
                     "other_downloads": 0,
                     "total_downloads": 0
