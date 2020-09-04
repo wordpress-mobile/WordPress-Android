@@ -67,7 +67,7 @@
                         android:layout_gravity="center_horizontal"
                         app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
                         app:cardElevation="0dp"
-                        app:strokeColor="@color/material_on_surface_disabled"
+                        app:strokeColor="@color/on_surface_emphasis_lowest"
                         app:strokeWidth="@dimen/my_site_blavatar_container_border_width">
 
                         <com.google.android.material.card.MaterialCardView

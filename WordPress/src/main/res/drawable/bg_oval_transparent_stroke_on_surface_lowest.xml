@@ -5,7 +5,7 @@
     android:shape="oval">
 
     <stroke
-        android:color="@color/material_on_surface_disabled"
+        android:color="@color/on_surface_emphasis_lowest"
         android:width="@dimen/me_avatar_width">
     </stroke>
 
