@@ -24,7 +24,6 @@ class MediaLoaderFactoryTest {
     @Before
     fun setUp() {
         mediaLoaderFactory = MediaLoaderFactory(deviceListBuilder, localeManagerWrapper)
-        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
