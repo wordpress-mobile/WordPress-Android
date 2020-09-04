@@ -17,7 +17,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
-import kotlinx.android.synthetic.main.modal_layout_picker_categories_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
@@ -51,7 +50,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categories_recycler_view.apply {
+        categoriesRecyclerView.apply {
             layoutManager = LinearLayoutManager(
                     context,
                     RecyclerView.HORIZONTAL,
@@ -62,18 +61,20 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             ViewCompat.setNestedScrollingEnabled(this, false)
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = LayoutCategoryAdapter()
+        layoutsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireActivity())
+            adapter = LayoutCategoryAdapter()
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            /**
-             * We track the vertical scroll to show/hide the header title accordingly
-             */
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                setHeaderVisibility()
-            }
-        })
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                /**
+                 * We track the vertical scroll to show/hide the header title accordingly
+                 */
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    setHeaderVisibility()
+                }
+            })
+        }
 
         backButton.setOnClickListener {
             closeModal()
@@ -96,7 +97,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             title.setVisible(true)
         } else {
             val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
-            val offset = recyclerView.computeVerticalScrollOffset()
+            val offset = layoutsRecyclerView.computeVerticalScrollOffset()
             setTitleVisibility(offset > scrollThreshold)
         }
     }
@@ -136,11 +137,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                 .get(ModalLayoutPickerViewModel::class.java)
 
         viewModel.layoutCategories.observe(this, Observer {
-            (recyclerView?.adapter as? LayoutCategoryAdapter)?.update(it)
+            (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(it)
         })
 
         viewModel.categories.observe(this, Observer {
-            (categories_recycler_view.adapter as CategoriesAdapter).setData(it)
+            (categoriesRecyclerView.adapter as CategoriesAdapter).setData(it)
         })
 
         viewModel.buttonsUiState.observe(this,
