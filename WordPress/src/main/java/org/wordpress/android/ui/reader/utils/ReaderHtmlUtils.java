@@ -14,26 +14,26 @@ public class ReaderHtmlUtils {
 
     // regex for matching oriwidth attributes in tags
     private static final Pattern ORIGINAL_WIDTH_ATTR_PATTERN = Pattern.compile(
-            "data-orig-size\\s*=\\s*(?:'|\") (.*?),.*?(?:'|\")",
+            "data-orig-size\\s*=\\s*(?:'|\")(.*?),.*?(?:'|\")",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     private static final Pattern ORIGINAL_HEIGHT_ATTR_PATTERN = Pattern.compile(
-            "data-orig-size\\s*=\\s*(?:'|\").*?,(.*?) (?:'|\")",
+            "data-orig-size\\s*=\\s*(?:'|\").*?,(.*?)(?:'|\")",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching width attributes in tags
     private static final Pattern WIDTH_ATTR_PATTERN = Pattern.compile(
-            "width\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            "width\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching height attributes in tags
     private static final Pattern HEIGHT_ATTR_PATTERN = Pattern.compile(
-            "height\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            "height\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching class attributes in tags
     private static final Pattern CLASS_ATTR_PATTERN = Pattern.compile(
-            "class\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            "class\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
 
