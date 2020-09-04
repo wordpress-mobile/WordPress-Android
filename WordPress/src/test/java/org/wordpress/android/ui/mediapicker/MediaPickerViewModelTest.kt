@@ -21,6 +21,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
@@ -344,6 +345,30 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertSearchExpanded(query)
     }
 
+    @Test
+    fun `camera FAB is shown in stories when no selected items`() = test {
+        setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), true))
+        assertStoriesFabIsVisible()
+    }
+
+    @Test
+    fun `camera FAB is not shown in stories when selected items`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), true))
+
+        selectItem(0)
+
+        assertStoriesFabIsHidden()
+    }
+
+    @Test
+    fun `camera FAB is not shown when no stories`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false))
+
+        assertStoriesFabIsHidden()
+    }
+
     private fun selectItem(position: Int) {
         (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
     }
@@ -471,6 +496,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.last().searchUiModel.let { model ->
             assertThat(model is SearchUiModel.Expanded).isTrue()
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
+        }
+    }
+
+    private fun assertStoriesFabIsVisible() {
+        uiStates.last().fabUiModel.let { model ->
+            assertThat(model is FabUiModel).isTrue()
+            assertThat((model as FabUiModel).show).isEqualTo(true)
+        }
+    }
+
+    private fun assertStoriesFabIsHidden() {
+        uiStates.last().fabUiModel.let { model ->
+            assertThat(model is FabUiModel).isTrue()
+            assertThat((model as FabUiModel).show).isEqualTo(false)
         }
     }
 }
