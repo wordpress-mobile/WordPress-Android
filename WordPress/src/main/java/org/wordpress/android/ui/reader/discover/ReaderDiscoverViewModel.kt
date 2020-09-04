@@ -33,7 +33,7 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Su
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
-import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -330,8 +330,6 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun onReblogSiteSelected(siteLocalId: Int) {
         launch {
-            // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
-            //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
             val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
             val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
             if (navigationTarget != null) {

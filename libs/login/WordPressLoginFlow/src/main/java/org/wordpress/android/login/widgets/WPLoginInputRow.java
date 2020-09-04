@@ -77,6 +77,13 @@ public class WPLoginInputRow extends RelativeLayout {
                     mEditText.setHint(hint);
                     // Makes the hint transparent, so the TalkBack can read it, when the field is prefilled
                     mEditText.setHintTextColor(getResources().getColor(android.R.color.transparent));
+
+                    // Passes autofill hints values forward to child views
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        if (isImportantForAutofill()) {
+                            mEditText.setAutofillHints(getAutofillHints());
+                        }
+                    }
                 }
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {
                     mTextInputLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
