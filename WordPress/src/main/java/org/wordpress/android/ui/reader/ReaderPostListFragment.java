@@ -2572,7 +2572,8 @@ public class ReaderPostListFragment extends Fragment
                 mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
                 break;
             case COMMENTS:
-                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
+                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
         }
     }
 

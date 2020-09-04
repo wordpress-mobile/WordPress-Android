@@ -371,23 +371,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context ctx = holder.getViewContext();
         Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
                 (postId, blogId, type) -> {
-                    //noinspection EnumSwitchStatementWhichMissesCases
-                    switch (type) {
-                        case COMMENTS:
-                            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
-                            break;
-                        case BOOKMARK:
-                        case BLOCK_SITE:
-                        case REBLOG:
-                        case LIKE:
-                        case FOLLOW:
-                        case SITE_NOTIFICATIONS:
-                        case SHARE:
-                        case VISIT_SITE:
-                            mOnPostListItemButtonListener.onButtonClicked(post, type);
-                            renderPost(position, holder, false);
-                            break;
-                    }
+                    mOnPostListItemButtonListener.onButtonClicked(post, type);
+                    renderPost(position, holder, false);
                     return Unit.INSTANCE;
                 };
         Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
