@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -17,6 +19,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
@@ -30,6 +33,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60
+const val TRACK_TAB_CHANGED_THROTTLE = 100L
 
 typealias TabPosition = Int
 
@@ -45,6 +49,8 @@ class ReaderViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var isReaderInterestsShown: Boolean = false
+    private var wasPaused: Boolean = false
+    private var trackReaderTabJob: Job? = null
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -69,17 +75,10 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
-            if (isReaderInterestsShown) return
-            isReaderInterestsShown = true
-            _uiState.value = InitialUiState
-            _showReaderInterests.value = Event(Unit)
-        } else {
-            if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
-            if (initialized) return
-            _uiState.value = InitialUiState
-            loadTabs()
-        }
+        if (isReaderInterestsShown) return
+        isReaderInterestsShown = true
+        _uiState.value = InitialUiState
+        _showReaderInterests.value = Event(Unit)
     }
 
     private fun loadTabs() {
@@ -116,12 +115,14 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTagChanged(selectedTag: ReaderTag?) {
+        selectedTag?.let {
+            trackReaderTabShownIfNecessary(it)
+        }
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
 
         // Show interests picker if tag changed to discover and no followed tags found for user
-        if (selectedTag?.isDiscover == true &&
-                appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
+        if (selectedTag?.isDiscover == true) {
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
@@ -147,16 +148,20 @@ class ReaderViewModel @Inject constructor(
         val tabLayoutVisible: Boolean = false
     ) {
         object InitialUiState : ReaderUiState(
-            searchIconVisible = false,
-            appBarExpanded = false,
-            tabLayoutVisible = false
+                searchIconVisible = false,
+                appBarExpanded = false,
+                tabLayoutVisible = false
         )
 
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
             override val searchIconVisible: Boolean
-        ) : ReaderUiState(searchIconVisible = searchIconVisible, appBarExpanded = true, tabLayoutVisible = true)
+        ) : ReaderUiState(
+                searchIconVisible = searchIconVisible,
+                appBarExpanded = true,
+                tabLayoutVisible = true
+        )
     }
 
     override fun onCleared() {
@@ -190,10 +195,7 @@ class ReaderViewModel @Inject constructor(
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
-        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled() &&
-            _uiState.value == InitialUiState &&
-            isReaderInterestsShown
-        ) {
+        if (_uiState.value == InitialUiState && isReaderInterestsShown) {
             return
         } else {
             loadTabs()
@@ -202,11 +204,24 @@ class ReaderViewModel @Inject constructor(
 
     fun onScreenInForeground() {
         readerTracker.start(MAIN_READER)
+        appPrefsWrapper.getReaderTag()?.let {
+            trackReaderTabShownIfNecessary(it)
+        }
     }
 
     fun onScreenInBackground() {
         readerTracker.stop(MAIN_READER)
+        wasPaused = true
     }
 
     private fun isSearchSupported() = accountStore.hasAccessToken()
+
+    private fun trackReaderTabShownIfNecessary(it: ReaderTag) {
+        trackReaderTabJob?.cancel()
+        trackReaderTabJob = launch {
+            // we need to add this throttle as it takes a few ms to select the last selected tab after app restart
+            delay(TRACK_TAB_CHANGED_THROTTLE)
+            readerTracker.trackReaderTabIfNecessary(ReaderTab.transformTagToTab(it))
+        }
+    }
 }

@@ -23,7 +23,7 @@ commands:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -114,9 +114,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Test WordPress
           environment:
@@ -127,6 +127,11 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
+      - run:
+          name: Test WordPressProcessors
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew :libs:WordPressProcessors:test --stacktrace
       - android/save-gradle-cache
       - android/save-test-results
   lint:
@@ -142,9 +147,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Checkstyle
           environment:
@@ -191,9 +196,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build APK
           environment:
@@ -219,6 +224,80 @@ jobs:
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
+  Release Build:
+    docker:
+      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    environment:
+      JVM_OPTS: -Xmx2048m
+    steps:
+      - run: 
+          name: Init messages
+          command: |
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android failed!'" >> $BASH_ENV
+      - git/shallow-checkout:
+          init-submodules: true
+      - checkout-submodules
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - update-gradle-memory
+      - android/restore-gradle-cache
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
+      - run:
+          name: Install other tools
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+            brew install openjdk
+            brew install bundletool
+            echo "export PATH='/home/linuxbrew/.linuxbrew/Cellar/bundletool/1.2.0/bin:$PATH'" >> $BASH_ENV
+      - run: 
+          name: Prepare build
+          command: |
+            echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV 
+            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
+            bundle check
+      - run:
+          name: Build Zalpha 
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_alpha skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            fi 
+          no_output_timeout: 15m
+      - run: 
+          name: Build Vanilla
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_beta skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            else
+              bundle exec fastlane build_and_upload_release skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            fi
+          no_output_timeout: 15m
+      - android/save-gradle-cache
+      - store_artifacts:
+          path: build
+          destination: Artifacts
+      - slack/status:
+          include_job_number_field: false
+          include_project_field: false
+          include_visit_job_action: false
+          webhook: '${SLACK_BUILD_WEBHOOK}'
+          failure_message: '${SLACK_FAILURE_MESSAGE}'
+          success_message: '${SLACK_SUCCESS_MESSAGE}'
+
   Connected Tests:
     parameters:
       post-to-slack:
@@ -237,9 +316,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build
           environment:
@@ -281,9 +360,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build
           environment:
@@ -336,9 +415,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build APK
           environment:
@@ -391,7 +470,7 @@ workflows:
       - Connected Tests:
           requires:
             - gutenberg-bundle-build
-          post-to-slack: false
+          post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
             branches:
@@ -416,3 +495,28 @@ workflows:
     when: << pipeline.parameters.translation_review_build >>
     jobs:
       - translation-review-build
+  Release Build:
+    unless: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - gutenberg-bundle-build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - lint:
+          requires:
+            - gutenberg-bundle-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - Release Build:
+          requires:
+            - lint 
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/

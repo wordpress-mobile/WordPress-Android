@@ -30,4 +30,6 @@ class ReaderUtilsWrapper @Inject constructor(
 
     fun getLongLikeLabelText(numLikes: Int, isLikedByCurrentUser: Boolean): String =
             ReaderUtils.getLongLikeLabelText(appContext, numLikes, isLikedByCurrentUser)
+
+    fun isExternalFeed(blogId: Long, feedId: Long): Boolean = ReaderUtils.isExternalFeed(blogId, feedId)
 }

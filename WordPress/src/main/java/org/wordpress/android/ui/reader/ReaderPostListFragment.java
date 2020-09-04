@@ -28,7 +28,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,7 +71,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
@@ -85,11 +83,11 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
+import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
@@ -110,8 +108,8 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
@@ -154,7 +152,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        ReblogActionListener {
+        ReblogActionListener,
+        BlockSiteActionListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -215,14 +214,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostListViewModel mViewModel;
     // This VM is initialized only on the Following tab
     private SubFilterViewModel mSubFilterViewModel;
-    private NewsCardViewModel mNewsCardViewModel;
     private ReaderViewModel mReaderViewModel = null;
-
-    private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
-        @Override public void onChanged(@Nullable NewsItem newsItem) {
-            getPostAdapter().updateNewsCardItem(newsItem);
-        }
-    };
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject AccountStore mAccountStore;
@@ -420,8 +412,6 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
-        mNewsCardViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
-                                               .get(NewsCardViewModel.class);
         if (mIsTopLevel) {
             mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
                                                  .get(ReaderViewModel.class);
@@ -477,6 +467,15 @@ public class ReaderPostListFragment extends Fragment
                 })
         );
 
+        mViewModel.getRefreshPosts().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    refreshPosts();
+                    return Unit.INSTANCE;
+                })
+        );
+
+        mViewModel.getUpdateFollowStatus().observe(getViewLifecycleOwner(), this::setFollowStatusForBlog);
+
         mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
@@ -490,14 +489,24 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    private void setFollowStatusForBlog(PostFollowStatusChanged readerData) {
+        if (!hasPostAdapter()) {
+            return;
+        }
+        getPostAdapter().setFollowStatusForBlog(readerData.getBlogId(), readerData.getFollowing());
+    }
+
     private void showSnackbar(SnackbarMessageHolder holder) {
         WPSnackbar snackbar = WPSnackbar.make(
-                requireView(),
-                holder.getMessageRes(),
+                getSnackbarParent(),
+                mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG
         );
-        if (holder.getButtonTitleRes() != null) {
-            snackbar.setAction(getString(holder.getButtonTitleRes()), v -> holder.getButtonAction().invoke());
+        if (holder.getButtonTitle() != null) {
+            snackbar.setAction(
+                    mUiHelpers.getTextOfUiString(requireContext(), holder.getButtonTitle()),
+                    v -> holder.getButtonAction().invoke()
+            );
         }
         snackbar.show();
     }
@@ -891,7 +900,7 @@ public class ReaderPostListFragment extends Fragment
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
-            WPDialogSnackbar snackbar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator), title,
+            WPDialogSnackbar snackbar = WPDialogSnackbar.make(getSnackbarParent(), title,
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
@@ -1014,6 +1023,9 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public void onLoadData(boolean forced) {
+                if (forced) {
+                    AnalyticsTracker.track(Stat.READER_PULL_TO_REFRESH);
+                }
                 updatePosts(forced);
             }
 
@@ -1635,48 +1647,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter
-     */
-    private void blockBlogForPost(final ReaderPost post) {
-        if (post == null
-            || !isAdded()
-            || !hasPostAdapter()
-            || !NetworkUtils.checkConnection(getActivity())) {
-            return;
-        }
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && isAdded()) {
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
-                }
-            }
-        };
-
-        // perform call to block this blog - returns list of posts deleted by blocking so
-        // they can be restored if the user undoes the block
-        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
-        AnalyticsUtils.trackWithSiteId(AnalyticsTracker.Stat.READER_BLOG_BLOCKED, post.blogId);
-
-        // remove posts in this blog from the adapter
-        getPostAdapter().removePostsInBlog(post.blogId);
-
-        // show the undo snackbar enabling the user to undo the block
-        View.OnClickListener undoListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
-                refreshPosts();
-            }
-        };
-        WPSnackbar.make(getSnackbarParent(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
-                  .setAction(R.string.undo, undoListener)
-                  .show();
-    }
-
-    /*
      * returns the parent view for snackbars - if this fragment is hosted in the main activity we want the
      * parent to be the main activity's CoordinatorLayout
      */
@@ -2016,19 +1986,17 @@ public class ReaderPostListFragment extends Fragment
             );
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setReblogActionListener(this);
+            mPostAdapter.setBlockSiteActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
-            mPostAdapter.setOnNewsCardListener(mNewsCardViewModel.getNewsCardListener());
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
-            mNewsCardViewModel.getNewsDataSource(mCurrentTag).removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
-                mNewsCardViewModel.getNewsDataSource(mCurrentTag).observe(getViewLifecycleOwner(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
@@ -2577,8 +2545,6 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
-        } else if (tag.isBookmarked()) {
-            stat = AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_FILTER;
         } else {
             return;
         }
@@ -2593,23 +2559,10 @@ public class ReaderPostListFragment extends Fragment
     public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
         switch (actionType) {
             case FOLLOW:
-                if (post.isFollowedByCurrentUser) {
-                    onFollowingTapped();
-                } else {
-                    onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                }
-                toggleFollowStatusForPost(post);
+                mViewModel.onFollowSiteClicked(post, isBookmarksList());
                 break;
             case SITE_NOTIFICATIONS:
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-                    updateSubscription(SubscriptionAction.DELETE, post.blogId);
-                } else {
-                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-                    updateSubscription(SubscriptionAction.NEW, post.blogId);
-                }
+                mViewModel.onSiteNotificationMenuClicked(post.blogId, post.postId, isBookmarksList());
                 break;
             case SHARE:
                 AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
@@ -2619,11 +2572,11 @@ public class ReaderPostListFragment extends Fragment
                 AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
-            case BLOCK_SITE:
-                blockBlogForPost(post);
-                break;
-            case BOOKMARK:
             case LIKE:
+                mViewModel.onLikeButtonClicked(post, isBookmarksList());
+                break;
+            case BLOCK_SITE:
+            case BOOKMARK:
             case REBLOG:
             case COMMENTS:
                 throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
@@ -2687,11 +2640,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void updateSubscription(SubscriptionAction action, long blogId) {
-        AddOrDeleteSubscriptionPayload payload = new AddOrDeleteSubscriptionPayload(String.valueOf(blogId), action);
-        mDispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload));
-    }
-
     /*
      * purge reader db if it hasn't been done yet
      */
@@ -2713,6 +2661,11 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void reblog(ReaderPost post) {
         mViewModel.onReblogButtonClicked(post, isBookmarksList());
+    }
+
+    @Override
+    public void blockSite(ReaderPost post) {
+        mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
     }
 
     @Override

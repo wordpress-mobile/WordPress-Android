@@ -204,15 +204,13 @@ public class WPMediaUtils {
             case PARSE_ERROR:
                 return context.getString(R.string.error_media_parse_error);
             case GENERIC_ERROR:
-                // This error happens when the user tries to upload a file that's not allowed on their user plan.
-                // Unfortunately it still has the standard 400 error code so there is no other way to differentiate it.
-                if ("Sorry, this file type is not permitted for security reasons.".equals(error.message)) {
-                    return context.getString(R.string.media_error_file_not_allowed_on_free_plan);
-                } else {
-                    return context.getString(R.string.error_generic_error);
-                }
+                return context.getString(R.string.error_generic_error);
             case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
                 return context.getString(R.string.error_media_quota_exceeded);
+            case XMLRPC_OPERATION_NOT_ALLOWED:
+                return context.getString(R.string.error_media_xmlrpc_not_allowed);
+            case XMLRPC_UPLOAD_ERROR:
+                return context.getString(R.string.error_media_xmlrcp_server_error);
         }
         return null;
     }
@@ -248,6 +246,7 @@ public class WPMediaUtils {
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -257,7 +256,7 @@ public class WPMediaUtils {
     private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoAndImageTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -291,6 +290,7 @@ public class WPMediaUtils {
     private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
@@ -300,6 +300,7 @@ public class WPMediaUtils {
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
         return Intent.createChooser(intent, title);
     }
 

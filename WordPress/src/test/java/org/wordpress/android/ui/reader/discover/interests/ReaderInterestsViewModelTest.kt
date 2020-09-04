@@ -36,6 +36,8 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
@@ -51,10 +53,11 @@ class ReaderInterestsViewModelTest {
     @Mock lateinit var parentViewModel: ReaderViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
+    @Mock lateinit var trackerWrapper: AnalyticsTrackerWrapper
 
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel(readerTagRepository)
+        viewModel = ReaderInterestsViewModel(readerTagRepository, trackerWrapper)
     }
 
     @ExperimentalCoroutinesApi
@@ -452,7 +455,7 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                    .isEqualTo(SnackbarMessageHolder(R.string.no_network_message))
+                    .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
         }
 
     @ExperimentalCoroutinesApi
@@ -470,7 +473,7 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
-                .isEqualTo(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
         }
 
     private fun initViewModel() = viewModel.start(

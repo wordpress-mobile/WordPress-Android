@@ -60,7 +60,7 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
         return START_NOT_STICKY
     }
 
-    override fun onCompleted(companion: Any) {
+    override fun onCompleted(companion: Any?) {
         AppLog.i(READER, "reader discover service > all tasks completed")
         stopSelf()
     }

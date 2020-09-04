@@ -62,7 +62,7 @@ class PreviewImageFragment : Fragment() {
             data class InputData(
                 val highResImgUrl: String,
                 val lowResImgUrl: String?,
-                val outputFileExtension: String
+                val outputFileExtension: String?
             ) : EditImageData()
 
             @Parcelize
