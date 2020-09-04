@@ -65,6 +65,10 @@ allprojects {
         } else {
             maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
         }
+
+        flatDir {
+            dirs '../aars'
+        }
     }
 
     task checkstyle(type: Checkstyle) {
@@ -129,7 +133,7 @@ ext {
     androidxWorkVersion = "2.0.1"
 
     daggerVersion = '2.22.1'
-    fluxCVersion = '1.6.20'
+    fluxCVersion = '1.6.21-beta-3'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.2.0'

@@ -34,6 +34,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.WPTextView
+import java.util.concurrent.atomic.AtomicBoolean
 
 sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
@@ -56,6 +57,10 @@ sealed class PostListItemViewHolder(
      */
     private var loadedFeaturedImgUrl: String? = null
 
+    companion object {
+        var isClickEnabled = AtomicBoolean(true)
+    }
+
     abstract fun onBind(item: PostListItemUiState)
 
     class Standard(
@@ -74,7 +79,11 @@ sealed class PostListItemViewHolder(
             setBasicValues(item.data)
 
             uiHelpers.setTextOrHide(excerptTextView, item.data.excerpt)
-            itemView.setOnClickListener { item.onSelected.invoke() }
+            itemView.setOnClickListener {
+                if (isSafeClick(it)) {
+                    item.onSelected.invoke()
+                }
+            }
 
             actionButtons.forEachIndexed { index, button ->
                 updateMenuItem(button, item.actions.getOrNull(index))
@@ -87,7 +96,11 @@ sealed class PostListItemViewHolder(
                 when (action) {
                     is SingleItem -> {
                         postListButton.updateButtonType(action.buttonType)
-                        postListButton.setOnClickListener { action.onButtonClicked.invoke(action.buttonType) }
+                        postListButton.setOnClickListener {
+                            if (isSafeClick(it)) {
+                                action.onButtonClicked.invoke(action.buttonType)
+                            }
+                        }
                     }
                     is MoreItem -> {
                         postListButton.updateButtonType(action.buttonType)
@@ -98,6 +111,18 @@ sealed class PostListItemViewHolder(
                     }
                 }
             }
+        }
+
+        // Purpose of this method is to prevent 2 Editors
+        // from being launched simultaneously and then producing a crash
+        private fun isSafeClick(view: View): Boolean {
+            if (isClickEnabled.getAndSet(false)) {
+                view.postDelayed({
+                    isClickEnabled.set(true)
+                }, 1000)
+                return true
+            }
+            return false
         }
     }
 

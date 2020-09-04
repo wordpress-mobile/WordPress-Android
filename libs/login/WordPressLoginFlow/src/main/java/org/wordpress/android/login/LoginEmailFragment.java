@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -14,6 +15,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.autofill.AutofillManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -195,8 +197,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
                     mAnalyticsListener.trackSelectEmailField();
-                    mIsDisplayingEmailHints = true;
-                    getEmailHints();
+                    showHintPickerDialogIfNeeded();
                 }
             }
         });
@@ -206,8 +207,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 mAnalyticsListener.trackSelectEmailField();
                 if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
                     mAnalyticsListener.trackSelectEmailField();
-                    mIsDisplayingEmailHints = true;
-                    getEmailHints();
+                    showHintPickerDialogIfNeeded();
                 }
             }
         });
@@ -661,7 +661,22 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         AppLog.d(T.NUX, LOG_TAG + ": Google API client connection suspended");
     }
 
-    public void getEmailHints() {
+    private void showHintPickerDialogIfNeeded() {
+        // If autofill is available and enabled, we favor the active autofill service over the hint picker dialog.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            final AutofillManager autofillManager = requireContext().getSystemService(AutofillManager.class);
+            if (autofillManager != null && autofillManager.isEnabled()) {
+                AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is enabled. Disabling hint picker dialog.");
+                return;
+            }
+        }
+
+        AppLog.d(T.NUX, LOG_TAG + ": Autofill framework is unavailable or disabled. Showing hint picker dialog.");
+
+        showHintPickerDialog();
+    }
+
+    private void showHintPickerDialog() {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
         if (getContext() == null
             || googleApiAvailability.isGooglePlayServicesAvailable(getContext()) != ConnectionResult.SUCCESS) {
@@ -679,6 +694,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         try {
             startIntentSenderForResult(intent.getIntentSender(), EMAIL_CREDENTIALS_REQUEST_CODE, null, 0, 0, 0, null);
+            mIsDisplayingEmailHints = true;
         } catch (IntentSender.SendIntentException exception) {
             AppLog.d(T.NUX, LOG_TAG + "Could not start email hint picker" + exception);
         } catch (ActivityNotFoundException exception) {

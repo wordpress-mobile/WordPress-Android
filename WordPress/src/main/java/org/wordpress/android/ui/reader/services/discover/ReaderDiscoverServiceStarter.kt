@@ -21,7 +21,7 @@ import org.wordpress.android.util.AppLog.T.READER
 object ReaderDiscoverServiceStarter {
     const val ARG_DISCOVER_TASK = "discover_task"
 
-    fun startService(context: Context, task: DiscoverTasks) {
+    fun startService(context: Context, task: DiscoverTasks): Boolean {
         if (VERSION.SDK_INT < VERSION_CODES.O) {
             val intent = Intent(context, ReaderDiscoverService::class.java)
             intent.putExtra(ARG_DISCOVER_TASK, task)
@@ -44,7 +44,9 @@ object ReaderDiscoverServiceStarter {
                 AppLog.i(READER, "reader discover service > job scheduled")
             } else {
                 AppLog.e(READER, "reader discover service > job could not be scheduled")
+                return false
             }
         }
+        return true
     }
 }

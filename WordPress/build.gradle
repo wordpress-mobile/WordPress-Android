@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-240"
+            versionName "alpha-241"
         }
-        versionCode 911
+        versionCode 914
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -68,7 +68,6 @@ android {
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "TENOR_AVAILABLE", "true"
-        buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
@@ -93,12 +92,11 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "15.6-rc-1"
+                versionName "15.6"
             }
-            versionCode 910
+            versionCode 915
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
-            buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "false"
@@ -110,14 +108,14 @@ android {
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
-            buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
+            // Enable this for testing consolidated media picker
+            // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -223,7 +221,7 @@ dependencies {
 
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.5'
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
@@ -288,6 +286,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
+    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -414,6 +413,12 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     violations = [
             ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
     ]
+}
+
+task printVersionName {
+    doLast {
+        println android.productFlavors.vanilla.versionName
+    }
 }
 
 def checkGradlePropertiesFile() {

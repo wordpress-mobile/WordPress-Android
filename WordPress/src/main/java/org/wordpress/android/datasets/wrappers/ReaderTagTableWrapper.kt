@@ -14,4 +14,6 @@ class ReaderTagTableWrapper @Inject constructor() {
     fun setTagLastUpdated(tag: ReaderTag) = ReaderTagTable.setTagLastUpdated(tag)
 
     fun getFollowedTags(): ReaderTagList = ReaderTagTable.getFollowedTags()
+
+    fun clearTagLastUpdated(readerTag: ReaderTag) = ReaderTagTable.clearTagLastUpdated(readerTag)
 }

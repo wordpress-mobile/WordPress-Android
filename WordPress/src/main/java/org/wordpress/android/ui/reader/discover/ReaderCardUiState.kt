@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover
 import android.text.Spanned
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
@@ -12,11 +13,13 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
+    data class ReaderWelcomeBannerCardUiState(@StringRes val titleRes: Int) : ReaderCardUiState()
+
     data class ReaderPostUiState(
         val postId: Long,
         val blogId: Long,
         val dateLine: String,
-        val title: String?,
+        val title: UiString?,
         val blogName: String?,
         val excerpt: String?, // mTxtText
         val blogUrl: String?,

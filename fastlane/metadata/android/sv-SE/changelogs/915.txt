@@ -1,0 +1,2 @@
+15.6:
+Förbättringar i blockredigeraren: Ny inställning för kolumnbredder i kolumnblocket, nytt stöd för redigering av media i galleriblocket och förbättrad logik för ångra/gör om vid arbete med utkast – ångra flera åtgärder åt gången och inte bara några bokstäver eller mindre ändringar åt gången.

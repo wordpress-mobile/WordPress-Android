@@ -1,5 +1,11 @@
 15.7
 -----
+* [**] Block Editor: New block: Pullquote
+* [**] Block Editor: Block settings now immediately reflect changes from menu sliders.
+ * [***] Reader: Introduced a new Discover tab tailored for each user.
+ * [*] Reader: Added "(un)follow" button to the site and topic detail screens.
+
+* [*] Media: Fixed a bug that would allow you to pick unsupported media that then couldn't be uploaded.
  
 15.6
 -----
