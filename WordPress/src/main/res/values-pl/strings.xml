@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-19 10:54:35+0000
+Translation-Revision-Date: 2020-08-29 13:34:42+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_select_a_layout">Wybierz układ</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Uwaga: Układ kolumny może różnić się pomiędzy motywami i różnymi wymiarami ekranów</string>
+    <string name="contact_fragment_title">\@string/contact_support</string>
+    <string name="reader_discover_interests_header">Może polubisz</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ukryj</string>
+    <string name="create_post_story_fab_tooltip">Utwórz wpis lub relację</string>
+    <string name="create_page_fab_tooltip">Utwórz stronę</string>
+    <string name="create_post_fab_tooltip">Utwórz wpis</string>
     <string name="gutenberg_native_updates_the_title">Uaktualnia tytuł.</string>
     <string name="gutenberg_native_paste_block_after">Wklej blok po</string>
     <string name="gutenberg_native_page_title_s">Tytuł strony. %s</string>
@@ -76,8 +84,8 @@ Language: pl
     <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b>Wpis na blogu&lt;/b></string>
     <string name="label_share_to">Udostępnij na</string>
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Utwórz wpis lub relację</string>
-    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Utwórz wpis, stronę lub relację</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>
@@ -116,7 +124,7 @@ Language: pl
     <string name="create_account">Utwórz konto</string>
     <string name="send_link_by_email">Wyślij odnośnik przez email</string>
     <string name="login_promo_text_unlock_the_power">Wykorzystaj możliwości najbardziej elastycznego kreatora witryny.</string>
-    <string name="login_promo_title_37_percent">37\% internetu jest oparte na WordPressie.</string>
+    <string name="login_promo_title_37_percent">37% internetu jest oparte na WordPressie.</string>
     <string name="reset_your_password">Zresetuj hasło</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
@@ -243,7 +251,6 @@ Language: pl
     <string name="reader_no_site_to_reblog_action">Zarządzanie witryny</string>
     <string name="reader_no_site_to_reblog_detail">Kiedy utowrzysz witrynę WordPress.com, możesz reblogować zawartość, którą chcesz na swoją własną witrynę</string>
     <string name="reader_no_site_to_reblog_title">Brak dostępnych witryn WordPress.com</string>
-    <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
     <string name="gutenberg_native_move_block_left">Przesuń blok w lewo</string>
@@ -252,7 +259,6 @@ Language: pl
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Przesuń blok w lewo z pozycji %1$s na pozycję %2$s</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nPrawie gotowe</string>
     <string name="gutenberg_native_blog">Blog</string>
-    <string name="gutenberg_native_columns_settings">Ustawienia kolumn</string>
     <string name="new_site_creation_creating_site_loading_3">Ustawianie motywu</string>
     <string name="new_site_creation_creating_site_loading_4">Tworzenie kokpitu</string>
     <string name="new_site_creation_creating_site_loading_1">Pobieranie adresu URL witryny</string>
@@ -273,11 +279,11 @@ Language: pl
     <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
     <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
-    <string name="error_page_not_published_private">Nie można było ukończyć tego działania, i opublikować tej prywatnej strony. </string>
     <string name="preview_image_description">Podgląd zdjęcia</string>
     <string name="error_unknown_page_type">Nieznany format strony</string>
     <string name="error_page_not_submitted">Nie można było ukończyć tego działania, i przesłać tej strony do przeglądu.</string>
     <string name="error_page_not_scheduled">Nie można było przesłać tego pliku mediów i zaplanować daty opublikowania tej strony. </string>
+    <string name="error_page_not_published_private">Nie można było ukończyć tego działania, i opublikować tej prywatnej strony. </string>
     <string name="failed_to_load_image_tap_to_retry">Nie udało się wczytać obrazka. \nSuknij aby spróbować ponownie. </string>
     <string name="error_page_not_published">Nie można było ukończyć tego działania, i opublikować tej strony. </string>
     <string name="error_page_not_submitted_retrying">Nie można było przesłać tej strony do przeglądu, ale spróbujemy ponownie później. </string>
@@ -407,7 +413,6 @@ Language: pl
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_posting_activity_end_description">Sprawdziłeś już statystyki za ten okres.\n      Stuknij jeszcze raz i rozpoczniesz od nowa.</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
-    <string name="gutenberg_native_remove_image">Usuń zdjęcie</string>
     <string name="create_post_page_fab_tooltip">Stwórz wpis lub stronę</string>
     <string name="gutenberg_native_move_image_forward">Przesuń obrazek dalej</string>
     <string name="gutenberg_native_move_image_backward">Przesuń obrazek do tyłu</string>
@@ -468,10 +473,10 @@ Language: pl
     <string name="gutenberg_native_start_writing">Rozpocznij pisanie…</string>
     <string name="gutenberg_native_size">Rozmiar</string>
     <string name="gutenberg_native_show_section">Wybierz sekcję</string>
-    <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s\' nie jest jeszcze wspierane na WordPressie dla iOS</string>
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s\' nie jest jeszcze wspierane na WordPressie dla Androida</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
+    <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
     <string name="gutenberg_native_sidebar_title_plugin">Wtyczka paska bocznego</string>
     <string name="gutenberg_native_cut_block">Wytnij blok</string>
@@ -492,7 +497,6 @@ Language: pl
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
     <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
@@ -501,6 +505,7 @@ Language: pl
     <string name="gutenberg_native_here_is_the_panel_content">Tutaj jest zawartość panelu!</string>
     <string name="gutenberg_native_help_icon">Ikona pomocy</string>
     <string name="gutenberg_native_link_text">Tekst odnośnika</string>
+    <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
     <string name="gutenberg_native_double_tap_to_select">Stuknij dwukrotnie aby wybrać</string>
@@ -564,11 +569,11 @@ Language: pl
     <string name="local_post_autosave_revision_available">Dokonałeś niezapisanych zmian do tego wpisu</string>
     <string name="dialog_confirm_autosave_dont_restore_button">Wersja z tej aplikacji</string>
     <string name="dialog_confirm_autosave_restore_button">Wersja z innego urządzenia</string>
-    <string name="dialog_confirm_autosave_body_second_part">Z tej aplikacji\nZapisany dnia %s\n\nZ innego urządzenia\nZapisany dnia %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Dokonałeś ostatnio zmian w tym wpisie, ale nie zostały zapisane. Wybierz wersję, którą chcesz wczytać:\n\n</string>
     <string name="dialog_confirm_autosave_title">Którą wersję chciał(a)byś edytować?</string>
     <string name="button_delete_permanently">Usuń trwale</string>
     <string name="post_waiting_for_connection_draft_cancel">Nie zapiszemy ostatnich zmian do twojego szkica.</string>
+    <string name="dialog_confirm_autosave_body_second_part">Z tej aplikacji\nZapisany %s\n\nZ innego urządzenia\nZapisany %s\n</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Nie zaplanujemy daty opublikowania tych zmian.</string>
     <string name="post_waiting_for_connection_pending_cancel">Nie prześlemy tych zmian do przeglądu.</string>
     <string name="post_waiting_for_connection_publish_cancel">Nie opublikujemy tych zmian.</string>
@@ -613,10 +618,10 @@ Language: pl
     <string name="share_desc">Udostępnij</string>
     <string name="navigate_back_desc">Cofnij się</string>
     <string name="navigate_forward_desc">Idź dalej</string>
-    <string name="calendar_scheduled_post_description">Wpis \"%s\" został zaplanowany do publikacji dnia \"%s\" w twojej alokacji WordPressowej\n%s</string>
     <string name="calendar_scheduled_post_title">WordPress zapanował wpis: \"%s\"</string>
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" zostanie opublikowany za 10 minut</string>
     <string name="web_preview_desktop">Komputer</string>
+    <string name="calendar_scheduled_post_description">Wpis \"%s\" został zaplanowany do publikacji w dniu \"%s\" w twojej aplikacji WordPressowej\n%s</string>
     <string name="notification_post_will_be_published_in_one_hour">\"%s\" zostanie opublikowany za godzinę</string>
     <string name="notification_post_has_been_published">\"%s\" został opublikowany</string>
     <string name="notification_scheduled_post_ten_minute_reminder">Zaplanowany wpis: przypomnienie 10 minutowe</string>
@@ -666,7 +671,6 @@ Language: pl
     <string name="stats_widget_all_time_insights_name">Od początku</string>
     <string name="my_site_custom_domain_name">Wszystkie plany WordPress.com zawierają własną nazwę domeny. Zarejestruj własną darmową domenę premium w tym momencie.</string>
     <string name="post_list_search_prompt">Przeszukaj wpisy</string>
-    <string name="stats_widget_select_type">Typ</string>
     <string name="stats_widget_color_dark">Ciemny</string>
     <string name="stats_widget_color_light">Jasny</string>
     <string name="stats_widget_color">Kolor</string>
@@ -677,6 +681,7 @@ Language: pl
     <string name="stats_widget_add">Dodaj widget</string>
     <string name="stats_widget_select_your_site">Wybierz swoją witrynę</string>
     <string name="stats_widget_select_color">Kolor</string>
+    <string name="stats_widget_select_type">Typ</string>
     <string name="stats_widget_error_no_data">Nie udało się załadować danych</string>
     <string name="stats_widget_log_in_message">Proszę zalogować się do aplikacji WordPress aby dodać widget.</string>
     <string name="stats_widget_weekly_views_name">Wyświetleń w tym tygodniu</string>
@@ -772,9 +777,7 @@ Language: pl
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Zarejestruj domenę</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Aby zainstalować wtyczki, musisz mieć przypisaną spersonalizowaną domenę powiązaną do twojej witryny.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Zainstaluj wtyczkę</string>
-    <string name="publish_on">Publikuj dnia: %s</string>
     <string name="schedule_for">Zaplanuj na dzień: %s</string>
-    <string name="published_on">Opublikowano dnia: %s</string>
     <string name="scheduled_for">Zaplanowano na dzień: %s</string>
     <string name="stats_detail_recent_weeks">Ostatnie tygodnie</string>
     <string name="stats_detail_average_views_per_day">Średnio wyświetleń na dzień</string>
@@ -783,6 +786,8 @@ Language: pl
     <string name="stats_detail_months_and_years">Miesiące i lata</string>
     <string name="stats_insights_load_more">Wczytaj więcej</string>
     <string name="new_site_creation_preview_subtitle">Będziesz mógł/mogła spersonalizować wygląd swojej witryny w późniejszym czasie</string>
+    <string name="publish_on">Publikuj w dniu: %s</string>
+    <string name="published_on">Opublikowano w dniu: %s</string>
     <string name="stats_insights_today_stats">Dziś</string>
     <string name="stats_insights_best_hour">Najlepsza godzina</string>
     <string name="stats_insights_best_day">Najlepszy Dzień</string>
@@ -869,8 +874,8 @@ Language: pl
     <string name="new_site_creation_empty_domain_list_message">Brak dostępnych adresów zgodnych z twoimi kryteriami wyszukiwania</string>
     <string name="site_creation_error_generic_subtitle">Błąd komunikacji z serwerem, spróbuj ponownie</string>
     <string name="site_creation_error_generic_title">Wystąpił problem</string>
-    <string name="site_creation_segments_subtitle">Dzięki temu nasza rekomendacja będzie trafniejsza. Ale nie oznacza to zaszufladowania - wszystkie witryny ewoluują!</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Wystąpił problem</string>
+    <string name="site_creation_segments_subtitle">Dzięki temu nasza rekomendacja będzie trafniejsza. Ale nie oznacza to zaszufladowania - wszystkie witryny ewoluują!</string>
     <string name="site_creation_segments_title">Powiedz nam jaki rodzaj witryny chcesz utworzyć</string>
     <string name="new_site_creation_preview_title">Twoja witryna został utworzona!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
@@ -965,12 +970,12 @@ Language: pl
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
     <string name="history_load_dialog_button_positive">Wczytaj</string>
-    <string name="history_footer_post">Utworzono wpis dnia %1$s na %2$s</string>
-    <string name="history_footer_page">Utworzono stronę dnia  %1$s na %2$s</string>
     <string name="history_empty_title">Brak historii</string>
     <string name="history_empty_subtitle_post">Kiedy wprowadzisz zmiany do swoich wpisów, będziesz miał(a) w tym miejscu możliwość przejrzenia historii.</string>
     <string name="history_empty_subtitle_page">Kiedy wprowadzisz zmiany do swoich stron, będziesz miał(a) w tym miejscu możliwość przejrzenia historii.</string>
     <string name="enter_wpcom_or_jetpack_site">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
+    <string name="history_footer_post">Wpis utworzono %1$s o %2$s</string>
+    <string name="history_footer_page">Utworzono stronę %1$s o %2$s</string>
     <string name="description_user">Obrazek profilowy użytkownika</string>
     <string name="image_size_full_label">Pełny rozmiar</string>
     <string name="image_size_large_label">Duży</string>
@@ -2187,46 +2192,46 @@ Language: pl
     <string name="hide">Ukryj</string>
     <string name="select_all">Wybierz wszystko</string>
     <string name="deselect_all">Odznacz wszystko</string>
-    <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
-    <string name="verification_code">Kod weryfikacyjny</string>
     <string name="language">Język</string>
+    <string name="verification_code">Kod weryfikacyjny</string>
+    <string name="invalid_verification_code">Niewłaściwy kod weryfikacyjny</string>
     <string name="auth_required">Zaloguj się ponownie, by kontynuować.</string>
-    <string name="media_fetching">Ładowanie mediów…</string>
-    <string name="posts_fetching">Ładowanie wpisów…</string>
-    <string name="pages_fetching">Ładowanie stron…</string>
-    <string name="comments_fetching">Ładowanie komentarzy…</string>
+    <string name="reader_empty_posts_request_failed">Nie udało się pobrać wpisów</string>
+    <string name="publisher">Wydawca:</string>
+    <string name="error_notification_open">Nie udało się otworzyć powiadomienia</string>
+    <string name="stats_search_terms_unknown_search_terms">Nieznane kryteria wyszukiwania</string>
     <string name="stats_view_authors">Autorzy</string>
     <string name="stats_view_search_terms">Wyrażenia</string>
-    <string name="stats_search_terms_unknown_search_terms">Nieznane kryteria wyszukiwania</string>
-    <string name="error_notification_open">Nie udało się otworzyć powiadomienia</string>
-    <string name="publisher">Wydawca:</string>
-    <string name="reader_empty_posts_request_failed">Nie udało się pobrać wpisów</string>
-    <string name="reader_label_new_posts">Nowe wpisy</string>
-    <string name="logs_copied_to_clipboard">Dziennik aplikacji został skopiowany do schowka</string>
+    <string name="comments_fetching">Ładowanie komentarzy…</string>
+    <string name="pages_fetching">Ładowanie stron…</string>
+    <string name="posts_fetching">Ładowanie wpisów…</string>
+    <string name="media_fetching">Ładowanie mediów…</string>
     <string name="error_copy_to_clipboard">Wystąpił błąd podczas kopiowania tekstu do schowka</string>
+    <string name="logs_copied_to_clipboard">Dziennik aplikacji został skopiowany do schowka</string>
+    <string name="reader_label_new_posts">Nowe wpisy</string>
     <string name="reader_page_recommended_blogs">Blogi, które mogą ciebie zainteresować</string>
     <string name="post_uploading">Przesyłanie wpisu</string>
     <string name="reader_empty_posts_in_blog">Ta witryna jest pusta</string>
-    <string name="stats_views">Wyświetleń</string>
-    <string name="stats_visitors">Odwiedzających</string>
-    <string name="stats_timeframe_years">Lata</string>
-    <string name="stats_view_countries">Kraje</string>
-    <string name="stats_likes">Polubienia</string>
-    <string name="stats_view_publicize">Publicize</string>
-    <string name="stats_view_top_posts_and_pages">Wpisy i Strony</string>
-    <string name="stats_view_videos">Filmy</string>
-    <string name="stats_followers_months">%1$d miesięcy</string>
-    <string name="themes_fetching">Pobieranie motywów…</string>
+    <string name="stats_followers_minutes">%1$d minut</string>
+    <string name="stats_followers_a_year">Rok</string>
+    <string name="stats_followers_years">%1$d lat</string>
+    <string name="stats_followers_a_month">Miesiąc</string>
+    <string name="stats_followers_an_hour_ago">godzinę temu</string>
+    <string name="stats_followers_hours">%1$d godzin</string>
+    <string name="stats_followers_a_day">Dzień</string>
     <string name="stats_followers_days">%1$d dni</string>
     <string name="stats_followers_a_minute_ago">minutę temu</string>
     <string name="stats_followers_seconds_ago">sekundy temu</string>
-    <string name="stats_followers_a_day">Dzień</string>
-    <string name="stats_followers_hours">%1$d godzin</string>
-    <string name="stats_followers_an_hour_ago">godzinę temu</string>
-    <string name="stats_followers_years">%1$d lat</string>
-    <string name="stats_followers_a_month">Miesiąc</string>
-    <string name="stats_followers_a_year">Rok</string>
-    <string name="stats_followers_minutes">%1$d minut</string>
+    <string name="themes_fetching">Pobieranie motywów…</string>
+    <string name="stats_followers_months">%1$d miesięcy</string>
+    <string name="stats_view_top_posts_and_pages">Wpisy i Strony</string>
+    <string name="stats_view_videos">Filmy</string>
+    <string name="stats_view_publicize">Publicize</string>
+    <string name="stats_view_countries">Kraje</string>
+    <string name="stats_likes">Polubienia</string>
+    <string name="stats_timeframe_years">Lata</string>
+    <string name="stats_views">Wyświetleń</string>
+    <string name="stats_visitors">Odwiedzających</string>
     <string name="stats_view_followers">Obserwujący</string>
     <string name="ssl_certificate_details">Szczegóły</string>
     <string name="cab_selected">Liczba zaznaczonych: %d</string>
@@ -2256,7 +2261,6 @@ Language: pl
     <string name="reader_toast_err_block_blog">Nie można zablokować tej witryny</string>
     <string name="reader_toast_blog_blocked">Wpisy z tej witryny nie będą więcej pokazywane</string>
     <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
-    <string name="contact_us">Kontakt</string>
     <string name="update_verb">Zaktualizuj</string>
     <string name="schedule_verb">Zaplanuj</string>
     <string name="reader_page_followed_tags">Obserwowane tagi</string>
@@ -2436,8 +2440,8 @@ Language: pl
     <string name="settings">Ustawienia</string>
     <string name="quickpress_add_error">Nazwa skrótu nie może być pusta</string>
     <string name="pages_private">Prywatny</string>
-    <string name="categories">Kategorie</string>
     <string name="title">Tytuł</string>
+    <string name="categories">Kategorie</string>
     <string name="tags_separate_with_commas">Oddziel tagi przecinkami</string>
     <string name="dlg_deleting_comments">Usuwanie komentarzy</string>
     <string name="sdcard_title">Wymagana karta pamięci SD</string>
@@ -2446,12 +2450,12 @@ Language: pl
     <string name="approve">Zaakceptuj</string>
     <string name="none">Brak</string>
     <string name="add">Dodaj</string>
+    <string name="error">Błąd</string>
+    <string name="save">Zapisz</string>
+    <string name="cancel">Anuluj</string>
+    <string name="category_refresh_error">Błąd odświeżania kategorii</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
-    <string name="category_refresh_error">Błąd odświeżania kategorii</string>
-    <string name="cancel">Anuluj</string>
-    <string name="save">Zapisz</string>
-    <string name="error">Błąd</string>
     <string name="reply">Odpisz</string>
     <string name="preview">Podgląd</string>
     <string name="notification_settings">Ustawienia powiadomień</string>
