@@ -55,9 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_medium_large"
-                    android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
-                    android:paddingStart="@dimen/margin_extra_large"
-                    android:paddingEnd="@dimen/margin_extra_large">
+                    android:layout_marginBottom="@dimen/margin_extra_extra_medium_large">
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/blavatar_container"
@@ -65,6 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="@dimen/margin_extra_large"
                         app:cardCornerRadius="@dimen/my_site_blavatar_container_corner_radius"
                         app:cardElevation="0dp"
                         app:strokeColor="@color/on_surface_emphasis_lowest"
@@ -115,9 +114,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="@dimen/margin_extra_large"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_margin="@dimen/margin_small"
+                        android:background="@drawable/ripple_oval"
                         android:contentDescription="@string/my_site_btn_switch_site"
+                        android:padding="@dimen/margin_large"
                         android:src="@drawable/ic_chevron_down_white_24dp"
                         app:tint="?attr/wpColorOnSurfaceMedium" />
 
