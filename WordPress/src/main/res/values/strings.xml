@@ -1597,7 +1597,7 @@
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
-    <string name="error_media_xmlrpc_not_allowed">Operation not allowed</string>
+    <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -2960,6 +2960,7 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
+    <string name="gutenberg_native_angle" tools:ignore="UnusedResources">Angle</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>

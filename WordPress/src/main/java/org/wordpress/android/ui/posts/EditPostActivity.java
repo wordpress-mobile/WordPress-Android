@@ -3192,4 +3192,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mAddingMediaToEditorProgressDialog = mProgressDialogHelper
                 .updateProgressDialogState(this, mAddingMediaToEditorProgressDialog, uiState, mUiHelpers);
     }
+
+    @Override
+    public String getErrorMessageFromMedia(int mediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
+
+        if (media != null) {
+            return UploadUtils.getErrorMessageFromMedia(this, media);
+        }
+
+        return "";
+    }
 }

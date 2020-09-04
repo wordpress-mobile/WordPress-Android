@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.fluxc.Dispatcher
@@ -22,9 +23,12 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -38,16 +42,13 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
-import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
@@ -64,7 +65,6 @@ import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 import javax.inject.Named
 
-// TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
 class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val reblogUseCase: ReblogUseCase,
@@ -74,6 +74,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
+    private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
@@ -99,18 +100,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     init {
         dispatcher.register(siteNotificationsUseCase)
-
-        _navigationEvents.addSource(bookmarkUseCase.navigationEvents) { event ->
-            _navigationEvents.value = event
-        }
-
-        _snackbarEvents.addSource(bookmarkUseCase.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-
-        _preloadPostEvents.addSource(bookmarkUseCase.preloadPostEvents) { event ->
-            _preloadPostEvents.value = event
-        }
     }
 
     suspend fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
@@ -215,7 +204,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleBlockSiteClicked(blogId: Long) {
-        // todo: Annmarie add tracking dependent upon implementation
         blockBlogUseCase.blockBlog(blogId).collect {
             when (it) {
                 is BlockSiteState.SiteBlockedInLocalDb -> {
@@ -252,21 +240,67 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private suspend fun handleLikeClicked(post: ReaderPost) {
-        when (likeUseCase.perform(post, !post.isLikedByCurrentUser)) {
-            is Started, is ReaderRepositoryCommunication.Success, is SuccessWithData<*> -> {}
-            is NetworkUnavailable -> {
-                _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
-            }
-            is RemoteRequestFailure -> {
-                _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
-                )
+        likeUseCase.perform(post, !post.isLikedByCurrentUser).collect {
+            when (it) {
+                is PostLikeState.PostLikedInLocalDb -> {
+                    _refreshPosts.postValue(Event(Unit))
+                }
+                is PostLikeState.Success, is PostLikeState.Unchanged, is PostLikeState.AlreadyRunning -> { }
+                is PostLikeState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
+                }
+                is PostLikeState.Failed.RequestFailed -> {
+                    _refreshPosts.postValue(Event(Unit))
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                    )
+                }
             }
         }
     }
 
     private suspend fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList)
+        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList).collect {
+            when (it) {
+                is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
+                is Success -> {
+                    // Content needs to be manually refreshed in the legacy ReaderPostListAdapter
+                    _refreshPosts.postValue(Event(Unit))
+
+                    val showSnackbarAction = {
+                        _snackbarEvents.postValue(
+                                Event(
+                                        SnackbarMessageHolder(
+                                                UiStringRes(R.string.reader_bookmark_snack_title),
+                                                UiStringRes(R.string.reader_bookmark_snack_btn),
+                                                buttonAction = {
+                                                    analyticsTrackerWrapper.track(
+                                                            READER_SAVED_LIST_SHOWN,
+                                                            mapOf("source" to "post_list_saved_post_notice")
+                                                    )
+                                                    _navigationEvents.postValue(Event(ShowBookmarkedTab))
+                                                })
+                                )
+                        )
+                    }
+                    if (it.bookmarked && !isBookmarkList) {
+                        if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
+                            _navigationEvents.postValue(
+                                    Event(
+                                            ShowBookmarkedSavedOnlyLocallyDialog(
+                                                    okButtonAction = {
+                                                        appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
+                                                        showSnackbarAction.invoke()
+                                                    })
+                                    )
+                            )
+                        } else {
+                            showSnackbarAction.invoke()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun handleReblogClicked(post: ReaderPost) {

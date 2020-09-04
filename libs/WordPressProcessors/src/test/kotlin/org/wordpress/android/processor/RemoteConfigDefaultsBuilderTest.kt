@@ -28,10 +28,10 @@ class RemoteConfigDefaultsBuilderTest {
             import kotlin.collections.Map
             
             object RemoteConfigDefaults {
-              val remoteConfigDefaults: Map<String, Any> = mapOf(
-                  "$keyA" to "$valueA",
-                  "$keyB" to "$valueB"
-                  )
+                val remoteConfigDefaults: Map<String, Any> = mapOf(
+                        "$keyA" to "$valueA",
+                        "$keyB" to "$valueB"
+                        )
             }
             
         """.trimIndent()

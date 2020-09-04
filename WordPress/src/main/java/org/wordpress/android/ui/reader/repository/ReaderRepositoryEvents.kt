@@ -4,36 +4,6 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 
 sealed class ReaderRepositoryEvent {
     object ReaderPostTableActionEnded : ReaderRepositoryEvent()
-    sealed class PostLikeEnded(
-        val postId: Long,
-        val blogId: Long,
-        val isAskingToLike: Boolean,
-        val wpComUserId: Long
-    ) : ReaderRepositoryEvent() {
-        class PostLikeSuccess(
-            postId: Long,
-            blogId: Long,
-            isAskingToLike: Boolean,
-            wpComUserId: Long
-        ) :
-                PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-
-        class PostLikeFailure(
-            postId: Long,
-            blogId: Long,
-            isAskingToLike: Boolean,
-            wpComUserId: Long
-        ) :
-                PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-
-        class PostLikeUnChanged(
-            postId: Long,
-            blogId: Long,
-            isAskingToLike: Boolean,
-            wpComUserId: Long
-        ) :
-                PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-    }
 }
 
 sealed class ReaderRepositoryCommunication {

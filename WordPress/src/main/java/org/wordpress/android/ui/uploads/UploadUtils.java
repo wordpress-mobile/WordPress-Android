@@ -17,11 +17,14 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.persistence.UploadSqlUtils;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
@@ -48,6 +51,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
@@ -153,7 +157,27 @@ public class UploadUtils {
             errorMessage = TextUtils.isEmpty(msg) ? error.type.toString() : msg;
         }
 
+        // Capitalize message first letter; this is done since some messages
+        // (like a few got from FluxC) are not capitalized.
+        if (errorMessage.length() > 0) {
+            String firstLetter = errorMessage.substring(0, 1);
+            String restOfMessage = errorMessage.length() > 1 ? errorMessage.substring(1) : "";
+            errorMessage = firstLetter.toUpperCase(Locale.getDefault()) + restOfMessage;
+        }
+
         return errorMessage;
+    }
+
+    public static @NonNull
+    String getErrorMessageFromMedia(Context context, @NonNull MediaModel media) {
+        MediaUploadModel uploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(media.getId());
+
+        MediaError error = new MediaError(
+                MediaErrorType.fromString(null != uploadModel ? uploadModel.getErrorType() : null),
+                null != uploadModel ? uploadModel.getErrorMessage() : null
+        );
+
+        return getErrorMessageFromMediaError(context, media, error);
     }
 
     public static boolean isMediaError(UploadError uploadError) {
