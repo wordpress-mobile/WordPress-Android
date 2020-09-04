@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.content.Context
-import android.view.View
-import android.widget.PopupMenu
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
@@ -293,7 +291,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun  `System picker opened for photo when allowed types is IMAGE only`() = test {
+    fun `System picker opened for photo when allowed types is IMAGE only`() = test {
         setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -318,7 +316,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun  `popup menu opened when allowed types is IMAGE and VIDEO`() = test {
+    fun `popup menu opened when allowed types is IMAGE and VIDEO`() = test {
         setupViewModel(listOf(), multiSelectMediaPickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()

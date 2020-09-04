@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
@@ -305,10 +304,10 @@ class MediaPickerViewModel @Inject constructor(
         }
     }
 
-    fun onBrowseForItems(anchorView: ViewWrapper) { //see performActionOrShowPopup
+    fun onBrowseForItems(anchorView: ViewWrapper) {
         val items = mutableListOf<PopupMenuItem>()
         if (mediaPickerSetup.allowedTypes.contains(IMAGE)) {
-            items.add(PopupMenuItem(UiStringRes(string.photo_picker_choose_photo)) {
+            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_photo)) {
                 clickIcon(
                         ANDROID_CHOOSE_PHOTO
                 )
