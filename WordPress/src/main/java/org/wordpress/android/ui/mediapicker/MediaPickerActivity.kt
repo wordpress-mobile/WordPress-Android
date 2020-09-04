@@ -29,12 +29,6 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_URIS
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.LOCAL_POST_ID
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
@@ -44,6 +38,12 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newIns
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_URIS
+import org.wordpress.android.ui.photopicker.MediaPickerConstants.LOCAL_POST_ID
 import org.wordpress.android.ui.posts.EMPTY_LOCAL_POST_ID
 import org.wordpress.android.ui.posts.FeaturedImageHelper
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult.FILE_NOT_FOUND
@@ -109,12 +109,12 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         if (savedInstanceState == null) {
             browserType = intent.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
             mediaPickerSetup = MediaPickerSetup.fromIntent(intent)
-            site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            site = intent.getSerializableExtra(WordPress.SITE) as? SiteModel
             localPostId = intent.getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         } else {
             browserType = savedInstanceState.getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
             mediaPickerSetup = MediaPickerSetup.fromBundle(savedInstanceState)
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            site = savedInstanceState.getSerializable(WordPress.SITE) as? SiteModel
             localPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID)
         }
         var fragment = pickerFragment
@@ -326,7 +326,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     }
 
     override fun onMediaChosen(uriList: List<Uri>) {
-        if (uriList.size > 0) {
+        if (uriList.isNotEmpty()) {
             doMediaUrisSelected(uriList, APP_PICKER)
         }
     }

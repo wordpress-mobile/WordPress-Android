@@ -8,13 +8,17 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.media.MediaBrowserType.BROWSER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
+import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 
@@ -84,5 +88,28 @@ class MediaPickerLauncher
             allowedTypes.add(VIDEO)
         }
         return MediaPickerSetup(DEVICE, browserType.canMultiselect(), allowedTypes, browserType.isWPStoriesPicker)
+    }
+
+    fun showFilePicker(activity: Activity) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
+            val mediaPickerSetup = MediaPickerSetup(
+                    DEVICE,
+                    true,
+                    allowedTypes,
+                    false
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    BROWSER,
+                    mediaPickerSetup
+            )
+            activity.startActivityForResult(
+                    intent,
+                    RequestCodes.FILE_LIBRARY
+            )
+        } else {
+            WPMediaUtils.launchFileLibrary(activity, true)
+        }
     }
 }
