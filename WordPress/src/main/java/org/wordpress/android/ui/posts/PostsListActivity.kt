@@ -288,7 +288,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        postListCreateMenuViewModel.start()
+        postListCreateMenuViewModel.start(site)
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
@@ -392,13 +392,14 @@ class PostsListActivity : LocaleAwareActivity(),
             event.applyIfNotHandled {
                 postListCreateMenuViewModel.onFabLongPressed()
             }
+            Toast.makeText(fab.context, R.string.create_post_story_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
 
         viewModel.onFabLongPressedForPostList.observe(this, Observer {
             if (fab.isHapticFeedbackEnabled) {
                 fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
-            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+            Toast.makeText(fab.context, R.string.create_post_fab_tooltip, Toast.LENGTH_SHORT).show()
         })
     }
 

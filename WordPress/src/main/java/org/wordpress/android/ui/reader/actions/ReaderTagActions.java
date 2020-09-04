@@ -163,7 +163,7 @@ public class ReaderTagActions {
         final String path = "read/tags/mine/new";
 
         Map<String, String> params = new HashMap<>();
-        String newTagSlugs = getCommaSeparatedSlugs(newTags);
+        String newTagSlugs = ReaderUtils.getCommaSeparatedTagSlugs(newTags);
         params.put("tags", newTagSlugs);
 
         WordPress.getRestClientUtilsV1_2().post(path, params, null, listener, errorListener);
@@ -208,17 +208,5 @@ public class ReaderTagActions {
         }
 
         return tags;
-    }
-
-    private static String getCommaSeparatedSlugs(ReaderTagList tags) {
-        StringBuilder slugs = new StringBuilder();
-        for (ReaderTag tag : tags) {
-            if (slugs.length() > 0) {
-                slugs.append(",");
-            }
-            final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
-            slugs.append(tagNameForApi);
-        }
-        return slugs.toString();
     }
 }

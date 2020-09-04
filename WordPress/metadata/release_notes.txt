@@ -1,4 +1,1 @@
-* Block Editor: Username @mentions now auto-complete in the Block Editor on WordPress.com and Jetpack sites. Type the “@” character to see a username popup. Edit media in the Cover block. A Heading block bug fix removes an unwanted white shadow on headings with a link and string formatting in dark mode.
-* Search for self-hosted sites on the post list.
-* Upload audio and document files to the media library.
-
+Block Editor improvements: Added settings for changing column widths to the Column block, added media editing support in the Gallery block, and improved the logic for undo/redo while drafting — enjoy smarter undoing in chunks, instead of undoing a few letters or tiny changes at a time.
