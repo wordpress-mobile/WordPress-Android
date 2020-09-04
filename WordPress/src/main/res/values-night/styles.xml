@@ -29,7 +29,7 @@
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
-        <item name="toolbarIconDisabledColor">@color/on_surface_emphasis_lowest</item>
+        <item name="toolbarIconDisabledColor">@color/on_surface_emphasis_lowest_disabled</item>
 
         <item name="colorGutenbergDivider">@color/background_dark_elevated</item>
         <item name="colorGutenbergBackground">@color/background_dark_elevated</item>
