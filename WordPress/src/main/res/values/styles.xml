@@ -525,7 +525,6 @@
     </style>
 
     <style name="MySiteBlavatarImageView">
-        <!-- We need to specify both bg and bg ting for this to work in all cases -->
         <item name="android:background">@drawable/bg_rectangle_placeholder_with_border_radius_4dp</item>
     </style>
 
