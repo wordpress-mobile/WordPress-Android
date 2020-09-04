@@ -1,0 +1,2 @@
+15.6:
+Verbesserungen beim Block-Editor: Einstellungen zur Änderung von Spaltenbreiten im Spaltenblock hinzugefügt, Unterstützung für Medienbearbeitung im Galerieblock hinzugefügt und die Logik für Rückgängigmachen/Wiederholen bei der Entwurfserstellung verbessert — du kannst jetzt ganze Vorgänge rückgängig machen, anstatt immer nur einige Buchstaben oder kleine Änderungen rückgängig zu machen.
