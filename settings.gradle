@@ -17,7 +17,9 @@ include ':libs:WordPressAnnotations'
 def includedBuilds = new File('./included-builds.txt')
 if (includedBuilds.exists()) {
     includedBuilds.eachLine { line ->
-        includeBuild(line)
+        if (!line.isEmpty() && !line.startsWith("#")) {
+            includeBuild(line)
+        }
     }
 }
 
