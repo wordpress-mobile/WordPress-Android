@@ -151,9 +151,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener,
-        ReblogActionListener,
-        BlockSiteActionListener {
+        WPMainActivity.OnScrollToTopListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -2576,6 +2574,8 @@ public class ReaderPostListFragment extends Fragment
                 mViewModel.onReblogButtonClicked(post, isBookmarksList());
                 break;
             case BLOCK_SITE:
+                mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
+                break;
             case BOOKMARK:
             case COMMENTS:
                 throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
@@ -2655,16 +2655,6 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    @Override
-    public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post, isBookmarksList());
-    }
-
-    @Override
-    public void blockSite(ReaderPost post) {
-        mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
     }
 
     @Override

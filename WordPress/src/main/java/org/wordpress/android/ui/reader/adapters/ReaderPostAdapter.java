@@ -30,7 +30,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
-import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
@@ -98,7 +97,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
-    private BlockSiteActionListener mBlockSiteActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -383,8 +381,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
                         case BLOCK_SITE:
-                            mBlockSiteActionListener.blockSite(post);
-                            break;
                         case REBLOG:
                         case LIKE:
                         case FOLLOW:
@@ -541,10 +537,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnFollowListener(OnFollowListener listener) {
         mFollowListener = listener;
-    }
-
-    public void setBlockSiteActionListener(BlockSiteActionListener blockSiteActionListener) {
-        mBlockSiteActionListener = blockSiteActionListener;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
