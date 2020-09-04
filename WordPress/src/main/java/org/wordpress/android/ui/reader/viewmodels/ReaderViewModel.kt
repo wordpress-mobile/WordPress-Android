@@ -35,8 +35,6 @@ import javax.inject.Named
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
 
-typealias TabPosition = Int
-
 class ReaderViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -58,8 +56,8 @@ class ReaderViewModel @Inject constructor(
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
 
-    private val _selectTab = MutableLiveData<Event<TabPosition>>()
-    val selectTab: LiveData<Event<TabPosition>> = _selectTab
+    private val _selectTab = MutableLiveData<Event<TabNavigation>>()
+    val selectTab: LiveData<Event<TabNavigation>> = _selectTab
 
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
@@ -103,7 +101,7 @@ class ReaderViewModel @Inject constructor(
             val selectTab = { it: ReaderTag ->
                 val index = tagList.indexOf(it)
                 if (index != -1) {
-                    _selectTab.postValue(Event(index))
+                    _selectTab.postValue(Event(TabNavigation(index, smoothAnimation = false)))
                 }
             }
             appPrefsWrapper.getReaderTag()?.let {
@@ -179,7 +177,13 @@ class ReaderViewModel @Inject constructor(
         uiState.value?.let {
             val currentUiState = it as ContentUiState
             val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
-            _selectTab.postValue(Event(position))
+            _selectTab.postValue(Event(TabNavigation(position, smoothAnimation = true)))
+        }
+    }
+
+    fun bookmarkTabRequested() {
+        (_uiState.value as? ContentUiState)?.readerTagList?.find { it.isBookmarked }?.let {
+            selectedTabChange(it)
         }
     }
 
@@ -225,3 +229,5 @@ class ReaderViewModel @Inject constructor(
         }
     }
 }
+
+data class TabNavigation(val position: Int, val smoothAnimation: Boolean)
