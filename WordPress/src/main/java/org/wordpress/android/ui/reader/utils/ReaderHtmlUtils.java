@@ -76,8 +76,7 @@ public class ReaderHtmlUtils {
 
         Matcher matcher = WIDTH_ATTR_PATTERN.matcher(tag);
         if (matcher.find()) {
-            // remove "width=" and quotes from the result
-            return StringUtils.stringToInt(tag.substring(matcher.start() + 7, matcher.end() - 1), 0);
+            return StringUtils.stringToInt(matcher.group(1), 0);
         } else {
             return 0;
         }
@@ -89,7 +88,7 @@ public class ReaderHtmlUtils {
         }
         Matcher matcher = HEIGHT_ATTR_PATTERN.matcher(tag);
         if (matcher.find()) {
-            return StringUtils.stringToInt(tag.substring(matcher.start() + 8, matcher.end() - 1), 0);
+            return StringUtils.stringToInt(matcher.group(1), 0);
         } else {
             return 0;
         }
@@ -105,8 +104,7 @@ public class ReaderHtmlUtils {
 
         Matcher matcher = CLASS_ATTR_PATTERN.matcher(tag);
         if (matcher.find()) {
-            // remove "class=" and quotes from the result
-            return tag.substring(matcher.start() + 7, matcher.end() - 1);
+            return matcher.group(1);
         } else {
             return null;
         }
