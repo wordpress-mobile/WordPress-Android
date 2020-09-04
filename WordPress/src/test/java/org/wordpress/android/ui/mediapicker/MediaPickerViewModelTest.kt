@@ -18,27 +18,32 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
+import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
+import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Locale
 
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
@@ -49,6 +54,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var uriWrapper2: UriWrapper
     @Mock lateinit var permissionsHandler: PermissionsHandler
     @Mock lateinit var context: Context
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var viewWrapper: ViewWrapper
     private lateinit var viewModel: MediaPickerViewModel
@@ -60,6 +67,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
     private lateinit var videoItem: MediaItem
+    private lateinit var audioItem: MediaItem
+    private lateinit var documentItem: MediaItem
 
     @InternalCoroutinesApi
     @Before
@@ -72,12 +81,22 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 permissionsHandler,
                 context,
+                localeManagerWrapper,
+                mediaUtilsWrapper,
                 resourceProvider
         )
         uiStates.clear()
-        firstItem = MediaItem(1, uriWrapper1)
-        secondItem = MediaItem(2, uriWrapper2)
-        videoItem = MediaItem(3, uriWrapper1, isVideo = true)
+        firstItem = MediaItem(uriWrapper1, "item1", IMAGE, "image/jpg", 1)
+        secondItem = MediaItem(uriWrapper2, "item2", IMAGE, "image/png", 2)
+        videoItem = MediaItem(uriWrapper1, "item3", VIDEO, "video/mpeg", 3)
+        audioItem = MediaItem(uriWrapper2, "item4", AUDIO, "audio/mp3", 4)
+        documentItem = MediaItem(uriWrapper2, "item5", DOCUMENT, "application/pdf", 5)
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("image/jpg")).thenReturn("jpg")
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("image/png")).thenReturn("png")
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("audio/mp3")).thenReturn("mp3")
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("video/mpeg")).thenReturn("mpg")
+        whenever(mediaUtilsWrapper.getExtensionForMimeType("application/pdf")).thenReturn("pdf")
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
@@ -203,7 +222,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         setupViewModel(listOf(firstItem, secondItem), singleSelectMediaPickerSetup)
         whenever(
                 analyticsUtilsWrapper.getMediaProperties(
-                        eq(firstItem.isVideo),
+                        eq(firstItem.type == VIDEO),
                         eq(firstItem.uri),
                         isNull()
                 )
@@ -291,6 +310,30 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `action mode hides edit action when audio item selected`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(audioItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, AUDIO), false))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+    }
+
+    @Test
+    fun `action mode hides edit action when document item selected`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(documentItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, DOCUMENT), false))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+    }
+
+    @Test
     fun `System picker opened for photo when allowed types is IMAGE only`() = test {
         setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
 
@@ -358,12 +401,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             (uiStates.last().photoListUiModel as PhotoListUiModel.Data).apply {
                 assertThat(this.items).hasSize(domainItems.size)
                 domainItems.forEachIndexed { index, photoPickerItem ->
-                    val isSelected = selectedItems.any { it.id == photoPickerItem.id }
+                    val isSelected = selectedItems.any { it.uri == photoPickerItem.uri }
                     assertSelection(
                             position = index,
                             isSelected = isSelected,
                             domainItem = photoPickerItem,
-                            selectedOrder = selectedItems.indexOfFirst { it.id == photoPickerItem.id },
+                            selectedOrder = selectedItems.indexOfFirst { it.uri == photoPickerItem.uri },
                             isMultiSelection = mediaPickerSetup.canMultiselect
                     )
                 }
@@ -431,11 +474,11 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     private fun MediaPickerUiItem.assertEqualToDomainItem(domainItem: MediaItem) {
-        assertThat(this.id).isEqualTo(domainItem.id)
-        if (domainItem.isVideo) {
-            assertThat(this is MediaPickerUiItem.VideoItem)
-        } else {
-            assertThat(this is MediaPickerUiItem.PhotoItem)
+        assertThat(this.uri).isEqualTo(domainItem.uri)
+        when (domainItem.type) {
+            IMAGE -> assertThat(this is MediaPickerUiItem.PhotoItem)
+            VIDEO -> assertThat(this is MediaPickerUiItem.VideoItem)
+            DOCUMENT, AUDIO -> assertThat(this is MediaPickerUiItem.FileItem)
         }
 
         assertThat(this.uri).isEqualTo(domainItem.uri)
