@@ -345,7 +345,7 @@ class MediaPickerViewModel @Inject constructor(
         if (mediaPickerSetup.allowedTypes.contains(VIDEO)) {
             items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_video)) {
                 clickIcon(
-                        MediaPickerIcon.ANDROID_CHOOSE_VIDEO
+                        ANDROID_CHOOSE_VIDEO
                 )
             })
         }
