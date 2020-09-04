@@ -14,14 +14,14 @@
             android:id="@+id/collapsing_toolbar"
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/prominent_toolbar_height"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            android:layout_height="@dimen/prominent_toolbar_height">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
                 app:layout_collapseMode="pin"
+                android:layout_height="@dimen/toolbar_height"
                 app:theme="@style/WordPress.ActionBar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

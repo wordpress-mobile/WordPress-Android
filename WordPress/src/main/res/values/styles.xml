@@ -67,9 +67,10 @@
         <item name="android:actionModeBackground">?attr/wpColorAppBar</item>
         <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
         <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
-        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:statusBarColor">?attr/colorSurface</item>
 
         <item name="colorButtonNormal">@color/light_gray</item>
+        <item name="android:windowLightStatusBar">true</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
@@ -338,6 +339,27 @@
     </style>
 
     <!--My Site Styles-->
+    <style name="MySiteTitleLabel">
+        <item name="android:ellipsize">end</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    </style>
+
+    <style name="MySiteSubtitleLabel" parent="@style/Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="android:ellipsize">end</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="MySiteQuickActionButtonContainer">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -493,6 +515,10 @@
         <item name="android:background">?android:attr/listDivider</item>
         <item name="android:layout_marginEnd">@dimen/content_margin</item>
         <item name="android:layout_marginStart">@dimen/content_margin</item>
+    </style>
+
+    <style name="MySiteBlavatarImageView">
+        <item name="android:background">@drawable/bg_rectangle_placeholder_with_border_radius_4dp</item>
     </style>
 
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
