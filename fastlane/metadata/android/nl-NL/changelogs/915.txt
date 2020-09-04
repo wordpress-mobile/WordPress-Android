@@ -1,0 +1,2 @@
+15,6:
+Verbeteringen in blok-editor: Instellingen toegevoegd voor het wijzigen van kolombreedte aan het kolom blok, ondersteuning voor mediabewerking toegevoegd in het galerij blok en verbeterde logica voor ongedaan maken/opnieuw uitvoeren tijdens het maken van concepten - geniet van slimmer ongedaan maken in stukken, in plaats van iedere keer een paar letters of kleine wijzigingen ongedaan te maken.

@@ -1,0 +1,2 @@
+15.6:
+Miglioramenti dell'Editor a blocchi: Aggiunto nel blocco Colonne le impostazioni per modificare la larghezza delle colonne, aggiunto nel blocco Galleria il supporto alla modifica dei media, migliorata la logica di annulla/ripeti durante la creazione delle bozze — goditi l'annullamento di gruppo, invece di annullare poche lettere o piccoli cambiamenti uno per volta.
