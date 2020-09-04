@@ -7,6 +7,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
+import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.viewmodel.Event
@@ -21,6 +22,8 @@ import javax.inject.Named
 class ModalLayoutPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
+    private val layouts: GutenbergPageLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+
     /**
      * Tracks the Modal Layout Picker visibility state
      */
@@ -71,13 +74,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun loadLayouts() {
         val listItems = ArrayList<LayoutCategoryUiState>()
 
-        val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
         val selectedCategories = if (selectedCategoriesSlugs.isNotEmpty())
-            demoLayouts.categories.filter { selectedCategoriesSlugs.contains(it.slug) }
-        else demoLayouts.categories
+            layouts.categories.filter { selectedCategoriesSlugs.contains(it.slug) }
+        else layouts.categories
 
         selectedCategories.forEach { category ->
-            val layouts = demoLayouts.getFilteredLayouts(category.slug).map { layout ->
+            val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == _selectedLayoutSlug.value
                 LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
                     layoutTapped(layoutSlug = layout.slug)
@@ -97,9 +99,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
-        val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
-
-        val listItems: List<CategoryListItemUiState> = demoLayouts.categories.map {
+        val listItems: List<CategoryListItemUiState> = layouts.categories.map {
             CategoryListItemUiState(
                     it.slug,
                     it.title,
