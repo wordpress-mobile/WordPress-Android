@@ -31,11 +31,6 @@ public class ReaderHtmlUtils {
             "height\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
-    // regex for matching src attributes in tags
-    private static final Pattern SRC_ATTR_PATTERN = Pattern.compile(
-            "src\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
-            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-
     // regex for matching class attributes in tags
     private static final Pattern CLASS_ATTR_PATTERN = Pattern.compile(
             "class\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
@@ -97,23 +92,6 @@ public class ReaderHtmlUtils {
             return StringUtils.stringToInt(tag.substring(matcher.start() + 8, matcher.end() - 1), 0);
         } else {
             return 0;
-        }
-    }
-
-    /*
-     * returns the value from the src attribute in the passed html tag
-     */
-    public static String getSrcAttrValue(final String tag) {
-        if (tag == null) {
-            return null;
-        }
-
-        Matcher matcher = SRC_ATTR_PATTERN.matcher(tag);
-        if (matcher.find()) {
-            // remove "src=" and quotes from the result
-            return tag.substring(matcher.start() + 5, matcher.end() - 1);
-        } else {
-            return null;
         }
     }
 
