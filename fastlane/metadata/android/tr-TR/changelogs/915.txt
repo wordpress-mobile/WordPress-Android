@@ -1,0 +1,2 @@
+15,6:
+Blok Düzenleyici ile ilgili geliştirmeler: Sütun bloğuna sütun genişliklerini değiştirmek için ayarlar eklendi, Galeri bloğuna medya düzenleme desteği eklendi ve taslak için geri alma/yineleme mantığı iyileştirildi. Birkaç harfi geri almak veya her seferinde küçük değişiklikler yapmak yerine, akıllı şekilde toplu geri alma işlemlerinin keyfini çıkarın.

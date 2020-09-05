@@ -5,14 +5,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.WelcomeBannerViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-private const val postViewType: Int = 1
-private const val interestViewType: Int = 2
+private const val welcomeBannerViewType: Int = 1
+private const val postViewType: Int = 2
+private const val interestViewType: Int = 3
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -21,6 +24,7 @@ class ReaderDiscoverAdapter(
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder {
         return when (viewType) {
+            welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
             postViewType -> ReaderPostViewHolder(
                     uiHelpers,
                     imageManager,
@@ -46,6 +50,7 @@ class ReaderDiscoverAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
+            is ReaderWelcomeBannerCardUiState -> welcomeBannerViewType
             is ReaderPostUiState -> postViewType
             is ReaderInterestsCardUiState -> interestViewType
         }
@@ -65,7 +70,7 @@ class ReaderDiscoverAdapter(
                 is ReaderPostUiState -> {
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
                 }
-
+                is ReaderWelcomeBannerCardUiState,
                 is ReaderInterestsCardUiState -> {
                     oldItem == newItem
                 }
@@ -78,6 +83,13 @@ class ReaderDiscoverAdapter(
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             return oldItems[oldItemPosition] == newItems[newItemPosition]
+        }
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            /* Returning true suppresses the default item animation. That's all we need - posts in Reader are static
+            except of the like/follow/bookmark/... action states. We don't want to play the default animation when
+            one of these states changes. */
+            return true
         }
     }
 }

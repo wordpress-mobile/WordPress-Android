@@ -32,12 +32,12 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -85,6 +85,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -207,9 +208,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER -> {
-                    if (it.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                    if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                                it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                                it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                         )
                         storyEditorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
@@ -248,14 +249,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun setupRequestCodes(requestCodes: ExternalMediaPickerRequestCodesAndExtraKeys) {
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
-                PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
     }
 
     override fun showProvidedMediaPicker() {
-        ActivityLauncher.showPhotoPickerForResult(
+        mediaPickerLauncher.showPhotoPickerForResult(
                 this,
                 MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                 site,
@@ -273,9 +274,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             return
         }
 
-        if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                    data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             )
             if (uriList.isNotEmpty()) {
                 storyEditorMedia.onPhotoPickerMediaChosen(uriList)

@@ -1,0 +1,2 @@
+15.6 :
+Améliorations de l’éditeur de blocs : ajout de paramètres pour modifier la largeur des colonnes dans le bloc Colonne, ajout de la prise en charge de la modification multimédia dans le bloc Galerie et amélioration de la logique pour annuler/refaire dans un brouillon. Profitez d’annulations par blocs au lieu d’annuler quelques lettres ou de petites modifications à la fois.

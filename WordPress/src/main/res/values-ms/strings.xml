@@ -449,7 +449,6 @@ Language: ms
     <string name="error_deleting_site">Ralat untuk memadamkan laman</string>
     <string name="site_settings_export_content_title">Eksport isi kandungan</string>
     <string name="confirm_delete_site_prompt">Sila taipkan %1$s dalam medan di bawah untuk mengesahkan. Laman anda akan hilang selamanya.</string>
-    <string name="contact_support">Hubungi sokongan</string>
     <string name="confirm_delete_site">Sah Hapuskan Laman</string>
     <string name="start_over_text">Jika anda mahukan laman tapi tidak mahu apa-apa kiriman atau laman yang anda ada sekarang, kumpulan sokongan kami boleh menghapuskan kiriman, halaman, media dan komen untuk anda.\n\nIni akan mengekalkan status aktif laman dan URL anda, tetapi memberi anda permulaan baharu untuk mewujudkan kandungan. Hubungi kami untuk menghapuskan kandungan semasa anda.</string>
     <string name="let_us_help">Biar Kami Bantu</string>
@@ -661,7 +660,6 @@ Language: ms
     <string name="reader_discover_attribution_author">Asalnya dikirim oleh %s</string>
     <string name="reader_discover_attribution_author_and_blog">Asalnya dikirim oleh %1$s pada %2$s</string>
     <string name="reader_short_like_count_multi">%s Suka</string>
-    <string name="reader_label_follow_count">%,d pengikut</string>
     <string name="reader_short_like_count_one">1 Suka</string>
     <string name="reader_short_like_count_none">Suka</string>
     <string name="reader_title_post_detail">Kiriman Pembaca</string>
@@ -779,7 +777,6 @@ Language: ms
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
     <string name="reader_label_liked_by">Disukai oleh</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
-    <string name="contact_us">Hubungi kami</string>
     <string name="update_verb">Kemas kini</string>
     <string name="schedule_verb">Jadual</string>
     <string name="reader_page_followed_tags">Tag yang diikuti</string>

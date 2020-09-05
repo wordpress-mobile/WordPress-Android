@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -28,20 +27,16 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.news.NewsItem;
-import org.wordpress.android.ui.news.NewsViewHolder;
-import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
@@ -82,7 +77,6 @@ import kotlin.jvm.functions.Function3;
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
     private final UiHelpers mUiHelpers;
-    private NewsCardListener mNewsCardListener;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -97,7 +91,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
-    private NewsItem mNewsItem;
 
     private ReaderInterfaces.OnPostListItemButtonListener mOnPostListItemButtonListener;
     private ReaderInterfaces.OnFollowListener mFollowListener;
@@ -107,6 +100,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
     private ReblogActionListener mReblogActionListener;
+    private BlockSiteActionListener mBlockSiteActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -118,13 +112,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_TAG_HEADER = 3;
     private static final int VIEW_TYPE_GAP_MARKER = 4;
     private static final int VIEW_TYPE_REMOVED_POST = 5;
-    private static final int VIEW_TYPE_NEWS_CARD = 6;
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
     private static final long ITEM_ID_NEWS_CARD = -3L;
-
-    private static final int NEWS_CARD_POSITION = 0;
 
     private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
@@ -211,13 +202,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        int headerPosition = hasNewsCard() ? 1 : 0;
-        if (position == NEWS_CARD_POSITION && hasNewsCard()) {
-            return VIEW_TYPE_NEWS_CARD;
-        } else if (position == headerPosition && hasSiteHeader()) {
+        if (position == 0 && hasSiteHeader()) {
             // first item is a ReaderSiteHeaderView
             return VIEW_TYPE_SITE_HEADER;
-        } else if (position == headerPosition && hasTagHeader()) {
+        } else if (position == 0 && hasTagHeader()) {
             // first item is a ReaderTagHeaderView
             return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
@@ -239,8 +227,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         View postView;
         switch (viewType) {
-            case VIEW_TYPE_NEWS_CARD:
-                return new NewsViewHolder(parent, mNewsCardListener);
             case VIEW_TYPE_SITE_HEADER:
                 ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
                 readerSiteHeaderView.setOnFollowListener(mFollowListener);
@@ -285,8 +271,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
-        } else if (holder instanceof NewsViewHolder) {
-            ((NewsViewHolder) holder).bind(mNewsItem);
         }
     }
 
@@ -308,8 +292,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
+                isFollowButtonEnabled
             )
         );
         tagHolder.onBind(uiState);
@@ -336,13 +319,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         boolean success;
+        boolean isLoggedIn = mAccountStore.hasAccessToken();
         if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener, mAccountStore.hasAccessToken());
+            success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
         } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
         }
 
-        if (success) {
+        if (isLoggedIn && success) {
             renderTagHeader(currentTag, tagHolder, false);
         }
     }
@@ -379,8 +363,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void undoPostUnbookmarked(final ReaderPost post, final int position) {
         if (!post.isBookmarked) {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
+            mOnPostBookmarkedListener.onBookmarkClicked(post.blogId, post.postId);
         }
     }
 
@@ -396,11 +379,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     //noinspection EnumSwitchStatementWhichMissesCases
                     switch (type) {
                         case BOOKMARK:
-                            toggleBookmark(post.blogId, post.postId);
-                            renderPost(position, holder, false);
-                            break;
-                        case LIKE:
-                            toggleLike(ctx, post, position, holder);
+                            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
                             break;
                         case REBLOG:
                             mReblogActionListener.reblog(post);
@@ -408,11 +387,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case COMMENTS:
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
+                        case BLOCK_SITE:
+                            mBlockSiteActionListener.blockSite(post);
+                            break;
+                        case LIKE:
                         case FOLLOW:
                         case SITE_NOTIFICATIONS:
                         case SHARE:
                         case VISIT_SITE:
-                        case BLOCK_SITE:
                             mOnPostListItemButtonListener.onButtonClicked(post, type);
                             renderPost(position, holder, false);
                             break;
@@ -483,7 +465,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
-                .mapPostToUiState(
+                .mapPostToUiStateBlocking(
                         post,
                         false,
                         mPhotonWidth,
@@ -500,7 +482,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItems(post, postListType, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, postListType, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -569,6 +551,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mReblogActionListener = reblogActionListener;
     }
 
+    public void setBlockSiteActionListener(BlockSiteActionListener blockSiteActionListener) {
+        mBlockSiteActionListener = blockSiteActionListener;
+    }
+
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
@@ -587,10 +573,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
-    }
-
-    public void setOnNewsCardListener(NewsCardListener newsCardListener) {
-        this.mNewsCardListener = newsCardListener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {
@@ -664,9 +646,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private ReaderPost getItem(int position) {
-        if (position == NEWS_CARD_POSITION && hasNewsCard()) {
-            return null;
-        }
         if (position == getHeaderPosition() && hasHeader()) {
             return null;
         }
@@ -689,14 +668,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private int getItemPositionOffset() {
-        int newsCardOffset = hasNewsCard() ? 1 : 0;
         int headersOffset = hasHeader() ? 1 : 0;
-        return newsCardOffset + headersOffset;
+        return headersOffset;
     }
 
     private int getHeaderPosition() {
-        int headerPosition = hasNewsCard() ? 1 : 0;
-        return hasHeader() ? headerPosition : -1;
+        return hasHeader() ? 0 : -1;
     }
 
     @Override
@@ -706,9 +683,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             size++;
         }
         if (hasHeader()) {
-            size++;
-        }
-        if (hasNewsCard()) {
             size++;
         }
         return size;
@@ -731,8 +705,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return ITEM_ID_HEADER;
             case VIEW_TYPE_GAP_MARKER:
                 return ITEM_ID_GAP_MARKER;
-            case VIEW_TYPE_NEWS_CARD:
-                return ITEM_ID_NEWS_CARD;
             default:
                 ReaderPost post = getItem(position);
                 return post != null ? post.getStableId() : 0;
@@ -750,57 +722,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
-    }
-
-    /*
-     * triggered when user taps the like button (textView)
-     */
-    private void toggleLike(Context context, ReaderPost post, int listPosition, ReaderPostViewHolder holder) {
-        if (post == null || !NetworkUtils.checkConnection(context)) {
-            return;
-        }
-
-        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
-        boolean isAskingToLike = !isCurrentlyLiked;
-
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
-            // Consider a like to be enough to push a page view - solves a long-standing question
-            // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
-        } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, post);
-        }
-
-        // update post in array and on screen
-        int positionInReaderPostList = mPosts.indexOfPost(post);
-        ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
-        if (updatedPost != null && positionInReaderPostList > -1) {
-            mPosts.set(positionInReaderPostList, updatedPost);
-            renderPost(listPosition, holder, false);
-        }
-    }
-
-    /*
-     * triggered when user taps the bookmark post button
-     */
-    private void toggleBookmark(final long blogId, final long postId) {
-        // update post in array and on screen
-        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
-        int position = mPosts.indexOfPost(post);
-        if (post != null && position > -1) {
-            post.isBookmarked = !post.isBookmarked;
-            mPosts.set(position, post);
-        }
-
-        if (mOnPostBookmarkedListener != null) {
-            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
-        }
     }
 
     public void setFollowStatusForBlog(long blogId, boolean isFollowing) {
@@ -825,28 +746,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (position < getItemCount()) {
             notifyItemRemoved(position);
         }
-    }
-
-    public void updateNewsCardItem(NewsItem newsItem) {
-        NewsItem prevState = mNewsItem;
-        mNewsItem = newsItem;
-        if (prevState == null && newsItem != null) {
-            notifyItemInserted(NEWS_CARD_POSITION);
-        } else if (prevState != null) {
-            if (newsItem == null) {
-                notifyItemRemoved(NEWS_CARD_POSITION);
-            } else {
-                notifyItemChanged(NEWS_CARD_POSITION);
-            }
-        }
-    }
-
-    private boolean hasNewsCard() {
-        // We don't want to display the card when we are displaying just a loading screen. However, on Discover a header
-        // is shown, even when we are loading data, so the card should be displayed. [moreover displaying the card only
-        // after we fetch the data results in weird animation after configuration change, since it plays insertion
-        // animation for all the data (including the card) except of the header which hasn't changed].
-        return mNewsItem != null && (!isEmpty() || isDiscover());
     }
 
     /*
@@ -928,7 +827,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     // we want the gap marker to appear *below* this post
                     gapMarkerPosition = gapMarkerPostPosition + 1;
-                    // increment it if there are custom items at the top of the list (header or newsCard)
+                    // increment it if there are custom items at the top of the list (header)
                     gapMarkerPosition += getItemPositionOffset();
                     AppLog.d(AppLog.T.READER, "gap marker at position " + gapMarkerPostPosition);
                 }

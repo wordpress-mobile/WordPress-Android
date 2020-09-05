@@ -76,7 +76,7 @@ fastlane/report.xml
 fastlane/README.md
 fastlane/metadata/android/screenshots.html
 fastlane/metadata/android/*/images/
-fastlane/screenshots_orig
+fastlane/screenshots
 default.profraw
 google-upload-credentials.json
 

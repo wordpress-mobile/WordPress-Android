@@ -7,24 +7,28 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.FILTERED_LIST
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.PAGED_POST
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.SUBFILTERED_LIST
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Calendar
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderTrackerTest {
     @Mock lateinit var dateProvider: DateProvider
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private lateinit var tracker: ReaderTracker
 
     @Before
     fun setup() {
-        tracker = ReaderTracker(dateProvider)
+        tracker = ReaderTracker(dateProvider, appPrefsWrapper, analyticsTrackerWrapper)
     }
 
     @Test

@@ -7,6 +7,7 @@ import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
 import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -41,7 +42,8 @@ fun handlePostListAction(
     activity: FragmentActivity,
     action: PostListAction,
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
-    previewStateHelper: PreviewStateHelper
+    previewStateHelper: PreviewStateHelper,
+    mediaPickerLauncher: MediaPickerLauncher
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -51,7 +53,7 @@ fun handlePostListAction(
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
         }
         is PostListAction.NewStoryPost -> {
-            ActivityLauncher.showPhotoPickerForResult(
+            mediaPickerLauncher.showPhotoPickerForResult(
                     activity,
                     WP_STORIES_MEDIA_PICKER,
                     action.site,
