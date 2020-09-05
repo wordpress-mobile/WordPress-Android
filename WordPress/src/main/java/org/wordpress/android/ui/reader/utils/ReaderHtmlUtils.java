@@ -56,73 +56,29 @@ public class ReaderHtmlUtils {
     * returns the integer value from the data-orig-size attribute in the passed html tag
     */
     public static int getOriginalWidthAttrValue(final String tag) {
-        if (tag == null) {
-            return 0;
-        }
-
-        Matcher matcher = ORIGINAL_WIDTH_ATTR_PATTERN.matcher(tag);
-        if (matcher.find()) {
-            return StringUtils.stringToInt(matcher.group(1), 0);
-        } else {
-            return 0;
-        }
+        return StringUtils.stringToInt(matchTagAttrPattern(ORIGINAL_WIDTH_ATTR_PATTERN, tag), 0);
     }
 
     public static int getOriginalHeightAttrValue(final String tag) {
-        if (tag == null) {
-            return 0;
-        }
-
-        Matcher matcher = ORIGINAL_HEIGHT_ATTR_PATTERN.matcher(tag);
-        if (matcher.find()) {
-            return StringUtils.stringToInt(matcher.group(1), 0);
-        } else {
-            return 0;
-        }
+        return StringUtils.stringToInt(matchTagAttrPattern(ORIGINAL_HEIGHT_ATTR_PATTERN, tag), 0);
     }
 
     /*
     * returns the integer value from the width attribute in the passed html tag
     */
     public static int getWidthAttrValue(final String tag) {
-        if (tag == null) {
-            return 0;
-        }
-
-        Matcher matcher = WIDTH_ATTR_PATTERN.matcher(tag);
-        if (matcher.find()) {
-            return StringUtils.stringToInt(matcher.group(1), 0);
-        } else {
-            return 0;
-        }
+        return StringUtils.stringToInt(matchTagAttrPattern(WIDTH_ATTR_PATTERN, tag), 0);
     }
 
     public static int getHeightAttrValue(final String tag) {
-        if (tag == null) {
-            return 0;
-        }
-        Matcher matcher = HEIGHT_ATTR_PATTERN.matcher(tag);
-        if (matcher.find()) {
-            return StringUtils.stringToInt(matcher.group(1), 0);
-        } else {
-            return 0;
-        }
+        return StringUtils.stringToInt(matchTagAttrPattern(HEIGHT_ATTR_PATTERN, tag), 0);
     }
 
     /*
      * returns the value from class src attribute in the passed html tag
      */
     public static String getClassAttrValue(final String tag) {
-        if (tag == null) {
-            return null;
-        }
-
-        Matcher matcher = CLASS_ATTR_PATTERN.matcher(tag);
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return null;
-        }
+        return matchTagAttrPattern(CLASS_ATTR_PATTERN, tag);
     }
 
     /*
@@ -179,11 +135,15 @@ public class ReaderHtmlUtils {
      * or null if the attribute is not present.
      */
     @Nullable public static String getLargeFileAttr(final String tag) {
+        return matchTagAttrPattern(DATA_LARGE_FILE_PATTERN, tag);
+    }
+
+    @Nullable private static String matchTagAttrPattern(Pattern pattern, String tag) {
         if (tag == null) {
             return null;
         }
 
-        Matcher matcher = DATA_LARGE_FILE_PATTERN.matcher(tag);
+        Matcher matcher = pattern.matcher(tag);
         if (matcher.find()) {
             return matcher.group(1);
         } else {
