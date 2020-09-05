@@ -48,6 +48,10 @@ public class ReaderHtmlUtils {
             "(\\S*?)\\s+(\\d*)w,?\\s*?",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
+    public static final Pattern DATA_LARGE_FILE_PATTERN = Pattern.compile(
+            "data-large-file\\s*=\\s*['\"](.*?)['\"]",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+
     /*
     * returns the integer value from the data-orig-size attribute in the passed html tag
     */
@@ -165,6 +169,23 @@ public class ReaderHtmlUtils {
                 }
             }
             return bestImageUrl;
+        } else {
+            return null;
+        }
+    }
+
+    /*
+     * Returns the value from the data-large-file attribute in the passed html tag,
+     * or null if the attribute is not present.
+     */
+    @Nullable public static String getLargeFileAttr(final String tag) {
+        if (tag == null) {
+            return null;
+        }
+
+        Matcher matcher = DATA_LARGE_FILE_PATTERN.matcher(tag);
+        if (matcher.find()) {
+            return matcher.group(1);
         } else {
             return null;
         }

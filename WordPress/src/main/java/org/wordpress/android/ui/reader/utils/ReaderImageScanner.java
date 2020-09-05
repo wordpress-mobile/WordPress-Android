@@ -115,6 +115,11 @@ public class ReaderImageScanner {
                 if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
                     currentImageUrl = imageUrl;
                 }
+
+                // Look for a data-large-file attribute if set and use the associated url
+                if (currentImageUrl == null) {
+                    currentImageUrl = ReaderHtmlUtils.getLargeFileAttr(imageTag);
+                }
             }
         }
 

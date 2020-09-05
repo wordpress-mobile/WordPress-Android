@@ -157,4 +157,19 @@ class ReaderHtmlUtilsTest {
         val bestUrl = ReaderHtmlUtils.getSrcsetImageForTag(test, 640)
         assertEquals(null, bestUrl)
     }
+
+    @Test
+    fun `getLargeFileAttr extracts large file attribute data correctly`() {
+        val testTag = "<img src=\"example.jpg\" alt=\"\" class=\"wp-image-10\" data-large-file=\"large-image.jpg\" " +
+                "height=\"1000\" width=\"500\">"
+        val result = ReaderHtmlUtils.getLargeFileAttr(testTag)
+        assertEquals("large-image.jpg", result)
+    }
+
+    @Test
+    fun `getLargeFileAttr returns null if tag is missing large file attr`() {
+        val testTag = "<img src=\"example.jpg\" alt=\"\" class=\"wp-image-10\" height=\"1000\" width=\"500\">"
+        val result = ReaderHtmlUtils.getLargeFileAttr(testTag)
+        assertEquals(null, result)
+    }
 }
