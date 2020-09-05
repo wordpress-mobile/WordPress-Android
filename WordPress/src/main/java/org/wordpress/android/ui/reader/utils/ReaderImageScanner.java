@@ -105,8 +105,16 @@ public class ReaderImageScanner {
             if (width > currentMaxWidth) {
                 currentImageUrl = imageUrl;
                 currentMaxWidth = width;
-            } else if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
-                currentImageUrl = imageUrl;
+            } else {
+                // Inspect the image tag and look for clues for an image of the right size
+
+                // Look through the srcset attribute if set for the image best matching minImageWidth
+                currentImageUrl = ReaderHtmlUtils.getSrcsetImageForTag(imageTag, minImageWidth);
+
+                // Check if the image tag's class suggests it's a good enough size
+                if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
+                    currentImageUrl = imageUrl;
+                }
             }
         }
 

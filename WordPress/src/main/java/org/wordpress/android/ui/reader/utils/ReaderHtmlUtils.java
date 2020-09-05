@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
 
+import androidx.annotation.Nullable;
+
 import org.wordpress.android.util.StringUtils;
 
 import java.util.regex.Matcher;
@@ -36,6 +38,15 @@ public class ReaderHtmlUtils {
             "class\\s*=\\s*['\"](.*?)['\"]",
             Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
+    public static final Pattern SRCSET_ATTR_PATTERN = Pattern.compile(
+            "srcset\\s*=\\s*['\"](.*?)['\"]",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+
+    // Matches pairs of URLs and widths inside a srcset tag, e.g.:
+    // <URL1> 600w, <URL2> 800w -> (<URL1>, 600) and (<URL2>, 800)
+    public static final Pattern SRCSET_INNER_PATTERN = Pattern.compile(
+            "(\\S*?)\\s+(\\d*)w,?\\s*?",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     /*
     * returns the integer value from the data-orig-size attribute in the passed html tag
@@ -124,5 +135,38 @@ public class ReaderHtmlUtils {
             return 0;
         }
         return StringUtils.stringToInt(Uri.parse(url).getQueryParameter(param));
+    }
+
+    /*
+     * Extracts the srcset attribute from the given [tag], and returns the smallest image
+     * larger than [minWidth].
+     * Returns null if the srcset attribute is not present.
+     */
+    @Nullable public static String getSrcsetImageForTag(final String tag, final int minWidth) {
+        if (tag == null) {
+            return null;
+        }
+
+        Matcher matcher = SRCSET_ATTR_PATTERN.matcher(tag);
+        if (matcher.find()) {
+            String srcsetBody = matcher.group(1);
+            Matcher innerMatcher = SRCSET_INNER_PATTERN.matcher(srcsetBody);
+            int bestWidth = 0;
+            String bestImageUrl = null;
+            while (innerMatcher.find()) {
+                int currentWidth = StringUtils.stringToInt(innerMatcher.group(2));
+                // Only interested in images wider than minWidth
+                if (currentWidth > minWidth) {
+                    // Only keep currentWidth if it's closer to minWidth than the current bestWidth
+                    if (bestWidth == 0 || currentWidth < bestWidth) {
+                        bestWidth = currentWidth;
+                        bestImageUrl = innerMatcher.group(1);
+                    }
+                }
+            }
+            return bestImageUrl;
+        } else {
+            return null;
+        }
     }
 }
