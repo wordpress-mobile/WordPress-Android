@@ -9,6 +9,7 @@ class LayoutCategoryDiffCallback(
     private val oldList: List<LayoutCategoryUiState>,
     private val newList: List<LayoutCategoryUiState>
 ) : Callback() {
+    object Payload
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return newList[newItemPosition].slug == oldList[oldItemPosition].slug
     }
@@ -17,10 +18,11 @@ class LayoutCategoryDiffCallback(
 
     override fun getNewListSize(): Int = newList.size
 
-    override fun areContentsTheSame(
-        oldItemPosition: Int,
-        newItemPosition: Int
-    ): Boolean {
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return newList[newItemPosition].layouts == oldList[oldItemPosition].layouts
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        return Payload
     }
 }

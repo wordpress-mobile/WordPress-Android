@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mlp
 
-import android.util.SparseIntArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
  */
 class LayoutCategoryAdapter : Adapter<LayoutsItemViewHolder>() {
     private var items: List<LayoutCategoryUiState> = listOf()
-    private val scrollStates = SparseIntArray()
 
     fun update(newItems: List<LayoutCategoryUiState>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -29,5 +27,5 @@ class LayoutCategoryAdapter : Adapter<LayoutsItemViewHolder>() {
         holder.bind(items[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutsItemViewHolder(parent, scrollStates)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = LayoutsItemViewHolder(parent)
 }

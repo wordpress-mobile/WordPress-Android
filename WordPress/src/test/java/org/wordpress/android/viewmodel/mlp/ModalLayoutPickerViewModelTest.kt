@@ -46,7 +46,6 @@ class ModalLayoutPickerViewModelTest {
 
     @Test
     fun `modal layout picker is shown when triggered`() {
-        viewModel.init()
         viewModel.show()
         assertThat(viewModel.isModalLayoutPickerShowing.value!!.peekContent()).isEqualTo(true)
     }

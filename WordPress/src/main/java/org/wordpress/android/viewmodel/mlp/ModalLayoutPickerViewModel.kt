@@ -115,6 +115,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Shows the MLP
      */
     fun show() {
+        init()
         _isModalLayoutPickerShowing.value = Event(true)
     }
 

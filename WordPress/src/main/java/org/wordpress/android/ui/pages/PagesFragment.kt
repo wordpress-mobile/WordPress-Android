@@ -307,8 +307,6 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.start(site)
-
-        mlpViewModel.init()
     }
 
     private fun showToast(toastMessageHolder: ToastMessageHolder) {

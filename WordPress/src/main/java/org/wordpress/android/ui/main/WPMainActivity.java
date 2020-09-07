@@ -563,8 +563,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.start(
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
                 mSelectedSite);
-
-        mMLPViewModel.init();
     }
 
     private @Nullable String getAuthToken() {
