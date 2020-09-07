@@ -116,22 +116,22 @@ class ReaderHtmlUtilsTest {
     }
 
     @Test
-    fun `getSrcsetImageForTag returns correct URL when it's first in the list`() {
+    fun `getLargestSrcsetImageForTag returns largest URL when it's first in the list`() {
         val test = "<img src=\"https://i0.wp.com/image.jpg?resize=525%2C700\" alt=\"\" class=\"wp-image-10\" " +
-                "srcset=\"https://i1.wp.com/image-scaled.jpg?resize=768%2C1024 768w, " +
+                "srcset=\"https://i1.wp.com/image-scaled.jpg?w=1920 1920w, " +
                 "https://i1.wp.com/image-scaled.jpg?resize=225%2C300 225w, " +
                 "https://i1.wp.com/image-scaled.jpg?resize=1152%2C1536 1152w, " +
                 "https://i1.wp.com/image-scaled.jpg?resize=1536%2C2048 1536w, " +
-                "https://i1.wp.com/image-scaled.jpg?w=1920 1920w, " +
+                "https://i1.wp.com/image-scaled.jpg?resize=768%2C1024 768w, " +
                 "https://i1.wp.com/image-scaled.jpg?w=1050 1050w\" " +
                 "sizes=\"(max-width: 767px) 89vw, (max-width: 1000px) 54vw, (max-width: 1071px) 543px, 580px\">"
-        val bestImage = ReaderHtmlUtils.getSrcsetImageForTag(test, 640)
-        val expected = SrcsetImage(768, "https://i1.wp.com/image-scaled.jpg?resize=768%2C1024")
+        val bestImage = ReaderHtmlUtils.getLargestSrcsetImageForTag(test)
+        val expected = SrcsetImage(1920, "https://i1.wp.com/image-scaled.jpg?w=1920")
         assertEquals(expected, bestImage)
     }
 
     @Test
-    fun `getSrcsetImageForTag returns correct URL when larger sizes appear first`() {
+    fun `getLargestSrcsetImageForTag returns largest URL when other sizes appear before it`() {
         val test = "<img src=\"https://i0.wp.com/image.jpg?resize=525%2C700\" alt=\"\" class=\"wp-image-10\" " +
                 "srcset=\"https://i1.wp.com/image-scaled.jpg?resize=225%2C300 225w, " +
                 "https://i1.wp.com/image-scaled.jpg?resize=1152%2C1536 1152w, " +
@@ -140,24 +140,15 @@ class ReaderHtmlUtilsTest {
                 "https://i1.wp.com/image-scaled.jpg?resize=768%2C1024 768w, " +
                 "https://i1.wp.com/image-scaled.jpg?w=1050 1050w\" " +
                 "sizes=\"(max-width: 767px) 89vw, (max-width: 1000px) 54vw, (max-width: 1071px) 543px, 580px\">"
-        val bestImage = ReaderHtmlUtils.getSrcsetImageForTag(test, 640)
-        val expected = SrcsetImage(768, "https://i1.wp.com/image-scaled.jpg?resize=768%2C1024")
+        val bestImage = ReaderHtmlUtils.getLargestSrcsetImageForTag(test)
+        val expected = SrcsetImage(1920, "https://i1.wp.com/image-scaled.jpg?w=1920")
         assertEquals(expected, bestImage)
     }
 
     @Test
-    fun `getSrcsetImageForTag returns null if srcset contains no image large enough`() {
-        val test = "<img src=\"https://i0.wp.com/image.jpg?resize=525%2C700\" alt=\"\" class=\"wp-image-10\" " +
-                "srcset=\"https://i1.wp.com/image-scaled.jpg?resize=600%2C1024 600w\" " +
-                "sizes=\"(max-width: 767px) 89vw, (max-width: 1000px) 54vw, (max-width: 1071px) 543px, 580px\">"
-        val bestImage = ReaderHtmlUtils.getSrcsetImageForTag(test, 640)
-        assertEquals(null, bestImage)
-    }
-
-    @Test
-    fun `getSrcsetImageForTag returns null if tag is missing srcset attr`() {
+    fun `getLargestSrcsetImageForTag returns null if tag is missing srcset attr`() {
         val test = "<img src=\"https://i0.wp.com/image.jpg?resize=525%2C700\" alt=\"\" class=\"wp-image-10\">"
-        val bestImage = ReaderHtmlUtils.getSrcsetImageForTag(test, 640)
+        val bestImage = ReaderHtmlUtils.getLargestSrcsetImageForTag(test)
         assertEquals(null, bestImage)
     }
 

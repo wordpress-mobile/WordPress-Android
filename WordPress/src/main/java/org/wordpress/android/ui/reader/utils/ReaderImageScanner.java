@@ -108,9 +108,9 @@ public class ReaderImageScanner {
             } else {
                 // Inspect the image tag and look for clues for an image of the right size
 
-                // Look through the srcset attribute if set for the image best matching minImageWidth
-                SrcsetImage bestFromSrcset = ReaderHtmlUtils.getSrcsetImageForTag(imageTag, minImageWidth);
-                if (bestFromSrcset != null) {
+                // Look through the srcset attribute (if set) for the largest available size of this image
+                SrcsetImage bestFromSrcset = ReaderHtmlUtils.getLargestSrcsetImageForTag(imageTag);
+                if (bestFromSrcset != null && bestFromSrcset.getWidth() > currentMaxWidth) {
                     currentMaxWidth = bestFromSrcset.getWidth();
                     currentImageUrl = bestFromSrcset.getUrl();
                 }

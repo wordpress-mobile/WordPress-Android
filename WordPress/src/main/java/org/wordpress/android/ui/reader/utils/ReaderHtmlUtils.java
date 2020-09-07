@@ -98,11 +98,10 @@ public class ReaderHtmlUtils {
     }
 
     /*
-     * Extracts the srcset attribute from the given [tag], and returns the smallest image
-     * larger than [minWidth].
+     * Extracts the srcset attribute from the given [tag], and returns the largest image.
      * Returns null if the srcset attribute is not present.
      */
-    @Nullable public static SrcsetImage getSrcsetImageForTag(final String tag, final int minWidth) {
+    @Nullable public static SrcsetImage getLargestSrcsetImageForTag(final String tag) {
         if (tag == null) {
             return null;
         }
@@ -111,21 +110,17 @@ public class ReaderHtmlUtils {
         if (matcher.find()) {
             String srcsetBody = matcher.group(1);
             Matcher innerMatcher = SRCSET_INNER_PATTERN.matcher(srcsetBody);
-            int bestWidth = 0;
-            String bestImageUrl = null;
+            int largestWidth = 0;
+            String largestImageUrl = null;
             while (innerMatcher.find()) {
                 int currentWidth = StringUtils.stringToInt(innerMatcher.group(2));
-                // Only interested in images wider than minWidth
-                if (currentWidth > minWidth) {
-                    // Only keep currentWidth if it's closer to minWidth than the current bestWidth
-                    if (bestWidth == 0 || currentWidth < bestWidth) {
-                        bestWidth = currentWidth;
-                        bestImageUrl = innerMatcher.group(1);
-                    }
+                if (currentWidth > largestWidth) {
+                    largestWidth = currentWidth;
+                    largestImageUrl = innerMatcher.group(1);
                 }
             }
-            if (bestImageUrl != null) {
-                return new SrcsetImage(bestWidth, bestImageUrl);
+            if (largestImageUrl != null) {
+                return new SrcsetImage(largestWidth, largestImageUrl);
             }
         }
         return null;
