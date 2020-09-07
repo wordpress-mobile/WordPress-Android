@@ -1138,7 +1138,6 @@ Language: es_CL
     <string name="site_settings_export_content_title">Exportar contenido</string>
     <string name="confirm_delete_site_prompt">Por favor, escribe %1$s en el campo de abajo para confirmar. Tu sitio se habrá ido para siempre.</string>
     <string name="confirm_delete_site">Confirmar eliminación de sitio</string>
-    <string name="contact_support">Contactar soporte</string>
     <string name="start_over_text">Si quieres un sitio pero no quieres ninguna de las entradas y las páginas que tienes ahora, nuestro equipo de soporte puede eliminar tus entradas, páginas, medios y comentarios para ti.\n\nEsto mantendrá su sitio y URL activo, pero te dará un nuevo comienzo en tu creación de contenido. Sólo tienes que contactarnos para despejar tu contenido actual.</string>
     <string name="let_us_help">Déjanos Ayudarte</string>
     <string name="site_settings_start_over_hint">Inicia tu sitio sobre</string>
@@ -1362,7 +1361,6 @@ Language: es_CL
     <string name="reader_discover_attribution_author_and_blog">Originalmente publicado por %1$s en %2$s</string>
     <string name="reader_short_like_count_multi">%s Me gusta</string>
     <string name="reader_short_like_count_one">1 Me gusta</string>
-    <string name="reader_label_follow_count">%,d seguidores</string>
     <string name="reader_short_like_count_none">Me gusta</string>
     <string name="reader_menu_tags">Editar etiquetas y sitios</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
@@ -1488,7 +1486,6 @@ Language: es_CL
     <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="reader_toast_blog_blocked">Los mensajes de este sitio ya no se mostrarán</string>
     <string name="reader_toast_err_block_blog">No se pudo bloquear este sitio</string>
-    <string name="contact_us">Contacta con nosotros</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
     <string name="reader_page_followed_tags">Etiquetas que se siguen</string>

@@ -6,7 +6,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{now format='yyyy-MM-dd'}}",
+            "date": "{{fnow format='yyyy-MM-dd'}}",
             "views": 32,
             "years": {
                 "2016": {
@@ -128,25 +128,25 @@
             },
             "weeks": [{
                 "days": [{
-                    "day": "{{now offset='-39 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-39 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-38 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-38 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-37 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-37 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-36 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-36 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-35 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-35 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-34 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-34 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-33 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-33 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }],
                 "total": 0,
@@ -154,25 +154,25 @@
                 "change": null
             }, {
                 "days": [{
-                    "day": "{{now offset='-32 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-32 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-31 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-31 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-30 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-30 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-29 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-29 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-28 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-28 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-27 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-27 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-26 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-26 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }],
                 "total": 0,
@@ -180,25 +180,25 @@
                 "change": 0
             }, {
                 "days": [{
-                    "day": "{{now offset='-25 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-25 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-24 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-24 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-23 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-23 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-22 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-22 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-21 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-21 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-20 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-20 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-19 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-19 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }],
                 "total": 0,
@@ -206,25 +206,25 @@
                 "change": 0
             }, {
                 "days": [{
-                    "day": "{{now offset='-18 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-18 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-17 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-17 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-16 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-16 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-15 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-15 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-14 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-14 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-13 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-13 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-12 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-12 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }],
                 "total": 0,
@@ -232,25 +232,25 @@
                 "change": 0
             }, {
                 "days": [{
-                    "day": "{{now offset='-11 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-11 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-10 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-10 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-9 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-9 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-8 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-8 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-7 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-7 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-6 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-6 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-5 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-5 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }],
                 "total": 0,
@@ -258,19 +258,19 @@
                 "change": 0
             }, {
                 "days": [{
-                    "day": "{{now offset='-4 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-4 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-3 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-3 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-2 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-2 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now offset='-1 days' format='yyyy-MM-dd'}}",
+                    "day": "{{fnow offset='-1 days' format='yyyy-MM-dd'}}",
                     "count": 0
                 }, {
-                    "day": "{{now format='yyyy-MM-dd'}}",
+                    "day": "{{fnow format='yyyy-MM-dd'}}",
                     "count": 0
                 }],
                 "total": 0,
@@ -279,70 +279,70 @@
             }],
             "fields": ["period", "views"],
             "data": [
-                ["{{now offset='-63 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-62 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-61 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-60 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-59 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-58 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-57 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-56 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-55 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-54 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-53 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-52 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-51 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-50 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-49 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-48 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-47 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-46 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-45 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-44 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-43 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-42 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-41 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-40 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-39 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-38 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-37 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-36 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-35 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-34 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-33 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-32 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-31 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-30 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-29 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-28 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-27 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-26 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-25 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-24 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-23 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-22 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-21 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-20 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-19 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-18 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-17 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-16 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-15 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-14 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-13 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-12 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-11 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-10 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-9 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-8 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-7 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-6 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-5 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-4 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-3 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-2 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now offset='-1 days' format='yyyy-MM-dd'}}", 0],
-                ["{{now format='yyyy-MM-dd'}}", 0]
+                ["{{fnow offset='-63 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-62 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-61 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-60 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-59 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-58 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-57 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-56 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-55 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-54 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-53 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-52 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-51 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-50 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-49 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-48 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-47 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-46 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-45 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-44 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-43 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-42 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-41 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-40 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-39 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-38 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-37 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-36 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-35 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-34 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-33 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-32 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-31 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-30 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-29 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-28 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-27 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-26 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-25 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-24 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-23 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-22 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-21 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-20 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-19 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-18 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-17 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-16 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-15 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-14 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-13 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-12 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-11 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-10 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-9 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-8 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-7 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-6 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-5 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-4 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-3 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-2 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow offset='-1 days' format='yyyy-MM-dd'}}", 0],
+                ["{{fnow format='yyyy-MM-dd'}}", 0]
             ],
             "highest_month": 4,
             "highest_day_average": 0,

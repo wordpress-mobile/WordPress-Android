@@ -1,0 +1,183 @@
+{
+    "request": {
+        "urlPath": "/wpcom/v2/read/interests",
+        "method": "GET"
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "success": true,
+            "interests": [
+                {
+                    "title": "Activism",
+                    "slug": "activism"
+                },
+                {
+                    "title": "Advice",
+                    "slug": "advice"
+                },
+                {
+                    "title": "Adventure",
+                    "slug": "adventure"
+                },
+                {
+                    "title": "Animals",
+                    "slug": "animals"
+                },
+                {
+                    "title": "Architecture",
+                    "slug": "architecture"
+                },
+                {
+                    "title": "Art",
+                    "slug": "art"
+                },
+                {
+                    "title": "Authors",
+                    "slug": "authors"
+                },
+                {
+                    "title": "Baking",
+                    "slug": "baking"
+                },
+                {
+                    "title": "Beauty",
+                    "slug": "beauty"
+                },
+                {
+                    "title": "Beer",
+                    "slug": "beer"
+                },
+                {
+                    "title": "Blogging",
+                    "slug": "blogging"
+                },
+                {
+                    "title": "Books",
+                    "slug": "books"
+                },
+                {
+                    "title": "Business",
+                    "slug": "business"
+                },
+                {
+                    "title": "Camping",
+                    "slug": "camping"
+                },
+                {
+                    "title": "Cars",
+                    "slug": "cars"
+                },
+                {
+                    "title": "Cocktails",
+                    "slug": "cocktails"
+                },
+                {
+                    "title": "Coding",
+                    "slug": "coding"
+                },
+                {
+                    "title": "Comics",
+                    "slug": "comics"
+                },
+                {
+                    "title": "Cooking",
+                    "slug": "cooking"
+                },
+                {
+                    "title": "Community",
+                    "slug": "community"
+                },
+                {
+                    "title": "Comics",
+                    "slug": "comics"
+                },
+                {
+                    "title": "Crafts",
+                    "slug": "crafts"
+                },
+                {
+                    "title": "Creativity",
+                    "slug": "creativity"
+                },
+                {
+                    "title": "Culture",
+                    "slug": "culture"
+                },
+                {
+                    "title": "Current Events",
+                    "slug": "current-events"
+                },
+                {
+                    "title": "Dance",
+                    "slug": "dance"
+                },
+                {
+                    "title": "Decorating",
+                    "slug": "decorating"
+                },
+                {
+                    "title": "Design",
+                    "slug": "design"
+                },
+                {
+                    "title": "Diversity",
+                    "slug": "diversity"
+                },
+                {
+                    "title": "DIY",
+                    "slug": "diy"
+                },
+                {
+                    "title": "Drawing",
+                    "slug": "drawing"
+                },
+                {
+                    "title": "Ecommerce",
+                    "slug": "ecommerce"
+                },
+                {
+                    "title": "Education",
+                    "slug": "education"
+                },
+                {
+                    "title": "Entertainment",
+                    "slug": "entertainment"
+                },
+                {
+                    "title": "Environment",
+                    "slug": "environment"
+                },
+                {
+                    "title": "Family",
+                    "slug": "family"
+                },
+                {
+                    "title": "Farming",
+                    "slug": "farming"
+                },
+                {
+                    "title": "Fashion",
+                    "slug": "fashion"
+                },
+                {
+                    "title": "Fiction",
+                    "slug": "fiction"
+                },
+                {
+                    "title": "Finance",
+                    "slug": "finance"
+                },
+                {
+                    "title": "Fitness",
+                    "slug": "fitness"
+                }
+            ]
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}
