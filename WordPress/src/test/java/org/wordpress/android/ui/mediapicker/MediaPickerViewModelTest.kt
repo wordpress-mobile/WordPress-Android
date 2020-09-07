@@ -398,7 +398,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(iconClickEvents).hasSize(0)
         assertThat(menuUiItems).hasSize(2)
     }
-    
+
     private fun selectItem(position: Int) {
         (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
     }
