@@ -9,10 +9,12 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
@@ -69,6 +72,7 @@ class MediaPickerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaPickerViewModel::class.java)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -76,7 +80,6 @@ class MediaPickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
         return inflater.inflate(
                 R.layout.media_picker_fragment,
                 container,
@@ -192,6 +195,68 @@ class MediaPickerFragment : Fragment() {
         })
 
         viewModel.start(selectedUris, mediaPickerSetup, lastTappedIcon, site)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_media_picker, menu)
+
+        val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
+            "Menu does not contain mandatory search item"
+        }
+        initializeSearchView(searchMenuItem)
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            val searchView = searchMenuItem.actionView as SearchView
+            if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
+                menu.findItem(R.id.mnu_browse_item).isVisible = false
+                searchMenuItem.expandActionView()
+                searchView.setQuery(uiState.searchUiModel.filter, true)
+            } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
+                menu.findItem(R.id.mnu_browse_item).isVisible = true
+                searchMenuItem.collapseActionView()
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.mnu_browse_item) {
+            val anchorView = activity?.findViewById<View>(item.itemId)
+            anchorView?.let {
+                viewModel.onBrowseForItems(ViewWrapper(anchorView))
+            }
+        }
+        return true
+    }
+
+    private fun initializeSearchView(actionMenuItem: MenuItem) {
+        var isExpanding = false
+        actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded()
+                isExpanding = true
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
+        val searchView = actionMenuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                if (!isExpanding) {
+                    viewModel.onSearch(query)
+                }
+                isExpanding = false
+                return true
+            }
+        })
     }
 
     private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
@@ -326,22 +391,6 @@ class MediaPickerFragment : Fragment() {
                 viewModel.clickOnLastTappedIcon()
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        inflater.inflate(R.menu.menu_media_picker, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mnu_browse_item) {
-            val anchorView = activity?.findViewById<View>(item.itemId)
-            anchorView?.let {
-                viewModel.onBrowseForItems(ViewWrapper(anchorView))
-            }
-        }
-        return true
     }
 
     companion object {

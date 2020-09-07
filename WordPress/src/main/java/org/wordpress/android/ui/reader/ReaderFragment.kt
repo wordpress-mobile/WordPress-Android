@@ -131,8 +131,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         })
 
         viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
-            selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
-                view_pager.setCurrentItem(tabPosition, false)
+            selectTabAction.getContentIfNotHandled()?.let { navTarget ->
+                view_pager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
             }
         })
 
@@ -164,6 +164,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         TabLayoutMediator(tab_layout, view_pager) { tab, position ->
             tab.text = uiState.tabTitles[position]
         }.attach()
+    }
+
+    fun requestBookmarkTab() {
+        viewModel.bookmarkTabRequested()
     }
 
     private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {

@@ -3,14 +3,16 @@ package org.wordpress.android.ui.mediapicker
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.ClearFilter
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Filter
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.util.LocaleManagerWrapper
 
-data class MediaLoader(private val mediaSource: MediaSource) {
+data class MediaLoader(private val mediaSource: MediaSource, private val localeManagerWrapper: LocaleManagerWrapper) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
             var state = DomainState()
@@ -18,7 +20,7 @@ data class MediaLoader(private val mediaSource: MediaSource) {
                 when (loadAction) {
                     is Start -> {
                         if (state.mediaTypes != loadAction.mediaTypes || state.items.isEmpty() || state.error != null) {
-                            state = refreshData(state, loadAction.mediaTypes)
+                            state = refreshData(state, loadAction.mediaTypes).copy(filter = loadAction.filter)
                         }
                     }
                     is Refresh -> {
@@ -50,6 +52,9 @@ data class MediaLoader(private val mediaSource: MediaSource) {
                     is Filter -> {
                         state = state.copy(filter = loadAction.filter)
                     }
+                    is ClearFilter -> {
+                        state = state.copy(filter = null)
+                    }
                 }
                 if (state.isNotInitialState()) {
                     emit(buildDomainModel(state))
@@ -80,20 +85,37 @@ data class MediaLoader(private val mediaSource: MediaSource) {
 
     private fun buildDomainModel(state: DomainState): DomainModel {
         return if (!state.filter.isNullOrEmpty()) {
-            DomainModel(state.items.filter { it.name?.contains(state.filter) == true }, state.error, state.hasMore)
+            val filter = state.filter.toLowerCase(localeManagerWrapper.getLocale())
+            DomainModel(
+                    state.items.filter {
+                        it.name?.toLowerCase(localeManagerWrapper.getLocale())
+                                ?.contains(filter) == true
+                    },
+                    state.error,
+                    state.hasMore,
+                    isFilteredResult = true,
+                    filter = state.filter
+            )
         } else {
-            DomainModel(state.items, state.error, state.hasMore)
+            DomainModel(state.items, state.error, state.hasMore, isFilteredResult = false, filter = state.filter)
         }
     }
 
     sealed class LoadAction {
-        data class Start(val mediaTypes: Set<MediaType>) : LoadAction()
+        data class Start(val mediaTypes: Set<MediaType>, val filter: String? = null) : LoadAction()
         object Refresh : LoadAction()
         data class Filter(val filter: String) : LoadAction()
         object NextPage : LoadAction()
+        object ClearFilter : LoadAction()
     }
 
-    data class DomainModel(val domainItems: List<MediaItem>, val error: String? = null, val hasMore: Boolean = false)
+    data class DomainModel(
+        val domainItems: List<MediaItem>,
+        val error: String? = null,
+        val hasMore: Boolean = false,
+        val isFilteredResult: Boolean = false,
+        val filter: String? = null
+    )
 
     private data class DomainState(
         val mediaTypes: Set<MediaType>? = null,

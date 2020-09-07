@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiMo
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -334,6 +335,21 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on search expanded updates state`() = test {
+        val query = "filter"
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, filter = query)
+
+        viewModel.refreshData(false)
+
+        assertThat(uiStates).hasSize(2)
+        assertSearchCollapsed()
+
+        viewModel.onSearchExpanded()
+
+        assertSearchExpanded(query)
+    }
+
+    @Test
     fun `System picker opened for photo when allowed types is IMAGE only`() = test {
         setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
 
@@ -382,7 +398,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(iconClickEvents).hasSize(0)
         assertThat(menuUiItems).hasSize(2)
     }
-
+    
     private fun selectItem(position: Int) {
         (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
     }
@@ -435,11 +451,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private suspend fun setupViewModel(
         domainModel: List<MediaItem>,
         mediaPickerSetup: MediaPickerSetup,
-        hasStoragePermissions: Boolean = true
+        hasStoragePermissions: Boolean = true,
+        filter: String? = null,
+        numberOfStates: Int = 2
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
         whenever(mediaLoaderFactory.build(mediaPickerSetup.dataSource)).thenReturn(mediaLoader)
-        whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel)) })
+        whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel, filter = filter)) })
         viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
             if (it != null) {
@@ -451,7 +469,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 navigateEvents.add(it)
             }
         }
-        assertThat(uiStates).hasSize(2)
+        assertThat(uiStates).hasSize(numberOfStates)
     }
 
     private fun PhotoListUiModel.Data.assertSelection(
@@ -495,6 +513,19 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             val model = it as ActionModeUiModel.Visible
             assertThat(model.actionModeTitle).isEqualTo(title)
             assertThat(model.showEditAction).isEqualTo(showEditAction)
+        }
+    }
+
+    private fun assertSearchCollapsed() {
+        uiStates.last().searchUiModel.let { model ->
+            assertThat(model is SearchUiModel.Collapsed).isTrue()
+        }
+    }
+
+    private fun assertSearchExpanded(filter: String) {
+        uiStates.last().searchUiModel.let { model ->
+            assertThat(model is SearchUiModel.Expanded).isTrue()
+            assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
         }
     }
 }
