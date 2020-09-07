@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -64,16 +65,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         layoutsRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = LayoutCategoryAdapter()
-
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                /**
-                 * We track the vertical scroll to show/hide the header title accordingly
-                 */
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    setHeaderVisibility()
-                }
-            })
         }
 
         backButton.setOnClickListener {
@@ -89,16 +80,17 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
         setupViewModel()
 
-        setHeaderVisibility()
+        setupTitleVisibility()
     }
 
-    private fun setHeaderVisibility() {
+    private fun setupTitleVisibility() {
         if (DisplayUtils.isLandscape(context)) {
             title.setVisible(true)
         } else {
             val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
-            val offset = layoutsRecyclerView.computeVerticalScrollOffset()
-            setTitleVisibility(offset > scrollThreshold)
+            appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
+                setTitleVisibility(verticalOffset < scrollThreshold)
+            })
         }
     }
 
@@ -108,8 +100,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      */
     private fun setTitleVisibility(visible: Boolean) {
         if (visible == (title.visibility == View.VISIBLE)) return // No change
-        title.setVisible(visible)
-        header.setVisible(!visible)
+        title.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        header.visibility = if (!visible) View.VISIBLE else View.INVISIBLE
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
