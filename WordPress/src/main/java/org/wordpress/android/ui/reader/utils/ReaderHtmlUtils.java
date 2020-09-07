@@ -102,7 +102,7 @@ public class ReaderHtmlUtils {
      * larger than [minWidth].
      * Returns null if the srcset attribute is not present.
      */
-    @Nullable public static String getSrcsetImageForTag(final String tag, final int minWidth) {
+    @Nullable public static SrcsetImage getSrcsetImageForTag(final String tag, final int minWidth) {
         if (tag == null) {
             return null;
         }
@@ -124,10 +124,11 @@ public class ReaderHtmlUtils {
                     }
                 }
             }
-            return bestImageUrl;
-        } else {
-            return null;
+            if (bestImageUrl != null) {
+                return new SrcsetImage(bestWidth, bestImageUrl);
+            }
         }
+        return null;
     }
 
     /*
