@@ -363,7 +363,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `camera FAB is not shown when no stories`() = test {
-        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false))
 
         assertStoriesFabIsHidden()
