@@ -14,23 +14,27 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.UriWrapper
+import java.util.Locale
 
 class MediaLoaderTest : BaseUnitTest() {
     @Mock lateinit var mediaSource: MediaSource
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var uri1: UriWrapper
     @Mock lateinit var uri2: UriWrapper
     private lateinit var mediaLoader: MediaLoader
-    private val mediaTypes = setOf(MediaType.IMAGE, VIDEO)
+    private val mediaTypes = setOf(IMAGE, VIDEO)
     private lateinit var firstMediaItem: MediaItem
     private lateinit var secondMediaItem: MediaItem
 
     @Before
     fun setUp() {
-        mediaLoader = MediaLoader(mediaSource)
-        firstMediaItem = MediaItem(1, uri1, "first item", false)
-        secondMediaItem = MediaItem(2, uri2, "second item", true)
+        mediaLoader = MediaLoader(mediaSource, localeManagerWrapper)
+        firstMediaItem = MediaItem(uri1, "first item", IMAGE, "image/jpeg", 1)
+        secondMediaItem = MediaItem(uri2, "second item", VIDEO, "video/mpeg", 2)
     }
 
     @Test
@@ -106,6 +110,37 @@ class MediaLoaderTest : BaseUnitTest() {
         performAction(LoadAction.Refresh, true)
 
         resultModel.assertModel(listOf(secondMediaItem))
+    }
+
+    @Test
+    fun `filters out media item`() = withMediaLoader { resultModel, performAction ->
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        val mediaItems = listOf(firstMediaItem, secondMediaItem)
+        whenever(mediaSource.load(mediaTypes, 0, null)).thenReturn(MediaLoadingResult.Success(mediaItems))
+
+        performAction(LoadAction.Start(mediaTypes), true)
+
+        performAction(LoadAction.Filter("second"), true)
+
+        resultModel.assertModel(listOf(secondMediaItem))
+
+        performAction(LoadAction.ClearFilter, true)
+
+        resultModel.assertModel(mediaItems)
+    }
+
+    @Test
+    fun `clears filter`() = withMediaLoader { resultModel, performAction ->
+        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
+        val mediaItems = listOf(firstMediaItem, secondMediaItem)
+        whenever(mediaSource.load(mediaTypes, 0, null)).thenReturn(MediaLoadingResult.Success(mediaItems))
+
+        performAction(LoadAction.Start(mediaTypes), true)
+        performAction(LoadAction.Filter("second"), true)
+
+        performAction(LoadAction.ClearFilter, true)
+
+        resultModel.assertModel(mediaItems)
     }
 
     private fun List<DomainModel>.assertModel(

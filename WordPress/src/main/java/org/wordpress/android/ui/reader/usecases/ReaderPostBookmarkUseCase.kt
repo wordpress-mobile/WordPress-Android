@@ -1,28 +1,17 @@
 package org.wordpress.android.ui.reader.usecases
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
-import org.wordpress.android.R
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.flow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
-import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * This class handles bookmark/saveForLater button click events.
@@ -30,44 +19,18 @@ import javax.inject.Named
  */
 class ReaderPostBookmarkUseCase @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
-    private val _navigationEvents = MutableLiveData<Event<ReaderNavigationEvents>>()
-    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
-
-    private val _snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
-    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
-    private val _preloadPostEvents = MutableLiveData<Event<PreLoadPostContent>>()
-    val preloadPostEvents = _preloadPostEvents
-
-    suspend fun toggleBookmark(blogId: Long, postId: Long, isBookmarkList: Boolean) {
-        return withContext(bgDispatcher) {
-            val bookmarked = updatePostInDb(blogId, postId)
-            trackEvent(bookmarked, isBookmarkList)
-            preloadContent(bookmarked, isBookmarkList, blogId, postId)
-
-            val showSnackbarAction = prepareSnackbarAction()
-            if (bookmarked && !isBookmarkList) {
-                if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
-                    _navigationEvents.postValue(Event(ShowBookmarkedSavedOnlyLocallyDialog(
-                            okButtonAction = {
-                                appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
-                                showSnackbarAction.invoke()
-                            })
-                    ))
-                } else {
-                    showSnackbarAction.invoke()
-                }
-            }
-        }
+    suspend fun toggleBookmark(blogId: Long, postId: Long, isBookmarkList: Boolean) = flow<BookmarkPostState> {
+        val bookmarked = updatePostInDb(blogId, postId)
+        trackEvent(bookmarked, isBookmarkList)
+        preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
+        emit(Success(bookmarked))
     }
 
-    private fun preloadContent(
+    private suspend fun FlowCollector<BookmarkPostState>.preloadPostContentIfNecessary(
         bookmarked: Boolean,
         isBookmarkList: Boolean,
         blogId: Long,
@@ -75,12 +38,11 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     ) {
         val cachePostContent = bookmarked && networkUtilsWrapper.isNetworkAvailable() && !isBookmarkList
         if (cachePostContent) {
-            _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
+            emit(PreLoadPostContent(blogId, postId))
         }
     }
 
     private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
-        //  Also make sure PostUpdated event is emitted when we change the state of the post.
         val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
                 ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
@@ -104,25 +66,9 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         }
         analyticsTrackerWrapper.track(trackingEvent)
     }
-
-    private fun prepareSnackbarAction(): () -> Unit {
-        return {
-            _snackbarEvents.postValue(
-                    Event(
-                            SnackbarMessageHolder(
-                                    UiStringRes(R.string.reader_bookmark_snack_title),
-                                    UiStringRes(R.string.reader_bookmark_snack_btn),
-                                    buttonAction = {
-                                        analyticsTrackerWrapper.track(
-                                                READER_SAVED_LIST_SHOWN,
-                                                mapOf("source" to "post_list_saved_post_notice")
-                                        )
-                                        _navigationEvents.postValue(Event(ShowBookmarkedTab))
-                                    })
-                    )
-            )
-        }
-    }
 }
 
-data class PreLoadPostContent(val blogId: Long, val postId: Long)
+sealed class BookmarkPostState {
+    data class PreLoadPostContent(val blogId: Long, val postId: Long) : BookmarkPostState()
+    data class Success(val bookmarked: Boolean) : BookmarkPostState()
+}

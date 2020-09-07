@@ -1,0 +1,2 @@
+15.6:
+Block Editor improvements: Added settings for changing column widths to the Column block, added media editing support in the Gallery block, and improved the logic for undo/redo while drafting — enjoy smarter undoing in chunks, instead of undoing a few letters or tiny changes at a time.

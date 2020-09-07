@@ -442,9 +442,6 @@ public class ReaderPostListFragment extends Fragment
                         ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                     } else if (navTarget instanceof ShowBookmarkedTab) {
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                        if (requireActivity() instanceof WPMainActivity) {
-                            requireActivity().overridePendingTransition(0, 0);
-                        }
                     } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
                         showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
                     } else {
@@ -2572,9 +2569,11 @@ public class ReaderPostListFragment extends Fragment
                 AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
+            case LIKE:
+                mViewModel.onLikeButtonClicked(post, isBookmarksList());
+                break;
             case BLOCK_SITE:
             case BOOKMARK:
-            case LIKE:
             case REBLOG:
             case COMMENTS:
                 throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");

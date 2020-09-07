@@ -79,8 +79,8 @@ Language: hi_IN
     <string name="reader_toast_err_comment_not_found">कोई टिप्पणी नहीं पाया!</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com पोस्ट</string>
-    <string name="error_notif_q_action_reply">टिप्पणी करने के लिए जवाब नहीं कर सके। बाद में पुन: प्रयास करें।</string>
     <string name="reader_title_deeplink">वर्डप्रेस रीडर</string>
+    <string name="error_notif_q_action_reply">टिप्पणी करने के लिए जवाब नहीं कर सके। बाद में पुन: प्रयास करें।</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
@@ -91,8 +91,8 @@ Language: hi_IN
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
     <string name="post_format_video">विडियो </string>
-    <string name="alignment_center">मध्य में</string>
     <string name="post_format_status">स्थिति</string>
+    <string name="alignment_center">मध्य में</string>
     <string name="post_format_standard">मानक</string>
     <string name="post_format_chat">चैट</string>
     <string name="post_format_gallery">गैलरी</string>
@@ -105,8 +105,8 @@ Language: hi_IN
     <string name="notif_suggestions">सुझाव</string>
     <string name="site_settings_list_editor_summary_one">1 आइटम </string>
     <string name="approve_auto">सभी उपयोगकर्ता</string>
-    <string name="days_quantity_one">1 दिन </string>
     <string name="days_quantity_other">%d दिन</string>
+    <string name="days_quantity_one">1 दिन </string>
     <string name="email_address">ईमेल पता</string>
     <string name="comment_status_all">सभी</string>
     <string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
@@ -145,7 +145,6 @@ Language: hi_IN
     <string name="reader_short_like_count_multi">%s पसंद</string>
     <string name="reader_short_like_count_one">1 पसंद</string>
     <string name="reader_short_like_count_none">पसंद</string>
-    <string name="reader_label_follow_count">%,d अनुयायी</string>
     <string name="reader_title_post_detail">पाठक लेख</string>
     <string name="notifications_push_summary">अपने उपकरण में सूचना हेतु व्यवस्था।</string>
     <string name="notification_types">अधिसूचना के प्रकार</string>
@@ -200,7 +199,6 @@ Language: hi_IN
     <string name="comment">टिप्पणी</string>
     <string name="comment_trashed">टिप्पणी ट्रैश किया गया</string>
     <string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
-    <string name="contact_us">हमसे संपर्क करें</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
     <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>

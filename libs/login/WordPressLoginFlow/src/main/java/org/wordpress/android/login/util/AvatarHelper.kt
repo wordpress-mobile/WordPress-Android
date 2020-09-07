@@ -39,7 +39,7 @@ object AvatarHelper {
                 .listener(object : RequestListener<Drawable?> {
                     override fun onLoadFailed(
                         e: GlideException?,
-                        model: Any,
+                        model: Any?,
                         target: Target<Drawable?>,
                         isFirstResource: Boolean
                     ): Boolean {
@@ -49,7 +49,7 @@ object AvatarHelper {
 
                     override fun onResourceReady(
                         drawable: Drawable?,
-                        model: Any,
+                        model: Any?,
                         target: Target<Drawable?>,
                         dataSource: DataSource,
                         isFirstResource: Boolean

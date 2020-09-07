@@ -6,10 +6,15 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,12 +31,14 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
@@ -62,6 +69,7 @@ class MediaPickerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaPickerViewModel::class.java)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -81,13 +89,14 @@ class MediaPickerFragment : Fragment() {
 
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
-        var selectedIds: List<Long>? = null
+        var selectedUris: List<UriWrapper>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
             lastTappedIcon = savedLastTappedIconName?.let { MediaPickerIcon.valueOf(it) }
             if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
-                selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_POSITIONS)?.toList()
+                selectedUris = savedInstanceState.getStringArrayList(KEY_SELECTED_POSITIONS)
+                        ?.map { UriWrapper(Uri.parse(it)) }
             }
         }
         recycler.setEmptyView(actionable_empty_view)
@@ -182,7 +191,57 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
+        viewModel.start(selectedUris, mediaPickerSetup, lastTappedIcon, site)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_search, menu)
+
+        val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
+            "Menu does not contain mandatory search item"
+        }
+        initializeSearchView(searchMenuItem)
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            val searchView = searchMenuItem.actionView as SearchView
+            if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
+                searchMenuItem.expandActionView()
+                searchView.setQuery(uiState.searchUiModel.filter, true)
+            } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
+                searchMenuItem.collapseActionView()
+            }
+        })
+    }
+
+    private fun initializeSearchView(actionMenuItem: MenuItem) {
+        var isExpanding = false
+        actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
+            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                viewModel.onSearchExpanded()
+                isExpanding = true
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                viewModel.onSearchCollapsed()
+                return true
+            }
+        })
+        val searchView = actionMenuItem.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.onSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                if (!isExpanding) {
+                    viewModel.onSearch(query)
+                }
+                isExpanding = false
+                return true
+            }
+        })
     }
 
     private fun setupSoftAskView(uiModel: SoftAskViewUiModel) {
@@ -238,9 +297,9 @@ class MediaPickerFragment : Fragment() {
                 KEY_LAST_TAPPED_ICON,
                 viewModel.lastTappedIcon?.name
         )
-        val selectedIds = viewModel.selectedIds.value
+        val selectedIds = viewModel.selectedUris.value
         if (selectedIds != null && selectedIds.isNotEmpty()) {
-            outState.putLongArray(KEY_SELECTED_POSITIONS, selectedIds.toLongArray())
+            outState.putStringArrayList(KEY_SELECTED_POSITIONS, ArrayList(selectedIds.map { it.uri.toString() }))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
