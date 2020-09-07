@@ -17,7 +17,7 @@ class MediaPickerAdapterDiffCallback(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldItems[oldItemPosition].uri == updatedItems[newItemPosition].uri
+        return oldItems[oldItemPosition].identifier == updatedItems[newItemPosition].identifier
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

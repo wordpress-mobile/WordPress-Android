@@ -26,6 +26,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
@@ -54,7 +55,7 @@ class MediaPickerFragment : Fragment() {
      * parent activity must implement this listener
      */
     interface MediaPickerListener {
-        fun onMediaChosen(uriList: List<Uri>)
+        fun onItemsChosen(uriList: List<Identifier>)
         fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
     }
 
@@ -90,13 +91,17 @@ class MediaPickerFragment : Fragment() {
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
         var selectedUris: List<UriWrapper>? = null
+        var selectedIds: List<Long>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
             lastTappedIcon = savedLastTappedIconName?.let { MediaPickerIcon.valueOf(it) }
-            if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
-                selectedUris = savedInstanceState.getStringArrayList(KEY_SELECTED_POSITIONS)
+            if (savedInstanceState.containsKey(KEY_SELECTED_URIS)) {
+                selectedUris = savedInstanceState.getStringArrayList(KEY_SELECTED_URIS)
                         ?.map { UriWrapper(Uri.parse(it)) }
+            }
+            if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
+                selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_IDS)?.toList()
             }
         }
         recycler.setEmptyView(actionable_empty_view)
@@ -156,8 +161,8 @@ class MediaPickerFragment : Fragment() {
 
         viewModel.onInsert.observe(viewLifecycleOwner, Observer
         { event ->
-            event.getContentIfNotHandled()?.let { selectedUris ->
-                listener?.onMediaChosen(selectedUris.map { it.uri })
+            event.getContentIfNotHandled()?.let { selectedIds ->
+                listener?.onItemsChosen(selectedIds)
             }
         })
 
@@ -191,7 +196,7 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedUris, mediaPickerSetup, lastTappedIcon, site)
+        viewModel.start(selectedUris, selectedIds, mediaPickerSetup, lastTappedIcon, site)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -297,9 +302,13 @@ class MediaPickerFragment : Fragment() {
                 KEY_LAST_TAPPED_ICON,
                 viewModel.lastTappedIcon?.name
         )
-        val selectedIds = viewModel.selectedUris.value
-        if (selectedIds != null && selectedIds.isNotEmpty()) {
-            outState.putStringArrayList(KEY_SELECTED_POSITIONS, ArrayList(selectedIds.map { it.uri.toString() }))
+        val selectedIds = viewModel.selectedIds()
+        if (selectedIds.isNotEmpty()) {
+            outState.putLongArray(KEY_SELECTED_IDS, selectedIds.toLongArray())
+        }
+        val selectedUris = viewModel.selectedURIs()
+        if (selectedUris.isNotEmpty()) {
+            outState.putStringArrayList(KEY_SELECTED_URIS, ArrayList(selectedUris.map { it.uri.toString() }))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
@@ -380,7 +389,8 @@ class MediaPickerFragment : Fragment() {
 
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
-        private const val KEY_SELECTED_POSITIONS = "selected_positions"
+        private const val KEY_SELECTED_URIS = "selected_uris"
+        private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(

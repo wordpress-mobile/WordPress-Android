@@ -3,8 +3,8 @@ package org.wordpress.android.ui.mediapicker
 interface MediaSource {
     suspend fun load(
         mediaTypes: Set<MediaType>,
-        offset: Int = 0,
-        pageSize: Int? = null
+        forced: Boolean = false,
+        loadMore: Boolean = false
     ): MediaLoadingResult
 
     sealed class MediaLoadingResult {

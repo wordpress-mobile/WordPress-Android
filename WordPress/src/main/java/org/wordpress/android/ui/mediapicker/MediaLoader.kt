@@ -20,19 +20,23 @@ data class MediaLoader(private val mediaSource: MediaSource, private val localeM
                 when (loadAction) {
                     is Start -> {
                         if (state.mediaTypes != loadAction.mediaTypes || state.items.isEmpty() || state.error != null) {
-                            state = refreshData(state, loadAction.mediaTypes).copy(filter = loadAction.filter)
+                            state = refreshData(
+                                    state,
+                                    loadAction.mediaTypes,
+                                    state.items.isEmpty()
+                            ).copy(filter = loadAction.filter)
                         }
                     }
                     is Refresh -> {
                         state.mediaTypes?.let { mediaTypes ->
-                            state = refreshData(state, mediaTypes)
+                            state = refreshData(state, mediaTypes, forced = true)
                         }
                     }
                     is NextPage -> {
                         state.mediaTypes?.let { mediaTypes ->
                             state = when (val mediaLoadingResult = mediaSource.load(
                                     mediaTypes,
-                                    offset = state.items.size
+                                    loadMore = true
                             )) {
                                 is Success -> {
                                     state.copy(
@@ -63,7 +67,7 @@ data class MediaLoader(private val mediaSource: MediaSource, private val localeM
         }
     }
 
-    private suspend fun refreshData(state: DomainState, mediaTypes: Set<MediaType>): DomainState {
+    private suspend fun refreshData(state: DomainState, mediaTypes: Set<MediaType>, forced: Boolean): DomainState {
         return when (val mediaLoadingResult = mediaSource.load(mediaTypes)) {
             is Success -> {
                 state.copy(

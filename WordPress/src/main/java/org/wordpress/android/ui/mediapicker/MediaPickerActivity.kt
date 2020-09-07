@@ -29,6 +29,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
@@ -291,11 +292,11 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     }
 
     private fun doMediaIdsSelected(
-        mediaIds: ArrayList<Long>?,
+        mediaIds: List<Long>?,
         source: MediaPickerMediaSource
     ) {
-        if (mediaIds != null && mediaIds.size > 0) {
-            if (browserType == WP_STORIES_MEDIA_PICKER) {
+        if (mediaIds != null && mediaIds.isNotEmpty()) {
+            if (browserType.canMultiselect()) {
                 // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
                 val data = Intent()
                         .putExtra(
@@ -325,9 +326,14 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
-    override fun onMediaChosen(uriList: List<Uri>) {
-        if (uriList.isNotEmpty()) {
-            doMediaUrisSelected(uriList, APP_PICKER)
+    override fun onItemsChosen(identifiers: List<Identifier>) {
+        val chosenUris = identifiers.mapNotNull { (it as? Identifier.LocalUri)?.value?.uri }
+        val chosenIds = identifiers.mapNotNull { (it as? Identifier.RemoteId)?.value }
+        if (chosenUris.isNotEmpty()) {
+            doMediaUrisSelected(chosenUris, APP_PICKER)
+        }
+        if (chosenIds.isNotEmpty()) {
+            doMediaIdsSelected(chosenIds, APP_PICKER)
         }
     }
 
