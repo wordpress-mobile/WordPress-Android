@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.modal_layout_picker_category.view.*
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
 import org.wordpress.android.login.util.getColorStateListFromAttribute
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.setVisible
@@ -38,19 +37,13 @@ class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHold
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
         }
-        setSelectedStateUI(uiState.selected)
+        setSelectedStateUI(uiState)
     }
 
-    private fun setSelectedStateUI(selected: Boolean) {
-        check.setVisible(selected)
-        emoji.setVisible(!selected)
-        container.backgroundTintList = parent.context.getColorStateListFromAttribute(
-                if (selected) attr.categoriesButtonBackgroundSelected else attr.categoriesButtonBackground
-        )
-        category.setTextColor(
-                parent.context.getColorFromAttribute(
-                        if (selected) attr.categoriesButtonTextSelected else attr.categoriesButtonText
-                )
-        )
+    private fun setSelectedStateUI(uiState: CategoryListItemUiState) {
+        check.setVisible(uiState.selected)
+        emoji.setVisible(!uiState.selected)
+        container.backgroundTintList = parent.context.getColorStateListFromAttribute(uiState.background)
+        category.setTextColor(parent.context.getColorFromAttribute(uiState.textColor))
     }
 }
