@@ -1142,39 +1142,35 @@
     </style>
 
     <!-- Modal Layout Picker Styles -->
-    <style name="ModalLayoutPickerHeader">
+
+    <style name="ModalLayoutPickerText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="ModalLayoutPickerHeader" parent="ModalLayoutPickerText">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
 
-    <style name="ModalLayoutPickerTitle">
+    <style name="ModalLayoutPickerTitle" parent="ModalLayoutPickerText">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="ModalLayoutPickerSubtitle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:layout_gravity">center</item>
+    <style name="ModalLayoutPickerSubtitle" parent="ModalLayoutPickerTitle">
         <item name="android:layout_margin">@dimen/margin_extra_extra_medium_large</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:ellipsize">end</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:alpha">0.6</item>
+        <item name="android:maxLines">5</item>
     </style>
 
     <style name="Widget.ModalLayoutPicker.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -1188,12 +1184,9 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
-    <style name="ModalLayoutPickerLayoutsTitle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="ModalLayoutPickerLayoutsTitle" parent="ModalLayoutPickerText">
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_gravity">top</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
@@ -1211,24 +1204,16 @@
         <item name="cardCornerRadius">@dimen/mlp_layout_card_radius</item>
     </style>
 
-    <style name="ModalLayoutPickerCategoryEmoji">
+    <style name="ModalLayoutPickerCategoryEmoji" parent="ModalLayoutPickerText">
         <item name="android:layout_width">@dimen/mlp_categories_emoji_size</item>
         <item name="android:layout_height">@dimen/mlp_categories_emoji_size</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:layout_marginStart">@dimen/mlp_category_horizontal_margin</item>
         <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_central_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="ModalLayoutPickerCategoryTitle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:maxLines">1</item>
+    <style name="ModalLayoutPickerCategoryTitle" parent="ModalLayoutPickerText">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
