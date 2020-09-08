@@ -420,6 +420,26 @@ class ReaderDiscoverViewModelTest {
         assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
     }
 
+    @Test
+    fun `Data are refreshed when the user swipes down to refresh`() = test {
+        // Arrange
+        val navigaitonObserver = init()
+        // Act
+        viewModel.swipeToRefresh()
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards()
+    }
+
+    @Test
+    fun `Data are refreshed when the user clicks on retry`() = test {
+        // Arrange
+        val navigaitonObserver = init()
+        // Act
+        viewModel.onRetryButtonClick()
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards()
+    }
+
     private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
