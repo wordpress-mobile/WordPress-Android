@@ -38,7 +38,6 @@ class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHold
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
         }
-        container.backgroundTintList
         setSelectedStateUI(uiState.selected)
     }
 
