@@ -24,9 +24,10 @@ import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import javax.inject.Inject
 
@@ -35,6 +36,7 @@ import javax.inject.Inject
  */
 class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
+    @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
@@ -80,20 +82,17 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         createPageButton.setOnClickListener { /* TODO */ }
         previewButton.setOnClickListener { /* TODO */ }
 
-        setupViewModel()
+        setScrollListener()
 
-        setupTitleVisibility()
+        setupViewModel()
     }
 
-    private fun setupTitleVisibility() {
-        if (DisplayUtils.isLandscape(context)) {
-            title.setVisible(true)
-        } else {
-            val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
-            appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
-                setTitleVisibility(verticalOffset < scrollThreshold)
-            })
-        }
+    private fun setScrollListener() {
+        if (displayUtils.isLandscape(requireContext())) return // Always visible
+        val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
+        appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
+            viewModel.setHeaderTitleVisibility(verticalOffset < scrollThreshold)
+        })
     }
 
     /**
@@ -101,9 +100,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      * @param visible if true the title is shown and the header is hidden
      */
     private fun setTitleVisibility(visible: Boolean) {
-        if (visible == (title.visibility == View.VISIBLE)) return // No change
-        uiHelper.setInvisible(title, !visible)
-        uiHelper.setInvisible(header, visible)
+        title?.let { uiHelper.setInvisible(it, !visible) }
+        header?.let { uiHelper.setInvisible(it, visible) }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
@@ -133,6 +131,15 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel.layoutCategories.observe(this, Observer {
             (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(it)
         })
+
+        viewModel.setHeaderTitleVisibility(displayUtils.isLandscape(requireContext()))
+        viewModel.isHeaderVisible.observe(this,
+                Observer { event: Event<Boolean> ->
+                    event.applyIfNotHandled {
+                        setTitleVisibility(this)
+                    }
+                }
+        )
 
         viewModel.categories.observe(this, Observer {
             (categoriesRecyclerView.adapter as CategoriesAdapter).setData(it)

@@ -42,6 +42,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val selectedLayoutSlug: LiveData<String?> = _selectedLayoutSlug
 
     /**
+     * Tracks the header visibility
+     */
+    private val _isHeaderVisible = MutableLiveData<Event<Boolean>>()
+    val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
+
+    /**
      * Tracks the visibility of the action buttons
      */
     private val _buttonsUiState = MutableLiveData<ButtonsUiState>()
@@ -124,8 +130,18 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
+        _isHeaderVisible.postValue(Event(true))
         _selectedLayoutSlug.value = null
         selectedCategoriesSlugs.clear()
+    }
+
+    /**
+     * Sets the header and title visibility
+     * @param headerShouldBeVisible if true the header is shown and the title hidden
+     */
+    fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
+        if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return // No change
+        _isHeaderVisible.postValue(Event(headerShouldBeVisible))
     }
 
     /**
