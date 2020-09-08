@@ -149,7 +149,7 @@ class ReaderSiteFollowUseCaseTest {
             }
 
     @Test
-    fun `request failure on un-follow site returns info that site is followed`() =
+    fun `request failure on un-follow site action returns info that site is followed`() =
             testWithFailedResponseForFollowedSitePost {
                 // Act
                 val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
@@ -160,14 +160,14 @@ class ReaderSiteFollowUseCaseTest {
             }
 
     @Test
-    fun `request failure on follow site returns info that site is un-followed`() =
-            testWithFailedResponseForFollowedSitePost {
+    fun `request failure on follow site action returns info that site is not followed`() =
+            testWithFailedResponseForUnFollowedSitePost {
                 // Act
                 val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
-                assertThat((result[1] as PostFollowStatusChanged).following).isTrue()
+                assertThat((result[1] as PostFollowStatusChanged).following).isFalse()
             }
 
     @Test
