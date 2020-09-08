@@ -13,7 +13,7 @@
         android:id="@+id/check"
         style="@style/ModalLayoutPickerCategoryEmoji"
         android:src="@drawable/ic_done_white_24dp"
-        android:tint="?attr/categoriesButtonCheckIconColor"
+        android:tint="?attr/colorOnPrimary"
         android:visibility="gone"
         tools:ignore="ContentDescription" />
 

@@ -16,5 +16,5 @@ data class CategoryListItemUiState(
         get() = if (selected) attr.categoriesButtonBackgroundSelected else attr.categoriesButtonBackground
 
     val textColor: Int
-        get() = if (selected) attr.categoriesButtonTextSelected else attr.categoriesButtonText
+        get() = if (selected) attr.colorOnPrimary else attr.colorOnSurface
 }
