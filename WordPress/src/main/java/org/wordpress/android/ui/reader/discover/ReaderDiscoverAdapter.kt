@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.WelcomeBannerViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -16,6 +18,7 @@ import org.wordpress.android.util.image.ImageManager
 private const val welcomeBannerViewType: Int = 1
 private const val postViewType: Int = 2
 private const val interestViewType: Int = 3
+private const val recommendedBlogsViewType: Int = 4
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -31,6 +34,7 @@ class ReaderDiscoverAdapter(
                     parent
             )
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
+            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
@@ -53,6 +57,7 @@ class ReaderDiscoverAdapter(
             is ReaderWelcomeBannerCardUiState -> welcomeBannerViewType
             is ReaderPostUiState -> postViewType
             is ReaderInterestsCardUiState -> interestViewType
+            is ReaderRecommendedBlogsCardUiState -> recommendedBlogsViewType
         }
     }
 
@@ -71,6 +76,7 @@ class ReaderDiscoverAdapter(
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
                 }
                 is ReaderWelcomeBannerCardUiState,
+                is ReaderRecommendedBlogsCardUiState,
                 is ReaderInterestsCardUiState -> {
                     oldItem == newItem
                 }

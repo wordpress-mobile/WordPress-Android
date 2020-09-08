@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
@@ -57,6 +58,12 @@ class GetDiscoverCardsUseCase @Inject constructor(
                                 } else {
                                     appLogWrapper.d(READER, "Post from /cards json not found in ReaderDatabase")
                                     continue@forLoop
+                                }
+                            }
+                            ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS -> {
+                                cardJson?.let {
+                                    val recommendedBlogs = parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(it)
+                                    cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
                                 }
                             }
                         }

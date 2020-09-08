@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
+import com.google.gson.Gson
 import dagger.Reusable
 import org.json.JSONArray
 import org.json.JSONObject
+import org.wordpress.android.models.ReaderCardRecommendedBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -13,6 +15,8 @@ import javax.inject.Inject
 
 @Reusable
 class ParseDiscoverCardsJsonUseCase @Inject constructor() {
+    private val gson = Gson()
+
     fun parsePostCard(postCardJson: JSONObject): ReaderPost {
         return ReaderPost.fromJson(postCardJson.getJSONObject(ReaderConstants.JSON_CARD_DATA))
     }
@@ -34,6 +38,16 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
             interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
         }
         return interestTags
+    }
+
+    fun parseRecommendedBlogsCard(cardJson: JSONObject): List<ReaderCardRecommendedBlog> {
+        return cardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
+                ?.let { jsonRecommendedBlogs ->
+                    List(jsonRecommendedBlogs.length()) { index ->
+                        gson.fromJson(jsonRecommendedBlogs[index].toString(), ReaderCardRecommendedBlog::class.java)
+                    }
+                }
+                ?: emptyList()
     }
 
     fun parseNextPageHandle(jsonObject: JSONObject): String =

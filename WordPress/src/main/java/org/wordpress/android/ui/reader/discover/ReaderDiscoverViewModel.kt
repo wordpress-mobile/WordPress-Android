@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
@@ -12,6 +13,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
@@ -19,8 +21,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
@@ -185,13 +187,13 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
-        return posts.cards.map {
-            when (it) {
+        return posts.cards.map { card ->
+            when (card) {
                 is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                        titleRes = R.string.reader_welcome_banner
+                        titleRes = string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                        post = it.post,
+                        post = card.post,
                         isDiscover = true,
                         photonWidth = photonWidth,
                         photonHeight = photonHeight,
@@ -209,9 +211,12 @@ class ReaderDiscoverViewModel @Inject constructor(
                 )
                 is InterestsYouMayLikeCard -> {
                     postUiStateBuilder.mapTagListToReaderInterestUiState(
-                            it.interests,
+                            card.interests,
                             this@ReaderDiscoverViewModel::onReaderTagClicked
                     )
+                }
+                is ReaderRecommendedBlogsCard -> {
+                    postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(card.blogs)
                 }
             }
         }

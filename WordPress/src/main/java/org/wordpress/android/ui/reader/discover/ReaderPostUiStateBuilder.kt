@@ -3,8 +3,10 @@ package org.wordpress.android.ui.reader.discover
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderCardRecommendedBlog
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
@@ -26,6 +28,8 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -46,6 +50,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
+private const val READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT = 3
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -172,6 +177,20 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 )
             })
         }
+    }
+
+    suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+        recommendedBlogs: List<ReaderCardRecommendedBlog>
+    ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
+        recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
+                .map {
+                    ReaderRecommendedBlogUiState(
+                            name = StringEscapeUtils.unescapeHtml4(it.name),
+                            url = it.url,
+                            blogId = it.blogId,
+                            description = StringEscapeUtils.unescapeHtml4(it.description)
+                    )
+                }.let { ReaderRecommendedBlogsCardUiState(it) }
     }
 
     private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =

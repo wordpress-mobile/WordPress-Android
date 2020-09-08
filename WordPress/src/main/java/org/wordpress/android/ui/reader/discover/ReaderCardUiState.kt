@@ -76,6 +76,17 @@ sealed class ReaderCardUiState {
             val onClicked: ((String) -> Unit)
         )
     }
+
+    data class ReaderRecommendedBlogsCardUiState(
+        val blogs: List<ReaderRecommendedBlogUiState>
+    ) : ReaderCardUiState() {
+        data class ReaderRecommendedBlogUiState(
+            val name: String,
+            val url: String,
+            val blogId: Long,
+            val description: String
+        )
+    }
 }
 
 sealed class ReaderPostCardAction {

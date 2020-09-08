@@ -18,6 +18,7 @@
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1A000000</color>
+    <color name="placeholder_light">#EEEEEE</color>
 
     <!-- Stats -->
 
@@ -304,6 +305,7 @@
     <color name="yellow_100">#1c1700</color>
 
     <!-- TRANSLUCENT -->
+    <color name="black_translucent_12">#1F000000</color>
     <color name="black_translucent_20">#33000000</color>
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
@@ -329,5 +331,8 @@
     <!--Reader Welcome Card -->
     <color name="reader_welcome_card_background">@color/primary_emphasis_lowest</color>
     <color name="reader_welcome_card_text">@color/blue_70</color>
+
+    <!--Reader Recommended Blogs Card -->
+    <color name="reader_recommended_blogs_card_divider">@color/black_translucent_12</color>
 
 </resources>
