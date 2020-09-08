@@ -100,13 +100,33 @@ public class ReaderImageScanner {
             String imageTag = imgMatcher.group(0);
             String imageUrl = imgMatcher.group(1);
 
+            // Primary source: check the width attribute.
             int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imageTag),
                                  ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
             if (width > currentMaxWidth) {
                 currentImageUrl = imageUrl;
                 currentMaxWidth = width;
-            } else if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
+            }
+
+            // Look through the srcset attribute (if set) for the largest available size of this image.
+            SrcsetImage bestFromSrcset = ReaderHtmlUtils.getLargestSrcsetImageForTag(imageTag);
+            if (bestFromSrcset != null && bestFromSrcset.getWidth() > currentMaxWidth) {
+                currentMaxWidth = bestFromSrcset.getWidth();
+                currentImageUrl = bestFromSrcset.getUrl();
+            }
+
+            // Check if the image tag's class suggests it's a good enough size.
+            // Only do this if we don't already have a winner, since we can't be sure of the width
+            // and shouldn't replace an image we know for sure is larger than [minImageWidth].
+            if (currentImageUrl == null && hasSuitableClassForFeaturedImage(imageTag)) {
                 currentImageUrl = imageUrl;
+            }
+
+            // Look for a data-large-file attribute if set and use the associated url.
+            // Only do this if we don't already have a winner, since we can't be sure of the width
+            // and shouldn't replace an image we know for sure is larger than [minImageWidth].
+            if (currentImageUrl == null) {
+                currentImageUrl = ReaderHtmlUtils.getLargeFileAttr(imageTag);
             }
         }
 
