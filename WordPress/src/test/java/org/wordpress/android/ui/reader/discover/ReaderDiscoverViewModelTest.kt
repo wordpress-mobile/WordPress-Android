@@ -327,7 +327,7 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val observers = init()
         // Act
-        ((observers.uiStates.last() as ContentUiState).cards[1] as ReaderPostUiState).tagItems[0].onClick!!.invoke("Test")
+        ((observers.uiStates.last() as ContentUiState).cards[1] as ReaderPostUiState).tagItems[0].onClick!!.invoke("t")
         // Assert
         assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
