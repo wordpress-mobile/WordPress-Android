@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 
 @RunWith(MockitoJUnitRunner::class)
 class ModalLayoutPickerViewModelTest {
@@ -35,13 +36,13 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts the categories are loaded`() {
         viewModel.init()
-        assertThat(viewModel.categories.value!!.size).isGreaterThan(0)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).categories.size).isGreaterThan(0)
     }
 
     @Test
     fun `when modal layout picker starts the layouts are loaded`() {
         viewModel.init()
-        assertThat(viewModel.layoutCategories.value!!.size).isGreaterThan(0)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).layoutCategories.size).isGreaterThan(0)
     }
 
     @Test
@@ -67,14 +68,14 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts no layout is selected`() {
         viewModel.init()
-        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
     }
 
     @Test
     fun `when the user taps on a layout the layout is selected`() {
         viewModel.init()
         viewModel.layoutTapped("about-1")
-        assertThat(viewModel.selectedLayoutSlug.value).isEqualTo("about-1")
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isEqualTo("about-1")
     }
 
     @Test
@@ -82,7 +83,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.init()
         viewModel.layoutTapped("about-1")
         viewModel.layoutTapped("about-1")
-        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
     }
 
     @Test
@@ -90,20 +91,21 @@ class ModalLayoutPickerViewModelTest {
         viewModel.init()
         viewModel.layoutTapped("about-1")
         viewModel.dismiss()
-        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
     }
 
     @Test
     fun `when modal layout picker starts no category is selected`() {
         viewModel.init()
-        assertThat(viewModel.selectedCategoriesSlugs).isEmpty()
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
     }
 
     @Test
     fun `when the user taps on a category the category is selected`() {
         viewModel.init()
         viewModel.categoryTapped("about")
-        assertThat(viewModel.selectedCategoriesSlugs).contains("about")
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
+                .contains("about")
     }
 
     @Test
@@ -111,7 +113,8 @@ class ModalLayoutPickerViewModelTest {
         viewModel.init()
         viewModel.categoryTapped("about")
         viewModel.categoryTapped("about")
-        assertThat(viewModel.selectedCategoriesSlugs).doesNotContain("about")
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
+                .doesNotContain("about")
     }
 
     @Test
@@ -119,44 +122,50 @@ class ModalLayoutPickerViewModelTest {
         viewModel.init()
         viewModel.categoryTapped("about")
         viewModel.dismiss()
-        assertThat(viewModel.selectedCategoriesSlugs).isEmpty()
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
     }
 
     fun `when no layout is selected the create blank page button is visible`() {
         viewModel.init()
-        assertThat(viewModel.buttonsUiState.value?.createBlankPageVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
+                .isEqualTo(true)
     }
 
     @Test
     fun `when a layout is selected the create blank page button is not visible`() {
         viewModel.init()
         viewModel.layoutTapped("about-1")
-        assertThat(viewModel.buttonsUiState.value?.createBlankPageVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
+                .isEqualTo(false)
     }
 
     @Test
     fun `when no layout is selected the create page button is not visible`() {
         viewModel.init()
-        assertThat(viewModel.buttonsUiState.value?.createPageVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
+                .isEqualTo(false)
     }
 
     @Test
     fun `when a layout is selected the create page button is visible`() {
         viewModel.init()
         viewModel.layoutTapped("about-1")
-        assertThat(viewModel.buttonsUiState.value?.createPageVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
+                .isEqualTo(true)
     }
 
     @Test
     fun `when no layout is selected the preview button is not visible`() {
         viewModel.init()
-        assertThat(viewModel.buttonsUiState.value?.previewVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
+                .isEqualTo(false)
     }
 
     @Test
     fun `when a layout is selected the preview button is visible`() {
         viewModel.init()
         viewModel.layoutTapped("about-1")
-        assertThat(viewModel.buttonsUiState.value?.previewVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
+                .isEqualTo(true)
     }
 }

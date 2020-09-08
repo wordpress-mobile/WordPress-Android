@@ -13,6 +13,7 @@ import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,40 +31,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _isModalLayoutPickerShowing = MutableLiveData<Event<Boolean>>()
     val isModalLayoutPickerShowing: LiveData<Event<Boolean>> = _isModalLayoutPickerShowing
 
-    /**
-     * Tracks the selected categories
-     */
-    val selectedCategoriesSlugs = arrayListOf<String>()
-
-    /**
-     * Tracks the selected layout slug
-     */
-    private val _selectedLayoutSlug = MutableLiveData<String?>()
-    val selectedLayoutSlug: LiveData<String?> = _selectedLayoutSlug
-
-    /**
-     * Tracks the header visibility
-     */
-    private val _isHeaderVisible = MutableLiveData<Event<Boolean>>()
-    val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
-
-    /**
-     * Tracks the visibility of the action buttons
-     */
-    private val _buttonsUiState = MutableLiveData<ButtonsUiState>()
-    val buttonsUiState: LiveData<ButtonsUiState> = _buttonsUiState
-
-    /**
-     * Tracks the layout categories
-     */
-    private val _layoutCategories = MutableLiveData<List<LayoutCategoryUiState>>()
-    val layoutCategories: LiveData<List<LayoutCategoryUiState>> = _layoutCategories
-
-    /**
-     * Tracks the categories
-     */
-    private val _categories = MutableLiveData<List<CategoryListItemUiState>>()
-    val categories: LiveData<List<CategoryListItemUiState>> = _categories
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
+    val uiState: LiveData<UiState> = _uiState
 
     /**
      * Create new page event
@@ -72,21 +41,23 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
 
     fun init() {
+        updateUiState(ContentUiState())
         loadLayouts()
         loadCategories()
         updateButtonsUiState()
     }
 
     private fun loadLayouts() {
+        val state = uiState.value as ContentUiState
         val listItems = ArrayList<LayoutCategoryUiState>()
 
-        val selectedCategories = if (selectedCategoriesSlugs.isNotEmpty())
-            layouts.categories.filter { selectedCategoriesSlugs.contains(it.slug) }
+        val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
+            layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
         else layouts.categories
 
         selectedCategories.forEach { category ->
             val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
-                val selected = layout.slug == _selectedLayoutSlug.value
+                val selected = layout.slug == state.selectedLayoutSlug
                 LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
                     layoutTapped(layoutSlug = layout.slug)
                 }
@@ -100,21 +71,20 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     )
             )
         }
-
-        _layoutCategories.postValue(listItems)
+        updateUiState(state.copy(layoutCategories = listItems))
     }
 
     private fun loadCategories() {
+        val state = uiState.value as ContentUiState
         val listItems: List<CategoryListItemUiState> = layouts.categories.map {
             CategoryListItemUiState(
                     it.slug,
                     it.title,
                     it.emoji,
-                    selectedCategoriesSlugs.contains(it.slug)
+                    state.selectedCategoriesSlugs.contains(it.slug)
             ) { categoryTapped(it.slug) }
         }
-
-        _categories.postValue(listItems)
+        updateUiState(state.copy(categories = listItems))
     }
 
     /**
@@ -130,9 +100,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
-        _isHeaderVisible.postValue(Event(true))
-        _selectedLayoutSlug.value = null
-        selectedCategoriesSlugs.clear()
+        updateUiState(ContentUiState())
     }
 
     /**
@@ -140,8 +108,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param headerShouldBeVisible if true the header is shown and the title hidden
      */
     fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return // No change
-        _isHeaderVisible.postValue(Event(headerShouldBeVisible))
+        val state = uiState.value as ContentUiState
+        if (state.isHeaderVisible == headerShouldBeVisible) return // No change
+        updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
     }
 
     /**
@@ -149,10 +118,15 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param categorySlug the slug of the tapped category
      */
     fun categoryTapped(categorySlug: String) {
-        if (selectedCategoriesSlugs.contains(categorySlug)) { // deselect
-            selectedCategoriesSlugs.remove(categorySlug)
+        val state = uiState.value as ContentUiState
+        if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
+            updateUiState(
+                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { remove(categorySlug) })
+            )
         } else {
-            selectedCategoriesSlugs.add(categorySlug)
+            updateUiState(
+                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
+            )
         }
         loadCategories()
         loadLayouts()
@@ -163,10 +137,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param layoutSlug the slug of the tapped layout
      */
     fun layoutTapped(layoutSlug: String) {
-        if (layoutSlug == _selectedLayoutSlug.value) { // deselect
-            _selectedLayoutSlug.value = null
+        val state = uiState.value as ContentUiState
+        if (layoutSlug == state.selectedLayoutSlug) { // deselect
+            updateUiState(state.copy(selectedLayoutSlug = null))
         } else {
-            _selectedLayoutSlug.value = layoutSlug
+            updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
         }
         updateButtonsUiState()
         loadLayouts()
@@ -176,8 +151,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
-        val selection = _selectedLayoutSlug.value != null
-        _buttonsUiState.value = ButtonsUiState(!selection, selection, selection)
+        val state = uiState.value as ContentUiState
+        val selection = state.selectedLayoutSlug != null
+        updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
     }
 
     /**
@@ -185,5 +161,28 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun createPage() {
         _onCreateNewPageRequested.call()
+    }
+
+    private fun updateUiState(uiState: UiState) {
+        _uiState.value = uiState
+    }
+
+    sealed class UiState {
+        object LoadingUiState : UiState()
+
+        data class ContentUiState(
+            val isHeaderVisible: Boolean = false,
+            val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
+            val selectedLayoutSlug: String? = null,
+            val categories: List<CategoryListItemUiState> = listOf(),
+            val layoutCategories: List<LayoutCategoryUiState> = listOf(),
+            val buttonsUiState: ButtonsUiState = ButtonsUiState(
+                    createBlankPageVisible = true,
+                    previewVisible = false,
+                    createPageVisible = false
+            )
+        ) : UiState()
+
+        object ErrorUiState : UiState()
     }
 }

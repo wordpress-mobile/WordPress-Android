@@ -27,8 +27,10 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.LoadingUiState
 import javax.inject.Inject
 
 /**
@@ -100,6 +102,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      * @param visible if true the title is shown and the header is hidden
      */
     private fun setTitleVisibility(visible: Boolean) {
+        if (visible == (title.visibility == View.VISIBLE)) return // No change
         title?.let { uiHelper.setInvisible(it, !visible) }
         header?.let { uiHelper.setInvisible(it, visible) }
     }
@@ -128,30 +131,28 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        viewModel.layoutCategories.observe(this, Observer {
-            (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(it)
-        })
-
         viewModel.setHeaderTitleVisibility(displayUtils.isLandscape(requireContext()))
-        viewModel.isHeaderVisible.observe(this,
-                Observer { event: Event<Boolean> ->
-                    event.applyIfNotHandled {
-                        setTitleVisibility(this)
-                    }
-                }
-        )
 
-        viewModel.categories.observe(this, Observer {
-            (categoriesRecyclerView.adapter as CategoriesAdapter).setData(it)
+        viewModel.uiState.observe(this, Observer { uiState ->
+            when (uiState) {
+                is LoadingUiState -> {
+                }
+                is ContentUiState -> {
+                    (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
+                    (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
+                    setButtonsVisibility(uiState.buttonsUiState)
+                    setTitleVisibility(uiState.isHeaderVisible)
+                }
+                is ErrorUiState -> {
+                }
+            }
         })
+    }
 
-        viewModel.buttonsUiState.observe(this,
-                Observer {
-                    createBlankPageButton.setVisible(it.createBlankPageVisible)
-                    createPageButton.setVisible(it.createPageVisible)
-                    previewButton.setVisible(it.previewVisible)
-                }
-        )
+    private fun setButtonsVisibility(uiState: ButtonsUiState) {
+        createBlankPageButton.setVisible(uiState.createBlankPageVisible)
+        createPageButton.setVisible(uiState.createPageVisible)
+        previewButton.setVisible(uiState.previewVisible)
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
