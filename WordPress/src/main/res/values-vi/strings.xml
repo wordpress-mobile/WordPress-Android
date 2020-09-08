@@ -150,7 +150,6 @@ Language: vi_VN
     <string name="error_deleting_site">Lỗi xóa site</string>
     <string name="site_settings_export_content_title">Xuất nội dung</string>
     <string name="confirm_delete_site_prompt">Xin vui lòng nhập %1$s vào trường bên dưới để xác nhận. Trang web của bạn sau đó sẽ biến mất mãi mãi.</string>
-    <string name="contact_support">Liên hệ hỗ trợ</string>
     <string name="confirm_delete_site">Xác nhận xóa site</string>
     <string name="start_over_text">Nếu bạn muốn có một trang web nhưng không muốn bất kỳ của các bài viết và trang bạn có bây giờ, nhóm hỗ trợ của chúng tôi có thể xóa bài viết, trang, media và bình luận  của bạn cho bạn.\n \n Điều này sẽ giữ cho trang web và URL của bạn hoạt động, nhưng cung cấp cho bạn một khởi đầu mới vào việc tạo ra nội dung của bạn. Chỉ cần liên hệ với chúng tôi để xóa hết nội dung hiện tại của bạn.</string>
     <string name="let_us_help">Để chúng tôi giúp</string>
@@ -368,7 +367,6 @@ Language: vi_VN
     <string name="reader_discover_attribution_author_and_blog">Bài viết gốc được viết bởi %1$s trên %2$s</string>
     <string name="reader_short_like_count_multi">%s thích</string>
     <string name="reader_short_like_count_one">1 thích</string>
-    <string name="reader_label_follow_count">%,d theo dõi</string>
     <string name="reader_short_like_count_none">Thích</string>
     <string name="reader_menu_tags">Sửa các tag và site</string>
     <string name="reader_title_post_detail">Người đọc bài viết</string>
@@ -490,7 +488,6 @@ Language: vi_VN
     <string name="comment_trashed">Bình luận cho vào thùng rác</string>
     <string name="older_last_week">Cũ hơn 1 tuần</string>
     <string name="reader_toast_err_generic">khong lam duoc</string>
-    <string name="contact_us">lien lac voi chung toi</string>
     <string name="update_verb">Cập nhật</string>
     <string name="schedule_verb">Lich trinh</string>
     <string name="reader_page_followed_tags">Thẻ được theo dõi</string>

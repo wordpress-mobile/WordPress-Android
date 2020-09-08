@@ -73,7 +73,6 @@ Language: ku_TR
     <string name="domains_suggestions_intro_title">Navê navpereke premiûm bibijêre</string>
     <string name="my_site_custom_domain_name">Di hemû planên WordPress.comê de navperên taybet hene. Aniha navpera xwe ya premiûm bêpere tomar bike.</string>
     <string name="stats_widget_all_time_insights_name">Herdem</string>
-    <string name="stats_widget_site_caption">Malpera xwe hilbijêre</string>
     <string name="stats_widget_weekly_views_name">Dîtinên vê hefteyê</string>
     <string name="stats_widget_error_no_network">Tor tune ye</string>
     <string name="stats_widget_error_no_data">Dane nehatin barkirin</string>
@@ -88,6 +87,7 @@ Language: ku_TR
     <string name="stats_widget_log_in_message">Ji bo tevlîkirina alavokekê, ji kerema xwe têkeve sepana WordPressê.</string>
     <string name="stats_widget_color_dark">Tarî</string>
     <string name="stats_widget_color_light">Ronî</string>
+    <string name="stats_widget_site_caption">Malpera xwe hilbijêre</string>
     <string name="plugin_fetching_error_after_at">Nûyandina hûrgiliyên pêvekan ji her tim bêhtir dewam dike. Ji kerema xwe paşê dîsa kontrol bike.</string>
     <string name="plugin_install_site_ineligible_default_error">Eger te navperek nû tomar kiribe, ji kerema xwe li bende be heta em sazkirina wê biqedînin û paşê dîsa biceribîne.\n\nEger na, wisa dixuyê ku şaşiyek pêk hatiye û dibe ku taybetiya pêvekê ji bo vê malperê ne guncan be.</string>
     <string name="domain_registration_privacy_protection_tos">Bi tomarkirina vê navperê tu %1$sşert û merc%2$s ên me dipejirînî.</string>
@@ -447,9 +447,9 @@ Language: ku_TR
     <string name="quick_start_dialog_choose_theme_message">Ji bo ahengeke bêkêmasî, çavekî li hemû rûkarên me bigerîne.</string>
     <string name="quick_start_button_negative">Ne niha</string>
     <string name="my_site_create_new_site_title">Ti malperên te nîn e</string>
-    <string name="install_jetpack_continue">Bidomîne</string>
-    <string name="install_jetpack_retry">Dîsa Biceribîne</string>
     <string name="login_to_to_connect_jetpack">Ji bo girêdana Jetpackê di ajimêra xwe ya WordPress.comê keve.</string>
+    <string name="install_jetpack_retry">Dîsa Biceribîne</string>
+    <string name="install_jetpack_continue">Bidomîne</string>
     <string name="jetpack_installation_problem">Pirsgirêkek hebû</string>
     <string name="jetpack_installed">Jetpack sazkirî ye</string>
     <string name="installing_jetpack">Jetpack tê sazkirin</string>
@@ -1301,7 +1301,6 @@ Language: ku_TR
     <string name="site_settings_export_content_title">Naverokê derxe</string>
     <string name="confirm_delete_site_prompt">Ji kerema xwe bo pejirandinê di qasa jêrîn de %1$s binivîsîne. Malpera te dê piştî vê heta hetayê winda bibe.</string>
     <string name="confirm_delete_site">Jêbirina Malperê Bipejirîne</string>
-    <string name="contact_support">Bi piştgiriyê re têkilî deyne</string>
     <string name="start_over_text">Tu malpereke nû bixwazî, lê nexwazî ku ti rûpel û şandiyeke te ya niha tê de nîn bin, tîma me ya alîkariyê dikare ji bo te şandî, rûpel, medya û şiroveyên te jê bibe.\n\nEv wê malpera te û URLya te aktîv bigire, lêbelê ji bo te destpêkek teze bide ji bo çêkirina naverokan. Tenê bi me re têkiliyê deyîne ji bo paqijkirina hemû naverokên xwe yên vê gavê.</string>
     <string name="let_us_help">Werin Em Alîkariya We Bikin</string>
     <string name="site_settings_start_over_hint">Ji serî ve dest bi malpera xwe bike</string>
@@ -1525,7 +1524,6 @@ Language: ku_TR
     <string name="reader_discover_attribution_author_and_blog">Eslen ji aliyê %1$s ve li ser %2$s hate weşandin</string>
     <string name="reader_short_like_count_multi">%s Ecibandin</string>
     <string name="reader_short_like_count_none">Biecibîne</string>
-    <string name="reader_label_follow_count">%,d şopîner</string>
     <string name="reader_short_like_count_one">Ecibandinek</string>
     <string name="reader_menu_tags">Malper û etîketan serrast bike</string>
     <string name="reader_title_post_detail">Şandiya xwînerê</string>
@@ -1651,7 +1649,6 @@ Language: ku_TR
     <string name="reader_toast_blog_blocked">Şandiyên ji vê malperê wê êdî neyên nîşandan</string>
     <string name="reader_toast_err_block_blog">Nikare vê malperê asteng bike</string>
     <string name="reader_toast_err_generic">Nikare vê çalakiyê bi cîh bîne</string>
-    <string name="contact_us">Têkilî deynin</string>
     <string name="schedule_verb">Demsaz bike</string>
     <string name="update_verb">Bihildemîne</string>
     <string name="reader_empty_recommended_blogs">Malperên pêşniyarkirî nîn in</string>

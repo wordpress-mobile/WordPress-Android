@@ -104,7 +104,8 @@ import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
@@ -193,6 +194,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -771,13 +773,13 @@ class MySiteFragment : Fragment(),
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
                 if (!handleMediaPickerResultForStories(data, activity, selectedSite)) {
-                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                        val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
                         updateSiteIconMediaId(mediaId)
                     } else {
                         val mediaUriStringsArray = data.getStringArrayExtra(
-                                PhotoPickerActivity.EXTRA_MEDIA_URIS
+                                MediaPickerConstants.EXTRA_MEDIA_URIS
                         )
                         if (mediaUriStringsArray.isNullOrEmpty()) {
                             AppLog.e(
@@ -788,7 +790,7 @@ class MySiteFragment : Fragment(),
                         }
 
                         val source = PhotoPickerMediaSource.fromString(
-                                data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                                data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                         )
                         val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
                         AnalyticsTracker.track(stat)
@@ -1214,8 +1216,8 @@ class MySiteFragment : Fragment(),
 
     override fun onPositiveClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> ActivityLauncher.showPhotoPickerForResult(
-                    activity,
+            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showPhotoPickerForResult(
+                    requireActivity(),
                     SITE_ICON_PICKER, selectedSite, null
             )
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG -> {

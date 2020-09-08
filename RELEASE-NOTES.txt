@@ -1,5 +1,21 @@
+15.8
+-----
+* [**] Reader: Now displaying preview images for more posts when no feature image is set.
+
+15.7
+-----
+* [**] Block Editor: New block: Pullquote
+* [**] Block Editor: Block settings now immediately reflect changes from menu sliders.
+ * [***] Reader: Introduced a new Discover tab tailored for each user.
+ * [*] Reader: Added "(un)follow" button to the site and topic detail screens.
+
+* [*] Media: Fixed a bug that would allow you to pick unsupported media that then couldn't be uploaded.
+ 
 15.6
 -----
+* [**] Block Editor: Add settings to allow changing column widths
+* [**] Block Editor: Media editing support in Gallery block.
+* [*] Block Editor: Improved logic for creating undo levels.
  
 15.5
 -----

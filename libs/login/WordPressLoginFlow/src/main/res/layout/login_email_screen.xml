@@ -16,15 +16,18 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         tools:text="@string/enter_email_wordpress_com" />
 
+    <!-- Even though this field only accepts email addresses, we also include "username" as an
+    autofill hint value to ensure that the default autofill service works well with it -->
     <org.wordpress.android.login.widgets.WPLoginInputRow
         android:id="@+id/login_email_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:autofillHints="emailAddress,username"
         android:hint="@string/email_address"
         android:imeOptions="actionNext"
-        android:importantForAutofill="noExcludeDescendants"
+        android:importantForAutofill="yes"
         android:inputType="textEmailAddress"
         tools:ignore="UnusedAttribute" />
 

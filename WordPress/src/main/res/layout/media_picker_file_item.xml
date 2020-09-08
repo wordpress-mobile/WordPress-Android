@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/photo_picker_item_padding">
+
+    <RelativeLayout
+        android:id="@+id/media_grid_item_file_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?attr/wpColorSurfaceSecondary"
+        android:padding="@dimen/margin_medium"
+        app:layout_constraintDimensionRatio="@string/media_grid_item_ratio"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:id="@+id/media_item_filetype_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@null"
+                app:tint="@color/neutral_70"
+                tools:src="@drawable/ic_pages_white_24dp" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/media_item_filetype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_sz_small"
+                android:textStyle="bold"
+                tools:text="PDF" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/media_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:singleLine="true"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_sz_extra_small"
+                tools:text="filename" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <include layout="@layout/media_picker_selection_count" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

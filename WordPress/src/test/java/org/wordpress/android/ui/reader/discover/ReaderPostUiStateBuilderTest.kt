@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -15,6 +16,8 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
@@ -27,6 +30,9 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
@@ -39,12 +45,15 @@ import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
+@InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostUiStateBuilderTest {
     // region Set-up
@@ -59,12 +68,11 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
-    @Mock lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
-    fun setUp() {
+    fun setUp() = test {
         builder = ReaderPostUiStateBuilder(
                 accountStore,
                 urlUtilsWrapper,
@@ -72,9 +80,9 @@ class ReaderPostUiStateBuilderTest {
                 dateTimeUtilsWrapper,
                 readerImageScannerProvider,
                 readerUtilsWrapper,
-                readerPostMoreButtonUiStateBuilder,
                 readerPostTagsUiStateBuilder,
-                appPrefsWrapper
+                appPrefsWrapper,
+                TEST_DISPATCHER
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
@@ -89,7 +97,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region BLOG HEADER
     @Test
-    fun `clicks on blog header are disabled on blog preview`() {
+    fun `clicks on blog header are disabled on blog preview`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -99,7 +107,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `clicks on blog header are enabled when not blog preview`() {
+    fun `clicks on blog header are enabled when not blog preview`() = test {
         // Arrange
         val post = createPost()
         ReaderPostListType.values().filter { it != BLOG_PREVIEW }.forEach {
@@ -113,7 +121,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region BLOG URL
     @Test
-    fun `scheme is removed from blog url`() {
+    fun `scheme is removed from blog url`() = test {
         // Arrange
         val post = createPost(blogUrl = "http://dummy.url")
         whenever(urlUtilsWrapper.removeScheme("http://dummy.url")).thenReturn("dummy.url")
@@ -126,7 +134,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region DISCOVER SECTION
     @Test
-    fun `discover section is empty when isDiscoverPost is false`() {
+    fun `discover section is empty when isDiscoverPost is false`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = false)
         // Act
@@ -136,7 +144,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `discover section is not empty when isDiscoverPost is true`() {
+    fun `discover section is not empty when isDiscoverPost is true`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true)
         // Act
@@ -146,7 +154,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `discover section is empty when discoverType is OTHER`() {
+    fun `discover section is empty when discoverType is OTHER`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true, discoverType = OTHER)
         // Act
@@ -156,7 +164,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `discover section is not empty when discoverType is other than OTHER`() {
+    fun `discover section is not empty when discoverType is other than OTHER`() = test {
         // Arrange
         DiscoverType.values().filter { it != OTHER }.forEach {
             val post = createPost(isDiscoverPost = true, discoverType = it)
@@ -168,7 +176,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `discover uses ImageType AVATAR when EDITOR_PICK`() {
+    fun `discover uses ImageType AVATAR when EDITOR_PICK`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true, discoverType = EDITOR_PICK)
         // Act
@@ -178,7 +186,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `discover uses ImageType BLAVATAR when SITE_PICK`() {
+    fun `discover uses ImageType BLAVATAR when SITE_PICK`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true, discoverType = SITE_PICK)
         // Act
@@ -188,7 +196,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `discover uses fixed avatar URL`() {
+    fun `discover uses fixed avatar URL`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true)
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("12345")
@@ -201,7 +209,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region VIDEO
     @Test
-    fun `videoUrl gets initialized for video cards`() {
+    fun `videoUrl gets initialized for video cards`() = test {
         // Arrange
         val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
         // Act
@@ -211,7 +219,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `videoUrl does not get initialized for other than video cards`() {
+    fun `videoUrl does not get initialized for other than video cards`() = test {
         // Arrange
         val types = ReaderCardType.values()
         types.filter { it != VIDEO }.forEach {
@@ -224,7 +232,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `video overlay is displayed for video cards`() {
+    fun `video overlay is displayed for video cards`() = test {
         // Arrange
         val post = createPost(cardType = VIDEO)
         // Act
@@ -234,7 +242,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `video overlay is not displayed for other than video cards`() {
+    fun `video overlay is not displayed for other than video cards`() = test {
         // Arrange
         val types = ReaderCardType.values()
         types.filter { it != VIDEO }.forEach {
@@ -249,7 +257,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region THUMBNAIL STRIP
     @Test
-    fun `thumbnail strip is not empty for GALLERY`() {
+    fun `thumbnail strip is not empty for GALLERY`() = test {
         // Arrange
         val post = createPost(cardType = GALLERY)
         // Act
@@ -259,7 +267,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `thumbnail strip is empty for other than GALLERY`() {
+    fun `thumbnail strip is empty for other than GALLERY`() = test {
         // Arrange
         ReaderCardType.values().filter { it != GALLERY }.forEach {
             val post = createPost(cardType = it)
@@ -273,7 +281,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region FEATURED IMAGE
     @Test
-    fun `featured image is displayed for photo and default card types`() {
+    fun `featured image is displayed for photo and default card types`() = test {
         // Arrange
         val dummyUrl = "12345"
         ReaderCardType.values().filter { it == PHOTO || it == DEFAULT }.forEach {
@@ -286,7 +294,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `featured image is not displayed for other than photo and default card types`() {
+    fun `featured image is not displayed for other than photo and default card types`() = test {
         // Arrange
         ReaderCardType.values().filter { it != PHOTO && it != DEFAULT }.forEach {
             val post = createPost(cardType = it, hasFeaturedImage = true)
@@ -298,7 +306,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `featured image is not displayed when hasFeaturedImage returns false`() {
+    fun `featured image is not displayed when hasFeaturedImage returns false`() = test {
         // Arrange
         val post = createPost(cardType = PHOTO, hasFeaturedImage = false)
         // Act
@@ -310,7 +318,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region PHOTO TITLE
     @Test
-    fun `photo title is displayed for photo card type`() {
+    fun `photo title is displayed for photo card type`() = test {
         // Arrange
         val post = createPost(cardType = PHOTO)
         // Act
@@ -320,7 +328,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo title is not displayed for other than photo card type`() {
+    fun `photo title is not displayed for other than photo card type`() = test {
         // Arrange
         ReaderCardType.values().filter { it != PHOTO }.forEach {
             val post = createPost(cardType = it)
@@ -332,7 +340,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo title is not displayed when hasTitle returns false`() {
+    fun `photo title is not displayed when hasTitle returns false`() = test {
         // Arrange
         val post = createPost(cardType = PHOTO, hasTitle = false)
         // Act
@@ -344,7 +352,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region PHOTO FRAME
     @Test
-    fun `photo frame is visible for other than gallery type`() {
+    fun `photo frame is visible for other than gallery type`() = test {
         // Arrange
         ReaderCardType.values().filter { it != GALLERY }.forEach {
             val post = createPost(cardType = it, hasFeaturedVideo = true)
@@ -356,7 +364,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo frame is not visible for gallery type`() {
+    fun `photo frame is not visible for gallery type`() = test {
         // Arrange
         val post = createPost(cardType = GALLERY, hasFeaturedVideo = true)
         // Act
@@ -366,7 +374,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo frame is visible when hasFeaturedVideo returns true`() {
+    fun `photo frame is visible when hasFeaturedVideo returns true`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasFeaturedVideo = true)
         // Act
@@ -376,7 +384,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo frame is not visible when hasFeaturedVideo returns false`() {
+    fun `photo frame is not visible when hasFeaturedVideo returns false`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasFeaturedVideo = false)
         // Act
@@ -386,7 +394,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo frame is visible when hasFeaturedImage returns true`() {
+    fun `photo frame is visible when hasFeaturedImage returns true`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasFeaturedImage = true)
         // Act
@@ -396,7 +404,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `photo frame is not visible when hasFeaturedImage returns false`() {
+    fun `photo frame is not visible when hasFeaturedImage returns false`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasFeaturedImage = false)
         // Act
@@ -408,19 +416,19 @@ class ReaderPostUiStateBuilderTest {
 
     // region TITLE & EXCERPT
     @Test
-    fun `title is displayed for other than PHOTO card type`() {
+    fun `title is displayed for other than PHOTO card type`() = test {
         // Arrange
         ReaderCardType.values().filter { it != PHOTO }.forEach {
             val post = createPost(cardType = it)
             // Act
             val uiState = mapPostToUiState(post)
             // Assert
-            assertThat(uiState.title).isNotNull()
+            assertThat((uiState.title as UiStringText).text).isEqualTo(post.title)
         }
     }
 
     @Test
-    fun `title is not displayed for PHOTO card type`() {
+    fun `title is not displayed for PHOTO card type`() = test {
         // Arrange
         val post = createPost(cardType = PHOTO)
         // Act
@@ -430,17 +438,17 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `title is not displayed when the post doesn't have a title`() {
+    fun `default title is displayed when the post doesn't have a title`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasTitle = false)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.title).isNull()
+        assertThat((uiState.title as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
 
     @Test
-    fun `excerpt is displayed for other than PHOTO card type`() {
+    fun `excerpt is displayed for other than PHOTO card type`() = test {
         // Arrange
         ReaderCardType.values().filter { it != PHOTO }.forEach {
             val post = createPost(cardType = it)
@@ -452,7 +460,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `excerpt is not displayed for PHOTO card type`() {
+    fun `excerpt is not displayed for PHOTO card type`() = test {
         // Arrange
         val post = createPost(cardType = PHOTO)
         // Act
@@ -462,7 +470,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `excerpt is not displayed when the post doesn't have an excerpt`() {
+    fun `excerpt is not displayed when the post doesn't have an excerpt`() = test {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasExcerpt = false)
         // Act
@@ -474,7 +482,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region BLOG NAME
     @Test
-    fun `blog name is displayed for regular post`() {
+    fun `blog name is displayed for regular post`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -484,7 +492,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `blogName is not displayed the post doesn't have a blog name`() {
+    fun `blogName is not displayed the post doesn't have a blog name`() = test {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
@@ -496,7 +504,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region DATELINE
     @Test
-    fun `builds dateline from post's display date`() {
+    fun `builds dateline from post's display date`() = test {
         // Arrange
         val post = createPost()
         val dummyDate: Date = mock()
@@ -511,7 +519,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region BOOKMARK BUTTON
     @Test
-    fun `bookmark button is disabled when postId is empty`() {
+    fun `bookmark button is disabled when postId is empty`() = test {
         // Arrange
         val post = createPost(postId = 0)
         // Act
@@ -521,7 +529,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `bookmark button is disabled when blogId is empty`() {
+    fun `bookmark button is disabled when blogId is empty`() = test {
         // Arrange
         val post = createPost(blogId = 0)
         // Act
@@ -531,7 +539,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `bookmark button is enabled when blogid and postId is not empty`() {
+    fun `bookmark button is enabled when blogid and postId is not empty`() = test {
         // Arrange
         val post = createPost(postId = 1L, blogId = 2L)
         // Act
@@ -541,7 +549,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `bookmark button is selected when the post is bookmarked`() {
+    fun `bookmark button is selected when the post is bookmarked`() = test {
         // Arrange
         val post = createPost(isBookmarked = true)
         // Act
@@ -551,7 +559,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `bookmark button is not selected when the post is not bookmarked`() {
+    fun `bookmark button is not selected when the post is not bookmarked`() = test {
         // Arrange
         val post = createPost(isBookmarked = false)
         // Act
@@ -561,7 +569,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `onButtonClicked listener is correctly assigned to bookmarkAction`() {
+    fun `onButtonClicked listener is correctly assigned to bookmarkAction`() = test {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
@@ -575,7 +583,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region LIKE BUTTON
     @Test
-    fun `like button is enabled on regular posts`() {
+    fun `like button is enabled on regular posts`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -585,7 +593,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `like button is disabled on bookmark list`() {
+    fun `like button is disabled on bookmark list`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -595,7 +603,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `like button is disabled when the user is logged off`() {
+    fun `like button is disabled when the user is logged off`() = test {
         // Arrange
         val post = createPost()
         whenever(accountStore.hasAccessToken()).thenReturn(false)
@@ -606,7 +614,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `like button is disabled when likes are disabled on the post`() {
+    fun `like button is disabled when likes are disabled on the post`() = test {
         // Arrange
         val post = createPost(isCanLikePost = false)
         // Act
@@ -616,7 +624,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `onButtonClicked listener is correctly assigned to likeAction`() {
+    fun `onButtonClicked listener is correctly assigned to likeAction`() = test {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
@@ -630,7 +638,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region REBLOG BUTTON
     @Test
-    fun `reblog button is enabled on regular posts`() {
+    fun `reblog button is enabled on regular posts`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -640,7 +648,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `reblog button is disabled on private posts`() {
+    fun `reblog button is disabled on private posts`() = test {
         // Arrange
         val post = createPost(isPrivate = true)
         // Act
@@ -650,7 +658,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `reblog button is disabled when the user is logged off`() {
+    fun `reblog button is disabled when the user is logged off`() = test {
         // Arrange
         val post = createPost()
         whenever(accountStore.hasAccessToken()).thenReturn(false)
@@ -661,7 +669,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `onButtonClicked listener is correctly assigned to reblogAction`() {
+    fun `onButtonClicked listener is correctly assigned to reblogAction`() = test {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
@@ -675,7 +683,7 @@ class ReaderPostUiStateBuilderTest {
 
     // region COMMENT BUTTON
     @Test
-    fun `Comments button is enabled on regular posts`() {
+    fun `Comments button is enabled on regular posts`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -685,7 +693,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled when comments are disabled on the post`() {
+    fun `Comments button is disabled when comments are disabled on the post`() = test {
         // Arrange
         val post = createPost(isCommentsOpen = false)
         // Act
@@ -695,7 +703,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled on non-wpcom posts`() {
+    fun `Comments button is disabled on non-wpcom posts`() = test {
         // Arrange
         val post = createPost(isWPCom = false)
         // Act
@@ -705,7 +713,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled when the user is logged off and the post does not have any comments`() {
+    fun `Comments button is disabled when the user is logged off and the post does not have any comments`() = test {
         // Arrange
         val post = createPost(numOfReplies = 0)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
@@ -716,7 +724,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is enabled when the user is logged off but the post has some comments`() {
+    fun `Comments button is enabled when the user is logged off but the post has some comments`() = test {
         // Arrange
         val post = createPost(numOfReplies = 1)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
@@ -727,7 +735,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled on discover posts`() {
+    fun `Comments button is disabled on discover posts`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true)
         // Act
@@ -737,7 +745,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled on bookmark list`() {
+    fun `Comments button is disabled on bookmark list`() = test {
         // Arrange
         val post = createPost()
         // Act
@@ -747,7 +755,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Count on Comments button corresponds to number of comments on the post`() {
+    fun `Count on Comments button corresponds to number of comments on the post`() = test {
         // Arrange
         val numReplies = 15
         val post = createPost(numOfReplies = numReplies)
@@ -756,10 +764,66 @@ class ReaderPostUiStateBuilderTest {
         // Assert
         assertThat(uiState.commentsAction.count).isEqualTo(numReplies)
     }
+
+    @Test
+    fun `Ensures that there are 5 interests within the uiState even though the ReaderTagList contains 6`() = test {
+        // arrange
+        val expectedInterestListSize = 5
+        val currentReaderTagListSize = 6
+
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
+    }
+
+    @Test
+    fun `Ensures that there are three interests within the uiState when the ReaderTagList contains 3`() = test {
+        // arrange
+        val expectedInterestListSize = 3
+        val currentReaderTagListSize = 3
+
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.size).isEqualTo(expectedInterestListSize)
+    }
+
+    @Test
+    fun `Ensures that the first InterestUiState has isDividerVisible set to true`() = test {
+        // arrange
+        val currentReaderTagListSize = 2
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.first().isDividerVisible).isTrue()
+    }
+
+    @Test
+    fun `Ensures that the last InterestUiState has isDividerVisible set to false`() = test {
+        // arrange
+        val currentReaderTagListSize = 2
+        val readerTagList = createReaderTagList(currentReaderTagListSize)
+
+        // act
+        val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
+
+        // assert
+        assertThat(result.interest.last().isDividerVisible).isFalse()
+    }
     // endregion
 
     // region Private methods
-    private fun mapPostToUiState(
+    private suspend fun mapPostToUiState(
         post: ReaderPost,
         postListType: ReaderPostListType = TAG_FOLLOWED,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock(),
@@ -779,7 +843,8 @@ class ReaderPostUiStateBuilderTest {
                 onMoreButtonClicked = mock(),
                 onVideoOverlayClicked = mock(),
                 onPostHeaderViewClicked = mock(),
-                onTagItemClicked = mock()
+                onTagItemClicked = mock(),
+                onMoreDismissed = mock()
         )
     }
 
@@ -834,5 +899,20 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
         return post
     }
+
+    private fun createReaderTagList(numOfTags: Int) = ReaderTagList().apply {
+        for (x in 0 until numOfTags) {
+            add(createReaderTag())
+        }
+    }
+
+    private fun createReaderTag() = ReaderTag(
+            "",
+            "",
+            "",
+            null,
+            mock(),
+            false
+    )
     // endregion
 }

@@ -14,6 +14,7 @@ import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
+import com.wordpress.stories.compose.PermanentPermissionDenialDialogProvider
 import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
@@ -32,12 +33,12 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -55,6 +56,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
@@ -73,7 +75,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         StoryDiscardListener,
         EditPostActivityHook,
         PrepublishingEventProvider,
-        PrepublishingBottomSheetListener {
+        PrepublishingBottomSheetListener,
+        PermanentPermissionDenialDialogProvider {
     private var site: SiteModel? = null
 
     @Inject lateinit var storyEditorMedia: StoryEditorMedia
@@ -85,6 +88,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -93,9 +97,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun getEditPostRepository() = editPostRepository
 
     companion object {
-        // arbitrary post format for Stories. Will be used in Posts lists for filtering.
-        // See https://wordpress.org/support/article/post-formats/
-        const val POST_FORMAT_WP_STORY_KEY = "wpstory"
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
@@ -114,6 +115,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setStoryDiscardListener(this)
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
         setPrepublishingEventProvider(this)
+        setPermissionDialogProvider(this)
 
         initViewModel(savedInstanceState)
     }
@@ -210,9 +212,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER -> {
-                    if (it.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                    if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                                it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                                it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                         )
                         storyEditorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
@@ -251,14 +253,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun setupRequestCodes(requestCodes: ExternalMediaPickerRequestCodesAndExtraKeys) {
         requestCodes.PHOTO_PICKER = RequestCodes.PHOTO_PICKER
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
-                PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
+                MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
         // we're handling EXTRA_MEDIA_URIS at the app level (not at the Stories library level)
         // hence we set the requestCode to UNUSED
         requestCodes.EXTRA_MEDIA_URIS = UNUSED_KEY
     }
 
     override fun showProvidedMediaPicker() {
-        ActivityLauncher.showPhotoPickerForResult(
+        mediaPickerLauncher.showPhotoPickerForResult(
                 this,
                 MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                 site,
@@ -272,9 +274,13 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun handleMediaPickerIntentData(data: Intent) {
-        if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+        if (permissionsRequestForCameraInProgress) {
+            return
+        }
+
+        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val uriList: List<Uri> = convertStringArrayIntoUrisList(
-                    data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             )
             if (uriList.isNotEmpty()) {
                 storyEditorMedia.onPhotoPickerMediaChosen(uriList)
@@ -312,7 +318,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         WPSnackbar
                                 .make(
                                         findViewById(id.editor_activity),
-                                        messageHolder.messageRes,
+                                        uiHelpers.getTextOfUiString(this, messageHolder.message),
                                         Snackbar.LENGTH_SHORT
                                 )
                                 .show()
@@ -334,7 +340,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // TODO will implement when we support StoryPost editing
         // updateAndSavePostAsync(listener)
         // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
-        listener?.onPostUpdatedFromUI()
+        listener?.onPostUpdatedFromUI(null)
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
@@ -406,5 +412,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         viewModel.onSubmitButtonClicked()
+    }
+
+    override fun showPermissionPermanentlyDeniedDialog(permission: String) {
+        WPPermissionUtils.showPermissionAlwaysDeniedDialog(this, permission)
     }
 }

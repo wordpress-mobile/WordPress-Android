@@ -59,6 +59,8 @@ import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.MediaPickerViewModel}")
 class PhotoPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -119,28 +121,36 @@ class PhotoPickerViewModel @Inject constructor(
         var isVideoSelected = false
         return if (data != null) {
             val uiItems = data.map {
-                if (selectedIds != null && selectedIds.contains(it.id)) {
+                val showOrderCounter = browserType.canMultiselect()
+                val toggleAction = ToggleAction(it.id, showOrderCounter, this::toggleItem)
+                val clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
+                val (selectedOrder, isSelected) = if (selectedIds != null && selectedIds.contains(it.id)) {
                     isVideoSelected = isVideoSelected || it.isVideo
-                    PhotoPickerUiItem(
+                    val selectedOrder = if (showOrderCounter) selectedIds.indexOf(it.id) + 1 else null
+                    val isSelected = true
+                    selectedOrder to isSelected
+                } else {
+                    null to false
+                }
+                if (it.isVideo) {
+                    PhotoPickerUiItem.VideoItem(
                             id = it.id,
                             uri = it.uri,
-                            isVideo = it.isVideo,
-                            isSelected = true,
-                            selectedOrder = if (browserType.canMultiselect()) selectedIds.indexOf(it.id) + 1 else null,
-                            showOrderCounter = browserType.canMultiselect(),
-                            toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem),
-                            clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
+                            isSelected = isSelected,
+                            selectedOrder = selectedOrder,
+                            showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction,
+                            clickAction = clickAction
                     )
                 } else {
-                    PhotoPickerUiItem(
+                    PhotoPickerUiItem.PhotoItem(
                             id = it.id,
                             uri = it.uri,
-                            isVideo = it.isVideo,
-                            isSelected = false,
-                            selectedOrder = null,
-                            showOrderCounter = browserType.canMultiselect(),
-                            toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem),
-                            clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
+                            isSelected = isSelected,
+                            selectedOrder = selectedOrder,
+                            showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction,
+                            clickAction = clickAction
                     )
                 }
             }
