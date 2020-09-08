@@ -151,10 +151,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
         setContentView(R.layout.reader_activity_post_pager);
 
-        mToolbar = findViewById(R.id.toolbar_main);
+        mAppBar = findViewById(R.id.appbar_with_collapsing_toolbar_layout);
+        mToolbar = mAppBar.findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
-
-        mAppBar = findViewById(R.id.appbar_main);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
