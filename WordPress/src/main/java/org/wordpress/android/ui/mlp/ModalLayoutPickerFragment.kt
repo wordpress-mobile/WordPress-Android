@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
@@ -33,6 +34,7 @@ import javax.inject.Inject
  * Implements the Modal Layout Picker UI based on the [BottomSheetDialogFragment] to inherit the container behavior
  */
 class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
+    @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
@@ -100,8 +102,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      */
     private fun setTitleVisibility(visible: Boolean) {
         if (visible == (title.visibility == View.VISIBLE)) return // No change
-        title.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-        header.visibility = if (!visible) View.VISIBLE else View.INVISIBLE
+        uiHelper.setInvisible(title, !visible)
+        uiHelper.setInvisible(header, visible)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
