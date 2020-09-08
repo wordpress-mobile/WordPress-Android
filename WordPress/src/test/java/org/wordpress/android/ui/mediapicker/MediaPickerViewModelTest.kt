@@ -19,10 +19,15 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -345,12 +350,24 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     private fun selectItem(position: Int) {
-        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
+        when (val item = itemOnPosition(position)) {
+            is PhotoItem -> item.toggleAction.toggle()
+            is VideoItem -> item.toggleAction.toggle()
+            is FileItem -> item.toggleAction.toggle()
+        }
     }
 
     private fun clickItem(position: Int) {
-        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].clickAction.click()
+        when (val item = itemOnPosition(position)) {
+            is PhotoItem -> item.clickAction.click()
+            is VideoItem -> item.clickAction.click()
+            is FileItem -> item.clickAction.click()
+            is NextPageLoader -> item.retryAction()
+        }
     }
+
+    private fun itemOnPosition(position: Int) =
+            (uiStates.last().photoListUiModel as Data).items[position]
 
     private fun assertDataList(
         mediaPickerSetup: MediaPickerSetup,
@@ -401,7 +418,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         numberOfStates: Int = 2
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
-        whenever(mediaLoaderFactory.build(mediaPickerSetup.dataSource)).thenReturn(mediaLoader)
+        whenever(mediaLoaderFactory.build(mediaPickerSetup)).thenReturn(mediaLoader)
         whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel, filter = filter)) })
         viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
@@ -424,7 +441,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         selectedOrder: Int,
         domainItem: MediaItem
     ) {
-        this.items[position].apply {
+        val mediaPickerItem = this.items[position]
+        mediaPickerItem.toSelectableItem()!!.apply {
             assertThat(this.isSelected).isEqualTo(isSelected)
             if (isSelected && isMultiSelection) {
                 assertThat(this.selectedOrder).isEqualTo(selectedOrder + 1)
@@ -432,19 +450,16 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 assertThat(this.selectedOrder).isNull()
             }
             assertThat(this.showOrderCounter).isEqualTo(isMultiSelection)
-            assertEqualToDomainItem(domainItem)
         }
+        mediaPickerItem.assertEqualToDomainItem(domainItem)
     }
 
     private fun MediaPickerUiItem.assertEqualToDomainItem(domainItem: MediaItem) {
-        assertThat(this.uri).isEqualTo(domainItem.uri)
         when (domainItem.type) {
-            IMAGE -> assertThat(this is MediaPickerUiItem.PhotoItem)
-            VIDEO -> assertThat(this is MediaPickerUiItem.VideoItem)
-            DOCUMENT, AUDIO -> assertThat(this is MediaPickerUiItem.FileItem)
+            IMAGE -> assertThat((this as PhotoItem).uri).isEqualTo(domainItem.uri)
+            VIDEO -> assertThat((this as VideoItem).uri).isEqualTo(domainItem.uri)
+            DOCUMENT, AUDIO -> assertThat((this as FileItem).uri).isEqualTo(domainItem.uri)
         }
-
-        assertThat(this.uri).isEqualTo(domainItem.uri)
     }
 
     private fun assertActionModeHidden() {
