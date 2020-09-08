@@ -1,5 +1,7 @@
 package org.wordpress.android.util;
 
+import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -160,6 +162,8 @@ public class WPPermissionUtils {
                 return context.getString(R.string.permission_storage);
             case android.Manifest.permission.CAMERA:
                 return context.getString(R.string.permission_camera);
+            case Manifest.permission.RECORD_AUDIO:
+                return context.getString(R.string.permission_microphone);
             default:
                 AppLog.w(AppLog.T.UTILS, "No name for requested permission");
                 return context.getString(R.string.unknown);
@@ -170,7 +174,7 @@ public class WPPermissionUtils {
      * called when the app detects that the user has permanently denied a permission, shows a dialog
      * alerting them to this fact and enabling them to visit the app settings to edit permissions
      */
-    private static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
+    public static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
                                                          @NonNull String permission) {
         String message = String.format(activity.getString(R.string.permissions_denied_message),
                 getPermissionName(activity, permission));

@@ -6,14 +6,14 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: az
 -->
 <resources>
-    <string name="theme_support">Dəstək</string>
     <string name="theme_view">Bax</string>
-    <string name="active">Aktiv</string>
+    <string name="theme_support">Dəstək</string>
     <string name="support">Dəstək</string>
-    <string name="page_updated">Səhifə yeniləndi</string>
-    <string name="post_updated">Yazı yeniləndi</string>
-    <string name="page_published">Səhifə dərc edildi</string>
+    <string name="active">Aktiv</string>
     <string name="post_published">Yazı dərc edildi</string>
+    <string name="page_published">Səhifə dərc edildi</string>
+    <string name="post_updated">Yazı yeniləndi</string>
+    <string name="page_updated">Səhifə yeniləndi</string>
     <string name="reader_short_comment_count_multi">%s Şərh</string>
     <string name="reader_short_comment_count_one">1 Şərh</string>
     <string name="reader_short_like_count_multi">%s Bəyənmə</string>
@@ -111,7 +111,6 @@ Language: az
     <string name="posts_empty_list">Hələlik yazı yoxdur. Bir yazı yaratmağa nə deyərsiniz?</string>
     <string name="comment_reply_to_user">Bunu cavabla: %s</string>
     <string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
-    <string name="contact_us">Əlaqə yaradın</string>
     <string name="update_verb">Yenilə</string>
     <string name="schedule_verb">Planla</string>
     <string name="reader_page_followed_tags">İzlənilən etiketlər</string>
