@@ -19,7 +19,6 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -148,13 +147,9 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `initial uiState is loading`() {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
+        val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         viewModel.start()
-
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isEqualTo(LoadingUiState)
@@ -163,15 +158,9 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `uiState updated when discover feed finishes loading`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-
+        val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
-
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
         assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
@@ -182,7 +171,6 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
-
         // Act
         ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
             it.onItemRendered.invoke(it)
@@ -196,9 +184,7 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val notCloseToEndIndex = 2
         init()
-
         // Act
-
         ((viewModel.uiState.value as ContentUiState).cards[notCloseToEndIndex] as ReaderPostUiState).let {
             it.onItemRendered.invoke(it)
         }
@@ -207,101 +193,63 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `if InterestsYouMayLikeCard exist then ReaderInterestsCardUiState will be present in the ContentUIState`() =
-            test {
-                // Arrange
-                val uiStates = mutableListOf<DiscoverUiState>()
-                viewModel.uiState.observeForever {
-                    uiStates.add(it)
-                }
-                viewModel.start()
-
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createInterestsYouMayLikeCardList())
-
-                // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
-            }
+    fun `if InterestsYouMayLikeCard exist then it will be present in the ContentUIState`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createInterestsYouMayLikeCardList())
+        // Assert
+        val contentUiState = uiStates[1] as ContentUiState
+        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
+    }
 
     @Test
-    fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() =
-            test {
-                // Arrange
-                val uiStates = mutableListOf<DiscoverUiState>()
-                viewModel.uiState.observeForever {
-                    uiStates.add(it)
-                }
-                viewModel.start()
-
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
-
-                // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
-            }
+    fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
+        // Assert
+        val contentUiState = uiStates[1] as ContentUiState
+        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
+    }
 
     @Test
-    fun `if welcome card exists with other cards, ReaderWelcomeBannerCardUiState is present in ContentUiState`() =
-            test {
-                // Arrange
-                val uiStates = mutableListOf<DiscoverUiState>()
-                viewModel.uiState.observeForever {
-                    uiStates.add(it)
-                }
-                viewModel.start()
-
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(
-                        createWelcomeBannerCard()
-                                .plus(createDummyReaderPostCardList())
-                )
-
-                // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
-            }
+    fun `if welcome card exists with other cards, it is present in ContentUiState`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = ReaderDiscoverCards(
+                createWelcomeBannerCard()
+                        .plus(createDummyReaderPostCardList())
+        )
+        // Assert
+        val contentUiState = uiStates[1] as ContentUiState
+        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
+    }
 
     @Test
-    fun `if welcome card exists as the only card in the feed then ContentUiState is not shown`() =
-            test {
-                // Arrange
-                val uiStates = mutableListOf<DiscoverUiState>()
-                viewModel.uiState.observeForever {
-                    uiStates.add(it)
-                }
-                viewModel.start()
-
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
-
-                // Assert
-                assertThat(uiStates.size).isEqualTo(1)
-                assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
-            }
+    fun `if welcome card exists as the only card in the feed then ContentUiState is not shown`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
+        // Assert
+        assertThat(uiStates.size).isEqualTo(1)
+        assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
+    }
 
     @Test
-    fun `WelcomeBannerCard has welcome title set to it`() =
-            test {
-                // Arrange
-                val uiStates = mutableListOf<DiscoverUiState>()
-                viewModel.uiState.observeForever {
-                    uiStates.add(it)
-                }
-                viewModel.start()
-
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(
-                        createWelcomeBannerCard()
-                                .plus(createDummyReaderPostCardList())
-                )
-
-                // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                val welcomeBannerCardUiState = contentUiState.cards.first() as ReaderWelcomeBannerCardUiState
-                assertThat(welcomeBannerCardUiState.titleRes).isEqualTo(R.string.reader_welcome_banner)
-            }
+    fun `WelcomeBannerCard has welcome title set to it`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard().plus(createDummyReaderPostCardList()))
+        // Assert
+        val contentUiState = uiStates[1] as ContentUiState
+        val welcomeBannerCardUiState = contentUiState.cards.first() as ReaderWelcomeBannerCardUiState
+        assertThat(welcomeBannerCardUiState.titleRes).isEqualTo(R.string.reader_welcome_banner)
+    }
 
     @Test
     fun `Discover data provider is started when the vm is started`() = test {
@@ -314,15 +262,9 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `PTR progress shown when REQUEST_FIRST_PAGE event starts and a content is displayed`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.postValue(createDummyReaderCardsList())
+        val uiStates = init().uiStates
         // Act
         fakeCommunicationChannel.postValue(Event(Started(REQUEST_FIRST_PAGE)))
-
         // Assert
         assertThat(uiStates.last().reloadProgressVisibility).isTrue()
     }
@@ -330,16 +272,9 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Load more progress shown when REQUEST_MORE event starts and a content is displayed`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.postValue(createDummyReaderCardsList())
-
+        val uiStates = init().uiStates
         // Act
         fakeCommunicationChannel.postValue(Event(Started(REQUEST_MORE)))
-
         // Assert
         assertThat(uiStates.last().loadMoreProgressVisibility).isTrue()
     }
@@ -347,15 +282,9 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Fullscreen progress shown when an event starts and a content is not displayed`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-
+        val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         fakeCommunicationChannel.postValue(Event(Started(mock())))
-
         // Assert
         assertThat(uiStates.last().fullscreenProgressVisibility).isTrue()
     }
@@ -363,15 +292,10 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Fullscreen error is shown on error event when there is no content`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
+        val uiStates = init(autoUpdateFeed = false).uiStates
         viewModel.start()
-
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
-
         // Assert
         assertThat(uiStates.last().fullscreenErrorVisibility).isTrue()
     }
@@ -379,15 +303,9 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Progress indicators are hidden when an event results in error`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-
+        val uiStates = init().uiStates
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
-
         // Assert
         assertThat(uiStates.last().fullscreenProgressVisibility).isFalse()
         assertThat(uiStates.last().reloadProgressVisibility).isFalse()
@@ -397,52 +315,27 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Snackbar message is shown when an event results in error`() = test {
         // Arrange
-        val msgs = mutableListOf<Event<SnackbarMessageHolder>>()
-        viewModel.snackbarEvents.observeForever {
-            msgs.add(it)
-        }
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
-
+        val msgs = init().snackbarMsgs
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
-
         // Assert
-        assertThat(msgs[0].peekContent().message).isEqualTo(UiStringRes(string.reader_error_request_failed_title))
+        assertThat(msgs[0].peekContent().message).isEqualTo(UiStringRes(R.string.reader_error_request_failed_title))
     }
 
     @Test
     fun `When user clicks on a tag, a list of posts for that tag is shown`() = test {
         // Arrange
-        val navigation = mutableListOf<Event<ReaderNavigationEvents>>()
-        viewModel.navigationEvents.observeForever {
-            navigation.add(it)
-        }
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
+        val observers = init()
         // Act
-        ((uiStates.last() as ContentUiState).cards[1] as ReaderPostUiState).tagItems[0].onClick!!.invoke("Test")
+        ((observers.uiStates.last() as ContentUiState).cards[1] as ReaderPostUiState).tagItems[0].onClick!!.invoke("Test")
         // Assert
-        assertThat(navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
+        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
 
     @Test
     fun `When user clicks on like button postActionHandler is invoked`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).likeAction.onClicked!!.invoke(2, 200, LIKE)
         // Assert
@@ -456,12 +349,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user clicks on video overlay post action handler is invoked`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).onVideoOverlayClicked(2, 200)
         // Assert
@@ -473,12 +361,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user clicks on header post action handler is invoked`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
                 .postHeaderClickData!!.onPostHeaderViewClicked!!.invoke(2, 200)
@@ -492,12 +375,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user clicks on list item post action handler is invoked`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
                 .onItemClicked.invoke(2, 200)
@@ -510,12 +388,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user clicks on more button menu is shown`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val uiStates = init().uiStates
         val cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
         // Act
         cardUiState.onMoreButtonClicked.invoke(cardUiState)
@@ -526,12 +399,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user dismisses the menu the ui state is updated`() = test {
         // Arrange
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val uiStates = init().uiStates
         var cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
         // Act
         cardUiState.onMoreButtonClicked.invoke(cardUiState) // show menu
@@ -544,24 +412,15 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `When user picks a site for reblog action the app shows the editor`() {
         // Arrange
-        val navigation = mutableListOf<Event<ReaderNavigationEvents>>()
-        viewModel.navigationEvents.observeForever {
-            navigation.add(it)
-        }
-        val uiStates = mutableListOf<DiscoverUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        val navigaitonObserver = init().navigation
         fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
         // Act
         viewModel.onReblogSiteSelected(1)
         // Assert
-        assertThat(navigation.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
+        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
     }
 
-    private fun init(): Observers {
+    private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
@@ -575,7 +434,9 @@ class ReaderDiscoverViewModelTest {
             msgs.add(it)
         }
         viewModel.start()
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        if (autoUpdateFeed) {
+            fakeDiscoverFeed.value = createDummyReaderCardsList()
+        }
         return Observers(uiStates, navigation, msgs)
     }
 
