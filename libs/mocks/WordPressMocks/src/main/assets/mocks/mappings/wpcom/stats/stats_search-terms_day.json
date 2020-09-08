@@ -20,10 +20,10 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{now format='yyyy-MM-dd'}}",
+            "date": "{{fnow format='yyyy-MM-dd'}}",
             "period": "day",
             "days": {
-                "{{now format='yyyy-MM-dd'}}": {
+                "{{fnow format='yyyy-MM-dd'}}": {
                     "search_terms": [],
                     "encrypted_search_terms": 0,
                     "other_search_terms": 0,

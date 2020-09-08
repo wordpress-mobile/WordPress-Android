@@ -1,0 +1,2 @@
+15.6:
+Mejoras en el editor de bloques: Añadidos ajustes para cambiar el ancho de las columnas en el bloque de columnas, añadida compatibilidad para la edición de medios en el bloque de galería y mejorada la lógica para deshacer/rehacer mientras se dibuja: disfruta deshacer en partes de una forma más inteligente, en lugar de deshacer unas pocas letras o pequeños cambios a la vez.
