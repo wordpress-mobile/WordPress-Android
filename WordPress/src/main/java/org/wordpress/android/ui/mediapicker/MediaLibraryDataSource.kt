@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.mediapicker
 
-import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -85,7 +83,7 @@ class MediaLibraryDataSource(
         }
     }
 
-    private suspend fun loadMediaItems(mediaType: MediaType, forced: Boolean, loadMore: Boolean) = flow<PartialResult> {
+    private suspend fun loadMediaItems(mediaType: MediaType, forced: Boolean, loadMore: Boolean) = flow {
         emit(Loading)
         if (!forced) {
             emit(Data(getFromDatabase(mediaType)))
@@ -94,7 +92,7 @@ class MediaLibraryDataSource(
         if (loadingResult.isError) {
             emit(PartialResult.Error(loadingResult.error.message))
         } else {
-
+            emit(Data(getFromDatabase(mediaType)))
         }
     }
 
@@ -120,7 +118,7 @@ class MediaLibraryDataSource(
             }
 
     private fun MediaType.toMimeType(): MimeType.Type {
-        return when(this) {
+        return when (this) {
             IMAGE -> MimeType.Type.IMAGE
             VIDEO -> MimeType.Type.VIDEO
             AUDIO -> MimeType.Type.AUDIO
@@ -135,9 +133,9 @@ class MediaLibraryDataSource(
     }
 
     sealed class PartialResult {
-        object Loading: PartialResult()
-        data class Data(val data: List<MediaItem>): PartialResult()
-        data class Error(val message: String): PartialResult()
+        object Loading : PartialResult()
+        data class Data(val data: List<MediaItem>) : PartialResult()
+        data class Error(val message: String) : PartialResult()
     }
 
     companion object {
@@ -147,8 +145,9 @@ class MediaLibraryDataSource(
     class MediaLibraryDataSourceFactory
     @Inject constructor(
         private val mediaStore: MediaStore,
+        private val dispatcher: Dispatcher,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
-        fun build(siteModel: SiteModel) = MediaLibraryDataSource(mediaStore, bgDispatcher, siteModel)
+        fun build(siteModel: SiteModel) = MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel)
     }
 }
