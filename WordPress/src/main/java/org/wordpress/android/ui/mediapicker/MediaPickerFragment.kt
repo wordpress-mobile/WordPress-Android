@@ -204,17 +204,22 @@ class MediaPickerFragment : Fragment() {
         val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
+        val browseMenuItem = checkNotNull(menu.findItem(R.id.mnu_browse_item)) {
+            "Menu does not contain mandatory browse item"
+        }
         initializeSearchView(searchMenuItem)
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             val searchView = searchMenuItem.actionView as SearchView
+
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
-                menu.findItem(R.id.mnu_browse_item).isVisible = false
                 searchMenuItem.expandActionView()
                 searchView.setQuery(uiState.searchUiModel.filter, true)
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
-                menu.findItem(R.id.mnu_browse_item).isVisible = true
                 searchMenuItem.collapseActionView()
             }
+
+            searchMenuItem.isVisible = uiState.searchUiModel.isVisible
+            browseMenuItem.isVisible = uiState.browseMenuUiModel.isVisible
         })
     }
 

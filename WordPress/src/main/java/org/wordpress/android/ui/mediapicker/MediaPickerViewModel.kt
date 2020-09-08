@@ -98,16 +98,23 @@ class MediaPickerViewModel @Inject constructor(
                     clickIcon(WP_STORIES_CAPTURE)
                 },
                 buildActionModeUiModel(selectedUris, photoPickerItems),
-                buildSearchUiModel(domainModel?.filter, searchExpanded)
+                buildSearchUiModel(softAskRequest?.let { !it.show }, domainModel?.filter, searchExpanded),
+                buildBrowseMenuUiModel(softAskRequest, searchExpanded)
         )
     }
 
-    private fun buildSearchUiModel(filter: String?, searchExpanded: Boolean?): SearchUiModel {
+    private fun buildSearchUiModel(isVisible: Boolean?, filter: String?, searchExpanded: Boolean?): SearchUiModel {
         return if (searchExpanded == true) {
-            SearchUiModel.Expanded(filter ?: "")
+            SearchUiModel.Expanded(isVisible ?: false,filter ?: "")
         } else {
-            SearchUiModel.Collapsed
+            SearchUiModel.Collapsed(isVisible ?: false)
         }
+    }
+
+    private fun buildBrowseMenuUiModel(softAskRequest: SoftAskRequest?, searchExpanded: Boolean?): BrowseMenuUiModel {
+        val isSoftAskRequestVisible = softAskRequest?.show ?: false
+        val isSearchExpanded = searchExpanded ?: false
+        return BrowseMenuUiModel(!isSoftAskRequestVisible && !isSearchExpanded)
     }
 
     var lastTappedIcon: MediaPickerIcon? = null
@@ -412,7 +419,8 @@ class MediaPickerViewModel @Inject constructor(
         val softAskViewUiModel: SoftAskViewUiModel,
         val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
-        val searchUiModel: SearchUiModel
+        val searchUiModel: SearchUiModel,
+        val browseMenuUiModel: BrowseMenuUiModel
     )
 
     sealed class PhotoListUiModel {
@@ -440,10 +448,12 @@ class MediaPickerViewModel @Inject constructor(
         object Hidden : ActionModeUiModel()
     }
 
-    sealed class SearchUiModel {
-        object Collapsed : SearchUiModel()
-        data class Expanded(val filter: String) : SearchUiModel()
+    sealed class SearchUiModel(val isVisible: Boolean) {
+        class Collapsed(isVisible: Boolean) : SearchUiModel(isVisible)
+        class Expanded(isVisible: Boolean, val filter: String) : SearchUiModel(isVisible)
     }
+
+    data class BrowseMenuUiModel(val isVisible: Boolean)
 
     data class IconClickEvent(val icon: MediaPickerIcon, val allowMultipleSelection: Boolean)
 
