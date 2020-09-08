@@ -234,7 +234,7 @@ class ReaderSiteFollowUseCaseTest {
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(true)
             whenever(readerBlogActionsWrapper.followBlogForPost(anyOrNull(), anyBoolean(), anyOrNull())).then {
                 (it.arguments[2] as ActionListener).onActionResult(false)
-                false
+                true
             }
 
             block()
@@ -247,7 +247,7 @@ class ReaderSiteFollowUseCaseTest {
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(false)
             whenever(readerBlogActionsWrapper.followBlogForPost(anyOrNull(), anyBoolean(), anyOrNull())).then {
                 (it.arguments[2] as ActionListener).onActionResult(false)
-                false
+                true
             }
 
             block()
