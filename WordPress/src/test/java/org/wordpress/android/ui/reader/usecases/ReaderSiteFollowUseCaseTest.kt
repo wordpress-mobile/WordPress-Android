@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -194,6 +196,36 @@ class ReaderSiteFollowUseCaseTest {
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).showEnableNotification).isFalse()
+            }
+
+    @Test
+    fun `toggling follow for un-followed site post initiates follow blog (or site) action`() =
+            testWithUnFollowedSitePost {
+                // Act
+                useCase.toggleFollow(readerPost).toList(mutableListOf())
+
+                // Assert
+                verify(readerBlogActionsWrapper).followBlogForPost(anyOrNull(), eq(true), anyOrNull())
+            }
+
+    @Test
+    fun `toggling follow for followed site post initiates un-follow blog (or site) action`() =
+            testWithFollowedSitePost {
+                // Act
+                useCase.toggleFollow(readerPost).toList(mutableListOf())
+
+                // Assert
+                verify(readerBlogActionsWrapper).followBlogForPost(anyOrNull(), eq(false), anyOrNull())
+            }
+
+    @Test
+    fun `follow blog (or site) action is triggered for selected reader post`() =
+            testWithFollowedSitePost {
+                // Act
+                useCase.toggleFollow(readerPost).toList(mutableListOf())
+
+                // Assert
+                verify(readerBlogActionsWrapper).followBlogForPost(eq(readerPost), anyBoolean(), anyOrNull())
             }
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
