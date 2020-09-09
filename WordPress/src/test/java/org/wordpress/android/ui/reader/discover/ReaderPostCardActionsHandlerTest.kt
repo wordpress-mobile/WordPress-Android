@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -12,20 +15,25 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
@@ -34,6 +42,8 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostCon
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -82,6 +92,7 @@ class ReaderPostCardActionsHandlerTest {
                 TEST_SCOPE
         )
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyOrNull())).thenReturn(mock())
     }
 
     /** BOOKMARK ACTION begin **/
@@ -91,7 +102,7 @@ class ReaderPostCardActionsHandlerTest {
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(true)
 
-        val observedValues = init()
+        val observedValues = startObserving()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
@@ -105,7 +116,7 @@ class ReaderPostCardActionsHandlerTest {
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
 
-        val observedValues = init()
+        val observedValues = startObserving()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
@@ -118,7 +129,7 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
 
-        val observedValues = init()
+        val observedValues = startObserving()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
@@ -131,7 +142,7 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
 
-        val observedValues = init()
+        val observedValues = startObserving()
         val isBookmarkList = true
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, isBookmarkList)
@@ -145,7 +156,7 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(false)))
 
-        val observedValues = init()
+        val observedValues = startObserving()
         val isBookmarkList = true
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, isBookmarkList)
@@ -159,8 +170,7 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
 
-        val observedValues = init()
-
+        val observedValues = startObserving()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
         observedValues.snackbarMsgs[0].buttonAction.invoke()
@@ -170,18 +180,142 @@ class ReaderPostCardActionsHandlerTest {
     }
 
     /** BOOKMARK ACTION end **/
+    /** FOLLOW ACTION begin **/
+    @Test
+    fun `Emit followStatusUpdated after follow status update`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(mock<PostFollowStatusChanged>()))
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Assert
+        assertThat(observedValues.followStatusUpdated).isNotEmpty
+    }
+
+    @Test
+    fun `Fetch subscriptions after follow status update`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(mock<PostFollowStatusChanged>()))
+
+        // Act
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Assert
+        verify(siteNotificationsUseCase).fetchSubscriptions()
+    }
+
+    @Test
+    fun `Enable notifications snackbar shown when user follows a post`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(
+                flowOf(PostFollowStatusChanged(-1, following = true, showEnableNotification = true))
+        )
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isNotEmpty
+    }
+
+    @Test
+    fun `Post notifications are disabled when user unfollows a post`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(
+                flowOf(PostFollowStatusChanged(-1, following = false, deleteNotificationSubscription = true))
+        )
+
+        // Act
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Assert
+        verify(siteNotificationsUseCase).updateSubscription(anyLong(), eq(SubscriptionAction.DELETE))
+        verify(siteNotificationsUseCase).updateNotificationEnabledForBlogInDb(anyLong(), eq(false))
+    }
+
+    @Test
+    fun `Post notifications are enabled when user clicks on enable notifications snackbar action`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(
+                flowOf(PostFollowStatusChanged(-1, following = true, showEnableNotification = true))
+        )
+        val observedValues = startObserving()
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Act
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
+
+        // Assert
+        verify(siteNotificationsUseCase).updateSubscription(anyLong(), eq(SubscriptionAction.NEW))
+        verify(siteNotificationsUseCase).updateNotificationEnabledForBlogInDb(anyLong(), eq(true))
+    }
+
+    @Test
+    fun `Error message is shown when follow action fails with NoNetwork error`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(NoNetwork))
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isNotEmpty
+    }
+
+    @Test
+    fun `Error message is shown when follow action fails with RequestFailed error`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(RequestFailed))
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(mock(), FOLLOW, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isNotEmpty
+    }
+    /** FOLLOW ACTION end **/
 
     @Test
     fun `Clicking on a post opens post detail`() = test {
         // Arrange
-        val observedValues = init()
+        val observedValues = startObserving()
+
         // Act
         actionHandler.handleOnItemClicked(mock())
+
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowPostDetail::class.java)
     }
 
-    private fun init(): Observers {
+    @Test
+    fun `Clicking on a video overlay opens video viewer`() = test {
+        // Arrange
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.handleVideoOverlayClicked("mock")
+
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowVideoViewer::class.java)
+    }
+
+    @Test
+    fun `Clicking on a header opens blog preview`() = test {
+        // Arrange
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.handleHeaderClicked(0L, 0L)
+
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowBlogPreview::class.java)
+    }
+
+    private fun startObserving(): Observers {
         val navigation = mutableListOf<ReaderNavigationEvents>()
         actionHandler.navigationEvents.observeForever {
             navigation.add(it.peekContent())
