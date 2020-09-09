@@ -42,6 +42,7 @@ import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -118,6 +119,10 @@ class MediaPickerFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
+        val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
+            viewModel.onPullToRefresh()
+        }
+
         var isShowingActionMode = false
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             it?.let { uiState ->
@@ -134,6 +139,7 @@ class MediaPickerFragment : Fragment() {
                     isShowingActionMode = false
                 }
                 uiState.fabUiModel.let(this::setupFab)
+                swipeToRefreshHelper.isRefreshing = uiState.isRefreshing
             }
         })
 

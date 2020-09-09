@@ -22,10 +22,14 @@ import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -89,15 +93,15 @@ class MediaPickerViewModel @Inject constructor(
             _softAskRequest,
             _searchExpanded
     ) { domainModel, selectedIds, softAskRequest, searchExpanded ->
-        val photoPickerItems = domainModel?.domainItems
         MediaPickerUiState(
-                buildUiModel(photoPickerItems, selectedIds),
+                buildUiModel(domainModel, selectedIds),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
-                buildActionModeUiModel(selectedIds, photoPickerItems),
-                buildSearchUiModel(domainModel?.filter, searchExpanded)
+                buildActionModeUiModel(selectedIds, domainModel?.domainItems),
+                buildSearchUiModel(domainModel?.filter, searchExpanded),
+                isRefreshing = !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true
         )
     }
 
@@ -114,9 +118,10 @@ class MediaPickerViewModel @Inject constructor(
     private var site: SiteModel? = null
 
     private fun buildUiModel(
-        data: List<MediaItem>?,
+        domainModel: DomainModel?,
         selectedIds: List<Identifier>?
     ): PhotoListUiModel {
+        val data = domainModel?.domainItems
         return if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = mediaPickerSetup.canMultiselect
@@ -134,7 +139,7 @@ class MediaPickerViewModel @Inject constructor(
                     mediaUtilsWrapper.getExtensionForMimeType(mimeType).toUpperCase(localeManagerWrapper.getLocale())
                 }
                 when (it.type) {
-                    IMAGE -> MediaPickerUiItem.PhotoItem(
+                    IMAGE -> PhotoItem(
                             url = it.url,
                             identifier = it.identifier,
                             isSelected = isSelected,
@@ -143,7 +148,7 @@ class MediaPickerViewModel @Inject constructor(
                             toggleAction = toggleAction,
                             clickAction = clickAction
                     )
-                    VIDEO -> MediaPickerUiItem.VideoItem(
+                    VIDEO -> VideoItem(
                             url = it.url,
                             identifier = it.identifier,
                             isSelected = isSelected,
@@ -152,7 +157,7 @@ class MediaPickerViewModel @Inject constructor(
                             toggleAction = toggleAction,
                             clickAction = clickAction
                     )
-                    AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
+                    AUDIO, DOCUMENT -> FileItem(
                             fileName = it.name ?: "",
                             fileExtension = fileExtension,
                             identifier = it.identifier,
@@ -164,7 +169,17 @@ class MediaPickerViewModel @Inject constructor(
                     )
                 }
             }
-            PhotoListUiModel.Data(uiItems)
+            if (domainModel.hasMore) {
+                val updatedItems = uiItems.toMutableList()
+                updatedItems.add(MediaPickerUiItem.NextPageLoader(true, domainModel.error) {
+                    launch {
+                        loadActions.send(NextPage)
+                    }
+                })
+                PhotoListUiModel.Data(updatedItems)
+            } else {
+                PhotoListUiModel.Data(uiItems)
+            }
         } else {
             PhotoListUiModel.Empty
         }
@@ -229,7 +244,7 @@ class MediaPickerViewModel @Inject constructor(
         this.lastTappedIcon = lastTappedIcon
         this.site = site
         if (_domainModel.value == null) {
-            this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup.dataSource, site)
+            this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
             launch(bgDispatcher) {
                 mediaLoader.loadMedia(loadActions).collect { domainModel ->
                     withContext(mainDispatcher) {
@@ -238,7 +253,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
             launch(bgDispatcher) {
-                loadActions.send(LoadAction.Start(mediaPickerSetup.allowedTypes))
+                loadActions.send(LoadAction.Start())
             }
         }
     }
@@ -394,12 +409,19 @@ class MediaPickerViewModel @Inject constructor(
         }
     }
 
+    fun onPullToRefresh() {
+        launch {
+            loadActions.send(LoadAction.Refresh)
+        }
+    }
+
     data class MediaPickerUiState(
         val photoListUiModel: PhotoListUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
         val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
-        val searchUiModel: SearchUiModel
+        val searchUiModel: SearchUiModel,
+        val isRefreshing: Boolean
     )
 
     sealed class PhotoListUiModel {
