@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/photo_picker_item_padding">
+
+    <ImageView
+        android:id="@+id/image_thumbnail"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/photo_picker_item_background"
+        android:contentDescription="@string/photo_picker_image_thumbnail_content_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="@string/media_grid_item_ratio"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include layout="@layout/media_picker_selection_count" />
+
+    <ImageView
+        android:id="@+id/image_video_overlay"
+        android:layout_width="@dimen/photo_picker_preview_icon"
+        android:layout_height="@dimen/photo_picker_preview_icon"
+        android:layout_gravity="center"
+        android:contentDescription="@string/photo_picker_thumbnail_desc"
+        android:padding="@dimen/margin_extra_small"
+        android:src="@drawable/ic_play_white_black_black_white_24dp_selector"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

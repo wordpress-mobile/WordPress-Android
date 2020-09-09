@@ -60,22 +60,6 @@
 
     </RelativeLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_selection_count"
-        android:layout_width="@dimen/media_selection_dot"
-        android:layout_height="@dimen/media_selection_dot"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:background="@drawable/photo_picker_circle_selector"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:importantForAccessibility="no"
-        android:includeFontPadding="false"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_sz_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        tools:ignore="UnusedAttribute"
-        tools:text="5" />
+    <include layout="@layout/media_picker_selection_count" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
