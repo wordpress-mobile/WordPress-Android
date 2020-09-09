@@ -15,16 +15,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.AccountModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
@@ -49,8 +45,6 @@ class PostLikeUseCaseTest {
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
-    @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
-    @Mock private lateinit var siteStore: SiteStore
 
     private lateinit var useCase: PostLikeUseCase
 
@@ -60,11 +54,8 @@ class PostLikeUseCaseTest {
     fun setUp() {
         val account = AccountModel()
         account.userId = 100
-        val siteModel = SiteModel()
-        siteModel.id = 100
 
         whenever(accountStore.account).thenReturn(account)
-        whenever(siteStore.getSiteByLocalId(anyInt())).thenReturn(siteModel)
 
         useCase = PostLikeUseCase(
                 readerPostActionsWrapper,
