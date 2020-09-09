@@ -18,6 +18,8 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
@@ -86,11 +88,13 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 resourceProvider
         )
         uiStates.clear()
-        firstItem = MediaItem(uriWrapper1, "item1", IMAGE, "image/jpg", 1)
-        secondItem = MediaItem(uriWrapper2, "item2", IMAGE, "image/png", 2)
-        videoItem = MediaItem(uriWrapper1, "item3", VIDEO, "video/mpeg", 3)
-        audioItem = MediaItem(uriWrapper2, "item4", AUDIO, "audio/mp3", 4)
-        documentItem = MediaItem(uriWrapper2, "item5", DOCUMENT, "application/pdf", 5)
+        val identifier1 = LocalUri(uriWrapper1)
+        val identifier2 = LocalUri(uriWrapper2)
+        firstItem = MediaItem(identifier1, "url://item1", "item1", IMAGE, "image/jpg", 1)
+        secondItem = MediaItem(identifier2, "url://item2", "item2", IMAGE, "image/png", 2)
+        videoItem = MediaItem(identifier1, "url://item3", "item3", VIDEO, "video/mpeg", 3)
+        audioItem = MediaItem(identifier2, "url://item4", "item4", AUDIO, "audio/mp3", 4)
+        documentItem = MediaItem(identifier2, "url://item5", "item5", DOCUMENT, "application/pdf", 5)
         whenever(mediaUtilsWrapper.getExtensionForMimeType("image/jpg")).thenReturn("jpg")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("image/png")).thenReturn("png")
         whenever(mediaUtilsWrapper.getExtensionForMimeType("audio/mp3")).thenReturn("mp3")
@@ -239,7 +243,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         whenever(
                 analyticsUtilsWrapper.getMediaProperties(
                         eq(firstItem.type == VIDEO),
-                        eq(firstItem.uri),
+                        eq((firstItem.identifier as Identifier.LocalUri).value),
                         isNull()
                 )
         ).thenReturn(
@@ -400,19 +404,19 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                     assertThat(this.items).hasSize(domainItems.size)
                 }
                 domainItems.forEachIndexed { index, photoPickerItem ->
-                    val isSelected = selectedItems.any { it.uri == photoPickerItem.uri }
+                    val isSelected = selectedItems.any { it.identifier == photoPickerItem.identifier }
                     assertSelection(
                             position = index,
                             isSelected = isSelected,
                             domainItem = photoPickerItem,
-                            selectedOrder = selectedItems.indexOfFirst { it.uri == photoPickerItem.uri },
+                            selectedOrder = selectedItems.indexOfFirst { it.identifier == photoPickerItem.identifier },
                             isMultiSelection = mediaPickerSetup.canMultiselect
                     )
                 }
             }
         }
         assertThat(viewModel.numSelected()).isEqualTo(selectedItems.size)
-        assertThat(viewModel.selectedURIs()).isEqualTo(selectedItems.map { it.uri })
+        assertThat(viewModel.selectedIdentifiers()).isEqualTo(selectedItems.map { it.identifier })
         assertSoftAskUiModelHidden()
     }
 
@@ -440,7 +444,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         hasMore: Boolean = false
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
-        whenever(mediaLoaderFactory.build(mediaPickerSetup)).thenReturn(mediaLoader)
+        whenever(mediaLoaderFactory.build(mediaPickerSetup, site)).thenReturn(mediaLoader)
         whenever(mediaLoader.loadMedia(any())).thenReturn(flow {
             emit(
                     DomainModel(
@@ -486,9 +490,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     private fun MediaPickerUiItem.assertEqualToDomainItem(domainItem: MediaItem) {
         when (domainItem.type) {
-            IMAGE -> assertThat((this as PhotoItem).uri).isEqualTo(domainItem.uri)
-            VIDEO -> assertThat((this as VideoItem).uri).isEqualTo(domainItem.uri)
-            DOCUMENT, AUDIO -> assertThat((this as FileItem).uri).isEqualTo(domainItem.uri)
+            IMAGE -> assertThat((this as PhotoItem).identifier).isEqualTo(domainItem.identifier)
+            VIDEO -> assertThat((this as VideoItem).identifier).isEqualTo(domainItem.identifier)
+            DOCUMENT, AUDIO -> assertThat((this as FileItem).identifier).isEqualTo(domainItem.identifier)
         }
     }
 

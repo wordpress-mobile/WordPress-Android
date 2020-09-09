@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
@@ -37,7 +36,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiMo
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
-import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -89,18 +87,14 @@ class MediaPickerFragment : Fragment() {
 
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
-        var selectedUris: List<UriWrapper>? = null
-        var selectedIds: List<Long>? = null
+        var selectedIds: List<Identifier>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
             lastTappedIcon = savedLastTappedIconName?.let { MediaPickerIcon.valueOf(it) }
-            if (savedInstanceState.containsKey(KEY_SELECTED_URIS)) {
-                selectedUris = savedInstanceState.getStringArrayList(KEY_SELECTED_URIS)
-                        ?.map { UriWrapper(Uri.parse(it)) }
-            }
             if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
-                selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_IDS)?.toList()
+                selectedIds = savedInstanceState.getParcelableArrayList<Identifier.Parcel>(KEY_SELECTED_IDS)
+                        ?.map { Identifier.fromParcel(it) }
             }
         }
         recycler.setEmptyView(actionable_empty_view)
@@ -200,7 +194,7 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedUris, selectedIds, mediaPickerSetup, lastTappedIcon, site)
+        viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -315,13 +309,9 @@ class MediaPickerFragment : Fragment() {
                 KEY_LAST_TAPPED_ICON,
                 viewModel.lastTappedIcon?.name
         )
-        val selectedIds = viewModel.selectedIds()
+        val selectedIds = viewModel.selectedIdentifiers().map { it.toParcel() }
         if (selectedIds.isNotEmpty()) {
-            outState.putLongArray(KEY_SELECTED_IDS, selectedIds.toLongArray())
-        }
-        val selectedUris = viewModel.selectedURIs()
-        if (selectedUris.isNotEmpty()) {
-            outState.putStringArrayList(KEY_SELECTED_URIS, ArrayList(selectedUris.map { it.uri.toString() }))
+            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList(selectedIds))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
@@ -388,7 +378,6 @@ class MediaPickerFragment : Fragment() {
 
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
-        private const val KEY_SELECTED_URIS = "selected_uris"
         private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3

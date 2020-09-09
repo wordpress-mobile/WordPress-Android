@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
@@ -233,13 +232,12 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun start(
-        selectedUris: List<UriWrapper>?,
-        selectedIds: List<Long>?,
+        selectedIds: List<Identifier>?,
         mediaPickerSetup: MediaPickerSetup,
         lastTappedIcon: MediaPickerIcon?,
         site: SiteModel?
     ) {
-        _selectedIds.value = selectedUris?.map { LocalUri(it) } ?: selectedIds?.map { RemoteId(it) }
+        _selectedIds.value = selectedIds
         this.mediaPickerSetup = mediaPickerSetup
         this.lastTappedIcon = lastTappedIcon
         this.site = site
@@ -262,15 +260,7 @@ class MediaPickerViewModel @Inject constructor(
         return _selectedIds.value?.size ?: 0
     }
 
-    fun selectedURIs(): List<UriWrapper> {
-        return selectedIdentifiers().mapNotNull { (it as? LocalUri)?.value }
-    }
-
-    fun selectedIds(): List<Long> {
-        return selectedIdentifiers().mapNotNull { (it as? RemoteId)?.value }
-    }
-
-    private fun selectedIdentifiers(): List<Identifier> {
+    fun selectedIdentifiers(): List<Identifier> {
         return _selectedIds.value ?: listOf()
     }
 
@@ -332,7 +322,7 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun performEditAction() {
-        val uriList = selectedURIs()
+        val uriList = selectedIdentifiers().mapNotNull { (it as? Identifier.LocalUri)?.value }
         _navigateToEdit.value = Event(uriList)
     }
 
