@@ -7,7 +7,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type.VIDEO
 
 sealed class MediaPickerUiItem(
-    open val type: Type
+    val type: Type,
+    val fullWidthItem: Boolean = false
 ) {
     data class PhotoItem(
         val url: String,
@@ -41,7 +42,7 @@ sealed class MediaPickerUiItem(
     ) : MediaPickerUiItem(FILE)
 
     data class NextPageLoader(val isLoading: Boolean, val error: String? = null, val loadAction: () -> Unit) :
-            MediaPickerUiItem(NEXT_PAGE_LOADER)
+            MediaPickerUiItem(NEXT_PAGE_LOADER, fullWidthItem = true)
 
     data class ToggleAction(
         val identifier: Identifier,

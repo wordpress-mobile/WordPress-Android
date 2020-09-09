@@ -25,18 +25,18 @@ data class MediaLoader(
                 when (loadAction) {
                     is Start -> {
                         if (state.domainItems.isEmpty() || state.error != null) {
-                            emit(state.copy(isLoading = true))
                             state = buildDomainModel(mediaSource.load(allowedTypes), state)
                             emit(state)
                         }
                     }
                     is Refresh -> {
-                        emit(state.copy(isLoading = true))
-                        state = buildDomainModel(mediaSource.load(allowedTypes), state)
-                        emit(state)
+                        if (loadAction.forced || state.domainItems.isEmpty()) {
+                            emit(state.copy(isLoading = true))
+                            state = buildDomainModel(mediaSource.load(allowedTypes), state)
+                            emit(state)
+                        }
                     }
                     is NextPage -> {
-                        emit(state.copy(isLoading = true))
                         val load = mediaSource.load(mediaTypes = allowedTypes, loadMore = true)
                         state = buildDomainModel(load, state)
                         emit(state)
@@ -74,7 +74,7 @@ data class MediaLoader(
 
     sealed class LoadAction {
         data class Start(val filter: String? = null) : LoadAction()
-        object Refresh : LoadAction()
+        data class Refresh(val forced: Boolean) : LoadAction()
         data class Filter(val filter: String) : LoadAction()
         object NextPage : LoadAction()
         object ClearFilter : LoadAction()
