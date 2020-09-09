@@ -27,16 +27,23 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
+import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
@@ -136,7 +143,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
         // Assert
-        assertThat(observedValues.snackbarMsgs).isNotEmpty
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
 
     @Test
@@ -193,7 +200,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(mock(), FOLLOW, false)
 
         // Assert
-        assertThat(observedValues.followStatusUpdated).isNotEmpty
+        assertThat(observedValues.followStatusUpdated.size).isEqualTo(1)
     }
 
     @Test
@@ -219,7 +226,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(mock(), FOLLOW, false)
 
         // Assert
-        assertThat(observedValues.snackbarMsgs).isNotEmpty
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
 
     @Test
@@ -264,7 +271,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(mock(), FOLLOW, false)
 
         // Assert
-        assertThat(observedValues.snackbarMsgs).isNotEmpty
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
 
     @Test
@@ -277,7 +284,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(mock(), FOLLOW, false)
 
         // Assert
-        assertThat(observedValues.snackbarMsgs).isNotEmpty
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
     /** FOLLOW ACTION end **/
 
@@ -304,7 +311,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(mock(), SITE_NOTIFICATIONS, false)
 
         // Assert
-        assertThat(observedValues.snackbarMsgs).isNotEmpty
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
 
     @Test
@@ -318,7 +325,7 @@ class ReaderPostCardActionsHandlerTest {
         actionHandler.onAction(mock(), SITE_NOTIFICATIONS, false)
 
         // Assert
-        assertThat(observedValues.snackbarMsgs).isNotEmpty
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
 
     @Test
@@ -335,6 +342,118 @@ class ReaderPostCardActionsHandlerTest {
         assertThat(observedValues.snackbarMsgs).isEmpty()
     }
     /** SITE NOTIFICATIONS ACTION end **/
+
+    /** SHARE ACTION Begin **/
+    @Test
+    fun `Share button opens share dialog`() = test {
+        // Arrange
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), SHARE, false)
+
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(SharePost::class.java)
+    }
+    /** SHARE ACTION end **/
+
+    /** VISIT SITE ACTION end **/
+    @Test
+    fun `Visit Site button opens browser`() = test {
+        // Arrange
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), VISIT_SITE, false)
+
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(OpenPost::class.java)
+    }
+    /** VISIT SITE ACTION end **/
+
+    /** BLOCK SITE ACTION begin **/
+    @Test
+    fun `Posts are refreshed when site blocked in local db`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+
+        // Assert
+        assertThat(observedValues.refreshPosts.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Snackbar shown when site blocked in local db`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Snackbar shown when request to block site failes with no network error`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(Failed.NoNetwork))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Posts are refreshed when request to block site failes with request failed error`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(Failed.RequestFailed))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+
+        // Assert
+        assertThat(observedValues.refreshPosts.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Snackbar shown when request to block site failes with request failed error`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(Failed.RequestFailed))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Undo action is invoked when user clicks on undo action in snackbar`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+        val observedValues = startObserving()
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+        // Act
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
+        // Assert
+        verify(undoBlockBlogUseCase).undoBlockBlog(anyOrNull())
+    }
+
+    @Test
+    fun `Post refreshed when user clicks on undo action in snackbar`() = test {
+        // Arrange
+        whenever(blockBlogUseCase.blockBlog(anyLong())).thenReturn(flowOf(SiteBlockedInLocalDb(mock())))
+        val observedValues = startObserving()
+        actionHandler.onAction(mock(), BLOCK_SITE, false)
+        // Act
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
+        // Assert
+        assertThat(observedValues.refreshPosts.size).isEqualTo(2)
+    }
+    /** BLOCK SITE ACTION end **/
 
     @Test
     fun `Clicking on a post opens post detail`() = test {
