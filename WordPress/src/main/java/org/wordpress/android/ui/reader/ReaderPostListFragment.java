@@ -423,7 +423,7 @@ public class ReaderPostListFragment extends Fragment
                         ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
                         ActivityLauncher.showSitePickerForResult(
                                 ReaderPostListFragment.this,
-                                data.getSite(),
+                                data.getPreselectedSite(),
                                 data.getMode()
                         );
                     } else if (navTarget instanceof OpenEditorForReblog) {

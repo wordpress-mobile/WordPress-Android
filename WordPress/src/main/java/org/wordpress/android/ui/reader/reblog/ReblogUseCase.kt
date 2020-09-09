@@ -69,7 +69,7 @@ class ReblogUseCase @Inject constructor(
     fun convertReblogStateToNavigationEvent(state: ReblogState): ReaderNavigationEvents? {
         return when (state) {
             is NoSite -> ShowNoSitesToReblog
-            is MultipleSites -> ShowSitePickerForResult(state.site, state.post, REBLOG_SELECT_MODE)
+            is MultipleSites -> ShowSitePickerForResult(state.defaultSite, state.post, REBLOG_SELECT_MODE)
             is SingleSite -> OpenEditorForReblog(state.site, state.post, POST_FROM_REBLOG)
             Unknown -> null
         }
