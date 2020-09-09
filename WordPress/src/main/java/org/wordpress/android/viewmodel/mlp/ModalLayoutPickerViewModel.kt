@@ -59,7 +59,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == state.selectedLayoutSlug
                 LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
-                    layoutTapped(layoutSlug = layout.slug)
+                    onLayoutTapped(layoutSlug = layout.slug)
                 }
             }
             listItems.add(
@@ -82,7 +82,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     it.title,
                     it.emoji,
                     state.selectedCategoriesSlugs.contains(it.slug)
-            ) { categoryTapped(it.slug) }
+            ) { onCategoryTapped(it.slug) }
         }
         updateUiState(state.copy(categories = listItems))
     }
@@ -117,7 +117,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Category tapped
      * @param categorySlug the slug of the tapped category
      */
-    fun categoryTapped(categorySlug: String) {
+    fun onCategoryTapped(categorySlug: String) {
         val state = uiState.value as ContentUiState
         if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
             updateUiState(
@@ -136,7 +136,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    fun layoutTapped(layoutSlug: String) {
+    fun onLayoutTapped(layoutSlug: String) {
         val state = uiState.value as ContentUiState
         if (layoutSlug == state.selectedLayoutSlug) { // deselect
             updateUiState(state.copy(selectedLayoutSlug = null))

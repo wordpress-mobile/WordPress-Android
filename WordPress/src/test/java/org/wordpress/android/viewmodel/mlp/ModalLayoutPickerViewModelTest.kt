@@ -74,22 +74,22 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user taps on a layout the layout is selected`() {
         viewModel.init()
-        viewModel.layoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isEqualTo("about-1")
     }
 
     @Test
     fun `when the user taps on a selected layout the layout is deselected`() {
         viewModel.init()
-        viewModel.layoutTapped("about-1")
-        viewModel.layoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
     }
 
     @Test
     fun `when the modal layout picker is dismissed the layout is deselected`() {
         viewModel.init()
-        viewModel.layoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
         viewModel.dismiss()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
     }
@@ -103,7 +103,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user taps on a category the category is selected`() {
         viewModel.init()
-        viewModel.categoryTapped("about")
+        viewModel.onCategoryTapped("about")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
                 .contains("about")
     }
@@ -111,8 +111,8 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user taps on a selected category the category is deselected`() {
         viewModel.init()
-        viewModel.categoryTapped("about")
-        viewModel.categoryTapped("about")
+        viewModel.onCategoryTapped("about")
+        viewModel.onCategoryTapped("about")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
                 .doesNotContain("about")
     }
@@ -120,7 +120,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the modal layout picker is dismissed the category is deselected`() {
         viewModel.init()
-        viewModel.categoryTapped("about")
+        viewModel.onCategoryTapped("about")
         viewModel.dismiss()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
     }
@@ -134,7 +134,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the create blank page button is not visible`() {
         viewModel.init()
-        viewModel.layoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
                 .isEqualTo(false)
     }
@@ -149,7 +149,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the create page button is visible`() {
         viewModel.init()
-        viewModel.layoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
                 .isEqualTo(true)
     }
@@ -164,7 +164,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the preview button is visible`() {
         viewModel.init()
-        viewModel.layoutTapped("about-1")
+        viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
                 .isEqualTo(true)
     }
