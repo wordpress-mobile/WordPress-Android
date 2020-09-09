@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 
 class FileThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
         ThumbnailViewHolder(parent, R.layout.media_picker_file_item) {
@@ -15,7 +14,7 @@ class FileThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewU
     private val fileName: TextView = itemView.findViewById(R.id.media_item_name)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
 
-    fun bind(item: FileItem, animateSelection: Boolean, updateCount: Boolean) {
+    fun bind(item: MediaPickerUiItem.FileItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
         mediaThumbnailViewUtils.setupTextSelectionCount(
                 txtSelectionCount,

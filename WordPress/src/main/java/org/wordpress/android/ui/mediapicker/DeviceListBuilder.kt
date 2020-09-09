@@ -44,21 +44,23 @@ class DeviceListBuilder
         mediaTypes: Set<MediaType>,
         offset: Int,
         pageSize: Int?
-    ) = withContext(bgDispatcher) {
-        val result = mutableListOf<MediaItem>()
-        val deferredJobs = mediaTypes.map { mediaType ->
-            when (mediaType) {
-                IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, IMAGE) }
-                VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, VIDEO) }
-                AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO) }
-                DOCUMENT -> async { addDownloads() }
+    ): MediaLoadingResult {
+        return withContext(bgDispatcher) {
+            val result = mutableListOf<MediaItem>()
+            val deferredJobs = mediaTypes.map { mediaType ->
+                when (mediaType) {
+                    IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, IMAGE) }
+                    VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, VIDEO) }
+                    AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO) }
+                    DOCUMENT -> async { addDownloads() }
+                }
             }
+            deferredJobs.forEach { result.addAll(it.await()) }
+            result.sortByDescending { it.dataModified }
+            cachedData.clear()
+            cachedData.addAll(result)
+            MediaLoadingResult.Success(false)
         }
-        deferredJobs.forEach { result.addAll(it.await()) }
-        result.sortByDescending { it.dataModified }
-        cachedData.clear()
-        cachedData.addAll(result)
-        MediaLoadingResult.Success(false)
     }
 
     override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
