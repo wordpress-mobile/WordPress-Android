@@ -14,6 +14,7 @@ class LoaderViewHolder(parent: ViewGroup) :
     fun bind(item: MediaPickerUiItem.NextPageLoader) {
         setFullWidth()
         if (item.isLoading) {
+            item.loadAction()
             progress.visibility = View.VISIBLE
             error.visibility = View.GONE
         } else if (item.error != null) {
