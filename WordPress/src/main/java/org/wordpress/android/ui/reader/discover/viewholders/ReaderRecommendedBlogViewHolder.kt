@@ -8,7 +8,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.reader_recommended_blog_item.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.utils.show
+import org.wordpress.android.util.setVisible
 
 class ReaderRecommendedBlogViewHolder(
     internal val parent: ViewGroup,
@@ -20,7 +20,7 @@ class ReaderRecommendedBlogViewHolder(
             site_name.text = name
             site_url.text = url
             site_description.text = description
-            site_description.show(description.isNotEmpty())
+            site_description.setVisible(description.isNotEmpty())
         }
     }
 }
