@@ -19,11 +19,13 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.models.ReaderCardRecommendedBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
@@ -31,6 +33,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -103,6 +107,12 @@ class ReaderDiscoverViewModelTest {
         whenever(uiStateBuilder.mapTagListToReaderInterestUiState(anyOrNull(), anyOrNull())).thenReturn(
                 createReaderInterestsCardUiState(createReaderTagList())
         )
+        whenever(
+                uiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenReturn(createReaderRecommendedBlogsCardUiState(createRecommendedBlogsList()))
     }
 
     @Test
@@ -182,6 +192,24 @@ class ReaderDiscoverViewModelTest {
                 // Assert
                 val contentUiState = uiStates[1] as ContentUiState
                 assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
+            }
+
+    @Test
+    fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present in the ContentUIState`() =
+            test {
+                // Arrange
+                val uiStates = mutableListOf<DiscoverUiState>()
+                viewModel.uiState.observeForever {
+                    uiStates.add(it)
+                }
+                viewModel.start()
+
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
             }
 
     @Test
@@ -331,10 +359,28 @@ class ReaderDiscoverViewModelTest {
     private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
             ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
 
+    private fun createReaderRecommendedBlogsCardUiState(recommendedBlogs: List<ReaderCardRecommendedBlog>): ReaderRecommendedBlogsCardUiState {
+        return ReaderRecommendedBlogsCardUiState(
+                blogs = recommendedBlogs.map {
+                    ReaderRecommendedBlogUiState(
+                            blogId = it.blogId,
+                            name = it.name,
+                            url = it.url,
+                            description = it.description,
+                            onItemClicked = mock()
+                    )
+                }
+        )
+    }
+
     private fun createReaderTagList(numOfTags: Int = 1) = ReaderTagList().apply {
         for (x in 0 until numOfTags) {
             add(createReaderTag())
         }
+    }
+
+    private fun createRecommendedBlogsList(numOfBlogs: Int = 1): List<ReaderCardRecommendedBlog> {
+        return List(numOfBlogs) { createRecommendedBlog() }
     }
 
     private fun createReaderTag() = ReaderTag(
@@ -346,6 +392,16 @@ class ReaderDiscoverViewModelTest {
             false
     )
 
+    private fun createRecommendedBlog() = ReaderCardRecommendedBlog(
+            blogId = 1L,
+            description = "description",
+            url = "url",
+            name = "name"
+    )
+
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
     private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)
+    private fun createReaderRecommendedBlogsCardList(): List<ReaderRecommendedBlogsCard> {
+        return listOf(ReaderRecommendedBlogsCard(createRecommendedBlogsList()))
+    }
 }
