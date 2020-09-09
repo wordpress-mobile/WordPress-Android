@@ -75,11 +75,11 @@ class WPMainActivityViewModel @Inject constructor(
     private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
     val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
 
-    fun start(isFabVisible: Boolean, site: SiteModel?) {
+    fun start(site: SiteModel?) {
         if (isStarted) return
         isStarted = true
 
-        setMainFabUiState(isFabVisible, site)
+        setMainFabUiState(false, site)
 
         loadMainActions(site)
 
@@ -193,11 +193,11 @@ class WPMainActivityViewModel @Inject constructor(
         _startLoginFlow.value = Event(true)
     }
 
-    fun onResume(site: SiteModel?) {
+    fun onResume(site: SiteModel?,  showFab: Boolean) {
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
-                    isFabVisible = it.isFabVisible,
+                    isFabVisible = showFab,
                     isFabTooltipVisible = it.isFabTooltipVisible,
                     CreateContentMessageId = getCreateContentMessageId(site)
             )

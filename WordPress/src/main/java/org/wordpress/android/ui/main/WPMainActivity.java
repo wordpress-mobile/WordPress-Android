@@ -563,9 +563,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // initialized with the most restrictive rights case. This is OK and will be frequently checked
         // to normalize the UI state whenever mSelectedSite changes.
         // It also means that the ViewModel must accept a nullable SiteModel.
-        mViewModel.start(
-                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                mSelectedSite);
+        mViewModel.start(mSelectedSite);
 
         mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
@@ -809,7 +807,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(mSelectedSite);
+        mViewModel.onResume(mSelectedSite,
+                mSelectedSite != null && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
 
         mFirstResume = false;
     }
