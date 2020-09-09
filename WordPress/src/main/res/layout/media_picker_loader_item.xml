@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foregroundGravity="center_horizontal"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+    android:foregroundGravity="center_horizontal">
 
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:progressTint="?attr/colorPrimary"
         android:layout_gravity="center"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:progressTint="?attr/colorPrimary" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/error"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -280,6 +280,14 @@ class MediaPickerFragment : Fragment() {
                 )
             }
             val adapter = recycler.adapter as MediaPickerAdapter
+
+            (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
+                    NUM_COLUMNS
+                } else {
+                    1
+                }
+            }
             val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
             recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
@@ -319,20 +327,6 @@ class MediaPickerFragment : Fragment() {
 
     fun setMediaPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
-    }
-
-    /*
-     * similar to the above but only repopulates if changes are detected
-     */
-    fun refresh() {
-        if (!isAdded) {
-            AppLog.w(
-                    POSTS,
-                    "Photo picker > can't refresh when not added"
-            )
-            return
-        }
-        viewModel.refreshData(false)
     }
 
     private val isStoragePermissionAlwaysDenied: Boolean

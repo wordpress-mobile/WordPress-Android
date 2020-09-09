@@ -219,7 +219,7 @@ class MediaPickerViewModel @Inject constructor(
             return
         }
         launch(bgDispatcher) {
-            loadActions.send(LoadAction.Refresh)
+            loadActions.send(LoadAction.Refresh(forceReload))
         }
     }
 
@@ -394,9 +394,7 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun onPullToRefresh() {
-        launch {
-            loadActions.send(LoadAction.Refresh)
-        }
+        refreshData(true)
     }
 
     data class MediaPickerUiState(
