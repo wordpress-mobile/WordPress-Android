@@ -282,12 +282,12 @@ class MediaPickerFragment : Fragment() {
 
     private fun setupFab(fabUiModel: FabUiModel) {
         if (fabUiModel.show) {
-            wp_stories_take_picture.visibility = View.VISIBLE
+            wp_stories_take_picture.show()
             wp_stories_take_picture.setOnClickListener {
                 fabUiModel.action()
             }
         } else {
-            wp_stories_take_picture.visibility = View.GONE
+            wp_stories_take_picture.hide()
         }
     }
 
