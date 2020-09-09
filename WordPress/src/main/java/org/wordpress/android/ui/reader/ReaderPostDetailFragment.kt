@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -119,6 +120,8 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
@@ -157,6 +160,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var likingUsersLabel: View
     private lateinit var signInButton: WPTextView
     private lateinit var readerBookmarkButton: ReaderBookmarkButton
+    private lateinit var featuredImageView: ImageView
 
     private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
     private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
@@ -175,6 +179,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private var isToolbarShowing = true
     private var autoHideToolbarListener: AutoHideToolbarListener? = null
+    private lateinit var resourceVars: ReaderResourceVars
 
     private var fileForDownload: String? = null
 
@@ -185,6 +190,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
+    @Inject internal lateinit var imageManager: ImageManager
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -270,6 +276,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         scrollView = view.findViewById(R.id.scroll_view_reader)
         scrollView.setScrollDirectionListener(this)
+
+        featuredImageView = view.findViewById(R.id.featured_image)
+        resourceVars = ReaderResourceVars(context)
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
@@ -1357,6 +1366,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
+
+            post?.let {
+                if (featuredImageUtils.shouldAddFeaturedImage(it)) {
+                    val imageUrl = ReaderUtils.getResizedImageUrl(
+                            it.featuredImage,
+                            resourceVars.mFullSizeImageWidthPx,
+                            resourceVars.mFeaturedImageHeightPx,
+                            it.isPrivate,
+                            it.isPrivateAtomic
+                    )
+                    imageManager.load(
+                            featuredImageView,
+                            PHOTO,
+                            imageUrl
+                    )
+                }
+            }
 
             // render the post in the webView
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils, readerCssProvider)

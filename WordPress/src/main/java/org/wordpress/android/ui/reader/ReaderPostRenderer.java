@@ -261,12 +261,6 @@ public class ReaderPostRenderer {
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
 
-        // add the featured image (if any)
-        if (mFeaturedImageUtils.shouldAddFeaturedImage(mPost)) {
-            AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
-            content = getFeaturedImageHtml() + content;
-        }
-
         // if this is a Discover post, add a link which shows the blog preview
         if (mPost.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
@@ -291,20 +285,6 @@ public class ReaderPostRenderer {
      */
     String getRenderedHtml() {
         return mRenderedHtml;
-    }
-
-    /*
-     * returns the HTML to use when inserting a featured image into the rendered content
-     */
-    private String getFeaturedImageHtml() {
-        String imageUrl = ReaderUtils.getResizedImageUrl(
-                mPost.getFeaturedImage(),
-                mResourceVars.mFullSizeImageWidthPx,
-                mResourceVars.mFeaturedImageHeightPx,
-                mPost.isPrivate,
-                mPost.isPrivateAtomic);
-
-        return "<img class='size-full' src='" + imageUrl + "'/>";
     }
 
     /*
