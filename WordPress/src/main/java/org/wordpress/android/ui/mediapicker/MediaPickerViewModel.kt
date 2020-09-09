@@ -104,7 +104,7 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun buildSearchUiModel(isVisible: Boolean?, filter: String?, searchExpanded: Boolean?): SearchUiModel {
         return if (searchExpanded == true) {
-            SearchUiModel.Expanded(isVisible ?: false,filter ?: "")
+            SearchUiModel.Expanded(isVisible ?: false, filter ?: "")
         } else {
             SearchUiModel.Collapsed(isVisible ?: false)
         }
