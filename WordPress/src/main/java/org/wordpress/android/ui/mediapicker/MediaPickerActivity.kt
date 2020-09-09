@@ -18,7 +18,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes.FILE_LIBRARY
 import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
+import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.MULTI_SELECT_MEDIA_PICKER
 import org.wordpress.android.ui.RequestCodes.PICTURE_LIBRARY
 import org.wordpress.android.ui.RequestCodes.SINGLE_SELECT_MEDIA_PICKER
@@ -36,7 +38,9 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMedia
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_FILE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
@@ -195,7 +199,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             return
         }
         when (requestCode) {
-            PICTURE_LIBRARY, VIDEO_LIBRARY -> if (data != null) {
+            PICTURE_LIBRARY, VIDEO_LIBRARY, MEDIA_LIBRARY, FILE_LIBRARY -> if (data != null) {
                 doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), ANDROID_PICKER)
             }
             TAKE_PHOTO -> try {
@@ -239,6 +243,14 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
 
     private fun launchVideoLibrary(multiSelect: Boolean) {
         WPMediaUtils.launchVideoLibrary(this, multiSelect)
+    }
+
+    private fun launchMediaLibrary(multiSelect: Boolean) {
+        WPMediaUtils.launchMediaLibrary(this, multiSelect)
+    }
+
+    private fun launchFileLibrary(multiSelect: Boolean) {
+        WPMediaUtils.launchFileLibrary(this, multiSelect)
     }
 
     private fun launchWPStoriesCamera() {
@@ -345,6 +357,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         when (icon) {
             ANDROID_CHOOSE_PHOTO -> launchPictureLibrary(allowMultipleSelection)
             ANDROID_CHOOSE_VIDEO -> launchVideoLibrary(allowMultipleSelection)
+            ANDROID_CHOOSE_PHOTO_OR_VIDEO -> launchMediaLibrary(allowMultipleSelection)
+            ANDROID_CHOOSE_FILE -> launchFileLibrary(allowMultipleSelection)
             WP_STORIES_CAPTURE -> launchWPStoriesCamera()
         }
     }
