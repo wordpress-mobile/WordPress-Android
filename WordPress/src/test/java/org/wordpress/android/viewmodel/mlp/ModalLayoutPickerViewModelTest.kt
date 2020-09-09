@@ -34,6 +34,34 @@ class ModalLayoutPickerViewModelTest {
     }
 
     @Test
+    fun `when modal layout picker starts in landscape mode the title is visible`() {
+        viewModel.init()
+        viewModel.start(true)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `when modal layout picker starts in portrait mode the title is not visible`() {
+        viewModel.init()
+        viewModel.start(false)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when the user scroll beyond a threshold the title becomes visible`() {
+        viewModel.init()
+        viewModel.onAppBarOffsetChanged(9, 10)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `when the user scroll bellow a threshold the title remains hidden`() {
+        viewModel.init()
+        viewModel.onAppBarOffsetChanged(11, 10)
+        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
+    }
+
+    @Test
     fun `when modal layout picker starts the categories are loaded`() {
         viewModel.init()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).categories.size).isGreaterThan(0)

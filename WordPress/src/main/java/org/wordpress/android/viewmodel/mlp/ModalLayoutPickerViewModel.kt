@@ -104,13 +104,30 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
+     * Notifies the VM to start passing the orientation
+     * @param landscapeMode app operates in landscape mode
+     */
+    fun start(landscapeMode: Boolean) {
+        setHeaderTitleVisibility(landscapeMode)
+    }
+
+    /**
      * Sets the header and title visibility
      * @param headerShouldBeVisible if true the header is shown and the title hidden
      */
-    fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
+    private fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
         val state = uiState.value as ContentUiState
         if (state.isHeaderVisible == headerShouldBeVisible) return // No change
         updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+    }
+
+    /**
+     * Appbar scrolled event
+     * @param verticalOffset the scroll state vertical offset
+     * @param scrollThreshold the scroll threshold
+     */
+    fun onAppBarOffsetChanged(verticalOffset: Int, scrollThreshold: Int) {
+        setHeaderTitleVisibility(verticalOffset < scrollThreshold)
     }
 
     /**

@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
@@ -38,7 +38,6 @@ import javax.inject.Inject
  */
 class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
-    @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
@@ -90,10 +89,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun setScrollListener() {
-        if (displayUtils.isLandscape(requireContext())) return // Always visible
+        if (DisplayUtils.isLandscape(requireContext())) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
-            viewModel.setHeaderTitleVisibility(verticalOffset < scrollThreshold)
+            viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
     }
 
@@ -131,7 +130,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        viewModel.setHeaderTitleVisibility(displayUtils.isLandscape(requireContext()))
+        viewModel.start(DisplayUtils.isLandscape(requireContext()))
 
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
