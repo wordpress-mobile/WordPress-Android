@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mediapicker
 
 import android.content.Intent
 import android.os.Bundle
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 
 data class MediaPickerSetup(
     val dataSource: DataSource,
@@ -26,6 +27,8 @@ data class MediaPickerSetup(
         intent.putExtra(KEY_CAN_MULTISELECT, canMultiselect)
         intent.putExtra(KEY_CAMERA_ENABLED, cameraEnabled)
     }
+
+    fun isBrowser() = dataSource == DEVICE && allowedTypes.containsAll( MediaType.values().toList() )
 
     companion object {
         private const val KEY_DATA_SOURCE = "key_data_source"
