@@ -19,13 +19,17 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_FILE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -89,15 +93,15 @@ class MediaPickerViewModel @Inject constructor(
             _softAskRequest,
             _searchExpanded
     ) { domainModel, selectedUris, softAskRequest, searchExpanded ->
-        val photoPickerItems = domainModel?.domainItems
         MediaPickerUiState(
-                buildUiModel(photoPickerItems, selectedUris),
+                buildUiModel(domainModel, selectedUris),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled && selectedUris.isNullOrEmpty()) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
-                buildActionModeUiModel(selectedUris, photoPickerItems),
+                buildActionModeUiModel(selectedUris, domainModel?.domainItems),
                 buildSearchUiModel(softAskRequest?.let { !it.show }, domainModel?.filter, searchExpanded),
+                !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
                 buildBrowseMenuUiModel(softAskRequest, searchExpanded)
         )
     }
@@ -121,9 +125,10 @@ class MediaPickerViewModel @Inject constructor(
     private var site: SiteModel? = null
 
     private fun buildUiModel(
-        data: List<MediaItem>?,
+        domainModel: DomainModel?,
         selectedUris: List<UriWrapper>?
     ): PhotoListUiModel {
+        val data = domainModel?.domainItems
         return if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = mediaPickerSetup.canMultiselect
@@ -141,7 +146,15 @@ class MediaPickerViewModel @Inject constructor(
                     mediaUtilsWrapper.getExtensionForMimeType(mimeType).toUpperCase(localeManagerWrapper.getLocale())
                 }
                 when (it.type) {
-                    IMAGE -> MediaPickerUiItem.PhotoItem(
+                    IMAGE -> PhotoItem(
+                            uri = it.uri,
+                            isSelected = isSelected,
+                            selectedOrder = selectedOrder,
+                            showOrderCounter = showOrderCounter,
+                            toggleAction = toggleAction,
+                            clickAction = clickAction
+                    ) as MediaPickerUiItem
+                    VIDEO -> VideoItem(
                             uri = it.uri,
                             isSelected = isSelected,
                             selectedOrder = selectedOrder,
@@ -149,15 +162,7 @@ class MediaPickerViewModel @Inject constructor(
                             toggleAction = toggleAction,
                             clickAction = clickAction
                     )
-                    VIDEO -> MediaPickerUiItem.VideoItem(
-                            uri = it.uri,
-                            isSelected = isSelected,
-                            selectedOrder = selectedOrder,
-                            showOrderCounter = showOrderCounter,
-                            toggleAction = toggleAction,
-                            clickAction = clickAction
-                    )
-                    AUDIO, DOCUMENT -> MediaPickerUiItem.FileItem(
+                    AUDIO, DOCUMENT -> FileItem(
                             uri = it.uri,
                             fileName = it.name ?: "",
                             fileExtension = fileExtension,
@@ -169,7 +174,17 @@ class MediaPickerViewModel @Inject constructor(
                     )
                 }
             }
-            PhotoListUiModel.Data(uiItems)
+            if (domainModel.hasMore) {
+                val updatedItems = uiItems.toMutableList()
+                updatedItems.add(MediaPickerUiItem.NextPageLoader(true, domainModel.error) {
+                    launch {
+                        loadActions.send(NextPage)
+                    }
+                })
+                PhotoListUiModel.Data(updatedItems)
+            } else {
+                PhotoListUiModel.Data(uiItems)
+            }
         } else {
             PhotoListUiModel.Empty
         }
@@ -212,7 +227,7 @@ class MediaPickerViewModel @Inject constructor(
             return
         }
         launch(bgDispatcher) {
-            loadActions.send(LoadAction.Refresh)
+            loadActions.send(LoadAction.Refresh(forceReload))
         }
     }
 
@@ -235,7 +250,7 @@ class MediaPickerViewModel @Inject constructor(
         this.lastTappedIcon = lastTappedIcon
         this.site = site
         if (_domainModel.value == null) {
-            this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup.dataSource)
+            this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup)
             launch(bgDispatcher) {
                 mediaLoader.loadMedia(loadActions).collect { domainModel ->
                     withContext(mainDispatcher) {
@@ -244,7 +259,7 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
             launch(bgDispatcher) {
-                loadActions.send(LoadAction.Start(mediaPickerSetup.allowedTypes))
+                loadActions.send(LoadAction.Start())
             }
         }
     }
@@ -406,12 +421,17 @@ class MediaPickerViewModel @Inject constructor(
         }
     }
 
+    fun onPullToRefresh() {
+        refreshData(true)
+    }
+
     data class MediaPickerUiState(
         val photoListUiModel: PhotoListUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
         val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
         val searchUiModel: SearchUiModel,
+        val isRefreshing: Boolean,
         val browseMenuUiModel: BrowseMenuUiModel
     )
 

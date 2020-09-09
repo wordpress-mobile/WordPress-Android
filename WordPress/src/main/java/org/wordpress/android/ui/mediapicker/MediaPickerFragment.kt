@@ -35,11 +35,10 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiMo
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -116,6 +115,10 @@ class MediaPickerFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
+        val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
+            viewModel.onPullToRefresh()
+        }
+
         var isShowingActionMode = false
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             it?.let { uiState ->
@@ -132,6 +135,7 @@ class MediaPickerFragment : Fragment() {
                     isShowingActionMode = false
                 }
                 uiState.fabUiModel.let(this::setupFab)
+                swipeToRefreshHelper.isRefreshing = uiState.isRefreshing
             }
         })
 
@@ -276,6 +280,15 @@ class MediaPickerFragment : Fragment() {
                 )
             }
             val adapter = recycler.adapter as MediaPickerAdapter
+
+            (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
+                            NUM_COLUMNS
+                        } else {
+                            1
+                        }
+                    }
             val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
             recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
@@ -315,20 +328,6 @@ class MediaPickerFragment : Fragment() {
 
     fun setMediaPickerListener(listener: MediaPickerListener?) {
         this.listener = listener
-    }
-
-    /*
-     * similar to the above but only repopulates if changes are detected
-     */
-    fun refresh() {
-        if (!isAdded) {
-            AppLog.w(
-                    POSTS,
-                    "Photo picker > can't refresh when not added"
-            )
-            return
-        }
-        viewModel.refreshData(false)
     }
 
     private val isStoragePermissionAlwaysDenied: Boolean
