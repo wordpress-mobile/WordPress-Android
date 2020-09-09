@@ -61,6 +61,9 @@
     <color name="reader_welcome_card_background">@color/background_dark</color>
     <color name="reader_welcome_card_text">@color/white</color>
 
+    <!--Reader Recommended Blogs Card -->
+    <color name="reader_recommended_blogs_card_divider">@color/white_translucent_12</color>
+
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>
     <color name="prepublishing_action_type_enabled_color">@color/white</color>
