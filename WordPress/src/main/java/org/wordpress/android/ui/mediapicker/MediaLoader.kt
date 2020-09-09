@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.ClearFilter
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Filter
@@ -11,7 +10,6 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Loading
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.util.LocaleManagerWrapper
 
@@ -28,28 +26,20 @@ data class MediaLoader(
                     is Start -> {
                         if (state.domainItems.isEmpty() || state.error != null) {
                             emit(state.copy(isLoading = true))
-                            mediaSource.load(allowedTypes).collect {
-                                state = buildDomainModel(it, state)
-                                emit(state)
-                            }
+                            state = buildDomainModel(mediaSource.load(allowedTypes), state)
+                            emit(state)
                         }
                     }
                     is Refresh -> {
                         emit(state.copy(isLoading = true))
-                        mediaSource.load(allowedTypes).collect {
-                            state = buildDomainModel(it, state)
-                            emit(state)
-                        }
+                        state = buildDomainModel(mediaSource.load(allowedTypes), state)
+                        emit(state)
                     }
                     is NextPage -> {
                         emit(state.copy(isLoading = true))
-                        mediaSource.load(
-                                mediaTypes = allowedTypes,
-                                offset = state.domainItems.size
-                        ).collect {
-                            state = buildDomainModel(it, state)
-                            emit(state)
-                        }
+                        val load = mediaSource.load(mediaTypes = allowedTypes, offset = state.domainItems.size)
+                        state = buildDomainModel(load, state)
+                        emit(state)
                     }
                     is Filter -> {
                         state = state.copy(
@@ -72,7 +62,6 @@ data class MediaLoader(
         state: DomainModel
     ): DomainModel {
         return when (partialResult) {
-            Loading -> state.copy(isLoading = true, error = null)
             is Success -> state.copy(
                     isLoading = false,
                     error = null,
