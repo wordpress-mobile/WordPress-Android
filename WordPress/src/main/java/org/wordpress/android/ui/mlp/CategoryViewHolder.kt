@@ -30,10 +30,7 @@ class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHold
     fun onBind(uiState: CategoryListItemUiState) {
         category.text = uiState.title
         emoji.text = uiState.emoji
-        container.contentDescription = if (uiState.selected) parent.context.getString(
-                R.string.mlp_layout_selected,
-                uiState.title
-        ) else uiState.title
+        container.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
         }
@@ -41,8 +38,8 @@ class CategoryViewHolder(internal val parent: ViewGroup) : RecyclerView.ViewHold
     }
 
     private fun setSelectedStateUI(uiState: CategoryListItemUiState) {
-        check.setVisible(uiState.selected)
-        emoji.setVisible(!uiState.selected)
+        check.setVisible(uiState.checkIconVisible)
+        emoji.setVisible(uiState.emojiIconVisible)
         container.backgroundTintList = parent.context.getColorStateListFromAttribute(uiState.background)
         category.setTextColor(parent.context.getColorFromAttribute(uiState.textColor))
     }

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mlp
 
+import org.wordpress.android.R
 import org.wordpress.android.R.attr
 
 /**
@@ -17,4 +18,13 @@ data class CategoryListItemUiState(
 
     val textColor: Int
         get() = if (selected) attr.colorOnPrimary else attr.colorOnSurface
+
+    val checkIconVisible: Boolean
+        get() = selected
+
+    val emojiIconVisible: Boolean
+        get() = !selected
+
+    val contentDescriptionResId: Int
+        get() = if (selected) R.string.mlp_selected_description else R.string.mlp_notselected_description
 }
