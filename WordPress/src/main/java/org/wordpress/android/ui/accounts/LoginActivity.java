@@ -616,7 +616,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void useMagicLinkInstead(String email, boolean verifyEmail) {
-        showMagicLinkRequestScreen(email, verifyEmail, true, true);
+        showMagicLinkRequestScreen(email, verifyEmail, false, true);
     }
 
     @Override
