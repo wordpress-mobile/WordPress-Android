@@ -27,20 +27,30 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
+import org.wordpress.android.ui.reader.reblog.ReblogState.MultipleSites
+import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
+import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
+import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
@@ -583,6 +593,79 @@ class ReaderPostCardActionsHandlerTest {
     }
 
     /** LIKE ACTION end **/
+
+    /** REVLOG ACTION begin **/
+    @Test
+    fun `Reblog action is initiated when user clicks on reblog button`() = test {
+        // Arrange
+        whenever(reblogUseCase.onReblogButtonClicked(anyOrNull())).thenReturn(mock())
+        whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock())
+        // Act
+        actionHandler.onAction(mock(), REBLOG, false)
+        // Assert
+        verify(reblogUseCase).onReblogButtonClicked(anyOrNull())
+    }
+
+    @Test
+    fun `Show NoSitesToReblog screen when user does not have any sites attached`() = test {
+        // Arrange
+        whenever(reblogUseCase.onReblogButtonClicked(anyOrNull())).thenReturn(NoSite)
+        whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenCallRealMethod()
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), REBLOG, false)
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowNoSitesToReblog::class.java)
+    }
+
+    @Test
+    fun `Show SitePicker when user has multiple sites attached`() = test {
+        // Arrange
+        whenever(reblogUseCase.onReblogButtonClicked(anyOrNull())).thenReturn(MultipleSites(mock(), mock()))
+        whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenCallRealMethod()
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), REBLOG, false)
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowSitePickerForResult::class.java)
+    }
+
+    @Test
+    fun `Show Editor when user has a single site attached or they selected a site they want to reblog to`() = test {
+        // Arrange
+        whenever(reblogUseCase.onReblogButtonClicked(anyOrNull())).thenReturn(SingleSite(mock(), mock()))
+        whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenCallRealMethod()
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), REBLOG, false)
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(OpenEditorForReblog::class.java)
+    }
+
+    @Test
+    fun `Show snackbar when an error occurs`() = test {
+        // Arrange
+        whenever(reblogUseCase.onReblogButtonClicked(anyOrNull())).thenReturn(Unknown)
+        whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenCallRealMethod()
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), REBLOG, false)
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+    /** REBLOG ACTION end **/
+
+    /** COMMENTS ACTION begin **/
+    @Test
+    fun `Comments screen shown when the user clicks on comments button`() = test {
+        // Arrange
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), COMMENTS, false)
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowReaderComments::class.java)
+    }
+    /** COMMENTS ACTION end **/
 
     @Test
     fun `Clicking on a post opens post detail`() = test {

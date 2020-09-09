@@ -15,6 +15,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.reblog.ReblogState.MultipleSites
+import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
+import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
+import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -54,9 +58,9 @@ class ReblogUseCaseTest {
 
         val state = reblogUseCase.onReblogButtonClicked(post)
 
-        Assertions.assertThat(state).isInstanceOf(PostEditor::class.java)
+        Assertions.assertThat(state).isInstanceOf(SingleSite::class.java)
 
-        val peState = state as? PostEditor
+        val peState = state as? SingleSite
         Assertions.assertThat(peState?.site).isEqualTo(site)
         Assertions.assertThat(peState?.post).isEqualTo(post)
     }
@@ -71,9 +75,9 @@ class ReblogUseCaseTest {
 
         val state = reblogUseCase.onReblogButtonClicked(post)
 
-        Assertions.assertThat(state).isInstanceOf(SitePicker::class.java)
+        Assertions.assertThat(state).isInstanceOf(MultipleSites::class.java)
 
-        val spState = state as? SitePicker
+        val spState = state as? MultipleSites
         Assertions.assertThat(spState?.site).isEqualTo(site)
         Assertions.assertThat(spState?.post).isEqualTo(post)
     }
@@ -89,12 +93,12 @@ class ReblogUseCaseTest {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post) as SitePicker
+        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post) as MultipleSites
         val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post)
 
-        Assertions.assertThat(state).isInstanceOf(PostEditor::class.java)
+        Assertions.assertThat(state).isInstanceOf(SingleSite::class.java)
 
-        val peState = state as? PostEditor
+        val peState = state as? SingleSite
         Assertions.assertThat(peState?.site).isEqualTo(site)
         Assertions.assertThat(peState?.post).isEqualTo(post)
     }
