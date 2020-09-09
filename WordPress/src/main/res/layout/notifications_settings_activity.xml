@@ -9,6 +9,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
+        app:liftOnScrollTargetViewId="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -24,7 +25,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="true"
-                app:liftOnScrollTargetViewId="@android:id/list"
                 app:theme="@style/WordPress.ActionBar" />
 
             <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
