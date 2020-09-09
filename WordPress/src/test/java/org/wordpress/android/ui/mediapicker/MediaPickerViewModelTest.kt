@@ -26,7 +26,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
@@ -108,6 +107,22 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(2)
         assertDataList(singleSelectMediaPickerSetup, selectedItems = listOf(), domainItems = listOf(firstItem))
+        assertActionModeHidden()
+    }
+
+    @Test
+    fun `adds loading item when source has more data`() = test {
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, hasMore = true)
+
+        viewModel.refreshData(false)
+
+        assertThat(uiStates).hasSize(2)
+        assertDataList(
+                singleSelectMediaPickerSetup,
+                selectedItems = listOf(),
+                domainItems = listOf(firstItem),
+                showsLoadingItem = true
+        )
         assertActionModeHidden()
     }
 
@@ -372,12 +387,18 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private fun assertDataList(
         mediaPickerSetup: MediaPickerSetup,
         selectedItems: List<MediaItem>,
-        domainItems: List<MediaItem>
+        domainItems: List<MediaItem>,
+        showsLoadingItem: Boolean = false
     ) {
         uiStates.last().apply {
             assertThat(this.photoListUiModel).isNotNull()
-            (uiStates.last().photoListUiModel as PhotoListUiModel.Data).apply {
-                assertThat(this.items).hasSize(domainItems.size)
+            (uiStates.last().photoListUiModel as Data).apply {
+                if (showsLoadingItem) {
+                    assertThat(this.items).hasSize(domainItems.size + 1)
+                    assertThat(this.items.last() is NextPageLoader).isTrue()
+                } else {
+                    assertThat(this.items).hasSize(domainItems.size)
+                }
                 domainItems.forEachIndexed { index, photoPickerItem ->
                     val isSelected = selectedItems.any { it.uri == photoPickerItem.uri }
                     assertSelection(
@@ -415,11 +436,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         mediaPickerSetup: MediaPickerSetup,
         hasStoragePermissions: Boolean = true,
         filter: String? = null,
-        numberOfStates: Int = 2
+        numberOfStates: Int = 2,
+        hasMore: Boolean = false
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
         whenever(mediaLoaderFactory.build(mediaPickerSetup)).thenReturn(mediaLoader)
-        whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel, filter = filter)) })
+        whenever(mediaLoader.loadMedia(any())).thenReturn(flow {
+            emit(
+                    DomainModel(
+                            domainModel,
+                            filter = filter,
+                            hasMore = hasMore
+                    )
+            )
+        })
         viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
             if (it != null) {
@@ -434,7 +464,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(numberOfStates)
     }
 
-    private fun PhotoListUiModel.Data.assertSelection(
+    private fun Data.assertSelection(
         position: Int,
         isSelected: Boolean,
         isMultiSelection: Boolean = false,
