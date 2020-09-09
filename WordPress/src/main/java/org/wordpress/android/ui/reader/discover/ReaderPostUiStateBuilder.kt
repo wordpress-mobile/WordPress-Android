@@ -180,7 +180,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<ReaderCardRecommendedBlog>
+        recommendedBlogs: List<ReaderCardRecommendedBlog>,
+        onItemClicked: (Long) -> Unit
     ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
         recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
                 .map {
@@ -188,7 +189,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                             name = StringEscapeUtils.unescapeHtml4(it.name),
                             url = it.url,
                             blogId = it.blogId,
-                            description = StringEscapeUtils.unescapeHtml4(it.description)
+                            description = StringEscapeUtils.unescapeHtml4(it.description),
+                            onItemClicked = onItemClicked
                     )
                 }.let { ReaderRecommendedBlogsCardUiState(it) }
     }

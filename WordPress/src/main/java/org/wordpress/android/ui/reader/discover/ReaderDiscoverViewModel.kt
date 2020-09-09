@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeB
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
@@ -216,7 +217,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                     )
                 }
                 is ReaderRecommendedBlogsCard -> {
-                    postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(card.blogs)
+                    postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                            recommendedBlogs = card.blogs,
+                            onItemClicked = this@ReaderDiscoverViewModel::onRecommendedBlogItemClicked
+                    )
                 }
             }
         }
@@ -267,6 +271,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                 readerPostCardActionsHandler.handleOnItemClicked(it)
             }
         }
+    }
+
+    private fun onRecommendedBlogItemClicked(blogId: Long) {
+        // TODO: pass feedId once available in the API model
+        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, 0)))
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {

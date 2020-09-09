@@ -21,6 +21,9 @@ class ReaderRecommendedBlogViewHolder(
             site_url.text = url
             site_description.text = description
             site_description.setVisible(description.isNotEmpty())
+            containerView.setOnClickListener {
+                onItemClicked(blogId)
+            }
         }
     }
 }

@@ -84,7 +84,8 @@ sealed class ReaderCardUiState {
             val name: String,
             val url: String,
             val blogId: Long,
-            val description: String
+            val description: String,
+            val onItemClicked: (Long) -> Unit
         )
     }
 }
