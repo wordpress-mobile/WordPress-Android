@@ -32,7 +32,7 @@ data class MediaLoader(
                     is Refresh -> {
                         if (loadAction.forced || state.domainItems.isEmpty()) {
                             emit(state.copy(isLoading = true))
-                            state = buildDomainModel(mediaSource.load(allowedTypes), state)
+                            state = buildDomainModel(mediaSource.load(allowedTypes, forced = loadAction.forced), state)
                             emit(state)
                         }
                     }

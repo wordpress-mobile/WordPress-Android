@@ -11,7 +11,7 @@ data class MediaItem(
     val dataModified: Long
 ) {
     sealed class Identifier {
-        class LocalUri(val value: UriWrapper): Identifier()
-        class RemoteId(val value: Long): Identifier()
+        data class LocalUri(val value: UriWrapper): Identifier()
+        data class RemoteId(val value: Long): Identifier()
     }
 }
