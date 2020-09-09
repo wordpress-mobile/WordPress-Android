@@ -187,7 +187,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 .map {
                     ReaderRecommendedBlogUiState(
                             name = StringEscapeUtils.unescapeHtml4(it.name),
-                            url = it.url,
+                            url = urlUtilsWrapper.removeScheme(it.url),
                             blogId = it.blogId,
                             description = StringEscapeUtils.unescapeHtml4(it.description),
                             onItemClicked = onItemClicked
