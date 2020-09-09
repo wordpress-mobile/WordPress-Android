@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaLibraryDataSource.MediaLibraryDataSourceFactory
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
@@ -32,7 +33,7 @@ class MediaLoaderFactoryTest {
 
     @Test
     fun `returns device list builder on DEVICE source`() {
-        val mediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(), false)
+        val mediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(), false, R.string.wp_media_title)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
         assertThat(mediaLoader).isEqualTo(
@@ -46,7 +47,7 @@ class MediaLoaderFactoryTest {
 
     @Test
     fun `returns WP media source on WP_LIBRARY source`() {
-        val mediaPickerSetup = MediaPickerSetup(WP_LIBRARY, true, setOf(), false)
+        val mediaPickerSetup = MediaPickerSetup(WP_LIBRARY, true, setOf(), false, R.string.wp_media_title)
         whenever(mediaLibraryDataSourceFactory.build(site)).thenReturn(mediaLibraryDataSource)
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -64,12 +65,15 @@ class MediaLoaderFactoryTest {
     fun `throws exception on not implemented sources`() {
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
             mediaLoaderFactory.build(
-                    MediaPickerSetup(GIF_LIBRARY, true, setOf(), false),
+                    MediaPickerSetup(GIF_LIBRARY, true, setOf(), false, R.string.wp_media_title),
                     site
             )
         }
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
-            mediaLoaderFactory.build(MediaPickerSetup(STOCK_LIBRARY, true, setOf(), false), site)
+            mediaLoaderFactory.build(
+                    MediaPickerSetup(STOCK_LIBRARY, true, setOf(), false, R.string.wp_media_title),
+                    site
+            )
         }
     }
 }

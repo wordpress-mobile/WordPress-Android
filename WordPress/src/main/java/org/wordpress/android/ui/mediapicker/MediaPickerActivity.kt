@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.FragmentTransaction
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
@@ -28,7 +27,6 @@ import org.wordpress.android.ui.RequestCodes.VIDEO_LIBRARY
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
@@ -132,19 +130,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         } else {
             fragment.setMediaPickerListener(this)
         }
-        updateTitle(mediaPickerSetup, requireNotNull(actionBar))
-    }
-
-    private fun updateTitle(mediaPickerSetup: MediaPickerSetup, actionBar: ActionBar) {
-        val isImagePicker = mediaPickerSetup.allowedTypes.contains(MediaType.IMAGE)
-        val isVideoPicker = mediaPickerSetup.allowedTypes.contains(MediaType.VIDEO)
-        if (isImagePicker && isVideoPicker) {
-            actionBar.setTitle(R.string.photo_picker_photo_or_video_title)
-        } else if (isVideoPicker) {
-            actionBar.setTitle(R.string.photo_picker_video_title)
-        } else {
-            actionBar.setTitle(R.string.photo_picker_title)
-        }
+        requireNotNull(actionBar).setTitle(mediaPickerSetup.title)
     }
 
     private val pickerFragment: MediaPickerFragment?

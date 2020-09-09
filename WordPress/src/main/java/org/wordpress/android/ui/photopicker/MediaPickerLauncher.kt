@@ -3,6 +3,7 @@ package org.wordpress.android.ui.photopicker
 import android.app.Activity
 import android.content.Intent
 import androidx.fragment.app.Fragment
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -84,10 +85,11 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
-                    DEVICE,
-                    true,
-                    allowedTypes,
-                    false
+                    dataSource = DEVICE,
+                    canMultiselect = true,
+                    allowedTypes = allowedTypes,
+                    cameraEnabled = false,
+                    title = R.string.photo_picker_choose_file
             )
             val intent = MediaPickerActivity.buildIntent(
                     activity,
@@ -130,7 +132,20 @@ class MediaPickerLauncher
         if (browserType.isVideoPicker) {
             allowedTypes.add(VIDEO)
         }
-        return MediaPickerSetup(DEVICE, browserType.canMultiselect(), allowedTypes, browserType.isWPStoriesPicker)
+        val title = if (browserType.isImagePicker && browserType.isVideoPicker) {
+            R.string.photo_picker_photo_or_video_title
+        } else if (browserType.isVideoPicker) {
+            R.string.photo_picker_video_title
+        } else {
+            R.string.photo_picker_title
+        }
+        return MediaPickerSetup(
+                dataSource = DEVICE,
+                canMultiselect = browserType.canMultiselect(),
+                allowedTypes = allowedTypes,
+                cameraEnabled = browserType.isWPStoriesPicker,
+                title = title
+        )
     }
 
     private fun buildWPMediaLibraryPickerSetup(browserType: MediaBrowserType): MediaPickerSetup {
@@ -141,6 +156,12 @@ class MediaPickerLauncher
         if (browserType.isVideoPicker) {
             allowedTypes.add(VIDEO)
         }
-        return MediaPickerSetup(WP_LIBRARY, browserType.canMultiselect(), allowedTypes, browserType.isWPStoriesPicker)
+        return MediaPickerSetup(
+                dataSource = WP_LIBRARY,
+                canMultiselect = browserType.canMultiselect(),
+                allowedTypes = allowedTypes,
+                cameraEnabled = browserType.isWPStoriesPicker,
+                title = R.string.wp_media_title
+        )
     }
 }

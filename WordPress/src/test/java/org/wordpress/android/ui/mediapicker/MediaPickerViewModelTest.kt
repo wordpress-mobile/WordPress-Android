@@ -63,8 +63,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: MediaPickerViewModel
     private var uiStates = mutableListOf<MediaPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
-    private val singleSelectMediaPickerSetup = MediaPickerSetup(DEVICE, false, setOf(IMAGE), false)
-    private val multiSelectMediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false)
+    private val singleSelectMediaPickerSetup = buildMediaPickerSetup(false, setOf(IMAGE))
+    private val multiSelectMediaPickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO))
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
@@ -273,7 +273,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Photo when photo browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, false, setOf(IMAGE), false))
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(IMAGE)))
 
         viewModel.refreshData(false)
 
@@ -284,7 +284,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Video when video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, false, setOf(VIDEO), false))
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(VIDEO)))
 
         viewModel.refreshData(false)
 
@@ -295,7 +295,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Media when image and video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, false, setOf(IMAGE, VIDEO), false))
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(IMAGE, VIDEO)))
 
         viewModel.refreshData(false)
 
@@ -307,7 +307,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode title is Select N items when multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE), false))
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE)))
 
         viewModel.refreshData(false)
 
@@ -320,7 +320,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode hides edit action when video item selected`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(videoItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false))
+        setupViewModel(listOf(videoItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO)))
 
         viewModel.refreshData(false)
 
@@ -332,7 +332,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode hides edit action when audio item selected`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(audioItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, AUDIO), false))
+        setupViewModel(listOf(audioItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE, AUDIO)))
 
         viewModel.refreshData(false)
 
@@ -344,7 +344,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     @Test
     fun `action mode hides edit action when document item selected`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(documentItem, secondItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, DOCUMENT), false))
+        setupViewModel(listOf(documentItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE, DOCUMENT)))
 
         viewModel.refreshData(false)
 
@@ -522,4 +522,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
         }
     }
+
+    private fun buildMediaPickerSetup(canMultiselect: Boolean, allowedTypes: Set<MediaType>) =
+            MediaPickerSetup(DEVICE, canMultiselect, allowedTypes, false, R.string.wp_media_title)
 }
