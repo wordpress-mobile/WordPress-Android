@@ -37,8 +37,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiMo
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -286,13 +284,14 @@ class MediaPickerFragment : Fragment() {
             }
             val adapter = recycler.adapter as MediaPickerAdapter
 
-            (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
-                    NUM_COLUMNS
-                } else {
-                    1
-                }
-            }
+            (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
+                    object : GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
+                            NUM_COLUMNS
+                        } else {
+                            1
+                        }
+                    }
             val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
             recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
