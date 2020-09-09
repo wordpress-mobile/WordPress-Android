@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -23,18 +24,20 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
@@ -73,6 +76,7 @@ class ReaderPostCardActionsHandlerTest {
                 dispatcher,
                 resourceProvider,
                 htmlMessageUtils,
+                mock(),
                 TEST_DISPATCHER,
                 TEST_SCOPE,
                 TEST_SCOPE
@@ -87,15 +91,12 @@ class ReaderPostCardActionsHandlerTest {
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(true)
 
-        var observedValue: Event<ReaderNavigationEvents>? = null
-        actionHandler.navigationEvents.observeForever {
-            observedValue = it
-        }
+        val observedValues = init()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
         // Assert
-        assertThat(observedValue!!.peekContent()).isInstanceOf(ShowBookmarkedSavedOnlyLocallyDialog::class.java)
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowBookmarkedSavedOnlyLocallyDialog::class.java)
     }
 
     @Test
@@ -104,15 +105,12 @@ class ReaderPostCardActionsHandlerTest {
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
 
-        var observedValue: Event<ReaderNavigationEvents>? = null
-        actionHandler.navigationEvents.observeForever {
-            observedValue = it
-        }
+        val observedValues = init()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
         // Assert
-        assertThat(observedValue).isNull()
+        assertThat(observedValues.navigation).isEmpty()
     }
 
     @Test
@@ -120,15 +118,12 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
 
-        var observedValue: Event<SnackbarMessageHolder>? = null
-        actionHandler.snackbarEvents.observeForever {
-            observedValue = it
-        }
+        val observedValues = init()
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
 
         // Assert
-        assertThat(observedValue!!.peekContent()).isNotNull
+        assertThat(observedValues.snackbarMsgs).isNotEmpty
     }
 
     @Test
@@ -136,16 +131,13 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
 
-        var observedValue: Event<SnackbarMessageHolder>? = null
-        actionHandler.snackbarEvents.observeForever {
-            observedValue = it
-        }
+        val observedValues = init()
         val isBookmarkList = true
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, isBookmarkList)
 
         // Assert
-        assertThat(observedValue).isNull()
+        assertThat(observedValues.snackbarMsgs).isEmpty()
     }
 
     @Test
@@ -153,16 +145,13 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(false)))
 
-        var observedValue: Event<SnackbarMessageHolder>? = null
-        actionHandler.snackbarEvents.observeForever {
-            observedValue = it
-        }
+        val observedValues = init()
         val isBookmarkList = true
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, isBookmarkList)
 
         // Assert
-        assertThat(observedValue).isNull()
+        assertThat(observedValues.snackbarMsgs).isEmpty()
     }
 
     @Test
@@ -170,24 +159,55 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(bookmarkUseCase.toggleBookmark(anyLong(), anyLong(), anyBoolean())).thenReturn(flowOf(Success(true)))
 
-        var snackBarObservedValue: Event<SnackbarMessageHolder>? = null
-        actionHandler.snackbarEvents.observeForever {
-            snackBarObservedValue = it
-        }
-
-        var navigationObservedValue: Event<ReaderNavigationEvents>? = null
-        actionHandler.navigationEvents.observeForever {
-            navigationObservedValue = it
-        }
+        val observedValues = init()
 
         // Act
         actionHandler.onAction(dummyReaderPostModel(), BOOKMARK, false)
-        snackBarObservedValue!!.peekContent().buttonAction.invoke()
+        observedValues.snackbarMsgs[0].buttonAction.invoke()
 
         // Assert
-        assertThat(navigationObservedValue!!.peekContent()).isEqualTo(ShowBookmarkedTab)
+        assertThat(observedValues.navigation[0]).isEqualTo(ShowBookmarkedTab)
     }
+
     /** BOOKMARK ACTION end **/
+
+    @Test
+    fun `Clicking on a post opens post detail`() = test {
+        // Arrange
+        val observedValues = init()
+        // Act
+        actionHandler.handleOnItemClicked(mock())
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowPostDetail::class.java)
+    }
+
+    private fun init(): Observers {
+        val navigation = mutableListOf<ReaderNavigationEvents>()
+        actionHandler.navigationEvents.observeForever {
+            navigation.add(it.peekContent())
+        }
+
+        val snackbarMsgs = mutableListOf<SnackbarMessageHolder>()
+        actionHandler.snackbarEvents.observeForever {
+            snackbarMsgs.add(it.peekContent())
+        }
+
+        val preloadPost = mutableListOf<PreLoadPostContent>()
+        actionHandler.preloadPostEvents.observeForever {
+            preloadPost.add(it.peekContent())
+        }
+
+        val followStatusUpdated = mutableListOf<PostFollowStatusChanged>()
+        actionHandler.followStatusUpdated.observeForever {
+            followStatusUpdated.add(it)
+        }
+
+        val refreshPosts = mutableListOf<Unit>()
+        actionHandler.refreshPosts.observeForever {
+            refreshPosts.add(it.peekContent())
+        }
+        return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts)
+    }
 
     private fun dummyReaderPostModel(): ReaderPost {
         return ReaderPost().apply {
@@ -196,3 +216,11 @@ class ReaderPostCardActionsHandlerTest {
         }
     }
 }
+
+private data class Observers(
+    val navigation: List<ReaderNavigationEvents>,
+    val snackbarMsgs: List<SnackbarMessageHolder>,
+    val preloadPost: List<PreLoadPostContent>,
+    val followStatusUpdated: List<PostFollowStatusChanged>,
+    val refreshPosts: List<Unit>
+)
