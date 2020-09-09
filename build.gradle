@@ -65,6 +65,10 @@ allprojects {
         } else {
             maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
         }
+
+        flatDir {
+            dirs '../aars'
+        }
     }
 
     task checkstyle(type: Checkstyle) {

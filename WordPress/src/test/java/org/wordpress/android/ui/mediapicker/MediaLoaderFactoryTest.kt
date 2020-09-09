@@ -11,22 +11,24 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
+import org.wordpress.android.util.LocaleManagerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
     @Mock lateinit var deviceListBuilder: DeviceListBuilder
+    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
     @Before
     fun setUp() {
-        mediaLoaderFactory = MediaLoaderFactory(deviceListBuilder)
+        mediaLoaderFactory = MediaLoaderFactory(deviceListBuilder, localeManagerWrapper)
     }
 
     @Test
     fun `returns device list builder on DEVICE source`() {
         val mediaLoader = mediaLoaderFactory.build(DEVICE)
 
-        assertThat(mediaLoader).isEqualTo(MediaLoader(deviceListBuilder))
+        assertThat(mediaLoader).isEqualTo(MediaLoader(deviceListBuilder, localeManagerWrapper))
     }
 
     @Test

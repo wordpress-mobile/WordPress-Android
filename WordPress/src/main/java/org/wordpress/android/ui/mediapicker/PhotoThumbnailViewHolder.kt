@@ -9,7 +9,7 @@ import org.wordpress.android.R
  * ViewHolder containing a device thumbnail
  */
 class PhotoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
-        ThumbnailViewHolder(parent, R.layout.photo_picker_thumbnail) {
+        ThumbnailViewHolder(parent, R.layout.media_picker_thumbnail_item) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
 
