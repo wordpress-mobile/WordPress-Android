@@ -20,11 +20,12 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_FILE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -66,7 +67,6 @@ class MediaPickerViewModel @Inject constructor(
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _navigateToEdit = MutableLiveData<Event<List<UriWrapper>>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
-    private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
     private val _domainModel = MutableLiveData<DomainModel>()
     private val _selectedUris = MutableLiveData<List<UriWrapper>>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
@@ -79,7 +79,6 @@ class MediaPickerViewModel @Inject constructor(
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
     val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
 
-    val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
     val selectedUris: LiveData<List<UriWrapper>> = _selectedUris
@@ -342,27 +341,20 @@ class MediaPickerViewModel @Inject constructor(
         }
     }
 
-    fun onBrowseForItems(anchorView: ViewWrapper) {
-        val items = mutableListOf<PopupMenuItem>()
-        if (mediaPickerSetup.allowedTypes.contains(IMAGE)) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_photo)) {
-                clickIcon(
-                        ANDROID_CHOOSE_PHOTO
-                )
-            })
-        }
-        if (mediaPickerSetup.allowedTypes.contains(VIDEO)) {
-            items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_video)) {
-                clickIcon(
-                        MediaPickerIcon.ANDROID_CHOOSE_VIDEO
-                )
-            })
-        }
-
-        if (items.size == 1) {
-            items[0].action()
+    fun onBrowseForItems() {
+        if (mediaPickerSetup.isBrowser()) {
+            clickIcon(ANDROID_CHOOSE_FILE)
         } else {
-            _showPopupMenu.value = Event(PopupMenuUiModel(anchorView, items))
+            val isImageAllowed = mediaPickerSetup.allowedTypes.contains(IMAGE)
+            val isVideoAllowed = mediaPickerSetup.allowedTypes.contains(VIDEO)
+
+            if (isImageAllowed && isVideoAllowed) {
+                clickIcon(ANDROID_CHOOSE_PHOTO_OR_VIDEO)
+            } else if (isImageAllowed) {
+                clickIcon(ANDROID_CHOOSE_PHOTO)
+            } else if (isVideoAllowed) {
+                clickIcon(MediaPickerIcon.ANDROID_CHOOSE_VIDEO)
+            }
         }
     }
 

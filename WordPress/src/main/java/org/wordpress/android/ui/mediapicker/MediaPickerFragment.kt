@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -39,7 +38,6 @@ import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
@@ -50,6 +48,8 @@ class MediaPickerFragment : Fragment() {
     enum class MediaPickerIcon {
         ANDROID_CHOOSE_PHOTO,
         ANDROID_CHOOSE_VIDEO,
+        ANDROID_CHOOSE_PHOTO_OR_VIDEO,
+        ANDROID_CHOOSE_FILE,
         WP_STORIES_CAPTURE;
     }
 
@@ -170,21 +170,6 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.onShowPopupMenu.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { uiModel ->
-                val popup = PopupMenu(activity, uiModel.view.view)
-                for (popupMenuItem in uiModel.items) {
-                    val item = popup.menu
-                            .add(popupMenuItem.title.stringRes)
-                    item.setOnMenuItemClickListener {
-                        popupMenuItem.action()
-                        true
-                    }
-                }
-                popup.show()
-            }
-        })
-
         viewModel.onPermissionsRequested.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 when (this) {
@@ -225,10 +210,7 @@ class MediaPickerFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.mnu_browse_item) {
-            val anchorView = activity?.findViewById<View>(item.itemId)
-            anchorView?.let {
-                viewModel.onBrowseForItems(ViewWrapper(anchorView))
-            }
+            viewModel.onBrowseForItems()
         }
         return true
     }
