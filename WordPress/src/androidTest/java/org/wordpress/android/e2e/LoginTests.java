@@ -50,7 +50,7 @@ public class LoginTests extends BaseTest {
     public void loginWithMagicLink() {
         new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress()
-                       .chooseMagicLink(mMagicLinkActivityTestRule)
+                       .openMagicLink(mMagicLinkActivityTestRule)
                        .confirmLogin();
     }
 
