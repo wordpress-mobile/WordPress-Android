@@ -19,7 +19,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
@@ -254,15 +253,6 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * returns true if the post has a featured image and the featured image is not found in the post body
-     */
-    private boolean shouldAddFeaturedImage() {
-        return mPost.hasFeaturedImage()
-               && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())
-               && mFeaturedImageUtils.showFeaturedImage(mPost.getFeaturedImage(), mPost.getText());
-    }
-
-    /*
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
@@ -272,7 +262,7 @@ public class ReaderPostRenderer {
         content = content.replace("src=\"//", "src=\"http://");
 
         // add the featured image (if any)
-        if (shouldAddFeaturedImage()) {
+        if (mFeaturedImageUtils.shouldAddFeaturedImage(mPost)) {
             AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
             content = getFeaturedImageHtml() + content;
         }
