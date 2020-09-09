@@ -193,7 +193,7 @@ class WPMainActivityViewModel @Inject constructor(
         _startLoginFlow.value = Event(true)
     }
 
-    fun onResume(site: SiteModel?,  showFab: Boolean) {
+    fun onResume(site: SiteModel?, showFab: Boolean) {
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
