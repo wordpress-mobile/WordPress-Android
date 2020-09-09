@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideo
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
@@ -45,6 +46,8 @@ import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.Failed
 import org.wordpress.android.ui.reader.repository.usecases.BlockSiteState.SiteBlockedInLocalDb
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostLikeState.PostLikedInLocalDb
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
@@ -454,6 +457,132 @@ class ReaderPostCardActionsHandlerTest {
         assertThat(observedValues.refreshPosts.size).isEqualTo(2)
     }
     /** BLOCK SITE ACTION end **/
+
+    /** LIKE ACTION begin **/
+    @Test
+    fun `Like action is initiated when user clicks on like button`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf())
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        verify(likeUseCase).perform(anyOrNull(), anyBoolean())
+    }
+
+    @Test
+    fun `Like use cases is initiated with like action when the post is not liked by the current user`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf())
+        val isLiked = false
+        val post = ReaderPost().apply { isLikedByCurrentUser = isLiked }
+        // Act
+        actionHandler.onAction(post, LIKE, false)
+        // Assert
+        verify(likeUseCase).perform(anyOrNull(), eq(!isLiked))
+    }
+
+    @Test
+    fun `Like use cases is initiated with unlike action when the post is not liked by the current user`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf())
+        val isLiked = true
+        val post = ReaderPost().apply { isLikedByCurrentUser = isLiked }
+        // Act
+        actionHandler.onAction(post, LIKE, false)
+        // Assert
+        verify(likeUseCase).perform(anyOrNull(), eq(!isLiked))
+    }
+
+    @Test
+    fun `Posts are refreshed when user likes a post`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikedInLocalDb))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.refreshPosts.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Posts are refreshed when like action fails with RequestFailed error`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.refreshPosts.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Snackbar shown when like action fails with no network error`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikeState.Failed.NoNetwork))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Snackbar shown when like action fails with no RequestFailed error`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikeState.Failed.RequestFailed))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `Nothing happens when like action succeeds`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikeState.Success))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isEmpty()
+        assertThat(observedValues.navigation).isEmpty()
+        assertThat(observedValues.refreshPosts).isEmpty()
+        assertThat(observedValues.preloadPost).isEmpty()
+        assertThat(observedValues.followStatusUpdated).isEmpty()
+    }
+
+    @Test
+    fun `Nothing happens when like action results in Unchanged state`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikeState.Unchanged))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isEmpty()
+        assertThat(observedValues.navigation).isEmpty()
+        assertThat(observedValues.refreshPosts).isEmpty()
+        assertThat(observedValues.preloadPost).isEmpty()
+        assertThat(observedValues.followStatusUpdated).isEmpty()
+    }
+
+    @Test
+    fun `Nothing happens when like action results in AlreadyRunning`() = test {
+        // Arrange
+        whenever(likeUseCase.perform(anyOrNull(), anyBoolean())).thenReturn(flowOf(PostLikeState.AlreadyRunning))
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(mock(), LIKE, false)
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isEmpty()
+        assertThat(observedValues.navigation).isEmpty()
+        assertThat(observedValues.refreshPosts).isEmpty()
+        assertThat(observedValues.preloadPost).isEmpty()
+        assertThat(observedValues.followStatusUpdated).isEmpty()
+    }
+
+    /** LIKE ACTION end **/
 
     @Test
     fun `Clicking on a post opens post detail`() = test {
