@@ -136,6 +136,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         mRequestMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAnalyticsListener.trackRequestMagicLinkClick();
                 dispatchMagicLinkRequest();
             }
         });
@@ -267,7 +268,6 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     }
 
     private void dispatchMagicLinkRequest() {
-        mAnalyticsListener.trackRequestMagicLinkClick();
         if (mLoginListener != null) {
             if (NetworkUtils.checkConnection(getActivity())) {
                 showMagicLinkRequestProgressDialog();
