@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostD
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
@@ -46,6 +47,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -278,6 +280,61 @@ class ReaderPostCardActionsHandlerTest {
         assertThat(observedValues.snackbarMsgs).isNotEmpty
     }
     /** FOLLOW ACTION end **/
+
+    /** SITE NOTIFICATIONS ACTION Begin **/
+    @Test
+    fun `ToggleNotifications when user clicks on Notifcations button`() = test {
+        // Arrange
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong())).thenReturn(SiteNotificationState.Success)
+        // Act
+        actionHandler.onAction(mock(), SITE_NOTIFICATIONS, false)
+
+        // Assert
+        verify(siteNotificationsUseCase).toggleNotification(anyLong())
+    }
+
+    @Test
+    fun `Show snackbar message when toggleNotification return network error`() = test {
+        // Arrange
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+                .thenReturn(SiteNotificationState.Failed.NoNetwork)
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(mock(), SITE_NOTIFICATIONS, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isNotEmpty
+    }
+
+    @Test
+    fun `Show snackbar message when toggleNotification returns request error`() = test {
+        // Arrange
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+                .thenReturn(SiteNotificationState.Failed.RequestFailed)
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(mock(), SITE_NOTIFICATIONS, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isNotEmpty
+    }
+
+    @Test
+    fun `Do not Show snackbar message when toggleNotification returns alreadyRunning error`() = test {
+        // Arrange
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong()))
+                .thenReturn(SiteNotificationState.Failed.AlreadyRunning)
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(mock(), SITE_NOTIFICATIONS, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs).isEmpty()
+    }
+    /** SITE NOTIFICATIONS ACTION end **/
 
     @Test
     fun `Clicking on a post opens post detail`() = test {
