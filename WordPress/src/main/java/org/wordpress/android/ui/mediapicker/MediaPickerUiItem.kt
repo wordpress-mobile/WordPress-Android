@@ -40,7 +40,7 @@ sealed class MediaPickerUiItem(
         val clickAction: ClickAction
     ) : MediaPickerUiItem(FILE)
 
-    data class NextPageLoader(val isLoading: Boolean, val error: String? = null, val retryAction: () -> Unit) :
+    data class NextPageLoader(val isLoading: Boolean, val error: String? = null, val loadAction: () -> Unit) :
             MediaPickerUiItem(NEXT_PAGE_LOADER)
 
     data class ToggleAction(

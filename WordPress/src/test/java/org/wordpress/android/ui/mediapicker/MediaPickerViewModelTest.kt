@@ -377,7 +377,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             is PhotoItem -> item.clickAction.click()
             is VideoItem -> item.clickAction.click()
             is FileItem -> item.clickAction.click()
-            is NextPageLoader -> item.retryAction()
+            is NextPageLoader -> item.loadAction()
         }
     }
 
