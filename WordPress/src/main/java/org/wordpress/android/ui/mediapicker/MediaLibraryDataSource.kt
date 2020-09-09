@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -16,8 +15,6 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
-import org.wordpress.android.ui.mediapicker.MediaLibraryDataSource.PartialResult.Data
-import org.wordpress.android.ui.mediapicker.MediaLibraryDataSource.PartialResult.Loading
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
@@ -47,26 +44,42 @@ class MediaLibraryDataSource(
         loadMore: Boolean
     ): MediaLoadingResult {
         return withContext(bgDispatcher) {
-            val result = mutableListOf<MediaItem>()
-            val deferredJobs = mediaTypes.map { mediaType ->
-                when (mediaType) {
-                    IMAGE -> async {
-                        mediaStore.getSiteImages(siteModel).toMediaItems(mediaType)
-                    }
-                    VIDEO -> async {
-                        mediaStore.getSiteVideos(siteModel).toMediaItems(mediaType)
-                    }
-                    AUDIO -> async {
-                        mediaStore.getSiteAudio(siteModel).toMediaItems(mediaType)
-                    }
-                    DOCUMENT -> async {
-                        mediaStore.getSiteDocuments(siteModel).toMediaItems(mediaType)
-                    }
+            val loadingResults = mediaTypes.map { mediaType ->
+                async {
+                    loadPage(
+                            siteModel,
+                            loadMore,
+                            mediaType.toMimeType()
+                    )
+                }
+            }.map { it.await() }
+
+            var error: String? = null
+            var hasMore = false
+            for (loadingResult in loadingResults) {
+                if (loadingResult.isError) {
+                    error = loadingResult.error.message
+                    break
+                } else {
+                    hasMore = hasMore || loadingResult.canLoadMore
                 }
             }
-            deferredJobs.forEach { result.addAll(it.await()) }
-            result.sortByDescending { (it.identifier as? RemoteId)?.value }
-            MediaLoadingResult.Success(result, false)
+            if (error != null) {
+                MediaLoadingResult.Failure(error)
+            } else {
+                MediaLoadingResult.Success(hasMore)
+            }
+        }
+    }
+
+    override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
+        return withContext(bgDispatcher) {
+            mediaTypes.map { mediaType ->
+                async { getFromDatabase(mediaType) }
+            }.fold(mutableListOf<MediaItem>()) { result, databaseItems ->
+                result.addAll(databaseItems.await())
+                result
+            }.sortedByDescending { (it.identifier as? RemoteId)?.value }
         }
     }
 
@@ -80,19 +93,6 @@ class MediaLibraryDataSource(
                     mediaModel.mimeType,
                     0
             )
-        }
-    }
-
-    private suspend fun loadMediaItems(mediaType: MediaType, forced: Boolean, loadMore: Boolean) = flow {
-        emit(Loading)
-        if (!forced) {
-            emit(Data(getFromDatabase(mediaType)))
-        }
-        val loadingResult = loadPage(siteModel, loadMore, mediaType.toMimeType())
-        if (loadingResult.isError) {
-            emit(PartialResult.Error(loadingResult.error.message))
-        } else {
-            emit(Data(getFromDatabase(mediaType)))
         }
     }
 
@@ -130,12 +130,6 @@ class MediaLibraryDataSource(
     fun onMediaListFetched(event: OnMediaListFetched) {
         loadContinuations[event.mimeType]?.resume(event)
         loadContinuations.remove(event.mimeType)
-    }
-
-    sealed class PartialResult {
-        object Loading : PartialResult()
-        data class Data(val data: List<MediaItem>) : PartialResult()
-        data class Error(val message: String) : PartialResult()
     }
 
     companion object {
