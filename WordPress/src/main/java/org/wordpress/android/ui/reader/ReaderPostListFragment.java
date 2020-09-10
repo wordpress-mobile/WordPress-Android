@@ -710,15 +710,6 @@ public class ReaderPostListFragment extends Fragment
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 return;
             }
-            ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-            ReaderTag readerTag = AppPrefs.getReaderTag();
-
-            if (discoverTag != null && discoverTag.equals(readerTag)) {
-                setCurrentTag(readerTag);
-                updateCurrentTag();
-            } else if (discoverTag == null) {
-                AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
-            }
         }
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
@@ -1033,17 +1024,6 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
-                if (mIsTopLevel) {
-                    if (AppPrefs.getReaderTag() == null) {
-                        ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                        String discoverLabel = requireActivity().getString(R.string.reader_discover_display_name);
-
-                        if (discoverTag != null && discoverTag.getTagDisplayName().equals(discoverLabel)) {
-                            setCurrentTag(discoverTag);
-                        }
-                    }
-                }
-
                 if (hasCurrentTag()) {
                     ReaderTag defaultTag;
 
@@ -2536,9 +2516,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         AnalyticsTracker.Stat stat;
-        if (tag.isDiscover()) {
-            stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
-        } else if (tag.isTagTopic()) {
+        if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
