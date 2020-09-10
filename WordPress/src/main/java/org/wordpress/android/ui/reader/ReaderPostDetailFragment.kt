@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.color
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -118,6 +119,7 @@ import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.WPUrlUtils
@@ -288,6 +290,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        WPActivityUtils.setStatusBarColor(requireActivity().window, color.black_translucent_20)
+
         val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
 
         val swipeRefreshLayout = view.findViewById<CustomSwipeRefreshLayout>(R.id.swipe_to_refresh)

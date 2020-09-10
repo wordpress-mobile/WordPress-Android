@@ -16,6 +16,9 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -161,6 +164,16 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
         mAppBar = findViewById(R.id.appbar_with_collapsing_toolbar_layout);
         mToolbar = mAppBar.findViewById(R.id.toolbar_main);
+
+        // Fixes extra padding at the bottom of collapsing toolbar layout when it is drawn behind the statusbar
+        // https://stackoverflow.com/a/50712192/193545
+        ViewCompat.setOnApplyWindowInsetsListener(mAppBar, new OnApplyWindowInsetsListener() {
+            @Override public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+                mToolbar.setPadding(0, insets.getSystemWindowInsetTop(), 0, 0);
+                return insets.consumeSystemWindowInsets();
+            }
+        });
+
         setSupportActionBar(mToolbar);
         mResourceVars = new ReaderResourceVars(this);
 
