@@ -27,6 +27,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
@@ -368,6 +369,29 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertSearchExpanded(query)
     }
 
+    @Test
+    fun `camera FAB is shown in stories when no selected items`() = test {
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), true))
+        assertStoriesFabIsVisible()
+    }
+
+    @Test
+    fun `camera FAB is not shown in stories when selected items`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), true))
+
+        selectItem(0)
+
+        assertStoriesFabIsHidden()
+    }
+
+    @Test
+    fun `camera FAB is not shown when no stories`() = test {
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), false))
+
+        assertStoriesFabIsHidden()
+    }
+
     private fun selectItem(position: Int) {
         when (val item = itemOnPosition(position)) {
             is PhotoItem -> item.toggleAction.toggle()
@@ -523,6 +547,24 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun buildMediaPickerSetup(canMultiselect: Boolean, allowedTypes: Set<MediaType>) =
-            MediaPickerSetup(DEVICE, canMultiselect, allowedTypes, false, R.string.wp_media_title)
+    private fun buildMediaPickerSetup(
+        canMultiselect: Boolean,
+        allowedTypes: Set<MediaType>,
+        cameraAllowed: Boolean = false
+    ) =
+            MediaPickerSetup(DEVICE, canMultiselect, allowedTypes, cameraAllowed, R.string.wp_media_title)
+
+    private fun assertStoriesFabIsVisible() {
+        uiStates.last().fabUiModel.let { model ->
+            assertThat(model is FabUiModel).isTrue()
+            assertThat((model as FabUiModel).show).isEqualTo(true)
+        }
+    }
+
+    private fun assertStoriesFabIsHidden() {
+        uiStates.last().fabUiModel.let { model ->
+            assertThat(model is FabUiModel).isTrue()
+            assertThat((model as FabUiModel).show).isEqualTo(false)
+        }
+    }
 }

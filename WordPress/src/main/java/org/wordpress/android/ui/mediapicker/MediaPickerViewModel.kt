@@ -95,7 +95,7 @@ class MediaPickerViewModel @Inject constructor(
         MediaPickerUiState(
                 buildUiModel(domainModel, selectedIds),
                 buildSoftAskView(softAskRequest),
-                FabUiModel(mediaPickerSetup.cameraEnabled) {
+                FabUiModel(mediaPickerSetup.cameraEnabled && selectedIds.isNullOrEmpty()) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
                 buildActionModeUiModel(selectedIds, domainModel?.domainItems),
