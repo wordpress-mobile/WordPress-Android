@@ -7,5 +7,6 @@ data class ReaderCardRecommendedBlog(
     @SerializedName("url") val url: String,
     @SerializedName("blog_id") val blogId: Long,
     @SerializedName("description") val description: String,
-    @SerializedName("icon") val iconUrl: String?
+    @SerializedName("icon") val iconUrl: String?,
+    @SerializedName("feed_id") val feedId: Long?
 )

@@ -831,7 +831,7 @@ class ReaderPostUiStateBuilderTest {
         val blog = createRecommendedBlog().copy(url = url)
         whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
         // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(listOf(blog)) {}
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(listOf(blog)) { _, _ -> }
         // Assert
         assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
     }
@@ -843,7 +843,7 @@ class ReaderPostUiStateBuilderTest {
         val blogs = List(6) { createRecommendedBlog() }
 
         // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(blogs) {}
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(blogs) { _, _ -> }
 
         // Assert
         assertThat(uiState.blogs.size).isEqualTo(3)
@@ -947,7 +947,8 @@ class ReaderPostUiStateBuilderTest {
             name = "name",
             description = "desc",
             url = "url",
-            iconUrl = null
+            iconUrl = null,
+            feedId = null
     )
     // endregion
 }

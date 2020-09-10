@@ -370,6 +370,7 @@ class ReaderDiscoverViewModelTest {
                             url = it.url,
                             description = it.description,
                             iconUrl = it.iconUrl,
+                            feedId = it.feedId,
                             onItemClicked = mock()
                     )
                 }
@@ -400,7 +401,8 @@ class ReaderDiscoverViewModelTest {
             description = "description",
             url = "url",
             name = "name",
-            iconUrl = null
+            iconUrl = null,
+            feedId = null
     )
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))

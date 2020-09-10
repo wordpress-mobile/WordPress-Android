@@ -273,9 +273,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onRecommendedBlogItemClicked(blogId: Long) {
-        // TODO: pass feedId once available in the API model
-        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, 0)))
+    private fun onRecommendedBlogItemClicked(blogId: Long, feedId: Long?) {
+        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId ?: 0)))
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {

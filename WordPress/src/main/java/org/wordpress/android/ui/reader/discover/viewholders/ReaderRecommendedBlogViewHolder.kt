@@ -34,7 +34,7 @@ class ReaderRecommendedBlogViewHolder(
                 imageManager.cancelRequestAndClearImageView(site_icon)
             }
             containerView.setOnClickListener {
-                onItemClicked(blogId)
+                onItemClicked(blogId, feedId)
             }
         }
     }
