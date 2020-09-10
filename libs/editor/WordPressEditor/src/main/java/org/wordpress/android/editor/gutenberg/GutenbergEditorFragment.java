@@ -400,28 +400,31 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
-        FragmentActivity activity = getActivity();
 
         Bundle arguments = getArguments();
+        FragmentActivity activity = getActivity();
+        if (activity == null || arguments == null) {
+            AppLog.e(T.EDITOR,
+                    "Failed to initialize other media options because the activity or getArguments() is null");
+            return otherMediaOptions;
+        }
+
         GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
                 arguments.getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
-        boolean supportStockPhotos = arguments != null && gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI();
-        boolean supportGifs = arguments != null && arguments.getBoolean(ARG_TENOR_ENABLED);
-        if (activity != null) {
-            String packageName = activity.getApplication().getPackageName();
-            if (supportStockPhotos) {
-                int stockMediaResourceId =
-                        getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+        boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI();
+        boolean supportGifs = arguments.getBoolean(ARG_TENOR_ENABLED, false);
 
-                otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
-            }
-            if (supportGifs) {
-                int gifMediaResourceId =
-                        getResources().getIdentifier("photo_picker_gif", "string", packageName);
-                otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
-            }
-        } else {
-            AppLog.e(T.EDITOR, "Failed to initialize other media options because the activity is null");
+        String packageName = activity.getApplication().getPackageName();
+        if (supportStockPhotos) {
+            int stockMediaResourceId =
+                    getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+
+            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+        }
+        if (supportGifs) {
+            int gifMediaResourceId =
+                    getResources().getIdentifier("photo_picker_gif", "string", packageName);
+            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
         }
 
         return otherMediaOptions;
