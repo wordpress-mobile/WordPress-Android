@@ -2,9 +2,11 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
@@ -19,14 +21,15 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
@@ -56,7 +59,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val displayUtilsWrapper: DisplayUtilsWrapper,
+    displayUtilsWrapper: DisplayUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -85,6 +88,14 @@ class ReaderDiscoverViewModel @Inject constructor(
      */
     private val photonWidth: Int = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
     private val photonHeight: Int = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
+
+    private val communicationChannelObserver = Observer { data: Event<ReaderDiscoverCommunication>? ->
+        data?.let {
+            data.getContentIfNotHandled()?.let {
+                handleDataProviderEvent(it)
+            }
+        }
+    }
 
     fun start() {
         if (isStarted) return
@@ -116,56 +127,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             }
         }
 
-        readerDiscoverDataProvider.communicationChannel.observeForever { data ->
-            data?.let {
-                // TODO reader improvements: Consider using Channel/Flow
-                data.getContentIfNotHandled()?.let {
-                    when (it) {
-                        is Started -> {
-                            uiState.value.let { state ->
-                                if (state is ContentUiState) {
-                                    when (it.task) {
-                                        REQUEST_FIRST_PAGE -> {
-                                            _uiState.value = state.copy(reloadProgressVisibility = true)
-                                        }
-                                        REQUEST_MORE -> {
-                                            _uiState.value = state.copy(loadMoreProgressVisibility = true)
-                                        }
-                                    }
-                                } else {
-                                    _uiState.value = LoadingUiState
-                                }
-                            }
-                        }
-                        is Success -> {
-                        } // no op
-                        is Error ->
-                            _uiState.value?.let { uiState ->
-                                when (uiState) {
-                                    is LoadingUiState -> {
-                                        // show fullscreen error
-                                        _uiState.value = RequestFailedErrorUiState
-                                    }
-                                    is ContentUiState -> {
-                                        _uiState.value = uiState.copy(
-                                                reloadProgressVisibility = false,
-                                                loadMoreProgressVisibility = false
-                                        )
-                                        // show snackbar
-                                        _snackbarEvents.postValue(
-                                                Event(
-                                                        SnackbarMessageHolder(
-                                                                UiStringRes(R.string.reader_error_request_failed_title)
-                                                        )
-                                                )
-                                        )
-                                    }
-                                }
-                            }
-                    }
-                }
-            }
-        }
+        // TODO reader improvements: Consider using Channel/Flow
+        readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
 
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
@@ -211,6 +174,60 @@ class ReaderDiscoverViewModel @Inject constructor(
                     postUiStateBuilder.mapTagListToReaderInterestUiState(
                             it.interests,
                             this@ReaderDiscoverViewModel::onReaderTagClicked
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleDataProviderEvent(it: ReaderDiscoverCommunication) {
+        when (it) {
+            is Started -> {
+                handleStartedEvent(it)
+            }
+            is Success -> {
+            } // no op
+            is Error ->
+                handleErrorEvent()
+        }
+    }
+
+    private fun handleStartedEvent(it: ReaderDiscoverCommunication) {
+        uiState.value.let { state ->
+            if (state is ContentUiState) {
+                when (it.task) {
+                    REQUEST_FIRST_PAGE -> {
+                        _uiState.value = state.copy(reloadProgressVisibility = true)
+                    }
+                    REQUEST_MORE -> {
+                        _uiState.value = state.copy(loadMoreProgressVisibility = true)
+                    }
+                }
+            } else {
+                _uiState.value = LoadingUiState
+            }
+        }
+    }
+
+    private fun handleErrorEvent() {
+        _uiState.value?.let { uiState ->
+            when (uiState) {
+                is LoadingUiState -> {
+                    // show fullscreen error
+                    _uiState.value = RequestFailedErrorUiState
+                }
+                is ContentUiState -> {
+                    _uiState.value = uiState.copy(
+                            reloadProgressVisibility = false,
+                            loadMoreProgressVisibility = false
+                    )
+                    // show snackbar
+                    _snackbarEvents.postValue(
+                            Event(
+                                    SnackbarMessageHolder(
+                                            UiStringRes(string.reader_error_request_failed_title)
+                                    )
+                            )
                     )
                 }
             }
@@ -345,6 +362,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         super.onCleared()
         readerDiscoverDataProvider.stop()
         readerPostCardActionsHandler.onCleared()
+        readerDiscoverDataProvider.communicationChannel.removeObserver(communicationChannelObserver)
 
         appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
