@@ -946,7 +946,8 @@ class ReaderPostUiStateBuilderTest {
             blogId = 1L,
             name = "name",
             description = "desc",
-            url = "url"
+            url = "url",
+            iconUrl = null
     )
     // endregion
 }

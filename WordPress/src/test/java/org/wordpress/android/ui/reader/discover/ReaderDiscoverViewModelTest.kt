@@ -195,7 +195,7 @@ class ReaderDiscoverViewModelTest {
             }
 
     @Test
-    fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present in the ContentUIState`() =
+    fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present`() =
             test {
                 // Arrange
                 val uiStates = mutableListOf<DiscoverUiState>()
@@ -359,7 +359,9 @@ class ReaderDiscoverViewModelTest {
     private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
             ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
 
-    private fun createReaderRecommendedBlogsCardUiState(recommendedBlogs: List<ReaderCardRecommendedBlog>): ReaderRecommendedBlogsCardUiState {
+    private fun createReaderRecommendedBlogsCardUiState(
+        recommendedBlogs: List<ReaderCardRecommendedBlog>
+    ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(
                 blogs = recommendedBlogs.map {
                     ReaderRecommendedBlogUiState(
@@ -367,6 +369,7 @@ class ReaderDiscoverViewModelTest {
                             name = it.name,
                             url = it.url,
                             description = it.description,
+                            iconUrl = it.iconUrl,
                             onItemClicked = mock()
                     )
                 }
@@ -396,7 +399,8 @@ class ReaderDiscoverViewModelTest {
             blogId = 1L,
             description = "description",
             url = "url",
-            name = "name"
+            name = "name",
+            iconUrl = null
     )
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))

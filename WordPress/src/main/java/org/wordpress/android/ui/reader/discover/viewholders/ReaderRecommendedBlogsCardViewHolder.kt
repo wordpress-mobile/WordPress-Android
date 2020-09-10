@@ -8,11 +8,13 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderRecommendedBlogsAdapter
 import org.wordpress.android.ui.utils.addItemDivider
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.image.ImageManager
 
 class ReaderRecommendedBlogsCardViewHolder(
-    parentView: ViewGroup
+    parentView: ViewGroup,
+    imageManager: ImageManager
 ) : ReaderViewHolder(parentView, R.layout.reader_recommended_blos_card) {
-    private val recommendedBlogsAdapter = ReaderRecommendedBlogsAdapter()
+    private val recommendedBlogsAdapter = ReaderRecommendedBlogsAdapter(imageManager)
 
     init {
         if (recommended_blogs.adapter == null) {

@@ -190,6 +190,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                             url = urlUtilsWrapper.removeScheme(it.url),
                             blogId = it.blogId,
                             description = StringEscapeUtils.unescapeHtml4(it.description),
+                            iconUrl = it.iconUrl,
                             onItemClicked = onItemClicked
                     )
                 }.let { ReaderRecommendedBlogsCardUiState(it) }

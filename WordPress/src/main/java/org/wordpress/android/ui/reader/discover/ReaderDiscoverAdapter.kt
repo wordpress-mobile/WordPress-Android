@@ -34,7 +34,7 @@ class ReaderDiscoverAdapter(
                     parent
             )
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
-            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent)
+            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent, imageManager)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
