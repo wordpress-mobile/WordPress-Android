@@ -78,7 +78,7 @@ class ReblogUseCaseTest {
         Assertions.assertThat(state).isInstanceOf(MultipleSites::class.java)
 
         val spState = state as? MultipleSites
-        Assertions.assertThat(spState?.site).isEqualTo(site)
+        Assertions.assertThat(spState?.defaultSite).isEqualTo(site)
         Assertions.assertThat(spState?.post).isEqualTo(post)
     }
 
