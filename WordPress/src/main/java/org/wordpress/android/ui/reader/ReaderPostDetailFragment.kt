@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.PorterDuff.Mode.SRC_ATOP
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
@@ -27,8 +28,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
@@ -120,6 +123,7 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -162,6 +166,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var signInButton: WPTextView
     private lateinit var readerBookmarkButton: ReaderBookmarkButton
     private lateinit var featuredImageView: ImageView
+
+    private lateinit var appBar: AppBarLayout
 
     private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
     private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
@@ -215,6 +221,36 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 null
             }
         }
+
+    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
+        appBarLayout, verticalOffset ->
+        val collapsingToolbarLayout = appBarLayout
+                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+        val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+
+        context?.let { context ->
+            val menu: Menu = toolbar.menu
+            val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+            val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+
+            val collapsingToolbarHeight = collapsingToolbarLayout.height
+            val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                    collapsingToolbarLayout.scrimVisibleHeightTrigger
+
+            val colorAttr = if (isCollapsed) {
+                R.attr.colorOnSurface
+            } else {
+                R.attr.colorSurface
+            }
+            val color = context.getColorFromAttribute(colorAttr)
+
+            toolbar.setTitleTextColor(color)
+            toolbar.navigationIcon?.setColorFilter(color, SRC_ATOP)
+
+            menuBrowse?.icon?.setColorFilter(color, SRC_ATOP)
+            menuShare?.icon?.setColorFilter(color, SRC_ATOP)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -278,7 +314,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         scrollView = view.findViewById(R.id.scroll_view_reader)
         scrollView.setScrollDirectionListener(this)
 
-        val appBar = requireActivity().findViewById<AppBarLayout>(R.id.appbar_with_collapsing_toolbar_layout)
+        appBar = requireActivity().findViewById(R.id.appbar_with_collapsing_toolbar_layout)
+        appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
+
         featuredImageView = appBar.findViewById(R.id.featured_image)
         resourceVars = ReaderResourceVars(context)
 
