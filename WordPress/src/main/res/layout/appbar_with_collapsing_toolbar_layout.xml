@@ -16,14 +16,19 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:titleEnabled="false">
 
-        <ImageView
-            android:id="@+id/featured_image"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
+            android:foreground="@drawable/bg_rectangle_black_translucent_40"
             android:fitsSystemWindows="true"
-            android:contentDescription="@null"
-            app:layout_collapseMode="parallax"/>
+            app:layout_collapseMode="parallax">
+            <ImageView
+                android:id="@+id/featured_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:contentDescription="@null"/>
+        </FrameLayout>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"

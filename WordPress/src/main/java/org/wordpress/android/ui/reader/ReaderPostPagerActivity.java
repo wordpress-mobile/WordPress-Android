@@ -125,6 +125,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     private ProgressBar mProgress;
     private Toolbar mToolbar;
     private AppBarLayout mAppBar;
+    private ImageView mFeaturedImageView;
 
     private ReaderTag mCurrentTag;
     private boolean mIsFeed;
@@ -175,6 +176,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         });
 
         setSupportActionBar(mToolbar);
+
+        mFeaturedImageView = mAppBar.findViewById(R.id.featured_image);
         mResourceVars = new ReaderResourceVars(this);
 
         ActionBar actionBar = getSupportActionBar();
@@ -279,7 +282,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     }
 
     private void updateFeaturedImage(int position) {
-        ImageView featuredImageView = mAppBar.findViewById(R.id.featured_image);
         ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
 
         if (ids != null) {
@@ -294,7 +296,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                             post.isPrivateAtomic
                     );
                     mImageManager.load(
-                            featuredImageView,
+                            mFeaturedImageView,
                             ImageType.PHOTO,
                             imageUrl
                     );
