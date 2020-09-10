@@ -3,6 +3,12 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
@@ -10,10 +16,13 @@ import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.LoadingUiState
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -21,9 +30,12 @@ import javax.inject.Named
  * Implements the Modal Layout Picker view model
  */
 class ModalLayoutPickerViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
+    private val siteStore: SiteStore,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private val layouts: GutenbergPageLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+    private var layouts: GutenbergPageLayouts = GutenbergPageLayouts()
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -34,21 +46,55 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    private val contentUiState: ContentUiState
+        get() = uiState.value as? ContentUiState ?: ContentUiState()
+
     /**
      * Create new page event
      */
     private val _onCreateNewPageRequested = SingleLiveEvent<Unit>()
     val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
 
+    init {
+        dispatcher.register(this)
+    }
+
+    override fun onCleared() {
+        dispatcher.unregister(this)
+        super.onCleared()
+    }
+
     fun init() {
-        updateUiState(ContentUiState())
-        loadLayouts()
-        loadCategories()
+        fetchLayouts()
         updateButtonsUiState()
     }
 
+    private fun fetchLayouts() {
+        updateUiState(LoadingUiState)
+        val siteId = appPrefsWrapper.getSelectedSite()
+        val site = siteStore.getSiteByLocalId(siteId)
+        if (site.isWPCom) {
+            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
+        } else {
+            layouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+            loadLayouts()
+            loadCategories()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
+        if (event.isError) {
+            updateUiState(ErrorUiState)
+        } else {
+            layouts = GutenbergPageLayouts(event.layouts, event.categories)
+            loadLayouts()
+            loadCategories()
+        }
+    }
+
     private fun loadLayouts() {
-        val state = uiState.value as ContentUiState
+        val state = contentUiState
         val listItems = ArrayList<LayoutCategoryUiState>()
 
         val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
@@ -56,6 +102,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         else layouts.categories
 
         selectedCategories.forEach { category ->
+
             val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == state.selectedLayoutSlug
                 LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
@@ -75,7 +122,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
-        val state = uiState.value as ContentUiState
+        val state = contentUiState
         val listItems: List<CategoryListItemUiState> = layouts.categories.map {
             CategoryListItemUiState(
                     it.slug,
@@ -116,7 +163,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param headerShouldBeVisible if true the header is shown and the title hidden
      */
     private fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        val state = uiState.value as ContentUiState
+        val state = contentUiState
         if (state.isHeaderVisible == headerShouldBeVisible) return // No change
         updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
     }
@@ -135,7 +182,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param categorySlug the slug of the tapped category
      */
     fun onCategoryTapped(categorySlug: String) {
-        val state = uiState.value as ContentUiState
+        val state = contentUiState
         if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
             updateUiState(
                     state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { remove(categorySlug) })
@@ -154,7 +201,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param layoutSlug the slug of the tapped layout
      */
     fun onLayoutTapped(layoutSlug: String) {
-        val state = uiState.value as ContentUiState
+        val state = contentUiState
         if (layoutSlug == state.selectedLayoutSlug) { // deselect
             updateUiState(state.copy(selectedLayoutSlug = null))
         } else {
@@ -168,7 +215,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
-        val state = uiState.value as ContentUiState
+        val state = contentUiState
         val selection = state.selectedLayoutSlug != null
         updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
     }

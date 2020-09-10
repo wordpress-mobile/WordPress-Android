@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -11,6 +12,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 
@@ -21,16 +26,31 @@ class ModalLayoutPickerViewModelTest {
 
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
+    @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var siteStore: SiteStore
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Unit>
 
     @Before
     fun setUp() {
         viewModel = ModalLayoutPickerViewModel(
+                dispatcher,
+                siteStore,
+                appPrefsWrapper,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onCreateNewPageRequested.observeForever(
                 onCreateNewPageRequestedObserver
         )
+        mockFetchingSelectedSite()
+    }
+
+    private fun mockFetchingSelectedSite() {
+        val siteId = 1
+        val site = SiteModel()
+        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
     }
 
     @Test
