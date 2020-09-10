@@ -25,6 +25,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplat
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorRequestListener;
 
 import java.util.ArrayList;
 
@@ -62,6 +63,7 @@ public class GutenbergContainerFragment extends Fragment {
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
+                                  OnStoryCreatorRequestListener onStoryCreatorRequestListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -77,6 +79,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
                     addMentionUtil,
                     onSPTTooltipShownEventListener,
+                    onStoryCreatorRequestListener,
                     isDarkMode);
     }
 

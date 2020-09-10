@@ -62,6 +62,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEv
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorRequestListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -335,6 +336,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public boolean onRequestStarterPageTemplatesTooltipShown() {
                         return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
+                    }
+                },
+                new OnStoryCreatorRequestListener() {
+                    @Override public void onRequestStoryCreatorLoad(int postId) {
+                        mEditorFragmentListener.onStoryComposerLoaderRequested(postId);
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));

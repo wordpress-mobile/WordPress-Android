@@ -110,6 +110,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
@@ -2950,6 +2951,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onTrackableEvent(TrackableEvent event, Map<String, String> properties) {
         mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
+    }
+
+    @Override public void onStoryComposerLoaderRequested(int postId) {
+        // TODO here trigger the StoryCreator in the listener, figure out which media ids the
+        //  story block contains, etc.
+
+        // ActivityLauncher.addNewStoryWithMediaIdsForResult
+        // TODO we'll create a new ActivityLauncher method that passes the actual block content for the Story,
+        // after having found it and deserialized from local repository
+        ActivityLauncher.addNewStoryForResult(this, getSite(), PagePostCreationSourcesDetail.NO_DETAIL);
     }
 
     // FluxC events
