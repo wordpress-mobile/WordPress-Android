@@ -401,34 +401,38 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
             showError(R.string.invalid_site_url_message);
         } else {
-            // TODO: If we plan to keep this logic we should convert these labels to constants
-            HashMap<String, String> properties = new HashMap<>();
-            properties.put("url", event.info.url);
-            properties.put("url_after_redirects", event.info.urlAfterRedirects);
-            properties.put("exists", Boolean.toString(event.info.exists));
-            properties.put("has_jetpack", Boolean.toString(event.info.hasJetpack));
-            properties.put("is_jetpack_active", Boolean.toString(event.info.isJetpackActive));
-            properties.put("is_jetpack_connected", Boolean.toString(event.info.isJetpackConnected));
-            properties.put("is_wordpress", Boolean.toString(event.info.isWordPress));
-            properties.put("is_wp_com", Boolean.toString(event.info.isWPCom));
+            handleConnectSiteInfoForWoo(event.info);
+        }
+    }
 
-            boolean hasJetpack = calculateHasJetpack(event.info);
+    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo) {
+        // TODO: If we plan to keep this logic we should convert these labels to constants
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("url", siteInfo.url);
+        properties.put("url_after_redirects", siteInfo.urlAfterRedirects);
+        properties.put("exists", Boolean.toString(siteInfo.exists));
+        properties.put("has_jetpack", Boolean.toString(siteInfo.hasJetpack));
+        properties.put("is_jetpack_active", Boolean.toString(siteInfo.isJetpackActive));
+        properties.put("is_jetpack_connected", Boolean.toString(siteInfo.isJetpackConnected));
+        properties.put("is_wordpress", Boolean.toString(siteInfo.isWordPress));
+        properties.put("is_wp_com", Boolean.toString(siteInfo.isWPCom));
 
-            properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
-            mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
+        boolean hasJetpack = calculateHasJetpack(siteInfo);
 
-            if (!event.info.exists) {
-                // Site does not exist
-                showError(R.string.invalid_site_url_message);
-            } else if (!event.info.isWordPress) {
-                // Not a WordPress site
-                showError(R.string.enter_wordpress_site);
-            } else {
-                mLoginListener.gotConnectedSiteInfo(
-                        event.info.url,
-                        event.info.urlAfterRedirects,
-                        hasJetpack);
-            }
+        properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
+        mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
+
+        if (!siteInfo.exists) {
+            // Site does not exist
+            showError(R.string.invalid_site_url_message);
+        } else if (!siteInfo.isWordPress) {
+            // Not a WordPress site
+            showError(R.string.enter_wordpress_site);
+        } else {
+            mLoginListener.gotConnectedSiteInfo(
+                    siteInfo.url,
+                    siteInfo.urlAfterRedirects,
+                    hasJetpack);
         }
     }
 
