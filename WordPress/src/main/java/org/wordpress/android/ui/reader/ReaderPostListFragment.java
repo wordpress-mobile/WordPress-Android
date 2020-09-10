@@ -118,7 +118,6 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -1086,14 +1085,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         int spacingVertical = getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
-        // the following will change the look and feel of the toolbar to match the current design
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedAppBarColor = elevationOverlayProvider
-                .compositeOverlayIfNeeded(
-                        ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.wpColorAppBar),
-                        appbarElevation);
-        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
+        mRecyclerView.setToolbarBackgroundColor(0);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
         if (mIsTopLevel) {

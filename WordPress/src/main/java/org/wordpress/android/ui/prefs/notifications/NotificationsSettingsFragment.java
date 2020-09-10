@@ -18,10 +18,14 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.ViewCompat;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -159,6 +163,16 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             mRestoredQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
         }
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        final ListView lv = (ListView) view.findViewById(android.R.id.list);
+        if (lv != null) {
+            ViewCompat.setNestedScrollingEnabled(lv, true);
+        }
+    }
+
 
     @Override
     public void onStart() {

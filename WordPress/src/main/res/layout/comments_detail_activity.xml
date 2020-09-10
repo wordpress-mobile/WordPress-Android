@@ -4,8 +4,7 @@
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.wordpress.android.ui.comments.CommentsDetailActivity"
-    tools:ignore="MergeRootFrame">
+    tools:context="org.wordpress.android.ui.comments.CommentsDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
@@ -24,7 +23,6 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <ProgressBar
