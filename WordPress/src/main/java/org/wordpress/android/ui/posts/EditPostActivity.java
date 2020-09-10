@@ -2620,7 +2620,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (allowMultipleSelection) {
             mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else {
-            mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
+            mMediaPickerLauncher
+                    .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
         }
     }
 
