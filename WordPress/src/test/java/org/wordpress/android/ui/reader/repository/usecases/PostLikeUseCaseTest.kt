@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions
@@ -102,7 +101,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `success is returned when liking an unliked post`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = false)
                 // Act
                 val result = useCase.perform(readerPost, true).toList(mutableListOf())
@@ -113,7 +112,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `success is returned when unliking a like post`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = true)
 
                 // Act
@@ -125,7 +124,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `failure is returned when liking an unliked post`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = false, remoteSucceeds = false)
 
                 // Act
@@ -137,7 +136,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `failure is returned when unliking a like post`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = true, remoteSucceeds = false)
 
                 // Act
@@ -149,7 +148,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `like local action is triggered for selected reader post`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = false)
 
                 // Act
@@ -165,7 +164,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `like remote action is triggered for selected reader post`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = false)
 
                 // Act
@@ -182,7 +181,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `Post views bumped when asking to like`() =
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = false)
                 // Act
                 useCase.perform(readerPost, true).toList(mutableListOf())
@@ -193,8 +192,7 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `Post views NOT bumped when asking to unlike`() =
-
-            testWithBlock {
+            test {
                 val readerPost = init(isLikedByCurrentUser = true)
 
                 // Act
@@ -203,12 +201,6 @@ class PostLikeUseCaseTest {
                 // Assert
                 verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())
             }
-
-    private fun <T> testWithBlock(block: suspend CoroutineScope.() -> T) {
-        test {
-            block()
-        }
-    }
 
     private fun init(
         isLikedByCurrentUser: Boolean = false,
