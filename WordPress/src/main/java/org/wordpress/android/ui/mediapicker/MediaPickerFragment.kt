@@ -207,7 +207,7 @@ class MediaPickerFragment : Fragment() {
                 searchMenuItem.collapseActionView()
             }
 
-            searchMenuItem.isVisible = uiState.searchUiModel.isVisible
+            searchMenuItem.isVisible = uiState.searchUiModel !is SearchUiModel.Hidden
             browseMenuItem.isVisible = uiState.browseMenuUiModel.isVisible
         })
     }

@@ -107,10 +107,10 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     private fun buildSearchUiModel(isVisible: Boolean?, filter: String?, searchExpanded: Boolean?): SearchUiModel {
-        return if (searchExpanded == true) {
-            SearchUiModel.Expanded(isVisible ?: false, filter ?: "")
-        } else {
-            SearchUiModel.Collapsed(isVisible ?: false)
+        return when {
+            searchExpanded == true -> SearchUiModel.Expanded(filter ?: "")
+            isVisible == true -> SearchUiModel.Collapsed
+            else -> SearchUiModel.Hidden
         }
     }
 
@@ -460,9 +460,10 @@ class MediaPickerViewModel @Inject constructor(
         object Hidden : ActionModeUiModel()
     }
 
-    sealed class SearchUiModel(val isVisible: Boolean) {
-        class Collapsed(isVisible: Boolean) : SearchUiModel(isVisible)
-        class Expanded(isVisible: Boolean, val filter: String) : SearchUiModel(isVisible)
+    sealed class SearchUiModel {
+        object Collapsed : SearchUiModel()
+        data class Expanded(val filter: String) : SearchUiModel()
+        object Hidden : SearchUiModel()
     }
 
     data class BrowseMenuUiModel(val isVisible: Boolean)
