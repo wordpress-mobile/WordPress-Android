@@ -48,8 +48,6 @@ class PostLikeUseCaseTest {
 
     private lateinit var useCase: PostLikeUseCase
 
-    private val readerPost = createDummyReaderPost()
-
     @Before
     fun setUp() {
         val account = AccountModel()
@@ -69,7 +67,7 @@ class PostLikeUseCaseTest {
     @Test
     fun `NoNetwork returned when no network found`() = test {
         // Given
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val readerPost = init(isNetworkAvailable = false)
 
         // When
         val result = useCase.perform(readerPost, true).toList(mutableListOf())
@@ -81,15 +79,7 @@ class PostLikeUseCaseTest {
     @Test
     fun `unchanged returned when already liked and requesting to like`() = test {
         // Given
-        readerPost.isLikedByCurrentUser = true
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(
-                readerPostActionsWrapper.performLikeActionLocal(
-                        anyOrNull(),
-                        anyBoolean(),
-                        anyLong()
-                )
-        ).thenReturn(false)
+        val readerPost = init(isLikedByCurrentUser = true, localSucceeds = false)
 
         // When
         val result = useCase.perform(readerPost, true).toList(mutableListOf())
@@ -101,15 +91,7 @@ class PostLikeUseCaseTest {
     @Test
     fun `unchanged returned when already unliked and requesting to unlike`() = test {
         // Given
-        readerPost.isLikedByCurrentUser = false
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(
-                readerPostActionsWrapper.performLikeActionLocal(
-                        anyOrNull(),
-                        anyBoolean(),
-                        anyLong()
-                )
-        ).thenReturn(false)
+        val readerPost = init(isLikedByCurrentUser = false, localSucceeds = false)
 
         // When
         val result = useCase.perform(readerPost, false).toList(mutableListOf())
@@ -120,7 +102,8 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `success is returned when liking an unliked post`() =
-            testWithUnlikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = false)
                 // Act
                 val result = useCase.perform(readerPost, true).toList(mutableListOf())
 
@@ -130,7 +113,9 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `success is returned when unliking a like post`() =
-            testWithLikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = true)
+
                 // Act
                 val result = useCase.perform(readerPost, false).toList(mutableListOf())
 
@@ -140,7 +125,9 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `failure is returned when liking an unliked post`() =
-            testWitFailurehUnlikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = false, remoteSucceeds = false)
+
                 // Act
                 val result = useCase.perform(readerPost, true).toList(mutableListOf())
 
@@ -150,7 +137,9 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `failure is returned when unliking a like post`() =
-            testWithFailureLikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = true, remoteSucceeds = false)
+
                 // Act
                 val result = useCase.perform(readerPost, false).toList(mutableListOf())
 
@@ -160,7 +149,9 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `like local action is triggered for selected reader post`() =
-            testWithUnlikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = false)
+
                 // Act
                 useCase.perform(readerPost, true).toList(mutableListOf())
 
@@ -174,7 +165,9 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `like remote action is triggered for selected reader post`() =
-            testWithUnlikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = false)
+
                 // Act
                 useCase.perform(readerPost, true).toList(mutableListOf())
 
@@ -189,7 +182,8 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `Post views bumped when asking to like`() =
-            testWithUnlikedPost {
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = false)
                 // Act
                 useCase.perform(readerPost, true).toList(mutableListOf())
 
@@ -199,7 +193,10 @@ class PostLikeUseCaseTest {
 
     @Test
     fun `Post views NOT bumped when asking to unlike`() =
-            testWithLikedPost {
+
+            testWithBlock {
+                val readerPost = init(isLikedByCurrentUser = true)
+
                 // Act
                 useCase.perform(readerPost, false).toList(mutableListOf())
 
@@ -207,112 +204,26 @@ class PostLikeUseCaseTest {
                 verify(readerPostActionsWrapper, never()).bumpPageViewForPost(anyOrNull())
             }
 
-    private fun <T> testWithUnlikedPost(block: suspend CoroutineScope.() -> T) {
+    private fun <T> testWithBlock(block: suspend CoroutineScope.() -> T) {
         test {
-            readerPost.isLikedByCurrentUser = false
-            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionLocal(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong()
-                    )
-            ).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionRemote(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong(),
-                            anyOrNull()
-                    )
-            )
-                    .then {
-                        (it.arguments[3] as ActionListener).onActionResult(true)
-                    }
-
             block()
         }
     }
 
-    private fun <T> testWithLikedPost(block: suspend CoroutineScope.() -> T) {
-        test {
-            readerPost.isLikedByCurrentUser = true
-            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionLocal(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong()
-                    )
-            ).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionRemote(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong(),
-                            anyOrNull()
-                    )
-            )
-                    .then {
-                        (it.arguments[3] as ActionListener).onActionResult(true)
-                    }
-
-            block()
-        }
-    }
-
-    private fun <T> testWitFailurehUnlikedPost(block: suspend CoroutineScope.() -> T) {
-        test {
-            readerPost.isLikedByCurrentUser = false
-            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionLocal(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong()
-                    )
-            ).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionRemote(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong(),
-                            anyOrNull()
-                    )
-            )
-                    .then {
-                        (it.arguments[3] as ActionListener).onActionResult(false)
-                    }
-
-            block()
-        }
-    }
-
-    private fun <T> testWithFailureLikedPost(block: suspend CoroutineScope.() -> T) {
-        test {
-            readerPost.isLikedByCurrentUser = true
-            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionLocal(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong()
-                    )
-            ).thenReturn(true)
-            whenever(
-                    readerPostActionsWrapper.performLikeActionRemote(
-                            anyOrNull(),
-                            anyBoolean(),
-                            anyLong(),
-                            anyOrNull()
-                    )
-            )
-                    .then {
-                        (it.arguments[3] as ActionListener).onActionResult(false)
-                    }
-
-            block()
-        }
+    private fun init(
+        isLikedByCurrentUser: Boolean = false,
+        isNetworkAvailable: Boolean = true,
+        localSucceeds: Boolean = true,
+        remoteSucceeds: Boolean = true
+    ): ReaderPost {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(isNetworkAvailable)
+        whenever(readerPostActionsWrapper.performLikeActionLocal(anyOrNull(), anyBoolean(), anyLong()))
+                .thenReturn(localSucceeds)
+        whenever(readerPostActionsWrapper.performLikeActionRemote(anyOrNull(), anyBoolean(), anyLong(), anyOrNull()))
+                .then {
+                    (it.arguments[3] as ActionListener).onActionResult(remoteSucceeds)
+                }
+        return createDummyReaderPost(isLikedByCurrentUser = isLikedByCurrentUser)
     }
 
     private fun createDummyReaderPost(
