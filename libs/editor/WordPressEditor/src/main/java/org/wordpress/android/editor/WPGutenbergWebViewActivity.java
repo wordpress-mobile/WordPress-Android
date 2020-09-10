@@ -41,8 +41,8 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             String siteUrl = gutenbergWebViewAuthorizationData.getSiteUrl();
             String urlToLoad = siteUrl + "/wp-admin/post-new.php";
 
-            boolean isSitePrivate = !gutenbergWebViewAuthorizationData.isWPCom();
-            String authenticationUrl = isSitePrivate ? siteUrl + "/wp-login.php" : WPCOM_LOGIN_URL;
+            boolean isSelfHosted = !gutenbergWebViewAuthorizationData.isWPCom();
+            String authenticationUrl = isSelfHosted ? siteUrl + "/wp-login.php" : WPCOM_LOGIN_URL;
             String userAgent = gutenbergWebViewAuthorizationData.getWordPressUserAgent();
 
             // Request to login.php needs to carry the “User-Agent” along with the headers.
@@ -53,10 +53,10 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             String password = gutenbergWebViewAuthorizationData.getWPComAccountPassword();
             String token = gutenbergWebViewAuthorizationData.getWPComAccountToken();
 
-            mUserId = isSitePrivate ? gutenbergWebViewAuthorizationData.getSelfHostedSiteId()
+            mUserId = isSelfHosted ? gutenbergWebViewAuthorizationData.getSelfHostedSiteId()
                     : gutenbergWebViewAuthorizationData.getWPComAccountUserId();
 
-            if (isSitePrivate && gutenbergWebViewAuthorizationData.isJetpackSsoEnabled()) {
+            if (isSelfHosted && gutenbergWebViewAuthorizationData.isJetpackSsoEnabled()) {
                 mIsJetpackSsoEnabled = true;
                 mUrlToLoad = urlToLoad;
                 mUserId = gutenbergWebViewAuthorizationData.getWPComAccountUserId();
