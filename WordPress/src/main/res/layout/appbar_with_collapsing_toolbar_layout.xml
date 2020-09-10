@@ -13,6 +13,14 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         app:titleEnabled="false">
 
+        <ImageView
+            android:id="@+id/featured_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:contentDescription="@null"
+            app:layout_collapseMode="parallax"/>
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"

@@ -28,13 +28,6 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/margin_large">
 
-                    <ImageView
-                        android:id="@+id/featured_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@null"/>
-
                     <org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
                         android:id="@+id/header_view"
                         android:layout_width="match_parent"
@@ -43,7 +36,6 @@
                         android:layout_marginTop="@dimen/margin_large"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
                         android:layout_alignStart="@+id/layout_post_detail_content"
-                        android:layout_below="@id/featured_image"
                         tools:ignore="UnknownIdInLayout"/>
 
                     <include

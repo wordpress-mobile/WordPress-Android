@@ -28,6 +28,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
@@ -277,7 +278,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         scrollView = view.findViewById(R.id.scroll_view_reader)
         scrollView.setScrollDirectionListener(this)
 
-        featuredImageView = view.findViewById(R.id.featured_image)
+        val appBar = requireActivity().findViewById<AppBarLayout>(R.id.appbar_with_collapsing_toolbar_layout)
+        featuredImageView = appBar.findViewById(R.id.featured_image)
         resourceVars = ReaderResourceVars(context)
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
@@ -1360,9 +1362,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             // add padding to the scrollView to make room for the top and bottom toolbars - this also
             // ensures the scrollbar matches the content so it doesn't disappear behind the toolbars
-            val topPadding = if (autoHideToolbarListener != null) toolbarHeight else 0
+//            val topPadding = if (autoHideToolbarListener != null) toolbarHeight else 0
             val bottomPadding = if (canShowFooter()) layoutFooter.height else 0
-            scrollView.setPadding(0, topPadding, 0, bottomPadding)
+            scrollView.setPadding(0, 0, 0, bottomPadding)
 
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
