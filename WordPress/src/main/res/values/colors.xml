@@ -18,7 +18,6 @@
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1A000000</color>
-    <color name="placeholder_light">#EEEEEE</color>
 
     <!-- Stats -->
 
