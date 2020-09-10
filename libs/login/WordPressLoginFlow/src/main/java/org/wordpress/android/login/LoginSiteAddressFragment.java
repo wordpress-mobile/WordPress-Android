@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked;
 import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.util.SiteUtils;
@@ -411,15 +412,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             properties.put("is_wordpress", Boolean.toString(event.info.isWordPress));
             properties.put("is_wp_com", Boolean.toString(event.info.isWPCom));
 
-            // Determining if jetpack is actually installed takes additional logic. This final
-            // calculated event property will make querying this event more straight-forward:
-            boolean hasJetpack = false;
-            if (event.info.isWPCom && event.info.hasJetpack) {
-                // This is likely an atomic site.
-                hasJetpack = true;
-            } else if (event.info.isJetpackConnected) {
-                hasJetpack = true;
-            }
+            boolean hasJetpack = calculateHasJetpack(event.info);
+
             properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
             mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
 
@@ -436,5 +430,18 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                         hasJetpack);
             }
         }
+    }
+
+    private boolean calculateHasJetpack(ConnectSiteInfoPayload siteInfo) {
+        // Determining if jetpack is actually installed takes additional logic. This final
+        // calculated event property will make querying this event more straight-forward:
+        boolean hasJetpack = false;
+        if (siteInfo.isWPCom && siteInfo.hasJetpack) {
+            // This is likely an atomic site.
+            hasJetpack = true;
+        } else if (siteInfo.isJetpackConnected) {
+            hasJetpack = true;
+        }
+        return hasJetpack;
     }
 }
