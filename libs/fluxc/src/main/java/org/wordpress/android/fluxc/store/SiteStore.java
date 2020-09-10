@@ -24,6 +24,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookieResponse;
@@ -143,6 +145,25 @@ public class SiteStore extends Store {
             this.site = site;
             this.mobileEditor = mobileEditor;
             this.webEditor = webEditor;
+        }
+    }
+
+    public static class FetchedBlockLayoutsResponsePayload extends Payload<SiteError> {
+        public SiteModel site;
+        public List<GutenbergLayout> layouts;
+        public List<GutenbergLayoutCategory> categories;
+
+        public FetchedBlockLayoutsResponsePayload(SiteModel site,
+                                                  List<GutenbergLayout> layouts,
+                                                  List<GutenbergLayoutCategory> categories) {
+            this.site = site;
+            this.layouts = layouts;
+            this.categories = categories;
+        }
+
+        public FetchedBlockLayoutsResponsePayload(SiteModel site, SiteError error) {
+            this.site = site;
+            this.error = error;
         }
     }
 
@@ -573,6 +594,18 @@ public class SiteStore extends Store {
 
         public OnAllSitesRemoved(int rowsAffected) {
             mRowsAffected = rowsAffected;
+        }
+    }
+
+    public static class OnBlockLayoutsFetched extends OnChanged<SiteError> {
+        public List<GutenbergLayout> layouts;
+        public List<GutenbergLayoutCategory> categories;
+
+        public OnBlockLayoutsFetched(List<GutenbergLayout> layouts, List<GutenbergLayoutCategory> categories,
+                                     SiteError error) {
+            this.layouts = layouts;
+            this.categories = categories;
+            this.error = error;
         }
     }
 
@@ -1463,6 +1496,12 @@ public class SiteStore extends Store {
             case FETCH_SITE_EDITORS:
                 fetchSiteEditors((SiteModel) action.getPayload());
                 break;
+            case FETCH_BLOCK_LAYOUTS:
+                fetchBlockLayouts((SiteModel) action.getPayload());
+                break;
+            case FETCHED_BLOCK_LAYOUTS:
+                handleFetchedBlockLayouts((FetchedBlockLayoutsResponsePayload) action.getPayload());
+                break;
             case DESIGNATE_MOBILE_EDITOR:
                 designateMobileEditor((DesignateMobileEditorPayload) action.getPayload());
                 break;
@@ -1778,6 +1817,12 @@ public class SiteStore extends Store {
         }
     }
 
+    private void fetchBlockLayouts(SiteModel site) {
+        if (site.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchBlockLayouts(site);
+        }
+    }
+
     private void designateMobileEditor(DesignateMobileEditorPayload payload) {
         // wpcom sites sync the new value with the backend
         if (payload.site.isUsingWpComRestApi()) {
@@ -2031,6 +2076,10 @@ public class SiteStore extends Store {
 
     private void handleFetchedSupportedCountries(DomainSupportedCountriesResponsePayload payload) {
         emitChange(new OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error));
+    }
+
+    private void handleFetchedBlockLayouts(FetchedBlockLayoutsResponsePayload payload) {
+        emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
     }
 
     // Automated Transfers

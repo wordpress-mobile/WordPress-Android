@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
@@ -556,6 +557,43 @@ public class SiteRestClient extends BaseWPComRestClient {
                             }
                         }
                                                 );
+        add(request);
+    }
+
+    public void fetchBlockLayouts(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
+        final WPComGsonRequest<BlockLayoutsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                BlockLayoutsResponse.class,
+                new Listener<BlockLayoutsResponse>() {
+                    @Override
+                    public void onResponse(BlockLayoutsResponse response) {
+                        FetchedBlockLayoutsResponsePayload payload;
+                        payload = new FetchedBlockLayoutsResponsePayload(site, response.getLayouts(),
+                                response.getCategories());
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        SiteErrorType siteErrorType = SiteErrorType.GENERIC_ERROR;
+                        switch (error.apiError) {
+                            case "unauthorized":
+                                siteErrorType = SiteErrorType.UNAUTHORIZED;
+                                break;
+                            case "unknown_blog":
+                                siteErrorType = SiteErrorType.UNKNOWN_SITE;
+                                break;
+                        }
+                        SiteError siteError = new SiteError(siteErrorType);
+                        siteError.message = error.message;
+                        FetchedBlockLayoutsResponsePayload payload =
+                                new FetchedBlockLayoutsResponsePayload(site, siteError);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedBlockLayoutsAction(payload));
+                    }
+                }
+                                                                                               );
         add(request);
     }
 
