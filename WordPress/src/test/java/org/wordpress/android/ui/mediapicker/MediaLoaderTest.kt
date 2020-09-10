@@ -111,7 +111,7 @@ class MediaLoaderTest : BaseUnitTest() {
     @Test
     fun `refresh overrides data`() = withMediaLoader { resultModel, performAction ->
         val firstResult = MediaLoadingResult.Success()
-        whenever(mediaSource.load(eq(mediaTypes), any() , any())).thenReturn(firstResult)
+        whenever(mediaSource.load(eq(mediaTypes), any(), any())).thenReturn(firstResult)
         whenever(mediaSource.get(mediaTypes)).thenReturn(listOf(firstMediaItem), listOf(secondMediaItem))
 
         performAction(LoadAction.Start(), true)
