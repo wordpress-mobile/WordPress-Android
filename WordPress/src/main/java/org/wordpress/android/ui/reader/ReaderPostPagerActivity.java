@@ -10,6 +10,7 @@ import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,8 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -64,6 +67,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -127,6 +132,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     private String mInterceptedUri;
     private int mLastSelectedPosition = -1;
     private ReaderPostListType mPostListType;
+    private ReaderResourceVars mResourceVars;
 
     private boolean mPostSlugsResolutionUnderway;
     private boolean mIsRequestingMorePosts;
@@ -143,6 +149,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject FeaturedImageUtils mFeaturedImageUtils;
+    @Inject ImageManager mImageManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,6 +162,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         mAppBar = findViewById(R.id.appbar_with_collapsing_toolbar_layout);
         mToolbar = mAppBar.findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
+        mResourceVars = new ReaderResourceVars(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -248,6 +257,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
                 mLastSelectedPosition = position;
                 updateTitle(position);
+                updateFeaturedImage(position);
             }
         });
 
@@ -255,6 +265,30 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
     }
 
+    private void updateFeaturedImage(int position) {
+        ImageView featuredImageView = mAppBar.findViewById(R.id.featured_image);
+        ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
+
+        if (ids != null) {
+            ReaderPost post = ReaderPostTable.getBlogPost(ids.getBlogId(), ids.getPostId(), false);
+            if (post != null) {
+                if (mFeaturedImageUtils.shouldAddFeaturedImage(post)) {
+                    String imageUrl = ReaderUtils.getResizedImageUrl(
+                            post.getFeaturedImage(),
+                            mResourceVars.mFullSizeImageWidthPx,
+                            mResourceVars.mFeaturedImageHeightPx,
+                            post.isPrivate,
+                            post.isPrivateAtomic
+                    );
+                    mImageManager.load(
+                            featuredImageView,
+                            ImageType.PHOTO,
+                            imageUrl
+                    );
+                }
+            }
+        }
+    }
     /*
      * set the activity title based on the post at the passed position
      */
@@ -287,7 +321,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SinglePostDownloaded event) {
         if (!isFinishing()) {
-            updateTitle(mViewPager.getCurrentItem());
+            int currentItemIndex = mViewPager.getCurrentItem();
+            updateFeaturedImage(currentItemIndex);
+            updateTitle(currentItemIndex);
         }
     }
 
@@ -728,10 +764,12 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
                             updateTitle(newPosition);
+                            updateFeaturedImage(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
                             updateTitle(currentPosition);
+                            updateFeaturedImage(currentPosition);
                         }
 
                         // let the user know they can swipe between posts
