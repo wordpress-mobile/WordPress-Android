@@ -41,6 +41,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,16 @@ import dagger.android.support.AndroidSupportInjection;
 public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment implements TextWatcher,
         OnEditorCommitListener, LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
+
+    private static final String KEY_SITE_INFO_URL = "url";
+    private static final String KEY_SITE_INFO_URL_AFTER_REDIRECTS = "url_after_redirects";
+    private static final String KEY_SITE_INFO_EXISTS = "exists";
+    private static final String KEY_SITE_INFO_HAS_JETPACK = "has_jetpack";
+    private static final String KEY_SITE_INFO_IS_JETPACK_ACTIVE = "is_jetpack_active";
+    private static final String KEY_SITE_INFO_IS_JETPACK_CONNECTED = "is_jetpack_connected";
+    private static final String KEY_SITE_INFO_IS_WORDPRESS = "is_wordpress";
+    private static final String KEY_SITE_INFO_IS_WPCOM = "is_wp_com";
+    private static final String KEY_SITE_INFO_CALCULATED_HAS_JETPACK = "login_calculated_has_jetpack";
 
     public static final String TAG = "login_site_address_fragment_tag";
 
@@ -354,32 +365,20 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
             endProgressIfNeeded();
         } else {
+            boolean hasJetpack = calculateHasJetpack(event.info);
+
+            mAnalyticsListener.trackConnectedSiteInfoSucceeded(createConnectSiteInfoProperties(event.info, hasJetpack));
+
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-                handleConnectSiteInfoForWoo(event.info);
+                handleConnectSiteInfoForWoo(event.info, hasJetpack);
             } else {
-                handleConnectSiteInfoForWordPress(event.info);
+                handleConnectSiteInfoForWordPress(event.info, hasJetpack);
             }
         }
     }
 
-    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo) {
+    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
         endProgressIfNeeded();
-
-        // TODO: If we plan to keep this logic we should convert these labels to constants
-        HashMap<String, String> properties = new HashMap<>();
-        properties.put("url", siteInfo.url);
-        properties.put("url_after_redirects", siteInfo.urlAfterRedirects);
-        properties.put("exists", Boolean.toString(siteInfo.exists));
-        properties.put("has_jetpack", Boolean.toString(siteInfo.hasJetpack));
-        properties.put("is_jetpack_active", Boolean.toString(siteInfo.isJetpackActive));
-        properties.put("is_jetpack_connected", Boolean.toString(siteInfo.isJetpackConnected));
-        properties.put("is_wordpress", Boolean.toString(siteInfo.isWordPress));
-        properties.put("is_wp_com", Boolean.toString(siteInfo.isWPCom));
-
-        boolean hasJetpack = calculateHasJetpack(siteInfo);
-
-        properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
-        mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
 
         if (!siteInfo.exists) {
             // Site does not exist
@@ -395,9 +394,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
     }
 
-    private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo) {
-        boolean hasJetpack = calculateHasJetpack(siteInfo);
-
+    private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
         if (!siteInfo.isWPCom && !hasJetpack) {
             // Not a WordPress.com or Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
@@ -434,5 +431,19 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             hasJetpack = true;
         }
         return hasJetpack;
+    }
+
+    private Map<String, String> createConnectSiteInfoProperties(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put(KEY_SITE_INFO_URL, siteInfo.url);
+        properties.put(KEY_SITE_INFO_URL_AFTER_REDIRECTS, siteInfo.urlAfterRedirects);
+        properties.put(KEY_SITE_INFO_EXISTS, Boolean.toString(siteInfo.exists));
+        properties.put(KEY_SITE_INFO_HAS_JETPACK, Boolean.toString(siteInfo.hasJetpack));
+        properties.put(KEY_SITE_INFO_IS_JETPACK_ACTIVE, Boolean.toString(siteInfo.isJetpackActive));
+        properties.put(KEY_SITE_INFO_IS_JETPACK_CONNECTED, Boolean.toString(siteInfo.isJetpackConnected));
+        properties.put(KEY_SITE_INFO_IS_WORDPRESS, Boolean.toString(siteInfo.isWordPress));
+        properties.put(KEY_SITE_INFO_IS_WPCOM, Boolean.toString(siteInfo.isWPCom));
+        properties.put(KEY_SITE_INFO_CALCULATED_HAS_JETPACK, Boolean.toString(hasJetpack));
+        return properties;
     }
 }
