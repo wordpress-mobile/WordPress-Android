@@ -724,6 +724,21 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
+    public static void editStoryWithMediaIdsForResult(
+            Activity activity,
+            SiteModel site,
+            long[] mediaIds
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
+    }
+
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
         editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
     }

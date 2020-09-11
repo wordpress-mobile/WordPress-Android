@@ -62,7 +62,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEv
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorRequestListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +91,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_SITE_USER_AGENT = "param_user_agent";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
+    private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -108,6 +109,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
+    private int mStoryBlockEditRequestCode;
 
     // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
     //  fragment can be alive and accessible even before it gets attached to an activity.
@@ -135,7 +137,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean isSiteUsingWpComRestApi,
                                                       String userAgent,
                                                       boolean tenorEnabled,
-                                                      GutenbergPropsBuilder gutenbergPropsBuilder) {
+                                                      GutenbergPropsBuilder gutenbergPropsBuilder,
+                                                      int storyBlockEditRequestCode) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -151,6 +154,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_SITE_USER_AGENT, userAgent);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
+        args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
         fragment.setArguments(args);
         return fragment;
     }
@@ -197,6 +201,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            mStoryBlockEditRequestCode = getArguments().getInt(ARG_STORY_EDITOR_REQUEST_CODE);
         }
 
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
@@ -338,9 +343,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
                     }
                 },
-                new OnStoryCreatorRequestListener() {
-                    @Override public void onRequestStoryCreatorLoad(int postId) {
-                        mEditorFragmentListener.onStoryComposerLoaderRequested(postId);
+                new OnStoryCreatorLoadRequestListener() {
+                    @Override public void onRequestStoryCreatorLoad(ArrayList<Object> mediaFiles, String blockId) {
+                        mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
@@ -425,6 +430,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             } else {
                 trackWebViewClosed("dismiss");
             }
+        } else if (requestCode == mStoryBlockEditRequestCode) {
+            // handle edited block content
+            String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
+            String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
+            getGutenbergContainerFragment().replaceStoryEditedBlock(content, blockId);
         }
     }
 

@@ -2070,7 +2070,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isSiteUsingWpComRestApi,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
-                                gutenbergPropsBuilder
+                                gutenbergPropsBuilder,
+                                RequestCodes.EDIT_STORY
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
@@ -2953,14 +2954,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
-    @Override public void onStoryComposerLoaderRequested(int postId) {
+    @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
         // TODO here trigger the StoryCreator in the listener, figure out which media ids the
         //  story block contains, etc.
 
         // ActivityLauncher.addNewStoryWithMediaIdsForResult
         // TODO we'll create a new ActivityLauncher method that passes the actual block content for the Story,
         // after having found it and deserialized from local repository
-        ActivityLauncher.addNewStoryForResult(this, getSite(), PagePostCreationSourcesDetail.NO_DETAIL);
+
+        ArrayList<Long> tmpMediaIds = new ArrayList<>();
+        for (Object mediaFile : mediaFiles) {
+            long mediaId = new Double(((HashMap<String, Object>)mediaFile).get("id").toString()).longValue();
+            tmpMediaIds.add(mediaId);
+        }
+        ActivityLauncher.editStoryWithMediaIdsForResult(this, getSite(), ListUtils.toLongArray(tmpMediaIds));
     }
 
     // FluxC events
