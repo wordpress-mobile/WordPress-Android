@@ -787,18 +787,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
     }
 
-    private void startProgressIfNeeded() {
-        if (!isInProgress()) {
-            startProgress(false);
-        }
-    }
-
-    private void endProgressIfNeeded() {
-        if (isInProgress()) {
-            endProgress();
-        }
-    }
-
     private class DownloadAvatarAndUploadGravatarThread extends Thread {
         private String mEmail;
         private String mToken;
