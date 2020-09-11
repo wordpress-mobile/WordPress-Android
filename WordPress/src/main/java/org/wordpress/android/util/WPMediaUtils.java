@@ -31,13 +31,19 @@ import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext;
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction;
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser;
+import org.wordpress.android.ui.mediapicker.MediaType;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
@@ -243,6 +249,11 @@ public class WPMediaUtils {
                 RequestCodes.FILE_LIBRARY);
     }
 
+    public static void launchChooserWithContext(Activity activity, OpenSystemChooser openChooser, UiHelpers uiHelpers) {
+        activity.startActivityForResult(prepareChooserIntent(activity, openChooser, uiHelpers),
+                openChooser.getChooserContext().getRequestCode());
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
@@ -271,6 +282,17 @@ public class WPMediaUtils {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_file));
+    }
+
+    private static Intent prepareChooserIntent(Context context, OpenSystemChooser openChooser, UiHelpers uiHelpers) {
+        ChooserContext chooserContext = openChooser.getChooserContext();
+        Intent intent = new Intent(chooserContext.getIntentAction());
+        intent.setType(chooserContext.getMediaTypeFilter());
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, openChooser.getMimeTypes().toArray(new String[0]));
+        if (openChooser.getAllowMultipleSelection()) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, uiHelpers.getTextOfUiString(context, chooserContext.getTitle()));
     }
 
     public static void launchVideoCamera(Activity activity) {

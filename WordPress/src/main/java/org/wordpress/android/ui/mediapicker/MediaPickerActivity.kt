@@ -37,12 +37,9 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMedia
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.STOCK_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_FILE
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
@@ -57,6 +54,7 @@ import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageRe
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult.SUCCESS
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent.IMAGE_PICKED
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.ListUtils
@@ -83,6 +81,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     @Inject lateinit var featuredImageHelper: FeaturedImageHelper
 
     @Inject lateinit var imageEditorTracker: ImageEditorTracker
+
+    @Inject lateinit var uiHelpers: UiHelpers
 
     enum class MediaPickerMediaSource {
         ANDROID_CAMERA, ANDROID_PICKER, APP_PICKER, WP_MEDIA_PICKER, STOCK_MEDIA_PICKER;
@@ -237,20 +237,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
-    private fun launchPictureLibrary(multiSelect: Boolean) {
-        WPMediaUtils.launchPictureLibrary(this, multiSelect)
-    }
-
-    private fun launchVideoLibrary(multiSelect: Boolean) {
-        WPMediaUtils.launchVideoLibrary(this, multiSelect)
-    }
-
-    private fun launchMediaLibrary(multiSelect: Boolean) {
-        WPMediaUtils.launchMediaLibrary(this, multiSelect)
-    }
-
-    private fun launchFileLibrary(multiSelect: Boolean) {
-        WPMediaUtils.launchFileLibrary(this, multiSelect)
+    private fun launchChooserWithContext(openChooser: OpenSystemChooser, uiHelpers: UiHelpers) {
+        WPMediaUtils.launchChooserWithContext(this, openChooser, uiHelpers)
     }
 
     private fun launchWPStoriesCamera() {
@@ -353,13 +341,12 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
-    override fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean) {
-        when (icon) {
-            ANDROID_CHOOSE_PHOTO -> launchPictureLibrary(allowMultipleSelection)
-            ANDROID_CHOOSE_VIDEO -> launchVideoLibrary(allowMultipleSelection)
-            ANDROID_CHOOSE_PHOTO_OR_VIDEO -> launchMediaLibrary(allowMultipleSelection)
-            ANDROID_CHOOSE_FILE -> launchFileLibrary(allowMultipleSelection)
-            WP_STORIES_CAPTURE -> launchWPStoriesCamera()
+    override fun onIconClicked(action: MediaPickerAction) {
+        when (action) {
+            is OpenSystemChooser -> {
+                launchChooserWithContext(action, uiHelpers)
+            }
+            is OpenCameraForWPStories -> launchWPStoriesCamera()
         }
     }
 
