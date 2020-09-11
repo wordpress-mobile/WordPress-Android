@@ -11,6 +11,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
@@ -117,7 +118,7 @@ public class ReaderTagActions {
             newTags.add(newTag);
         }
         boolean result;
-        if (!isLoggedIn) {
+        if (!isLoggedIn && AppPrefs.isReaderImprovementsPhase2Enabled()) {
             result = saveTagsLocallyOnly(actionListener, newTags);
         } else {
             result = saveTagsLocallyAndRemotely(actionListener, newTags);

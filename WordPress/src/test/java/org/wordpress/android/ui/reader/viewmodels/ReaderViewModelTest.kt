@@ -342,6 +342,8 @@ class ReaderViewModelTest {
 
     @Test
     fun `Choose interests screen shown on first start`() = testWithEmptyTags {
+        // Arrange
+        whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
         // Act
         viewModel.start()
         // Assert
@@ -362,6 +364,7 @@ class ReaderViewModelTest {
     fun `Choose interests screen shown if tag changed to discover and followed tags not found for user`() =
             testWithEmptyUserTags {
                 // Arrange
+                whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
                 val selectedTag: ReaderTag = mock()
                 whenever(selectedTag.isDiscover).thenReturn(true)
                 // Act
@@ -374,6 +377,7 @@ class ReaderViewModelTest {
     fun `Choose interests screen not shown if tag changed to discover and followed tags found for user`() =
             testWithNonEmptyUserTags {
                 // Arrange
+                whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
                 val selectedTag: ReaderTag = mock()
                 whenever(selectedTag.isDiscover).thenReturn(true)
                 // Act
@@ -399,7 +403,9 @@ class ReaderViewModelTest {
 
     private fun triggerReaderTabContentDisplay() {
         viewModel.start()
-        viewModel.onCloseReaderInterests()
+        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
+            viewModel.onCloseReaderInterests()
+        }
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {

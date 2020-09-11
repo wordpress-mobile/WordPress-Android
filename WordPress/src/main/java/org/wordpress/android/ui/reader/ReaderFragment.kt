@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -174,7 +175,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun getItemCount(): Int = tags.size
 
         override fun createFragment(position: Int): Fragment {
-            return if (tags[position].isDiscover) {
+            return if (AppPrefs.isReaderImprovementsPhase2Enabled() && tags[position].isDiscover) {
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)

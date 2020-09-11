@@ -73,10 +73,17 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (isReaderInterestsShown) return
-        isReaderInterestsShown = true
-        _uiState.value = InitialUiState
-        _showReaderInterests.value = Event(Unit)
+        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
+            if (isReaderInterestsShown) return
+            isReaderInterestsShown = true
+            _uiState.value = InitialUiState
+            _showReaderInterests.value = Event(Unit)
+        } else {
+            if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
+            if (initialized) return
+            _uiState.value = InitialUiState
+            loadTabs()
+        }
     }
 
     private fun loadTabs() {
@@ -120,7 +127,8 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.setReaderTag(selectedTag)
 
         // Show interests picker if tag changed to discover and no followed tags found for user
-        if (selectedTag?.isDiscover == true) {
+        if (selectedTag?.isDiscover == true &&
+                appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
@@ -199,7 +207,10 @@ class ReaderViewModel @Inject constructor(
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
-        if (_uiState.value == InitialUiState && isReaderInterestsShown) {
+        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled() &&
+                _uiState.value == InitialUiState &&
+                isReaderInterestsShown
+        ) {
             return
         } else {
             loadTabs()

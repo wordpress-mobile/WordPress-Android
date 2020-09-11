@@ -152,6 +152,8 @@ class AppPrefsWrapper @Inject constructor() {
     fun setReaderActiveTab(selectedTab: ReaderTab?) = AppPrefs.setReaderActiveTab(selectedTab)
     fun getReaderActiveTab(): ReaderTab? = AppPrefs.getReaderActiveTab()
 
+    fun isReaderImprovementsPhase2Enabled(): Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
+
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
 

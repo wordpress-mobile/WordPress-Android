@@ -155,7 +155,11 @@ public class ReaderUpdateLogic {
 
                 boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
+                if (!mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                    serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
+                } else {
+                    serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
+                }
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
                 // and check if we are going to change it to trigger UI update in case of downgrade
@@ -186,7 +190,7 @@ public class ReaderUpdateLogic {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
-                    if (!mAccountStore.hasAccessToken()) {
+                    if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
                         // Do not delete locally saved tags for logged out user
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {
