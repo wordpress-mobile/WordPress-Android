@@ -19,10 +19,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_FILE
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_VIDEO
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
@@ -387,7 +385,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].icon).isEqualTo(ANDROID_CHOOSE_PHOTO)
+        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.PHOTO)
     }
 
     @Test
@@ -405,7 +404,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].icon).isEqualTo(ANDROID_CHOOSE_VIDEO)
+        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.VIDEO)
     }
 
     @Test
@@ -423,7 +423,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].icon).isEqualTo(ANDROID_CHOOSE_PHOTO_OR_VIDEO)
+        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
     }
 
     @Test
@@ -441,7 +442,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].icon).isEqualTo(ANDROID_CHOOSE_FILE)
+        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
     }
 
     @Test
@@ -619,6 +621,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.last().searchUiModel.let { model ->
             assertThat(model is SearchUiModel.Expanded).isTrue()
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
+        }
+    }
+
+    private fun assertSearchHidden() {
+        uiStates.last().searchUiModel.let { model ->
+            assertThat(model is SearchUiModel.Hidden).isTrue()
         }
     }
 
