@@ -545,10 +545,10 @@ class ReaderDiscoverViewModelTest {
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
     private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)
-}
 
-private data class Observers(
-    val uiStates: List<DiscoverUiState>,
-    val navigation: List<Event<ReaderNavigationEvents>>,
-    val snackbarMsgs: List<Event<SnackbarMessageHolder>>
-)
+    private data class Observers(
+        val uiStates: List<DiscoverUiState>,
+        val navigation: List<Event<ReaderNavigationEvents>>,
+        val snackbarMsgs: List<Event<SnackbarMessageHolder>>
+    )
+}
