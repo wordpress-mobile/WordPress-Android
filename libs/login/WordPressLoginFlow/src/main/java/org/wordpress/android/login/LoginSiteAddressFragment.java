@@ -191,12 +191,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
 
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
-        } else {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
-        }
+        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
 
         startProgress();
     }
@@ -401,7 +397,11 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
             showError(R.string.invalid_site_url_message);
         } else {
-            handleConnectSiteInfoForWoo(event.info);
+            if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+                handleConnectSiteInfoForWoo(event.info);
+            } else {
+                handleConnectSiteInfoForWordPress(event.info);
+            }
         }
     }
 
@@ -433,6 +433,37 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                     siteInfo.url,
                     siteInfo.urlAfterRedirects,
                     hasJetpack);
+        }
+    }
+
+    private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo) {
+        boolean hasJetpack = calculateHasJetpack(siteInfo);
+
+        if (!siteInfo.exists) {
+            // Site does not exist
+            showError(R.string.invalid_site_url_message);
+        } else if (!siteInfo.isWPCom && !hasJetpack) {
+            // Not a WordPress.com or Jetpack site
+            if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
+                showError(R.string.enter_wpcom_or_jetpack_site);
+                endProgress();
+            } else {
+                // Start the discovery process
+                initiateDiscovery();
+            }
+        } else {
+            if (hasJetpack && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
+                // If Jetpack site, treat it as self-hosted and start the discovery process
+                // An exception is WPCOM_LOGIN_ONLY mode - in that case we're only interested in adding sites
+                // through WordPress.com login, and should proceed along that login path
+                initiateDiscovery();
+                return;
+            }
+
+            endProgress();
+
+            // it's a wp.com site so, treat it as such.
+            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url), null, null);
         }
     }
 
