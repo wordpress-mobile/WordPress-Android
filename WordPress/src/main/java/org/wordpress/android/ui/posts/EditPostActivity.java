@@ -2193,6 +2193,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
+        if (mIsPage) {
+            setPageContent();
+        }
+
         // Set post title and content
         if (mEditPostRepository.hasPost()) {
             // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized
@@ -2308,6 +2312,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }, (postModel, result) -> {
                 if (result == UpdatePostResult.Updated.INSTANCE) {
                     mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
+        }
+    }
+
+    /**
+     * Sets the page content
+     */
+    private void setPageContent() {
+        Intent intent = getIntent();
+        final String content = intent.getStringExtra(EXTRA_PAGE_CONTENT);
+        if (content != null && !content.isEmpty()) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
                     mEditorFragment.setContent(postModel.getContent());
                 }
                 return null;
