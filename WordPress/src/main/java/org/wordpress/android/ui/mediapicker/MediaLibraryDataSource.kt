@@ -37,12 +37,18 @@ class MediaLibraryDataSource(
     }
 
     private var loadContinuations = mutableMapOf<MimeType.Type, Continuation<OnMediaListFetched>>()
+    private var lastUsedFilter: String? = null
 
     override suspend fun load(
         mediaTypes: Set<MediaType>,
         forced: Boolean,
-        loadMore: Boolean
+        loadMore: Boolean,
+        filter: String?
     ): MediaLoadingResult {
+        if (!forced && !loadMore && filter == lastUsedFilter) {
+            return MediaLoadingResult.NoChange
+        }
+        lastUsedFilter = filter
         return withContext(bgDispatcher) {
             val loadingResults = mediaTypes.map { mediaType ->
                 async {

@@ -4,7 +4,8 @@ interface MediaSource {
     suspend fun load(
         mediaTypes: Set<MediaType>,
         forced: Boolean = false,
-        loadMore: Boolean = false
+        loadMore: Boolean = false,
+        filter: String? = null
     ): MediaLoadingResult
 
     suspend fun get(mediaTypes: Set<MediaType>, filter: String? = null): List<MediaItem>
@@ -12,5 +13,6 @@ interface MediaSource {
     sealed class MediaLoadingResult {
         data class Success(val hasMore: Boolean = false) : MediaLoadingResult()
         data class Failure(val message: String) : MediaLoadingResult()
+        object NoChange : MediaLoadingResult()
     }
 }

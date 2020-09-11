@@ -39,12 +39,18 @@ class DeviceListBuilder
 ) : MediaSource {
     private val mimeTypes = MimeTypes()
     private val cachedData = mutableListOf<MediaItem>()
+    private var lastUsedFilter: String? = null
 
     override suspend fun load(
         mediaTypes: Set<MediaType>,
         forced: Boolean,
-        loadMore: Boolean
+        loadMore: Boolean,
+        filter: String?
     ): MediaLoadingResult {
+        if (!forced && !loadMore && filter == lastUsedFilter) {
+            return MediaLoadingResult.NoChange
+        }
+        lastUsedFilter = filter
         return withContext(bgDispatcher) {
             val result = mutableListOf<MediaItem>()
             val deferredJobs = mediaTypes.map { mediaType ->
