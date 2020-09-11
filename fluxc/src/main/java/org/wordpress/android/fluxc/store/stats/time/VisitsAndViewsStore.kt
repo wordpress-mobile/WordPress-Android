@@ -41,7 +41,12 @@ class VisitsAndViewsStore
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
         logProgress(granularity, "Site timezone: ${site.timezone}")
-        logProgress(granularity, "Current date: ${currentTimeProvider.currentDate}")
+        try {
+            logProgress(granularity, "Current date: ${currentTimeProvider.currentDate}")
+        } catch (e: AssertionError) {
+            // Workaround for a bug in Android that can cause crashes on Android 8.0 and 8.1
+            logProgress(granularity, "Cannot print current date because of AssertionError: $e")
+        }
         logProgress(granularity, "Fetching for date with applied timezone: $dateWithTimeZone")
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, dateWithTimeZone, limitMode.limit)) {
             logProgress(granularity, "Loading cached data")

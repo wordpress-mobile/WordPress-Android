@@ -279,7 +279,9 @@ constructor(
     }
 
     private fun unregisterDevice() {
-        val deviceId = preferences.getString(WPCOM_PUSH_DEVICE_SERVER_ID, "")
+        val deviceId = requireNotNull(preferences.getString(WPCOM_PUSH_DEVICE_SERVER_ID, ""), {
+            "Because we are giving it a default value, preferences.getString shouldn't return null"
+        })
         notificationRestClient.unregisterDeviceForPushNotifications(deviceId)
     }
 

@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.util.AppLog;
 
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class MediaStore extends Store {
     public static class FetchMediaListPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public boolean loadMore;
-        public String mimeType;
+        public MimeType.Type mimeType;
         public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
 
         public FetchMediaListPayload(SiteModel site) {
@@ -99,7 +100,7 @@ public class MediaStore extends Store {
             this.number = number;
         }
 
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore, String mimeType) {
+        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore, MimeType.Type mimeType) {
             this.site = site;
             this.loadMore = loadMore;
             this.mimeType = mimeType;
@@ -115,12 +116,12 @@ public class MediaStore extends Store {
         public List<MediaModel> mediaList;
         public boolean loadedMore;
         public boolean canLoadMore;
-        public String mimeType;
+        public MimeType.Type mimeType;
         public FetchMediaListResponsePayload(SiteModel site,
                                              @NonNull List<MediaModel> mediaList,
                                              boolean loadedMore,
                                              boolean canLoadMore,
-                                             String mimeType) {
+                                             MimeType.Type mimeType) {
             this.site = site;
             this.mediaList = mediaList;
             this.loadedMore = loadedMore;
@@ -128,7 +129,7 @@ public class MediaStore extends Store {
             this.mimeType = mimeType;
         }
 
-        public FetchMediaListResponsePayload(SiteModel site, MediaError error, String mimeType) {
+        public FetchMediaListResponsePayload(SiteModel site, MediaError error, MimeType.Type mimeType) {
             this.mediaList = new ArrayList<>();
             this.site = site;
             this.error = error;
@@ -248,6 +249,35 @@ public class MediaStore extends Store {
 
             return mediaError;
         }
+
+        public String getApiUserMessageIfAvailable() {
+            if (TextUtils.isEmpty(message)) {
+                return "";
+            }
+
+            if (type == MediaErrorType.BAD_REQUEST) {
+                String[] splitMsg = message.split("\\|", 2);
+
+                if (null != splitMsg && splitMsg.length > 1) {
+                    String userMessage = splitMsg[1];
+
+                    if (TextUtils.isEmpty(userMessage)) {
+                        return message;
+                    }
+
+                    // NOTE: It seems the backend is sending a final " Back" string in the message
+                    // Note that the real string depends on current locale; this is not optimal and we thought to
+                    // try to filter it out in the client app but at the end it can be not reliable so we are
+                    // keeping it. We can try to get it filtered on the backend side.
+
+                    return userMessage;
+                } else {
+                    return message;
+                }
+            } else {
+                return message;
+            }
+        }
     }
 
     public static class UploadStockMediaError implements OnChangedError {
@@ -281,13 +311,13 @@ public class MediaStore extends Store {
     public static class OnMediaListFetched extends OnChanged<MediaError> {
         public SiteModel site;
         public boolean canLoadMore;
-        public String mimeType;
-        public OnMediaListFetched(SiteModel site, boolean canLoadMore, String mimeType) {
+        public MimeType.Type mimeType;
+        public OnMediaListFetched(SiteModel site, boolean canLoadMore, MimeType.Type mimeType) {
             this.site = site;
             this.canLoadMore = canLoadMore;
             this.mimeType = mimeType;
         }
-        public OnMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+        public OnMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
             this.site = site;
             this.error = error;
             this.mimeType = mimeType;
@@ -346,6 +376,9 @@ public class MediaStore extends Store {
         REQUEST_TOO_LARGE,
         SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
         TIMEOUT,
+        BAD_REQUEST,
+        XMLRPC_OPERATION_NOT_ALLOWED,
+        XMLRPC_UPLOAD_ERROR,
 
         // logic constraints errors
         INVALID_ID,
@@ -374,6 +407,8 @@ public class MediaStore extends Store {
 
         public static MediaErrorType fromHttpStatusCode(int code) {
             switch (code) {
+                case 400:
+                    return MediaErrorType.BAD_REQUEST;
                 case 404:
                     return MediaErrorType.NOT_FOUND;
                 case 403:
@@ -741,8 +776,9 @@ public class MediaStore extends Store {
         if (payload.loadMore) {
             List<String> list = new ArrayList<>();
             list.add(MediaUploadState.UPLOADED.toString());
-            if (!TextUtils.isEmpty(payload.mimeType)) {
-                offset = MediaSqlUtils.getMediaWithStatesAndMimeType(payload.site, list, payload.mimeType).size();
+            if (payload.mimeType != null) {
+                offset = MediaSqlUtils.getMediaWithStatesAndMimeType(payload.site, list, payload.mimeType.getValue())
+                                      .size();
             } else {
                 offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
             }
@@ -854,8 +890,12 @@ public class MediaStore extends Store {
         }
 
         // remove media that is NOT in the existing list
+        String mimeTypeValue = "";
+        if (payload.mimeType != null) {
+            mimeTypeValue = payload.mimeType.getValue();
+        }
         MediaSqlUtils.deleteUploadedSiteMediaNotInList(
-                payload.site, existingMediaList, payload.mimeType);
+                payload.site, existingMediaList, mimeTypeValue);
 
         // add new media
         for (MediaModel media : newMediaList) {

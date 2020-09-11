@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaError;
 import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -57,6 +58,7 @@ import javax.inject.Singleton;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -68,7 +70,8 @@ import okhttp3.ResponseBody;
  *
  * <ul>
  *     <li>Fetch existing media from a WP.com site
- *     (via {@link #fetchMediaList(SiteModel, int, int, String)} and {@link #fetchMedia(SiteModel, MediaModel)}</li>
+ *     (via {@link #fetchMediaList(SiteModel, int, int, MimeType.Type)} and
+ *     {@link #fetchMedia(SiteModel, MediaModel)}</li>
  *     <li>Push new media to a WP.com site
  *     (via {@link #uploadMedia(SiteModel, MediaModel)})</li>
  *     <li>Push updates to existing media to a WP.com site
@@ -189,6 +192,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .post(body)
                 .build();
 
+        // Try to add locale query param
+        HttpUrl httpUrl = getHttpUrlWithLocale(url);
+
+        if (null != httpUrl) {
+            request = request.newBuilder()
+                             .url(httpUrl)
+                             .build();
+        } else {
+            AppLog.d(T.MEDIA, "Could not add locale query param for url '" + url + "'.");
+        }
+
         Call call = mOkHttpClient.newCall(request);
         mCurrentUploadCalls.put(media.getId(), call);
 
@@ -226,7 +240,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                 } else {
                     AppLog.e(T.MEDIA, "error uploading media: " + response.message());
-                    notifyMediaUploaded(media, parseUploadError(response, site));
+
+                    MediaError error = parseUploadError(response, site);
+
+                    if (null != error && error.type == MediaErrorType.BAD_REQUEST) {
+                        AppLog.e(T.MEDIA, "media upload error message: " + error.message);
+                    }
+
+                    notifyMediaUploaded(media, error);
                 }
             }
 
@@ -251,14 +272,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
      * NOTE: Only media item data is gathered, the actual media file can be downloaded from the URL
      * provided in the response {@link MediaModel}'s (via {@link MediaModel#getUrl()}).
      */
-    public void fetchMediaList(final SiteModel site, final int number, final int offset, final String mimeType) {
+    public void fetchMediaList(final SiteModel site, final int number, final int offset, final MimeType.Type mimeType) {
         final Map<String, String> params = new HashMap<>();
         params.put("number", String.valueOf(number));
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
-        if (!TextUtils.isEmpty(mimeType)) {
-            params.put("mime_type", mimeType);
+        if (mimeType != null) {
+            params.put("mime_type", mimeType.getValue());
         }
         String url = WPCOMREST.sites.site(site.getSiteId()).media.getUrlV1_1();
         add(WPComGsonRequest.buildGetRequest(url, params, MultipleMediaResponse.class,
@@ -507,13 +528,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                                         @NonNull List<MediaModel> media,
                                         boolean loadedMore,
                                         boolean canLoadMore,
-                                        String mimeType) {
+                                        MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
                 loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+    private void notifyMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }

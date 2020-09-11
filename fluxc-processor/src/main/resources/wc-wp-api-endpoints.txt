@@ -7,6 +7,7 @@
 
 /products/<id>/
 /products/<id>/variations/
+/products/<id>/variations/<variation_id>
 /products/
 /products/shipping_classes
 /products/shipping_classes/<id>/
@@ -19,6 +20,7 @@
 
 /products/tags/
 /products/tags/<id>/
+/products/tags/batch/
 
 /reports/orders/totals/
 /reports/revenue/stats/
@@ -39,3 +41,5 @@
 /connect/label/<order_id>/
 /connect/label/<order_id>/<shippingLabelId>/
 /connect/label/<order_id>/<shippingLabelId>/refund
+
+/leaderboards
