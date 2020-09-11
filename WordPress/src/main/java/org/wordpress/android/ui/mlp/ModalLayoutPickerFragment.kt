@@ -25,6 +25,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
@@ -143,6 +145,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                     setTitleVisibility(uiState.isHeaderVisible)
                 }
                 is ErrorUiState -> {
+                    ToastUtils.showToast(activity, uiState.message, SHORT)
                 }
             }
         })

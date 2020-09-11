@@ -85,7 +85,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
-            updateUiState(ErrorUiState)
+            updateUiState(ErrorUiState(event.error.message))
         } else {
             layouts = GutenbergPageLayouts(event.layouts, event.categories)
             loadLayouts()
@@ -247,6 +247,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
             )
         ) : UiState()
 
-        object ErrorUiState : UiState()
+        data class ErrorUiState(val message: String) : UiState()
     }
 }
