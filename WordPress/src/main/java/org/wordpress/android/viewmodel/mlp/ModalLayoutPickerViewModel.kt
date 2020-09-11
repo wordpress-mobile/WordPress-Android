@@ -100,7 +100,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
             layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
         else layouts.categories
 
-        selectedCategories.forEach { category ->
+        selectedCategories.sortedBy { it.title }.forEach { category ->
 
             val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
                 val selected = layout.slug == state.selectedLayoutSlug
@@ -122,7 +122,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun loadCategories() {
         val state = contentUiState
-        val listItems: List<CategoryListItemUiState> = layouts.categories.map {
+        val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
             CategoryListItemUiState(
                     it.slug,
                     it.title,
