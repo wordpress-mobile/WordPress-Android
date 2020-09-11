@@ -338,16 +338,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             return;
         }
 
-        // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
-        final String requestedSiteAddress = mRequestedSiteAddress;
-
-        if (isInProgress()) {
-            endProgress();
-        }
-
         if (event.isError()) {
             mAnalyticsListener.trackConnectedSiteInfoFailed(
-                    requestedSiteAddress,
+                    mRequestedSiteAddress,
                     event.getClass().getSimpleName(),
                     event.error.type.name(),
                     event.error.message);
@@ -355,6 +348,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             AppLog.e(T.API, "onFetchedConnectSiteInfo has error: " + event.error.message);
 
             showError(R.string.invalid_site_url_message);
+
+            endProgressIfNeeded();
         } else {
             if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
                 handleConnectSiteInfoForWoo(event.info);
@@ -365,6 +360,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo) {
+        endProgressIfNeeded();
+
         // TODO: If we plan to keep this logic we should convert these labels to constants
         HashMap<String, String> properties = new HashMap<>();
         properties.put("url", siteInfo.url);
@@ -401,11 +398,12 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         if (!siteInfo.exists) {
             // Site does not exist
             showError(R.string.invalid_site_url_message);
+            endProgressIfNeeded();
         } else if (!siteInfo.isWPCom && !hasJetpack) {
             // Not a WordPress.com or Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
                 showError(R.string.enter_wpcom_or_jetpack_site);
-                endProgress();
+                endProgressIfNeeded();
             } else {
                 // Start the discovery process
                 initiateDiscovery();
@@ -419,7 +417,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
                 return;
             }
 
-            endProgress();
+            endProgressIfNeeded();
 
             // it's a wp.com site so, treat it as such.
             mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
