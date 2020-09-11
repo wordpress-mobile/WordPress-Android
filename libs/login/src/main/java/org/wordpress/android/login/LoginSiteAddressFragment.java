@@ -395,11 +395,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo) {
         boolean hasJetpack = calculateHasJetpack(siteInfo);
 
-        if (!siteInfo.exists) {
-            // Site does not exist
-            showError(R.string.invalid_site_url_message);
-            endProgressIfNeeded();
-        } else if (!siteInfo.isWPCom && !hasJetpack) {
+        if (!siteInfo.isWPCom && !hasJetpack) {
             // Not a WordPress.com or Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
                 showError(R.string.enter_wpcom_or_jetpack_site);
