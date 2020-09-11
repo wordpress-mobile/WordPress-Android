@@ -102,16 +102,16 @@ class MediaPickerViewModel @Inject constructor(
                     clickIcon(WpStoriesCapture)
                 },
                 buildActionModeUiModel(selectedUris, domainModel?.domainItems),
-                buildSearchUiModel(softAskRequest?.let { !it.show }, domainModel?.filter, searchExpanded),
+                buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
                 !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
                 buildBrowseMenuUiModel(softAskRequest, searchExpanded)
         )
     }
 
-    private fun buildSearchUiModel(isVisible: Boolean?, filter: String?, searchExpanded: Boolean?): SearchUiModel {
+    private fun buildSearchUiModel(isVisible: Boolean, filter: String?, searchExpanded: Boolean?): SearchUiModel {
         return when {
             searchExpanded == true -> SearchUiModel.Expanded(filter ?: "")
-            isVisible == true -> SearchUiModel.Collapsed
+            isVisible -> SearchUiModel.Collapsed
             else -> SearchUiModel.Hidden
         }
     }
