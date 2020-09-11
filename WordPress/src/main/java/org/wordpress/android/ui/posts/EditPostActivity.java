@@ -261,6 +261,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_CONTENT = "pageContent";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";

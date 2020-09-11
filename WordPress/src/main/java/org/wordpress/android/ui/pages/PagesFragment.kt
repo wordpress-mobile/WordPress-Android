@@ -346,8 +346,8 @@ class PagesFragment : Fragment() {
             }
         })
 
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer {
-            createNewPage()
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer { content ->
+            createNewPage(content)
         })
 
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
@@ -481,11 +481,12 @@ class PagesFragment : Fragment() {
 
     /**
      * Triggers new page creation
+     * @param content the page content
      */
-    private fun createNewPage() {
+    private fun createNewPage(content: String = "") {
         QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
                 viewModel.site, quickStartEvent, context)
-        ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
+        ActivityLauncher.addNewPageForResult(this, viewModel.site, content, PAGE_FROM_PAGES_LIST)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
