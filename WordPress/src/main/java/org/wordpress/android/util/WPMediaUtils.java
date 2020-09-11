@@ -32,7 +32,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext;
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser;
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog.T;
@@ -246,9 +246,9 @@ public class WPMediaUtils {
                 RequestCodes.FILE_LIBRARY);
     }
 
-    public static void launchChooserWithContext(Activity activity, OpenSystemChooser openChooser, UiHelpers uiHelpers) {
-        activity.startActivityForResult(prepareChooserIntent(activity, openChooser, uiHelpers),
-                openChooser.getChooserContext().getRequestCode());
+    public static void launchChooserWithContext(Activity activity, OpenSystemPicker openSystemPicker, UiHelpers uiHelpers) {
+        activity.startActivityForResult(prepareChooserIntent(activity, openSystemPicker, uiHelpers),
+                openSystemPicker.getChooserContext().getRequestCode());
     }
 
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
@@ -281,12 +281,16 @@ public class WPMediaUtils {
         return Intent.createChooser(intent, context.getString(R.string.pick_file));
     }
 
-    private static Intent prepareChooserIntent(Context context, OpenSystemChooser openChooser, UiHelpers uiHelpers) {
-        ChooserContext chooserContext = openChooser.getChooserContext();
+    private static Intent prepareChooserIntent(
+            Context context,
+            OpenSystemPicker openSystemPicker,
+            UiHelpers uiHelpers
+    ) {
+        ChooserContext chooserContext = openSystemPicker.getChooserContext();
         Intent intent = new Intent(chooserContext.getIntentAction());
         intent.setType(chooserContext.getMediaTypeFilter());
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, openChooser.getMimeTypes().toArray(new String[0]));
-        if (openChooser.getAllowMultipleSelection()) {
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, openSystemPicker.getMimeTypes().toArray(new String[0]));
+        if (openSystemPicker.getAllowMultipleSelection()) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, uiHelpers.getTextOfUiString(context, chooserContext.getTitle()));

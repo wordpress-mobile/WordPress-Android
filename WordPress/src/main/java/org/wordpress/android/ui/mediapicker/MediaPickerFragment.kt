@@ -76,7 +76,7 @@ class MediaPickerFragment : Fragment() {
     }
 
     sealed class MediaPickerAction {
-        data class OpenSystemChooser(
+        data class OpenSystemPicker(
             val chooserContext: ChooserContext,
             val mimeTypes: List<String>,
             val allowMultipleSelection: Boolean

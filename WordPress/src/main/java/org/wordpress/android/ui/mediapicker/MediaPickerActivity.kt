@@ -39,7 +39,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMedia
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
@@ -237,8 +237,8 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
-    private fun launchChooserWithContext(openChooser: OpenSystemChooser, uiHelpers: UiHelpers) {
-        WPMediaUtils.launchChooserWithContext(this, openChooser, uiHelpers)
+    private fun launchChooserWithContext(openSystemPicker: OpenSystemPicker, uiHelpers: UiHelpers) {
+        WPMediaUtils.launchChooserWithContext(this, openSystemPicker, uiHelpers)
     }
 
     private fun launchWPStoriesCamera() {
@@ -343,7 +343,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
 
     override fun onIconClicked(action: MediaPickerAction) {
         when (action) {
-            is OpenSystemChooser -> {
+            is OpenSystemPicker -> {
                 launchChooserWithContext(action, uiHelpers)
             }
             is OpenCameraForWPStories -> launchWPStoriesCamera()

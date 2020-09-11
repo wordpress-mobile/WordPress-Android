@@ -24,7 +24,7 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WpStoriesCapture
@@ -365,7 +365,7 @@ class MediaPickerViewModel @Inject constructor(
                         Pair(ChooserContext.MEDIA_FILE, MimeTypes().getAllTypes())
                     }
                 }
-                OpenSystemChooser(context, types.toList(), canMultiselect)
+                OpenSystemPicker(context, types.toList(), canMultiselect)
             }
             is WpStoriesCapture -> OpenCameraForWPStories(canMultiselect)
         }

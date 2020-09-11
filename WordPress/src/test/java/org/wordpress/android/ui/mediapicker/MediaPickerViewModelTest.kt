@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
@@ -385,8 +385,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.PHOTO)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.PHOTO)
     }
 
     @Test
@@ -404,8 +404,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.VIDEO)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.VIDEO)
     }
 
     @Test
@@ -423,8 +423,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext)
                 .isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
     }
 
@@ -443,8 +443,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.onBrowseForItems()
 
         assertThat(iconClickEvents).hasSize(1)
-        assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
     }
 
     @Test
