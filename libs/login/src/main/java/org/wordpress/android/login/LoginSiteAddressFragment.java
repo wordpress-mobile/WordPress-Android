@@ -287,7 +287,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, true);
             mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
         } else {
-            mLoginListener.gotWpcomSiteInfo(failedEndpoint, null, null);
+            mLoginListener.gotWpcomSiteInfo(failedEndpoint);
         }
     }
 
@@ -422,7 +422,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             endProgress();
 
             // it's a wp.com site so, treat it as such.
-            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url), null, null);
+            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
         }
     }
 
