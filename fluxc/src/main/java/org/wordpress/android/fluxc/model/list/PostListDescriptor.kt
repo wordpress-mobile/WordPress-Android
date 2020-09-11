@@ -29,21 +29,31 @@ sealed class PostListDescriptor(
                 }
 
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-${site.id}-st$statusStr-a$authorFilter-o${order.value}" +
-                                "-ob${orderBy.value}-sq$searchQuery").hashCode()
+                        ("rest-site" +
+                                "-post-list" +
+                                "-${site.id}" +
+                                "-st$statusStr" +
+                                "-a$authorFilter" +
+                                "-o${order.value}" +
+                                "-ob${orderBy.value}" +
+                                "-sq$searchQuery").hashCode()
                 )
             }
             is PostListDescriptorForXmlRpcSite -> {
                 ListDescriptorUniqueIdentifier(
-                        "xml-rpc-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}".hashCode()
+                        ("xml-rpc-site" +
+                                "-post-list" +
+                                "-${site.id}" +
+                                "-st$statusStr" +
+                                "-o${order.value}" +
+                                "-ob${orderBy.value}" +
+                                "-sq$searchQuery").hashCode()
                 )
             }
         }
     }
 
-    override val typeIdentifier: ListDescriptorTypeIdentifier by lazy {
-        PostListDescriptor.calculateTypeIdentifier(site.id)
-    }
+    override val typeIdentifier: ListDescriptorTypeIdentifier by lazy { calculateTypeIdentifier(site.id) }
 
     override fun hashCode(): Int {
         return uniqueIdentifier.value
@@ -67,7 +77,7 @@ sealed class PostListDescriptor(
     class PostListDescriptorForRestSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        val author: AuthorFilter = AuthorFilter.Everyone,
+        val author: AuthorFilter = Everyone,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
         val searchQuery: String? = null,
@@ -79,6 +89,7 @@ sealed class PostListDescriptor(
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
+        val searchQuery: String? = null,
         config: ListConfig = ListConfig.default
     ) : PostListDescriptor(site, statusList, order, orderBy, config)
 }
