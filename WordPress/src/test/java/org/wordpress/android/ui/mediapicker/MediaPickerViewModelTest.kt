@@ -371,7 +371,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `System picker opened for photo when allowed types is IMAGE only`() = test {
+    fun `system picker opened for photo when allowed types is IMAGE only`() = test {
         setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -390,7 +390,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `System picker opened for video when allowed types is VIDEO only`() = test {
+    fun `system picker opened for video when allowed types is VIDEO only`() = test {
         setupViewModel(listOf(), singleSelectVideoPickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -409,7 +409,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `System picker opened for image and video when allowed types is IMAGE and VIDEO`() = test {
+    fun `system picker opened for image and video when allowed types is IMAGE and VIDEO`() = test {
         setupViewModel(listOf(), multiSelectMediaPickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -429,7 +429,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `System picker opened for all supported files when is browser picker`() = test {
+    fun `system picker opened for all supported files when is browser picker`() = test {
         setupViewModel(listOf(), multiSelectFilePickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
