@@ -12,7 +12,7 @@ import com.yarolegovich.wellsql.WellSql;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.fluxc.utils.MimeType.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class MediaSqlUtils {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, site.getId())
-                .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
+                .contains(MediaModelTable.MIME_TYPE, Type.IMAGE.getValue())
                 .isIn(MediaModelTable.UPLOAD_STATE, uploadStates)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING)
@@ -119,19 +119,19 @@ public class MediaSqlUtils {
     }
 
     public static List<MediaModel> searchSiteImages(SiteModel siteModel, String searchTerm) {
-        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_IMAGE).getAsModel();
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, Type.IMAGE.getValue()).getAsModel();
     }
 
     public static List<MediaModel> searchSiteAudio(SiteModel siteModel, String searchTerm) {
-        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_AUDIO).getAsModel();
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, Type.AUDIO.getValue()).getAsModel();
     }
 
     public static List<MediaModel> searchSiteVideos(SiteModel siteModel, String searchTerm) {
-        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_VIDEO).getAsModel();
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, Type.VIDEO.getValue()).getAsModel();
     }
 
     public static List<MediaModel> searchSiteDocuments(SiteModel siteModel, String searchTerm) {
-        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_APPLICATION).getAsModel();
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, Type.APPLICATION.getValue()).getAsModel();
     }
 
     private static SelectQuery<MediaModel> searchSiteMediaQuery(SiteModel siteModel,
@@ -170,7 +170,7 @@ public class MediaSqlUtils {
     }
 
     private static SelectQuery<MediaModel> getSiteImagesQuery(SiteModel siteModel) {
-        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_IMAGE);
+        return getSiteMediaByMimeTypeQuery(siteModel, Type.IMAGE.getValue());
     }
 
     public static List<MediaModel> getSiteImagesExcluding(SiteModel siteModel, List<Long> filter) {
@@ -193,22 +193,22 @@ public class MediaSqlUtils {
         return WellSql.select(MediaModel.class)
                 .where().beginGroup()
                 .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                .contains(MediaModelTable.MIME_TYPE, MediaUtils.MIME_TYPE_IMAGE)
+                .contains(MediaModelTable.MIME_TYPE, Type.IMAGE.getValue())
                 .isNotIn(MediaModelTable.MEDIA_ID, filter)
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     private static SelectQuery<MediaModel> getSiteVideosQuery(SiteModel siteModel) {
-        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_VIDEO);
+        return getSiteMediaByMimeTypeQuery(siteModel, Type.VIDEO.getValue());
     }
 
     private static SelectQuery<MediaModel> getSiteAudioQuery(SiteModel siteModel) {
-        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_AUDIO);
+        return getSiteMediaByMimeTypeQuery(siteModel, Type.AUDIO.getValue());
     }
 
     private static SelectQuery<MediaModel> getSiteDocumentsQuery(SiteModel siteModel) {
-        return getSiteMediaByMimeTypeQuery(siteModel, MediaUtils.MIME_TYPE_APPLICATION);
+        return getSiteMediaByMimeTypeQuery(siteModel, Type.APPLICATION.getValue());
     }
 
     private static SelectQuery<MediaModel> getSiteMediaByMimeTypeQuery(SiteModel siteModel, String mimeTypePrefix) {

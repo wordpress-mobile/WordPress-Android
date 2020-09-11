@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient;
@@ -438,6 +439,13 @@ public class ReleaseNetworkModule {
                                                          WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new TransactionsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public EncryptedLogRestClient provideEncryptedLogRestClient(@Named("regular") RequestQueue requestQueue,
+                                                                AppSecrets appSecrets) {
+        return new EncryptedLogRestClient(requestQueue, appSecrets);
     }
 
     @Singleton

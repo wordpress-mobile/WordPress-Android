@@ -69,7 +69,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchPost(final PostModel post, final SiteModel site, final PostAction origin) {
-        List<Object> params = createfetchPostParams(post, site);
+        List<Object> params = createFetchPostParams(post, site);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POST, params,
                 new Listener<Object>() {
@@ -107,7 +107,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPostStatus(final PostModel post, final SiteModel site) {
         final String postStatusField = "post_status";
-        List<Object> params = createfetchPostParams(post, site);
+        List<Object> params = createFetchPostParams(post, site);
         // If we only request the status, we get an empty response
         params.add(Arrays.asList("post_id", postStatusField));
 
@@ -146,7 +146,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
                         offset, pageSize, listDescriptor.getStatusList(), fields,
-                        listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
+                        listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue(),
+                        listDescriptor.getSearchQuery());
         final boolean loadedMore = offset > 0;
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
@@ -181,7 +182,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                            final int offset) {
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
-                        getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null);
+                        getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
@@ -197,12 +198,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
                                 offset > 0, canLoadMore);
 
-                        if (posts != null) {
-                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
-                        } else {
+                        if (posts == null) {
                             payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         }
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -596,7 +595,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             @Nullable final List<PostStatus> statusList,
             @Nullable final List<String> fields,
             @Nullable final String orderBy,
-            @Nullable final String order) {
+            @Nullable final String order,
+            @Nullable final String searchQuery) {
         Map<String, Object> contentStruct = new HashMap<>();
         contentStruct.put("number", number);
         contentStruct.put("offset", offset);
@@ -608,6 +608,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
         if (statusList != null && statusList.size() > 0) {
             contentStruct.put("post_status", PostStatus.postStatusListToString(statusList));
+        }
+        if (!TextUtils.isEmpty(searchQuery)) {
+            contentStruct.put("s", searchQuery);
         }
 
         if (getPages) {
@@ -625,7 +628,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return params;
     }
 
-    private List<Object> createfetchPostParams(final PostModel post, final SiteModel site) {
+    private List<Object> createFetchPostParams(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
