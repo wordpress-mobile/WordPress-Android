@@ -194,14 +194,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onResume(site: SiteModel?, showFab: Boolean) {
-        val oldState = _fabUiState.value
-        oldState?.let {
-            _fabUiState.value = MainFabUiState(
-                    isFabVisible = showFab,
-                    isFabTooltipVisible = it.isFabTooltipVisible,
-                    CreateContentMessageId = getCreateContentMessageId(site)
-            )
-        }
+        setMainFabUiState(showFab, site)
 
         launch {
             val currentVersionCode = buildConfigWrapper.getAppVersionCode()
