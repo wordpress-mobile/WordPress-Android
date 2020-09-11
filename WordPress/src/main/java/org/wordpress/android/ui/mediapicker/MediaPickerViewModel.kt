@@ -15,16 +15,19 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_W
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_FILE
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ANDROID_CHOOSE_PHOTO_OR_VIDEO
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WpStoriesCapture
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
@@ -42,7 +45,6 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -97,7 +99,7 @@ class MediaPickerViewModel @Inject constructor(
                 buildUiModel(domainModel, selectedUris),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled && selectedUris.isNullOrEmpty()) {
-                    clickIcon(WP_STORIES_CAPTURE)
+                    clickIcon(WpStoriesCapture)
                 },
                 buildActionModeUiModel(selectedUris, domainModel?.domainItems),
                 buildSearchUiModel(softAskRequest?.let { !it.show }, domainModel?.filter, searchExpanded),
@@ -153,7 +155,7 @@ class MediaPickerViewModel @Inject constructor(
                             showOrderCounter = showOrderCounter,
                             toggleAction = toggleAction,
                             clickAction = clickAction
-                    ) as MediaPickerUiItem
+                    )
                     VIDEO -> VideoItem(
                             uri = it.uri,
                             isSelected = isSelected,
@@ -331,7 +333,7 @@ class MediaPickerViewModel @Inject constructor(
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
     private fun clickIcon(icon: MediaPickerIcon) {
-        if (icon == WP_STORIES_CAPTURE) {
+        if (icon is WpStoriesCapture) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
                 _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
                 lastTappedIcon = icon
@@ -342,7 +344,33 @@ class MediaPickerViewModel @Inject constructor(
 
         // Do we need tracking here?; review tracking need.
 
-        _onIconClicked.postValue(Event(IconClickEvent(icon, mediaPickerSetup.canMultiselect)))
+        _onIconClicked.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
+    }
+
+    private fun populateIconClickEvent(icon: MediaPickerIcon, canMultiselect: Boolean): IconClickEvent {
+        val action: MediaPickerAction = when (icon) {
+            is ChooseFromAndroidDevice -> {
+                val allowedTypes = icon.allowedTypes
+                val (context, types) = when {
+                    listOf(IMAGE).containsAll(allowedTypes) -> {
+                        Pair(ChooserContext.PHOTO, MimeTypes().getImageTypesOnly())
+                    }
+                    listOf(VIDEO).containsAll(allowedTypes) -> {
+                        Pair(ChooserContext.VIDEO, MimeTypes().getVideoTypesOnly())
+                    }
+                    listOf(IMAGE, VIDEO).containsAll(allowedTypes) -> {
+                        Pair(ChooserContext.PHOTO_OR_VIDEO, MimeTypes().getVideoAndImageTypesOnly())
+                    }
+                    else -> {
+                        Pair(ChooserContext.MEDIA_FILE, MimeTypes().getAllTypes())
+                    }
+                }
+                OpenSystemChooser(context, types.toList(), canMultiselect)
+            }
+            is WpStoriesCapture -> OpenCameraForWPStories(canMultiselect)
+        }
+
+        return IconClickEvent(action)
     }
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {
@@ -357,20 +385,7 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun onBrowseForItems() {
-        if (mediaPickerSetup.isBrowser()) {
-            clickIcon(ANDROID_CHOOSE_FILE)
-        } else {
-            val isImageAllowed = mediaPickerSetup.allowedTypes.contains(IMAGE)
-            val isVideoAllowed = mediaPickerSetup.allowedTypes.contains(VIDEO)
-
-            if (isImageAllowed && isVideoAllowed) {
-                clickIcon(ANDROID_CHOOSE_PHOTO_OR_VIDEO)
-            } else if (isImageAllowed) {
-                clickIcon(ANDROID_CHOOSE_PHOTO)
-            } else if (isVideoAllowed) {
-                clickIcon(MediaPickerIcon.ANDROID_CHOOSE_VIDEO)
-            }
-        }
+        clickIcon(ChooseFromAndroidDevice(mediaPickerSetup.allowedTypes))
     }
 
     private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
@@ -468,14 +483,10 @@ class MediaPickerViewModel @Inject constructor(
 
     data class BrowseMenuUiModel(val isVisible: Boolean)
 
-    data class IconClickEvent(val icon: MediaPickerIcon, val allowMultipleSelection: Boolean)
+    data class IconClickEvent(val action: MediaPickerAction)
 
     enum class PermissionsRequested {
         CAMERA, STORAGE
-    }
-
-    data class PopupMenuUiModel(val view: ViewWrapper, val items: List<PopupMenuItem>) {
-        data class PopupMenuItem(val title: UiStringRes, val action: () -> Unit)
     }
 
     data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)
