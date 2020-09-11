@@ -18,6 +18,7 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 
+@Singleton
 class StockMediaRestClient
 @Inject constructor(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
