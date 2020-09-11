@@ -30,7 +30,6 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked;
-import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -326,46 +325,6 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     // OnChanged events
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWPComSiteFetched(OnWPComSiteFetched event) {
-        if (mRequestedSiteAddress == null) {
-            // bail if user canceled
-            return;
-        }
-
-        if (!isAdded()) {
-            return;
-        }
-
-        if (event.isError()) {
-            // Not a WordPress.com or Jetpack site
-            if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
-                showError(R.string.enter_wpcom_or_jetpack_site);
-                endProgress();
-            } else {
-                // Start the discovery process
-                initiateDiscovery();
-            }
-        } else {
-            if (event.site.isJetpackInstalled() && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
-                // If Jetpack site, treat it as self-hosted and start the discovery process
-                // An exception is WPCOM_LOGIN_ONLY mode - in that case we're only interested in adding sites
-                // through WordPress.com login, and should proceed along that login path
-                initiateDiscovery();
-                return;
-            }
-
-            endProgress();
-
-            // it's a wp.com site so, treat it as such.
-            mLoginListener.gotWpcomSiteInfo(
-                    UrlUtils.removeScheme(event.site.getUrl()),
-                    event.site.getName(),
-                    event.site.getIconUrl());
-        }
-    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
