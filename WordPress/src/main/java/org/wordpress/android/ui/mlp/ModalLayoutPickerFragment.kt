@@ -82,10 +82,13 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         }
 
         createBlankPageButton.setOnClickListener {
-            closeModal()
             viewModel.createPage()
+            closeModal()
         }
-        createPageButton.setOnClickListener { /* TODO */ }
+        createPageButton.setOnClickListener {
+            viewModel.createPage()
+            closeModal()
+        }
         previewButton.setOnClickListener { /* TODO */ }
 
         setScrollListener()
