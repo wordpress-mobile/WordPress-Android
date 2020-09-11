@@ -260,11 +260,16 @@ class MediaPickerFragment : Fragment() {
                         requestStoragePermission()
                     }
                 }
+
+                recycler.setEmptyView(null)
+                actionable_empty_view.visibility = View.GONE
+
                 soft_ask_view.visibility = View.VISIBLE
             }
             is SoftAskViewUiModel.Hidden -> {
                 if (soft_ask_view.visibility == View.VISIBLE) {
                     AniUtils.fadeOut(soft_ask_view, MEDIUM)
+                    recycler.setEmptyView(actionable_empty_view)
                 }
             }
         }
