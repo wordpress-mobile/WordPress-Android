@@ -32,9 +32,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext;
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemChooser;
-import org.wordpress.android.ui.mediapicker.MediaType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog.T;
@@ -43,7 +41,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {

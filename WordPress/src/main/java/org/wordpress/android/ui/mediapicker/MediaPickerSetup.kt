@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker
 
 import android.content.Intent
 import android.os.Bundle
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 
 data class MediaPickerSetup(
     val dataSource: DataSource,

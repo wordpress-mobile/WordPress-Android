@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
-import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.Intent.ACTION_OPEN_DOCUMENT
 import android.net.Uri
@@ -64,7 +63,12 @@ class MediaPickerFragment : Fragment() {
         }
     }
 
-    enum class ChooserContext(val intentAction: String, val requestCode: Int, val title: UiStringRes, val mediaTypeFilter: String) {
+    enum class ChooserContext(
+        val intentAction: String,
+        val requestCode: Int,
+        val title: UiStringRes,
+        val mediaTypeFilter: String
+    ) {
         PHOTO(ACTION_GET_CONTENT, RequestCodes.PICTURE_LIBRARY, UiStringRes(R.string.pick_photo), "image/*"),
         VIDEO(ACTION_GET_CONTENT, RequestCodes.VIDEO_LIBRARY, UiStringRes(R.string.pick_video), "video/*"),
         PHOTO_OR_VIDEO(ACTION_GET_CONTENT, RequestCodes.MEDIA_LIBRARY, UiStringRes(R.string.pick_media), "*/*"),
@@ -76,15 +80,15 @@ class MediaPickerFragment : Fragment() {
             val chooserContext: ChooserContext,
             val mimeTypes: List<String>,
             val allowMultipleSelection: Boolean
-        ): MediaPickerAction()
-        data class OpenCameraForWPStories(val allowMultipleSelection: Boolean): MediaPickerAction()
+        ) : MediaPickerAction()
+        data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
     }
 
     sealed class MediaPickerIcon(val type: MediaPickerIconType) {
         data class ChooseFromAndroidDevice(
             val allowedTypes: Set<MediaType>
-        ): MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
-        object WpStoriesCapture: MediaPickerIcon(WP_STORIES_CAPTURE)
+        ) : MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
+        object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
 
         fun toBundle(bundle: Bundle) {
             bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
@@ -100,10 +104,8 @@ class MediaPickerFragment : Fragment() {
 
                 return when (iconTypeName.let { MediaPickerIconType.fromNameString(iconTypeName) }) {
                     ANDROID_CHOOSE_FROM_DEVICE -> {
-                        // bundle.getString can return null but it should not happen since we
-                        // should put the chooser context in the bundle when it is a ANDROID_CHOOSE_FROM_DEVICE
-                        // so we should not defence but fail fast in this case
-                        val allowedTypes = (bundle.getStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES) ?: listOf<String>()).map {
+                        val allowedTypes = (bundle.getStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES)
+                                ?: listOf<String>()).map {
                             MediaType.valueOf(
                                     it
                             )
