@@ -46,7 +46,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils;
-import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient;
@@ -139,14 +138,6 @@ public class ReleaseNetworkModule {
                                                       @Named("custom-ssl") OkHttpClient okHttpClient,
                                                       UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, userAgent, httpAuthManager);
-    }
-
-    @Singleton
-    @Provides
-    public StockMediaRestClient provideStockMediaRestClient(Context appContext, Dispatcher dispatcher,
-                                                            @Named("regular") RequestQueue requestQueue,
-                                                            AccessToken token, UserAgent userAgent) {
-        return new StockMediaRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
 
     @Singleton
