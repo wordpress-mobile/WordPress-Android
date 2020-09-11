@@ -110,7 +110,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                     is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
                     is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
                     is ShowSitePickerForResult -> ActivityLauncher
-                            .showSitePickerForResult(this@ReaderDiscoverFragment, this.site, this.mode)
+                            .showSitePickerForResult(this@ReaderDiscoverFragment, this.preselectedSite, this.mode)
                     is OpenEditorForReblog -> ActivityLauncher
                             .openEditorForReblog(activity, this.site, this.post, this.source)
                     is ShowBookmarkedTab -> {
