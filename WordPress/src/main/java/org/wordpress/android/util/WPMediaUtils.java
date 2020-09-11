@@ -246,7 +246,11 @@ public class WPMediaUtils {
                 RequestCodes.FILE_LIBRARY);
     }
 
-    public static void launchChooserWithContext(Activity activity, OpenSystemPicker openSystemPicker, UiHelpers uiHelpers) {
+    public static void launchChooserWithContext(
+            Activity activity,
+            OpenSystemPicker openSystemPicker,
+            UiHelpers uiHelpers
+    ) {
         activity.startActivityForResult(prepareChooserIntent(activity, openSystemPicker, uiHelpers),
                 openSystemPicker.getChooserContext().getRequestCode());
     }
