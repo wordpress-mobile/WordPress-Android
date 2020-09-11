@@ -424,7 +424,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemChooser).isTrue()
-        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext).isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+        assertThat((iconClickEvents[0].action as OpenSystemChooser).chooserContext)
+                .isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
     }
 
     @Test
