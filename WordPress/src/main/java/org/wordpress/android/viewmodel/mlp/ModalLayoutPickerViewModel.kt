@@ -66,7 +66,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     fun init() {
         fetchLayouts()
-        updateButtonsUiState()
     }
 
     private fun fetchLayouts() {
@@ -231,11 +230,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
-    sealed class UiState {
-        object LoadingUiState : UiState()
+    sealed class UiState(
+        open val isHeaderVisible: Boolean = false,
+        val loadingSkeletonVisible: Boolean = false
+    ) {
+        object LoadingUiState : UiState(loadingSkeletonVisible = true)
 
         data class ContentUiState(
-            val isHeaderVisible: Boolean = false,
+            override val isHeaderVisible: Boolean = false,
             val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
             val selectedLayoutSlug: String? = null,
             val categories: List<CategoryListItemUiState> = listOf(),
