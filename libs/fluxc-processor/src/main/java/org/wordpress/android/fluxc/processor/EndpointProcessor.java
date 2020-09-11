@@ -120,7 +120,7 @@ public class EndpointProcessor extends AbstractProcessor {
 
     private void generateXMLRPCEndpointFile() throws IOException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(XMLRPC_ENDPOINT_FILE);
-        // read inputStream into byte array since we wil have to use it twice
+        // read inputStream into byte array since we will have to use it twice
         byte[] fileContent = new byte[inputStream.available()];
         inputStream.read(fileContent);
 
