@@ -8,7 +8,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTagList;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -203,8 +202,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_posts ADD tags TEXT;");
                 currentVersion++;
             case 141:
-                String[] args = {Integer.toString(ReaderTagType.FOLLOWED.toInt())};
-                db.execSQL("DELETE FROM tbl_tags WHERE tag_type=?", args);
+                // no-op
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
