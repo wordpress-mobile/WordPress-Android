@@ -23,7 +23,7 @@ class ReaderRecommendedBlogViewHolder(
             site_name.text = name
             site_url.text = url
             site_description.text = description
-            site_description.setVisible(description.isNotEmpty())
+            site_description.setVisible(isDescriptionVisible)
             if (iconUrl != null) {
                 imageManager.loadIntoCircle(
                         imageView = site_icon,

@@ -849,6 +849,19 @@ class ReaderPostUiStateBuilderTest {
         assertThat(uiState.blogs.size).isEqualTo(3)
     }
 
+    @Test
+    fun `blog description is not visible when description is empty`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(1) { createRecommendedBlog().copy(description = "") }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(blogs) { _, _ -> }
+
+        // Assert
+        assertThat(uiState.blogs[0].isDescriptionVisible).isFalse()
+    }
+
     // region Private methods
     private suspend fun mapPostToUiState(
         post: ReaderPost,

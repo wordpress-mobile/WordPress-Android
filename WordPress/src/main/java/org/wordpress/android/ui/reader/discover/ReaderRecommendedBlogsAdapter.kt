@@ -22,7 +22,7 @@ class ReaderRecommendedBlogsAdapter(
         override fun areItemsTheSame(
             oldItem: ReaderRecommendedBlogUiState,
             newItem: ReaderRecommendedBlogUiState
-        ): Boolean = oldItem.blogId == newItem.blogId
+        ): Boolean = oldItem.blogId == newItem.blogId && oldItem.feedId == newItem.feedId
 
         override fun areContentsTheSame(
             oldItem: ReaderRecommendedBlogUiState,

@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/reader_interest_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
@@ -48,7 +47,7 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="@dimen/margin_extra_large" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_description"
         style="@style/ReaderTextView.Site.Description"
         android:layout_width="0dp"
@@ -61,7 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/site_icon"
         tools:text="@tools:sample/lorem/random" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_name"
         style="@style/ReaderTextView.Site.Title"
         android:layout_width="0dp"
@@ -76,7 +75,7 @@
         app:layout_constraintTop_toTopOf="@id/site_icon"
         tools:text="Legal Nomads" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_url"
         style="@style/ReaderTextView.Site.Url"
         android:layout_width="0dp"

@@ -88,7 +88,9 @@ sealed class ReaderCardUiState {
             val description: String,
             val iconUrl: String?,
             val onItemClicked: (Long, Long?) -> Unit
-        )
+        ) {
+            val isDescriptionVisible: Boolean = description.isNotEmpty()
+        }
     }
 }
 
