@@ -58,7 +58,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -92,8 +91,7 @@ import javax.inject.Inject;
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
 public class ReaderPostPagerActivity extends LocaleAwareActivity
-        implements ReaderInterfaces.AutoHideToolbarListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
+        implements BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     /**
      * Type of URL intercepted
      */
@@ -228,7 +226,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
 
                 if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
@@ -867,16 +864,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
         AnalyticsUtils.trackWithInterceptedUri(AnalyticsTracker.Stat.READER_SIGN_IN_INITIATED, mInterceptedUri);
         ActivityLauncher.loginWithoutMagicLink(this);
-    }
-
-    /*
-     * called by detail fragment to show/hide the toolbar when user scrolls
-     */
-    @Override
-    public void onShowHideToolbar(boolean show) {
-        if (!isFinishing()) {
-            AniUtils.animateTopBar(mAppBar, show);
-        }
     }
 
     /**

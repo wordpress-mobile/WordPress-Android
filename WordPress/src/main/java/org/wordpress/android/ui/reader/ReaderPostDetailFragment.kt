@@ -84,7 +84,6 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE
-import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_LIKE
@@ -187,7 +186,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var errorMessage: String? = null
 
     private var isToolbarShowing = true
-    private var autoHideToolbarListener: AutoHideToolbarListener? = null
     private lateinit var resourceVars: ReaderResourceVars
 
     private var fileForDownload: String? = null
@@ -285,9 +283,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is AutoHideToolbarListener) {
-            autoHideToolbarListener = context
-        }
         toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.toolbar_height)
     }
 
@@ -1402,9 +1397,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 layoutFooter.visibility = View.GONE
             }
 
-            // add padding to the scrollView to make room for the top and bottom toolbars - this also
+            // add padding to the scrollView to make room for the bottom toolbar - this also
             // ensures the scrollbar matches the content so it doesn't disappear behind the toolbars
-//            val topPadding = if (autoHideToolbarListener != null) toolbarHeight else 0
             val bottomPadding = if (canShowFooter()) layoutFooter.height else 0
             scrollView.setPadding(0, 0, 0, bottomPadding)
 
@@ -1707,9 +1701,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showToolbar(show: Boolean) {
         isToolbarShowing = show
-        if (autoHideToolbarListener != null) {
-            autoHideToolbarListener!!.onShowHideToolbar(show)
-        }
     }
 
     private fun showFooter(show: Boolean) {
