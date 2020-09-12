@@ -313,11 +313,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         scrollView = view.findViewById(R.id.scroll_view_reader)
         scrollView.setScrollDirectionListener(this)
 
-        appBar = requireActivity().findViewById(R.id.appbar_with_collapsing_toolbar_layout)
+        appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         featuredImageView = appBar.findViewById(R.id.featured_image)
         resourceVars = ReaderResourceVars(context)
+
+        val toolbar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 

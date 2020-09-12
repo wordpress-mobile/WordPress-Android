@@ -13,14 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.appbar.AppBarLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +37,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -91,7 +86,7 @@ import javax.inject.Inject;
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
 public class ReaderPostPagerActivity extends LocaleAwareActivity
-        implements BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
+        implements BasicFragmentDialog.BasicDialogPositiveClickInterface {
     /**
      * Type of URL intercepted
      */
@@ -113,8 +108,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
-    private Toolbar mToolbar;
-    private AppBarLayout mAppBar;
 
     private ReaderTag mCurrentTag;
     private boolean mIsFeed;
@@ -148,16 +141,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.reader_activity_post_pager);
-
-        mAppBar = findViewById(R.id.appbar_with_collapsing_toolbar_layout);
-        mToolbar = mAppBar.findViewById(R.id.toolbar_main);
-        setSupportActionBar(mToolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         mViewPager = findViewById(R.id.viewpager);
         mProgress = findViewById(R.id.progress_loading);
@@ -213,6 +196,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         // for related posts, show an X in the toolbar which closes the activity - using the
         // back button will navigate through related posts
         if (mIsRelatedPostView) {
+            // TODO: FIXME
             mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1050,10 +1034,5 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     null,
                     site);
         }
-    }
-
-    @Override
-    public void onScrollableViewInitialized(int containerId) {
-        mAppBar.setLiftOnScrollTargetViewId(containerId);
     }
 }
