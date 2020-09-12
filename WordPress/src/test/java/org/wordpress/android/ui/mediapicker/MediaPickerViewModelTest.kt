@@ -19,6 +19,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
@@ -64,6 +67,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
     private val singleSelectMediaPickerSetup = MediaPickerSetup(DEVICE, false, setOf(IMAGE), false)
     private val multiSelectMediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false)
+    private val singleSelectVideoPickerSetup = MediaPickerSetup(DEVICE, false, setOf(VIDEO), false)
+    private val multiSelectFilePickerSetup = MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT), false)
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
@@ -366,6 +371,83 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `system picker opened for photo when allowed types is IMAGE only`() = test {
+        setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.PHOTO)
+    }
+
+    @Test
+    fun `system picker opened for video when allowed types is VIDEO only`() = test {
+        setupViewModel(listOf(), singleSelectVideoPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.VIDEO)
+    }
+
+    @Test
+    fun `system picker opened for image and video when allowed types is IMAGE and VIDEO`() = test {
+        setupViewModel(listOf(), multiSelectMediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext)
+                .isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+    }
+
+    @Test
+    fun `system picker opened for all supported files when is browser picker`() = test {
+        setupViewModel(listOf(), multiSelectFilePickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
+    }
+
+    @Test
     fun `camera FAB is shown in stories when no selected items`() = test {
         setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), true))
         assertStoriesFabIsVisible()
@@ -540,6 +622,12 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.last().searchUiModel.let { model ->
             assertThat(model is SearchUiModel.Expanded).isTrue()
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
+        }
+    }
+
+    private fun assertSearchHidden() {
+        uiStates.last().searchUiModel.let { model ->
+            assertThat(model is SearchUiModel.Hidden).isTrue()
         }
     }
 

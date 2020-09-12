@@ -267,7 +267,6 @@ public class ReaderPostRenderer {
      */
     private String getPostContent() {
         String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
-
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
 
@@ -509,6 +508,7 @@ public class ReaderPostRenderer {
                 .append(" div.feedflare { display: none; }")
                 .append(" .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, ")
                 .append(" .OUTBRAIN, .adsbygoogle { display: none; }")
+                .append(" figure { display: block; margin-inline-start: 0px; margin-inline-end: 0px; }")
                 .append("</style>");
 
         // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
