@@ -22,20 +22,33 @@ class ReaderRecommendedBlogViewHolder(
         with(uiState) {
             site_name.text = name
             site_url.text = url
-            site_description.text = description
-            site_description.setVisible(isDescriptionVisible)
-            if (iconUrl != null) {
-                imageManager.loadIntoCircle(
-                        imageView = site_icon,
-                        imageType = BLAVATAR_CIRCULAR,
-                        imgUrl = iconUrl
-                )
-            } else {
-                imageManager.cancelRequestAndClearImageView(site_icon)
+            site_description.apply {
+                text = description
+                setVisible(isDescriptionVisible)
             }
+            site_follow_icon.apply {
+                isSelected = isFollowed
+                contentDescription = context.getString(followContentDescription.stringRes)
+                setOnClickListener {
+                    onFollowClicked(blogId, feedId)
+                }
+            }
+            updateBlogImage(iconUrl)
             containerView.setOnClickListener {
                 onItemClicked(blogId, feedId)
             }
+        }
+    }
+
+    private fun updateBlogImage(iconUrl: String?) {
+        if (iconUrl != null) {
+            imageManager.loadIntoCircle(
+                    imageView = site_icon,
+                    imageType = BLAVATAR_CIRCULAR,
+                    imgUrl = iconUrl
+            )
+        } else {
+            imageManager.cancelRequestAndClearImageView(site_icon)
         }
     }
 }

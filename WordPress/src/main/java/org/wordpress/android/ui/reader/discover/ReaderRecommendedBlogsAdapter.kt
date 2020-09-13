@@ -28,5 +28,11 @@ class ReaderRecommendedBlogsAdapter(
             oldItem: ReaderRecommendedBlogUiState,
             newItem: ReaderRecommendedBlogUiState
         ): Boolean = oldItem == newItem
+
+        // Returning true suppresses the default item animation.
+        override fun getChangePayload(
+            oldItem: ReaderRecommendedBlogUiState,
+            newItem: ReaderRecommendedBlogUiState
+        ): Any? = true
     }
 }

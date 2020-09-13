@@ -6,6 +6,19 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/site_follow_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/reader_btn_follow"
+        android:padding="@dimen/margin_extra_large"
+        android:src="@drawable/btn_follow_site"
+        android:tint="@color/secondary_gray_20_selector"
+        app:layout_constraintBottom_toBottomOf="@id/site_url"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/site_name" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/site_icon"
         style="@style/ReaderImageView.Avatar"
@@ -18,13 +31,6 @@
         app:layout_constraintStart_toStartOf="@id/guideline_start"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/margin_extra_large" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_end"
@@ -47,18 +53,12 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="@dimen/margin_extra_large" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/site_description"
-        style="@style/ReaderTextView.Site.Description"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_start"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        android:includeFontPadding="false"
-        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintStart_toStartOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/site_icon"
-        tools:text="@tools:sample/lorem/random" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/margin_extra_large" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_name"
@@ -69,7 +69,7 @@
         android:includeFontPadding="false"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/site_url"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintEnd_toStartOf="@id/site_follow_icon"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@id/site_icon"
         app:layout_constraintTop_toTopOf="@id/site_icon"
@@ -88,5 +88,18 @@
         app:layout_constraintStart_toStartOf="@id/site_name"
         app:layout_constraintTop_toBottomOf="@+id/site_name"
         tools:text="legalnomads.com" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/site_description"
+        style="@style/ReaderTextView.Site.Description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:includeFontPadding="false"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@+id/site_icon"
+        tools:text="@tools:sample/lorem/random" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
