@@ -196,19 +196,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        // for related posts, show an X in the toolbar which closes the activity - using the
-        // back button will navigate through related posts
-        if (mIsRelatedPostView) {
-            // TODO: FIXME
-//            mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
-//            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    finish();
-//                }
-//            });
-        }
-
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {

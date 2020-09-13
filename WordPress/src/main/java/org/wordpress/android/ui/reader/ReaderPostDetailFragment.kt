@@ -337,8 +337,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // Fixes viewpager not displaying menu items for first fragment
         toolBar.inflateMenu(R.menu.reader_detail)
 
-        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        // for related posts, show an X in the toolbar which closes the activity
+        if (isRelatedPost) {
+            toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
+            toolBar.setNavigationOnClickListener { requireActivity().finish() }
+        } else {
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        }
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
