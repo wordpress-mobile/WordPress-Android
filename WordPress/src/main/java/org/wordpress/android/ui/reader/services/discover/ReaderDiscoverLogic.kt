@@ -162,9 +162,7 @@ class ReaderDiscoverLogic(
                 JSON_CARD_RECOMMENDED_BLOGS -> {
                     cardJson?.let {
                         val recommendedBlogs = parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(it)
-                        if (recommendedBlogs.isNotEmpty()) {
-                            cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
-                        }
+                        cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
                     }
                 }
             }
@@ -190,7 +188,12 @@ class ReaderDiscoverLogic(
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
-                JSON_CARD_RECOMMENDED_BLOGS,
+                JSON_CARD_RECOMMENDED_BLOGS -> {
+                    val recommendedBlogsCardJson = cardJson.optJSONArray(JSON_CARD_DATA)
+                    if (recommendedBlogsCardJson.length() > 0) {
+                        simplifiedJson.put(index++, cardJson)
+                    }
+                }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
                     simplifiedJson.put(index++, cardJson)
                 }
