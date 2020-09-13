@@ -157,8 +157,44 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
+    suspend fun handleFollowRecommendedSiteClicked(blogId: Long, feedId: Long?, isAskingToFollow: Boolean) {
+        val param = ReaderSiteFollowUseCase.Param.RecommendedSite(
+                blogId = blogId,
+                feedId = feedId ?: 0,
+                isAskingToFollow = isAskingToFollow
+        )
+        followUseCase.toggleFollow(param).collect {
+            when (it) {
+                is FollowSiteState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    )
+                }
+                is FollowSiteState.Failed.RequestFailed -> {
+                    _snackbarEvents.postValue(
+                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                    )
+                }
+                is FollowSiteState.Success -> Unit // Do nothing
+                is PostFollowStatusChanged -> {
+                    _followStatusUpdated.postValue(it)
+                    siteNotificationsUseCase.fetchSubscriptions()
+
+//                    if (it.showEnableNotification) {
+//                        val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
+//                        action.invoke()
+//                    } else if (it.deleteNotificationSubscription) {
+//                        siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
+//                        siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(it.blogId, false)
+//                    }
+                }
+            }
+        }
+    }
+
     private suspend fun handleFollowClicked(post: ReaderPost) {
-        followUseCase.toggleFollow(post).collect {
+        val param = ReaderSiteFollowUseCase.Param.FromPost(post)
+        followUseCase.toggleFollow(param).collect {
             when (it) {
                 is FollowSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(

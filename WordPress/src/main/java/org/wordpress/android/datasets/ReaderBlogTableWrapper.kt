@@ -11,4 +11,13 @@ class ReaderBlogTableWrapper
     fun isNotificationsEnabled(blogId: Long): Boolean = ReaderBlogTable.isNotificationsEnabled(blogId)
     fun setNotificationsEnabledByBlogId(blogId: Long, isEnabled: Boolean) =
             ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, isEnabled)
+    fun isSiteFollowed(blogId: Long, feedId: Long?): Boolean {
+        return if (blogId != 0L) {
+            ReaderBlogTable.isFollowedBlog(blogId)
+        } else if (feedId != null && feedId != 0L) {
+            ReaderBlogTable.isFollowedFeed(feedId)
+        } else {
+            false
+        }
+    }
 }

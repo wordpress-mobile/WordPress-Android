@@ -205,7 +205,7 @@ class ReaderSiteFollowUseCaseTest {
                 useCase.toggleFollow(readerPost).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlogForPost(anyOrNull(), eq(true), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(anyOrNull(), eq(true), anyOrNull())
             }
 
     @Test
@@ -215,7 +215,7 @@ class ReaderSiteFollowUseCaseTest {
                 useCase.toggleFollow(readerPost).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlogForPost(anyOrNull(), eq(false), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(anyOrNull(), eq(false), anyOrNull())
             }
 
     @Test
@@ -225,7 +225,7 @@ class ReaderSiteFollowUseCaseTest {
                 useCase.toggleFollow(readerPost).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlogForPost(eq(readerPost), anyBoolean(), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(eq(readerPost), anyBoolean(), anyOrNull())
             }
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
@@ -238,7 +238,7 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = true
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(true)
-            whenever(readerBlogActionsWrapper.followBlogForPost(anyOrNull(), anyBoolean(), anyOrNull())).then {
+            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
                 (it.arguments[2] as ActionListener).onActionResult(true)
                 true
             }
@@ -251,7 +251,7 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = false
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(false)
-            whenever(readerBlogActionsWrapper.followBlogForPost(anyOrNull(), anyBoolean(), anyOrNull())).then {
+            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
                 (it.arguments[2] as ActionListener).onActionResult(true)
                 true
             }
@@ -264,7 +264,7 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = true
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(true)
-            whenever(readerBlogActionsWrapper.followBlogForPost(anyOrNull(), anyBoolean(), anyOrNull())).then {
+            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
                 (it.arguments[2] as ActionListener).onActionResult(false)
                 true
             }
@@ -277,7 +277,7 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = false
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(false)
-            whenever(readerBlogActionsWrapper.followBlogForPost(anyOrNull(), anyBoolean(), anyOrNull())).then {
+            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
                 (it.arguments[2] as ActionListener).onActionResult(false)
                 true
             }

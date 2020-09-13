@@ -85,7 +85,6 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
@@ -1587,35 +1586,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             showSearchTabs();
         } else {
             hideSearchTabs();
-        }
-    }
-
-    /*
-     * called when user taps follow item in popup menu for a post
-     */
-    private void toggleFollowStatusForPost(final ReaderPost post) {
-        if (post == null
-            || !hasPostAdapter()
-            || !NetworkUtils.checkConnection(getActivity())) {
-            return;
-        }
-
-        final boolean isAskingToFollow = !ReaderPostTable.isPostFollowed(post);
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isAdded() && !succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                            : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(getActivity(), resId);
-                    getPostAdapter().setFollowStatusForBlog(post.blogId, !isAskingToFollow);
-                }
-            }
-        };
-
-        if (ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
-            getPostAdapter().setFollowStatusForBlog(post.blogId, isAskingToFollow);
         }
     }
 

@@ -181,7 +181,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                             recommendedBlogs = card.blogs,
                             onItemClicked = this@ReaderDiscoverViewModel::onRecommendedSiteItemClicked,
-                            onFollowClicked = this@ReaderDiscoverViewModel::onFollowSiteClocked
+                            onFollowClicked = this@ReaderDiscoverViewModel::onFollowSiteClicked
                     )
                 }
             }
@@ -293,27 +293,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId ?: 0)))
     }
 
-    private fun onFollowSiteClocked(blogId: Long, feedId: Long?) {
+    private fun onFollowSiteClicked(blogId: Long, feedId: Long?, isAskingToFollow: Boolean) {
         launch {
-            // temp logic to test the UI states
-            (_uiState.value as? ContentUiState)?.let { contentUiState ->
-                val newCards = contentUiState.cards.map { card ->
-                    if (card is ReaderCardUiState.ReaderRecommendedBlogsCardUiState) {
-                        card.copy(
-                                blogs = card.blogs.map { blog ->
-                                    if (blogId == blog.blogId && feedId == blog.feedId) {
-                                        blog.copy(isFollowed = !blog.isFollowed)
-                                    } else {
-                                        blog
-                                    }
-                                }
-                        )
-                    } else {
-                        card
-                    }
-                }
-                _uiState.postValue(contentUiState.copy(cards = newCards))
-            }
+            readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(blogId, feedId, isAskingToFollow)
         }
     }
 

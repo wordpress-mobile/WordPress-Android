@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.repository.usecases
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderDiscoverCardsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -12,6 +13,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
+import org.wordpress.android.models.discover.RecommendedBlog
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
@@ -24,6 +26,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
     private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase,
     private val readerDiscoverCardsTableWrapper: ReaderDiscoverCardsTableWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val appLogWrapper: AppLogWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -63,6 +66,20 @@ class GetDiscoverCardsUseCase @Inject constructor(
                             ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS -> {
                                 cardJson?.let {
                                     val recommendedBlogs = parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(it)
+                                            .map { blog ->
+                                                RecommendedBlog(
+                                                        blogId = blog.blogId,
+                                                        url = blog.url,
+                                                        name = blog.name,
+                                                        iconUrl = blog.iconUrl,
+                                                        feedId = blog.feedId,
+                                                        description = blog.description,
+                                                        isFollowed = readerBlogTableWrapper.isSiteFollowed(
+                                                                blog.blogId,
+                                                                blog.feedId
+                                                        )
+                                                )
+                                            }
                                     cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
                                 }
                             }

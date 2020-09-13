@@ -239,18 +239,14 @@ public class ReaderBlogActions {
     /*
      * helper routine when following a blog from a post view
      */
-    public static boolean followBlogForPost(ReaderPost post,
-                                            boolean isAskingToFollow,
-                                            ActionListener actionListener) {
-        if (post == null) {
-            AppLog.w(T.READER, "follow action performed with null post");
-            ReaderActions.callActionListener(actionListener, false);
-            return false;
-        }
-        if (post.feedId != 0) {
-            return followFeedById(post.feedId, isAskingToFollow, actionListener);
+    public static boolean followBlog(final Long blogId,
+                                     final Long feedId,
+                                     boolean isAskingToFollow,
+                                     ActionListener actionListener) {
+        if (feedId != 0) {
+            return followFeedById(feedId, isAskingToFollow, actionListener);
         } else {
-            return followBlogById(post.blogId, isAskingToFollow, actionListener);
+            return followBlogById(blogId, isAskingToFollow, actionListener);
         }
     }
 
@@ -485,7 +481,7 @@ public class ReaderBlogActions {
         if (blockResult == null) {
             return;
         }
-       undoBlockBlogLocal(blockResult);
+        undoBlockBlogLocal(blockResult);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

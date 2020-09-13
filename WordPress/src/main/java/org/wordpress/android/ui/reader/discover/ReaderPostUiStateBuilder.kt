@@ -6,7 +6,6 @@ import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.ReaderCardRecommendedBlog
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
@@ -18,6 +17,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.discover.RecommendedBlog
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -175,9 +175,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<ReaderCardRecommendedBlog>,
+        recommendedBlogs: List<RecommendedBlog>,
         onItemClicked: (Long, Long?) -> Unit,
-        onFollowClicked: (Long, Long?) -> Unit
+        onFollowClicked: (Long, Long?, Boolean) -> Unit
     ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
         recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
                 .map {
@@ -188,7 +188,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                             feedId = it.feedId,
                             description = StringEscapeUtils.unescapeHtml4(it.description),
                             iconUrl = it.iconUrl,
-                            isFollowed = false,
+                            isFollowed = it.isFollowed,
                             onFollowClicked = onFollowClicked,
                             onItemClicked = onItemClicked
                     )
