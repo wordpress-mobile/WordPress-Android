@@ -12,6 +12,8 @@ import android.graphics.PorterDuff.Mode.SRC_ATOP
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -24,12 +26,14 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
@@ -38,7 +42,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.color
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -113,6 +116,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
@@ -128,6 +132,7 @@ import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
+import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
@@ -144,7 +149,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener,
+        ReaderInterfaces.AutoHideToolbarListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -212,16 +218,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val actionBar: ActionBar?
-        get() {
-            return if (isAdded && activity is AppCompatActivity) {
-                (activity as AppCompatActivity).supportActionBar
-            } else {
-                AppLog.w(T.READER, "reader post detail > getActionBar returned null")
-                null
-            }
-        }
-
     private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
         appBarLayout, verticalOffset ->
         val collapsingToolbarLayout = appBarLayout
@@ -236,8 +232,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val collapsingToolbarHeight = collapsingToolbarLayout.height
             val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
                     collapsingToolbarLayout.scrimVisibleHeightTrigger
+            val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-            val colorAttr = if (isCollapsed) {
+            val colorAttr = if (isCollapsed || isDarkTheme) {
                 R.attr.colorOnSurface
             } else {
                 R.attr.colorSurface
@@ -291,7 +288,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        WPActivityUtils.setStatusBarColor(requireActivity().window, color.black_translucent_20)
+        WPActivityUtils.setStatusBarColor(requireActivity().window, R.color.black_translucent_40)
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            val decorView: View = requireActivity().window.decorView
+            var systemUiVisibilityFlags = decorView.systemUiVisibility
+            systemUiVisibilityFlags = systemUiVisibilityFlags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            decorView.systemUiVisibility = systemUiVisibilityFlags
+        }
 
         val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
 
@@ -319,8 +322,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         featuredImageView = appBar.findViewById(R.id.featured_image)
         resourceVars = ReaderResourceVars(context)
 
-        val toolbar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
+        (activity as AppCompatActivity).setSupportActionBar(toolBar)
+
+        // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
+        ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+            val insetTop = insets.systemWindowInsetTop
+            if (insetTop > 0) {
+                toolBar.setPadding(0, insetTop, 0, 0)
+            }
+            insets.consumeSystemWindowInsets()
+        }
+
+        // Fixes viewpager not displaying menu items for first fragment
+        toolBar.inflateMenu(R.menu.reader_detail)
+
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
@@ -1410,17 +1428,24 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             post?.let {
                 if (featuredImageUtils.shouldAddFeaturedImage(it)) {
+                    val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
                     val imageUrl = ReaderUtils.getResizedImageUrl(
                             it.featuredImage,
-                            resourceVars.mFullSizeImageWidthPx,
+                            displayWidth,
                             resourceVars.mFeaturedImageHeightPx,
                             it.isPrivate,
                             it.isPrivateAtomic
                     )
+
+                    val params = featuredImageView.layoutParams
+                    params.height = resourceVars.mFeaturedImageHeightPx
+                    featuredImageView.layoutParams = params
+
                     imageManager.load(
                             featuredImageView,
                             PHOTO,
-                            imageUrl
+                            imageUrl,
+                            CENTER_CROP
                     )
                 }
             }
@@ -1541,15 +1566,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onCustomViewShown() {
-        // full screen video has just been shown so hide the ActionBar
-        val actionBar = actionBar
-        actionBar?.hide()
+        // full screen video has just been shown so hide the AppBar
+        onShowHideToolbar(false)
     }
 
     override fun onCustomViewHidden() {
-        // user returned from full screen video so re-display the ActionBar
-        val actionBar = actionBar
-        actionBar?.show()
+        // user returned from full screen video so re-display the AppBar
+        onShowHideToolbar(true)
     }
 
     fun hideCustomView() {
@@ -1800,6 +1823,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             fragment.arguments = args
 
             return fragment
+        }
+    }
+
+    override fun onShowHideToolbar(show: Boolean) {
+        if (isAdded) {
+            AniUtils.animateTopBar(appBar, show)
         }
     }
 }

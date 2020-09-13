@@ -29,6 +29,13 @@ public class ReaderInterfaces {
     }
 
     /*
+     * called from post detail fragment so toolbar can animate in/out when scrolling
+     */
+    public interface AutoHideToolbarListener {
+        void onShowHideToolbar(boolean show);
+    }
+
+    /*
      * used by adapters to notify when data has been loaded
      */
     public interface DataLoadedListener {
