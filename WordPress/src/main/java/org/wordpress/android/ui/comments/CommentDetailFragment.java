@@ -684,7 +684,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 WordPress.getContext()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz);
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz,
+                getString(R.string.comment_unable_to_show_error));
 
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
