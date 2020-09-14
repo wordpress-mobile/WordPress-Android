@@ -11,7 +11,6 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.NoChange
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.util.LocaleManagerWrapper
 
@@ -82,7 +81,7 @@ data class MediaLoader(
         return updatedState
     }
 
-    private suspend fun buildDomainModel(
+    private fun buildDomainModel(
         partialResult: MediaLoadingResult,
         state: DomainModel
     ): DomainModel {
@@ -91,14 +90,9 @@ data class MediaLoader(
                     isLoading = false,
                     error = null,
                     hasMore = partialResult.hasMore,
-                    domainItems = mediaSource.get(allowedTypes, state.filter)
+                    domainItems = partialResult.data
             )
             is Failure -> state.copy(isLoading = false, error = partialResult.message)
-            NoChange -> state.copy(
-                    isLoading = false,
-                    error = null,
-                    domainItems = mediaSource.get(allowedTypes, state.filter)
-            )
         }
     }
 

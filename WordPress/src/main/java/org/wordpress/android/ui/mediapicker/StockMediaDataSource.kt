@@ -15,7 +15,6 @@ class StockMediaDataSource(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MediaSource {
     override suspend fun load(
-        mediaTypes: Set<MediaType>,
         forced: Boolean,
         loadMore: Boolean,
         filter: String?
@@ -28,14 +27,14 @@ class StockMediaDataSource(
                     error != null -> {
                         Failure(error.message)
                     }
-                    else -> Success(result.canLoadMore)
+                    else -> Success(get(validFilter), result.canLoadMore)
                 }
             }
             NoChange
         } ?: NoChange
     }
 
-    override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
+    private suspend fun get(filter: String?): List<MediaItem> {
         return withValidFilter(filter) { validFilter ->
             stockMediaStore.getStockMedia(validFilter).map { MediaItem(Iden) }
         } ?: listOf<MediaItem>()

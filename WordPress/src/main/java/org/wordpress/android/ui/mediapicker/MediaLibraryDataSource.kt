@@ -30,25 +30,20 @@ class MediaLibraryDataSource(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val siteModel: SiteModel
+    private val siteModel: SiteModel,
+    private val mediaTypes: Set<MediaType>
 ) : MediaSource {
     init {
         dispatcher.register(this)
     }
 
     private var loadContinuations = mutableMapOf<MimeType.Type, Continuation<OnMediaListFetched>>()
-    private var lastUsedFilter: String? = null
 
     override suspend fun load(
-        mediaTypes: Set<MediaType>,
         forced: Boolean,
         loadMore: Boolean,
         filter: String?
     ): MediaLoadingResult {
-        if (!forced && !loadMore && filter == lastUsedFilter) {
-            return MediaLoadingResult.NoChange
-        }
-        lastUsedFilter = filter
         return withContext(bgDispatcher) {
             val loadingResults = mediaTypes.map { mediaType ->
                 async {
@@ -73,12 +68,12 @@ class MediaLibraryDataSource(
             if (error != null) {
                 MediaLoadingResult.Failure(error)
             } else {
-                MediaLoadingResult.Success(hasMore)
+                MediaLoadingResult.Success(get(mediaTypes, filter), hasMore)
             }
         }
     }
 
-    override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
+    private suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
         return withContext(bgDispatcher) {
             mediaTypes.map { mediaType ->
                 async { getFromDatabase(mediaType) }
@@ -148,6 +143,7 @@ class MediaLibraryDataSource(
         private val dispatcher: Dispatcher,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
-        fun build(siteModel: SiteModel) = MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel)
+        fun build(siteModel: SiteModel, mediaTypes: Set<MediaType>) =
+                MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel, mediaTypes)
     }
 }
