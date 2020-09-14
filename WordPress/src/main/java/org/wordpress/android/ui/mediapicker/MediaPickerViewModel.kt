@@ -93,7 +93,7 @@ class MediaPickerViewModel @Inject constructor(
             _searchExpanded
     ) { domainModel, selectedUris, softAskRequest, searchExpanded ->
         MediaPickerUiState(
-                buildUiModel(domainModel, selectedUris),
+                buildUiModel(domainModel, selectedUris, softAskRequest),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled && selectedUris.isNullOrEmpty()) {
                     clickIcon(WP_STORIES_CAPTURE)
@@ -118,10 +118,13 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun buildUiModel(
         domainModel: DomainModel?,
-        selectedUris: List<UriWrapper>?
+        selectedUris: List<UriWrapper>?,
+        softAskRequest: SoftAskRequest?
     ): PhotoListUiModel {
         val data = domainModel?.domainItems
-        return if (data != null) {
+        return if (null != softAskRequest && softAskRequest.show) {
+            PhotoListUiModel.Hidden
+        } else if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = mediaPickerSetup.canMultiselect
                 val toggleAction = ToggleAction(it.uri, showOrderCounter, this::toggleItem)
@@ -411,6 +414,7 @@ class MediaPickerViewModel @Inject constructor(
                 PhotoListUiModel()
 
         object Empty : PhotoListUiModel()
+        object Hidden : PhotoListUiModel()
     }
 
     sealed class SoftAskViewUiModel {
