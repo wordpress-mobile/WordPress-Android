@@ -70,7 +70,7 @@ class UiHelpers @Inject constructor() {
 
     companion object {
         fun adjustDialogSize(dialog: Dialog) {
-            val window = dialog.window
+            val window = requireNotNull(dialog.window)
             val size = Point()
 
             val display = window.windowManager.defaultDisplay
