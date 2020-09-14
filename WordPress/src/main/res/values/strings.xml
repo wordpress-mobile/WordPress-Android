@@ -2868,7 +2868,8 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
-    <string name="mlp_layout_selected">%s selected</string>
+    <string name="mlp_selected_description">%s selected</string>
+    <string name="mlp_notselected_description">%s</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
