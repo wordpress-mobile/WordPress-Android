@@ -80,6 +80,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String ARG_SITE_LOGIN_ENABLED = "ARG_SITE_LOGIN_ENABLED";
     private static final String ARG_SHOULD_USE_NEW_LAYOUT = "ARG_SHOULD_USE_NEW_LAYOUT";
     private static final String ARG_OPTIONAL_SITE_CREDS_LAYOUT = "ARG_OPTIONAL_SITE_CREDS_LAYOUT";
+    private static final String ARG_HIDE_TOS = "ARG_HIDE_TOS";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final String TAG_ALT_LAYOUT = "login_email_fragment_alternate_layout_tag";
@@ -95,6 +96,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private boolean mIsSiteLoginEnabled;
     private boolean mShouldUseNewLayout;
     private boolean mOptionalSiteCredsLayout;
+    private boolean mHideTos;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -118,13 +120,23 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
+                                                 boolean isSiteLoginEnabled,
                                                  boolean shouldUseNewLayout) {
+        return newInstance(
+                isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, false);
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
+                                                 boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout,
+                                                 boolean hideTos) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
         args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
+        args.putBoolean(ARG_HIDE_TOS, hideTos);
         fragment.setArguments(args);
         return fragment;
     }
@@ -256,20 +268,31 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     private void setupTosButtons(Button continueTosButton, Button continueWithGoogleTosButton) {
-        OnClickListener onClickListener = new OnClickListener() {
-            public void onClick(View view) {
-                Context context = getContext();
-                if ((context instanceof SignupSheetListener)) {
-                    ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
+        if (mHideTos) {
+            // Hide the TOS buttons
+            continueTosButton.setVisibility(View.GONE);
+            continueWithGoogleTosButton.setVisibility(View.GONE);
+        } else {
+            // Show the TOS buttons
+            continueTosButton.setVisibility(View.VISIBLE);
+            continueWithGoogleTosButton.setVisibility(View.VISIBLE);
+
+            OnClickListener onClickListener = new OnClickListener() {
+                public void onClick(View view) {
+                    Context context = getContext();
+                    if ((context instanceof SignupSheetListener)) {
+                        ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
+                    }
                 }
-            }
-        };
+            };
 
-        continueTosButton.setOnClickListener(onClickListener);
-        continueTosButton.setText(formatTosText(R.string.continue_terms_of_service_text));
+            continueTosButton.setOnClickListener(onClickListener);
+            continueTosButton.setText(formatTosText(R.string.continue_terms_of_service_text));
 
-        continueWithGoogleTosButton.setOnClickListener(onClickListener);
-        continueWithGoogleTosButton.setText(formatTosText(R.string.continue_with_google_terms_of_service_text));
+            continueWithGoogleTosButton.setOnClickListener(onClickListener);
+            continueWithGoogleTosButton
+                    .setText(formatTosText(R.string.continue_with_google_terms_of_service_text));
+        }
     }
 
     private void setupSocialButtons(Button continueWithGoogleButton) {
@@ -452,6 +475,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSiteLoginEnabled = args.getBoolean(ARG_SITE_LOGIN_ENABLED, true);
             mShouldUseNewLayout = args.getBoolean(ARG_SHOULD_USE_NEW_LAYOUT, false);
             mOptionalSiteCredsLayout = args.getBoolean(ARG_OPTIONAL_SITE_CREDS_LAYOUT, false);
+            mHideTos = args.getBoolean(ARG_HIDE_TOS, false);
         }
     }
 
