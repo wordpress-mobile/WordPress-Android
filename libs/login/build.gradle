@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.0.1'
     }
 }
 
@@ -32,16 +32,16 @@ android {
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.20.3') {
+    implementation ('org.wordpress:utils:1.26') {
         exclude group: "com.android.volley"
     }
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.media:media:1.0.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0'
+    implementation 'androidx.media:media:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.1'
 
     api 'com.google.android.gms:play-services-auth:15.0.1'
 
