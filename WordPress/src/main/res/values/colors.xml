@@ -304,12 +304,10 @@
     <color name="yellow_100">#1c1700</color>
 
     <!-- TRANSLUCENT -->
-    <color name="black_translucent_12">#1F000000</color>
     <color name="black_translucent_20">#33000000</color>
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
-    <color name="white_translucent_12">#1FFFFFFF</color>
     <color name="white_translucent_20">#33ffffff</color>
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
