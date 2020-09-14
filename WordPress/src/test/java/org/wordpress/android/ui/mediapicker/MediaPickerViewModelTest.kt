@@ -28,6 +28,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiMod
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -388,6 +390,38 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertStoriesFabIsHidden()
     }
 
+    @Test
+    fun `empty state is emitted when no items in picker`() = test {
+        setupViewModel(null, singleSelectMediaPickerSetup, numberOfStates = 1)
+
+        viewModel.checkStoragePermission(isAlwaysDenied = false)
+
+        assertThat(uiStates).hasSize(2)
+        assertPhotoListUiStateEmpty()
+    }
+
+    @Test
+    fun `hidden state is emitted when when need to ask permission in picker`() = test {
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, hasStoragePermissions = false)
+        whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
+        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_label)).thenReturn("Soft ask label")
+
+        viewModel.checkStoragePermission(isAlwaysDenied = false)
+
+        assertThat(uiStates).hasSize(3)
+        assertPhotoListUiStateHidden()
+    }
+
+    @Test
+    fun `data items state is emitted when items available in picker and have permissions`() = test {
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, hasStoragePermissions = true)
+
+        viewModel.refreshData(false)
+
+        assertThat(uiStates).hasSize(2)
+        assertPhotoListUiStateData()
+    }
+
     private fun selectItem(position: Int) {
         when (val item = itemOnPosition(position)) {
             is PhotoItem -> item.toggleAction.toggle()
@@ -455,8 +489,26 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         }
     }
 
+    private fun assertPhotoListUiStateData() {
+        uiStates.last().photoListUiModel.let {
+            assertThat(it is Data).isTrue()
+        }
+    }
+
+    private fun assertPhotoListUiStateEmpty() {
+        uiStates.last().photoListUiModel.let {
+            assertThat(it is Empty).isTrue()
+        }
+    }
+
+    private fun assertPhotoListUiStateHidden() {
+        uiStates.last().photoListUiModel.let {
+            assertThat(it is Hidden).isTrue()
+        }
+    }
+
     private suspend fun setupViewModel(
-        domainModel: List<MediaItem>,
+        domainModel: List<MediaItem>?,
         mediaPickerSetup: MediaPickerSetup,
         hasStoragePermissions: Boolean = true,
         filter: String? = null,
@@ -466,14 +518,17 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
         whenever(mediaLoaderFactory.build(mediaPickerSetup)).thenReturn(mediaLoader)
         whenever(mediaLoader.loadMedia(any())).thenReturn(flow {
-            emit(
-                    DomainModel(
-                            domainModel,
-                            filter = filter,
-                            hasMore = hasMore
-                    )
-            )
+            if (null != domainModel) {
+                emit(
+                        DomainModel(
+                                domainModel,
+                                filter = filter,
+                                hasMore = hasMore
+                        )
+                )
+            }
         })
+
         viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
             if (it != null) {
