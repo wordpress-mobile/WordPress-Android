@@ -43,6 +43,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -74,6 +75,8 @@ private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 13
 private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 7
 private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 10
 private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 11
+private const val RECOMMENDED_BLOG_PARAM_POSITION = 0
+private const val ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION = 1
 private const val NUMBER_OF_ITEMS = 10L
 
 @InternalCoroutinesApi
@@ -149,7 +152,14 @@ class ReaderDiscoverViewModelTest {
                         anyOrNull(),
                         anyOrNull()
                 )
-        ).thenReturn(createReaderRecommendedBlogsCardUiState(createRecommendedBlogsList()))
+        ).thenAnswer {
+            createReaderRecommendedBlogsCardUiState(
+                    recommendedBlogs = it.getArgument<List<ReaderCardRecommendedBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
+                    onItemClicked = it.getArgument<(Long, Long?) -> Unit>(
+                            ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
+                    )
+            )
+        }
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
     }
@@ -445,6 +455,23 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
+    fun `When user clicks on recommended blog a blog preview is shown`() {
+        // Arrange
+        val (uiStates, navigationObserver) = init(autoUpdateFeed = false)
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Act
+        (uiStates.last() as ContentUiState).let {
+            (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
+                card.blogs[0].onItemClicked.invoke(1, null)
+            }
+        }
+
+        // Assert
+        assertThat(navigationObserver.last().peekContent()).isInstanceOf(ShowBlogPreview::class.java)
+    }
+
+    @Test
     fun `Data are refreshed when the user swipes down to refresh`() = test {
         // Arrange
         val navigaitonObserver = init()
@@ -553,7 +580,8 @@ class ReaderDiscoverViewModelTest {
             ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<ReaderCardRecommendedBlog>
+        recommendedBlogs: List<ReaderCardRecommendedBlog>,
+        onItemClicked: (Long, Long?) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(
                 blogs = recommendedBlogs.map {
@@ -564,7 +592,7 @@ class ReaderDiscoverViewModelTest {
                             description = it.description,
                             iconUrl = it.iconUrl,
                             feedId = it.feedId,
-                            onItemClicked = mock()
+                            onItemClicked = onItemClicked
                     )
                 }
         )
