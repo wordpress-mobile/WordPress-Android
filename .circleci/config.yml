@@ -231,7 +231,9 @@ jobs:
           path: Artifacts
           destination: Artifacts
   Release Build:
-    executor: android-jdk8
+    executor:
+      name: android/default
+      api-version: "28"
     environment:
       JVM_OPTS: -Xmx2048m
     steps:
