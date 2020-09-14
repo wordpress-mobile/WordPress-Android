@@ -76,6 +76,7 @@ android {
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
+        buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -102,6 +103,7 @@ android {
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "false"
             buildConfigField "boolean", "WP_STORIES_AVAILABLE", "false"
             buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
+            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         zalpha { // alpha version - enable experimental features

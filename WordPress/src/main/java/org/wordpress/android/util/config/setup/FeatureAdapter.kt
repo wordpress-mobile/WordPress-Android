@@ -1,0 +1,48 @@
+package org.wordpress.android.util.config.setup
+
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.util.config.setup.FeatureItemViewHolder.FeatureViewHolder
+import org.wordpress.android.util.config.setup.FeatureItemViewHolder.HeaderViewHolder
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Header
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
+
+class FeatureAdapter : Adapter<FeatureItemViewHolder>() {
+    private var items: List<FeatureUiItem> = listOf()
+
+    fun update(newItems: List<FeatureUiItem>) {
+        val diffResult = DiffUtil.calculateDiff(
+                FeatureBlockDiffCallback(
+                        items,
+                        newItems
+                )
+        )
+        items = newItems
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeatureItemViewHolder {
+        return when (Type.values()[viewType]) {
+            HEADER -> HeaderViewHolder(parent)
+            FEATURE -> FeatureViewHolder(parent)
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return items[position].type.ordinal
+    }
+
+    override fun getItemCount() = items.size
+
+    override fun onBindViewHolder(holder: FeatureItemViewHolder, position: Int) {
+        when (holder) {
+            is HeaderViewHolder -> holder.bind(items[position] as Header)
+            is FeatureViewHolder -> holder.bind(items[position] as Feature)
+        }
+    }
+}

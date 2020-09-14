@@ -875,6 +875,11 @@
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
 
+    <!-- Feature configuration -->
+    <string name="preference_open_feature_config">Test feature configuration</string>
+    <string name="remote_features">Remote features</string>
+    <string name="features_in_development">Features in development</string>
+
     <!-- stats -->
     <string name="stats">Stats</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
