@@ -88,9 +88,13 @@ class PostListMainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
-) : ViewModel(), LifecycleOwner, CoroutineScope {
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+) : ViewModel(), CoroutineScope {
+    private val lifecycleOwner = object : LifecycleOwner {
+        val lifecycleRegistry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle {
+            return lifecycleRegistry
+        }
+    }
 
     private val scrollToTargetPostJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -161,7 +165,7 @@ class PostListMainViewModel @Inject constructor(
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
     private val postFetcher by lazy {
-        PostFetcher(lifecycle, dispatcher)
+        PostFetcher(lifecycleOwner.lifecycle, dispatcher)
     }
 
     private val postListDialogHelper: PostListDialogHelper by lazy {
@@ -217,7 +221,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     init {
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 
     fun start(
@@ -243,7 +247,7 @@ class PostListMainViewModel @Inject constructor(
         }
 
         postListEventListenerFactory.createAndStartListening(
-                lifecycle = lifecycle,
+                lifecycle = lifecycleOwner.lifecycle,
                 dispatcher = dispatcher,
                 bgDispatcher = bgDispatcher,
                 postStore = postStore,
@@ -283,19 +287,19 @@ class PostListMainViewModel @Inject constructor(
             }
         }
 
-        lifecycleRegistry.markState(Lifecycle.State.STARTED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
         uploadStarter.queueUploadFromSite(site)
 
         editPostRepository.run {
-            postChanged.observe(this@PostListMainViewModel, Observer {
+            postChanged.observe(lifecycleOwner, Observer {
                 savePostToDbUseCase.savePostToDb(editPostRepository, site)
             })
         }
     }
 
     override fun onCleared() {
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
         super.onCleared()
     }
