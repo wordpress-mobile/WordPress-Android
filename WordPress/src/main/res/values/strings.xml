@@ -174,6 +174,7 @@
     <string name="media_encoder_quality_90">High</string>
     <string name="media_encoder_quality_95">Very High</string>
     <string name="media_encoder_quality_100">Maximum</string>
+    <string name="media_browse_for_items">Browse for items</string>
 
     <!-- Edit Media -->
     <string name="media_edit_title_text">Title</string>
@@ -2365,6 +2366,7 @@
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_camera">Camera</string>
+    <string name="permission_microphone">Microphone</string>
 
     <!-- Image Optimization promo -->
     <string name="turn_on">Turn on</string>

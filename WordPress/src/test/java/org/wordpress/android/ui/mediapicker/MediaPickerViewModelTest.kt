@@ -19,11 +19,19 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
@@ -59,6 +67,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
     private val singleSelectMediaPickerSetup = MediaPickerSetup(DEVICE, false, setOf(IMAGE), false)
     private val multiSelectMediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false)
+    private val singleSelectVideoPickerSetup = MediaPickerSetup(DEVICE, false, setOf(VIDEO), false)
+    private val multiSelectFilePickerSetup = MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT), false)
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
     private lateinit var secondItem: MediaItem
@@ -103,6 +113,22 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         assertThat(uiStates).hasSize(2)
         assertDataList(singleSelectMediaPickerSetup, selectedItems = listOf(), domainItems = listOf(firstItem))
+        assertActionModeHidden()
+    }
+
+    @Test
+    fun `adds loading item when source has more data`() = test {
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, hasMore = true)
+
+        viewModel.refreshData(false)
+
+        assertThat(uiStates).hasSize(2)
+        assertDataList(
+                singleSelectMediaPickerSetup,
+                selectedItems = listOf(),
+                domainItems = listOf(firstItem),
+                showsLoadingItem = true
+        )
         assertActionModeHidden()
     }
 
@@ -344,23 +370,141 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertSearchExpanded(query)
     }
 
+    @Test
+    fun `system picker opened for photo when allowed types is IMAGE only`() = test {
+        setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.PHOTO)
+    }
+
+    @Test
+    fun `system picker opened for video when allowed types is VIDEO only`() = test {
+        setupViewModel(listOf(), singleSelectVideoPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.VIDEO)
+    }
+
+    @Test
+    fun `system picker opened for image and video when allowed types is IMAGE and VIDEO`() = test {
+        setupViewModel(listOf(), multiSelectMediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext)
+                .isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+    }
+
+    @Test
+    fun `system picker opened for all supported files when is browser picker`() = test {
+        setupViewModel(listOf(), multiSelectFilePickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onIconClicked.observeForever {
+            it.peekContent().let { clickEvent ->
+                iconClickEvents.add(clickEvent)
+            }
+        }
+
+        viewModel.onBrowseForItems()
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
+    }
+
+    @Test
+    fun `camera FAB is shown in stories when no selected items`() = test {
+        setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), true))
+        assertStoriesFabIsVisible()
+    }
+
+    @Test
+    fun `camera FAB is not shown in stories when selected items`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
+        setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), true))
+
+        selectItem(0)
+
+        assertStoriesFabIsHidden()
+    }
+
+    @Test
+    fun `camera FAB is not shown when no stories`() = test {
+        setupViewModel(listOf(firstItem), MediaPickerSetup(DEVICE, true, setOf(IMAGE, VIDEO), false))
+
+        assertStoriesFabIsHidden()
+    }
+
     private fun selectItem(position: Int) {
-        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].toggleAction.toggle()
+        when (val item = itemOnPosition(position)) {
+            is PhotoItem -> item.toggleAction.toggle()
+            is VideoItem -> item.toggleAction.toggle()
+            is FileItem -> item.toggleAction.toggle()
+        }
     }
 
     private fun clickItem(position: Int) {
-        (uiStates.last().photoListUiModel as PhotoListUiModel.Data).items[position].clickAction.click()
+        when (val item = itemOnPosition(position)) {
+            is PhotoItem -> item.clickAction.click()
+            is VideoItem -> item.clickAction.click()
+            is FileItem -> item.clickAction.click()
+            is NextPageLoader -> item.loadAction()
+        }
     }
+
+    private fun itemOnPosition(position: Int) =
+            (uiStates.last().photoListUiModel as Data).items[position]
 
     private fun assertDataList(
         mediaPickerSetup: MediaPickerSetup,
         selectedItems: List<MediaItem>,
-        domainItems: List<MediaItem>
+        domainItems: List<MediaItem>,
+        showsLoadingItem: Boolean = false
     ) {
         uiStates.last().apply {
             assertThat(this.photoListUiModel).isNotNull()
-            (uiStates.last().photoListUiModel as PhotoListUiModel.Data).apply {
-                assertThat(this.items).hasSize(domainItems.size)
+            (uiStates.last().photoListUiModel as Data).apply {
+                if (showsLoadingItem) {
+                    assertThat(this.items).hasSize(domainItems.size + 1)
+                    assertThat(this.items.last() is NextPageLoader).isTrue()
+                } else {
+                    assertThat(this.items).hasSize(domainItems.size)
+                }
                 domainItems.forEachIndexed { index, photoPickerItem ->
                     val isSelected = selectedItems.any { it.uri == photoPickerItem.uri }
                     assertSelection(
@@ -398,11 +542,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         mediaPickerSetup: MediaPickerSetup,
         hasStoragePermissions: Boolean = true,
         filter: String? = null,
-        numberOfStates: Int = 2
+        numberOfStates: Int = 2,
+        hasMore: Boolean = false
     ) {
         whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
-        whenever(mediaLoaderFactory.build(mediaPickerSetup.dataSource)).thenReturn(mediaLoader)
-        whenever(mediaLoader.loadMedia(any())).thenReturn(flow { emit(DomainModel(domainModel, filter = filter)) })
+        whenever(mediaLoaderFactory.build(mediaPickerSetup)).thenReturn(mediaLoader)
+        whenever(mediaLoader.loadMedia(any())).thenReturn(flow {
+            emit(
+                    DomainModel(
+                            domainModel,
+                            filter = filter,
+                            hasMore = hasMore
+                    )
+            )
+        })
         viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
             if (it != null) {
@@ -417,14 +570,15 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(uiStates).hasSize(numberOfStates)
     }
 
-    private fun PhotoListUiModel.Data.assertSelection(
+    private fun Data.assertSelection(
         position: Int,
         isSelected: Boolean,
         isMultiSelection: Boolean = false,
         selectedOrder: Int,
         domainItem: MediaItem
     ) {
-        this.items[position].apply {
+        val mediaPickerItem = this.items[position]
+        mediaPickerItem.toSelectableItem()!!.apply {
             assertThat(this.isSelected).isEqualTo(isSelected)
             if (isSelected && isMultiSelection) {
                 assertThat(this.selectedOrder).isEqualTo(selectedOrder + 1)
@@ -432,19 +586,16 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 assertThat(this.selectedOrder).isNull()
             }
             assertThat(this.showOrderCounter).isEqualTo(isMultiSelection)
-            assertEqualToDomainItem(domainItem)
         }
+        mediaPickerItem.assertEqualToDomainItem(domainItem)
     }
 
     private fun MediaPickerUiItem.assertEqualToDomainItem(domainItem: MediaItem) {
-        assertThat(this.uri).isEqualTo(domainItem.uri)
         when (domainItem.type) {
-            IMAGE -> assertThat(this is MediaPickerUiItem.PhotoItem)
-            VIDEO -> assertThat(this is MediaPickerUiItem.VideoItem)
-            DOCUMENT, AUDIO -> assertThat(this is MediaPickerUiItem.FileItem)
+            IMAGE -> assertThat((this as PhotoItem).uri).isEqualTo(domainItem.uri)
+            VIDEO -> assertThat((this as VideoItem).uri).isEqualTo(domainItem.uri)
+            DOCUMENT, AUDIO -> assertThat((this as FileItem).uri).isEqualTo(domainItem.uri)
         }
-
-        assertThat(this.uri).isEqualTo(domainItem.uri)
     }
 
     private fun assertActionModeHidden() {
@@ -471,6 +622,26 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         uiStates.last().searchUiModel.let { model ->
             assertThat(model is SearchUiModel.Expanded).isTrue()
             assertThat((model as SearchUiModel.Expanded).filter).isEqualTo(filter)
+        }
+    }
+
+    private fun assertSearchHidden() {
+        uiStates.last().searchUiModel.let { model ->
+            assertThat(model is SearchUiModel.Hidden).isTrue()
+        }
+    }
+
+    private fun assertStoriesFabIsVisible() {
+        uiStates.last().fabUiModel.let { model ->
+            assertThat(model is FabUiModel).isTrue()
+            assertThat((model as FabUiModel).show).isEqualTo(true)
+        }
+    }
+
+    private fun assertStoriesFabIsHidden() {
+        uiStates.last().fabUiModel.let { model ->
+            assertThat(model is FabUiModel).isTrue()
+            assertThat((model as FabUiModel).show).isEqualTo(false)
         }
     }
 }

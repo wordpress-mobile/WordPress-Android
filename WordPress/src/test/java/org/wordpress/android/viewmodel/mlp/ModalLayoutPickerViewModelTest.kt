@@ -29,7 +29,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Unit>
+    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
 
     @Before
     fun setUp() {

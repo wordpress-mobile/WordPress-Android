@@ -14,6 +14,7 @@ import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
+import com.wordpress.stories.compose.PermanentPermissionDenialDialogProvider
 import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
@@ -55,6 +56,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
@@ -73,7 +75,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         StoryDiscardListener,
         EditPostActivityHook,
         PrepublishingEventProvider,
-        PrepublishingBottomSheetListener {
+        PrepublishingBottomSheetListener,
+        PermanentPermissionDenialDialogProvider {
     private var site: SiteModel? = null
 
     @Inject lateinit var storyEditorMedia: StoryEditorMedia
@@ -112,6 +115,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setStoryDiscardListener(this)
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
         setPrepublishingEventProvider(this)
+        setPermissionDialogProvider(this)
 
         initViewModel(savedInstanceState)
     }
@@ -408,5 +412,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         viewModel.onSubmitButtonClicked()
+    }
+
+    override fun showPermissionPermanentlyDeniedDialog(permission: String) {
+        WPPermissionUtils.showPermissionAlwaysDeniedDialog(this, permission)
     }
 }
