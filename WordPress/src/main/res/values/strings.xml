@@ -174,6 +174,7 @@
     <string name="media_encoder_quality_90">High</string>
     <string name="media_encoder_quality_95">Very High</string>
     <string name="media_encoder_quality_100">Maximum</string>
+    <string name="media_browse_for_items">Browse for items</string>
 
     <!-- Edit Media -->
     <string name="media_edit_title_text">Title</string>
