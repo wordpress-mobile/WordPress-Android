@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.mlp
 
+import org.wordpress.android.R
+
 /**
  * The layout list item
  */
@@ -9,4 +11,10 @@ data class LayoutListItemUiState(
     val preview: String,
     val selected: Boolean,
     val onItemTapped: (() -> Unit)
-)
+) {
+    val contentDescriptionResId: Int
+        get() = if (selected) R.string.mlp_selected_description else R.string.mlp_notselected_description
+
+    val selectedOverlayVisible: Boolean
+        get() = selected
+}

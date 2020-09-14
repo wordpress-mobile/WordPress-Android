@@ -665,6 +665,7 @@ class ReaderPostCardActionsHandlerTest {
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowReaderComments::class.java)
     }
+
     /** COMMENTS ACTION end **/
 
     @Test
@@ -737,12 +738,12 @@ class ReaderPostCardActionsHandlerTest {
             blogId = 1
         }
     }
-}
 
-private data class Observers(
-    val navigation: List<ReaderNavigationEvents>,
-    val snackbarMsgs: List<SnackbarMessageHolder>,
-    val preloadPost: List<PreLoadPostContent>,
-    val followStatusUpdated: List<PostFollowStatusChanged>,
-    val refreshPosts: List<Unit>
-)
+    private data class Observers(
+        val navigation: List<ReaderNavigationEvents>,
+        val snackbarMsgs: List<SnackbarMessageHolder>,
+        val preloadPost: List<PreLoadPostContent>,
+        val followStatusUpdated: List<PostFollowStatusChanged>,
+        val refreshPosts: List<Unit>
+    )
+}

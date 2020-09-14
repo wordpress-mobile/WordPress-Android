@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
+import android.content.Intent.ACTION_GET_CONTENT
+import android.content.Intent.ACTION_OPEN_DOCUMENT
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -12,7 +14,6 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -25,7 +26,10 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
@@ -33,6 +37,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequ
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -45,8 +50,72 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class MediaPickerFragment : Fragment() {
-    enum class MediaPickerIcon {
+    enum class MediaPickerIconType {
+        ANDROID_CHOOSE_FROM_DEVICE,
         WP_STORIES_CAPTURE;
+
+        companion object {
+            @JvmStatic
+            fun fromNameString(iconTypeName: String): MediaPickerIconType {
+                return values().firstOrNull { it.name == iconTypeName }
+                        ?: throw IllegalArgumentException("MediaPickerIconType not found with name $iconTypeName")
+            }
+        }
+    }
+
+    enum class ChooserContext(
+        val intentAction: String,
+        val requestCode: Int,
+        val title: UiStringRes,
+        val mediaTypeFilter: String
+    ) {
+        PHOTO(ACTION_GET_CONTENT, RequestCodes.PICTURE_LIBRARY, UiStringRes(R.string.pick_photo), "image/*"),
+        VIDEO(ACTION_GET_CONTENT, RequestCodes.VIDEO_LIBRARY, UiStringRes(R.string.pick_video), "video/*"),
+        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, RequestCodes.MEDIA_LIBRARY, UiStringRes(R.string.pick_media), "*/*"),
+        MEDIA_FILE(ACTION_OPEN_DOCUMENT, RequestCodes.FILE_LIBRARY, UiStringRes(R.string.pick_file), "*/*");
+    }
+
+    sealed class MediaPickerAction {
+        data class OpenSystemPicker(
+            val chooserContext: ChooserContext,
+            val mimeTypes: List<String>,
+            val allowMultipleSelection: Boolean
+        ) : MediaPickerAction()
+        data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
+    }
+
+    sealed class MediaPickerIcon(val type: MediaPickerIconType) {
+        data class ChooseFromAndroidDevice(
+            val allowedTypes: Set<MediaType>
+        ) : MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
+        object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
+
+        fun toBundle(bundle: Bundle) {
+            bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
+            if (this is ChooseFromAndroidDevice) {
+                bundle.putStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES, ArrayList(allowedTypes.map { it.name }))
+            }
+        }
+
+        companion object {
+            @JvmStatic
+            fun fromBundle(bundle: Bundle): MediaPickerIcon? {
+                val iconTypeName = bundle.getString(KEY_LAST_TAPPED_ICON) ?: return null
+
+                return when (iconTypeName.let { MediaPickerIconType.fromNameString(iconTypeName) }) {
+                    ANDROID_CHOOSE_FROM_DEVICE -> {
+                        val allowedTypes = (bundle.getStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES)
+                                ?: listOf<String>()).map {
+                            MediaType.valueOf(
+                                    it
+                            )
+                        }.toSet()
+                        ChooseFromAndroidDevice(allowedTypes)
+                    }
+                    WP_STORIES_CAPTURE -> WpStoriesCapture
+                }
+            }
+        }
     }
 
     /*
@@ -54,7 +123,7 @@ class MediaPickerFragment : Fragment() {
      */
     interface MediaPickerListener {
         fun onMediaChosen(uriList: List<Uri>)
-        fun onIconClicked(icon: MediaPickerIcon, allowMultipleSelection: Boolean)
+        fun onIconClicked(action: MediaPickerAction)
     }
 
     private var listener: MediaPickerListener? = null
@@ -91,8 +160,7 @@ class MediaPickerFragment : Fragment() {
         var selectedUris: List<UriWrapper>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
-            val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
-            lastTappedIcon = savedLastTappedIconName?.let { MediaPickerIcon.valueOf(it) }
+            lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
             if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
                 selectedUris = savedInstanceState.getStringArrayList(KEY_SELECTED_POSITIONS)
                         ?.map { UriWrapper(Uri.parse(it)) }
@@ -166,23 +234,8 @@ class MediaPickerFragment : Fragment() {
         })
 
         viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { (icon, allowMultipleSelection) ->
-                listener?.onIconClicked(icon, allowMultipleSelection)
-            }
-        })
-
-        viewModel.onShowPopupMenu.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { uiModel ->
-                val popup = PopupMenu(activity, uiModel.view.view)
-                for (popupMenuItem in uiModel.items) {
-                    val item = popup.menu
-                            .add(popupMenuItem.title.stringRes)
-                    item.setOnMenuItemClickListener {
-                        popupMenuItem.action()
-                        true
-                    }
-                }
-                popup.show()
+            it?.getContentIfNotHandled()?.let { (action) ->
+                listener?.onIconClicked(action)
             }
         })
 
@@ -200,21 +253,35 @@ class MediaPickerFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.menu_search, menu)
+        inflater.inflate(R.menu.menu_media_picker, menu)
 
         val searchMenuItem = checkNotNull(menu.findItem(R.id.action_search)) {
             "Menu does not contain mandatory search item"
         }
+        val browseMenuItem = checkNotNull(menu.findItem(R.id.mnu_browse_item)) {
+            "Menu does not contain mandatory browse item"
+        }
         initializeSearchView(searchMenuItem)
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             val searchView = searchMenuItem.actionView as SearchView
+
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
                 searchView.setQuery(uiState.searchUiModel.filter, true)
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.collapseActionView()
             }
+
+            searchMenuItem.isVisible = uiState.searchUiModel !is SearchUiModel.Hidden
+            browseMenuItem.isVisible = uiState.browseMenuUiModel.isVisible
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.mnu_browse_item) {
+            viewModel.onBrowseForItems()
+        }
+        return true
     }
 
     private fun initializeSearchView(actionMenuItem: MenuItem) {
@@ -306,10 +373,7 @@ class MediaPickerFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(
-                KEY_LAST_TAPPED_ICON,
-                viewModel.lastTappedIcon?.name
-        )
+        viewModel.lastTappedIcon?.toBundle(outState)
         val selectedIds = viewModel.selectedUris.value
         if (selectedIds != null && selectedIds.isNotEmpty()) {
             outState.putStringArrayList(KEY_SELECTED_POSITIONS, ArrayList(selectedIds.map { it.uri.toString() }))
@@ -379,6 +443,7 @@ class MediaPickerFragment : Fragment() {
 
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
+        private const val KEY_LAST_TAPPED_ICON_ALLOWED_TYPES = "last_tapped_icon_allowed_types"
         private const val KEY_SELECTED_POSITIONS = "selected_positions"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
