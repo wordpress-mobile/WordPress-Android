@@ -83,8 +83,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
-import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -150,9 +148,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         ReaderInterfaces.OnFollowListener,
         ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener,
-        ReblogActionListener,
-        BlockSiteActionListener {
+        WPMainActivity.OnScrollToTopListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -426,7 +422,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
                         ActivityLauncher.showSitePickerForResult(
                                 ReaderPostListFragment.this,
-                                data.getSite(),
+                                data.getPreselectedSite(),
                                 data.getMode()
                         );
                     } else if (navTarget instanceof OpenEditorForReblog) {
@@ -1887,9 +1883,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     };
 
-    private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
-
     private void announceListStateForAccessibility() {
         if (getView() != null) {
             getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
@@ -1974,13 +1967,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
-            mPostAdapter.setReblogActionListener(this);
-            mPostAdapter.setBlockSiteActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
@@ -2569,11 +2559,18 @@ public class ReaderPostListFragment extends ViewPagerFragment
             case LIKE:
                 mViewModel.onLikeButtonClicked(post, isBookmarksList());
                 break;
-            case BLOCK_SITE:
-            case BOOKMARK:
             case REBLOG:
+                mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                break;
+            case BLOCK_SITE:
+                mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
+                break;
+            case BOOKMARK:
+                mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
+                break;
             case COMMENTS:
-                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
+                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
         }
     }
 
@@ -2650,16 +2647,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    @Override
-    public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post, isBookmarksList());
-    }
-
-    @Override
-    public void blockSite(ReaderPost post) {
-        mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
     }
 
     @Override

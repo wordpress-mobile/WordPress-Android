@@ -33,7 +33,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PIC
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.test
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -69,7 +68,6 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
     fun setUp() = test {
@@ -81,7 +79,6 @@ class ReaderPostUiStateBuilderTest {
                 readerImageScannerProvider,
                 readerUtilsWrapper,
                 readerPostTagsUiStateBuilder,
-                appPrefsWrapper,
                 TEST_DISPATCHER
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")

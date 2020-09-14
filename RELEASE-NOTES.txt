@@ -3,6 +3,7 @@
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.
 * [**] Improved AppBar and Site Picker design.
 
+ 
 15.7
 -----
 * [**] Block Editor: New block: Pullquote
