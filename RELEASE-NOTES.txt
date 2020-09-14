@@ -1,7 +1,8 @@
 15.8
 -----
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.
-
+* [***] Block Editor: Full-width and wide alignment support for Group, Cover and Image block
+* [**] Block Editor: Add support for rounded style in Image block
  
 15.7
 -----
