@@ -18,6 +18,7 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var deviceListBuilder: DeviceListBuilder
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
+    private val mediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(), false)
 
     @Before
     fun setUp() {
@@ -26,17 +27,31 @@ class MediaLoaderFactoryTest {
 
     @Test
     fun `returns device list builder on DEVICE source`() {
-        val mediaLoader = mediaLoaderFactory.build(DEVICE)
+        val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup)
 
-        assertThat(mediaLoader).isEqualTo(MediaLoader(deviceListBuilder, localeManagerWrapper))
+        assertThat(mediaLoader).isEqualTo(
+                MediaLoader(
+                        deviceListBuilder,
+                        localeManagerWrapper,
+                        mediaPickerSetup.allowedTypes
+                )
+        )
     }
 
     @Test
     fun `throws exception on not implemented sources`() {
-        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy { mediaLoaderFactory.build(GIF_LIBRARY) }
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
-            mediaLoaderFactory.build(STOCK_LIBRARY)
+            mediaLoaderFactory.build(
+                    mediaPickerSetup.copy(dataSource = GIF_LIBRARY)
+            )
         }
-        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy { mediaLoaderFactory.build(WP_LIBRARY) }
+        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
+            mediaLoaderFactory.build(mediaPickerSetup.copy(dataSource = STOCK_LIBRARY))
+        }
+        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
+            mediaLoaderFactory.build(
+                    mediaPickerSetup.copy(dataSource = WP_LIBRARY)
+            )
+        }
     }
 }
