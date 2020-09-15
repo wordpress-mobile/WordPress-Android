@@ -37,7 +37,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        WPActivityUtils.setLightStatusBar(requireActivity().window, true)
         initDoneButton()
         initRetryButton()
         initViewModel()
@@ -147,11 +146,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             interests_chip_group.addView(chip)
         }
         return chip
-    }
-
-    override fun onDestroyView() {
-        WPActivityUtils.setLightStatusBar(requireActivity().window, false)
-        super.onDestroyView()
     }
 
     companion object {

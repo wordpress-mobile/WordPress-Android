@@ -157,7 +157,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
-        WPActivityUtils.setLightStatusBar(getWindow(), true);
         super.onCreate(savedInstanceState);
     }
 
