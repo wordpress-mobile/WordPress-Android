@@ -142,6 +142,8 @@ ext {
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
 
+    exoPlayerVersion = '2.11.5'
+
     // testing
     jUnitVersion = '4.12'
     androidxTestVersion = '1.1.0'
