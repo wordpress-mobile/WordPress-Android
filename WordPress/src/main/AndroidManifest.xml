@@ -588,7 +588,7 @@
             android:name=".ui.gif.GifPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
-            android:name=".util.config.setup.ManualFeatureConfigActivity"
+            android:name=".util.config.manual.ManualFeatureConfigActivity"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar" />
 

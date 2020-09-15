@@ -1,4 +1,4 @@
-package org.wordpress.android.util.config.setup
+package org.wordpress.android.util.config.manual
 
 import android.os.Bundle
 import android.view.MenuItem

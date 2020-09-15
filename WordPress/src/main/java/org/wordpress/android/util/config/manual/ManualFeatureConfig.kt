@@ -1,4 +1,4 @@
-package org.wordpress.android.util.config.setup
+package org.wordpress.android.util.config.manual
 
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.config.FeatureConfig

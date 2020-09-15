@@ -1,4 +1,4 @@
-package org.wordpress.android.util.config.setup
+package org.wordpress.android.util.config.manual
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,16 +9,16 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Button
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Header
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.ToggleAction
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
-import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Button
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Header
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.ToggleAction
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
+import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject

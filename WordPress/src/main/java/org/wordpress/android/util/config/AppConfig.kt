@@ -4,7 +4,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
-import org.wordpress.android.util.config.setup.ManualFeatureConfig
+import org.wordpress.android.util.config.manual.ManualFeatureConfig
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import javax.inject.Singleton
