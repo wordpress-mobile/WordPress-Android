@@ -227,6 +227,7 @@
             android:name=".ui.stories.StoryComposerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/WordPress.Stories.Immersive">
         </activity>
 

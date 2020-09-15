@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.app.Activity
 import android.app.PendingIntent
 import android.app.ProgressDialog
 import android.content.Intent
@@ -26,6 +27,7 @@ import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
+import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -101,6 +103,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
+        const val KEY_LAUNCHED_FROM_GUTENBERG = "key_launched_from_gutenberg"
         const val UNUSED_KEY = "unused_key"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
@@ -396,7 +399,13 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStoryDiscarded() {
-        viewModel.onStoryDiscarded()
+        val launchedFromGutenberg = intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)
+        viewModel.onStoryDiscarded(!launchedFromGutenberg)
+
+        if (launchedFromGutenberg) {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
     }
 
     private fun openPrepublishingBottomSheet() {

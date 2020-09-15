@@ -40,6 +40,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.wordpress.stories.compose.story.StoryFrameItem;
+import com.wordpress.stories.compose.story.StoryRepository;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -2999,26 +3001,53 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        // TODO here trigger the StoryCreator in the listener, figure out which media ids the
-        //  story block contains, etc.
-
-        // ActivityLauncher.addNewStoryWithMediaIdsForResult
-        // TODO we'll create a new ActivityLauncher method that passes the actual block content for the Story,
-        // after having found it and deserialized from local repository
-
-        ArrayList<Long> tmpMediaIds = new ArrayList<>();
+        ArrayList<Long> tmpMediaIdsLong = new ArrayList<>();
+        ArrayList<String> tmpMediaIdsString = new ArrayList<>();
         boolean allStorySlidesAreEditable = true;
         for (Object mediaFile : mediaFiles) {
-            long mediaId = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
+            long mediaIdLong = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
+            String mediaIdString = String.valueOf(mediaIdLong); // convert back after stripping the decimals in original Double
             if (allStorySlidesAreEditable
-                && !StoriesPrefs.isValidSlide(this, getImmutablePost().getLocalSiteId(), mediaId)) {
+                && !StoriesPrefs.isValidSlide(this, mSite.getSiteId(), mediaIdLong)) {
                 // flag this as soon as we find one media item not being really editable
                 allStorySlidesAreEditable = false;
             }
-            tmpMediaIds.add(mediaId);
+            tmpMediaIdsLong.add(mediaIdLong);
+            tmpMediaIdsString.add(mediaIdString);
         }
-        // TODO pass the allStorySlidesAreEditable boolean flag make sure to show the warning dialog
-        ActivityLauncher.editStoryWithMediaIdsForResult(this, getSite(), ListUtils.toLongArray(tmpMediaIds));
+
+        // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
+        // just build the Story object ourselves to keep these files arrangement
+        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(tmpMediaIdsString);
+        if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
+            // the StoryRepository didn' have it but we have editable serialized slides so,
+            // create a new Story from scratch with these deserialized StoryFrameItems
+            StoryRepository.loadStory(storyIndex);
+            storyIndex = StoryRepository.currentStoryIndex;
+            for (String mediaId : tmpMediaIdsString) {
+                StoryFrameItem storyFrameItem = StoriesPrefs.getSlide(this, mSite.getSiteId(), Long.parseLong(mediaId));
+                if (storyFrameItem != null) {
+                    StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
+                } else {
+                    allStorySlidesAreEditable = false;
+                    // create a new frame using the actual uploaded flattened media as a background
+                    List<MediaModel> mediaModelList = mMediaStore.getSiteMediaWithIds(mSite, tmpMediaIdsLong);
+                    for (MediaModel mediaModel : mediaModelList) {
+                        storyFrameItem = StoryFrameItem.Companion.getNewStoryFrameItemFromUri(
+                                Uri.parse(mediaModel.getUrl()),
+                                mediaModel.isVideo()
+                        );
+                        storyFrameItem.setId(String.valueOf(mediaModel.getMediaId()));
+                        StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
+                    }
+                }
+                // Story instance re-created! Load it
+                ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
+            }
+        } else {
+            // Story found! Load it
+            ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
+        }
     }
 
     // FluxC events

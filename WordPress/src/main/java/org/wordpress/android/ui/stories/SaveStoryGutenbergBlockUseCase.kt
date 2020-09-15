@@ -69,6 +69,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                     localSiteId,
                     localIdKey
             )?.let {
+                it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
                 StoriesPrefs.saveSlide(
                         WordPress.getContext(),
                         localSiteId,

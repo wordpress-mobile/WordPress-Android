@@ -186,10 +186,11 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // value with the new (probably optimized) URL and also keep track of the new id.
                 val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
                 mediaModel?.let {
+                    frame.id = it.id.toString()
                     StoriesPrefs.saveSlide(
                             appContext,
-                            mediaModel.localSiteId.toLong(),
-                            mediaModel.id.toLong(), // use the local id to save the original, will be replaced later
+                            it.localSiteId.toLong(),
+                            it.id.toLong(), // use the local id to save the original, will be replaced later
                             // with mediaModel.mediaId after uploading to the remote site
                             frame
                     )

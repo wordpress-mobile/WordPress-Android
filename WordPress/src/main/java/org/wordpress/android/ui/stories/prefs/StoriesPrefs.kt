@@ -15,12 +15,14 @@ object StoriesPrefs {
         return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" + mediaId.toString()
     }
 
-    private fun checkSlideIdExists(context: Context, siteId: Long, mediaId: Long): Boolean {
+    @JvmStatic
+    fun checkSlideIdExists(context: Context, siteId: Long, mediaId: Long): Boolean {
         val slideIdKey = buildSlideKey(siteId, mediaId)
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    private fun checkSlideOriginalBackgroundMediaExists(context: Context, siteId: Long, mediaId: Long): Boolean {
+    @JvmStatic
+    fun checkSlideOriginalBackgroundMediaExists(context: Context, siteId: Long, mediaId: Long): Boolean {
         val storyFrameItem: StoryFrameItem? = getSlide(context, siteId, mediaId)
         storyFrameItem?.let { frame ->
             // now check the background media exists or is accessible on this device
@@ -74,6 +76,7 @@ object StoriesPrefs {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(slideIdKey, null)
     }
 
+    @JvmStatic
     fun getSlide(context: Context, siteId: Long, mediaId: Long): StoryFrameItem? {
         val jsonSlide = getSlideJson(context, siteId, mediaId)
         jsonSlide?.let {
@@ -83,7 +86,6 @@ object StoriesPrefs {
 
     fun saveSlide(context: Context, siteId: Long, mediaId: Long, storyFrameItem: StoryFrameItem) {
         val slideIdKey = buildSlideKey(siteId, mediaId)
-//        storyFrameItem.id = slideIdKey
         saveSlide(context, slideIdKey, StorySerializerUtils.serializeStoryFrameItem(storyFrameItem))
     }
 
