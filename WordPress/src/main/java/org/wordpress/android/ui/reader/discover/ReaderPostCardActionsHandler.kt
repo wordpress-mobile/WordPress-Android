@@ -158,7 +158,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-
     private suspend fun handleFollowClicked(post: ReaderPost) {
         followUseCase.toggleFollow(post).collect {
             when (it) {
