@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
@@ -702,6 +703,18 @@ class ReaderPostCardActionsHandlerTest {
 
         // Assert
         assertThat(observedValues.navigation[0]).isInstanceOf(ShowBlogPreview::class.java)
+    }
+
+    @Test
+    fun `Clicking on a report this post opens internal browswer`() = test {
+        // Arrange
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.handleReportPostClicked(dummyReaderPostModel())
+
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowReportPost::class.java)
     }
 
     private fun startObserving(): Observers {

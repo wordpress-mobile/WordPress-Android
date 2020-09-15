@@ -147,6 +147,18 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
+    suspend fun handleReportPostClicked(post: ReaderPost) {
+        withContext(bgDispatcher) {
+            val properties: MutableMap<String, Any> = HashMap()
+            properties["blog_id"] = post.blogId
+            properties["is_jetpack"] = post.isJetpack
+            properties["post_id"] = post.postId
+            analyticsTrackerWrapper.track(READER_POST_REPORTED, properties)
+            _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
+        }
+    }
+
+
     private suspend fun handleFollowClicked(post: ReaderPost) {
         followUseCase.toggleFollow(post).collect {
             when (it) {
@@ -321,15 +333,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleCommentsClicked(postId: Long, blogId: Long) {
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
-    }
-
-    private fun handleReportPostClicked(post: ReaderPost) {
-        val properties: MutableMap<String, Any> = HashMap()
-        properties["blog_id"] = post.blogId
-        properties["is_jetpack"] = post.isJetpack
-        properties["post_id"] = post.postId
-        analyticsTrackerWrapper.track(READER_POST_REPORTED, properties)
-        _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
     }
 
     private fun prepareEnableNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
