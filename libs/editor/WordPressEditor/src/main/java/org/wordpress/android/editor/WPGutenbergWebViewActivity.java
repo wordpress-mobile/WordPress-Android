@@ -13,6 +13,8 @@ import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergWebViewActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 
 public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     public static final String ENCODING_UTF8 = "UTF-8";
@@ -20,6 +22,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     public static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
 
+    public static final String ARG_USER_ID = "authenticated_user_id";
     public static final String ARG_BLOCK_ID = "block_id";
     public static final String ARG_BLOCK_NAME = "block_name";
     public static final String ARG_BLOCK_CONTENT = "block_content";
@@ -136,6 +139,18 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     }
 
     @Override
+    protected List<String> getOnGutenbergReadyExternalSources() {
+        String file = getFileContentFromAssets("unsupported-block-editor/remove-nux.js");
+        return Arrays.asList(file);
+    }
+
+    @Override protected List<String> getOnPageLoadExternalSources() {
+        long userId = getIntent().getExtras().getLong(ARG_USER_ID, 0);
+        String file = getFileContentFromAssets("unsupported-block-editor/extra-localstorage-entries.js")
+                .replace("%@", Long.toString(userId));
+        return Arrays.asList(file);
+    }
+
     protected boolean isUrlOverridden(WebView view, String url) {
         if (mIsJetpackSsoEnabled) {
             if (!mIsJetpackSsoRedirected) {
