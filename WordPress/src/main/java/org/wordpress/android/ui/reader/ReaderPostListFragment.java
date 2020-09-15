@@ -140,7 +140,9 @@ import java.util.Stack;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTED;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
 
 import kotlin.Unit;
 
@@ -2551,6 +2553,18 @@ public class ReaderPostListFragment extends Fragment
                 break;
             case COMMENTS:
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
+            case REPORT_POST:
+                HashMap<String, Object> properties = new HashMap();
+                properties.put("blog_id", post.blogId);
+                properties.put("is_jetpack", post.isJetpack);
+                properties.put("post_id", post.postId);
+                AnalyticsTracker.track(READER_POST_REPORTED, properties);
+                ReaderActivityLauncher.openUrl(
+                        getContext(),
+                        ReaderUtils.getReportPostUrl(post.getUrl()),
+                        INTERNAL
+                );
                 break;
         }
     }

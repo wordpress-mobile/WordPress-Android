@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -38,6 +40,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENT
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
@@ -62,6 +65,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.widgets.AppRatingDialogWrapper
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -115,6 +119,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
                 REBLOG -> handleReblogClicked(post)
                 COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+                REPORT_POST -> handleReportPostClicked(post)
             }
         }
     }
@@ -316,6 +321,15 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleCommentsClicked(postId: Long, blogId: Long) {
         _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
+    }
+
+    private fun handleReportPostClicked(post: ReaderPost) {
+        val properties: MutableMap<String, Any> = HashMap()
+        properties["blog_id"] = post.blogId
+        properties["is_jetpack"] = post.isJetpack
+        properties["post_id"] = post.postId
+        analyticsTrackerWrapper.track(READER_POST_REPORTED, properties)
+        _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
     }
 
     private fun prepareEnableNotificationSnackbarAction(blogName: String?, blogId: Long): () -> Unit {
