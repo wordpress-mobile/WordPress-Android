@@ -83,8 +83,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
-import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -151,9 +149,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener,
-        ReblogActionListener,
-        BlockSiteActionListener {
+        WPMainActivity.OnScrollToTopListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -427,7 +423,7 @@ public class ReaderPostListFragment extends Fragment
                         ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
                         ActivityLauncher.showSitePickerForResult(
                                 ReaderPostListFragment.this,
-                                data.getSite(),
+                                data.getPreselectedSite(),
                                 data.getMode()
                         );
                     } else if (navTarget instanceof OpenEditorForReblog) {
@@ -442,9 +438,6 @@ public class ReaderPostListFragment extends Fragment
                         ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                     } else if (navTarget instanceof ShowBookmarkedTab) {
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                        if (requireActivity() instanceof WPMainActivity) {
-                            requireActivity().overridePendingTransition(0, 0);
-                        }
                     } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
                         showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
                     } else {
@@ -712,15 +705,6 @@ public class ReaderPostListFragment extends Fragment
 
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 return;
-            }
-            ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-            ReaderTag readerTag = AppPrefs.getReaderTag();
-
-            if (discoverTag != null && discoverTag.equals(readerTag)) {
-                setCurrentTag(readerTag);
-                updateCurrentTag();
-            } else if (discoverTag == null) {
-                AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
             }
         }
 
@@ -1036,17 +1020,6 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
-                if (mIsTopLevel) {
-                    if (AppPrefs.getReaderTag() == null) {
-                        ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                        String discoverLabel = requireActivity().getString(R.string.reader_discover_display_name);
-
-                        if (discoverTag != null && discoverTag.getTagDisplayName().equals(discoverLabel)) {
-                            setCurrentTag(discoverTag);
-                        }
-                    }
-                }
-
                 if (hasCurrentTag()) {
                     ReaderTag defaultTag;
 
@@ -1898,9 +1871,6 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
-
     private void announceListStateForAccessibility() {
         if (getView() != null) {
             getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
@@ -1985,13 +1955,10 @@ public class ReaderPostListFragment extends Fragment
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
-            mPostAdapter.setReblogActionListener(this);
-            mPostAdapter.setBlockSiteActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
@@ -2539,9 +2506,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         AnalyticsTracker.Stat stat;
-        if (tag.isDiscover()) {
-            stat = AnalyticsTracker.Stat.READER_DISCOVER_VIEWED;
-        } else if (tag.isTagTopic()) {
+        if (tag.isTagTopic()) {
             stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
@@ -2572,12 +2537,21 @@ public class ReaderPostListFragment extends Fragment
                 AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
                 ReaderActivityLauncher.openPost(getContext(), post);
                 break;
-            case BLOCK_SITE:
-            case BOOKMARK:
             case LIKE:
+                mViewModel.onLikeButtonClicked(post, isBookmarksList());
+                break;
             case REBLOG:
+                mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                break;
+            case BLOCK_SITE:
+                mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
+                break;
+            case BOOKMARK:
+                mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
+                break;
             case COMMENTS:
-                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
+                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
         }
     }
 
@@ -2654,16 +2628,6 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    @Override
-    public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post, isBookmarksList());
-    }
-
-    @Override
-    public void blockSite(ReaderPost post) {
-        mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
     }
 
     @Override

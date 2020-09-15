@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -28,18 +27,14 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
-import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
@@ -99,11 +94,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
-    private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
-    private ReblogActionListener mReblogActionListener;
-    private BlockSiteActionListener mBlockSiteActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -295,8 +287,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                AppPrefs.isReaderImprovementsPhase2Enabled() || mAccountStore.hasAccessToken()
+                isFollowButtonEnabled
             )
         );
         tagHolder.onBind(uiState);
@@ -323,13 +314,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         boolean success;
+        boolean isLoggedIn = mAccountStore.hasAccessToken();
         if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener, mAccountStore.hasAccessToken());
+            success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
         } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
         }
 
-        if (success) {
+        if (isLoggedIn && success) {
             renderTagHeader(currentTag, tagHolder, false);
         }
     }
@@ -366,8 +358,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void undoPostUnbookmarked(final ReaderPost post, final int position) {
         if (!post.isBookmarked) {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
+            mOnPostListItemButtonListener.onButtonClicked(post, ReaderPostCardActionType.BOOKMARK);
         }
     }
 
@@ -380,32 +371,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context ctx = holder.getViewContext();
         Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
                 (postId, blogId, type) -> {
-                    //noinspection EnumSwitchStatementWhichMissesCases
-                    switch (type) {
-                        case BOOKMARK:
-                            toggleBookmark(post.blogId, post.postId);
-                            renderPost(position, holder, false);
-                            break;
-                        case LIKE:
-                            toggleLike(ctx, post, position, holder);
-                            break;
-                        case REBLOG:
-                            mReblogActionListener.reblog(post);
-                            break;
-                        case COMMENTS:
-                            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
-                            break;
-                        case BLOCK_SITE:
-                            mBlockSiteActionListener.blockSite(post);
-                            break;
-                        case FOLLOW:
-                        case SITE_NOTIFICATIONS:
-                        case SHARE:
-                        case VISIT_SITE:
-                            mOnPostListItemButtonListener.onButtonClicked(post, type);
-                            renderPost(position, holder, false);
-                            break;
-                    }
+                    mOnPostListItemButtonListener.onButtonClicked(post, type);
+                    renderPost(position, holder, false);
                     return Unit.INSTANCE;
                 };
         Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
@@ -554,24 +521,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mFollowListener = listener;
     }
 
-    public void setReblogActionListener(ReblogActionListener reblogActionListener) {
-        mReblogActionListener = reblogActionListener;
-    }
-
-    public void setBlockSiteActionListener(BlockSiteActionListener blockSiteActionListener) {
-        mBlockSiteActionListener = blockSiteActionListener;
-    }
-
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
         mPostSelectedListener = listener;
     }
 
     public void setOnDataLoadedListener(ReaderInterfaces.DataLoadedListener listener) {
         mDataLoadedListener = listener;
-    }
-
-    public void setOnPostBookmarkedListener(ReaderInterfaces.OnPostBookmarkedListener listener) {
-        mOnPostBookmarkedListener = listener;
     }
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
@@ -729,57 +684,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
-    }
-
-    /*
-     * triggered when user taps the like button (textView)
-     */
-    private void toggleLike(Context context, ReaderPost post, int listPosition, ReaderPostViewHolder holder) {
-        if (post == null || !NetworkUtils.checkConnection(context)) {
-            return;
-        }
-
-        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
-        boolean isAskingToLike = !isCurrentlyLiked;
-
-        if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_LIKED, post);
-            // Consider a like to be enough to push a page view - solves a long-standing question
-            // from folks who ask 'why do I have more likes than page views?'.
-            ReaderPostActions.bumpPageViewForPost(mSiteStore, post);
-        } else {
-            AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED, post);
-        }
-
-        // update post in array and on screen
-        int positionInReaderPostList = mPosts.indexOfPost(post);
-        ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
-        if (updatedPost != null && positionInReaderPostList > -1) {
-            mPosts.set(positionInReaderPostList, updatedPost);
-            renderPost(listPosition, holder, false);
-        }
-    }
-
-    /*
-     * triggered when user taps the bookmark post button
-     */
-    private void toggleBookmark(final long blogId, final long postId) {
-        // update post in array and on screen
-        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
-        int position = mPosts.indexOfPost(post);
-        if (post != null && position > -1) {
-            post.isBookmarked = !post.isBookmarked;
-            mPosts.set(position, post);
-        }
-
-        if (mOnPostBookmarkedListener != null) {
-            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
-        }
     }
 
     public void setFollowStatusForBlog(long blogId, boolean isFollowing) {

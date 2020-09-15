@@ -18,7 +18,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -132,8 +131,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         })
 
         viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
-            selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
-                view_pager.setCurrentItem(tabPosition, false)
+            selectTabAction.getContentIfNotHandled()?.let { navTarget ->
+                view_pager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
             }
         })
 
@@ -167,11 +166,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         }.attach()
     }
 
+    fun requestBookmarkTab() {
+        viewModel.bookmarkTabRequested()
+    }
+
     private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
         override fun getItemCount(): Int = tags.size
 
         override fun createFragment(position: Int): Fragment {
-            return if (AppPrefs.isReaderImprovementsPhase2Enabled() && tags[position].isDiscover) {
+            return if (tags[position].isDiscover) {
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)

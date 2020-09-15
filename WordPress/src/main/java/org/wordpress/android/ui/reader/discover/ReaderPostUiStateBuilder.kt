@@ -17,7 +17,6 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PIC
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
@@ -56,7 +55,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun mapPostToUiState(
@@ -202,7 +200,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     ?.let { post.featuredVideo }
 
     private fun buildExpandedTagsViewVisibility(post: ReaderPost, isDiscover: Boolean) =
-            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty() && isDiscover
+            post.tags.isNotEmpty() && isDiscover
 
     private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
             readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)

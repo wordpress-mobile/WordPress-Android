@@ -101,6 +101,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -114,7 +115,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -169,6 +169,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_MY_SITE = "show_my_site";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
+    public static final String ARG_READER_BOOKMARK_TAB = "show_reader_bookmark_tab";
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
     public static final String ARG_STATS = "show_stats";
@@ -564,8 +565,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.start(
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
                 mSelectedSite);
-
-        mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
 
     private @Nullable String getAuthToken() {
@@ -597,7 +596,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
                 case ARG_READER:
-                    mBottomNav.setCurrentSelectedPage(PageType.READER);
+                    if (intent.getBooleanExtra(ARG_READER_BOOKMARK_TAB, false) && mBottomNav
+                            .getActiveFragment() instanceof ReaderFragment) {
+                        ((ReaderFragment) mBottomNav.getActiveFragment()).requestBookmarkTab();
+                    } else {
+                        mBottomNav.setCurrentSelectedPage(PageType.READER);
+                    }
                     break;
                 case ARG_EDITOR:
                     if (mSelectedSite == null) {

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -13,19 +14,13 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.Event
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -36,7 +31,6 @@ class ReaderPostBookmarkUseCaseTest {
     lateinit var useCase: ReaderPostBookmarkUseCase
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
     @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
 
@@ -44,9 +38,7 @@ class ReaderPostBookmarkUseCaseTest {
     fun setup() {
         useCase = ReaderPostBookmarkUseCase(
                 analyticsTrackerWrapper,
-                TEST_DISPATCHER,
                 networkUtilsWrapper,
-                appPrefsWrapper,
                 readerPostActionsWrapper,
                 readerPostTableWrapper
         )
@@ -57,7 +49,7 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         val dummyPost = init(isBookmarked = false)
         // Act
-        useCase.toggleBookmark(0L, 0L, false)
+        useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
 
         // Assert
         verify(readerPostActionsWrapper).addToBookmarked(dummyPost)
@@ -68,7 +60,7 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         val dummyPost = init(isBookmarked = true)
         // Act
-        useCase.toggleBookmark(0L, 0L, false)
+        useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
 
         // Assert
         verify(readerPostActionsWrapper).removeFromBookmarked(dummyPost)
@@ -79,15 +71,11 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         init(isBookmarked = false, networkAvailable = true)
 
-        var observedValue: Event<PreLoadPostContent>? = null
-        useCase.preloadPostEvents.observeForever {
-            observedValue = it
-        }
         // Act
-        useCase.toggleBookmark(0L, 0L, false)
+        val result = useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
 
         // Assert
-        assertThat(observedValue).isNotNull
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isTrue()
     }
 
     @Test
@@ -95,15 +83,11 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         init(isBookmarked = false, networkAvailable = false)
 
-        var observedValue: Event<PreLoadPostContent>? = null
-        useCase.preloadPostEvents.observeForever {
-            observedValue = it
-        }
         // Act
-        useCase.toggleBookmark(0L, 0L, false)
+        val result = useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
 
         // Assert
-        assertThat(observedValue).isNull()
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse()
     }
 
     @Test
@@ -111,98 +95,23 @@ class ReaderPostBookmarkUseCaseTest {
         // Arrange
         init(isBookmarked = true)
 
-        var observedValue: Event<PreLoadPostContent>? = null
-        useCase.preloadPostEvents.observeForever {
-            observedValue = it
-        }
         // Act
-        useCase.toggleBookmark(0L, 0L, false)
+        val result = useCase.toggleBookmark(0L, 0L, false).toList(mutableListOf())
 
         // Assert
-        assertThat(observedValue).isNull()
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse()
     }
 
     @Test
     fun `does not initiate content preload when on bookmarkList(savedTab)`() = test {
         // Arrange
         init()
-        var observedValue: Event<PreLoadPostContent>? = null
-        useCase.preloadPostEvents.observeForever {
-            observedValue = it
-        }
+        val isBookmarkList = true
         // Act
-        useCase.toggleBookmark(0L, 0L, true)
+        val result = useCase.toggleBookmark(0L, 0L, isBookmarkList).toList(mutableListOf())
 
         // Assert
-        assertThat(observedValue).isNull()
-    }
-
-    @Test
-    fun `shows dialog when shouldShow returns true`() = test {
-        // Arrange
-        init()
-        whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(true)
-        var observedValue: Event<ReaderNavigationEvents>? = null
-        useCase.navigationEvents.observeForever {
-            observedValue = it
-        }
-        // Act
-        useCase.toggleBookmark(0L, 0L, false)
-
-        // Assert
-        assertThat(observedValue!!.peekContent()).isInstanceOf(ShowBookmarkedSavedOnlyLocallyDialog::class.java)
-    }
-
-    @Test
-    fun `don't show dialog when shouldShow returns false`() = test {
-        // Arrange
-        init()
-        whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
-        var observedValue: Event<ReaderNavigationEvents>? = null
-        useCase.navigationEvents.observeForever {
-            observedValue = it
-        }
-        // Act
-        useCase.toggleBookmark(0L, 0L, false)
-
-        // Assert
-        assertThat(observedValue).isNull()
-    }
-
-    @Test
-    fun `shows snackbar on bookmark action`() = test {
-        // Arrange
-        init()
-        var observedValue: Event<SnackbarMessageHolder>? = null
-        useCase.snackbarEvents.observeForever {
-            observedValue = it
-        }
-        // Act
-        useCase.toggleBookmark(0L, 0L, false)
-
-        // Assert
-        assertThat(observedValue!!.peekContent()).isNotNull
-    }
-
-    @Test
-    fun `navigates to bookmark tab on snackbar action clicked`() = test {
-        // Arrange
-        init()
-        var snackbarEvent: Event<SnackbarMessageHolder>? = null
-        useCase.snackbarEvents.observeForever {
-            snackbarEvent = it
-        }
-
-        var observedValue: Event<ReaderNavigationEvents>? = null
-        useCase.navigationEvents.observeForever {
-            observedValue = it
-        }
-        // Act
-        useCase.toggleBookmark(0L, 0L, false)
-        snackbarEvent!!.peekContent().buttonAction.invoke()
-
-        // Assert
-        assertThat(observedValue!!.peekContent()).isEqualTo(ShowBookmarkedTab)
+        assertThat(result.contains(PreLoadPostContent(0L, 0L))).isFalse()
     }
 
     private fun init(isBookmarked: Boolean = false, networkAvailable: Boolean = true): ReaderPost {
@@ -210,7 +119,6 @@ class ReaderPostBookmarkUseCaseTest {
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean()))
                 .thenReturn(post)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(networkAvailable)
-        whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         return post
     }
 }
