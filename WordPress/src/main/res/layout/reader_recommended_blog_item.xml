@@ -6,19 +6,6 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/site_follow_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/reader_btn_follow"
-        android:padding="@dimen/margin_extra_large"
-        android:src="@drawable/btn_follow_site"
-        android:tint="@color/secondary_gray_20_selector"
-        app:layout_constraintBottom_toBottomOf="@id/site_url"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/site_name" />
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/site_icon"
         style="@style/ReaderImageView.Avatar"
@@ -101,5 +88,17 @@
         app:layout_constraintStart_toStartOf="@id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/site_icon"
         tools:text="@tools:sample/lorem/random" />
+
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/site_follow_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/reader_btn_follow"
+        android:padding="@dimen/margin_extra_large"
+        app:iconTint="@color/secondary_gray_20_selector"
+        app:layout_constraintBottom_toBottomOf="@id/site_url"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/site_name"
+        app:wpShowFollowButtonCaption="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

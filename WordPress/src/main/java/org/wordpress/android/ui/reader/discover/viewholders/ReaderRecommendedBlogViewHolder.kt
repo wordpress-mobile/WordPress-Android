@@ -27,7 +27,7 @@ class ReaderRecommendedBlogViewHolder(
                 setVisible(isDescriptionVisible)
             }
             site_follow_icon.apply {
-                isSelected = isFollowed
+                setIsFollowed(isFollowed)
                 contentDescription = context.getString(followContentDescription.stringRes)
                 setOnClickListener {
                     onFollowClicked(blogId, feedId, !isFollowed)
