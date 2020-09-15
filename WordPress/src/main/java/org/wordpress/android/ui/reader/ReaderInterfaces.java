@@ -15,20 +15,6 @@ public class ReaderInterfaces {
     }
 
     /*
-     * Called by the [ReaderPostAdapter] to trigger the reblog action
-     */
-    public interface ReblogActionListener {
-        void reblog(ReaderPost post);
-    }
-
-    /*
-     * Called by the [ReaderPostAdapter] to trigger the block site action
-     */
-    public interface BlockSiteActionListener {
-        void blockSite(ReaderPost post);
-    }
-
-    /*
      * called from post detail fragment so toolbar can animate in/out when scrolling
      */
     public interface AutoHideToolbarListener {
@@ -58,12 +44,5 @@ public class ReaderInterfaces {
      */
     public interface OnPostListItemButtonListener {
         void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType);
-    }
-
-    /*
-     * used by adapters to notify when post bookmarked state has changed
-     */
-    public interface OnPostBookmarkedListener {
-        void onBookmarkClicked(long blogId, long postId);
     }
 }

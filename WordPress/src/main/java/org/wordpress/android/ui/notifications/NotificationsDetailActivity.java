@@ -17,6 +17,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -35,6 +37,7 @@ import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -48,6 +51,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.stats.StatsViewType;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -69,7 +73,7 @@ import static org.wordpress.android.ui.notifications.services.NotificationsUpdat
 
 public class NotificationsDetailActivity extends LocaleAwareActivity implements
         CommentActions.OnNoteCommentActionListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+        BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
 
@@ -83,6 +87,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private WPViewPager mViewPager;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
+    private AppBarLayout mAppBarLayout;
 
     @Override
     public void onBackPressed() {
@@ -106,6 +111,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
+
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -489,11 +496,16 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
     }
 
+    @Override
+    public void onScrollableViewInitialized(int containerId) {
+        AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, containerId);
+    }
+
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Note> mNoteList;
 
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mNoteList = (ArrayList<Note>) notes.clone();
         }
 

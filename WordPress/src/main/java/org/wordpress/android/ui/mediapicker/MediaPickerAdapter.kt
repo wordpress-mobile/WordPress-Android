@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.COUNT_CHANGE
 import org.wordpress.android.ui.mediapicker.MediaPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
+import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.Type
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
@@ -32,6 +33,7 @@ class MediaPickerAdapter internal constructor(imageManager: ImageManager) : Adap
             Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils)
             Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils)
             Type.FILE.ordinal -> FileThumbnailViewHolder(parent, thumbnailViewUtils)
+            Type.NEXT_PAGE_LOADER.ordinal -> LoaderViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }
@@ -60,6 +62,7 @@ class MediaPickerAdapter internal constructor(imageManager: ImageManager) : Adap
             is PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(item, animateSelection, updateCount)
             is VideoItem -> (holder as VideoThumbnailViewHolder).bind(item, animateSelection, updateCount)
             is FileItem -> (holder as FileThumbnailViewHolder).bind(item, animateSelection, updateCount)
+            is NextPageLoader -> (holder as LoaderViewHolder).bind(item)
         }
     }
 

@@ -7,6 +7,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -25,6 +27,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
 public class ReaderUserListActivity extends LocaleAwareActivity {
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
+    private AppBarLayout mAppBarLayout;
     private int mRestorePosition;
 
     @Override
@@ -60,6 +63,8 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
         mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
+        mAppBarLayout = findViewById(R.id.appbar_main);
+
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
         long commentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
@@ -83,6 +88,7 @@ public class ReaderUserListActivity extends LocaleAwareActivity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isEmpty && mRestorePosition > 0) {
                         mRecyclerView.scrollToPosition(mRestorePosition);
+                        mAppBarLayout.post(mAppBarLayout::requestLayout);
                     }
                     mRestorePosition = 0;
                 }

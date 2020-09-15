@@ -15,6 +15,5 @@
     <TextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerHeader"
-        android:text="@string/mlp_choose_layout_title"
-        android:visibility="gone" />
+        android:text="@string/mlp_choose_layout_title" />
 </FrameLayout>
