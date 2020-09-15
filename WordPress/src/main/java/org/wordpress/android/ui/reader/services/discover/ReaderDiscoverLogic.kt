@@ -18,12 +18,14 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_POST
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_TYPE
 import org.wordpress.android.ui.reader.ReaderConstants.POST_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_PSEUDO_ID
@@ -157,6 +159,12 @@ class ReaderDiscoverLogic(
                     val post = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
                     cards.add(ReaderPostCard(post))
                 }
+                JSON_CARD_RECOMMENDED_BLOGS -> {
+                    cardJson?.let {
+                        val recommendedBlogs = parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(it)
+                        cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
+                    }
+                }
             }
         }
         return cards
@@ -180,6 +188,12 @@ class ReaderDiscoverLogic(
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
+                JSON_CARD_RECOMMENDED_BLOGS -> {
+                    val recommendedBlogsCardJson = cardJson.optJSONArray(JSON_CARD_DATA)
+                    if (recommendedBlogsCardJson.length() > 0) {
+                        simplifiedJson.put(index++, cardJson)
+                    }
+                }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
                     simplifiedJson.put(index++, cardJson)
                 }

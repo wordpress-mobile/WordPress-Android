@@ -76,6 +76,22 @@ sealed class ReaderCardUiState {
             val onClicked: ((String) -> Unit)
         )
     }
+
+    data class ReaderRecommendedBlogsCardUiState(
+        val blogs: List<ReaderRecommendedBlogUiState>
+    ) : ReaderCardUiState() {
+        data class ReaderRecommendedBlogUiState(
+            val name: String,
+            val url: String,
+            val blogId: Long,
+            val feedId: Long?,
+            val description: String,
+            val iconUrl: String?,
+            val onItemClicked: (Long, Long?) -> Unit
+        ) {
+            val isDescriptionVisible: Boolean = description.isNotEmpty()
+        }
+    }
 }
 
 sealed class ReaderPostCardAction {

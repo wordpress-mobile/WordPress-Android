@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeB
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
@@ -148,13 +150,13 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
-        return posts.cards.map {
-            when (it) {
+        return posts.cards.map { card ->
+            when (card) {
                 is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                        titleRes = R.string.reader_welcome_banner
+                        titleRes = string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
-                        post = it.post,
+                        post = card.post,
                         isDiscover = true,
                         photonWidth = photonWidth,
                         photonHeight = photonHeight,
@@ -172,8 +174,14 @@ class ReaderDiscoverViewModel @Inject constructor(
                 )
                 is InterestsYouMayLikeCard -> {
                     postUiStateBuilder.mapTagListToReaderInterestUiState(
-                            it.interests,
+                            card.interests,
                             this@ReaderDiscoverViewModel::onReaderTagClicked
+                    )
+                }
+                is ReaderRecommendedBlogsCard -> {
+                    postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                            recommendedBlogs = card.blogs,
+                            onItemClicked = this@ReaderDiscoverViewModel::onRecommendedBlogItemClicked
                     )
                 }
             }
@@ -279,6 +287,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                 readerPostCardActionsHandler.handleOnItemClicked(it)
             }
         }
+    }
+
+    private fun onRecommendedBlogItemClicked(blogId: Long, feedId: Long?) {
+        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId ?: 0)))
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {
