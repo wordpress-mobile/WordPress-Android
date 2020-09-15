@@ -247,7 +247,6 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNull()
     }
 
-
     private fun init(
         isFollowed: Boolean = false,
         isNotificationsEnabled: Boolean = false,
