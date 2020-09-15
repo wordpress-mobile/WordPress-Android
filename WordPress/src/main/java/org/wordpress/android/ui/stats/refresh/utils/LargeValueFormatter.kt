@@ -2,8 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
-import com.github.mikephil.charting.formatter.IValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ViewPortHandler
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -14,7 +13,7 @@ import kotlin.math.round
  * This class is based on the {@link com.github.mikephil.charting.formatter.LargeValueFormatter} and fixes the issue
  * with Locale other than US (in some languages is the DecimalFormat different).
  */
-class LargeValueFormatter : IValueFormatter, IAxisValueFormatter {
+class LargeValueFormatter : ValueFormatter() {
     private var mSuffix = arrayOf("", "k", "m", "b", "t")
     private var mMaxLength = 5
     private val mFormat: DecimalFormat = DecimalFormat("###E00", DecimalFormatSymbols(Locale.US))
@@ -28,7 +27,7 @@ class LargeValueFormatter : IValueFormatter, IAxisValueFormatter {
         return makePretty(round(value).toDouble())
     }
 
-    override fun getFormattedValue(value: Float, axis: AxisBase): String {
+    override fun getFormattedValue(value: Float): String {
         return makePretty(round(value).toDouble())
     }
 
