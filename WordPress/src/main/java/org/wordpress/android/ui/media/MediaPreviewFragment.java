@@ -13,11 +13,12 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.exoplayer2.ui.PlayerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -66,7 +67,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private SiteModel mSite;
 
     private ImageView mImageView;
-    private VideoView mVideoView;
+    private PlayerView mExoPlayerView;
     private ViewGroup mVideoFrame;
     private ViewGroup mAudioFrame;
 
@@ -151,7 +152,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         View view = inflater.inflate(R.layout.media_preview_fragment, container, false);
 
         mImageView = view.findViewById(R.id.image_preview);
-        mVideoView = view.findViewById(R.id.video_preview);
+        mExoPlayerView = view.findViewById(R.id.video_preview);
 
         mVideoFrame = view.findViewById(R.id.frame_video);
         mAudioFrame = view.findViewById(R.id.frame_audio);
@@ -228,10 +229,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             mAudioPlayer.release();
             mAudioPlayer = null;
         }
-        if (mVideoView.isPlaying()) {
-            mVideoView.stopPlayback();
-            mVideoView.setMediaController(null);
-        }
+        /*if (mExoPlayerView.isPlaying()) {
+            mExoPlayerView.stopPlayback();
+            mExoPlayerView.setMediaController(null);
+        }*/
         super.onDestroy();
     }
 
@@ -240,7 +241,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         super.onSaveInstanceState(outState);
 
         if (mIsVideo) {
-            outState.putInt(ARG_POSITION, mVideoView.getCurrentPosition());
+//            outState.putInt(ARG_POSITION, mExoPlayerView.getCurrentPosition());
         } else if (mIsAudio && mAudioPlayer != null) {
             outState.putInt(ARG_POSITION, mAudioPlayer.getCurrentPosition());
         }
@@ -254,10 +255,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             mPosition = mAudioPlayer.getCurrentPosition();
             mAudioPlayer.pause();
         }
-        if (mVideoView.isPlaying()) {
-            mPosition = mVideoView.getCurrentPosition();
-            mVideoView.pause();
-        }
+        /*if (mExoPlayerView.isPlaying()) {
+            mPosition = mExoPlayerView.getCurrentPosition();
+            mExoPlayerView.pause();
+        }*/
     }
 
     void setOnMediaTappedListener(OnMediaTappedListener listener) {
@@ -333,7 +334,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         mControls = new MediaController(getActivity());
         if (mIsVideo) {
             mControls.setAnchorView(mVideoFrame);
-            mControls.setMediaPlayer(mVideoView);
+//            mControls.setMediaPlayer(mExoPlayerView);
         } else if (mIsAudio) {
             mControls.setAnchorView(mAudioFrame);
             mControls.setMediaPlayer(this);
@@ -341,7 +342,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     private void playVideo(@NonNull String mediaUri, final int position) {
-        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+        /*mExoPlayerView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 return false;
@@ -349,7 +350,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         });
 
         showProgress(true);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mExoPlayerView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 if (isAdded()) {
@@ -364,11 +365,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     mControls.show();
                 }
             }
-        });
+        });*/
 
         initControls();
-        mVideoView.setVideoURI(Uri.parse(mediaUri), mAuthenticationUtils.getAuthHeaders(mediaUri));
-        mVideoView.requestFocus();
+//        mExoPlayerView.setVideoURI(Uri.parse(mediaUri), mAuthenticationUtils.getAuthHeaders(mediaUri));
+        mExoPlayerView.requestFocus();
     }
 
     private void playAudio(@NonNull String mediaUri, final int position) {
