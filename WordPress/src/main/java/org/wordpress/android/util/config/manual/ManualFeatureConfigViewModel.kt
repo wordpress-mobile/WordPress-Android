@@ -87,7 +87,7 @@ class ManualFeatureConfigViewModel
                 }
             }
             if (value != null) {
-                Feature(key, value, ToggleAction(key, value, this::toggleFeature))
+                Feature(key, value, ToggleAction(key, !value, this::toggleFeature))
             } else {
                 null
             }
