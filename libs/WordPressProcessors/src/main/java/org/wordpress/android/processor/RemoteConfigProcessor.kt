@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
 import org.wordpress.android.annotation.Experiment
 import org.wordpress.android.annotation.Feature
+import org.wordpress.android.annotation.FeatureInDevelopment
 import java.io.File
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
@@ -20,7 +21,8 @@ import javax.tools.Diagnostic.Kind
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
 @SupportedAnnotationTypes(
         "org.wordpress.android.annotation.Experiment",
-        "org.wordpress.android.annotation.Feature"
+        "org.wordpress.android.annotation.Feature",
+        "org.wordpress.android.annotation.FeatureInDevelopment"
 )
 class RemoteConfigProcessor : AbstractProcessor() {
     override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
@@ -34,9 +36,14 @@ class RemoteConfigProcessor : AbstractProcessor() {
             remoteFeatureNames.add(element.asType().asTypeName())
             annotation.remoteField to annotation.defaultValue.toString()
         } ?: listOf()
+        val featuresInDevelopment = roundEnvironment?.getElementsAnnotatedWith(FeatureInDevelopment::class.java)
+                ?.map { element ->
+                    element.asType().toString()
+                } ?: listOf()
         return if (experiments.isNotEmpty() || features.isNotEmpty()) {
             generateRemoteConfigDefaults((experiments + features).toMap())
             generateRemoteConfigCheck(remoteFeatureNames)
+            generateFeaturesInDevelopment(featuresInDevelopment)
             true
         } else {
             false
@@ -61,6 +68,22 @@ class RemoteConfigProcessor : AbstractProcessor() {
     ) {
         try {
             val fileContent = RemoteConfigCheckBuilder(remoteFeatureNames).getContent()
+
+            val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
+            fileContent.writeTo(File(kaptKotlinGeneratedDir))
+        } catch (e: Exception) {
+            processingEnv.messager.printMessage(
+                    Kind.ERROR,
+                    "Failed to generate remote config check: $e"
+            )
+        }
+    }
+
+    private fun generateFeaturesInDevelopment(
+        remoteFeatureNames: List<String>
+    ) {
+        try {
+            val fileContent = FeaturesInDevelopmentDefaultsBuilder(remoteFeatureNames).getContent()
 
             val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
             fileContent.writeTo(File(kaptKotlinGeneratedDir))
