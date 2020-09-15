@@ -2552,11 +2552,6 @@ public class ReaderPostListFragment extends Fragment
             case LIKE:
                 mViewModel.onLikeButtonClicked(post, isBookmarksList());
                 break;
-            case BLOCK_SITE:
-            case BOOKMARK:
-            case REBLOG:
-            case COMMENTS:
-                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
             case REPORT_POST:
                 HashMap<String, Object> properties = new HashMap();
                 properties.put("blog_id", post.blogId);
@@ -2569,6 +2564,11 @@ public class ReaderPostListFragment extends Fragment
                         INTERNAL
                 );
                 break;
+            case BLOCK_SITE:
+            case BOOKMARK:
+            case REBLOG:
+            case COMMENTS:
+                throw new IllegalStateException("These actions should be handled in ReaderPostAdapter.");
         }
     }
 
