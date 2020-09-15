@@ -389,11 +389,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        WPActivityUtils.setLightStatusBar(requireActivity().window, false)
-    }
-
     private fun hasPost(): Boolean {
         return post != null
     }
