@@ -12,8 +12,6 @@ import android.graphics.PorterDuff.Mode.SRC_ATOP
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
@@ -288,14 +286,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        WPActivityUtils.setStatusBarColor(requireActivity().window, R.color.black_translucent_40)
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            val decorView: View = requireActivity().window.decorView
-            var systemUiVisibilityFlags = decorView.systemUiVisibility
-            systemUiVisibilityFlags = systemUiVisibilityFlags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-            decorView.systemUiVisibility = systemUiVisibilityFlags
-        }
-
+        WPActivityUtils.setLightStatusBar(requireActivity().window, false,
+                ContextCompat.getColor(requireContext(), R.color.black_translucent_40))
         val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
 
         val swipeRefreshLayout = view.findViewById<CustomSwipeRefreshLayout>(R.id.swipe_to_refresh)
@@ -395,6 +387,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (view != null) {
             readerWebView.destroy()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        WPActivityUtils.setLightStatusBar(requireActivity().window, false)
     }
 
     private fun hasPost(): Boolean {

@@ -129,7 +129,7 @@ public class WPActivityUtils {
     public static void setStatusBarColor(Window window, int color) {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(window.getContext().getResources().getColor(color));
+        window.setStatusBarColor(color);
     }
 
     public static void setLightStatusBar(Window window, boolean showInLightMode) {
@@ -138,14 +138,18 @@ public class WPActivityUtils {
         if (!isDarkTheme) {
             int newColor = showInLightMode ? ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface)
                     : ContextCompat.getColor(context, R.color.status_bar);
-            window.setStatusBarColor(newColor);
+            setLightStatusBar(window, showInLightMode, newColor);
+        }
+    }
 
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                int systemVisibility = window.getDecorView().getSystemUiVisibility();
-                int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        : systemVisibility ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                window.getDecorView().setSystemUiVisibility(newSystemVisibility);
-            }
+    public static void setLightStatusBar(Window window, boolean showInLightMode, int statusBarColor) {
+        window.setStatusBarColor(statusBarColor);
+
+        if (VERSION.SDK_INT >= VERSION_CODES.M) {
+            int systemVisibility = window.getDecorView().getSystemUiVisibility();
+            int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                    : systemVisibility & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            window.getDecorView().setSystemUiVisibility(newSystemVisibility);
         }
     }
 

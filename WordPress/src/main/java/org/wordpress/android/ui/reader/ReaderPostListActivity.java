@@ -41,6 +41,7 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPActivityUtils;
 
 import javax.inject.Inject;
 
@@ -61,6 +62,8 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
+
+        WPActivityUtils.setLightStatusBar(getWindow(), false);
 
         setContentView(R.layout.reader_activity_post_list);
 
