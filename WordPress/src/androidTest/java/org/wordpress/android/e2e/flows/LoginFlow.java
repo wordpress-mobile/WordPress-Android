@@ -41,16 +41,18 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow enterPassword() {
-        // Receive Magic Link or Enter Password Screen – Choose "Or type your password"
-        // See LoginMagicLinkRequestFragment
+    public LoginFlow choosePassword() {
+        // Magic Link Request or Magic Link Sent Screen – Choose "Or type your password"
+        // See LoginMagicLinkRequestFragment or LoginMagicLinkSentFragment
         clickOn(R.id.login_enter_password);
+        return this;
+    }
 
+    public LoginFlow enterPassword() {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
         populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
         clickOn(R.id.primary_button);
-
         return this;
     }
 
@@ -68,12 +70,15 @@ public class LoginFlow {
         waitForElementToBeDisplayed(R.id.nav_sites);
     }
 
-    public LoginFlow chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
-        // Receive Magic Link or Enter Password Screen – Choose "Send link by email"
-        // See LoginMagicLinkRequestFragment
-        clickOn(R.id.login_request_magic_link);
+    public LoginFlow chooseMagicLink() {
+        // Password Screen – Choose "Get a login link by email"
+        // See LoginEmailPasswordFragment
+        clickOn(R.id.login_get_email_link);
+        return this;
+    }
 
-        // Should see "Check email" button
+    public LoginFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+        // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
         waitForElementToBeDisplayed(R.id.login_open_email_client);
 

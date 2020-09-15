@@ -26,7 +26,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -76,6 +75,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -116,7 +116,6 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -144,7 +143,7 @@ import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpda
 
 import kotlin.Unit;
 
-public class ReaderPostListFragment extends Fragment
+public class ReaderPostListFragment extends ViewPagerFragment
         implements ReaderInterfaces.OnPostSelectedListener,
         ReaderInterfaces.OnFollowListener,
         ReaderInterfaces.OnPostListItemButtonListener,
@@ -1062,14 +1061,7 @@ public class ReaderPostListFragment extends Fragment
         int spacingVertical = getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
-        // the following will change the look and feel of the toolbar to match the current design
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedAppBarColor = elevationOverlayProvider
-                .compositeOverlayIfNeeded(
-                        ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.wpColorAppBar),
-                        appbarElevation);
-        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
+        mRecyclerView.setToolbarBackgroundColor(0);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
         if (mIsTopLevel) {
@@ -2090,6 +2082,11 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
+    }
+
+    @Override
+    public View getScrollableViewForUniqueIdProvision() {
+        return mRecyclerView.getInternalRecyclerView();
     }
 
     /*

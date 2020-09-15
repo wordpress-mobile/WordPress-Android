@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ScrollView;
+
+import androidx.core.widget.NestedScrollView;
 
 /**
  * ScrollView which reports when user has scrolled up or down, and when scrolling has completed
  */
-public class WPScrollView extends ScrollView {
+public class WPScrollView extends NestedScrollView {
     public interface ScrollDirectionListener {
         void onScrollUp(float distanceY);
 

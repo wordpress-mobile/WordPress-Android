@@ -31,6 +31,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
@@ -47,10 +48,11 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import java.util.HashMap
 import javax.inject.Inject
 
-class NotificationsListFragment : Fragment() {
+class NotificationsListFragment : Fragment(), ScrollableViewInitializedListener {
     private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
 
@@ -276,5 +278,9 @@ class NotificationsListFragment : Fragment() {
         private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        app_bar.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
     }
 }

@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,6 +41,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -90,7 +93,7 @@ import javax.inject.Inject;
  */
 public class ReaderPostPagerActivity extends LocaleAwareActivity
         implements ReaderInterfaces.AutoHideToolbarListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+        BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     /**
      * Type of URL intercepted
      */
@@ -113,6 +116,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
     private Toolbar mToolbar;
+    private AppBarLayout mAppBar;
 
     private ReaderTag mCurrentTag;
     private boolean mIsFeed;
@@ -149,6 +153,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
+
+        mAppBar = findViewById(R.id.appbar_main);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -870,7 +876,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     @Override
     public void onShowHideToolbar(boolean show) {
         if (!isFinishing()) {
-            AniUtils.animateTopBar(mToolbar, show);
+            AniUtils.animateTopBar(mAppBar, show);
         }
     }
 
@@ -889,7 +895,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mIdList = (ReaderBlogIdPostIdList) ids.clone();
         }
 
@@ -1058,5 +1064,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     null,
                     site);
         }
+    }
+
+    @Override
+    public void onScrollableViewInitialized(int containerId) {
+        mAppBar.setLiftOnScrollTargetViewId(containerId);
     }
 }
