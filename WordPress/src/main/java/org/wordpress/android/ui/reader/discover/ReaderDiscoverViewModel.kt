@@ -23,6 +23,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
@@ -293,9 +294,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId ?: 0)))
     }
 
-    private fun onFollowSiteClicked(blogId: Long, feedId: Long?, isAskingToFollow: Boolean) {
+    private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
         launch {
-            readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(blogId, feedId, isAskingToFollow)
+            readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(recommendedBlogUiState)
         }
     }
 

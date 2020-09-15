@@ -20,7 +20,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.ReaderCardRecommendedBlog
 import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -34,6 +33,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.discover.RecommendedBlog
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
@@ -808,7 +808,11 @@ class ReaderPostUiStateBuilderTest {
         val blog = createRecommendedBlog().copy(url = url)
         whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
         // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(listOf(blog)) { _, _ -> }
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                listOf(blog),
+                { _, _ -> },
+                { }
+        )
         // Assert
         assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
     }
@@ -820,7 +824,11 @@ class ReaderPostUiStateBuilderTest {
         val blogs = List(6) { createRecommendedBlog() }
 
         // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(blogs) { _, _ -> }
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _ -> },
+                { }
+        )
 
         // Assert
         assertThat(uiState.blogs.size).isEqualTo(3)
@@ -833,7 +841,11 @@ class ReaderPostUiStateBuilderTest {
         val blogs = List(1) { createRecommendedBlog().copy(description = "") }
 
         // Act
-        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(blogs) { _, _ -> }
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _ -> },
+                { }
+        )
 
         // Assert
         assertThat(uiState.blogs[0].isDescriptionVisible).isFalse()
@@ -930,13 +942,14 @@ class ReaderPostUiStateBuilderTest {
             false
     )
 
-    private fun createRecommendedBlog() = ReaderCardRecommendedBlog(
+    private fun createRecommendedBlog() = RecommendedBlog(
             blogId = 1L,
             name = "name",
             description = "desc",
             url = "url",
             iconUrl = null,
-            feedId = null
+            feedId = null,
+            isFollowed = false
     )
     // endregion
 }

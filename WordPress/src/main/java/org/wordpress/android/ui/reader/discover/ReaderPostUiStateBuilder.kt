@@ -177,7 +177,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<RecommendedBlog>,
         onItemClicked: (Long, Long?) -> Unit,
-        onFollowClicked: (Long, Long?, Boolean) -> Unit
+        onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
         recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
                 .map {

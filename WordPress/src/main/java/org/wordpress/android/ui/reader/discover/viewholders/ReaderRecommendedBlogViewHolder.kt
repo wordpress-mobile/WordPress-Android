@@ -30,7 +30,7 @@ class ReaderRecommendedBlogViewHolder(
                 setIsFollowed(isFollowed)
                 contentDescription = context.getString(followContentDescription.stringRes)
                 setOnClickListener {
-                    onFollowClicked(blogId, feedId, !isFollowed)
+                    onFollowClicked(uiState)
                 }
             }
             updateBlogImage(iconUrl)

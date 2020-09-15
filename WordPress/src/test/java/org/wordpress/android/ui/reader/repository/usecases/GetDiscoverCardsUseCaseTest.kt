@@ -14,9 +14,11 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderDiscoverCardsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.models.ReaderCardRecommendedBlog
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
@@ -36,6 +38,7 @@ class GetDiscoverCardsUseCaseTest {
     private val mockedInterestsCardJson: JSONObject = mock()
     private val mockedRecommendedBlogsCardJson: JSONObject = mock()
     private val readerPostTableWrapper: ReaderPostTableWrapper = mock()
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper = mock()
     private val appLogWrapper: AppLogWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
 
@@ -45,6 +48,7 @@ class GetDiscoverCardsUseCaseTest {
                 parseDiscoverCardsJsonUseCase,
                 readerDiscoverCardsTableWrapper,
                 readerPostTableWrapper,
+                readerBlogTableWrapper,
                 appLogWrapper,
                 appPrefsWrapper,
                 TEST_DISPATCHER
@@ -57,7 +61,8 @@ class GetDiscoverCardsUseCaseTest {
         whenever(mockedJsonArray.getJSONObject(2)).thenReturn(mockedRecommendedBlogsCardJson)
         whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(listOf(""))
         whenever(parseDiscoverCardsJsonUseCase.parseInterestCard(anyOrNull())).thenReturn(mock())
-        whenever(parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(anyOrNull())).thenReturn(mock())
+        whenever(parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(anyOrNull()))
+                .thenReturn(listOf(createRecommendedBlog()))
         whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedPostCard(anyOrNull())).thenReturn(Pair(101, 102))
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean())).thenReturn(mock())
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
@@ -155,4 +160,24 @@ class GetDiscoverCardsUseCaseTest {
         // Assert
         assertThat(result.cards).isEmpty()
     }
+
+    @Test
+    fun `recommended blog isFollow is set from the blog table`() = test {
+        // Arrange
+        whenever(readerBlogTableWrapper.isSiteFollowed(anyLong(), anyLong())).thenReturn(true)
+        // Act
+        val result = useCase.get()
+
+        // Assert
+        assertThat((result.cards[2] as ReaderRecommendedBlogsCard).blogs.first().isFollowed).isTrue()
+    }
+
+    private fun createRecommendedBlog() = ReaderCardRecommendedBlog(
+            blogId = 1L,
+            description = "description",
+            url = "url",
+            name = "name",
+            iconUrl = null,
+            feedId = null
+    )
 }

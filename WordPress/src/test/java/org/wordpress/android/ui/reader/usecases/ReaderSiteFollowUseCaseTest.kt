@@ -29,6 +29,8 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+private const val FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION = 3
+
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderSiteFollowUseCaseTest {
@@ -62,7 +64,7 @@ class ReaderSiteFollowUseCaseTest {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         // Act
-        val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+        val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost)).toList(mutableListOf())
 
         // Then
         assertThat(result).contains(NoNetwork)
@@ -72,7 +74,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `Success returned on success response`() =
             testWithFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result)).contains(Success)
@@ -82,7 +85,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `RequestFailed returned on failed response`() =
             testWithFailedResponseForFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result)).contains(RequestFailed)
@@ -92,7 +96,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `follow site action returns info to show enable notification`() =
             testWithUnFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).showEnableNotification).isTrue()
@@ -102,7 +107,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `un-follow site action returns info to not show enable notification`() =
             testWithFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).showEnableNotification).isFalse()
@@ -112,7 +118,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `follow site action returns info that site is followed`() =
             testWithUnFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).following).isTrue()
@@ -122,7 +129,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `un-follow site action returns info that site is un-followed`() =
             testWithFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).following).isFalse()
@@ -132,7 +140,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `follow site action returns info to not delete notification subscriptions`() =
             testWithUnFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
@@ -143,7 +152,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `un-follow site action returns info to delete notification subscriptions`() =
             testWithFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
@@ -154,7 +164,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `request failure on un-follow site action returns info that site is followed`() =
             testWithFailedResponseForFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
@@ -165,7 +176,8 @@ class ReaderSiteFollowUseCaseTest {
     fun `request failure on follow site action returns info that site is not followed`() =
             testWithFailedResponseForUnFollowedSitePost {
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat(result.size).isGreaterThanOrEqualTo(2)
@@ -179,7 +191,8 @@ class ReaderSiteFollowUseCaseTest {
                 whenever(readerUtilsWrapper.isExternalFeed(anyLong(), anyLong())).thenReturn(true)
 
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).showEnableNotification).isFalse()
@@ -192,7 +205,8 @@ class ReaderSiteFollowUseCaseTest {
                 whenever(readerUtilsWrapper.isExternalFeed(anyLong(), anyLong())).thenReturn(true)
 
                 // Act
-                val result = useCase.toggleFollow(readerPost).toList(mutableListOf())
+                val result = useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost))
+                        .toList(mutableListOf())
 
                 // Assert
                 assertThat((result[0] as PostFollowStatusChanged).showEnableNotification).isFalse()
@@ -202,30 +216,35 @@ class ReaderSiteFollowUseCaseTest {
     fun `toggling follow for un-followed site post initiates follow blog (or site) action`() =
             testWithUnFollowedSitePost {
                 // Act
-                useCase.toggleFollow(readerPost).toList(mutableListOf())
+                useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost)).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlog(anyOrNull(), eq(true), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(anyLong(), anyLong(), eq(true), anyOrNull())
             }
 
     @Test
     fun `toggling follow for followed site post initiates un-follow blog (or site) action`() =
             testWithFollowedSitePost {
                 // Act
-                useCase.toggleFollow(readerPost).toList(mutableListOf())
+                useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost)).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlog(anyOrNull(), eq(false), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(anyLong(), anyLong(), eq(false), anyOrNull())
             }
 
     @Test
     fun `follow blog (or site) action is triggered for selected reader post`() =
             testWithFollowedSitePost {
                 // Act
-                useCase.toggleFollow(readerPost).toList(mutableListOf())
+                useCase.toggleFollow(ReaderSiteFollowUseCase.Param.FromPost(readerPost)).toList(mutableListOf())
 
                 // Assert
-                verify(readerBlogActionsWrapper).followBlog(eq(readerPost), anyBoolean(), anyOrNull())
+                verify(readerBlogActionsWrapper).followBlog(
+                        eq(readerPost.blogId),
+                        eq(readerPost.feedId),
+                        anyBoolean(),
+                        anyOrNull()
+                )
             }
 
     private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
@@ -238,8 +257,8 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = true
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(true)
-            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
-                (it.arguments[2] as ActionListener).onActionResult(true)
+            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(true)
                 true
             }
 
@@ -251,8 +270,8 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = false
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(false)
-            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
-                (it.arguments[2] as ActionListener).onActionResult(true)
+            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(true)
                 true
             }
 
@@ -264,8 +283,8 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = true
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(true)
-            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
-                (it.arguments[2] as ActionListener).onActionResult(false)
+            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(false)
                 true
             }
 
@@ -277,8 +296,8 @@ class ReaderSiteFollowUseCaseTest {
         test {
             readerPost.isFollowedByCurrentUser = false
             whenever(readerPostTableWrapper.isPostFollowed(readerPost)).thenReturn(false)
-            whenever(readerBlogActionsWrapper.followBlog(anyOrNull(), anyBoolean(), anyOrNull())).then {
-                (it.arguments[2] as ActionListener).onActionResult(false)
+            whenever(readerBlogActionsWrapper.followBlog(anyLong(), anyLong(), anyBoolean(), anyOrNull())).then {
+                (it.arguments[FOLLOW_BLOG_ACTION_LISTENER_PARAM_POSITION] as ActionListener).onActionResult(false)
                 true
             }
 

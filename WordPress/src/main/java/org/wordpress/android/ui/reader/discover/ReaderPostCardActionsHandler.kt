@@ -25,6 +25,7 @@ import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -157,13 +158,22 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowRecommendedSiteClicked(blogId: Long, feedId: Long?, isAskingToFollow: Boolean) {
+    suspend fun handleFollowRecommendedSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
         val param = ReaderSiteFollowUseCase.Param.RecommendedSite(
-                blogId = blogId,
-                feedId = feedId ?: 0,
-                isAskingToFollow = isAskingToFollow
+                blogId = recommendedBlogUiState.blogId,
+                blogName = recommendedBlogUiState.name,
+                feedId = recommendedBlogUiState.feedId ?: 0,
+                isAskingToFollow = !recommendedBlogUiState.isFollowed
         )
-        followUseCase.toggleFollow(param).collect {
+        followSite(param)
+    }
+
+    private suspend fun handleFollowClicked(post: ReaderPost) {
+        followSite(ReaderSiteFollowUseCase.Param.FromPost(post))
+    }
+
+    private suspend fun followSite(followSiteParam: ReaderSiteFollowUseCase.Param) {
+        followUseCase.toggleFollow(followSiteParam).collect {
             when (it) {
                 is FollowSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
@@ -180,40 +190,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     _followStatusUpdated.postValue(it)
                     siteNotificationsUseCase.fetchSubscriptions()
 
-//                    if (it.showEnableNotification) {
-//                        val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
-//                        action.invoke()
-//                    } else if (it.deleteNotificationSubscription) {
-//                        siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
-//                        siteNotificationsUseCase.updateNotificationEnabledForBlogInDb(it.blogId, false)
-//                    }
-                }
-            }
-        }
-    }
-
-    private suspend fun handleFollowClicked(post: ReaderPost) {
-        val param = ReaderSiteFollowUseCase.Param.FromPost(post)
-        followUseCase.toggleFollow(param).collect {
-            when (it) {
-                is FollowSiteState.Failed.NoNetwork -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
-                    )
-                }
-                is FollowSiteState.Failed.RequestFailed -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
-                    )
-                }
-                is FollowSiteState.Success -> { // Do nothing
-                }
-                is PostFollowStatusChanged -> {
-                    _followStatusUpdated.postValue(it)
-                    siteNotificationsUseCase.fetchSubscriptions()
-
                     if (it.showEnableNotification) {
-                        val action = prepareEnableNotificationSnackbarAction(post.blogName, post.blogId)
+                        val action = prepareEnableNotificationSnackbarAction(followSiteParam.blogName, it.blogId)
                         action.invoke()
                     } else if (it.deleteNotificationSubscription) {
                         siteNotificationsUseCase.updateSubscription(it.blogId, DELETE)
@@ -297,7 +275,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 is PostLikeState.PostLikedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
                 }
-                is PostLikeState.Success, is PostLikeState.Unchanged, is PostLikeState.AlreadyRunning -> { }
+                is PostLikeState.Success, is PostLikeState.Unchanged, is PostLikeState.AlreadyRunning -> {
+                }
                 is PostLikeState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message))))
                 }

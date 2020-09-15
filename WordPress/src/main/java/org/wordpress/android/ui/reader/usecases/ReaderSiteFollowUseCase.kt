@@ -41,7 +41,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
             val showEnableNotification = when (param) {
                 is FromPost -> !readerUtilsWrapper.isExternalFeed(param.blogId, param.feedId) &&
                         !param.post.isFollowedByCurrentUser
-                is RecommendedSite -> false // todo: figure out logic for recommended site
+                is RecommendedSite -> param.isAskingToFollow // todo: figure out logic for recommended site
             }
             emit(PostFollowStatusChanged(param.blogId, isAskingToFollow, showEnableNotification))
             performAction(param.blogId, param.feedId, isAskingToFollow)
@@ -101,16 +101,19 @@ class ReaderSiteFollowUseCase @Inject constructor(
     sealed class Param {
         abstract val blogId: Long
         abstract val feedId: Long
+        abstract val blogName: String
         data class FromPost(
             val post: ReaderPost
         ) : Param() {
             override val blogId: Long = post.blogId
             override val feedId: Long = post.feedId
+            override val blogName: String = post.blogName
         }
 
         data class RecommendedSite(
             override val blogId: Long,
             override val feedId: Long,
+            override val blogName: String,
             val isAskingToFollow: Boolean
         ) : Param()
     }
