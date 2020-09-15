@@ -656,7 +656,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotWpcomSiteInfo(String siteAddress) {
-        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(false, false, true);
+        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(false, false, true, siteAddress);
         slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
     }
 
