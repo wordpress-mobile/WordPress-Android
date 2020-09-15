@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -20,6 +19,7 @@ import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -47,7 +47,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout) {
+class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout) {
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
@@ -187,6 +187,10 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     override fun onDestroyView() {
         super.onDestroyView()
         bookmarksSavedLocallyDialog?.dismiss()
+    }
+
+    override fun getScrollableViewForUniqueIdProvision(): View {
+        return recycler_view
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

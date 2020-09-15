@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
@@ -31,7 +32,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
 
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ReaderViewModel
@@ -118,7 +119,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                         updateTabs(it)
                     }
                 }
-                app_bar.setExpanded(uiState.appBarExpanded, false)
                 uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
             }
@@ -202,5 +202,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                     .remove(readerInterestsFragment)
                     .commitNow()
         }
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        app_bar.liftOnScrollTargetViewId = containerId
     }
 }
