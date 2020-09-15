@@ -15,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 class ManualFeatureConfigFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -46,6 +47,11 @@ class ManualFeatureConfigFragment : DaggerFragment() {
                 val recyclerViewState = layoutManager?.onSaveInstanceState()
                 adapter.update(uiState.uiItems)
                 layoutManager?.onRestoreInstanceState(recyclerViewState)
+            }
+        })
+        viewModel.restartAction.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                exitProcess(0)
             }
         })
         viewModel.start()

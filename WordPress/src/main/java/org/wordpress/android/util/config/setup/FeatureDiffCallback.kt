@@ -2,6 +2,7 @@ package org.wordpress.android.util.config.setup
 
 import androidx.recyclerview.widget.DiffUtil.Callback
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Header
 
 class FeatureBlockDiffCallback(
@@ -12,9 +13,10 @@ class FeatureBlockDiffCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        return oldItem.type == newItem.type && when (oldItem) {
-            is Header -> oldItem.header == (newItem as Header).header
-            is FeatureUiItem.Feature -> oldItem.title == (newItem as FeatureUiItem.Feature).title
+        return oldItem.type == newItem.type && when {
+            oldItem is Header && newItem is Header -> oldItem.header == newItem.header
+            oldItem is Feature && newItem is Feature -> oldItem.title == newItem.title
+            else -> true
         }
     }
 

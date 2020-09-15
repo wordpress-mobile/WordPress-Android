@@ -15,11 +15,8 @@ class ManualFeatureConfig
     fun isManuallyEnabled(featureKey: String): Boolean =
             appPrefsWrapper.getManualFeatureConfig(featureKey)
 
-    fun setManuallyEnabled(feature: FeatureConfig, enabled: Boolean) =
-            setManuallyEnabled(feature.toFeatureKey(), enabled)
-
     fun setManuallyEnabled(featureKey: String, enabled: Boolean) =
             appPrefsWrapper.setManualFeatureConfig(enabled, featureKey)
 
-    private fun FeatureConfig.toFeatureKey() = this.remoteField ?: this.javaClass.toString()
+    private fun FeatureConfig.toFeatureKey() = this.remoteField ?: this.javaClass.toString().split(".").last()
 }

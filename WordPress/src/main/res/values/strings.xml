@@ -879,6 +879,8 @@
     <string name="preference_open_feature_config">Test feature configuration</string>
     <string name="remote_features">Remote features</string>
     <string name="features_in_development">Features in development</string>
+    <string name="restart_app">Restart the app</string>
+    <string name="missing_developed_feature">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>

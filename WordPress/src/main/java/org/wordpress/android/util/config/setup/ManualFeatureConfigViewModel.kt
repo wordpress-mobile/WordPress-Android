@@ -6,15 +6,20 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
-import org.wordpress.android.util.config.FeatureConfig
+import org.wordpress.android.util.config.FeaturesInDevelopment
 import org.wordpress.android.util.config.RemoteConfig
 import org.wordpress.android.util.config.RemoteConfigDefaults
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Button
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.DISABLED
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.ENABLED
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature.State.UNKNOWN
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Header
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.ToggleAction
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,15 +28,13 @@ class ManualFeatureConfigViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val manualFeatureConfig: ManualFeatureConfig,
-    private val remoteConfig: RemoteConfig,
-    consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
+    private val remoteConfig: RemoteConfig
 ) : ScopedViewModel(mainDispatcher) {
-    // Local features
-    private val localFeature = mapOf<String, FeatureConfig>(
-            "Consolidated media picker" to consolidatedMediaPickerFeatureConfig
-    )
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
+    private val _restartAction = MutableLiveData<Event<Unit>>()
+    val restartAction: LiveData<Event<Unit>> = _restartAction
+    private var hasChange: Boolean = false
 
     fun start() {
         launch {
@@ -51,19 +54,25 @@ class ManualFeatureConfigViewModel
             uiItems.add(Header(R.string.features_in_development))
             uiItems.addAll(developedFeatures)
         }
+        uiItems.add(Header(R.string.missing_developed_feature))
+        if (hasChange) {
+            uiItems.add(Button(R.string.restart_app, this::restart))
+        }
         _uiState.value = UiState(uiItems)
     }
 
+    private fun restart() {
+        _restartAction.value = Event(Unit)
+    }
+
     private fun buildDevelopedFeatures(): List<Feature> {
-        return localFeature.map { (key, featureConfig) ->
-            val value = if (manualFeatureConfig.hasManualSetup(featureConfig)) {
-                manualFeatureConfig.isManuallyEnabled(featureConfig)
+        return FeaturesInDevelopment.featuresInDevelopment.map { name ->
+            val value = if (manualFeatureConfig.hasManualSetup(name)) {
+                manualFeatureConfig.isManuallyEnabled(name)
             } else {
-                featureConfig.buildConfigValue
+                null
             }
-            Feature(key, value) {
-                toggleFeature(featureConfig, !value)
-            }
+            Feature(name, value, ToggleAction(name, value?.not() ?: true, this::toggleFeature))
         }
     }
 
@@ -78,9 +87,7 @@ class ManualFeatureConfigViewModel
                 }
             }
             if (value != null) {
-                Feature(key, value) {
-                    toggleFeature(key, !value)
-                }
+                Feature(key, value, ToggleAction(key, value, this::toggleFeature))
             } else {
                 null
             }
@@ -89,14 +96,8 @@ class ManualFeatureConfigViewModel
 
     private fun toggleFeature(remoteKey: String, value: Boolean) {
         launch {
+            hasChange = true
             manualFeatureConfig.setManuallyEnabled(remoteKey, value)
-            refresh()
-        }
-    }
-
-    private fun toggleFeature(feature: FeatureConfig, value: Boolean) {
-        launch {
-            manualFeatureConfig.setManuallyEnabled(feature, value)
             refresh()
         }
     }
@@ -104,9 +105,33 @@ class ManualFeatureConfigViewModel
     data class UiState(val uiItems: List<FeatureUiItem>)
     sealed class FeatureUiItem(val type: Type) {
         data class Header(val header: Int) : FeatureUiItem(HEADER)
-        data class Feature(val title: String, val enabled: Boolean, val toggleAction: () -> Unit) : FeatureUiItem(FEATURE)
+        data class Button(val text: Int, val clickAction: () -> Unit) : FeatureUiItem(BUTTON)
+        data class Feature(val title: String, val state: State, val toggleAction: ToggleAction) : FeatureUiItem(
+                FEATURE
+        ) {
+            constructor(title: String, enabled: Boolean?, toggleAction: ToggleAction) : this(
+                    title,
+                    when (enabled) {
+                        true -> ENABLED
+                        false -> DISABLED
+                        null -> UNKNOWN
+                    },
+                    toggleAction
+            )
+
+            enum class State { ENABLED, DISABLED, UNKNOWN }
+        }
+
+        data class ToggleAction(
+            val key: String,
+            val value: Boolean,
+            val toggleAction: (key: String, value: Boolean) -> Unit
+        ) {
+            fun toggle() = toggleAction(key, value)
+        }
+
         enum class Type {
-            HEADER, FEATURE
+            HEADER, FEATURE, BUTTON
         }
     }
 }

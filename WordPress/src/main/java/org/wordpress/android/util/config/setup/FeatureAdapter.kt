@@ -3,12 +3,15 @@ package org.wordpress.android.util.config.setup
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.util.config.setup.FeatureItemViewHolder.ButtonViewHolder
 import org.wordpress.android.util.config.setup.FeatureItemViewHolder.FeatureViewHolder
 import org.wordpress.android.util.config.setup.FeatureItemViewHolder.HeaderViewHolder
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Button
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Header
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type
+import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.BUTTON
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.FEATURE
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Type.HEADER
 
@@ -30,6 +33,7 @@ class FeatureAdapter : Adapter<FeatureItemViewHolder>() {
         return when (Type.values()[viewType]) {
             HEADER -> HeaderViewHolder(parent)
             FEATURE -> FeatureViewHolder(parent)
+            BUTTON -> ButtonViewHolder(parent)
         }
     }
 
@@ -43,6 +47,7 @@ class FeatureAdapter : Adapter<FeatureItemViewHolder>() {
         when (holder) {
             is HeaderViewHolder -> holder.bind(items[position] as Header)
             is FeatureViewHolder -> holder.bind(items[position] as Feature)
+            is ButtonViewHolder -> holder.bind(items[position] as Button)
         }
     }
 }
