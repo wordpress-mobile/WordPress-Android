@@ -27,7 +27,6 @@ import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
-import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
