@@ -227,6 +227,27 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         }).isNotNull
     }
 
+    @Test
+    fun `contains report post action when post list type is TAG_FOLLOWED`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNotNull
+    }
+
+    @Test
+    fun `does not contain report post action when post list type is not TAG_FOLLOWED`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_PREVIEW, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNull()
+    }
+
+
     private fun init(
         isFollowed: Boolean = false,
         isNotificationsEnabled: Boolean = false,
