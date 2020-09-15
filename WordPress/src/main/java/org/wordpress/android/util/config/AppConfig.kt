@@ -39,7 +39,7 @@ class AppConfig
      * @param feature feature which we're checking remotely
      */
     fun isEnabled(feature: FeatureConfig): Boolean {
-        if (BuildConfig.ENABLE_FEATURE_CONFIGURATION && manualFeatureConfig.hasManualSetup(feature)) {
+        if (manualFeatureConfig.hasManualSetup(feature)) {
             return manualFeatureConfig.isManuallyEnabled(feature)
         }
         if (feature.remoteField == null) {
