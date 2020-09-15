@@ -20,7 +20,7 @@ class FeatureAdapter : Adapter<FeatureItemViewHolder>() {
 
     fun update(newItems: List<FeatureUiItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                FeatureBlockDiffCallback(
+                FeatureDiffCallback(
                         items,
                         newItems
                 )

@@ -5,7 +5,7 @@ import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.Feat
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Feature
 import org.wordpress.android.util.config.setup.ManualFeatureConfigViewModel.FeatureUiItem.Header
 
-class FeatureBlockDiffCallback(
+class FeatureDiffCallback(
     private val oldList: List<FeatureUiItem>,
     private val newList: List<FeatureUiItem>
 ) : Callback() {
