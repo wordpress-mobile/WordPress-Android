@@ -26,6 +26,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
@@ -341,6 +342,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
         WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
+    }
+
+    override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
+        // no op - we're not doing any special handling while composing, only when saving in the UploadBridge
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {

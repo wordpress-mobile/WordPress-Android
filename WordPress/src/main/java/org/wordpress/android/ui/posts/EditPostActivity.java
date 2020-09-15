@@ -110,7 +110,6 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
-import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
@@ -157,6 +156,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -2963,10 +2963,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // after having found it and deserialized from local repository
 
         ArrayList<Long> tmpMediaIds = new ArrayList<>();
+        boolean allStorySlidesAreEditable = true;
         for (Object mediaFile : mediaFiles) {
-            long mediaId = new Double(((HashMap<String, Object>)mediaFile).get("id").toString()).longValue();
+            long mediaId = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
+            if (allStorySlidesAreEditable
+                && !StoriesPrefs.isValidSlide(this, getImmutablePost().getLocalSiteId(), mediaId)) {
+                // flag this as soon as we find one media item not being really editable
+                allStorySlidesAreEditable = false;
+            }
             tmpMediaIds.add(mediaId);
         }
+        // TODO pass the allStorySlidesAreEditable boolean flag make sure to show the warning dialog
         ActivityLauncher.editStoryWithMediaIdsForResult(this, getSite(), ListUtils.toLongArray(tmpMediaIds));
     }
 
@@ -3194,6 +3201,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
+    }
+
+    @Override
+    public void onMediaModelsCreatedFromOptimizedUris(@NotNull Map<Uri, ? extends MediaModel> oldUriToMediaModels) {
+        // no op - we're not doing any special handling on MediaModels in EditPostActivity
     }
 
     @Override

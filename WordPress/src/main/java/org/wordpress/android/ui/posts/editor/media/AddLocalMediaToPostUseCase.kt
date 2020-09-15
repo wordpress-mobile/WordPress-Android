@@ -67,6 +67,14 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                 optimizeMediaResult.optimizedMediaUris
         )
 
+        // here we pass a map of "old" (before optimisation) Uris to the new MediaModels which contain
+        // both the mediaModel ids and the optimized media URLs.
+        // this way, the listener will be able to process from other models potining to the old URLs
+        // and make any needed updates
+        editorMediaListener.onMediaModelsCreatedFromOptimizedUris(
+                uriList.zip(createMediaModelsResult.mediaModels).toMap()
+        )
+
         // Add media to editor and optionally initiate upload
         addToEditorAndOptionallyUpload(createMediaModelsResult.mediaModels, editorMediaListener, doUploadAfterAdding)
 

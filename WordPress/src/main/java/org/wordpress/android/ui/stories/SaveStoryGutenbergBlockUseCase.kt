@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.stories
 
 import com.google.gson.Gson
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -57,6 +59,29 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
             id = mediaFile.mediaId.toInt()
             link = mediaFile.fileURL
             url = mediaFile.fileURL
+
+            // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
+            val localIdKey = mediaFile.id.toLong()
+            val remoteIdKey = mediaFile.mediaId.toLong()
+            val localSiteId = post.localSiteId.toLong()
+            StoriesPrefs.getSlide(
+                    WordPress.getContext(),
+                    localSiteId,
+                    localIdKey
+            )?.let {
+                StoriesPrefs.saveSlide(
+                        WordPress.getContext(),
+                        localSiteId,
+                        remoteIdKey, // use the new mediaId as key
+                        it
+                )
+                // now delete the old entry
+                StoriesPrefs.deleteSlide(
+                        WordPress.getContext(),
+                        localSiteId,
+                        localIdKey
+                )
+            }
         }
         post.setContent(createGBStoryBlockStringFromJson(requireNotNull(storyBlockData)))
     }
