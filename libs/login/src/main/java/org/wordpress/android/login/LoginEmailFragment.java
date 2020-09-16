@@ -267,6 +267,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
     }
 
+    @Override public void onDestroyView() {
+        mEmailInput = null;
+
+        super.onDestroyView();
+    }
+
     private void setupTosButtons(Button continueTosButton, Button continueWithGoogleTosButton) {
         if (mHideTos) {
             // Hide the TOS buttons

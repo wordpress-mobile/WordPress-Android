@@ -232,6 +232,17 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         super.onDestroy();
     }
 
+    @Override public void onDestroyView() {
+        mPrimaryButton = null;
+        mSecondaryButton = null;
+
+        if (mProgressDialog != null) {
+            mProgressDialog.setOnCancelListener(null);
+            mProgressDialog = null;
+        }
+        super.onDestroyView();
+    }
+
     protected void startProgress() {
         startProgress(true);
     }

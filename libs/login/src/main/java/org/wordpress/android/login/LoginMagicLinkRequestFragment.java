@@ -208,6 +208,12 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         mLoginListener = null;
     }
 
+    @Override public void onDestroyView() {
+        mRequestMagicLinkButton = null;
+
+        super.onDestroyView();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

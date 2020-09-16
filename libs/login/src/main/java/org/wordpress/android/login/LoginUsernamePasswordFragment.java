@@ -205,6 +205,20 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         }
     }
 
+    @Override public void onDestroyView() {
+        if (mPasswordInput != null) {
+            mPasswordInput.setOnEditorCommitListener(null);
+            mPasswordInput = null;
+        }
+        if (mUsernameInput != null) {
+            mUsernameInput.setOnEditorCommitListener(null);
+            mUsernameInput = null;
+        }
+        mScrollView = null;
+
+        super.onDestroyView();
+    }
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
