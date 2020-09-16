@@ -21,6 +21,7 @@ import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
+import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.wordpress.android.R.id
@@ -108,6 +109,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // convert our WPAndroid KEY_LAUNCHED_FROM_GUTENBERG flag into Stories general purpose EDIT_MODE flag
+        intent.putExtra(KEY_STORY_EDIT_MODE, intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false))
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setSnackbarProvider(this)
