@@ -177,7 +177,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             txtAudioTitle.setVisibility(View.VISIBLE);
         }
 
-        if (mIsVideo || mIsAudio) {
+        if (mIsAudio) {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -189,7 +189,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     }
                 }
             };
-            mVideoFrame.setOnClickListener(listener);
             mAudioFrame.setOnClickListener(listener);
         }
 
@@ -363,15 +362,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     /*
-     * initialize the media controls (audio/video only)
+     * initialize the media controls (audio only)
      */
     private void initControls() {
-        mControls = new MediaController(getActivity());
-        /*if (mIsVideo) {
-            mControls.setAnchorView(mVideoFrame);
-//            mControls.setMediaPlayer(mExoPlayerView);
-        } else */
         if (mIsAudio) {
+            mControls = new MediaController(getActivity());
             mControls.setAnchorView(mAudioFrame);
             mControls.setMediaPlayer(this);
         }
@@ -402,8 +397,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 }
             }
         });*/
-
-        initControls();
 //        mExoPlayerView.setVideoURI(Uri.parse(mediaUri), mAuthenticationUtils.getAuthHeaders(mediaUri));
         mExoPlayerView.requestFocus();
     }
