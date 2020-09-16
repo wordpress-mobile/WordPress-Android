@@ -119,6 +119,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
+        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
 
         initViewModel(savedInstanceState)
     }
