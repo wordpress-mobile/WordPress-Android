@@ -54,6 +54,7 @@ import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -352,9 +353,10 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 getPageAdapter().refreshFollowedTagFragment();
 
                 if (succeeded) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
                     showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
                     mLastAddedTagName = tag.getTagSlug();
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                            new HashMap<String, String>() { { put("tag", mLastAddedTagName); }});
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
                     mLastAddedTagName = null;
