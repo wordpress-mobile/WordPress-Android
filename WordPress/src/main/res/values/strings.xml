@@ -2871,6 +2871,9 @@
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
 
+    <!-- Stories -->
+    <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
+    <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>

@@ -103,6 +103,7 @@ import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
+import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -749,11 +750,11 @@ public class ActivityLauncher {
             return;
         }
 
-        // TODO pass the allStorySlidesAreEditable boolean flag make sure to show the warning dialog
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_STORY_INDEX, storyIndex);
         intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, launchedFromGutenberg);
+        intent.putExtra(KEY_ALL_UNFLATTENED_LOADED_SLIDES, allStorySlidesAreEditable);
         activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
     }
 
