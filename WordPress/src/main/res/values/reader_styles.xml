@@ -270,6 +270,12 @@
         <item name="android:minWidth">@dimen/min_touch_target_sz</item>
     </style>
 
+    <style name="Reader.Follow.Button.Icon" parent="Reader.Follow.Button">
+        <item name="iconTint">@color/secondary_gray_20_selector</item>
+        <item name="android:minHeight">@dimen/min_touch_target_sz</item>
+        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+    </style>
+
     <style name="Reader.Button.Error" parent="WordPress.Button.Primary">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
