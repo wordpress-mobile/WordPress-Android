@@ -56,7 +56,7 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.SiteNotificationState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -96,8 +96,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
 
-    private val _followStatusUpdated = MediatorLiveData<PostFollowStatusChanged>()
-    val followStatusUpdated: LiveData<PostFollowStatusChanged> = _followStatusUpdated
+    private val _followStatusUpdated = MediatorLiveData<FollowStatusChanged>()
+    val followStatusUpdated: LiveData<FollowStatusChanged> = _followStatusUpdated
 
     // Used only in legacy ReaderPostListFragment. The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
@@ -159,17 +159,16 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     suspend fun handleFollowRecommendedSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
-        val param = ReaderSiteFollowUseCase.Param.RecommendedSite(
+        val param = ReaderSiteFollowUseCase.Param(
                 blogId = recommendedBlogUiState.blogId,
                 blogName = recommendedBlogUiState.name,
-                feedId = recommendedBlogUiState.feedId ?: 0,
-                isAskingToFollow = !recommendedBlogUiState.isFollowed
+                feedId = recommendedBlogUiState.feedId ?: 0
         )
         followSite(param)
     }
 
     private suspend fun handleFollowClicked(post: ReaderPost) {
-        followSite(ReaderSiteFollowUseCase.Param.FromPost(post))
+        followSite(ReaderSiteFollowUseCase.Param(post.blogId, post.feedId, post.blogName))
     }
 
     private suspend fun followSite(followSiteParam: ReaderSiteFollowUseCase.Param) {
@@ -186,7 +185,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     )
                 }
                 is FollowSiteState.Success -> Unit // Do nothing
-                is PostFollowStatusChanged -> {
+                is FollowStatusChanged -> {
                     _followStatusUpdated.postValue(it)
                     siteNotificationsUseCase.fetchSubscriptions()
 

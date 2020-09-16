@@ -106,7 +106,7 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged;
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -488,7 +488,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void setFollowStatusForBlog(PostFollowStatusChanged readerData) {
+    private void setFollowStatusForBlog(FollowStatusChanged readerData) {
         if (!hasPostAdapter()) {
             return;
         }

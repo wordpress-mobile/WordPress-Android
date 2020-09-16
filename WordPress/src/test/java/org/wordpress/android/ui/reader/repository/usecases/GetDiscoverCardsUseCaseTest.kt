@@ -164,7 +164,7 @@ class GetDiscoverCardsUseCaseTest {
     @Test
     fun `recommended blog isFollow is set from the blog table`() = test {
         // Arrange
-        whenever(readerBlogTableWrapper.isSiteFollowed(anyLong(), anyLong())).thenReturn(true)
+        whenever(readerBlogTableWrapper.isSiteFollowed(anyLong(), anyOrNull())).thenReturn(true)
         // Act
         val result = useCase.get()
 
