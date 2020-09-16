@@ -23,6 +23,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
@@ -188,6 +189,22 @@ class ReaderPostCardActionsHandlerTest {
         assertThat(navigationObservedValue!!.peekContent()).isEqualTo(ShowBookmarkedTab)
     }
     /** BOOKMARK ACTION end **/
+
+    /** REPORT POST ACTION start **/
+    @Test
+    fun `Clicking on a report this post opens webview`() = test {
+        // Arrange
+        val navigation = mutableListOf<ReaderNavigationEvents>()
+        actionHandler.navigationEvents.observeForever {
+            navigation.add(it.peekContent())
+        }
+        // Act
+        actionHandler.handleReportPostClicked(dummyReaderPostModel())
+
+        // Assert
+        assertThat(navigation[0]).isInstanceOf(ShowReportPost::class.java)
+    }
+    /** REPORT POST ACTION end **/
 
     private fun dummyReaderPostModel(): ReaderPost {
         return ReaderPost().apply {

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
@@ -36,9 +37,11 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSit
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -54,6 +57,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,6 +128,13 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                             this.siteId,
                             this.feedId
                     )
+                    is ShowReportPost -> {
+                        ReaderActivityLauncher.openUrl(
+                                context,
+                                readerUtilsWrapper.getReportPostUrl(url),
+                                OpenUrlType.INTERNAL
+                        )
+                    }
                 }
             }
         })

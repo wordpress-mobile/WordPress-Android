@@ -407,6 +407,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case SITE_NOTIFICATIONS:
                         case SHARE:
                         case VISIT_SITE:
+                        case REPORT_POST:
                             mOnPostListItemButtonListener.onButtonClicked(post, type);
                             renderPost(position, holder, false);
                             break;
