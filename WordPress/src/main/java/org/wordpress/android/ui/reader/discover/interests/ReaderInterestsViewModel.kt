@@ -196,9 +196,9 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun trackInterests(tags: List<ReaderTag>) {
         tags.forEach { it ->
-            trackerWrapper.track(READER_TAG_FOLLOWED, mapOf("tag" to it.tagSlug ))
+            trackerWrapper.track(READER_TAG_FOLLOWED, mapOf("tag" to it.tagSlug))
         }
-        trackerWrapper.track(SELECT_INTERESTS_PICKED, mapOf("quantity" to tags.size ))
+        trackerWrapper.track(SELECT_INTERESTS_PICKED, mapOf("quantity" to tags.size))
     }
 
     sealed class UiState(
