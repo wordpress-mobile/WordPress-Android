@@ -3041,13 +3041,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
                     }
                 }
-                // Story instance re-created! Load it
-                ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
             }
-        } else {
-            // Story found! Load it
-            ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
         }
+        // Story instance loaded or re-created! Load it
+        ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
     }
 
     // FluxC events
