@@ -2,6 +2,7 @@
 -----
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.
 * [**] Improved AppBar and Site Picker design.
+* [***] Block Editor: Add message that mentions are unavailable when device is offline. [https://github.com/wordpress-mobile/WordPress-Android/pull/12968]
 
  
 15.7
