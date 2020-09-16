@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,7 +19,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -43,6 +50,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
     public static final String TAG = "media_preview_fragment";
+    public static final String USER_AGENT = "wpandroid-exoplayer";
 
     static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     static final String ARG_MEDIA_ID = "media_id";
@@ -79,6 +87,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
     @Inject AuthenticationUtils mAuthenticationUtils;
+
+    private SimpleExoPlayer mPlayer;
+    private int mCurrentWindow = 0;
 
     /**
      * @param site       optional site this media is associated with
@@ -186,10 +197,31 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > VERSION_CODES.M) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > VERSION_CODES.M) {
+            releasePlayer();
+        }
+    }
+
+    @Override
     public void onPause() {
         mFragmentWasPaused = true;
-        if (mIsAudio || mIsVideo) {
+        if (mIsAudio) {
             pauseMedia();
+        }
+        if (mIsVideo) {
+            if (Util.SDK_INT <= VERSION_CODES.M) {
+                releasePlayer();
+            }
         }
         super.onPause();
     }
@@ -205,10 +237,13 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 playMedia();
             }
         } else if (mIsVideo) {
-            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
+            /*if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl);
             } else {
                 playMedia();
+            }*/
+            if (Util.SDK_INT <= VERSION_CODES.M || mPlayer == null) {
+                initializePlayer();
             }
         } else {
             loadImage(mContentUri);
@@ -241,14 +276,14 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         super.onSaveInstanceState(outState);
 
         if (mIsVideo) {
-//            outState.putInt(ARG_POSITION, mExoPlayerView.getCurrentPosition());
+            outState.putInt(ARG_POSITION, (int) mPlayer.getCurrentPosition());
         } else if (mIsAudio && mAudioPlayer != null) {
             outState.putInt(ARG_POSITION, mAudioPlayer.getCurrentPosition());
         }
     }
 
     void pauseMedia() {
-        if (mControls != null) {
+        if (mIsAudio && mControls != null) {
             mControls.hide();
         }
         if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
@@ -332,10 +367,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      */
     private void initControls() {
         mControls = new MediaController(getActivity());
-        if (mIsVideo) {
+        /*if (mIsVideo) {
             mControls.setAnchorView(mVideoFrame);
 //            mControls.setMediaPlayer(mExoPlayerView);
-        } else if (mIsAudio) {
+        } else */
+        if (mIsAudio) {
             mControls.setAnchorView(mAudioFrame);
             mControls.setMediaPlayer(this);
         }
@@ -476,5 +512,40 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     @Override
     public int getAudioSessionId() {
         return 0;
+    }
+
+    private MediaSource buildMediaSource(Uri uri) {
+        DefaultHttpDataSourceFactory dataSourceFactory =
+                new DefaultHttpDataSourceFactory(USER_AGENT);
+        dataSourceFactory.getDefaultRequestProperties().set(mAuthenticationUtils.getAuthHeaders(uri.toString()));
+        return new ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(uri);
+    }
+
+    private void initializePlayer() {
+        mPlayer = new SimpleExoPlayer.Builder(requireActivity()).build();
+        mPlayer.addListener(new PlayerEventListener());
+        mExoPlayerView.setPlayer(mPlayer);
+
+        Uri uri = Uri.parse(mContentUri);
+        MediaSource mediaSource = buildMediaSource(uri);
+        mPlayer.setPlayWhenReady(mAutoPlay);
+        mPlayer.seekTo(mCurrentWindow, mPosition);
+        mPlayer.prepare(mediaSource, false, false);
+    }
+
+    private void releasePlayer() {
+        if (mPlayer != null) {
+            mPosition = (int) mPlayer.getCurrentPosition();
+            mCurrentWindow = mPlayer.getCurrentWindowIndex();
+            mPlayer.release();
+            mPlayer = null;
+        }
+    }
+
+    private class PlayerEventListener implements Player.EventListener {
+        @Override public void onLoadingChanged(boolean isLoading) {
+            showProgress(isLoading);
+        }
     }
 }
