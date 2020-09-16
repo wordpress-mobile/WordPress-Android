@@ -161,6 +161,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -3007,7 +3008,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             long mediaIdLong = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
             String mediaIdString = String.valueOf(mediaIdLong);
             if (allStorySlidesAreEditable
-                && !StoriesPrefs.isValidSlide(this, mSite.getId(), mediaIdLong)) {
+                && !StoriesPrefs.isValidSlide(this, mSite.getId(), new RemoteMediaId(mediaIdLong))) {
                 // flag this as soon as we find one media item not being really editable
                 allStorySlidesAreEditable = false;
             }
@@ -3023,7 +3024,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             StoryRepository.loadStory(storyIndex);
             storyIndex = StoryRepository.currentStoryIndex;
             for (String mediaId : tmpMediaIdsString) {
-                StoryFrameItem storyFrameItem = StoriesPrefs.getSlide(this, mSite.getId(), Long.parseLong(mediaId));
+                StoryFrameItem storyFrameItem = StoriesPrefs.getSlideWithRemoteId(
+                        this,
+                        mSite.getId(),
+                        new RemoteMediaId(Long.parseLong(mediaId))
+                );
                 if (storyFrameItem != null) {
                     StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
                 } else {

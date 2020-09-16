@@ -30,6 +30,7 @@ import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -187,11 +188,12 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
                 mediaModel?.let {
                     frame.id = it.id.toString()
-                    StoriesPrefs.saveSlide(
+                    StoriesPrefs.saveSlideWithLocalId(
                             appContext,
                             it.localSiteId.toLong(),
-                            it.id.toLong(), // use the local id to save the original, will be replaced later
+                            // use the local id to save the original, will be replaced later
                             // with mediaModel.mediaId after uploading to the remote site
+                            LocalMediaId(it.id.toLong()),
                             frame
                     )
                 }
