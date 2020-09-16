@@ -3001,7 +3001,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        ArrayList<Long> tmpMediaIdsLong = new ArrayList<>();
         ArrayList<String> tmpMediaIdsString = new ArrayList<>();
         boolean allStorySlidesAreEditable = true;
         for (Object mediaFile : mediaFiles) {
@@ -3012,7 +3011,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 // flag this as soon as we find one media item not being really editable
                 allStorySlidesAreEditable = false;
             }
-            tmpMediaIdsLong.add(mediaIdLong);
             tmpMediaIdsString.add(mediaIdString);
         }
 
@@ -3030,7 +3028,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
                 } else {
                     allStorySlidesAreEditable = false;
-                    // create a new frame using the actual uploaded flattened media as a background
+
+                    // for this missing frame we'll create a new frame using the actual uploaded flattened media
+                    ArrayList<Long> tmpMediaIdsLong = new ArrayList<>();
+                    tmpMediaIdsLong.add(Long.parseLong(mediaId));
                     List<MediaModel> mediaModelList = mMediaStore.getSiteMediaWithIds(mSite, tmpMediaIdsLong);
                     for (MediaModel mediaModel : mediaModelList) {
                         storyFrameItem = StoryFrameItem.Companion.getNewStoryFrameItemFromUri(
