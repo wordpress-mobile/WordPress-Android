@@ -2,6 +2,7 @@ package org.wordpress.android.support
 
 import android.view.View
 import android.widget.HorizontalScrollView
+import android.widget.ListView
 import android.widget.ScrollView
 import androidx.core.widget.NestedScrollView
 import androidx.test.espresso.ViewAction
@@ -26,7 +27,8 @@ class BetterScrollToAction(
                 Matchers.anyOf(
                         isAssignableFrom(ScrollView::class.java),
                         isAssignableFrom(HorizontalScrollView::class.java),
-                        isAssignableFrom(NestedScrollView::class.java)
+                        isAssignableFrom(NestedScrollView::class.java),
+                        isAssignableFrom(ListView::class.java)
                 )
         )
         )
