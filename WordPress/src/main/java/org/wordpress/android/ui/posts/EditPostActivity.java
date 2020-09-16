@@ -3007,7 +3007,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             long mediaIdLong = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
             String mediaIdString = String.valueOf(mediaIdLong);
             if (allStorySlidesAreEditable
-                && !StoriesPrefs.isValidSlide(this, mSite.getSiteId(), mediaIdLong)) {
+                && !StoriesPrefs.isValidSlide(this, mSite.getId(), mediaIdLong)) {
                 // flag this as soon as we find one media item not being really editable
                 allStorySlidesAreEditable = false;
             }
@@ -3023,7 +3023,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             StoryRepository.loadStory(storyIndex);
             storyIndex = StoryRepository.currentStoryIndex;
             for (String mediaId : tmpMediaIdsString) {
-                StoryFrameItem storyFrameItem = StoriesPrefs.getSlide(this, mSite.getSiteId(), Long.parseLong(mediaId));
+                StoryFrameItem storyFrameItem = StoriesPrefs.getSlide(this, mSite.getId(), Long.parseLong(mediaId));
                 if (storyFrameItem != null) {
                     StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
                 } else {
