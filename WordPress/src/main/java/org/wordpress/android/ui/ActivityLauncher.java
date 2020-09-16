@@ -13,8 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
-import com.wordpress.stories.compose.ComposeLoopFrameActivity;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;

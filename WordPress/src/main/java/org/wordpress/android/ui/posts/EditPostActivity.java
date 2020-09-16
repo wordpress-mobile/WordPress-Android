@@ -3006,7 +3006,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean allStorySlidesAreEditable = true;
         for (Object mediaFile : mediaFiles) {
             long mediaIdLong = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
-            String mediaIdString = String.valueOf(mediaIdLong); // convert back after stripping the decimals in original Double
+            String mediaIdString = String.valueOf(mediaIdLong);
             if (allStorySlidesAreEditable
                 && !StoriesPrefs.isValidSlide(this, mSite.getSiteId(), mediaIdLong)) {
                 // flag this as soon as we find one media item not being really editable
