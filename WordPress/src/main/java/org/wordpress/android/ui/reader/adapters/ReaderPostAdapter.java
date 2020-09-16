@@ -285,7 +285,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
         Function0<Unit> onFollowButtonClicked = () -> {
-            // todo: annmarie remove this comment
             toggleFollowButton(tagHolder.itemView.getContext(), currentTag, tagHolder);
             return Unit.INSTANCE;
         };
@@ -331,7 +330,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             renderTagHeader(currentTag, tagHolder, true);
         };
 
-        // todo: annmarie here remove this comment
         boolean success;
         boolean isLoggedIn = mAccountStore.hasAccessToken();
         if (isAskingToFollow) {
