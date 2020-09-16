@@ -75,6 +75,7 @@ public class MediaPreviewFragment extends Fragment {
     private ImageView mImageView;
     private PlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
+    private ImageView mExoPlayerArtworkView;
 
     private ViewGroup mVideoFrame;
     private ViewGroup mAudioFrame;
@@ -161,7 +162,7 @@ public class MediaPreviewFragment extends Fragment {
 
         mImageView = view.findViewById(R.id.image_preview);
         mExoPlayerView = view.findViewById(R.id.video_preview);
-        mExoPlayerView.setUseArtwork(true);
+        mExoPlayerArtworkView = mExoPlayerView.findViewById(R.id.exo_artwork);
         mExoPlayerControlsView = view.findViewById(R.id.controls);
 
         mVideoFrame = view.findViewById(R.id.frame_video);
@@ -223,14 +224,11 @@ public class MediaPreviewFragment extends Fragment {
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
         } else if (mIsAudio || mIsVideo) {
-            /*if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
-                loadImage(mVideoThumbnailUrl);
-            }*/
             if (Util.SDK_INT <= VERSION_CODES.M || mPlayer == null) {
                 initializePlayer();
             }
         } else {
-            loadImage(mContentUri);
+            loadImage(mContentUri, mImageView);
         }
     }
 
@@ -267,7 +265,7 @@ public class MediaPreviewFragment extends Fragment {
     /*
      * loads and displays a remote or local image
      */
-    private void loadImage(String mediaUri) {
+    private void loadImage(String mediaUri, ImageView imageView) {
         if (TextUtils.isEmpty(mediaUri)) {
             showLoadingError();
             return;
@@ -283,7 +281,7 @@ public class MediaPreviewFragment extends Fragment {
         }
         showProgress(true);
 
-        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
+        mImageManager.loadWithResultListener(imageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
@@ -327,6 +325,9 @@ public class MediaPreviewFragment extends Fragment {
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {
+             if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl) && mExoPlayerArtworkView != null) {
+                loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
+            }
             mExoPlayerView.setPlayer(mPlayer);
             mExoPlayerView.requestFocus();
         } else if (mIsAudio) {
