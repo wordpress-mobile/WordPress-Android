@@ -45,7 +45,6 @@ android {
     }
 
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolVersion
 
     defaultConfig {
         applicationId "org.wordpress.android"
