@@ -56,6 +56,13 @@
             app:tint="@color/neutral_30"
             android:contentDescription="@string/media_preview_audio_desc"/>
 
+        <com.google.android.exoplayer2.ui.PlayerControlView
+            android:id="@+id/controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:show_timeout="0" />
+
     </RelativeLayout>
 
     <ImageView

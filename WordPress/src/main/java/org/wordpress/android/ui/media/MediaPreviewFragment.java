@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.media;
 
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.MediaController;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +20,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -48,7 +46,7 @@ import javax.inject.Inject;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
+public class MediaPreviewFragment extends Fragment {
     public static final String TAG = "media_preview_fragment";
     public static final String USER_AGENT = "wpandroid-exoplayer";
 
@@ -76,11 +74,10 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     private ImageView mImageView;
     private PlayerView mExoPlayerView;
+    private PlayerControlView mExoPlayerControlsView;
+
     private ViewGroup mVideoFrame;
     private ViewGroup mAudioFrame;
-
-    private MediaPlayer mAudioPlayer;
-    private MediaController mControls;
 
     private OnMediaTappedListener mMediaTapListener;
 
@@ -164,6 +161,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         mImageView = view.findViewById(R.id.image_preview);
         mExoPlayerView = view.findViewById(R.id.video_preview);
+        mExoPlayerView.setUseArtwork(true);
+        mExoPlayerControlsView = view.findViewById(R.id.controls);
 
         mVideoFrame = view.findViewById(R.id.frame_video);
         mAudioFrame = view.findViewById(R.id.frame_audio);
@@ -177,19 +176,14 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
             txtAudioTitle.setVisibility(View.VISIBLE);
         }
 
-        if (mIsAudio) {
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mControls != null) {
-                        mControls.show();
-                    }
-                    if (mMediaTapListener != null) {
-                        mMediaTapListener.onMediaTapped();
-                    }
+        if (mIsAudio || mIsVideo) {
+            View.OnClickListener listener = v -> {
+                if (mMediaTapListener != null) {
+                    mMediaTapListener.onMediaTapped();
                 }
             };
             mAudioFrame.setOnClickListener(listener);
+            mVideoFrame.setOnClickListener(listener);
         }
 
         return view;
@@ -214,10 +208,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     @Override
     public void onPause() {
         mFragmentWasPaused = true;
-        if (mIsAudio) {
-            pauseMedia();
-        }
-        if (mIsVideo) {
+        if (mIsAudio || mIsVideo) {
             if (Util.SDK_INT <= VERSION_CODES.M) {
                 releasePlayer();
             }
@@ -231,15 +222,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
-        } else if (mIsAudio) {
-            if (mAutoPlay) {
-                playMedia();
-            }
-        } else if (mIsVideo) {
+        } else if (mIsAudio || mIsVideo) {
             /*if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl);
-            } else {
-                playMedia();
             }*/
             if (Util.SDK_INT <= VERSION_CODES.M || mPlayer == null) {
                 initializePlayer();
@@ -249,24 +234,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
     }
 
-    void playMedia() {
-        if (mIsVideo) {
-            playVideo(mContentUri, mPosition);
-        } else if (mIsAudio) {
-            playAudio(mContentUri, mPosition);
-        }
-    }
-
     @Override
     public void onDestroy() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.release();
-            mAudioPlayer = null;
-        }
-        /*if (mExoPlayerView.isPlaying()) {
-            mExoPlayerView.stopPlayback();
-            mExoPlayerView.setMediaController(null);
-        }*/
         super.onDestroy();
     }
 
@@ -274,25 +243,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (mIsVideo) {
+        if (mIsVideo || mIsAudio) {
             outState.putInt(ARG_POSITION, (int) mPlayer.getCurrentPosition());
-        } else if (mIsAudio && mAudioPlayer != null) {
-            outState.putInt(ARG_POSITION, mAudioPlayer.getCurrentPosition());
         }
-    }
-
-    void pauseMedia() {
-        if (mIsAudio && mControls != null) {
-            mControls.hide();
-        }
-        if (mAudioPlayer != null && mAudioPlayer.isPlaying()) {
-            mPosition = mAudioPlayer.getCurrentPosition();
-            mAudioPlayer.pause();
-        }
-        /*if (mExoPlayerView.isPlaying()) {
-            mPosition = mExoPlayerView.getCurrentPosition();
-            mExoPlayerView.pause();
-        }*/
     }
 
     void setOnMediaTappedListener(OnMediaTappedListener listener) {
@@ -361,152 +314,6 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 });
     }
 
-    /*
-     * initialize the media controls (audio only)
-     */
-    private void initControls() {
-        if (mIsAudio) {
-            mControls = new MediaController(getActivity());
-            mControls.setAnchorView(mAudioFrame);
-            mControls.setMediaPlayer(this);
-        }
-    }
-
-    private void playVideo(@NonNull String mediaUri, final int position) {
-        /*mExoPlayerView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                return false;
-            }
-        });
-
-        showProgress(true);
-        mExoPlayerView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                if (isAdded()) {
-                    showProgress(false);
-                    mImageView.setVisibility(View.GONE);
-                    if (mAutoPlay) {
-                        mp.start();
-                    }
-                    if (position > 0) {
-                        mp.seekTo(position);
-                    }
-                    mControls.show();
-                }
-            }
-        });*/
-//        mExoPlayerView.setVideoURI(Uri.parse(mediaUri), mAuthenticationUtils.getAuthHeaders(mediaUri));
-        mExoPlayerView.requestFocus();
-    }
-
-    private void playAudio(@NonNull String mediaUri, final int position) {
-        mAudioPlayer = new MediaPlayer();
-        mAudioPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        try {
-            mAudioPlayer.setDataSource(getActivity(), Uri.parse(mediaUri));
-        } catch (Exception e) {
-            AppLog.e(AppLog.T.MEDIA, e);
-            showLoadingError();
-            return;
-        }
-
-        mAudioPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                if (isAdded()) {
-                    showProgress(false);
-                    mp.start();
-                    if (position > 0) {
-                        mp.seekTo(position);
-                    }
-                    mControls.show();
-                }
-            }
-        });
-        mAudioPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                return false;
-            }
-        });
-
-        initControls();
-        showProgress(true);
-        mAudioPlayer.prepareAsync();
-    }
-
-    /*
-     * MediaController.MediaPlayerControl - for audio playback only
-     */
-    @Override
-    public void start() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.start();
-        }
-    }
-
-    @Override
-    public void pause() {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.pause();
-        }
-    }
-
-    @Override
-    public int getDuration() {
-        if (mAudioPlayer != null) {
-            return mAudioPlayer.getDuration();
-        }
-        return 0;
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        if (mAudioPlayer != null) {
-            return mAudioPlayer.getCurrentPosition();
-        }
-        return 0;
-    }
-
-    @Override
-    public void seekTo(int pos) {
-        if (mAudioPlayer != null) {
-            mAudioPlayer.seekTo(pos);
-        }
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return mAudioPlayer != null && mAudioPlayer.isPlaying();
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return true;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
-    }
-
     private MediaSource buildMediaSource(Uri uri) {
         DefaultHttpDataSourceFactory dataSourceFactory =
                 new DefaultHttpDataSourceFactory(USER_AGENT);
@@ -518,7 +325,14 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private void initializePlayer() {
         mPlayer = new SimpleExoPlayer.Builder(requireActivity()).build();
         mPlayer.addListener(new PlayerEventListener());
-        mExoPlayerView.setPlayer(mPlayer);
+
+        if (mIsVideo) {
+            mExoPlayerView.setPlayer(mPlayer);
+            mExoPlayerView.requestFocus();
+        } else if (mIsAudio) {
+            mExoPlayerControlsView.setPlayer(mPlayer);
+            mExoPlayerControlsView.requestFocus();
+        }
 
         Uri uri = Uri.parse(mContentUri);
         MediaSource mediaSource = buildMediaSource(uri);

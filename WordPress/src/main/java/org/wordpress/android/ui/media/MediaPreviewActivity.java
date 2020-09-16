@@ -455,18 +455,19 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
             super.destroyItem(container, position, object);
         }
 
+        // TODO: Revisit this logic. playMedia, pauseMedia are removed from the fragment while introducing exoplayer.
         void pauseFragment(int position) {
-            Fragment fragment = mFragmentMap.get(position);
-            if (fragment != null) {
-                ((MediaPreviewFragment) fragment).pauseMedia();
-            }
+//            Fragment fragment = mFragmentMap.get(position);
+//            if (fragment != null) {
+//                ((MediaPreviewFragment) fragment).pauseMedia();
+//            }
         }
 
         void unpauseFragment(int position) {
-            Fragment fragment = mFragmentMap.get(position);
-            if (fragment != null) {
-                ((MediaPreviewFragment) fragment).playMedia();
-            }
+//            Fragment fragment = mFragmentMap.get(position);
+//            if (fragment != null) {
+//                ((MediaPreviewFragment) fragment).playMedia();
+//            }
         }
 
         @Override
