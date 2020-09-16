@@ -475,7 +475,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
      */
     @Override
     public void onTagDeleted(ReaderTag tag) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                new HashMap<String, String>() { { put("tag", tag.getTagSlug()); }});
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
