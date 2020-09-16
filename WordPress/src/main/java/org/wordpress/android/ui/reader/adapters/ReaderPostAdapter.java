@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -64,6 +65,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.inject.Inject;
@@ -283,6 +285,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
         Function0<Unit> onFollowButtonClicked = () -> {
+            // todo: annmarie remove this comment
             toggleFollowButton(tagHolder.itemView.getContext(), currentTag, tagHolder);
             return Unit.INSTANCE;
         };
@@ -309,15 +312,26 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug());
 
+        final String slugForTracking = currentTag.getTagSlug();
+
         ReaderActions.ActionListener listener = succeeded -> {
             if (!succeeded) {
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
                         : R.string.reader_toast_err_remove_tag;
                 ToastUtils.showToast(context, errResId);
+            } else {
+                if (isAskingToFollow) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                }
             }
             renderTagHeader(currentTag, tagHolder, true);
         };
 
+        // todo: annmarie here remove this comment
         boolean success;
         boolean isLoggedIn = mAccountStore.hasAccessToken();
         if (isAskingToFollow) {
