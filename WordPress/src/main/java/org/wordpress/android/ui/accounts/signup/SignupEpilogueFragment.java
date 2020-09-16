@@ -687,7 +687,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             ));
             options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
             options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
-                    context, R.attr.colorOnPrimarySurface
+                    context, R.attr.colorOnSurface
             ));
             options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
             options.setHideBottomControls(true);
