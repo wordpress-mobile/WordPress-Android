@@ -396,25 +396,21 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
         if (siteInfo.isWPCom || hasJetpack) {
-            // It's a WordPress.com or a valid Jetpack site
+            // It's a WordPress.com or a connected Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
                 // We're only interested in self-hosted sites
                 if (hasJetpack) {
                     // If Jetpack site, treat it as self-hosted and start the discovery process
                     // Note: This also includes Atomic sites
                     initiateDiscovery();
-                } else {
-                    // Not a self-hosted site
-                    showError(R.string.invalid_site_url_message); // TODO Update error message
-                    endProgressIfNeeded();
+                    return;
                 }
-            } else {
-                // It's a WordPress.com or a valid Jetpack site, so treat it as such
-                endProgressIfNeeded();
-                mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
             }
+            // It's a WordPress.com or a connected Jetpack site, so treat it as such
+            endProgressIfNeeded();
+            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
         } else {
-            // Not a WordPress.com or a valid Jetpack site
+            // Not a WordPress.com or a connected Jetpack site
             if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
                 // We're only interested in WordPress.com accounts
                 showError(R.string.enter_wpcom_or_jetpack_site);

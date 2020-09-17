@@ -149,6 +149,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
+            case SELFHOSTED_ONLY:
                 if (!mShouldUseNewLayout) {
                     label.setText(R.string.enter_email_wordpress_com);
                 } else if (!TextUtils.isEmpty(mLoginSiteUrl)) {
