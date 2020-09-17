@@ -14,7 +14,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signup_tos"
-        style="@style/LoginTheme.Button.Secondary"
+        style="@style/Widget.LoginFlow.Button.Tertiary.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -30,7 +30,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signup_email"
-            style="@style/LoginTheme.Button.SignUp"
+            style="@style/Widget.LoginFlow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/margin_medium"
@@ -39,7 +39,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signup_google"
-            style="@style/LoginTheme.Button.SignUp"
+            style="@style/Widget.LoginFlow.Button.Secondary"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/margin_medium"

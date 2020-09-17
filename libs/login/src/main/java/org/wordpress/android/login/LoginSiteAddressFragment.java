@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -93,22 +95,29 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
         mSiteAddressInput.addTextChangedListener(this);
         mSiteAddressInput.setOnEditorCommitListener(this);
+
+        rootView.findViewById(R.id.login_site_address_help_button).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAnalyticsListener.trackShowHelpClick();
+                showSiteAddressHelp();
+            }
+        });
     }
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.login_site_address_help);
-        secondaryButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSiteAddressHelp();
-            }
-        });
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 discover();
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
     }
 
     @Override
@@ -141,12 +150,12 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         mLoginSiteAddressValidator = new LoginSiteAddressValidator();
 
-        mLoginSiteAddressValidator.getIsValid().observe(this, new Observer<Boolean>() {
+        mLoginSiteAddressValidator.getIsValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override public void onChanged(Boolean enabled) {
                 getPrimaryButton().setEnabled(enabled);
             }
         });
-        mLoginSiteAddressValidator.getErrorMessageResId().observe(this, new Observer<Integer>() {
+        mLoginSiteAddressValidator.getErrorMessageResId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override public void onChanged(Integer resId) {
                 if (resId != null) {
                     showError(resId);
@@ -165,14 +174,16 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     @Override public void onDestroyView() {
-        super.onDestroyView();
         mLoginSiteAddressValidator.dispose();
+
+        super.onDestroyView();
     }
 
     protected void discover() {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
+        mAnalyticsListener.trackSubmitClicked();
 
         mLoginBaseDiscoveryListener = this;
 
@@ -212,7 +223,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     private void showError(int messageId) {
-        mSiteAddressInput.setError(getString(messageId));
+        String message = getString(messageId);
+        mAnalyticsListener.trackFailure(message);
+        mSiteAddressInput.setError(message);
     }
 
     @Override

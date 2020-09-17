@@ -17,7 +17,9 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -71,7 +73,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return R.layout.signup_email_fragment;
+        return R.layout.signup_email_screen;
     }
 
     @Override
@@ -100,6 +102,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -109,6 +112,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
             @Override
             public void onClick(View view) {
                 if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -128,6 +132,11 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                 next(getCleanedEmail());
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.sign_up_label);
     }
 
     @Override
@@ -177,6 +186,12 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mAnalyticsListener.emailFormScreenResumed();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);
@@ -185,6 +200,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     protected void next(String email) {
+        mAnalyticsListener.trackSubmitClicked();
         if (NetworkUtils.checkConnection(getActivity())) {
             if (isValidEmail(email)) {
                 startProgress();
@@ -200,6 +216,13 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     public void onDetach() {
         super.onDetach();
         mLoginListener = null;
+    }
+
+    @Override 
+    public void onDestroyView() {
+        mEmailInput = null;
+
+        super.onDestroyView();
     }
 
     private String getCleanedEmail() {
@@ -240,6 +263,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     private void showErrorEmail(String message) {
+        mAnalyticsListener.trackFailure(message);
         mEmailInput.setError(message);
     }
 
@@ -319,6 +343,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
 
         try {
+            mAnalyticsListener.trackShowEmailHints();
             startIntentSenderForResult(intent.getIntentSender(), EMAIL_CREDENTIALS_REQUEST_CODE, null, 0, 0, 0, null);
         } catch (IntentSender.SendIntentException exception) {
             AppLog.d(T.NUX, LOG_TAG + "Could not start email hint picker" + exception);
@@ -335,10 +360,12 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                 return;
             }
             if (resultCode == RESULT_OK) {
+                mAnalyticsListener.trackPickEmailFromHint();
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
                 mEmailInput.getEditText().setText(credential.getId());
                 next(getCleanedEmail());
             } else {
+                mAnalyticsListener.trackDismissDialog();
                 mHasDismissedEmailHints = true;
                 mEmailInput.getEditText().postDelayed(new Runnable() {
                     @Override

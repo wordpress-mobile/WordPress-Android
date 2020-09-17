@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
@@ -52,7 +55,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     protected String mIdToken;
     protected String mPhotoUrl;
 
-    protected static final String SERVICE_TYPE_GOOGLE = "google";
+    public static final String SERVICE_TYPE_GOOGLE = "google";
 
     @Inject protected Dispatcher mDispatcher;
     @Inject protected SiteStore mSiteStore;
@@ -245,5 +248,14 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
                 mIsResolvingError = false;
                 break;
         }
+    }
+
+    // Remove scale from photo URL path string. Current URL matches /s96-c, which returns a 96 x 96
+    // pixel image. Removing /s96-c from the string returns a 512 x 512 pixel image. Using regular
+    // expressions may help if the photo URL scale value in the returned path changes.
+    protected String removeScaleFromGooglePhotoUrl(String photoUrl) {
+        Pattern pattern = Pattern.compile("(/s[0-9]+-c)");
+        Matcher matcher = pattern.matcher(photoUrl);
+        return matcher.find() ? photoUrl.replace(matcher.group(1), "") : photoUrl;
     }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.LoginFlow" parent="Base.Theme.LoginFlow.Shared">
+        <item name="colorPrimary">@color/wp_blue_40</item>
+        <item name="colorPrimaryVariant">@color/wp_blue_70</item>
+        <item name="colorSecondary">@color/wp_pink_50</item>
+        <item name="colorSecondaryVariant">@color/wp_pink_70</item>
+
+        <item name="android:colorBackground">@color/material_black_800</item>
+        <item name="colorSurface">@color/material_black_800</item>
+        <item name="colorError">@color/wp_red_50</item>
+
+        <item name="colorOnPrimary">@color/material_white_50</item>
+        <item name="colorOnSecondary">@color/material_white_50</item>
+        <item name="colorOnBackground">@color/material_white_50</item>
+        <item name="colorOnSurface">@color/material_white_50</item>
+        <item name="colorOnError">@color/material_black_900</item>
+    </style>
+
+    <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow">
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">false</item>
+    </style>
+</resources>

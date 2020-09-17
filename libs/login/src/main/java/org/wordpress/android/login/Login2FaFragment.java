@@ -18,7 +18,9 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -89,7 +91,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     ArrayList<Integer> mOldSitesIDs;
 
-    private Button mSecondaryButton;
+    private Button mOtpButton;
     private String mEmailAddress;
     private String mIdToken;
     private String mNonce;
@@ -172,27 +174,33 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         // restrict the allowed input chars to just numbers
         m2FaInput.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.login_text_otp);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        mOtpButton = rootView.findViewById(R.id.login_otp_button);
+        mOtpButton.setText(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp);
+        mOtpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isAdded()) {
+                    mAnalyticsListener.trackSendCodeWithTextClicked();
                     doAuthAction(R.string.requesting_otp, "", true);
                 }
             }
         });
-        secondaryButton.setText(getString(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp));
-        mSecondaryButton = secondaryButton;
+    }
 
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
     }
 
     @Override
@@ -275,9 +283,12 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
             m2FaInput.setText(getAuthCodeFromClipboard());
         }
+
+        updateContinueButtonEnabledStatus();
     }
 
     protected void next() {
+        mAnalyticsListener.trackSubmit2faCodeClicked();
         if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
             show2FaError(getString(R.string.login_empty_2fa));
             return;
@@ -318,7 +329,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
         if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null
-                && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
+            && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
             String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
 
             final Matcher twoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
@@ -365,10 +376,19 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         show2FaError(null);
+        updateContinueButtonEnabledStatus();
     }
 
-    private void show2FaError(String message) {
+    private void show2FaError(@Nullable String message) {
+        if (message != null) {
+            mAnalyticsListener.trackFailure(message);
+        }
         m2FaInput.setError(message);
+    }
+
+    private void updateContinueButtonEnabledStatus() {
+        String currentVerificationCode = m2FaInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentVerificationCode.trim().isEmpty());
     }
 
     @Override
@@ -389,7 +409,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 // TODO: FluxC: could be specific?
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
-
+                mAnalyticsListener.trackFailure(errorMessage);
                 ToastUtils.showToast(getActivity(),
                         errorMessage == null ? getString(R.string.error_generic) : errorMessage);
                 break;
@@ -397,6 +417,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void showErrorDialog(String message) {
+        mAnalyticsListener.trackFailure(message);
         AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
@@ -485,7 +506,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 mAnalyticsListener.trackSocialConnectFailure();
                 doFinishLogin();
             }
-        // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
+            // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
         } else if (!TextUtils.isEmpty(event.phoneNumber) && !TextUtils.isEmpty(event.nonce)) {
             endProgress();
             mPhoneNumber = event.phoneNumber;
@@ -514,7 +535,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     private void setTextForSms() {
         mLabel.setText(getString(R.string.enter_verification_code_sms, mPhoneNumber));
-        mSecondaryButton.setText(getString(R.string.login_text_otp_another));
+        mOtpButton.setText(getString(R.string.login_text_otp_another));
         mSentSmsCode = true;
     }
 }

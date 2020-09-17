@@ -16,9 +16,13 @@ public interface LoginListener {
     }
 
     LoginMode getLoginMode();
+    void startOver();
 
     // Login Email input callbacks
     void gotWpcomEmail(String email, boolean verifyEmail);
+    void gotUnregisteredEmail(String email);
+    void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
+                                      String service);
     void loginViaSiteAddress();
     void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
     void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
@@ -76,6 +80,8 @@ public interface LoginListener {
     void doStartSignup();
     void helpSignupEmailScreen(String email);
     void helpSignupMagicLinkScreen(String email);
+    void helpSignupConfirmationScreen(String email);
     void showSignupMagicLink(String email);
+    void showSignupSocial(String email, String displayName, String idToken, String photoUrl, String service);
     void showSignupToLoginMessage();
 }
