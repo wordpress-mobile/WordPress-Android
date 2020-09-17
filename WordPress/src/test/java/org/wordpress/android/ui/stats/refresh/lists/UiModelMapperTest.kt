@@ -18,7 +18,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 class UiModelMapperTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private lateinit var mapper: UiModelMapper
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         mapper = UiModelMapper(networkUtilsWrapper)
