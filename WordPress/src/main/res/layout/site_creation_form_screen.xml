@@ -1,70 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_main"/>
-
-   <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_buttons"
-        android:layout_below="@+id/toolbar"
-        android:fillViewport="true"
-        android:scrollbars="vertical">
-
-        <ViewStub
-            android:id="@+id/site_creation_form_content_stub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/site_creation_content_margin"
-            android:layout_marginStart="@dimen/site_creation_content_margin"/>
-
-   </androidx.core.widget.NestedScrollView>
-
-    <View
-        android:id="@+id/bottom_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_container_shadow_height"
-        android:background="@drawable/login_shadow"
-        android:layout_above="@+id/bottom_buttons"
-        android:visibility="gone"
-        tools:visibility="visible"/>
-
-    <RelativeLayout
-        android:id="@+id/bottom_buttons"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_medium_large"
-        android:paddingBottom="@dimen/margin_medium_large"
-        android:layout_alignParentBottom="true"
-        android:clipToPadding="false"
-        android:visibility="gone"
-        tools:visibility="visible">
+        app:liftOnScrollTargetViewId="@+id/site_creation_nested_scroll_view">
 
-        <androidx.appcompat.widget.AppCompatButton
-            style="@style/WordPress.Button.Primary"
-            android:id="@+id/primary_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium_large"
-            android:layout_alignParentEnd="true"
-            android:text="@string/next"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            style="@style/WordPress.Button.Primary"
-            android:id="@+id/finish_button"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:text="@string/site_creation_domain_finish_button"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/site_creation_nested_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_buttons"
+            android:layout_alignParentTop="true"
+            android:fillViewport="true"
+            android:scrollbars="vertical">
+
+            <ViewStub
+                android:id="@+id/site_creation_form_content_stub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/site_creation_content_margin"
+                android:layout_marginEnd="@dimen/site_creation_content_margin" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <View
+            android:id="@+id/bottom_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_container_shadow_height"
+            android:layout_above="@+id/bottom_buttons"
+            android:background="@drawable/login_shadow"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
+
+        <RelativeLayout
+            android:id="@+id/bottom_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/margin_medium_large"
+            android:paddingBottom="@dimen/margin_medium_large"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/primary_button"
+                style="@style/WordPress.Button.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/margin_medium_large"
+                android:text="@string/next"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/finish_button"
+                style="@style/WordPress.Button.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:text="@string/site_creation_domain_finish_button"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </RelativeLayout>
     </RelativeLayout>
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

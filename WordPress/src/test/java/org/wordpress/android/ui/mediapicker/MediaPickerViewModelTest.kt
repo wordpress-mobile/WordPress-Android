@@ -86,7 +86,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,
                 permissionsHandler,
-                context,
                 localeManagerWrapper,
                 mediaUtilsWrapper,
                 resourceProvider
