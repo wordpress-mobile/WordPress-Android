@@ -249,8 +249,11 @@ dependencies {
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
     testImplementation "junit:junit:$jUnitVersion"
-    testImplementation 'org.robolectric:robolectric:4.3'
-    testImplementation 'org.robolectric:shadows-multidex:4.3'
+
+    testImplementation 'org.robolectric:robolectric:4.4'
+    testImplementation 'org.robolectric:shadows-multidex:4.3.1'
+    implementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
+
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
