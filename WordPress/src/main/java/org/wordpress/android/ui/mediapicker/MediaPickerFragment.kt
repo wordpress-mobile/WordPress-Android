@@ -35,6 +35,9 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -327,6 +330,7 @@ class MediaPickerFragment : Fragment() {
                         requestStoragePermission()
                     }
                 }
+
                 soft_ask_view.visibility = View.VISIBLE
             }
             is SoftAskViewUiModel.Hidden -> {
@@ -338,25 +342,35 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
-        if (uiModel is PhotoListUiModel.Data) {
-            if (recycler.adapter == null) {
-                recycler.adapter = MediaPickerAdapter(
-                        imageManager
-                )
-            }
-            val adapter = recycler.adapter as MediaPickerAdapter
+        when (uiModel) {
+            is Data -> {
+                recycler.setEmptyViewIfNull(actionable_empty_view)
+                if (recycler.adapter == null) {
+                    recycler.adapter = MediaPickerAdapter(
+                            imageManager
+                    )
+                }
+                val adapter = recycler.adapter as MediaPickerAdapter
 
-            (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
-                    object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
-                            NUM_COLUMNS
-                        } else {
-                            1
+                (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
+                        object : GridLayoutManager.SpanSizeLookup() {
+                            override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
+                                NUM_COLUMNS
+                            } else {
+                                1
+                            }
                         }
-                    }
-            val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
-            adapter.loadData(uiModel.items)
-            recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
+                adapter.loadData(uiModel.items)
+                recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            }
+            Empty -> {
+                recycler.setEmptyView(actionable_empty_view)
+            }
+            Hidden -> {
+                recycler.setEmptyView(null)
+                actionable_empty_view.visibility = View.GONE
+            }
         }
     }
 
