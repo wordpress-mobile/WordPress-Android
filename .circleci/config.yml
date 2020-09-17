@@ -26,12 +26,12 @@ commands:
     steps:
       - run:
           name: Setup gradle.properties
-          command: cp gradle.properties-example gradle.properties
+          command: cp gradle.properties-example gradle.properties && cp libs/utils/WordPressUtils/gradle.properties-example libs/utils/WordPressUtils/gradle.properties
   update-gradle-memory:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -171,7 +171,7 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-          no_output_timeout: 20m
+          no_output_timeout: 40m
       - run:
           name: Violations
           when: on_fail

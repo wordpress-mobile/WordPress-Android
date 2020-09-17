@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:elevation="@dimen/appbar_elevation"
+        app:liftOnScrollTargetViewId="@+id/recycler"
         app:theme="@style/WordPress.ActionBar">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_view"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="flagNoExtractUi"
-            app:iconifiedByDefault="false"
-            app:queryHint="@string/stock_media_picker_search_hint"
-            app:searchIcon="@null" />
-    </com.google.android.material.appbar.MaterialToolbar>
+            app:theme="@style/WordPress.ActionBar">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="flagNoExtractUi"
+                app:iconifiedByDefault="false"
+                app:queryHint="@string/stock_media_picker_search_hint"
+                app:searchIcon="@null" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadeScrollbars="true"
             android:contentDescription="@string/stock_media_picker_list_content_description"
+            android:fadeScrollbars="true"
             android:scrollbars="vertical"
             tools:listitem="@layout/media_picker_thumbnail" />
 
@@ -106,4 +117,4 @@
             tools:visibility="visible" />
     </RelativeLayout>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
