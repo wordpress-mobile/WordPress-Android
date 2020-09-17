@@ -38,6 +38,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -68,6 +69,7 @@ import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -154,6 +156,7 @@ import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -165,6 +168,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -242,7 +246,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditPostSettingsCallback,
         PrepublishingBottomSheetListener,
         PrivateAtCookieProgressDialogOnDismissListener,
-        ExceptionLogger {
+        ExceptionLogger,
+        SiteSettingsInterface.SiteSettingsListener {
     public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
@@ -333,6 +338,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+
+    private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
+
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
 
@@ -378,6 +387,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
+    private SiteSettingsInterface mSiteSettings;
+    private boolean mIsJetpackSsoEnabled;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -440,6 +451,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (refreshedSite != null) {
                 mSite.setMobileEditor(refreshedSite.getMobileEditor());
             }
+
+            mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
+            // initialize settings with locally cached values, fetch remote on first pass
+            mSiteSettings.init(true);
         }
 
         // Check whether to show the visual editor
@@ -456,12 +471,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Set up the action bar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
@@ -640,6 +657,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupViewPager();
     }
 
+    // SiteSettingsListener
+    @Override
+    public void onSaveError(Exception error) { }
+
+    @Override
+    public void onFetchError(Exception error) { }
+
+    @Override
+    public void onSettingsUpdated() {
+        // Let's hold the value in local variable as listener is too noisy
+        boolean isJetpackSsoEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
+        if (mIsJetpackSsoEnabled != isJetpackSsoEnabled) {
+            mIsJetpackSsoEnabled = isJetpackSsoEnabled;
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment)
+                        .updateCapabilities(mIsJetpackSsoEnabled, getGutenbergPropsBuilder());
+            }
+        }
+    }
+
+    @Override
+    public void onSettingsSaved() { }
+
+    @Override
+    public void onCredentialsValidated(Exception error) { }
+
     private void setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
@@ -656,15 +699,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackgroundResource(R.drawable.tab_layout_background);
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mEditPostRepository.isPage() ? R.string.page_settings : R.string.post_settings);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.settings_fragment_root);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_PUBLISH_SETTINGS) {
                     setTitle(R.string.publish_date);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.empty_recycler_view);
+                    mToolbar.setBackground(null);
                 }
             }
         });
@@ -2017,7 +2068,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private static final int NUM_PAGES_EDITOR = 4;
         SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
@@ -2029,45 +2080,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
-                        String postType = mIsPage ? "page" : "post";
-                        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
-                        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
+                        GutenbergPropsBuilder gutenbergPropsBuilder = getGutenbergPropsBuilder();
 
-                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-                        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
-
-                        // The Unsupported Block Editor is disabled for all self-hosted sites
-                        // even the one that are connected via Jetpack to a WP.com account.
-                        // The option is disabled on Self-hosted sites because they can have their web editor
-                        // to be set to classic and then the fallback will not work.
-                        // We disable in Jetpack site because we don't have the self-hosted site's credentials
-                        // which are required for us to be able to fetch the site's authentication cookie.
-                        boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
-
-                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
-                        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
-                        GutenbergPropsBuilder gutenbergPropsBuilder = new GutenbergPropsBuilder(
-                                enableMentions,
-                                isUnsupportedBlockEditorEnabled,
-                                mModalLayoutPickerFeatureConfig.isEnabled(),
-                                wpcomLocaleSlug,
-                                postType,
-                                themeBundle
-                        );
+                        GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
+                                new GutenbergWebViewAuthorizationData(
+                                        mSite.getUrl(),
+                                        isWpCom,
+                                        mAccountStore.getAccount().getUserId(),
+                                        mAccountStore.getAccount().getUserName(),
+                                        mAccountStore.getAccessToken(),
+                                        mSite.getSelfHostedSiteId(),
+                                        mSite.getUsername(),
+                                        mSite.getPassword(),
+                                        mSite.isUsingWpComRestApi(),
+                                        mSite.getWebEditor(),
+                                        WordPress.getUserAgent(),
+                                        mIsJetpackSsoEnabled);
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
                                 mIsNewPost,
-                                mSite.getUrl(),
-                                !isWpCom,
-                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
-                                isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
-                                isWpCom ? "" : mSite.getPassword(),
-                                mAccountStore.getAccessToken(),
-                                isSiteUsingWpComRestApi,
-                                WordPress.getUserAgent(),
+                                gutenbergWebViewAuthorizationData,
                                 mTenorFeatureConfig.isEnabled(),
                                 gutenbergPropsBuilder
                         );
@@ -2118,6 +2154,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
         public int getCount() {
             return NUM_PAGES_EDITOR;
         }
+    }
+
+    private GutenbergPropsBuilder getGutenbergPropsBuilder() {
+        String postType = mIsPage ? "page" : "post";
+        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
+        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
+        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
+
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
+        boolean isUnsupportedBlockEditorEnabled = (mSite.isWPCom() || mIsJetpackSsoEnabled)
+                && "gutenberg".equals(mSite.getWebEditor());
+
+        return new GutenbergPropsBuilder(
+                enableMentions,
+                isUnsupportedBlockEditorEnabled,
+                mModalLayoutPickerFeatureConfig.isEnabled(),
+                wpcomLocaleSlug,
+                postType,
+                themeBundle
+        );
     }
 
     // Moved from EditPostContentFragment

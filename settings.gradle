@@ -1,3 +1,7 @@
+plugins {
+  id "com.gradle.enterprise" version "3.4.1"
+}
+
 include ':WordPress'
 include ':libs:stories-android:stories'
 project(':libs:stories-android:stories').projectDir = new File(rootProject.projectDir, 'libs/stories-android/stories')
@@ -50,3 +54,4 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
     include ':react-native-reanimated'
     project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-reanimated/android')
 }
+
