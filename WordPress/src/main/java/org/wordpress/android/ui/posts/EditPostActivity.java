@@ -3049,8 +3049,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             }
         }
-        // Story instance loaded or re-created! Load it
-        ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
+        // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
+        ActivityLauncher.editStoryForResult(
+                this,
+                mSite,
+                storyIndex,
+                allStorySlidesAreEditable,
+                true,
+                blockId
+        );
     }
 
     // FluxC events

@@ -99,6 +99,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
+import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
@@ -744,7 +745,8 @@ public class ActivityLauncher {
             SiteModel site,
             int storyIndex,
             boolean allStorySlidesAreEditable,
-            boolean launchedFromGutenberg
+            boolean launchedFromGutenberg,
+            String storyBlockId
     ) {
         if (site == null) {
             return;
@@ -755,6 +757,7 @@ public class ActivityLauncher {
         intent.putExtra(KEY_STORY_INDEX, storyIndex);
         intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, launchedFromGutenberg);
         intent.putExtra(KEY_ALL_UNFLATTENED_LOADED_SLIDES, allStorySlidesAreEditable);
+        intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);
         activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
     }
 

@@ -30,6 +30,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_MEDIA_FILES
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -95,6 +98,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -430,7 +434,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
-        viewModel.onStorySaveButtonPressed()
+        if (intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)) {
+            val savedContentIntent = Intent()
+            val blockId = intent.extras.getString(ARG_STORY_BLOCK_ID)
+            savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
+            // TODO
+            // here take the StoryFrameItems from the current Story, and build a
+            // val mediaFiles= saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockMediaFilesJsonString()
+            // savedContentIntent.putExtra(ARG_STORY_BLOCK_MEDIA_FILES, mediaFiles)
+            savedContentIntent.putExtra(ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA, true)
+            setResult(Activity.RESULT_OK, savedContentIntent)
+            finish()
+        } else {
+            viewModel.onStorySaveButtonPressed()
+        }
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
