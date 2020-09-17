@@ -47,7 +47,7 @@ class HistoryViewModel @Inject constructor(
     @Named(UI_THREAD) uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val connectionStatus: LiveData<ConnectionStatus>
-) : ScopedViewModel(uiDispatcher), LifecycleOwner {
+) : ScopedViewModel(uiDispatcher) {
     enum class HistoryListStatus {
         DONE,
         ERROR,
@@ -75,11 +75,15 @@ class HistoryViewModel @Inject constructor(
     private val _post = MutableLiveData<PostModel?>()
     val post: LiveData<PostModel?> = _post
 
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    private val lifecycleOwner = object : LifecycleOwner {
+        val lifecycleRegistry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle {
+            return lifecycleRegistry
+        }
+    }
 
     init {
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
         dispatcher.register(this)
     }
 
@@ -89,7 +93,7 @@ class HistoryViewModel @Inject constructor(
         }
         isStarted = true
         this.site = site
-        connectionStatus.observe(this, Observer {
+        connectionStatus.observe(lifecycleOwner, Observer {
             if (it == AVAILABLE) {
                 fetchRevisions()
             }
@@ -106,7 +110,7 @@ class HistoryViewModel @Inject constructor(
 
             fetchRevisions()
 
-            lifecycleRegistry.markState(Lifecycle.State.STARTED)
+            lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
         }
     }
 
@@ -205,7 +209,7 @@ class HistoryViewModel @Inject constructor(
 
     override fun onCleared() {
         dispatcher.unregister(this)
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         super.onCleared()
     }
 

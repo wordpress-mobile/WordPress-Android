@@ -17,7 +17,7 @@ public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
+    public static void displayHtmlComment(TextView textView, String content, int maxImageSize, String errorParseMsg) {
         if (textView == null) {
             return;
         }
@@ -59,7 +59,11 @@ public class CommentUtils {
             end--;
         }
 
-        textView.setText(html.subSequence(start, end));
+        if (html.length() == 0) {
+            textView.setText(errorParseMsg);
+        } else {
+            textView.setText(html.subSequence(start, end));
+        }
     }
 
     // Assumes all lines after first line will not be indented
