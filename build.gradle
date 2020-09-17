@@ -142,7 +142,7 @@ ext {
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
 
-    exoPlayerVersion = '2.11.5'
+    exoPlayerVersion = '2.12.0'
 
     // testing
     jUnitVersion = '4.12'

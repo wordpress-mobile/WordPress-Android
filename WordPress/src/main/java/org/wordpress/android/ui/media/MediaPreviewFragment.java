@@ -16,10 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
@@ -48,7 +49,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewFragment extends Fragment {
     public static final String TAG = "media_preview_fragment";
-    public static final String USER_AGENT = "wpandroid-exoplayer";
 
     static final String ARG_MEDIA_CONTENT_URI = "content_uri";
     static final String ARG_MEDIA_ID = "media_id";
@@ -85,6 +85,7 @@ public class MediaPreviewFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
     @Inject AuthenticationUtils mAuthenticationUtils;
+    @Inject ExoPlayerUtils mExoPlayerUtils;
 
     private SimpleExoPlayer mPlayer;
 
@@ -311,20 +312,18 @@ public class MediaPreviewFragment extends Fragment {
                 });
     }
 
-    private MediaSource buildMediaSource(Uri uri) {
-        DefaultHttpDataSourceFactory dataSourceFactory =
-                new DefaultHttpDataSourceFactory(USER_AGENT);
-        dataSourceFactory.getDefaultRequestProperties().set(mAuthenticationUtils.getAuthHeaders(uri.toString()));
-        return new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(uri);
-    }
-
     void initializePlayer() {
-        mPlayer = new SimpleExoPlayer.Builder(requireActivity()).build();
+        DefaultHttpDataSourceFactory dataSourceFactory = mExoPlayerUtils
+                .getHttpDataSourceFactory(Uri.parse(mContentUri));
+        MediaSourceFactory mediaSourceFactory =
+                new DefaultMediaSourceFactory(dataSourceFactory);
+        mPlayer = new SimpleExoPlayer.Builder(requireActivity())
+                .setMediaSourceFactory(mediaSourceFactory)
+                .build();
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {
-             if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl) && mExoPlayerArtworkView != null) {
+            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl) && mExoPlayerArtworkView != null) {
                 loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
             }
             mExoPlayerView.setPlayer(mPlayer);
@@ -335,10 +334,10 @@ public class MediaPreviewFragment extends Fragment {
         }
 
         Uri uri = Uri.parse(mContentUri);
-        MediaSource mediaSource = buildMediaSource(uri);
+        mPlayer.setMediaItem(MediaItem.fromUri(uri));
         mPlayer.setPlayWhenReady(mAutoPlay);
         mPlayer.seekTo(0, mPosition);
-        mPlayer.prepare(mediaSource, false, false);
+        mPlayer.prepare();
     }
 
     void releasePlayer() {
@@ -350,7 +349,7 @@ public class MediaPreviewFragment extends Fragment {
     }
 
     private class PlayerEventListener implements Player.EventListener {
-        @Override public void onLoadingChanged(boolean isLoading) {
+        @Override public void onIsLoadingChanged(boolean isLoading) {
             showProgress(isLoading);
         }
     }
