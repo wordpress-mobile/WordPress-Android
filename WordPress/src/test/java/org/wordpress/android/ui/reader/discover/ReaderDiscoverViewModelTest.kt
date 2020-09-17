@@ -117,7 +117,7 @@ class ReaderDiscoverViewModelTest {
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
+                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
                         anyOrNull(), anyOrNull()
                 )
