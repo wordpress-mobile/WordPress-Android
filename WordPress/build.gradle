@@ -252,7 +252,6 @@ dependencies {
 
     testImplementation 'org.robolectric:robolectric:4.4'
     testImplementation 'org.robolectric:shadows-multidex:4.4'
-    implementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
 
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
@@ -263,6 +262,8 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
+    testImplementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
+
     androidTestImplementation 'com.squareup.okio:okio:1.14.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
