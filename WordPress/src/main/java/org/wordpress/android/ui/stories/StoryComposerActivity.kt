@@ -23,6 +23,8 @@ import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
+import com.wordpress.stories.compose.story.StoryRepository
+import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
@@ -31,12 +33,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID
-import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_MEDIA_FILES
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_UPDATED_CONTENT
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -62,6 +65,7 @@ import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -99,6 +103,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
+    @Inject lateinit var mediaStore: MediaStore
+    @Inject lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -440,14 +447,38 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
             // TODO
             // here take the StoryFrameItems from the current Story, and build a
-            // val mediaFiles= saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockMediaFilesJsonString()
-            // savedContentIntent.putExtra(ARG_STORY_BLOCK_MEDIA_FILES, mediaFiles)
+            val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
+            val updatedStoryBlock=
+                    saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockString(
+                            getMediaFilesFromBackgroundMediaIdsInStory(storyIndex)
+                    )
+            savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             savedContentIntent.putExtra(ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA, true)
             setResult(Activity.RESULT_OK, savedContentIntent)
             finish()
         } else {
+            // assume this is a new Post, and proceed to PrePublish bottom sheet
             viewModel.onStorySaveButtonPressed()
         }
+    }
+
+    private fun getMediaFilesFromBackgroundMediaIdsInStory(storyIdx: StoryIndex) : List<MediaFile> {
+        val mediaFiles = ArrayList<MediaFile>()
+        val story = StoryRepository.getStoryAtIndex(storyIdx)
+        for (frame in story.frames) {
+            frame.id?.let {
+                // WARNING: we assume the only path to creation is by using the Story Creator (not mobile gutenberg
+                // by inserting a new block from the block picker) so, we ALWAYS should have a remote mediaId
+                // here. If things change, we'll need to cover the situation for finding a MediaModel from both
+                // a local ID (if not yet uploaded to the site) and a remote ID (after uploading to the site).
+                val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
+                val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
+                mediaFile?.let {
+                    mediaFiles.add(it)
+                }
+            }
+        }
+        return mediaFiles
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

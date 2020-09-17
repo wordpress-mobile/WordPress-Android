@@ -157,7 +157,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     }
 
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(editPostRepository, mediaFiles)
+        saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
+                editPostRepository,
+                ArrayList<MediaFile>(mediaFiles.values)
+        )
     }
 
     override fun getImmutablePost(): PostImmutableModel {

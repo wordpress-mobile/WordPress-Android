@@ -85,8 +85,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
-    public static final String ARG_STORY_BLOCK_ID = "block_id";
-    public static final String ARG_STORY_BLOCK_MEDIA_FILES = "block_media_files";
+    public static final String ARG_STORY_BLOCK_ID = "story_block_id";
+    public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
     public static final String ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA = "status_wait_for_flattened_media";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
@@ -413,8 +413,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             if (resultCode == Activity.RESULT_OK) {
                 // handle edited block content
                 String blockId = data.getStringExtra(ARG_STORY_BLOCK_ID);
-                String mediaFiles = data.getStringExtra(ARG_STORY_BLOCK_MEDIA_FILES);
-                getGutenbergContainerFragment().replaceStoryEditedBlock(mediaFiles, blockId);
+                String updatedBlockContent = data.getStringExtra(ARG_STORY_BLOCK_UPDATED_CONTENT);
+                getGutenbergContainerFragment().replaceStoryEditedBlock(updatedBlockContent, blockId);
                 // TODO maybe we need to track something here?
             } else {
                 // TODO maybe we need to track something here?
