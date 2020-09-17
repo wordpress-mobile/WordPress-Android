@@ -14,31 +14,23 @@ import javax.inject.Inject
 class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
-        mediaFiles: Map<String, MediaFile>
+        mediaFiles: ArrayList<MediaFile>
     ) {
-        val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
-        for (entry in mediaFiles.entries) {
-            jsonArrayMediaFiles.add(buildMediaFileData(entry.value))
-        }
-
-        val storyBlock = StoryBlockData(mediaFiles = jsonArrayMediaFiles)
-
         editPostRepository.update { postModel: PostModel ->
-            postModel.setContent(createGBStoryBlockStringFromJson(storyBlock))
+            postModel.setContent(buildJetpackStoryBlockString(mediaFiles))
             true
         }
     }
 
-    fun buildJetpackStoryBlockMediaFilesJsonString(
-        mediaFiles: Map<String, MediaFile>
+    fun buildJetpackStoryBlockString(
+        mediaFiles: List<MediaFile>
     ): String {
         val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
-        for (entry in mediaFiles.entries) {
-            jsonArrayMediaFiles.add(buildMediaFileData(entry.value))
+        for (mediaFile in mediaFiles) {
+            jsonArrayMediaFiles.add(buildMediaFileData(mediaFile))
         }
         val storyBlock = StoryBlockData(mediaFiles = jsonArrayMediaFiles)
-        val gson = Gson()
-        return gson.toJson(storyBlock)
+        return createGBStoryBlockStringFromJson(storyBlock)
     }
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
