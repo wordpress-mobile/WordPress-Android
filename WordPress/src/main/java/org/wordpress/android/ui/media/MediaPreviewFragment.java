@@ -87,7 +87,6 @@ public class MediaPreviewFragment extends Fragment {
     @Inject AuthenticationUtils mAuthenticationUtils;
 
     private SimpleExoPlayer mPlayer;
-    private int mCurrentWindow = 0;
 
     /**
      * @param site       optional site this media is associated with
@@ -241,8 +240,8 @@ public class MediaPreviewFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if (mIsVideo || mIsAudio) {
-            outState.putInt(ARG_POSITION, (int) mPlayer.getCurrentPosition());
+        if ((mIsVideo || mIsAudio)) {
+            outState.putInt(ARG_POSITION, mPosition);
         }
     }
 
@@ -320,7 +319,7 @@ public class MediaPreviewFragment extends Fragment {
                 .createMediaSource(uri);
     }
 
-    private void initializePlayer() {
+    void initializePlayer() {
         mPlayer = new SimpleExoPlayer.Builder(requireActivity()).build();
         mPlayer.addListener(new PlayerEventListener());
 
@@ -338,14 +337,13 @@ public class MediaPreviewFragment extends Fragment {
         Uri uri = Uri.parse(mContentUri);
         MediaSource mediaSource = buildMediaSource(uri);
         mPlayer.setPlayWhenReady(mAutoPlay);
-        mPlayer.seekTo(mCurrentWindow, mPosition);
+        mPlayer.seekTo(0, mPosition);
         mPlayer.prepare(mediaSource, false, false);
     }
 
-    private void releasePlayer() {
+    void releasePlayer() {
         if (mPlayer != null) {
             mPosition = (int) mPlayer.getCurrentPosition();
-            mCurrentWindow = mPlayer.getCurrentWindowIndex();
             mPlayer.release();
             mPlayer = null;
         }
