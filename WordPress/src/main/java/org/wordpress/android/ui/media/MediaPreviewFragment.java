@@ -177,7 +177,7 @@ public class MediaPreviewFragment extends Fragment {
             txtAudioTitle.setVisibility(View.VISIBLE);
         }
 
-        if (mIsAudio || mIsVideo) {
+        if (showAudioOrVideo()) {
             View.OnClickListener listener = v -> {
                 if (mMediaTapListener != null) {
                     mMediaTapListener.onMediaTapped();
@@ -193,7 +193,7 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > VERSION_CODES.M) {
+        if (showAudioOrVideo() && Util.SDK_INT > VERSION_CODES.M) {
             initializePlayer();
         }
     }
@@ -201,7 +201,7 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > VERSION_CODES.M) {
+        if (showAudioOrVideo() && Util.SDK_INT > VERSION_CODES.M) {
             releasePlayer();
         }
     }
@@ -209,10 +209,8 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onPause() {
         mFragmentWasPaused = true;
-        if (mIsAudio || mIsVideo) {
-            if (Util.SDK_INT <= VERSION_CODES.M) {
-                releasePlayer();
-            }
+        if (showAudioOrVideo() && Util.SDK_INT <= VERSION_CODES.M) {
+            releasePlayer();
         }
         super.onPause();
     }
@@ -223,7 +221,7 @@ public class MediaPreviewFragment extends Fragment {
 
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
-        } else if (mIsAudio || mIsVideo) {
+        } else if (showAudioOrVideo()) {
             if (Util.SDK_INT <= VERSION_CODES.M || mPlayer == null) {
                 initializePlayer();
             }
@@ -241,7 +239,7 @@ public class MediaPreviewFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if ((mIsVideo || mIsAudio)) {
+        if (showAudioOrVideo()) {
             outState.putInt(ARG_POSITION, mPosition);
         }
     }
@@ -346,6 +344,10 @@ public class MediaPreviewFragment extends Fragment {
             mPlayer.release();
             mPlayer = null;
         }
+    }
+
+    boolean showAudioOrVideo() {
+        return mIsVideo || mIsAudio;
     }
 
     private class PlayerEventListener implements Player.EventListener {

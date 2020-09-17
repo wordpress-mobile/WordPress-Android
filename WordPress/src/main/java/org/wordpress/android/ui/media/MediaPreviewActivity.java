@@ -457,15 +457,21 @@ public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPr
 
         void pauseFragment(int position) {
             Fragment fragment = mFragmentMap.get(position);
-            if (fragment != null) {
-                ((MediaPreviewFragment) fragment).releasePlayer();
+            if (fragment instanceof MediaPreviewFragment) {
+                MediaPreviewFragment mediaPreviewFragment = ((MediaPreviewFragment) fragment);
+                if (mediaPreviewFragment.showAudioOrVideo()) {
+                    mediaPreviewFragment.releasePlayer();
+                }
             }
         }
 
         void unpauseFragment(int position) {
             Fragment fragment = mFragmentMap.get(position);
-            if (fragment != null) {
-                ((MediaPreviewFragment) fragment).initializePlayer();
+            if (fragment instanceof MediaPreviewFragment) {
+                MediaPreviewFragment mediaPreviewFragment = ((MediaPreviewFragment) fragment);
+                if (mediaPreviewFragment.showAudioOrVideo()) {
+                    mediaPreviewFragment.initializePlayer();
+                }
             }
         }
 
