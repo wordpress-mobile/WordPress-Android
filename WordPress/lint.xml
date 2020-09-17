@@ -82,6 +82,7 @@
         <ignore regexp="okio-1.9.0.jar" />
         <ignore regexp="java-common-1.13.jar" />
         <ignore path="**/sentry*.jar"/>
+        <ignore path="**/*spongycastle*.jar"/>
     </issue>
 
     <issue id="UnusedResources" severity="error">
