@@ -18,7 +18,7 @@ public interface LoginListener {
     LoginMode getLoginMode();
 
     // Login Email input callbacks
-    void gotWpcomEmail(String email, boolean verifyEmail);
+    void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions);
     void gotUnregisteredEmail(String email);
     void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
                                       String service);
@@ -33,9 +33,8 @@ public interface LoginListener {
     void showHelpFindingConnectedEmail();
 
     // Login Request Magic Link callbacks
-    void showMagicLinkSentScreen(String email);
+    void showMagicLinkSentScreen(String email, boolean allowPassword);
     void usePasswordInstead(String email);
-    void forgotPassword(String url);
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks
@@ -43,6 +42,8 @@ public interface LoginListener {
     void helpMagicLinkSent(String email);
 
     // Login email password callbacks
+    void forgotPassword(String url);
+    void useMagicLinkInstead(String email, boolean verifyEmail);
     void needs2fa(String email, String password);
     void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
     void needs2faSocialConnect(String email, String password, String idToken, String service);

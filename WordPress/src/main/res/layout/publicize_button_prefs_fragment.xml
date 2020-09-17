@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/sharing_settings_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -148,5 +148,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

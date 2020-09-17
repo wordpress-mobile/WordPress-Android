@@ -42,8 +42,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.fluxc.store.AccountStore.FetchAuthOptionsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.OnAuthOptionsFetched;
 import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.util.ContextExtensionsKt;
 import org.wordpress.android.login.util.SiteUtils;
@@ -55,6 +55,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -494,7 +496,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             clearEmailError();
             startProgress();
             mRequestedEmail = email;
-            mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
+            mDispatcher.dispatch(AccountActionBuilder.newFetchAuthOptionsAction(new FetchAuthOptionsPayload(email)));
         } else {
             showEmailError(R.string.email_invalid);
         }
@@ -579,51 +581,54 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAvailabilityChecked(OnAvailabilityChecked event) {
-        if (mRequestedEmail == null || !mRequestedEmail.equalsIgnoreCase(event.value)) {
-            // bail if user canceled or a different email request is outstanding
+    public void onAuthOptionsFetched(OnAuthOptionsFetched event) {
+        if (mRequestedEmail == null) {
+            // bail if user canceled
             return;
         }
+
+        final String email = mRequestedEmail;
 
         if (isInProgress()) {
             endProgress();
         }
 
+        // hide the keyboard
+        ActivityUtils.hideKeyboardForced(mEmailInput);
+
         if (event.isError()) {
             // report the error but don't bail yet.
-            AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
-            // hide the keyboard to ensure the link to login using the site address is visible
-            ActivityUtils.hideKeyboardForced(mEmailInput);
-            // we validate the email prior to making the request, but just to be safe...
-            if (event.error.type == AccountStore.IsAvailableErrorType.INVALID) {
-                showEmailError(R.string.email_invalid);
-            } else {
-                showErrorDialog(getString(R.string.error_generic_network));
-            }
-            return;
-        }
+            AppLog.e(T.API, "OnAuthOptionsFetched has error: " + event.error.type + " - " + event.error.message);
 
-        switch (event.type) {
-            case EMAIL:
-                if (event.isAvailable) {
-                    ActivityUtils.hideKeyboardForced(mEmailInput);
+            switch (event.error.type) {
+                case UNKNOWN_USER:
+                    // This email does not correspond to an existing account
                     if (mIsSignupFromLoginEnabled) {
                         if (mLoginListener != null) {
-                            mLoginListener.gotUnregisteredEmail(event.value);
+                            mLoginListener.gotUnregisteredEmail(email);
                         }
                     } else {
-                        // email address is available on wpcom, so apparently the user can't login with that one.
                         mAnalyticsListener.trackFailure("Email not registered WP.com");
                         showEmailError(R.string.email_not_registered_wpcom);
                     }
-                } else if (mLoginListener != null) {
-                    ActivityUtils.hideKeyboardForced(mEmailInput);
-                    mLoginListener.gotWpcomEmail(event.value, false);
-                }
-                break;
-            default:
-                AppLog.e(T.API, "OnAvailabilityChecked unhandled event type: " + event.error.type);
-                break;
+                    break;
+                case EMAIL_LOGIN_NOT_ALLOWED:
+                    // As a security measure, this user needs to log in using an username and password
+                    mAnalyticsListener.trackFailure("Login with username required");
+                    ToastUtils.showToast(getContext(), R.string.error_user_username_instead_of_email, Duration.LONG);
+                    if (mLoginListener != null) {
+                        mLoginListener.loginViaWpcomUsernameInstead();
+                    }
+                    break;
+                case GENERIC_ERROR:
+                default:
+                    showErrorDialog(getString(R.string.error_generic_network));
+            }
+        } else {
+            if (mLoginListener != null) {
+                mLoginListener
+                        .gotWpcomEmail(email, false, new AuthOptions(event.isPasswordless, event.isEmailVerified));
+            }
         }
     }
 
