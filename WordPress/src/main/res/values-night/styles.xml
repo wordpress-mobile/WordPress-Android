@@ -86,11 +86,6 @@
         <item name="theme">@style/WordPress.ActionMode.Theme</item>
     </style>
 
-    <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
-        <item name="colorControlActivated">@android:color/transparent</item>
-    </style>
-
     <style name="WordPress" parent="Base.Wordpress">
         <item name="android:navigationBarColor">?attr/colorSurface</item>
     </style>

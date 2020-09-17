@@ -101,6 +101,10 @@
         <item name="theme">@style/WordPress.ActionMode.Theme</item>
     </style>
 
+    <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.DayNight">
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
+    </style>
+
     <style name="WordPress.ActionMode.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
