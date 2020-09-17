@@ -428,7 +428,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     private boolean calculateHasJetpack(ConnectSiteInfoPayload siteInfo) {
         // Determining if jetpack is actually installed takes additional logic. This final
-        // calculated event property will make querying this event more straight-forward:
+        // calculated event property will make querying this event more straight-forward.
+        // Internal reference: p99K0U-1vO-p2#comment-3574
         boolean hasJetpack = false;
         if (siteInfo.isWPCom && siteInfo.hasJetpack) {
             // This is likely an atomic site.
