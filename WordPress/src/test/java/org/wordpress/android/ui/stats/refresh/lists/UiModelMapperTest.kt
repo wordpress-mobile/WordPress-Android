@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
