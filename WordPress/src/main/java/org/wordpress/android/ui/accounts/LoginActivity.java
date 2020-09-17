@@ -726,8 +726,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void addGoogleLoginFragment() {
-        addGoogleFragment(LoginGoogleFragment.newInstance(mIsSignupFromLoginEnabled), LoginGoogleFragment.TAG);
+    public void addGoogleLoginFragment(boolean isSignupFromLoginEnabled) {
+        addGoogleFragment(LoginGoogleFragment.newInstance(isSignupFromLoginEnabled), LoginGoogleFragment.TAG);
     }
 
     @Override
