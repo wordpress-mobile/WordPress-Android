@@ -2396,6 +2396,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
+        if (requestCode == RequestCodes.EDIT_STORY) {
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                mEditorFragment.onActivityResult(requestCode, resultCode, data);
+                return;
+            }
+        }
+
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO || requestCode == RequestCodes.TAKE_VIDEO
                               || requestCode == RequestCodes.PHOTO_PICKER))) {
             switch (requestCode) {
