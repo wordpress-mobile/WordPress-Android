@@ -3048,8 +3048,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (!failedLoadingOrReCreatingStory) {
-            // Story instance loaded or re-created! Load it
-            ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
+            // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
+            ActivityLauncher.editStoryForResult(
+                    this,
+                    mSite,
+                    storyIndex,
+                    allStorySlidesAreEditable,
+                    true,
+                    blockId
+            );
         } else {
             // unfortunately we couldn't even load the remote media Ids indicated by the StoryBLock so we can't allow
             // editing at this time :(
@@ -3062,16 +3069,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-
-        // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
-        ActivityLauncher.editStoryForResult(
-                this,
-                mSite,
-                storyIndex,
-                allStorySlidesAreEditable,
-                true,
-                blockId
-        );
     }
 
     // FluxC events
