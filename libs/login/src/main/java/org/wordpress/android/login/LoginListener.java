@@ -29,7 +29,7 @@ public interface LoginListener {
     void loginViaSiteCredentials(String inputSiteAddress);
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
-    void addGoogleLoginFragment();
+    void addGoogleLoginFragment(boolean isSignupFromLoginEnabled);
     void showHelpFindingConnectedEmail();
 
     // Login Request Magic Link callbacks
