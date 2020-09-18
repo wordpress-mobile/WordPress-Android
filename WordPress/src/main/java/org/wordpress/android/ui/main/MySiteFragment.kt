@@ -411,6 +411,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
+        row_sharing.setPadding(5, 5, 5, 5)
         row_sharing.setOnClickListener {
             if (isQuickStartTaskActive(ENABLE_POST_SHARING)) {
                 requestNextStepOfActiveQuickStartTask()

@@ -951,6 +951,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void hideOverlay() {
         View overlay = findViewById(R.id.view_overlay);
         overlay.setVisibility(View.GONE);
+        overlay.setPadding(5, 5, 5, 5);
     }
 
     @Override
