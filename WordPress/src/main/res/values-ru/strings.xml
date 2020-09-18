@@ -124,7 +124,7 @@ Language: ru
     <string name="continue_google_button_suffix">Продолжить с Google</string>
     <string name="login_or">или</string>
     <string name="reset_your_password">Сбросить пароль</string>
-    <string name="login_promo_title_37_percent">37% всех сайтов сети основаны на WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% всех сайтов сети основаны на WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Раскройте потенциал самой гибкой платформы для создания сайтов.</string>
     <string name="send_link_by_email">Прислать ссылку по электронной почте</string>
     <string name="create_account">Создать учётную запись</string>

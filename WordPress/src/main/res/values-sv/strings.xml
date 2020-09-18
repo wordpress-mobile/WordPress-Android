@@ -126,7 +126,7 @@ Language: sv_SE
     <string name="reset_your_password">Återställ ditt lösenord</string>
     <string name="or_type_your_password">Eller skriv ditt lösenord</string>
     <string name="create_account">Skapa konto</string>
-    <string name="login_promo_title_37_percent">37&amp;nbsp;% av webben är byggd på WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% av webben är byggd på WordPress.</string>
     <string name="get_started">Kom igång</string>
     <string name="enter_email_to_continue_wordpress_com">Ange din e-postadress för att logga in eller skapa ett WordPress.com-konto.</string>
     <string name="send_link_by_email">Skicka länk via e-post</string>
