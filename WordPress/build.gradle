@@ -259,7 +259,7 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:3.3.3'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestImplementation 'com.squareup.okio:okio:1.14.0'
+    androidTestImplementation 'com.squareup.okio:okio:2.8.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
