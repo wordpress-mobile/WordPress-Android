@@ -7,9 +7,10 @@ import com.squareup.javapoet.TypeSpec;
 import org.wordpress.android.fluxc.annotations.Endpoint;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.Map;
 import javax.lang.model.element.Modifier;
 
 public class XMLRPCPoet {
-    public static TypeSpec generate(File endpointFile, String fileName, Map<String, List<String>> aliases)
+    public static TypeSpec generate(InputStream inputStream, String fileName, Map<String, List<String>> aliases)
             throws IOException {
         TypeSpec.Builder xmlrpcBuilder = TypeSpec.enumBuilder(fileName)
                 .addModifiers(Modifier.PUBLIC)
@@ -39,7 +40,7 @@ public class XMLRPCPoet {
 
         xmlrpcBuilder.addMethod(xmlrpcToString);
 
-        BufferedReader in = new BufferedReader(new FileReader(endpointFile));
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
         String fullEndpoint;
         while ((fullEndpoint = in.readLine()) != null) {
