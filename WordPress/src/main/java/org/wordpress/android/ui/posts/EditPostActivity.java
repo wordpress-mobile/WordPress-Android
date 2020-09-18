@@ -3049,7 +3049,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
             builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
-            builder.setPositiveButton(R.string.yes, (dialog, id) -> {
+            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
                 dialog.dismiss();
             });
             AlertDialog dialog = builder.create();
