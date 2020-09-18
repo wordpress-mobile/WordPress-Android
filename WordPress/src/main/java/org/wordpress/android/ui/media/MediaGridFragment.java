@@ -46,7 +46,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -794,7 +793,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             inflater.inflate(R.menu.media_multiselect, menu);
             setSwipeToRefreshEnabled(false);
             getAdapter().setInMultiSelect(true);
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.neutral_60);
             updateActionModeTitle(selectCount);
             return true;
         }
@@ -820,7 +818,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         public void onDestroyActionMode(ActionMode mode) {
             setSwipeToRefreshEnabled(true);
             getAdapter().setInMultiSelect(false);
-            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar);
             mActionMode = null;
         }
     }

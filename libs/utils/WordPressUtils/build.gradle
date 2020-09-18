@@ -8,15 +8,16 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.android.tools.build:gradle:3.5.1'
-        classpath 'com.novoda:bintray-release:0.9.1'
+        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 repositories {
     google()
@@ -50,10 +51,9 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileSdkVersion 28
-    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        versionName "1.27"
+        versionName "1.30"
         minSdkVersion 18
         targetSdkVersion 26
 
@@ -87,15 +87,33 @@ android.libraryVariants.all { variant ->
     }
 }
 
-publish {
-    artifactId = 'utils'
-    userOrg = 'wordpress-mobile'
-    groupId = 'org.wordpress'
-    uploadName = 'utils'
-    desc = 'Utils library for Android'
-    publishVersion = android.defaultConfig.versionName
-    licences = ['MIT', 'GPL']
-    website = 'https://github.com/wordpress-mobile/WordPress-Utils-Android/'
-    dryRun = 'false'
-    autoPublish = 'true'
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
+    publications = ['UtilsPublication']
+    pkg {
+        repo = 'maven'
+        name = 'utils'
+        userOrg = 'wordpress-mobile'
+        licenses = ['MIT', 'GPL']
+        vcsUrl = 'https://github.com/wordpress-mobile/WordPress-Utils-Android.git'
+        version {
+            name = android.defaultConfig.versionName
+            desc = 'Utils library for Android'
+            released  = new Date()
+        }
+    }
 }
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            UtilsPublication(MavenPublication) {
+                groupId 'org.wordpress'
+                artifactId 'utils'
+                version android.defaultConfig.versionName
+            }
+        }
+    }
+}
+

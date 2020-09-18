@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -63,7 +62,6 @@ class MediaPickerViewModel @Inject constructor(
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
-    private val context: Context,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val resourceProvider: ResourceProvider
@@ -96,7 +94,7 @@ class MediaPickerViewModel @Inject constructor(
             _searchExpanded
     ) { domainModel, selectedUris, softAskRequest, searchExpanded ->
         MediaPickerUiState(
-                buildUiModel(domainModel, selectedUris),
+                buildUiModel(domainModel, selectedUris, softAskRequest),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled && selectedUris.isNullOrEmpty()) {
                     clickIcon(WpStoriesCapture)
@@ -128,10 +126,13 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun buildUiModel(
         domainModel: DomainModel?,
-        selectedUris: List<UriWrapper>?
+        selectedUris: List<UriWrapper>?,
+        softAskRequest: SoftAskRequest?
     ): PhotoListUiModel {
         val data = domainModel?.domainItems
-        return if (data != null) {
+        return if (null != softAskRequest && softAskRequest.show) {
+            PhotoListUiModel.Hidden
+        } else if (data != null) {
             val uiItems = data.map {
                 val showOrderCounter = mediaPickerSetup.canMultiselect
                 val toggleAction = ToggleAction(it.uri, showOrderCounter, this::toggleItem)
@@ -394,7 +395,7 @@ class MediaPickerViewModel @Inject constructor(
             val label = if (softAskRequest.isAlwaysDenied) {
                 val permissionName = ("<strong>${
                     WPPermissionUtils.getPermissionName(
-                            context,
+                            resourceProvider,
                             permission.WRITE_EXTERNAL_STORAGE
                     )
                 }</strong>")
@@ -455,6 +456,7 @@ class MediaPickerViewModel @Inject constructor(
                 PhotoListUiModel()
 
         object Empty : PhotoListUiModel()
+        object Hidden : PhotoListUiModel()
     }
 
     sealed class SoftAskViewUiModel {
