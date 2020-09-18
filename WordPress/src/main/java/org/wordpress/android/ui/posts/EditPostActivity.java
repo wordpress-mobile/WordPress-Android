@@ -40,7 +40,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.wordpress.stories.compose.story.StoryFrameItem;
 import com.wordpress.stories.compose.story.StoryRepository;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,6 +74,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -95,9 +95,11 @@ import org.wordpress.android.fluxc.store.EditorThemeStore;
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload;
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -160,8 +162,9 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId;
+import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
+import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
+import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -182,6 +185,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
@@ -608,6 +612,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (!mIsNewPost) {
+            // if we are opening an existing Post, and it contains a Story block, pre-fetch the media in case
+            // the user wants to edit the block (we'll need to download it first if the slides images weren't
+            // created on this device)
+            if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getPost().getContent())) {
+                fetchMediaList();
+            }
+
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mEditPostRepository.getPost());
@@ -3009,53 +3020,49 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        ArrayList<String> tmpMediaIdsString = new ArrayList<>();
-        boolean allStorySlidesAreEditable = true;
-        for (Object mediaFile : mediaFiles) {
-            long mediaIdLong = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
-            String mediaIdString = String.valueOf(mediaIdLong);
-            if (allStorySlidesAreEditable
-                && !StoriesPrefs.isValidSlide(this, mSite.getId(), new RemoteMediaId(mediaIdLong))) {
-                // flag this as soon as we find one media item not being really editable
-                allStorySlidesAreEditable = false;
-            }
-            tmpMediaIdsString.add(mediaIdString);
-        }
+        LoadStoryFromStoriesPrefsUseCase loadStoryFromStoriesPrefsUseCase = new LoadStoryFromStoriesPrefsUseCase(
+                new StoryRepositoryWrapper(),
+                mSite,
+                mMediaStore,
+                this
+        );
+        ArrayList<String> mediaIds =
+                loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles);
+        boolean allStorySlidesAreEditable = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(mSite, mediaIds);
+        boolean failedLoadingOrReCreatingStory = false;
 
         // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
         // just build the Story object ourselves to keep these files arrangement
-        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(tmpMediaIdsString);
+        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(mediaIds);
         if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
-            // the StoryRepository didn' have it but we have editable serialized slides so,
+            // the StoryRepository didn't have it but we have editable serialized slides so,
             // create a new Story from scratch with these deserialized StoryFrameItems
-            StoryRepository.loadStory(storyIndex);
-            storyIndex = StoryRepository.currentStoryIndex;
-            for (String mediaId : tmpMediaIdsString) {
-                StoryFrameItem storyFrameItem = StoriesPrefs.getSlideWithRemoteId(
-                        this,
-                        mSite.getId(),
-                        new RemoteMediaId(Long.parseLong(mediaId))
-                );
-                if (storyFrameItem != null) {
-                    StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
-                } else {
-                    allStorySlidesAreEditable = false;
-
-                    // for this missing frame we'll create a new frame using the actual uploaded flattened media
-                    ArrayList<Long> tmpMediaIdsLong = new ArrayList<>();
-                    tmpMediaIdsLong.add(Long.parseLong(mediaId));
-                    List<MediaModel> mediaModelList = mMediaStore.getSiteMediaWithIds(mSite, tmpMediaIdsLong);
-                    for (MediaModel mediaModel : mediaModelList) {
-                        storyFrameItem = StoryFrameItem.Companion.getNewStoryFrameItemFromUri(
-                                Uri.parse(mediaModel.getUrl()),
-                                mediaModel.isVideo()
-                        );
-                        storyFrameItem.setId(String.valueOf(mediaModel.getMediaId()));
-                        StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
-                    }
-                }
+            ReCreateStoryResult result =
+                    loadStoryFromStoriesPrefsUseCase.loadOrReCreateStoryFromStoriesPrefs(mediaIds);
+            failedLoadingOrReCreatingStory = result.getNoSlidesLoaded();
+            if (allStorySlidesAreEditable) {
+                // double check and override if we found at least one couldn't be inflated
+                allStorySlidesAreEditable = result.getAllStorySlidesAreEditable();
             }
+            storyIndex = result.getStoryIndex();
         }
+
+        if (!failedLoadingOrReCreatingStory) {
+            // Story instance loaded or re-created! Load it
+            ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
+        } else {
+            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBLock so we can't allow
+            // editing at this time :(
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+            builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
+            builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
+            builder.setPositiveButton(R.string.yes, (dialog, id) -> {
+                dialog.dismiss();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+
         // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
         ActivityLauncher.editStoryForResult(
                 this,
@@ -3098,6 +3105,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaListFetched(OnMediaListFetched event) {
+        // no op - we don't need to check anything just now, but declaring the method so it's
+        // clear we make a request to FetchMedia in this class.
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -3223,6 +3237,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         FetchEditorThemePayload payload = new FetchEditorThemePayload(mSite);
         mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
     }
+
+    private void fetchMediaList() {
+        // do not refresh if there is no network
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            return;
+        }
+        FetchMediaListPayload payload =
+                new FetchMediaListPayload(mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
+    }
+
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
