@@ -65,6 +65,7 @@ public class WPScreenshotTest extends BaseTest {
         idleFor(1000);
         takeScreenshot("1-build-and-manage-your-website");
 
+        navigateMySite();
         editBlogPost();
         manageMedia();
         navigateNotifications();
@@ -73,6 +74,15 @@ public class WPScreenshotTest extends BaseTest {
         // Turn Demo Mode off on the emulator when we're done
         mDemoModeEnabler.disable();
         logoutIfNecessary();
+    }
+
+    private void navigateMySite() {
+        // Click on the "Sites" tab and take a screenshot
+        clickOn(R.id.nav_sites);
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
+
+        takeScreenshot("4-screenshot-my-site");
     }
 
     private void editBlogPost() {
