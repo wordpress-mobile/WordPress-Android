@@ -154,6 +154,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     protected boolean isUrlOverridden(WebView view, String url) {
         if (mIsJetpackSsoEnabled) {
             if (!mIsJetpackSsoRedirected) {
+                mForegroundView.setVisibility(View.VISIBLE);
                 mIsJetpackSsoRedirected = true;
                 view.loadUrl(mUrlToLoad);
                 return true;
@@ -162,6 +163,9 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             if (url.contains(mUrlToLoad)) {
                 mForegroundView.setVisibility(View.VISIBLE);
                 mIsRedirected = true;
+            }
+            else {
+                mForegroundView.setVisibility(View.INVISIBLE);
             }
 
             return false;
