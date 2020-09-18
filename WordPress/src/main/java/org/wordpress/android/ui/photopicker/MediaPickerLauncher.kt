@@ -87,8 +87,10 @@ class MediaPickerLauncher
             val mediaPickerSetup = MediaPickerSetup(
                     dataSource = DEVICE,
                     canMultiselect = true,
+                    requiresStoragePermissions = true,
                     allowedTypes = allowedTypes,
                     cameraEnabled = false,
+                    systemPickerEnabled = true,
                     title = R.string.photo_picker_choose_file
             )
             val intent = MediaPickerActivity.buildIntent(
@@ -142,8 +144,10 @@ class MediaPickerLauncher
         return MediaPickerSetup(
                 dataSource = DEVICE,
                 canMultiselect = browserType.canMultiselect(),
+                requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,
                 cameraEnabled = browserType.isWPStoriesPicker,
+                systemPickerEnabled = true,
                 title = title
         )
     }
@@ -159,8 +163,10 @@ class MediaPickerLauncher
         return MediaPickerSetup(
                 dataSource = WP_LIBRARY,
                 canMultiselect = browserType.canMultiselect(),
+                requiresStoragePermissions = false,
                 allowedTypes = allowedTypes,
                 cameraEnabled = browserType.isWPStoriesPicker,
+                systemPickerEnabled = false,
                 title = R.string.wp_media_title
         )
     }

@@ -693,7 +693,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         canMultiselect: Boolean,
         allowedTypes: Set<MediaType>,
         cameraAllowed: Boolean = false
-    ) = MediaPickerSetup(DEVICE, canMultiselect, allowedTypes, cameraAllowed, R.string.wp_media_title)
+    ) = MediaPickerSetup(DEVICE, canMultiselect, true, allowedTypes, cameraAllowed, true, R.string.wp_media_title)
 
     private fun assertStoriesFabIsVisible() {
         uiStates.last().fabUiModel.let { model ->

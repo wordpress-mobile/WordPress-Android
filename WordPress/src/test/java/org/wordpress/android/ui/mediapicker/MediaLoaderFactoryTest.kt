@@ -33,7 +33,15 @@ class MediaLoaderFactoryTest {
 
     @Test
     fun `returns device list builder on DEVICE source`() {
-        val mediaPickerSetup = MediaPickerSetup(DEVICE, true, setOf(), false, R.string.wp_media_title)
+        val mediaPickerSetup = MediaPickerSetup(
+                DEVICE,
+                canMultiselect = true,
+                requiresStoragePermissions = true,
+                allowedTypes = setOf(),
+                cameraEnabled = false,
+                systemPickerEnabled = true,
+                title = R.string.wp_media_title
+        )
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
         assertThat(mediaLoader).isEqualTo(
@@ -47,7 +55,15 @@ class MediaLoaderFactoryTest {
 
     @Test
     fun `returns WP media source on WP_LIBRARY source`() {
-        val mediaPickerSetup = MediaPickerSetup(WP_LIBRARY, true, setOf(), false, R.string.wp_media_title)
+        val mediaPickerSetup = MediaPickerSetup(
+                WP_LIBRARY,
+                canMultiselect = true,
+                requiresStoragePermissions = true,
+                allowedTypes = setOf(),
+                cameraEnabled = false,
+                systemPickerEnabled = true,
+                title = R.string.wp_media_title
+        )
         whenever(mediaLibraryDataSourceFactory.build(site)).thenReturn(mediaLibraryDataSource)
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -65,13 +81,27 @@ class MediaLoaderFactoryTest {
     fun `throws exception on not implemented sources`() {
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
             mediaLoaderFactory.build(
-                    MediaPickerSetup(GIF_LIBRARY, true, setOf(), false, R.string.wp_media_title),
+                    MediaPickerSetup(GIF_LIBRARY,
+                            canMultiselect = true,
+                            requiresStoragePermissions = true,
+                            allowedTypes = setOf(),
+                            cameraEnabled = false,
+                            systemPickerEnabled = true,
+                            title = R.string.wp_media_title
+                    ),
                     site
             )
         }
         assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
             mediaLoaderFactory.build(
-                    MediaPickerSetup(STOCK_LIBRARY, true, setOf(), false, R.string.wp_media_title),
+                    MediaPickerSetup(STOCK_LIBRARY,
+                            canMultiselect = true,
+                            requiresStoragePermissions = true,
+                            allowedTypes = setOf(),
+                            cameraEnabled = false,
+                            systemPickerEnabled = true,
+                            title = R.string.wp_media_title
+                    ),
                     site
             )
         }

@@ -117,7 +117,7 @@ class MediaPickerViewModel @Inject constructor(
     private fun buildBrowseMenuUiModel(softAskRequest: SoftAskRequest?, searchExpanded: Boolean?): BrowseMenuUiModel {
         val isSoftAskRequestVisible = softAskRequest?.show ?: false
         val isSearchExpanded = searchExpanded ?: false
-        return BrowseMenuUiModel(!isSoftAskRequestVisible && !isSearchExpanded)
+        return BrowseMenuUiModel(mediaPickerSetup.systemPickerEnabled && !isSoftAskRequestVisible && !isSearchExpanded)
     }
 
     var lastTappedIcon: MediaPickerIcon? = null
@@ -381,6 +381,9 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {
+        if (!mediaPickerSetup.requiresStoragePermissions) {
+            return
+        }
         if (permissionsHandler.hasStoragePermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
             if (_domainModel.value?.domainItems.isNullOrEmpty()) {
