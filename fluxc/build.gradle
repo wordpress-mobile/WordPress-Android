@@ -26,7 +26,7 @@ android {
     defaultConfig {
         versionCode 4
         versionName "0.1"
-        minSdkVersion 16
+        minSdkVersion 18
         targetSdkVersion 29
     }
     buildTypes {
@@ -71,7 +71,7 @@ dependencies {
     implementation "androidx.exifinterface:exifinterface:1.0.0"
 
     // WordPress libs
-    implementation ('org.wordpress:utils:1.20.0') {
+    implementation ('org.wordpress:utils:1.26') {
         // Using official volley package
         exclude group: "com.mcxiaoke.volley"
         exclude group: "com.android.support"
