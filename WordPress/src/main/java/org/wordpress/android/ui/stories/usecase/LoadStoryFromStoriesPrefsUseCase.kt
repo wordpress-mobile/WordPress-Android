@@ -50,6 +50,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         // the StoryRepository didn't have it but we have editable serialized slides so,
         // create a new Story from scratch with these deserialized StoryFrameItems
         var allStorySlidesAreEditable: Boolean = true
+        var noSlidesLoaded = false
         var storyIndex = StoryRepository.DEFAULT_NONE_SELECTED
         storyRepositoryWrapper.loadStory(storyIndex)
         storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
@@ -71,21 +72,28 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                         site,
                         tmpMediaIdsLong
                 )
-                for (mediaModel in mediaModelList) {
-                    storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
-                            Uri.parse(mediaModel.url),
-                            mediaModel.isVideo
-                    )
-                    storyFrameItem.id = mediaModel.mediaId.toString()
-                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+                if (mediaModelList.size == 0) {
+                    noSlidesLoaded = true
+                } else {
+                    for (mediaModel in mediaModelList) {
+                        storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
+                                Uri.parse(mediaModel.url),
+                                mediaModel.isVideo
+                        )
+                        storyFrameItem.id = mediaModel.mediaId.toString()
+                        storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+                    }
                 }
             }
         }
 
-        return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable)
+        return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
     }
 
-    data class ReCreateStoryResult(val storyIndex: StoryIndex, val allStorySlidesAreEditable: Boolean)
+    data class ReCreateStoryResult(
+        val storyIndex: StoryIndex,
+        val allStorySlidesAreEditable: Boolean,
+        val noSlidesLoaded: Boolean)
 }
 
 
