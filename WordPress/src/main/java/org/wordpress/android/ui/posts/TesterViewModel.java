@@ -7,5 +7,4 @@ import androidx.lifecycle.ViewModel;
 
 public class TesterViewModel extends ViewModel {
     @SuppressLint("StaticFieldLeak") TextView mTextView;
-
 }
