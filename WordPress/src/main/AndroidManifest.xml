@@ -145,6 +145,23 @@
             android:name=".ui.accounts.HelpActivity"
             android:label="@string/help_screen_title"
             android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name="zendesk.support.guide.HelpCenterActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.guide.ViewArticleActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.request.RequestActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.requestlist.RequestListActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
         <!-- empty title -->
 
         <!-- Preferences activities -->
@@ -636,7 +653,7 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:label="@string/edit_photo_screen_title"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
         <service

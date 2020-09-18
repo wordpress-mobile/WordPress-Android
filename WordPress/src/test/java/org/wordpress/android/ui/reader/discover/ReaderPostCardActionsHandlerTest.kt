@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
@@ -731,6 +732,22 @@ class ReaderPostCardActionsHandlerTest {
         }
         return Observers(navigation, snackbarMsgs, preloadPost, followStatusUpdated, refreshPosts)
     }
+
+    /** REPORT POST ACTION start **/
+    @Test
+    fun `Clicking on a report this post opens webview`() = test {
+        // Arrange
+        val navigation = mutableListOf<ReaderNavigationEvents>()
+        actionHandler.navigationEvents.observeForever {
+            navigation.add(it.peekContent())
+        }
+        // Act
+        actionHandler.handleReportPostClicked(dummyReaderPostModel())
+
+        // Assert
+        assertThat(navigation[0]).isInstanceOf(ShowReportPost::class.java)
+    }
+    /** REPORT POST ACTION end **/
 
     private fun dummyReaderPostModel(): ReaderPost {
         return ReaderPost().apply {

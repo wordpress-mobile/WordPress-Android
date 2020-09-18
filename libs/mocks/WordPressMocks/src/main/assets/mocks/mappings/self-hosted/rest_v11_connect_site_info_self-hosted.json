@@ -1,10 +1,10 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/connect/site-info",
+        "urlPattern": "/rest/v1.1/connect/site-info(/)?($|\\?.*)",
         "queryParameters": {
             "url": {
-                "matches": "^http(s)?://((?!wordpress.com).)*$"
+                "matches": "(https?://)?([0-9]+(.[0-9]+)+|.*(?<!wordpress).com)(:[0-9]*)?.*"
             }
         }
     },
