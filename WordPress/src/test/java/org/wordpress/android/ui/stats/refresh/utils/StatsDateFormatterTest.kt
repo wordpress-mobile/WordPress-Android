@@ -126,7 +126,7 @@ class StatsDateFormatterTest : BaseUnitTest() {
 
         val parsedDate = statsDateFormatter.printDate(unparsedDate)
 
-        assertThat(parsedDate).isEqualTo("25.11.2018")
+        assertThat(parsedDate).`as`("Are you using the correct version of JDK?").isEqualTo("25. 11. 2018")
     }
 
     @Test
@@ -136,7 +136,7 @@ class StatsDateFormatterTest : BaseUnitTest() {
 
         val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, DAYS)
 
-        assertThat(parsedDate).isEqualTo("25.11.2018")
+        assertThat(parsedDate).`as`("Are you using the correct version of JDK?").isEqualTo("25. 11. 2018")
     }
 
     @Test
@@ -145,8 +145,8 @@ class StatsDateFormatterTest : BaseUnitTest() {
         whenever(
                 resourceProvider.getString(
                         R.string.stats_from_to_dates_in_week_label,
-                        "17.12",
-                        "23.12"
+                        "17. 12",
+                        "23. 12"
                 )
         ).thenReturn(result)
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.forLanguageTag("cs"))
