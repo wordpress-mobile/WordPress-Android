@@ -93,7 +93,6 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     data class ReCreateStoryResult(
         val storyIndex: StoryIndex,
         val allStorySlidesAreEditable: Boolean,
-        val noSlidesLoaded: Boolean)
+        val noSlidesLoaded: Boolean
+    )
 }
-
-
