@@ -92,7 +92,6 @@ Language: sq_AL
     <string name="reader_toast_err_page_jump_not_found">S’arrihet të gjendet hedhja te faqja e lidhur</string>
     <string name="error_media_quota_exceeded_toast">S’ngarkohet dot kartela.\nJanë tejkaluar kuota depozitimi.</string>
     <string name="error_media_quota_exceeded">Janë tejkaluar kuota depozitim</string>
-    <string name="media_error_file_not_allowed_on_free_plan">Ky lloj kartelash nuk lejohet në një plan falas</string>
     <string name="pick_file">Shtoni kartelë</string>
     <string name="gutenberg_native_replace_video">Zëvendësoni video</string>
     <string name="gutenberg_native_replace_image_or_video">Zëvendësoni figurë ose video</string>
@@ -124,7 +123,7 @@ Language: sq_AL
     <string name="create_account">Krijo llogari</string>
     <string name="send_link_by_email">Dërgoje lidhjen me email</string>
     <string name="login_promo_text_unlock_the_power">Çlironi fuqinë e krijuesit më të zhdërvjellët të sajteve.</string>
-    <string name="login_promo_title_37_percent">37\% e web-it ngrihet mbi WordPress.</string>
+    <string name="login_promo_title_37_percent">37% e web-it ngrihet mbi WordPress.</string>
     <string name="reset_your_password">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_request_failed_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
     <string name="quick_start_list_update_site_title_subtitle">Jepini sajtit tuaj një emër që pasqyron personalitetin dhe subjektin e tij. Përshtypja e parë ka vlerë!</string>
@@ -984,9 +983,6 @@ Language: sq_AL
     <string name="menu_history">Historik</string>
     <string name="pages_open_page_error">Faqja e përzgjedhur s’kapet dot</string>
     <string name="pages_pending">Në pritje të shqyrtimit</string>
-    <string name="news_card_announcement_action_sample_announcement">[Lexoni më tepër]</string>
-    <string name="news_card_announcement_content_sample_announcement">[S’keni kohë ta lexoni që tani? S’ka problem: ruajini postimet për kur të keni kohë.]</string>
-    <string name="news_card_announcement_title_sample_announcement">[Ka të gatshme veçori të re]</string>
     <string name="pages_empty_trashed">S’keni faqe të shpëna te hedhurinat</string>
     <string name="pages_empty_scheduled">S’keni faqe të planifikuara për botim</string>
     <string name="pages_empty_drafts">S’keni ndonjë faqe skicë</string>
@@ -1018,7 +1014,6 @@ Language: sq_AL
     <string name="page_status_change_error">Pati një problem me ndryshimin e gjendjes së faqes</string>
     <string name="page_delete_error">Pati një problem me fshirjen e faqes</string>
     <string name="set_parent">Caktojeni Mëmë</string>
-    <string name="dismiss">hidhe tej</string>
     <string name="quick_start_focus_point_description">prekeni këtu</string>
     <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
     <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj.</string>

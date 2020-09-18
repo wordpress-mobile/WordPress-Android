@@ -88,7 +88,6 @@ Language: de
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Zum Bearbeiten von Website-Icons auf selbst gehosteten WordPress-Websites ist das Jetpack-Plugin erforderlich.</string>
     <string name="reader_toast_err_page_jump_not_found">Der verlinkte Seitensprung kann nicht gefunden werden</string>
     <string name="pick_file">Datei hinzufügen</string>
-    <string name="media_error_file_not_allowed_on_free_plan">Dieser Dateityp ist in einem kostenlosen Tarif nicht erlaubt</string>
     <string name="gutenberg_native_replace_video">Video ersetzen</string>
     <string name="gutenberg_native_replace_image_or_video">Bild oder Video ersetzen</string>
     <string name="gutenberg_native_choose_video">Video auswählen</string>
@@ -119,7 +118,7 @@ Language: de
     <string name="create_account">Konto erstellen</string>
     <string name="send_link_by_email">Link per E-Mail senden</string>
     <string name="login_promo_text_unlock_the_power">Nutze alle Vorteile des flexibelsten Website-Baukastens.</string>
-    <string name="login_promo_title_37_percent">37\% des Webs wurde mit WordPress erstellt.</string>
+    <string name="login_promo_title_37_percent">37 % des Webs wurde mit WordPress erstellt.</string>
     <string name="reset_your_password">Dein Passwort zurücksetzen</string>
     <string name="reader_error_request_failed_title">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt. Erste Eindrücke zählen!</string>
@@ -979,9 +978,6 @@ Language: de
     <string name="image_size_thumbnail_label">Vorschaubild</string>
     <string name="pages_open_page_error">Die ausgewählte Seite ist nicht verfügbar</string>
     <string name="pages_pending">Ausstehender Review</string>
-    <string name="news_card_announcement_action_sample_announcement">[Weitere Informationen]</string>
-    <string name="news_card_announcement_content_sample_announcement">[Gerade keine Zeit zum Lesen? Kein Problem: Speichere Beiträge und lies sie später.]</string>
-    <string name="news_card_announcement_title_sample_announcement">[Neue Funktion verfügbar]</string>
     <string name="pages_empty_trashed">Du hast keine Seiten im Papierkorb</string>
     <string name="pages_empty_scheduled">Du hast keine geplanten Seiten</string>
     <string name="pages_empty_drafts">Du hast keine Seitenentwürfe</string>
@@ -1013,7 +1009,6 @@ Language: de
     <string name="page_status_change_error">Beim Ändern des Seitenstatus ist ein Problem aufgetreten</string>
     <string name="page_delete_error">Beim Löschen der Seite ist ein Problem aufgetreten</string>
     <string name="set_parent">Übergeordnete festlegen</string>
-    <string name="dismiss">verwerfen</string>
     <string name="quick_start_focus_point_description">Hier tippen</string>
     <string name="quick_start_list_create_site_title">Erstelle deine Website</string>
     <string name="quick_start_list_create_site_subtitle">Website einrichten.</string>
