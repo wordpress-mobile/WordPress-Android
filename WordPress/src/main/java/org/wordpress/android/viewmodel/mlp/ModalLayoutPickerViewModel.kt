@@ -46,9 +46,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    private val contentUiState: ContentUiState
-        get() = uiState.value as? ContentUiState ?: ContentUiState()
-
     /**
      * Create new page event
      */
@@ -93,7 +90,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     private fun loadLayouts() {
-        val state = contentUiState
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
         val listItems = ArrayList<LayoutCategoryUiState>()
 
         val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
@@ -121,7 +118,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
-        val state = contentUiState
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
         val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
             CategoryListItemUiState(
                     it.slug,
@@ -162,9 +159,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param headerShouldBeVisible if true the header is shown and the title hidden
      */
     private fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        val state = contentUiState
-        if (state.isHeaderVisible == headerShouldBeVisible) return // No change
-        updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+        (uiState.value as? ContentUiState)?.let { state ->
+            if (state.isHeaderVisible == headerShouldBeVisible) return // No change
+            updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+        }
     }
 
     /**
@@ -181,18 +179,21 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param categorySlug the slug of the tapped category
      */
     fun onCategoryTapped(categorySlug: String) {
-        val state = contentUiState
-        if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
-            updateUiState(
-                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { remove(categorySlug) })
-            )
-        } else {
-            updateUiState(
-                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
-            )
+        (uiState.value as? ContentUiState)?.let { state ->
+            if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
+                updateUiState(
+                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply {
+                            remove(categorySlug)
+                        })
+                )
+            } else {
+                updateUiState(
+                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
+                )
+            }
+            loadCategories()
+            loadLayouts()
         }
-        loadCategories()
-        loadLayouts()
     }
 
     /**
@@ -200,23 +201,25 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param layoutSlug the slug of the tapped layout
      */
     fun onLayoutTapped(layoutSlug: String) {
-        val state = contentUiState
-        if (layoutSlug == state.selectedLayoutSlug) { // deselect
-            updateUiState(state.copy(selectedLayoutSlug = null))
-        } else {
-            updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
+        (uiState.value as? ContentUiState)?.let { state ->
+            if (layoutSlug == state.selectedLayoutSlug) { // deselect
+                updateUiState(state.copy(selectedLayoutSlug = null))
+            } else {
+                updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
+            }
+            updateButtonsUiState()
+            loadLayouts()
         }
-        updateButtonsUiState()
-        loadLayouts()
     }
 
     /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
-        val state = contentUiState
-        val selection = state.selectedLayoutSlug != null
-        updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
+        (uiState.value as? ContentUiState)?.let { state ->
+            val selection = state.selectedLayoutSlug != null
+            updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
+        }
     }
 
     /**
