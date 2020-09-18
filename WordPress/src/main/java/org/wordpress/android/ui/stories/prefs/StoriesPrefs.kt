@@ -14,11 +14,11 @@ object StoriesPrefs {
     private const val KEY_PREFIX_REMOTE_MEDIA_ID = "r-"
 
     private fun buildSlideKey(siteId: Long, mediaId: RemoteMediaId): String {
-        return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" + KEY_PREFIX_REMOTE_MEDIA_ID + mediaId.toString()
+        return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" + KEY_PREFIX_REMOTE_MEDIA_ID + mediaId.mediaId.toString()
     }
 
     private fun buildSlideKey(siteId: Long, mediaId: LocalMediaId): String {
-        return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" + KEY_PREFIX_LOCAL_MEDIA_ID + mediaId.toString()
+        return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" + KEY_PREFIX_LOCAL_MEDIA_ID + mediaId.id.toString()
     }
 
     @JvmStatic

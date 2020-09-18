@@ -160,8 +160,11 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId;
+import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
+import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -3002,52 +3005,29 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        ArrayList<String> tmpMediaIdsString = new ArrayList<>();
-        boolean allStorySlidesAreEditable = true;
-        for (Object mediaFile : mediaFiles) {
-            long mediaIdLong = new Double(((HashMap<String, Object>) mediaFile).get("id").toString()).longValue();
-            String mediaIdString = String.valueOf(mediaIdLong);
-            if (allStorySlidesAreEditable
-                && !StoriesPrefs.isValidSlide(this, mSite.getId(), new RemoteMediaId(mediaIdLong))) {
-                // flag this as soon as we find one media item not being really editable
-                allStorySlidesAreEditable = false;
-            }
-            tmpMediaIdsString.add(mediaIdString);
-        }
+        LoadStoryFromStoriesPrefsUseCase loadStoryFromStoriesPrefsUseCase = new LoadStoryFromStoriesPrefsUseCase(
+                new StoryRepositoryWrapper(),
+                mSite,
+                mMediaStore,
+                this
+        );
+        ArrayList<String> mediaIds =
+                loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles);
+        boolean allStorySlidesAreEditable = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(mSite, mediaIds);
 
         // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
         // just build the Story object ourselves to keep these files arrangement
-        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(tmpMediaIdsString);
+        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(mediaIds);
         if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
-            // the StoryRepository didn' have it but we have editable serialized slides so,
+            // the StoryRepository didn't have it but we have editable serialized slides so,
             // create a new Story from scratch with these deserialized StoryFrameItems
-            StoryRepository.loadStory(storyIndex);
-            storyIndex = StoryRepository.currentStoryIndex;
-            for (String mediaId : tmpMediaIdsString) {
-                StoryFrameItem storyFrameItem = StoriesPrefs.getSlideWithRemoteId(
-                        this,
-                        mSite.getId(),
-                        new RemoteMediaId(Long.parseLong(mediaId))
-                );
-                if (storyFrameItem != null) {
-                    StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
-                } else {
-                    allStorySlidesAreEditable = false;
-
-                    // for this missing frame we'll create a new frame using the actual uploaded flattened media
-                    ArrayList<Long> tmpMediaIdsLong = new ArrayList<>();
-                    tmpMediaIdsLong.add(Long.parseLong(mediaId));
-                    List<MediaModel> mediaModelList = mMediaStore.getSiteMediaWithIds(mSite, tmpMediaIdsLong);
-                    for (MediaModel mediaModel : mediaModelList) {
-                        storyFrameItem = StoryFrameItem.Companion.getNewStoryFrameItemFromUri(
-                                Uri.parse(mediaModel.getUrl()),
-                                mediaModel.isVideo()
-                        );
-                        storyFrameItem.setId(String.valueOf(mediaModel.getMediaId()));
-                        StoryRepository.addStoryFrameItemToCurrentStory(storyFrameItem);
-                    }
-                }
+            ReCreateStoryResult result =
+                    loadStoryFromStoriesPrefsUseCase.loadOrReCreateStoryFromStoriesPrefs(mediaIds);
+            if (allStorySlidesAreEditable) {
+                // double check and override if we found at least one couldn't be inflated
+                allStorySlidesAreEditable = result.getAllStorySlidesAreEditable();
             }
+            storyIndex = result.getStoryIndex();
         }
         // Story instance loaded or re-created! Load it
         ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
