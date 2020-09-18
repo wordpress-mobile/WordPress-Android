@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -1537,6 +1538,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun shouldOpenExternal(url: String): Boolean {
         // open YouTube videos in external app so they launch the YouTube player
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            return true
+        }
+
+        // Open Stories links in external browser so they have more fullscreen play real estate
+        if (Uri.parse(url).queryParameterNames.any { it.contains("wp-story") }) {
             return true
         }
 
