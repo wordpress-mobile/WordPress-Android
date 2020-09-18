@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mediapicker
 
-import android.content.Context
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -41,12 +40,12 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
 
                     if (editItemUiModel.isVisible) {
                         editItem.isVisible = true
-                        val customizeIconCount = editItem.actionView.findViewById<TextView>(R.id.customize_icon_count)
+                        val editItemBadge = editItem.actionView.findViewById<TextView>(R.id.customize_icon_count)
                         if (editItemUiModel.isCounterBadgeVisible) {
-                            customizeIconCount.visibility = View.VISIBLE
-                            customizeIconCount.text = editItemUiModel.counterBadgeValue.toString()
+                            editItemBadge.visibility = View.VISIBLE
+                            editItemBadge.text = editItemUiModel.counterBadgeValue.toString()
                         } else {
-                            customizeIconCount.visibility = View.GONE
+                            editItemBadge.visibility = View.GONE
                         }
                     } else {
                         editItem.isVisible = false
