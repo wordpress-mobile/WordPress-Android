@@ -91,6 +91,7 @@ class MediaPickerLauncher
                     allowedTypes = allowedTypes,
                     cameraEnabled = false,
                     systemPickerEnabled = true,
+                    editingEnabled = true,
                     title = R.string.photo_picker_choose_file
             )
             val intent = MediaPickerActivity.buildIntent(
@@ -148,6 +149,7 @@ class MediaPickerLauncher
                 allowedTypes = allowedTypes,
                 cameraEnabled = browserType.isWPStoriesPicker,
                 systemPickerEnabled = true,
+                editingEnabled = browserType.isImagePicker,
                 title = title
         )
     }
@@ -167,6 +169,7 @@ class MediaPickerLauncher
                 allowedTypes = allowedTypes,
                 cameraEnabled = browserType.isWPStoriesPicker,
                 systemPickerEnabled = false,
+                editingEnabled = false,
                 title = R.string.wp_media_title
         )
     }

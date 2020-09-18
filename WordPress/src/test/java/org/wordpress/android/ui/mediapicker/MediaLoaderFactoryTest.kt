@@ -40,6 +40,7 @@ class MediaLoaderFactoryTest {
                 allowedTypes = setOf(),
                 cameraEnabled = false,
                 systemPickerEnabled = true,
+                editingEnabled = true,
                 title = R.string.wp_media_title
         )
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -58,10 +59,11 @@ class MediaLoaderFactoryTest {
         val mediaPickerSetup = MediaPickerSetup(
                 WP_LIBRARY,
                 canMultiselect = true,
-                requiresStoragePermissions = true,
+                requiresStoragePermissions = false,
                 allowedTypes = setOf(),
                 cameraEnabled = false,
-                systemPickerEnabled = true,
+                systemPickerEnabled = false,
+                editingEnabled = false,
                 title = R.string.wp_media_title
         )
         whenever(mediaLibraryDataSourceFactory.build(site)).thenReturn(mediaLibraryDataSource)
@@ -87,6 +89,7 @@ class MediaLoaderFactoryTest {
                             allowedTypes = setOf(),
                             cameraEnabled = false,
                             systemPickerEnabled = true,
+                            editingEnabled = true,
                             title = R.string.wp_media_title
                     ),
                     site
@@ -100,6 +103,7 @@ class MediaLoaderFactoryTest {
                             allowedTypes = setOf(),
                             cameraEnabled = false,
                             systemPickerEnabled = true,
+                            editingEnabled = true,
                             title = R.string.wp_media_title
                     ),
                     site

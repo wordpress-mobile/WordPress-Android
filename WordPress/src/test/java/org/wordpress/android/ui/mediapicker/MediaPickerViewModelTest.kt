@@ -17,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
@@ -291,7 +292,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `action mode title is Use Video when video browser type`() = test {
-        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(VIDEO)))
+        setupViewModel(
+                listOf(firstItem, secondItem),
+                buildMediaPickerSetup(false, setOf(VIDEO), editingEnabled = false)
+        )
 
         viewModel.refreshData(false)
 
@@ -692,8 +696,18 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private fun buildMediaPickerSetup(
         canMultiselect: Boolean,
         allowedTypes: Set<MediaType>,
-        cameraAllowed: Boolean = false
-    ) = MediaPickerSetup(DEVICE, canMultiselect, true, allowedTypes, cameraAllowed, true, R.string.wp_media_title)
+        cameraAllowed: Boolean = false,
+        editingEnabled: Boolean = true
+    ) = MediaPickerSetup(
+            dataSource = DEVICE,
+            canMultiselect = canMultiselect,
+            requiresStoragePermissions = true,
+            allowedTypes = allowedTypes,
+            cameraEnabled = cameraAllowed,
+            systemPickerEnabled = true,
+            editingEnabled = editingEnabled,
+            title = R.string.wp_media_title
+    )
 
     private fun assertStoriesFabIsVisible() {
         uiStates.last().fabUiModel.let { model ->
