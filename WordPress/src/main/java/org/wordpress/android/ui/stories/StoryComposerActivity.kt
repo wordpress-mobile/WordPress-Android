@@ -448,7 +448,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             // TODO
             // here take the StoryFrameItems from the current Story, and build a
             val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
-            val updatedStoryBlock=
+            val updatedStoryBlock =
                     saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockString(
                             getMediaFilesFromBackgroundMediaIdsInStory(storyIndex)
                     )
@@ -462,7 +462,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
-    private fun getMediaFilesFromBackgroundMediaIdsInStory(storyIdx: StoryIndex) : List<MediaFile> {
+    private fun getMediaFilesFromBackgroundMediaIdsInStory(storyIdx: StoryIndex): List<MediaFile> {
         val mediaFiles = ArrayList<MediaFile>()
         val story = StoryRepository.getStoryAtIndex(storyIdx)
         for (frame in story.frames) {
