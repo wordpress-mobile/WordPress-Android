@@ -13,17 +13,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
     }
-}
-
-plugins {
-    id 'com.gradle.build-scan' version '2.0.2'
 }
 
 ext {

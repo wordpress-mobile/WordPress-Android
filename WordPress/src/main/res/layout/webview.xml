@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/webview_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        layout="@layout/toolbar_main"
-        android:id="@+id/toolbar" />
-
-    <org.wordpress.android.ui.WPWebView
-        android:id="@+id/webView"
-        android:layout_below="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        app:liftOnScrollTargetViewId="@+id/nested_scroll_view">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <org.wordpress.android.ui.WPWebView
+            android:nestedScrollingEnabled="true"
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.core.widget.NestedScrollView>
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/progress_bar_height"
-        android:indeterminate="false"
         android:layout_alignTop="@+id/webView"
-        android:progressDrawable="@drawable/progressbar_horizontal" />
+        android:indeterminate="false"
+        android:progressDrawable="@drawable/progressbar_horizontal"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.POSTAL_CODE
 import org.wordpress.android.fluxc.store.TransactionsStore.TransactionErrorType.STATE
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPUrlUtils
@@ -520,5 +521,12 @@ class DomainRegistrationDetailsFragment : Fragment() {
             super.onAttach(context)
             AndroidSupportInjection.inject(this)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? ScrollableViewInitializedListener)?.onScrollableViewInitialized(
+                R.id.domain_registration_details_container
+        )
     }
 }

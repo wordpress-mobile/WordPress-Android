@@ -7,7 +7,7 @@ Collection of utility methods for Android and WordPress.
 * In your build.gradle:
 ```groovy
 dependencies {
-    compile 'org.wordpress:utils:1.22.0' // use version 1.22.0
+    compile 'org.wordpress:utils:1.30.0' // use version 1.30.0
 }
 ```
 
@@ -21,10 +21,10 @@ $ ./gradlew assemble test publishToMavenLocal
 
 ## Publish it to Bintray
 
-When a new version is ready to be published to the remote repository, use the following command to upload it to Bintray:
+When a new version is ready to be published to the remote repository, use the following command to publish it to Bintray:
 
 ```shell
-$ ./gradlew assemble test bintrayUpload -PbintrayUser=FIXME -PbintrayKey=FIXME -PdryRun=false
+$ ./gradlew clean build bintrayPublish -PbintrayUser=FIXME -PbintrayKey=FIXME
 ```
 
 ## Apps and libraries using WordPress-Utils-Android:

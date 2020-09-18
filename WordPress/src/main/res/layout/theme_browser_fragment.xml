@@ -27,6 +27,7 @@
             android:columnWidth="@dimen/theme_browser_default_column_width"
             android:divider="@android:color/transparent"
             android:horizontalSpacing="@dimen/margin_none"
+            android:nestedScrollingEnabled="true"
             android:numColumns="auto_fit"
             android:scrollbarStyle="outsideOverlay"
             android:stretchMode="columnWidth" />
