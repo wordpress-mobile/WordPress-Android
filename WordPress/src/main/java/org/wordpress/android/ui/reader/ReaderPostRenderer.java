@@ -124,9 +124,11 @@ public class ReaderPostRenderer {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl) {
-                if (!imageUrl.contains("wpcom-smileys")) {
-                    replaceImageTag(imageTag, imageUrl);
+                // Exceptions which should keep their original tag attributes
+                if (imageUrl.contains("wpcom-smileys") || imageTag.contains("wp-story")) {
+                    return;
                 }
+                replaceImageTag(imageTag, imageUrl);
             }
         };
         String content = mRenderBuilder.toString();
