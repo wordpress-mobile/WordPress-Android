@@ -1,13 +1,14 @@
 package org.wordpress.android.fluxc.annotations.endpoint;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 public class EndpointTreeGenerator {
-    public static EndpointNode process(File file) throws IOException {
-        BufferedReader in = new BufferedReader(new FileReader(file));
+    public static EndpointNode process(InputStream inputStream) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
 
         EndpointNode endpointTree = new EndpointNode("/");
 
