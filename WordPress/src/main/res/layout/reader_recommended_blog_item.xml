@@ -64,7 +64,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_url"
-        style="@style/ReaderTextView.Site.Url"
+        style="@style/ReaderTextView.Site.Header.Caption.Url"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
