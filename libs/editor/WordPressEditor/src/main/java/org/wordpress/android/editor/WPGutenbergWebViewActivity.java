@@ -163,8 +163,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             if (url.contains(mUrlToLoad)) {
                 mForegroundView.setVisibility(View.VISIBLE);
                 mIsRedirected = true;
-            }
-            else {
+            } else {
                 mForegroundView.setVisibility(View.INVISIBLE);
             }
 
