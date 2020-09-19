@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
-import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
@@ -13,11 +13,13 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
+    data class ReaderWelcomeBannerCardUiState(@StringRes val titleRes: Int) : ReaderCardUiState()
+
     data class ReaderPostUiState(
         val postId: Long,
         val blogId: Long,
         val dateLine: String,
-        val title: String?,
+        val title: UiString?,
         val blogName: String?,
         val excerpt: String?, // mTxtText
         val blogUrl: String?,
@@ -38,11 +40,12 @@ sealed class ReaderCardUiState {
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
-        val moreMenuItems: List<SecondaryAction>,
+        val moreMenuItems: List<SecondaryAction>? = null,
         val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderCardUiState) -> Unit,
-        val onMoreButtonClicked: (Long, Long, View) -> Unit,
+        val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        val onMoreDismissed: (ReaderPostUiState) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {
         val dotSeparatorVisibility: Boolean = blogUrl != null
@@ -109,5 +112,6 @@ enum class ReaderPostCardActionType {
     LIKE,
     BOOKMARK,
     REBLOG,
-    COMMENTS
+    COMMENTS,
+    REPORT_POST
 }

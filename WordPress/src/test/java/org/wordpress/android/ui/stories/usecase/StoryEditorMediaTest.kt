@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
@@ -95,7 +96,8 @@ class StoryEditorMediaTest : BaseUnitTest() {
 
         // Assert
         verify(observer, times(1)).onChanged(captor.capture())
-        assertThat(captor.firstValue.getContentIfNotHandled()?.messageRes).isEqualTo(R.string.gallery_error)
+        val message = captor.firstValue.getContentIfNotHandled()?.message as? UiStringRes
+        assertThat(message?.stringRes).isEqualTo(R.string.gallery_error)
     }
 
     @Test
