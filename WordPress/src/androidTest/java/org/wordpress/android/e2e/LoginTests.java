@@ -15,9 +15,7 @@ import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_USERNAME;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 
 @RunWith(AndroidJUnit4.class)
 public class LoginTests extends BaseTest {
@@ -42,7 +40,8 @@ public class LoginTests extends BaseTest {
     public void loginWithSiteAddress() {
         new LoginFlow().chooseEnterYourSiteAddress()
                        .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
-                       .enterUsernameAndPassword(E2E_WP_COM_USER_USERNAME, E2E_WP_COM_USER_PASSWORD)
+                       .enterEmailAddress()
+                       .enterPassword()
                        .confirmLogin();
     }
 
