@@ -48,12 +48,12 @@ platform :android do
     screenshot_devices = [
       {
         screenshot_type: 'phone',
-        device_name: 'Pixel_3_API_28',
+        device_name: 'Pixel_3_API_30',
         device_serial: options[:phone_serial],
       },
       {
         screenshot_type: 'tenInch',
-        device_name: 'Nexus_9_API_28',
+        device_name: 'Nexus_9_API_30',
         device_serial: options[:tenInch_serial],
       }
     ]
