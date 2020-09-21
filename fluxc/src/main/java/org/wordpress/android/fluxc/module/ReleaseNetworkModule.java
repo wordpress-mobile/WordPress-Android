@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils;
+import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.transactions.TransactionsRestClient;
@@ -437,6 +438,16 @@ public class ReleaseNetworkModule {
     public EncryptedLogRestClient provideEncryptedLogRestClient(@Named("regular") RequestQueue requestQueue,
                                                                 AppSecrets appSecrets) {
         return new EncryptedLogRestClient(requestQueue, appSecrets);
+    }
+
+    @Singleton
+    @Provides
+    public StockMediaRestClient provideStockMediaRestClient(Context appContext, Dispatcher dispatcher,
+                                                            @Named("regular") RequestQueue requestQueue,
+                                                            AccessToken token, UserAgent userAgent,
+                                                            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new StockMediaRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
+                userAgent);
     }
 
     @Singleton
