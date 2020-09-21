@@ -46,17 +46,17 @@ class ManualFeatureConfigViewModel
         val uiItems = mutableListOf<FeatureUiItem>()
         val remoteFeatures = buildRemoteFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.remote_features))
+            uiItems.add(Header(R.string.manual_config_remote_features))
             uiItems.addAll(remoteFeatures)
         }
         val developedFeatures = buildDevelopedFeatures()
         if (remoteFeatures.isNotEmpty()) {
-            uiItems.add(Header(R.string.features_in_development))
+            uiItems.add(Header(R.string.manual_config_features_in_development))
             uiItems.addAll(developedFeatures)
         }
         uiItems.add(Header(R.string.missing_developed_feature))
         if (hasChange) {
-            uiItems.add(Button(R.string.restart_app, this::restart))
+            uiItems.add(Button(R.string.manual_config_restart_app, this::restart))
         }
         _uiState.value = UiState(uiItems)
     }

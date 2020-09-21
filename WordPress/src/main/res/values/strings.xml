@@ -876,11 +876,11 @@
     </string-array>
 
     <!-- Feature configuration -->
-    <string name="preference_open_feature_config">Test feature configuration</string>
-    <string name="remote_features">Remote features</string>
-    <string name="features_in_development">Features in development</string>
-    <string name="restart_app">Restart the app</string>
-    <string name="missing_developed_feature">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
+    <string name="preference_open_feature_config" translatable="false">Test feature configuration</string>
+    <string name="manual_config_remote_features" translatable="false">Remote features</string>
+    <string name="manual_config_features_in_development" translatable="false">Features in development</string>
+    <string name="manual_config_restart_app" translatable="false">Restart the app</string>
+    <string name="missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
