@@ -2167,8 +2167,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
-        boolean isUnsupportedBlockEditorEnabled = (mSite.isWPCom() || mIsJetpackSsoEnabled)
-                && "gutenberg".equals(mSite.getWebEditor());
+        boolean isUnsupportedBlockEditorEnabled =
+                mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
 
         return new GutenbergPropsBuilder(
                 enableMentions,
