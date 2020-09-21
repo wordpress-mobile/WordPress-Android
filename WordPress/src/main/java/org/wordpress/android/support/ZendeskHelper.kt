@@ -28,13 +28,13 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.logInformation
 import org.wordpress.android.util.stateLogInformation
 import org.wordpress.android.util.validateEmail
+import zendesk.configurations.Configuration
 import zendesk.core.AnonymousIdentity
 import zendesk.core.Identity
 import zendesk.core.PushRegistrationProvider
 import zendesk.core.Zendesk
 import zendesk.support.CustomField
 import zendesk.support.Support
-import zendesk.support.UiConfig
 import zendesk.support.guide.HelpCenterActivity
 import zendesk.support.request.RequestActivity
 import zendesk.support.requestlist.RequestListActivity
@@ -381,7 +381,7 @@ private fun buildZendeskConfig(
     selectedSite: SiteModel? = null,
     extraTags: List<String>? = null,
     zendeskPlanFieldHelper: ZendeskPlanFieldHelper
-): UiConfig {
+): Configuration {
     return RequestActivity.builder()
         .withTicketForm(
             TicketFieldIds.form,

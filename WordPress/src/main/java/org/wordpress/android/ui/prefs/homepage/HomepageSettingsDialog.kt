@@ -54,7 +54,7 @@ class HomepageSettingsDialog : DialogFragment() {
                 }
             }
         }
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setPositiveButton(R.string.site_settings_accept_homepage) { _, _ -> }
         builder.setNegativeButton(R.string.cancel) { _, _ -> }
         builder.setView(view)

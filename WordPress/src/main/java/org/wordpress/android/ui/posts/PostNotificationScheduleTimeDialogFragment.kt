@@ -36,7 +36,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
                     .get(PrepublishingPublishSettingsViewModel::class.java)
         }
 
-        val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity())
         val view = requireActivity().layoutInflater.inflate(R.layout.post_notification_type_selector, null)
                 as RadioGroup
         alertDialogBuilder.setView(view)
