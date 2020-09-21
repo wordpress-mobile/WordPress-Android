@@ -3,6 +3,13 @@ version: 2.1
 orbs:
   android: wordpress-mobile/android@0.0.22
 
+commands:
+  copy-gradle-properties:
+    steps:
+      - run:
+          name: Setup gradle.properties
+          command: cp gradle.properties-example gradle.properties
+
 jobs:
   Lint:
     executor: 
@@ -10,6 +17,7 @@ jobs:
       api-version: "27"
     steps:
       - checkout
+      - copy-gradle-properties
       - android/restore-gradle-cache
       - run:
           name: Lint & Checkstyle
@@ -22,6 +30,7 @@ jobs:
       api-version: "27"
     steps:
       - checkout
+      - copy-gradle-properties
       - android/restore-gradle-cache
       - run:
           name: Build
