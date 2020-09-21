@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class StockMediaRestClient
