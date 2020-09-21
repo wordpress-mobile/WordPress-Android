@@ -27,6 +27,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStorySavingReattachQueryListener;
 
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
                                   OnReattachQueryListener onReattachQueryListener,
+                                  OnStorySavingReattachQueryListener onStorySavingReattachQueryListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
@@ -70,6 +72,7 @@ public class GutenbergContainerFragment extends Fragment {
                     viewGroup,
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
+                    onStorySavingReattachQueryListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
                     onAuthHeaderRequestedListener,
@@ -217,5 +220,21 @@ public class GutenbergContainerFragment extends Fragment {
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
         mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+    }
+
+    public void clearFileSaveStatus(final int mediaId) {
+        mWPAndroidGlueCode.clearFileSaveStatus(mediaId);
+    }
+
+    public void mediaFileSaveProgress(final int mediaId, final float progress) {
+        mWPAndroidGlueCode.mediaFileSaveProgress(mediaId, progress);
+    }
+
+    public void mediaFileSaveFailed(final int mediaId) {
+        mWPAndroidGlueCode.mediaFileSaveFailed(mediaId);
+    }
+
+    public void mediaFileSaveSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {
+        mWPAndroidGlueCode.mediaFileSaveSucceeded(mediaId, mediaUrl, serverMediaId);
     }
 }

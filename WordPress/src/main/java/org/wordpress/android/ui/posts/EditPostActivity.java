@@ -163,6 +163,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
+import org.wordpress.android.ui.stories.media.StoryEditorMediaSaveListener;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -329,6 +330,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditorMediaUploadListener mEditorMediaUploadListener;
+    private StoryEditorMediaSaveListener mStoryEditorMediaSaveListener;
     private EditorPhotoPicker mEditorPhotoPicker;
 
     private ProgressDialog mProgressDialog;
@@ -562,6 +564,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
+            }
+
+            if (mEditorFragment instanceof StoryEditorMediaSaveListener) {
+                mStoryEditorMediaSaveListener = (StoryEditorMediaSaveListener) mEditorFragment;
             }
         }
 
@@ -2141,6 +2147,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mEditorFragment.setCustomHttpHeader("User-Agent", WordPress.getUserAgent());
 
                         reattachUploadingMediaForAztec();
+                    }
+
+                    if (mEditorFragment instanceof StoryEditorMediaSaveListener) {
+                        mStoryEditorMediaSaveListener = (StoryEditorMediaSaveListener) mEditorFragment;
                     }
                     break;
                 case PAGE_SETTINGS:

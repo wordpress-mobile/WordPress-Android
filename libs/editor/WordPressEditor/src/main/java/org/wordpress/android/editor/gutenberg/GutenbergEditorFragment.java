@@ -63,6 +63,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplat
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStorySavingReattachQueryListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +77,8 @@ import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeTyp
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener,
-        EditorThemeUpdateListener {
+        EditorThemeUpdateListener,
+        StorySaveMediaListener {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -266,6 +268,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnReattachQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
+                        updateFailedMediaState();
+                        updateMediaProgress();
+                    }
+                },
+                new OnStorySavingReattachQueryListener() {
+                    @Override public void onQueryCurrentProgressForStoryMediaSaving() {
+                        // TODO: probably go through mFailedMediaIds, and see if any block in the post content
+                        // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
                         updateMediaProgress();
                     }
@@ -996,5 +1006,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
+    }
+
+    @Override public void onMediaSaveReattached(String localId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localId, currentProgress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(Integer.valueOf(localId), currentProgress);
+    }
+
+    @Override public void onMediaSaveSucceeded(String localId, MediaFile mediaFile) {
+        mUploadingMediaProgressMax.remove(localId);
+        getGutenbergContainerFragment().mediaFileSaveSucceeded(Integer.valueOf(localId), mediaFile.getFileURL(),
+                Integer.valueOf(mediaFile.getMediaId()));
+    }
+
+    @Override public void onMediaSaveProgress(String localId, float progress) {
+        mUploadingMediaProgressMax.put(localId, progress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(Integer.valueOf(localId), progress);
+    }
+
+    @Override public void onMediaSaveFailed(String localId) {
+        getGutenbergContainerFragment().mediaFileSaveFailed(Integer.valueOf(localId));
+        mFailedMediaIds.add(localId);
+        mUploadingMediaProgressMax.remove(localId);
     }
 }

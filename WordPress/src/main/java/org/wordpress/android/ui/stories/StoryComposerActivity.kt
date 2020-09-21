@@ -445,8 +445,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             val savedContentIntent = Intent()
             val blockId = intent.extras.getString(ARG_STORY_BLOCK_ID)
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
-            // TODO
-            // here take the StoryFrameItems from the current Story, and build a
+
             val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
             val updatedStoryBlock =
                     saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockString(
@@ -455,6 +454,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             savedContentIntent.putExtra(ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA, true)
             setResult(Activity.RESULT_OK, savedContentIntent)
+
+            // TODO add tracks
+            processStorySaving()
+
             finish()
         } else {
             // assume this is a new Post, and proceed to PrePublish bottom sheet
