@@ -310,9 +310,9 @@ dependencies {
 
 
     if (buildUtilsFromLocalDirectory) {
-        implementation 'org.wordpress.android:WordPressUtils'
-        testImplementation 'org.wordpress.android:WordPressUtils'
-        debugImplementation 'org.wordpress.android:WordPressUtils'
+        implementation 'org.wordpress:WordPressUtils'
+        testImplementation 'org.wordpress:WordPressUtils'
+        debugImplementation 'org.wordpress:WordPressUtils'
     } else {
         implementation "org.wordpress:utils:$wordPressUtilsVersion"
         testImplementation "org.wordpress:utils:$wordPressUtilsVersion"
