@@ -32,11 +32,8 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
         imageManager: ImageManager
     ) {
         imageManager.load(preview, ImageType.THEME, uiState.preview, FIT_CENTER)
-        selected.setVisible(uiState.selected)
-        preview.contentDescription = if (uiState.selected) parent.context.getString(
-                R.string.mlp_layout_selected,
-                uiState.title
-        ) else uiState.title
+        selected.setVisible(uiState.selectedOverlayVisible)
+        preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
         }

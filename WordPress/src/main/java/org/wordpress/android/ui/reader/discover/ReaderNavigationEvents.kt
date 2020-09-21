@@ -15,7 +15,7 @@ sealed class ReaderNavigationEvents {
     data class ShowPostsByTag(val tag: ReaderTag) : ReaderNavigationEvents()
     data class ShowReaderComments(val blogId: Long, val postId: Long) : ReaderNavigationEvents()
     object ShowNoSitesToReblog : ReaderNavigationEvents()
-    data class ShowSitePickerForResult(val site: SiteModel, val post: ReaderPost, val mode: SitePickerMode) :
+    data class ShowSitePickerForResult(val preselectedSite: SiteModel, val post: ReaderPost, val mode: SitePickerMode) :
             ReaderNavigationEvents()
 
     data class OpenEditorForReblog(
@@ -32,4 +32,5 @@ sealed class ReaderNavigationEvents {
     }
     data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
     data class ShowBlogPreview(val siteId: Long, val feedId: Long) : ReaderNavigationEvents()
+    data class ShowReportPost(val url: String) : ReaderNavigationEvents()
 }

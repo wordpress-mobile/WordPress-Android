@@ -3,15 +3,17 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
+import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
-import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
+import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -21,35 +23,16 @@ import javax.inject.Named
 class ModalLayoutPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
+    private val layouts: GutenbergPageLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+
     /**
      * Tracks the Modal Layout Picker visibility state
      */
     private val _isModalLayoutPickerShowing = MutableLiveData<Event<Boolean>>()
     val isModalLayoutPickerShowing: LiveData<Event<Boolean>> = _isModalLayoutPickerShowing
 
-    /**
-     * Tracks the header visibility
-     */
-    private val _isHeaderVisible = MutableLiveData<Event<Boolean>>()
-    val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
-
-    /**
-     * Tracks the selected layout slug
-     */
-    private val _selectedLayoutSlug = MutableLiveData<String?>()
-    val selectedLayoutSlug: LiveData<String?> = _selectedLayoutSlug
-
-    /**
-     * Tracks the visibility of the action buttons
-     */
-    private val _buttonsUiState = MutableLiveData<ButtonsUiState>()
-    val buttonsUiState: LiveData<ButtonsUiState> = _buttonsUiState
-
-    /**
-     * Tracks the Modal Layout Picker list items
-     */
-    private val _listItems = MutableLiveData<List<ModalLayoutPickerListItem>>()
-    val listItems: LiveData<List<ModalLayoutPickerListItem>> = _listItems
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
+    val uiState: LiveData<UiState> = _uiState
 
     /**
      * Create new page event
@@ -57,51 +40,58 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<Unit>()
     val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
 
-    private var landscapeMode: Boolean = false
-
-    fun init(landscape: Boolean) {
-        landscapeMode = landscape
-        loadListItems()
+    fun init() {
+        updateUiState(ContentUiState())
+        loadLayouts()
+        loadCategories()
         updateButtonsUiState()
     }
 
-    private fun loadListItems() {
-        val listItems = ArrayList<ModalLayoutPickerListItem>()
+    private fun loadLayouts() {
+        val state = uiState.value as ContentUiState
+        val listItems = ArrayList<LayoutCategoryUiState>()
 
-        if (!landscapeMode) {
-            val titleVisibility = _isHeaderVisible.value?.peekContent() ?: true
-            listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
-            listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
-        }
+        val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
+            layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
+        else layouts.categories
 
-        listItems.add(ModalLayoutPickerListItem.Categories())
-
-        loadLayouts(listItems)
-
-        _listItems.postValue(listItems)
-    }
-
-    /**
-     * Loads DEMO layout data
-     */
-    private fun loadLayouts(listItems: ArrayList<ModalLayoutPickerListItem>) {
-        val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
-
-        demoLayouts.categories.forEach { category ->
-            val layouts = demoLayouts.getFilteredLayouts(category.slug).map { layout ->
-                val selected = layout.slug == _selectedLayoutSlug.value
+        selectedCategories.forEach { category ->
+            val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
+                val selected = layout.slug == state.selectedLayoutSlug
                 LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
-                    layoutTapped(layoutSlug = layout.slug)
+                    onLayoutTapped(layoutSlug = layout.slug)
                 }
             }
-            listItems.add(ModalLayoutPickerListItem.LayoutCategory(category.title, category.description, layouts))
+            listItems.add(
+                    LayoutCategoryUiState(
+                            category.slug,
+                            category.title,
+                            category.description,
+                            layouts
+                    )
+            )
         }
+        updateUiState(state.copy(layoutCategories = listItems))
+    }
+
+    private fun loadCategories() {
+        val state = uiState.value as ContentUiState
+        val listItems: List<CategoryListItemUiState> = layouts.categories.map {
+            CategoryListItemUiState(
+                    it.slug,
+                    it.title,
+                    it.emoji,
+                    state.selectedCategoriesSlugs.contains(it.slug)
+            ) { onCategoryTapped(it.slug) }
+        }
+        updateUiState(state.copy(categories = listItems))
     }
 
     /**
      * Shows the MLP
      */
     fun show() {
+        init()
         _isModalLayoutPickerShowing.value = Event(true)
     }
 
@@ -110,40 +100,77 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
-        _isHeaderVisible.postValue(Event(true))
-        _selectedLayoutSlug.value = null
+        updateUiState(ContentUiState())
+    }
+
+    /**
+     * Notifies the VM to start passing the orientation
+     * @param landscapeMode app operates in landscape mode
+     */
+    fun start(landscapeMode: Boolean) {
+        setHeaderTitleVisibility(landscapeMode)
     }
 
     /**
      * Sets the header and title visibility
-     * @param headerShouldBeVisible if true the header is shown and the title row hidden
+     * @param headerShouldBeVisible if true the header is shown and the title hidden
      */
-    fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return
-        _isHeaderVisible.postValue(Event(headerShouldBeVisible))
-        loadListItems()
+    private fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
+        val state = uiState.value as ContentUiState
+        if (state.isHeaderVisible == headerShouldBeVisible) return // No change
+        updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+    }
+
+    /**
+     * Appbar scrolled event
+     * @param verticalOffset the scroll state vertical offset
+     * @param scrollThreshold the scroll threshold
+     */
+    fun onAppBarOffsetChanged(verticalOffset: Int, scrollThreshold: Int) {
+        setHeaderTitleVisibility(verticalOffset < scrollThreshold)
+    }
+
+    /**
+     * Category tapped
+     * @param categorySlug the slug of the tapped category
+     */
+    fun onCategoryTapped(categorySlug: String) {
+        val state = uiState.value as ContentUiState
+        if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
+            updateUiState(
+                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { remove(categorySlug) })
+            )
+        } else {
+            updateUiState(
+                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
+            )
+        }
+        loadCategories()
+        loadLayouts()
     }
 
     /**
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    fun layoutTapped(layoutSlug: String) {
-        if (layoutSlug == _selectedLayoutSlug.value) { // deselect
-            _selectedLayoutSlug.value = null
+    fun onLayoutTapped(layoutSlug: String) {
+        val state = uiState.value as ContentUiState
+        if (layoutSlug == state.selectedLayoutSlug) { // deselect
+            updateUiState(state.copy(selectedLayoutSlug = null))
         } else {
-            _selectedLayoutSlug.value = layoutSlug
+            updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
         }
         updateButtonsUiState()
-        loadListItems()
+        loadLayouts()
     }
 
     /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
-        val selection = _selectedLayoutSlug.value != null
-        _buttonsUiState.value = ButtonsUiState(!selection, selection, selection)
+        val state = uiState.value as ContentUiState
+        val selection = state.selectedLayoutSlug != null
+        updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
     }
 
     /**
@@ -151,5 +178,28 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun createPage() {
         _onCreateNewPageRequested.call()
+    }
+
+    private fun updateUiState(uiState: UiState) {
+        _uiState.value = uiState
+    }
+
+    sealed class UiState {
+        object LoadingUiState : UiState()
+
+        data class ContentUiState(
+            val isHeaderVisible: Boolean = false,
+            val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
+            val selectedLayoutSlug: String? = null,
+            val categories: List<CategoryListItemUiState> = listOf(),
+            val layoutCategories: List<LayoutCategoryUiState> = listOf(),
+            val buttonsUiState: ButtonsUiState = ButtonsUiState(
+                    createBlankPageVisible = true,
+                    previewVisible = false,
+                    createPageVisible = false
+            )
+        ) : UiState()
+
+        object ErrorUiState : UiState()
     }
 }

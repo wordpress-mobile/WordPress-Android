@@ -1,5 +1,6 @@
 package org.wordpress.android.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.viewmodel.ResourceProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -160,6 +162,8 @@ public class WPPermissionUtils {
                 return context.getString(R.string.permission_storage);
             case android.Manifest.permission.CAMERA:
                 return context.getString(R.string.permission_camera);
+            case Manifest.permission.RECORD_AUDIO:
+                return context.getString(R.string.permission_microphone);
             default:
                 AppLog.w(AppLog.T.UTILS, "No name for requested permission");
                 return context.getString(R.string.unknown);
@@ -167,10 +171,28 @@ public class WPPermissionUtils {
     }
 
     /*
+     * returns the name to display for a permission, ex: "permission.WRITE_EXTERNAL_STORAGE" > "Storage"
+     */
+    public static String getPermissionName(@NonNull ResourceProvider resourceProvider, @NonNull String permission) {
+        switch (permission) {
+            case android.Manifest.permission.WRITE_EXTERNAL_STORAGE:
+            case android.Manifest.permission.READ_EXTERNAL_STORAGE:
+                return resourceProvider.getString(R.string.permission_storage);
+            case android.Manifest.permission.CAMERA:
+                return resourceProvider.getString(R.string.permission_camera);
+            case Manifest.permission.RECORD_AUDIO:
+                return resourceProvider.getString(R.string.permission_microphone);
+            default:
+                AppLog.w(AppLog.T.UTILS, "No name for requested permission");
+                return resourceProvider.getString(R.string.unknown);
+        }
+    }
+
+    /*
      * called when the app detects that the user has permanently denied a permission, shows a dialog
      * alerting them to this fact and enabling them to visit the app settings to edit permissions
      */
-    private static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
+    public static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
                                                          @NonNull String permission) {
         String message = String.format(activity.getString(R.string.permissions_denied_message),
                 getPermissionName(activity, permission));

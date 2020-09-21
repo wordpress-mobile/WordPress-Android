@@ -451,9 +451,6 @@ Language: en_AU
     <string name="menu_history">History</string>
     <string name="pages_open_page_error">The selected page is not available</string>
     <string name="pages_pending">Pending review</string>
-    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
-    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
-    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_drafts">You don\'t have any draft pages</string>
@@ -485,7 +482,6 @@ Language: en_AU
     <string name="page_status_change_error">There was a problem changing the page status</string>
     <string name="page_delete_error">There was a problem deleting the page</string>
     <string name="set_parent">Set Parent</string>
-    <string name="dismiss">dismiss</string>
     <string name="quick_start_focus_point_description">tap here</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>

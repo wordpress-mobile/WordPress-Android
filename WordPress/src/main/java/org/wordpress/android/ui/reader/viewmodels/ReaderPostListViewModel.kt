@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
@@ -142,6 +143,12 @@ class ReaderPostListViewModel @Inject constructor(
     fun onLikeButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(post, LIKE, bookmarksList)
+        }
+    }
+
+    fun onReportPostButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(post, REPORT_POST, bookmarksList)
         }
     }
 

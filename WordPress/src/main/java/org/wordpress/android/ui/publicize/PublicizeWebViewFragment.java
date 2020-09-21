@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.WebViewUtils;
@@ -34,6 +35,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
+    private View mNestedScrollView;
 
     @Inject AccountStore mAccountStore;
 
@@ -94,8 +96,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.publicize_webview_fragment, container, false);
 
-        mProgress = (ProgressBar) rootView.findViewById(R.id.progress);
-        mWebView = (WebView) rootView.findViewById(R.id.webView);
+        mProgress = rootView.findViewById(R.id.progress);
+        mWebView = rootView.findViewById(R.id.webView);
+        mNestedScrollView = rootView.findViewById(R.id.publicize_webview_nested_scroll_view);
 
         mWebView.setWebViewClient(new PublicizeWebViewClient());
         mWebView.setWebChromeClient(new PublicizeWebChromeClient());
@@ -122,6 +125,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     public void onResume() {
         super.onResume();
         setNavigationIcon(R.drawable.ic_close_white_24dp);
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+        }
     }
 
     /*

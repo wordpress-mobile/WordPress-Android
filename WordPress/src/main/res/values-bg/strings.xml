@@ -37,7 +37,6 @@ Language: bg
     <string name="pages_delete_permanently">Изтриване за постоянно</string>
     <string name="pages_move_to_trash">Преместване в кошчето</string>
     <string name="pages_move_to_draft">Преместване в чернова</string>
-    <string name="news_card_announcement_action_sample_announcement">[Научете още]</string>
     <string name="pages_view">Преглед</string>
     <string name="pages_trashed">В кошчето</string>
     <string name="pages_drafts">Чернови</string>
@@ -58,7 +57,6 @@ Language: bg
     <string name="page_delete_error">Възникна проблем при изтриването на страницата</string>
     <string name="page_parent_change_error">Възникна проблем при смяна на родителската страница</string>
     <string name="set_parent">Задаване на родител</string>
-    <string name="dismiss">отхвърляне</string>
     <string name="page_moved_to_trash">Страницата е преместена в кошчето</string>
     <string name="page_moved_to_scheduled">Насрочено е публикуване на страницата</string>
     <string name="quick_start_focus_point_description">докоснете тук</string>
