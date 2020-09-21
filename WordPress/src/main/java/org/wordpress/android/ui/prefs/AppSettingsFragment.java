@@ -199,11 +199,11 @@ public class AppSettingsFragment extends PreferenceFragment
     }
 
     private void removeFeatureConfigCategory() {
-        PreferenceCategory experimentalPreferenceCategory =
-                (PreferenceCategory) findPreference(getString(R.string.pref_key_feature_config));
+        Preference experimentalPreference =
+                findPreference(getString(R.string.pref_key_feature_config));
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
-        preferenceScreen.removePreference(experimentalPreferenceCategory);
+        preferenceScreen.removePreference(experimentalPreference);
     }
 
 
