@@ -55,7 +55,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private val postUtils: PostUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : CoroutineScope, LifecycleObserver, EditorMediaListener {
+) : CoroutineScope, LifecycleObserver {
     // region Fields
     private var job: Job = Job()
     private lateinit var appContext: Context
@@ -92,17 +92,71 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         // let's invoke the UploadService and enqueue all the files that were saved by the FrameSaveService
         val frames = StoryRepository.getStoryAtIndex(saveResult.storyIndex).frames
         val uriList = frames.map { Uri.fromFile(it.composedFrameFile) }
-        addNewMediaItemsToPostAsync(site, uriList)
+        addNewMediaItemsToPostAsync(site, uriList, saveResult.isEditMode)
     }
 
-    private fun addNewMediaItemsToPostAsync(site: SiteModel, uriList: List<Uri>) {
+    private fun addNewMediaItemsToPostAsync(site: SiteModel, uriList: List<Uri>, isEditMode: Boolean) {
         // this is similar to addNewMediaItemsToEditorAsync in EditorMedia
         launch {
+            val localEditorMediaListener = object: EditorMediaListener {
+                override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
+                    if (!isEditMode) {
+                        saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
+                                editPostRepository,
+                                ArrayList<MediaFile>(mediaFiles.values)
+                        )
+                    } else {
+                        // no op: in edit mode, we're handling replacing of the block's mediaFiles in Gutenberg
+                    }
+                }
+
+                override fun getImmutablePost(): PostImmutableModel {
+                    return editPostRepository.getPost()!!
+                }
+
+                override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
+                    // no op
+                    // WARNING: don't remove this, we need to call the listener no matter what, so save & upload actually happen
+                    listener?.onPostUpdatedFromUI(null)
+                }
+
+                override fun advertiseImageOptimization(listener: () -> Unit) {
+                    // no op
+                }
+
+                override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
+                    // in order to support Story editing capabilities, we save a serialized version of the Story slides
+                    // after their composedFrameFiles have been processed.
+
+                    // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image
+                    // urls with the new URLs which may have been replaced after image optimization
+                    for (story in StoryRepository.getImmutableStories()) {
+                        // find the MediaModel for a given Uri from composedFrameFile
+                        for (frame in story.frames) {
+                            // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
+                            // value with the new (probably optimized) URL and also keep track of the new id.
+                            val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
+                            mediaModel?.let {
+                                frame.id = it.id.toString()
+                                StoriesPrefs.saveSlideWithLocalId(
+                                        appContext,
+                                        it.localSiteId.toLong(),
+                                        // use the local id to save the original, will be replaced later
+                                        // with mediaModel.mediaId after uploading to the remote site
+                                        LocalMediaId(it.id.toLong()),
+                                        frame
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
                     uriList,
                     site,
                     freshlyTaken = false, // we don't care about this
-                    editorMediaListener = this@StoryMediaSaveUploadBridge,
+                    editorMediaListener = localEditorMediaListener,
                     doUploadAfterAdding = true
             )
             postUtils.preparePostForPublish(requireNotNull(editPostRepository.getEditablePost()), site)
@@ -154,53 +208,5 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private fun isStorySavingComplete(event: StorySaveResult): Boolean {
         return (event.isSuccess() &&
                 event.frameSaveResult.size == StoryRepository.getStoryAtIndex(event.storyIndex).frames.size)
-    }
-
-    override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
-                editPostRepository,
-                ArrayList<MediaFile>(mediaFiles.values)
-        )
-    }
-
-    override fun getImmutablePost(): PostImmutableModel {
-        return editPostRepository.getPost()!!
-    }
-
-    override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
-        // no op
-        // WARNING: don't remove this, we need to call the listener no matter what, so save & upload actually happen
-        listener?.onPostUpdatedFromUI(null)
-    }
-
-    override fun advertiseImageOptimization(listener: () -> Unit) {
-        // no op
-    }
-
-    override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
-        // in order to support Story editing capabilities, we save a serialized version of the Story slides
-        // after their composedFrameFiles have been processed.
-
-        // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image
-        // urls with the new URLs which may have been replaced after image optimization
-        for (story in StoryRepository.getImmutableStories()) {
-            // find the MediaModel for a given Uri from composedFrameFile
-            for (frame in story.frames) {
-                // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
-                // value with the new (probably optimized) URL and also keep track of the new id.
-                val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
-                mediaModel?.let {
-                    frame.id = it.id.toString()
-                    StoriesPrefs.saveSlideWithLocalId(
-                            appContext,
-                            it.localSiteId.toLong(),
-                            // use the local id to save the original, will be replaced later
-                            // with mediaModel.mediaId after uploading to the remote site
-                            LocalMediaId(it.id.toLong()),
-                            frame
-                    )
-                }
-            }
-        }
     }
 }
