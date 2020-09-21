@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaErrorType.Com
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.UrlUtils
-import java.util.HashMap
 import javax.inject.Singleton
 
 @Singleton
