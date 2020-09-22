@@ -34,11 +34,11 @@
 			"text_size": [3000, 317],
 			"text_offset": [0, 0],
 			"font_size": "70px",
-			"screenshot_size": [2107, 1581],
-			"screenshot_offset": [446, 424],
+			"screenshot_size": [1731, 1298],
+			"screenshot_offset": [634, 493],
 			"device_frame": "playstoreres/assets/nexus-9.png",
-			"device_frame_size": [2715, 1827],
-			"device_frame_offset": [149, 301]
+			"device_frame_size": [2139, 1451],
+			"device_frame_offset": [430, 419]
 		}
 	],
 	"entries": [
@@ -61,7 +61,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_7.html",
 					"size": [810,480],
 					"position": [127,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -77,7 +76,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
 					"size": [750,350],
 					"position": [157,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -93,7 +91,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
 					"size": [750,350],
 					"position": [157,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -109,7 +106,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
 					"size": [750,350],
 					"position": [157,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -125,7 +121,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
 					"size": [750,350],
 					"position": [157,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -141,7 +136,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_5.html",
 					"size": [750,350],
 					"position": [157,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -158,7 +152,6 @@
 					"text": "playstoreres/metadata/%s/play_store_screenshot_6.html",
 					"size": [750,350],
 					"position": [157,0 ],
-					"font-size": 100,
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
@@ -181,8 +174,99 @@
 				},
 				{
 					"text": "playstoreres/metadata/%s/play_store_screenshot_7.html",
-					"size": [3000,480],
-					"position": [0,0 ],
+					"size": [3000,120],
+					"position": [0,120 ],
+					"alignment": "center",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		// Create a site or start a blog
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/2-create-beautiful-posts-and-pages.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-2.png",
+			"attachments": [
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
+					"size": [3000,120],
+					"position": [0,120 ],
+					"alignment": "center",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		// Discover new reads
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/3-track-what-your-visitors-love.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-3.png",
+			"attachments": [
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
+					"size": [3000,120],
+					"position": [0,120 ],
+					"alignment": "center",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		// Build an audience
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/4-check-whats-happening-in-real-time.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-4.png",
+			"attachments": [
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
+					"size": [3000,120],
+					"position": [0,120 ],
+					"alignment": "center",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		// Keep tabs on your site
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/5-share-from-anywhere.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-5.png",
+			"attachments": [
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
+					"size": [3000,120],
+					"position": [0,120 ],
+					"alignment": "center",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		// Reply in real time
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/6-capture-ideas-on-the-go.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-6.png",
+			"attachments": [
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_5.html",
+					"size": [3000,120],
+					"position": [0,120 ],
+					"alignment": "center",
+					"stylesheet": "playstoreres/assets/intro-text.css"
+				}
+			]
+		},
+		// Upload on the go
+		{
+			"device": "Nexus 9",
+			"screenshot": "images/tenInchScreenshots/6-capture-ideas-on-the-go.png",
+			"filename": "images/tenInchScreenshots/7-capture-ideas-on-the-go.png",
+			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-7.png",
+			"attachments": [
+				{
+					"text": "playstoreres/metadata/%s/play_store_screenshot_6.html",
+					"size": [3000,120],
+					"position": [0,120 ],
 					"alignment": "center",
 					"stylesheet": "playstoreres/assets/intro-text.css"
 				}
