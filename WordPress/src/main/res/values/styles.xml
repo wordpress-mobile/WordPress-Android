@@ -1256,6 +1256,8 @@
 
     <style name="ModalLayoutPickerHeader" parent="ModalLayoutPickerText">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ModalLayoutPickerTitle" parent="ModalLayoutPickerText">
@@ -1263,6 +1265,7 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerSubtitle" parent="ModalLayoutPickerTitle">
@@ -1273,6 +1276,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:alpha">0.6</item>
         <item name="android:maxLines">5</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
     <style name="Widget.ModalLayoutPicker.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -1292,6 +1296,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerLayoutsSeparatorLine">
