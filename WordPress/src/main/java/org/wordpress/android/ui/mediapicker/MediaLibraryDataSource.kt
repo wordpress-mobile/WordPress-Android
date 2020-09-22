@@ -76,7 +76,13 @@ class MediaLibraryDataSource(
     private suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
         return withContext(bgDispatcher) {
             mediaTypes.map { mediaType ->
-                async { getFromDatabase(mediaType) }
+                async {
+                    if (filter == null) {
+                        getFromDatabase(mediaType)
+                    } else {
+                        searchInDatabase(mediaType, filter)
+                    }
+                }
             }.fold(mutableListOf<MediaItem>()) { result, databaseItems ->
                 result.addAll(databaseItems.await())
                 result
@@ -103,6 +109,15 @@ class MediaLibraryDataSource(
             VIDEO -> mediaStore.getSiteVideos(siteModel)
             AUDIO -> mediaStore.getSiteAudio(siteModel)
             DOCUMENT -> mediaStore.getSiteDocuments(siteModel)
+        }.toMediaItems(mediaType)
+    }
+
+    private fun searchInDatabase(mediaType: MediaType, filter: String): List<MediaItem> {
+        return when (mediaType) {
+            IMAGE -> mediaStore.searchSiteImages(siteModel, filter)
+            VIDEO -> mediaStore.searchSiteVideos(siteModel, filter)
+            AUDIO -> mediaStore.searchSiteAudio(siteModel, filter)
+            DOCUMENT -> mediaStore.searchSiteDocuments(siteModel, filter)
         }.toMediaItems(mediaType)
     }
 

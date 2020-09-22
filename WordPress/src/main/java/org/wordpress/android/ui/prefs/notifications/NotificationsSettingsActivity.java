@@ -14,7 +14,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -24,7 +23,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView.MasterSwitchToolbarListener;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 // Simple wrapper activity for NotificationsSettingsFragment
 public class NotificationsSettingsActivity extends LocaleAwareActivity
@@ -123,14 +121,6 @@ public class NotificationsSettingsActivity extends LocaleAwareActivity
         // Set master switch state from shared preferences.
         boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
         masterSwitchToolBarView.loadInitialState(isMasterChecked);
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
-        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int appBarColor = elevationOverlayProvider
-                .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar), cardElevation);
-
-        masterSwitchToolBarView.setBackgroundColor(appBarColor);
-
         hideDisabledView(isMasterChecked);
     }
 

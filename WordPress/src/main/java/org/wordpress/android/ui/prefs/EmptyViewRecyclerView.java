@@ -82,6 +82,12 @@ public class EmptyViewRecyclerView extends RecyclerView {
         toggleEmptyView();
     }
 
+    public void setEmptyViewIfNull(View emptyView) {
+        if (null != mEmptyView) return;
+
+        setEmptyView(emptyView);
+    }
+
     private void toggleEmptyView() {
         if (mEmptyView != null && getAdapter() != null) {
             final boolean empty = getAdapter().getItemCount() == 0;

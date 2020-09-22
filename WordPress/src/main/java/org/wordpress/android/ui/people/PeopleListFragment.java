@@ -176,8 +176,7 @@ public class PeopleListFragment extends Fragment {
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
                 mActionableEmptyView.setVisibility(View.GONE);
-                mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                            | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
 
                 switch (emptyViewMsgType) {
                     case LOADING:
@@ -303,8 +302,7 @@ public class PeopleListFragment extends Fragment {
         if (!peopleList.isEmpty()) {
             // if the list is not empty, don't show any message
             mFilteredRecyclerView.hideEmptyView();
-            mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                        | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+            mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
             mActionableEmptyView.setVisibility(View.GONE);
         } else if (!isFetching) {
             // if we are not fetching and list is empty, show no content message
