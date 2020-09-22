@@ -2,7 +2,9 @@ package org.wordpress.android.viewmodel.mlp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -35,7 +37,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private var layouts: GutenbergPageLayouts = GutenbergPageLayouts()
+    private lateinit var layouts: GutenbergPageLayouts
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -43,11 +45,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _isModalLayoutPickerShowing = MutableLiveData<Event<Boolean>>()
     val isModalLayoutPickerShowing: LiveData<Event<Boolean>> = _isModalLayoutPickerShowing
 
+    private val _onCategorySelected = MutableLiveData<Event<Unit>>()
+    val onCategorySelected: LiveData<Event<Unit>> = _onCategorySelected
+
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
-
-    private val contentUiState: ContentUiState
-        get() = uiState.value as? ContentUiState ?: ContentUiState()
 
     /**
      * Create new page event
@@ -70,14 +72,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun fetchLayouts() {
         updateUiState(LoadingUiState)
-        val siteId = appPrefsWrapper.getSelectedSite()
-        val site = siteStore.getSiteByLocalId(siteId)
-        if (site.isWPCom) {
-            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
-        } else {
-            layouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
-            loadLayouts()
-            loadCategories()
+        viewModelScope.launch {
+            val siteId = appPrefsWrapper.getSelectedSite()
+            val site = siteStore.getSiteByLocalId(siteId)
+            if (site.isWPCom) {
+                dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
+            } else {
+                handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
+            }
         }
     }
 
@@ -86,51 +88,61 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (event.isError) {
             updateUiState(ErrorUiState(event.error.message))
         } else {
-            layouts = GutenbergPageLayouts(event.layouts, event.categories)
-            loadLayouts()
-            loadCategories()
+            handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
         }
+    }
+
+    private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
+        layouts = response
+        loadLayouts()
+        loadCategories()
     }
 
     private fun loadLayouts() {
-        val state = contentUiState
-        val listItems = ArrayList<LayoutCategoryUiState>()
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
+        viewModelScope.launch {
+            val listItems = ArrayList<LayoutCategoryUiState>()
 
-        val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
-            layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
-        else layouts.categories
+            val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
+                layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
+            else layouts.categories
 
-        selectedCategories.sortedBy { it.title }.forEach { category ->
+            selectedCategories.sortedBy { it.title }.forEach { category ->
 
-            val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
-                val selected = layout.slug == state.selectedLayoutSlug
-                LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
-                    onLayoutTapped(layoutSlug = layout.slug)
-                }
-            }
-            listItems.add(
-                    LayoutCategoryUiState(
-                            category.slug,
-                            category.title,
-                            category.description,
-                            layouts
+                val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
+                    val selected = layout.slug == state.selectedLayoutSlug
+                    LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected,
+                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
+                            onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )
-            )
+                }
+                listItems.add(
+                        LayoutCategoryUiState(
+                                category.slug,
+                                category.title,
+                                category.description,
+                                layouts
+                        )
+                )
+            }
+            updateUiState(state.copy(layoutCategories = listItems))
         }
-        updateUiState(state.copy(layoutCategories = listItems))
     }
 
     private fun loadCategories() {
-        val state = contentUiState
-        val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
-            CategoryListItemUiState(
-                    it.slug,
-                    it.title,
-                    it.emoji,
-                    state.selectedCategoriesSlugs.contains(it.slug)
-            ) { onCategoryTapped(it.slug) }
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
+        viewModelScope.launch {
+            val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
+                CategoryListItemUiState(
+                        it.slug,
+                        it.title,
+                        it.emoji,
+                        state.selectedCategoriesSlugs.contains(it.slug)
+                ) { onCategoryTapped(it.slug) }
+            }
+            updateUiState(state.copy(categories = listItems))
+            _onCategorySelected.postValue(Event(Unit))
         }
-        updateUiState(state.copy(categories = listItems))
     }
 
     /**
@@ -162,9 +174,20 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param headerShouldBeVisible if true the header is shown and the title hidden
      */
     private fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
-        val state = contentUiState
-        if (state.isHeaderVisible == headerShouldBeVisible) return // No change
-        updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+        (uiState.value as? ContentUiState)?.let { state ->
+            if (state.isHeaderVisible == headerShouldBeVisible) return // No change
+            updateUiState(state.copy(isHeaderVisible = headerShouldBeVisible))
+        }
+    }
+
+    /**
+     * Layout thumbnail is ready
+     * @param layoutSlug the slug of the tapped layout
+     */
+    fun onThumbnailReady(layoutSlug: String) {
+        (uiState.value as? ContentUiState)?.let { state ->
+            updateUiState(state.copy(loadedThumbnailSlugs = state.loadedThumbnailSlugs.apply { add(layoutSlug) }))
+        }
     }
 
     /**
@@ -181,18 +204,21 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param categorySlug the slug of the tapped category
      */
     fun onCategoryTapped(categorySlug: String) {
-        val state = contentUiState
-        if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
-            updateUiState(
-                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { remove(categorySlug) })
-            )
-        } else {
-            updateUiState(
-                    state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
-            )
+        (uiState.value as? ContentUiState)?.let { state ->
+            if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
+                updateUiState(
+                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply {
+                            remove(categorySlug)
+                        })
+                )
+            } else {
+                updateUiState(
+                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
+                )
+            }
+            loadCategories()
+            loadLayouts()
         }
-        loadCategories()
-        loadLayouts()
     }
 
     /**
@@ -200,23 +226,26 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param layoutSlug the slug of the tapped layout
      */
     fun onLayoutTapped(layoutSlug: String) {
-        val state = contentUiState
-        if (layoutSlug == state.selectedLayoutSlug) { // deselect
-            updateUiState(state.copy(selectedLayoutSlug = null))
-        } else {
-            updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
+        (uiState.value as? ContentUiState)?.let { state ->
+            if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
+            if (layoutSlug == state.selectedLayoutSlug) { // deselect
+                updateUiState(state.copy(selectedLayoutSlug = null))
+            } else {
+                updateUiState(state.copy(selectedLayoutSlug = layoutSlug))
+            }
+            updateButtonsUiState()
+            loadLayouts()
         }
-        updateButtonsUiState()
-        loadLayouts()
     }
 
     /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
-        val state = contentUiState
-        val selection = state.selectedLayoutSlug != null
-        updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
+        (uiState.value as? ContentUiState)?.let { state ->
+            val selection = state.selectedLayoutSlug != null
+            updateUiState(state.copy(buttonsUiState = ButtonsUiState(!selection, selection, selection)))
+        }
     }
 
     /**
@@ -244,6 +273,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
             override val isHeaderVisible: Boolean = false,
             val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
             val selectedLayoutSlug: String? = null,
+            val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
             val layoutCategories: List<LayoutCategoryUiState> = listOf(),
             val buttonsUiState: ButtonsUiState = ButtonsUiState(
