@@ -149,10 +149,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             switch (getLoginMode()) {
                 case FULL:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
+                    mIsSignupFromLoginEnabled = true;
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
+                    mIsSignupFromLoginEnabled = true;
                     if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                         checkSmartLockPasswordAndStartLogin();
                     } else {
@@ -164,8 +166,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
                     break;
                 case JETPACK_STATS:
-                    mIsSignupFromLoginEnabled = true;
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
+                    mIsSignupFromLoginEnabled = true;
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
@@ -201,7 +203,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loginFromPrologue() {
-        mIsSignupFromLoginEnabled = true;
         showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             mIsSmartLockTriggeredFromPrologue = true;
@@ -656,9 +657,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotWpcomSiteInfo(String siteAddress) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
-                LoginUsernamePasswordFragment.newInstance(siteAddress, siteAddress, null, null, true);
-        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(false, false, true, siteAddress);
+        slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
     }
 
     @Override
@@ -727,8 +727,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void addGoogleLoginFragment() {
-        addGoogleFragment(LoginGoogleFragment.newInstance(mIsSignupFromLoginEnabled), LoginGoogleFragment.TAG);
+    public void addGoogleLoginFragment(boolean isSignupFromLoginEnabled) {
+        addGoogleFragment(LoginGoogleFragment.newInstance(isSignupFromLoginEnabled), LoginGoogleFragment.TAG);
     }
 
     @Override

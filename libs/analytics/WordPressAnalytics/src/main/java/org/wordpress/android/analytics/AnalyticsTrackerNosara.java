@@ -1825,6 +1825,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_successful";
             case ENCRYPTED_LOGGING_UPLOAD_FAILED:
                 return "encrypted_logging_upload_failed";
+            case READER_POST_REPORTED:
+                return "reader_post_reported";
         }
         return null;
     }

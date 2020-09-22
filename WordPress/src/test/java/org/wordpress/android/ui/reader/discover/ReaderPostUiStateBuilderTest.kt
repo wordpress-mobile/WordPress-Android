@@ -590,16 +590,6 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `like button is disabled on bookmark list`() = test {
-        // Arrange
-        val post = createPost()
-        // Act
-        val uiState = mapPostToUiState(post, isBookmarkList = true)
-        // Assert
-        assertThat(uiState.likeAction.isEnabled).isFalse()
-    }
-
-    @Test
     fun `like button is disabled when the user is logged off`() = test {
         // Arrange
         val post = createPost()
@@ -742,16 +732,6 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled on bookmark list`() = test {
-        // Arrange
-        val post = createPost()
-        // Act
-        val uiState = mapPostToUiState(post, isBookmarkList = true)
-        // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
-    }
-
-    @Test
     fun `Count on Comments button corresponds to number of comments on the post`() = test {
         // Arrange
         val numReplies = 15
@@ -823,8 +803,7 @@ class ReaderPostUiStateBuilderTest {
     private suspend fun mapPostToUiState(
         post: ReaderPost,
         postListType: ReaderPostListType = TAG_FOLLOWED,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock(),
-        isBookmarkList: Boolean = false
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
                 post = post,
@@ -832,7 +811,6 @@ class ReaderPostUiStateBuilderTest {
                 photonWidth = 0,
                 photonHeight = 0,
                 postListType = postListType,
-                isBookmarkList = isBookmarkList,
                 onButtonClicked = onButtonClicked,
                 onItemClicked = mock(),
                 onItemRendered = mock(),
