@@ -40,6 +40,10 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
+import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed;
+import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress;
+import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart;
 import com.wordpress.stories.compose.story.StoryRepository;
 
 import org.greenrobot.eventbus.EventBus;
@@ -3078,6 +3082,59 @@ public class EditPostActivity extends LocaleAwareActivity implements
             });
             AlertDialog dialog = builder.create();
             dialog.show();
+        }
+    }
+
+    // Story Frame Save Service events
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStoryFrameSaveStart(FrameSaveStart event) {
+        if (isFinishing()) {
+            return;
+        }
+        String localMediaId = String.valueOf(event.getFrameId());
+        if (mStoryEditorMediaSaveListener != null) {
+            mStoryEditorMediaSaveListener.onMediaSaveReattached(localMediaId, 0.0f);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStoryFrameSaveProgress(FrameSaveProgress event) {
+        if (isFinishing()) {
+            return;
+        }
+        String localMediaId = String.valueOf(event.getFrameId());
+        if (mStoryEditorMediaSaveListener != null) {
+            mStoryEditorMediaSaveListener.onMediaSaveProgress(localMediaId, event.getProgress());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStoryFrameSaveCompleted(FrameSaveCompleted event) {
+        if (isFinishing()) {
+            return;
+        }
+        String localMediaId = String.valueOf(event.getFrameId());
+        if (mStoryEditorMediaSaveListener != null) {
+            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
+            if (mediaModel != null) {
+                MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
+                mStoryEditorMediaSaveListener.onMediaSaveSucceeded(localMediaId, mediaFile);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStoryFrameSaveFailed(FrameSaveFailed event) {
+        if (isFinishing()) {
+            return;
+        }
+        String localMediaId = String.valueOf(event.getFrameId());
+        if (mStoryEditorMediaSaveListener != null) {
+            mStoryEditorMediaSaveListener.onMediaSaveFailed(localMediaId);
         }
     }
 
