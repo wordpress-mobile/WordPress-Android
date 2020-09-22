@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/toolbar_height"
-    android:layout_height="@dimen/toolbar_height"
+    android:layout_width="@dimen/min_touch_target_sz"
+    android:layout_height="@dimen/min_touch_target_sz"
     android:background="?android:attr/actionBarItemBackground"
     android:clickable="true"
     android:focusable="true">
@@ -13,7 +13,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@null"
-        android:padding="@dimen/me_avatar_padding"
         android:src="@drawable/ic_customize_white_24dp"
         android:tint="?attr/wpColorActionModeIcon"
         app:layout_constraintBottom_toBottomOf="parent"
