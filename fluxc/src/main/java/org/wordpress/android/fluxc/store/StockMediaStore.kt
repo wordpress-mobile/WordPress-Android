@@ -37,10 +37,10 @@ class StockMediaStore
      * Actions: FETCHED_MEDIA_LIST
      */
     class FetchedStockMediaListPayload(
-        val mediaList: List<StockMediaModel>,
-        val searchTerm: String,
-        val nextPage: Int,
-        val canLoadMore: Boolean
+        @JvmField val mediaList: List<StockMediaModel>,
+        @JvmField val searchTerm: String,
+        @JvmField val nextPage: Int,
+        @JvmField val canLoadMore: Boolean
     ) : Payload<StockMediaError?>() {
         constructor(error: StockMediaError, searchTerm: String) : this(listOf(), searchTerm, 0, false) {
             this.error = error
@@ -48,10 +48,10 @@ class StockMediaStore
     }
 
     class OnStockMediaListFetched(
-        val mediaList: List<StockMediaModel>,
-        val searchTerm: String,
-        val nextPage: Int,
-        val canLoadMore: Boolean
+        @JvmField val mediaList: List<StockMediaModel>,
+        @JvmField val searchTerm: String,
+        @JvmField val nextPage: Int,
+        @JvmField val canLoadMore: Boolean
     ) : OnChanged<StockMediaError?>() {
         constructor(error: StockMediaError, searchTerm: String) : this(listOf(), searchTerm, 0, false) {
             this.error = error
