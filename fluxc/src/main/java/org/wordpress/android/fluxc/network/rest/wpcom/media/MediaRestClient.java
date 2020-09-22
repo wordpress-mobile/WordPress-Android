@@ -459,18 +459,20 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     // Helper methods to dispatch media actions
     //
     private MediaError parseUploadError(Response response, SiteModel siteModel) {
-        MediaErrorType errorType = MediaErrorType.fromHttpStatusCode(response.code());
-        if (errorType == MediaErrorType.REQUEST_TOO_LARGE) {
+        MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
+
+        if (mediaError.type == MediaErrorType.REQUEST_TOO_LARGE) {
             // 413 (Request too large) errors are coming from the web server and are not an API response like the rest
-            return new MediaError(errorType, response.message());
+            mediaError.message = response.message();
+            return mediaError;
         }
 
-        String message = null;
         try {
             ResponseBody responseBody = response.body();
             if (responseBody == null) {
                 AppLog.e(T.MEDIA, "error uploading media, response body was empty " + response);
-                return new MediaError(MediaErrorType.PARSE_ERROR);
+                mediaError.type = MediaErrorType.PARSE_ERROR;
+                return mediaError;
             }
             JSONObject body = new JSONObject(responseBody.string());
             // Can be an array or errors
@@ -480,13 +482,13 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     JSONObject error = errors.getJSONObject(0);
                     // error.getString("error")) is always "upload_error"
                     if (error.has("message")) {
-                        message = error.getString("message");
+                        mediaError.message = error.getString("message");
                     }
                 }
             }
             // Or an object
             if (body.has("message")) {
-                message = body.getString("message");
+                mediaError.message = body.getString("message");
             }
 
             if (!siteModel.isWPCom()) {
@@ -496,14 +498,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 if (body.has("error")) {
                     String error = body.getString("error");
                     if ("invalid_hmac".equals(error)) {
-                        errorType = MediaErrorType.REQUEST_TOO_LARGE;
+                        mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
                     }
                 }
             }
         } catch (JSONException | IOException e) {
             // no op
         }
-        return new MediaError(errorType, message);
+        return mediaError;
     }
 
     private void notifyMediaPushed(SiteModel site, MediaModel media, MediaError error) {
