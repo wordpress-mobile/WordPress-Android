@@ -2,7 +2,9 @@ package org.wordpress.android.viewmodel.mlp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -67,12 +69,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun fetchLayouts() {
         updateUiState(LoadingUiState)
-        val siteId = appPrefsWrapper.getSelectedSite()
-        val site = siteStore.getSiteByLocalId(siteId)
-        if (site.isWPCom) {
-            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
-        } else {
-            handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
+        viewModelScope.launch {
+            val siteId = appPrefsWrapper.getSelectedSite()
+            val site = siteStore.getSiteByLocalId(siteId)
+            if (site.isWPCom) {
+                dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
+            } else {
+                handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
+            }
         }
     }
 
@@ -93,43 +97,47 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun loadLayouts() {
         val state = uiState.value as? ContentUiState ?: ContentUiState()
-        val listItems = ArrayList<LayoutCategoryUiState>()
+        viewModelScope.launch {
+            val listItems = ArrayList<LayoutCategoryUiState>()
 
-        val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
-            layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
-        else layouts.categories
+            val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
+                layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
+            else layouts.categories
 
-        selectedCategories.sortedBy { it.title }.forEach { category ->
+            selectedCategories.sortedBy { it.title }.forEach { category ->
 
-            val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
-                val selected = layout.slug == state.selectedLayoutSlug
-                LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
-                    onLayoutTapped(layoutSlug = layout.slug)
+                val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
+                    val selected = layout.slug == state.selectedLayoutSlug
+                    LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
+                        onLayoutTapped(layoutSlug = layout.slug)
+                    }
                 }
+                listItems.add(
+                        LayoutCategoryUiState(
+                                category.slug,
+                                category.title,
+                                category.description,
+                                layouts
+                        )
+                )
             }
-            listItems.add(
-                    LayoutCategoryUiState(
-                            category.slug,
-                            category.title,
-                            category.description,
-                            layouts
-                    )
-            )
+            updateUiState(state.copy(layoutCategories = listItems))
         }
-        updateUiState(state.copy(layoutCategories = listItems))
     }
 
     private fun loadCategories() {
         val state = uiState.value as? ContentUiState ?: ContentUiState()
-        val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
-            CategoryListItemUiState(
-                    it.slug,
-                    it.title,
-                    it.emoji,
-                    state.selectedCategoriesSlugs.contains(it.slug)
-            ) { onCategoryTapped(it.slug) }
+        viewModelScope.launch {
+            val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
+                CategoryListItemUiState(
+                        it.slug,
+                        it.title,
+                        it.emoji,
+                        state.selectedCategoriesSlugs.contains(it.slug)
+                ) { onCategoryTapped(it.slug) }
+            }
+            updateUiState(state.copy(categories = listItems))
         }
-        updateUiState(state.copy(categories = listItems))
     }
 
     /**
