@@ -141,7 +141,7 @@ class StockMediaStore
         emitChange(onStockMediaListFetched)
     }
 
-    suspend fun performUploadStockMedia(site: SiteModel, stockMedia: List<StockMediaItem>) =
+    suspend fun performUploadStockMedia(site: SiteModel, stockMedia: List<StockMediaUploadItem>) =
             coroutineEngine.launch(MEDIA, this, "Upload stock media") {
                 val payload = restClient.uploadStockMedia(site, stockMedia)
                 if (payload.isError) {
