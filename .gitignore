@@ -90,3 +90,4 @@ sentry.properties
 WordPress/release.jks
 WordPress/debug.keystore
 WordPress/*.jks
+included-builds.txt

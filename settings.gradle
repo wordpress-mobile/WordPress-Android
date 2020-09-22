@@ -19,6 +19,15 @@ include ':libs:login:WordPressLoginFlow'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
 
+def includedBuilds = new File('./included-builds.txt')
+if (includedBuilds.exists()) {
+    includedBuilds.eachLine { line ->
+        if (!line.isEmpty() && !line.startsWith("#")) {
+            includeBuild(line)
+        }
+    }
+}
+
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
