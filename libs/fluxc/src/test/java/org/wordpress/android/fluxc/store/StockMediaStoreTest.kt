@@ -23,6 +23,7 @@ class StockMediaStoreTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var restClient: StockMediaRestClient
     @Mock lateinit var sqlUtils: StockMediaSqlUtils
+    @Mock lateinit var mediaStore: MediaStore
     private lateinit var store: StockMediaStore
     private val stockMediaModel = StockMediaModel()
     private lateinit var stockMediaItem: StockMediaItem
@@ -39,7 +40,8 @@ class StockMediaStoreTest {
                 dispatcher,
                 restClient,
                 initCoroutineEngine(),
-                sqlUtils
+                sqlUtils,
+                mediaStore
         )
         stockMediaModel.id = id
         stockMediaModel.name = name
