@@ -7,10 +7,12 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.StockMediaAction
 import org.wordpress.android.fluxc.action.StockMediaAction.FETCH_STOCK_MEDIA
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.StockMediaModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient
 import org.wordpress.android.fluxc.persistence.StockMediaSqlUtils
+import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
@@ -23,7 +25,8 @@ class StockMediaStore
     dispatcher: Dispatcher?,
     private val restClient: StockMediaRestClient,
     private val coroutineEngine: CoroutineEngine,
-    private val sqlUtils: StockMediaSqlUtils
+    private val sqlUtils: StockMediaSqlUtils,
+    private val mediaStore: MediaStore
 ) : Store(dispatcher) {
     /**
      * Actions: FETCH_MEDIA_LIST
@@ -137,6 +140,20 @@ class StockMediaStore
         }
         emitChange(onStockMediaListFetched)
     }
+
+    suspend fun performUploadStockMedia(site: SiteModel, stockMedia: List<StockMediaItem>) =
+            coroutineEngine.launch(MEDIA, this, "Upload stock media") {
+                val payload = restClient.uploadStockMedia(site, stockMedia)
+                if (payload.isError) {
+                    OnStockMediaUploaded(payload.site, payload.error!!)
+                } else {
+                    // add uploaded media to the store
+                    for (media in payload.mediaList) {
+                        mediaStore.updateMedia(media, false)
+                    }
+                    OnStockMediaUploaded(payload.site, payload.mediaList)
+                }
+            }
 
     companion object {
         // this should be a multiple of both 3 and 4 since WPAndroid shows either 3 or 4 pics per row

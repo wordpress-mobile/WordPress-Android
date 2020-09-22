@@ -555,7 +555,7 @@ class MediaStore @Inject constructor(
     //
     // Action implementations
     //
-    private fun updateMedia(media: MediaModel?, emit: Boolean) {
+    fun updateMedia(media: MediaModel?, emit: Boolean) {
         val event = when {
             media == null -> {
                 OnMediaChanged(UPDATE_MEDIA, MediaError(NULL_MEDIA_ARG))
