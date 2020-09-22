@@ -19,10 +19,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestRespon
 import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaError
 import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaErrorType
 import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload
-import org.wordpress.android.fluxc.store.StockMediaItem
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchedStockMediaListPayload
 import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaError
 import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaErrorType
+import org.wordpress.android.fluxc.store.StockMediaUploadItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.StringUtils
@@ -85,7 +85,7 @@ class StockMediaRestClient
 
     suspend fun uploadStockMedia(
         site: SiteModel,
-        stockMediaList: List<StockMediaItem>
+        stockMediaList: List<StockMediaUploadItem>
     ): UploadedStockMediaPayload {
         val url = WPCOMREST.sites.site(site.siteId).external_media_upload.urlV1_1
         val jsonBody = JsonArray()
