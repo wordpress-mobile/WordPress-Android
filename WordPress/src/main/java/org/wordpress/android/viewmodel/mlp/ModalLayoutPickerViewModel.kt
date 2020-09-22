@@ -252,11 +252,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Triggers the creation of a new page
      */
     fun createPage() {
-        val state = contentUiState
-        val selection = state.selectedLayoutSlug != null
-        _onCreateNewPageRequested.value = if (selection) {
-            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
-        } else ""
+        (uiState.value as? ContentUiState)?.let { state ->
+            val selection = state.selectedLayoutSlug != null
+            _onCreateNewPageRequested.value = if (selection) {
+                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+            } else ""
+        }
     }
 
     private fun updateUiState(uiState: UiState) {

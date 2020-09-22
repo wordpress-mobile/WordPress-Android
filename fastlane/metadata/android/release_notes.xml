@@ -1,72 +1,98 @@
-<ar>
-15.6:
-تحسينات محرِّر المكوِّنات: تمت إضافة الإعدادات لتغيير عرض العمود إلى مكوِّن العمود، وتمت إضافة دعم تحرير الوسائط في مكوِّن المعرض، وتم تحسين منطق التراجع/الإعادة في أثناء وضع المسودة — تمتع بالتراجع الأكثر ذكاءً في الأجزاء، بدلاً من التراجع عن بعض الأحرف أو التغييرات الطفيفة في كل مرة.
-</ar>
-<de-DE>
-15.6:
-Verbesserungen beim Block-Editor: Einstellungen zur Änderung von Spaltenbreiten im Spaltenblock hinzugefügt, Unterstützung für Medienbearbeitung im Galerieblock hinzugefügt und die Logik für Rückgängigmachen/Wiederholen bei der Entwurfserstellung verbessert — du kannst jetzt ganze Vorgänge rückgängig machen, anstatt immer nur einige Buchstaben oder kleine Änderungen rückgängig zu machen.
-</de-DE>
 <en-US>
-15.6:
-Block Editor improvements: Added settings for changing column widths to the Column block, added media editing support in the Gallery block, and improved the logic for undo/redo while drafting — enjoy smarter undoing in chunks, instead of undoing a few letters or tiny changes at a time.
+15.7:
+Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.
+
+Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.
+
 </en-US>
 <es-ES>
-15.6:
-Mejoras en el editor de bloques: Añadidos ajustes para cambiar el ancho de las columnas en el bloque de columnas, añadida compatibilidad para la edición de medios en el bloque de galería y mejorada la lógica para deshacer/rehacer mientras se dibuja: disfruta deshacer en partes de una forma más inteligente, en lugar de deshacer unas pocas letras o pequeños cambios a la vez.
+15.7:
+Mejoras en el lector: Una nueva pestaña «Descubrir» que puedes adaptar a tus intereses y un botón «(No) Seguir» a las pantallas de detalles del sitio y del tema.
+
+Mejoras en el editor de bloques: Un nuevo bloque de «Cita» que te permite añadir énfasis a una pieza de texto elegida. Ahora, cualquier cambio realizado en los carruseles del menú también se refleja inmediatamente en los ajustes del bloque.
+
 </es-ES>
 <fr-CA>
-15.6 :
-Améliorations de l’éditeur de blocs : ajout de paramètres pour modifier la largeur des colonnes dans le bloc Colonne, ajout de la prise en charge de la modification multimédia dans le bloc Galerie et amélioration de la logique pour annuler/refaire dans un brouillon. Profitez d’annulations par blocs au lieu d’annuler quelques lettres ou de petites modifications à la fois.
+15.7 :
+Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
+
+Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
 </fr-CA>
 <fr-FR>
-15.6 :
-Améliorations de l’éditeur de blocs : ajout de paramètres pour modifier la largeur des colonnes dans le bloc Colonne, ajout de la prise en charge de la modification multimédia dans le bloc Galerie et amélioration de la logique pour annuler/refaire dans un brouillon. Profitez d’annulations par blocs au lieu d’annuler quelques lettres ou de petites modifications à la fois.
+15.7 :
+Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
+
+Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
 </fr-FR>
 <iw-IL>
-15.6:
- שיפורים בעורך הבלוקים: הוספנו הגדרות לשינוי של רוחב הטורים בבלוק הטורים, הוספנו תמיכה בעריכה בבלוק הגלריה ושיפרנו את ההיגיון של האפשרויות 'לבטל פעולה'/'לחזור על פעולה' במהלך כתיבה של טיוטה – כעת אפשר לבטל מספר פעולות במקביל במקום לבטל כמה אותיות או שינויים קטנים בכל פעם.
+15.7:
+שיפורים ב-Reader: לשונית חדשה של 'לגלות' שניתנת להתאמה לפי תחומי העניין וכפתורי מעקב או ביטול מעקב במסכי הפרטים של האתרים והנושאים.
+
+שיפורים בעורך הבלוקים: בלוק ציטוט חדש מאפשר לך להוסיף הדגשות לחלק מסוים מהטקסט. כל שינוי שמבוצע בסליידר של התפריט יחול כעת באופן מיידי בהגדרות הבלוק.
+
 </iw-IL>
-<id>
-15.6:
-Peningkatan Editor Blok: Menambahkan pengaturan untuk mengubah lebar kolom ke blok Kolom, menambahkan dukungan pengeditan media di blok Galeri, dan meningkatkan logika untuk undo/redo saat penyusunan - nikmati undo yang lebih cerdas dalam potongan, daripada membatalkan beberapa huruf atau perubahan kecil pada suatu waktu.
-</id>
+<in>
+15.7:
+Peningkatan pada Pembaca: Tab Jelajah baru yang dapat disesuaikan dengan minat Anda dan tombol “(berhenti) mengikuti” pada layar detail situs dan topik.
+
+Peningkatan Penyunting Blok: Blok Kutipan Besar baru yang memungkinkan Anda menambahkan penekanan pada bagian teks yang dipilih. Semua perubahan pada slider menu kini juga langsung ditampilkan di pengaturan blok.
+
+</in>
 <it-IT>
-15.6:
-Miglioramenti dell'Editor a blocchi: Aggiunto nel blocco Colonne le impostazioni per modificare la larghezza delle colonne, aggiunto nel blocco Galleria il supporto alla modifica dei media, migliorata la logica di annulla/ripeti durante la creazione delle bozze — goditi l'annullamento di gruppo, invece di annullare poche lettere o piccoli cambiamenti uno per volta.
+15.7:
+Miglioramenti nel Reader: una nuova scheda Discover può essere adattata ai tuoi interessi e un pulsante per seguire/non seguire i un sito e le schermate dei dettagli dell'argomento.
+
+Miglioramenti all'editor a blocchi: un nuovo blocco Citazione evidenziata che ti aiuta ad aggiungere enfasi a una parte del testo scelta. Qualsiasi modifica effettuata negli slider del menu ora viene anche immediatamente riflessa nelle impostazioni del blocco.
+
 </it-IT>
 <ja-JP>
-15.6: 
-ブロックエディターの改善 : カラムブロックのカラム幅を変更する設定を追加、ギャラリーブロックにメディア編集機能を追加、編集中の元に戻す / やり直すのロジックを改善 - 一度に1文字ずつのやり直しではなく、スマートに一括で取り消しができるようになりました。
+15.7:
+ Reader の改善 : 新しいディスカバータブで、サイトやトピックの詳細画面における、興味や「フォロー (解除)」ボタンをカスタマイズできます。
+
+ブロックエディターの改善 : 新しいプルクオートブロックで選択したテキストを強調できるようになりました。 メニューのスライダーの変更もすぐにブロック設定に反映されるようになりました。
+
 </ja-JP>
 <ko-KR>
-15.6:
-블록 편집기 개선: 컬럼 블록에 컬럼 너비를 변경하는 설정을 추가했습니다. 갤러리 블록에 미디어 편집 지원을 추가하고, 임시글을 작성하는 중 실행 취소/다시 실행 논리를 개선했습니다 — 한 번에 몇 개의 글자나 아주 작은 변경사항을 실행 취소하는 대신 덩어리 단위로 현명한 실행 취소를 즐기세요.
+15.7:
+리더의 개선: 관심에 따라 재단할 수 있는 새 발견 탭과 사이트와 주제 세부 화면에서 “(언)팔로우” 가 있습니다.
+
+블록 편집기 개선: 본문의 일부를 선택하여 강조할 수 있게 하는 새 내부인용이 있습니다. 또한 메뉴 슬라이더에서 만든 어떤 변경사항이든 이제 블록 설정에 즉각 볬영합니다.
+
 </ko-KR>
 <nl-NL>
-15,6:
-Verbeteringen in blok-editor: Instellingen toegevoegd voor het wijzigen van kolombreedte aan het kolom blok, ondersteuning voor mediabewerking toegevoegd in het galerij blok en verbeterde logica voor ongedaan maken/opnieuw uitvoeren tijdens het maken van concepten - geniet van slimmer ongedaan maken in stukken, in plaats van iedere keer een paar letters of kleine wijzigingen ongedaan te maken.
+15.7:
+Verbeteringen in de Reader: een nieuw tabblad Ontdekken dat je kan afstemmen op je interesses en een knop "(ont) volgen" voor de detailschermen van de site en het onderwerp.
+
+Verbeteringen in blok-editor:een nieuw Pullquote-blok waarmee je de nadruk kunt leggen op een gekozen stuk tekst. Eventuele wijzigingen in menu sliders worden nu ook onmiddellijk weerspiegeld in de blok instellingen.
+
 </nl-NL>
 <pt-BR>
-15.6:
-Melhorias no editor de blocos: Adicionadas configurações para alterar as larguras das colunas no bloco de colunas, adicionado suporte à edição de mídia no bloco da galeria e melhorada a lógica para desfazer/refazer durante o rascunho, aproveitar para de desfazer usando pedaços mais inteligentes, em vez de desfazer algumas letras ou pequenas alterações por vez.
+15.7:
+Melhorias no Leitor: Uma nova aba Explorar que você pode personalizar com seus interesses e botão Seguir (ou parar de seguir) sites e assuntos na tela de informações.
+
+Melhorias no editor de blocos: Um novo bloco de Citação que permite adicionar ênfase em uma parte do texto. Qualquer alteração feita no menu deslizante agora é refletida nas configurações do bloco imediatamente.
+
+
 </pt-BR>
 <ru-RU>
-15.6:
-Улучшения в редакторе блоков: добавлены настройки для изменения ширины столбцов в соответствующем блоке, поддержка редактирования медиафайла в блоке галереи, улучшение логики отмены/повтора для черновиков, вы можете отменить все действие, вместо отмены ввода пары символов.
+15.7:
+Улучшения "Чтива": Новая вкладка поиска позволяет вам найти и подписаться (или отписаться) на сайты по интересам (на экране подробностей).
+
+Улучшения редактора блоков: Новый блок выдержки, позволяет акцентировать выделенный фрагмент текста. Изменения внесенные слайдерами в меню будут применены немедленно к настройкам блоков.
+
+
 </ru-RU>
 <sv-SE>
-15.6:
-Förbättringar i blockredigeraren: Ny inställning för kolumnbredder i kolumnblocket, nytt stöd för redigering av media i galleriblocket och förbättrad logik för ångra/gör om vid arbete med utkast – ångra flera åtgärder åt gången och inte bara några bokstäver eller mindre ändringar åt gången.
+15.7:
+Förbättringar i läsaren: Ny flik Upptäck du kan anpassa till dina intressen och knapp för att följa/sluta följa webbplatsen och sidor med ämnesinformation.
+
+Förbättringar i blockredigeraren: Ett nytt block för utdragscitat låter dig framhäva ett valt textstycke. Eventuella ändringar i menyreglagen återspeglas nu direkt i blockinställningarna.
+
 </sv-SE>
-<tr-TR>
-15,6:
-Blok Düzenleyici ile ilgili geliştirmeler: Sütun bloğuna sütun genişliklerini değiştirmek için ayarlar eklendi, Galeri bloğuna medya düzenleme desteği eklendi ve taslak için geri alma/yineleme mantığı iyileştirildi. Birkaç harfi geri almak veya her seferinde küçük değişiklikler yapmak yerine, akıllı şekilde toplu geri alma işlemlerinin keyfini çıkarın.
-</tr-TR>
-<zh-CN>
-15.6：
-改进了区块编辑器：在“栏目”区块中增加了更改栏目宽度的设置；在“图库”区块中增加了媒体编辑支持；改进了绘图时撤销/重做的逻辑，享受更智能的成块撤销，而不是一次撤销几个字母或微小更改。
-</zh-CN>
 <zh-TW>
-15.6：
-改善區塊編輯器：內容欄區塊新增變更欄位寬度的設定功能、圖庫區塊新增媒體編輯支援，並改善撰寫草稿時重做/復原的邏輯，讓你享受更聰明的字塊復原功能，不用一次只能復原幾個字母或進行些微調整。
+15.7：
+閱讀器改善功能：你可以依自己的興趣量身打造全新「探索」分頁，並在網站和主題詳細資料畫面點選「關注/取消關注」按鈕。
+
+區塊編輯器增強功能：推出可突顯所選文字段落的全新「重要引述」區塊。 選單投影片中的任何變更現在也會隨即反映在區塊設定中。
+
 </zh-TW>

@@ -30,7 +30,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
-import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
@@ -116,7 +115,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
-        setStatusBarColor(this)
     }
 
     override fun onAttach(context: Context) {
@@ -130,7 +128,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun closeModal() {
-        WPActivityUtils.setLightStatusBar(activity?.window, false)
         viewModel.dismiss()
     }
 
@@ -199,14 +196,5 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         val layoutParams = bottomSheet.layoutParams
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
         bottomSheet.layoutParams = layoutParams
-    }
-
-    private fun setStatusBarColor(dialog: BottomSheetDialog) {
-        dialog.behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                WPActivityUtils.setLightStatusBar(activity?.window, newState == BottomSheetBehavior.STATE_EXPANDED)
-            }
-        })
     }
 }

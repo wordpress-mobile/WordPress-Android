@@ -14,9 +14,15 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -181,6 +187,18 @@ public class AppSettingsFragment extends PreferenceFragment
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        final ListView listOfPreferences = view.findViewById(android.R.id.list);
+        if (listOfPreferences != null) {
+            ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
+        }
+        return view;
     }
 
     private void removeExperimentalCategory() {
