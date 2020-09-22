@@ -300,19 +300,19 @@ class MediaStore @Inject constructor(
         DB_QUERY_FAILURE,
         EXCEEDS_FILESIZE_LIMIT,
         EXCEEDS_MEMORY_LIMIT,
-        EXCEEDS_SITE_SPACE_QUOTA_LIMIT,  // network errors, occur in response to network requests
+        EXCEEDS_SITE_SPACE_QUOTA_LIMIT, // network errors, occur in response to network requests
         AUTHORIZATION_REQUIRED,
         CONNECTION_ERROR,
         NOT_AUTHENTICATED,
         NOT_FOUND,
         PARSE_ERROR,
         REQUEST_TOO_LARGE,
-        SERVER_ERROR,  // this is also returned when PHP max_execution_time or memory_limit is reached
+        SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
         TIMEOUT,
         BAD_REQUEST,
         XMLRPC_OPERATION_NOT_ALLOWED,
-        XMLRPC_UPLOAD_ERROR,  // logic constraints errors
-        INVALID_ID,  // unknown/unspecified
+        XMLRPC_UPLOAD_ERROR, // logic constraints errors
+        INVALID_ID, // unknown/unspecified
         GENERIC_ERROR;
 
         companion object {
@@ -794,7 +794,9 @@ class MediaStore @Inject constructor(
     }
 
     private fun notifyMediaError(
-        errorType: MediaErrorType, errorMessage: String?, cause: MediaAction,
+        errorType: MediaErrorType,
+        errorMessage: String?,
+        cause: MediaAction,
         media: List<MediaModel>
     ) {
         val mediaChange = OnMediaChanged(cause, media)
