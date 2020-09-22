@@ -30,7 +30,7 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(requireActivity())
         alertDialogBuilder.setView(buildView())
         alertDialogBuilder.setTitle(R.string.stats_widget_select_your_site)
         alertDialogBuilder.setNegativeButton(R.string.cancel) { _, _ -> }

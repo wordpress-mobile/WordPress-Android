@@ -50,6 +50,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private static final String ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN";
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
+    private static final String ARG_ALLOW_MAGIC_LINK = "ARG_ALLOW_MAGIC_LINK";
+    private static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
 
     private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 
@@ -65,12 +67,20 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private String mPassword;
     private String mService;
     private boolean mIsSocialLogin;
+    private boolean mAllowMagicLink;
+    private boolean mVerifyMagicLinkEmail;
 
     private AutoForeground.ServiceEventConnection mServiceEventConnection;
 
     public static LoginEmailPasswordFragment newInstance(String emailAddress, String password,
                                                          String idToken, String service,
                                                          boolean isSocialLogin) {
+        return newInstance(emailAddress, password, idToken, service, isSocialLogin, false, false);
+    }
+
+    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password, String idToken,
+                                                         String service, boolean isSocialLogin, boolean allowMagicLink,
+                                                         boolean verifyMagicLinkEmail) {
         LoginEmailPasswordFragment fragment = new LoginEmailPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
@@ -78,6 +88,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         args.putString(ARG_SOCIAL_ID_TOKEN, idToken);
         args.putString(ARG_SOCIAL_SERVICE, service);
         args.putBoolean(ARG_SOCIAL_LOGIN, isSocialLogin);
+        args.putBoolean(ARG_ALLOW_MAGIC_LINK, allowMagicLink);
+        args.putBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL, verifyMagicLinkEmail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -92,11 +104,15 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
-        mPassword = getArguments().getString(ARG_PASSWORD);
-        mIdToken = getArguments().getString(ARG_SOCIAL_ID_TOKEN);
-        mService = getArguments().getString(ARG_SOCIAL_SERVICE);
-        mIsSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
+        if (getArguments() != null) {
+            mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
+            mPassword = getArguments().getString(ARG_PASSWORD);
+            mIdToken = getArguments().getString(ARG_SOCIAL_ID_TOKEN);
+            mService = getArguments().getString(ARG_SOCIAL_SERVICE);
+            mIsSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
+            mAllowMagicLink = getArguments().getBoolean(ARG_ALLOW_MAGIC_LINK);
+            mVerifyMagicLinkEmail = getArguments().getBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL);
+        }
 
         if (savedInstanceState == null) {
             // cleanup the service state on first appearance
@@ -166,6 +182,20 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
             public void onClick(View v) {
                 if (mLoginListener != null) {
                     mLoginListener.forgotPassword(FORGOT_PASSWORD_URL_WPCOM);
+                }
+            }
+        });
+
+        final View divider = rootView.findViewById(R.id.login_button_divider);
+        divider.setVisibility(mAllowMagicLink ? View.VISIBLE : View.GONE);
+
+        final Button magicLinkButton = rootView.findViewById(R.id.login_get_email_link);
+        magicLinkButton.setVisibility(mAllowMagicLink ? View.VISIBLE : View.GONE);
+        magicLinkButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                if (mLoginListener != null) {
+                    mAnalyticsListener.trackRequestMagicLinkClick();
+                    mLoginListener.useMagicLinkInstead(mEmailAddress, mVerifyMagicLinkEmail);
                 }
             }
         });

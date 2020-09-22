@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
@@ -123,6 +125,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public void onResume() {
         super.onResume();
 
+        ViewPagerFragment.Companion.setUniqueIdToView(getListView());
+
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(getListView().getId());
+        }
+
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
             setNote(mRestoredNoteId);
@@ -139,7 +147,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public void onPause() {
         // Stop the reader comment service if it is running
         ReaderCommentService.stopService(getActivity());
-
+        ViewPagerFragment.Companion.restoreOriginalViewId(getListView());
         super.onPause();
     }
 
@@ -231,7 +239,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     }
 
                     ReaderActivityLauncher.showReaderComments(getActivity(), mNote.getSiteId(), mNote.getPostId(),
-                                                              mNote.getCommentId());
+                            mNote.getCommentId());
                 }
 
                 @Override
@@ -266,9 +274,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         case COMMENT:
                             // Load the comment in the reader list if it exists, otherwise show a webview
                             if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(),
-                                                                 clickedSpan.getId())) {
+                                    clickedSpan.getId())) {
                                 activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(),
-                                                                clickedSpan.getId());
+                                        clickedSpan.getId());
                             } else {
                                 activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                             }

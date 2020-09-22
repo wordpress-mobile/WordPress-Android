@@ -91,7 +91,7 @@ class GifPickerActivity : LocaleAwareActivity() {
      * Show the back arrow.
      */
     private fun initializeToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

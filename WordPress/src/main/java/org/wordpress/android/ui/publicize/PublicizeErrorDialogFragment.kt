@@ -17,7 +17,7 @@ class PublicizeErrorDialogFragment : DialogFragment() {
                 // the custom dialog behavior here is specific to a user who is trying to share to Facebook
                 // but does not have any available Facebook Pages.
                 if (reasonResId == R.string.sharing_facebook_account_must_have_pages) {
-                    return MaterialAlertDialogBuilder(activity).apply {
+                    return MaterialAlertDialogBuilder(requireActivity()).apply {
                         setTitle(R.string.dialog_title_sharing_facebook_account_must_have_pages)
                         setMessage(R.string.sharing_facebook_account_must_have_pages)
                         setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
@@ -29,7 +29,7 @@ class PublicizeErrorDialogFragment : DialogFragment() {
                         }
                     }.create()
                 } else {
-                    return MaterialAlertDialogBuilder(activity).apply {
+                    return MaterialAlertDialogBuilder(requireActivity()).apply {
                         setMessage(reasonResId)
                         setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
                     }.create()

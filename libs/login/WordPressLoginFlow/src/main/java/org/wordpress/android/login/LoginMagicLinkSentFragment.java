@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,17 +29,24 @@ public class LoginMagicLinkSentFragment extends Fragment {
     public static final String TAG = "login_magic_link_sent_fragment_tag";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    private static final String ARG_ALLOW_PASSWORD = "ARG_ALLOW_PASSWORD";
 
     private LoginListener mLoginListener;
 
     private String mEmail;
+    private boolean mAllowPassword;
 
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkSentFragment newInstance(String email) {
+        return newInstance(email, true);
+    }
+
+    public static LoginMagicLinkSentFragment newInstance(String email, boolean allowPassword) {
         LoginMagicLinkSentFragment fragment = new LoginMagicLinkSentFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
+        args.putBoolean(ARG_ALLOW_PASSWORD, allowPassword);
         fragment.setArguments(args);
         return fragment;
     }
@@ -48,6 +56,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mEmail = getArguments().getString(ARG_EMAIL_ADDRESS);
+            mAllowPassword = getArguments().getBoolean(ARG_ALLOW_PASSWORD);
         }
 
         setHasOptionsMenu(true);
@@ -66,9 +75,12 @@ public class LoginMagicLinkSentFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.login_enter_password).setOnClickListener(new View.OnClickListener() {
+        final Button passwordButton = view.findViewById(R.id.login_enter_password);
+        passwordButton.setVisibility(mAllowPassword ? View.VISIBLE : View.GONE);
+        passwordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAnalyticsListener.trackLoginWithPasswordClick();
                 if (mLoginListener != null) {
                     mLoginListener.usePasswordInstead(mEmail);
                 }
