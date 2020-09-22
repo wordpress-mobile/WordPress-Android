@@ -111,9 +111,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
                 val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
                     val selected = layout.slug == state.selectedLayoutSlug
-                    LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected) {
-                        onLayoutTapped(layoutSlug = layout.slug)
-                    }
+                    LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected,
+                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
+                            onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
+                    )
                 }
                 listItems.add(
                         LayoutCategoryUiState(
@@ -179,6 +180,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
     }
 
+    private fun onThumbnailReady(layoutSlug: String) {
+        (uiState.value as? ContentUiState)?.let { state ->
+            updateUiState(state.copy(loadedThumbnailSlugs = state.loadedThumbnailSlugs.apply { add(layoutSlug) }))
+        }
+    }
+
     /**
      * Appbar scrolled event
      * @param verticalOffset the scroll state vertical offset
@@ -216,6 +223,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun onLayoutTapped(layoutSlug: String) {
         (uiState.value as? ContentUiState)?.let { state ->
+            if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
             if (layoutSlug == state.selectedLayoutSlug) { // deselect
                 updateUiState(state.copy(selectedLayoutSlug = null))
             } else {
@@ -257,6 +265,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
             override val isHeaderVisible: Boolean = false,
             val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
             val selectedLayoutSlug: String? = null,
+            val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
             val layoutCategories: List<LayoutCategoryUiState> = listOf(),
             val buttonsUiState: ButtonsUiState = ButtonsUiState(
