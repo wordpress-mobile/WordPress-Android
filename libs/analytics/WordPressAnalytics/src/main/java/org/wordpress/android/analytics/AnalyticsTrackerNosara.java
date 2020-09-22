@@ -1221,6 +1221,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_url_form_viewed";
             case LOGIN_URL_HELP_SCREEN_VIEWED:
                 return "login_url_help_screen_viewed";
+            case LOGIN_CONNECTED_SITE_INFO_REQUESTED:
+                return "login_connected_site_info_requested";
+            case LOGIN_CONNECTED_SITE_INFO_FAILED:
+                return "login_connected_site_info_failed";
+            case LOGIN_CONNECTED_SITE_INFO_SUCCEEDED:
+                return "login_connected_site_info_succeeded";
             case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
                 return "login_username_password_form_viewed";
             case LOGIN_TWO_FACTOR_FORM_VIEWED:
@@ -1819,6 +1825,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_successful";
             case ENCRYPTED_LOGGING_UPLOAD_FAILED:
                 return "encrypted_logging_upload_failed";
+            case READER_POST_REPORTED:
+                return "reader_post_reported";
         }
         return null;
     }

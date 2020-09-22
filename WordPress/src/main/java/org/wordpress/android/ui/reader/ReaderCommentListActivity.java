@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -144,6 +145,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         setContentView(R.layout.reader_activity_comment_list);
         mViewModel = mViewModelFactory.create(ReaderCommentListViewModel.class);
 
+        AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
+
         mViewModel.getScrollTo().observe(this, scrollPositionEvent -> {
             ScrollPosition content = scrollPositionEvent.getContentIfNotHandled();
             LayoutManager layoutManager = mRecyclerView.getLayoutManager();
@@ -159,6 +162,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                 } else {
                     ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(content.getPosition(), 0);
                 }
+                appBarLayout.post(appBarLayout::requestLayout);
             }
         });
 

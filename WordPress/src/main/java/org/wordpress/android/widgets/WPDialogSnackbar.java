@@ -38,7 +38,7 @@ public class WPDialogSnackbar {
         params.setMargins(margin, margin, margin, margin);
         snackbarLayout.setLayoutParams(params);
         snackbarLayout.setPadding(0, 0, 0, 0);
-        snackbarLayout.setBackground(context.getDrawable(R.drawable.bg_snackbar));
+        snackbarLayout.setBackgroundResource(R.drawable.bg_snackbar);
 
         // Hide underlying snackbar text and action.
         TextView snackbarText = snackbarLayout.findViewById(com.google.android.material.R.id.snackbar_text);

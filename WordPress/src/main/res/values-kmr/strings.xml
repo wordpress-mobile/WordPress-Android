@@ -380,11 +380,8 @@ Language: ku_TR
     <string name="menu_history">Raborî</string>
     <string name="pages_pending">Vekolîna Hilawîstî</string>
     <string name="pages_open_page_error">Rûpela hilbijartî ne li berdeste</string>
-    <string name="news_card_announcement_action_sample_announcement">(Zêdetir bixwîne)</string>
-    <string name="news_card_announcement_title_sample_announcement">[Taybetiyeke nû heye]</string>
     <string name="pages_search_suggestion">Li rûpelan bigere</string>
     <string name="pages_delete_permanently">Bi Mayînde Jê Bîbe</string>
-    <string name="news_card_announcement_content_sample_announcement">[Wextê te tune tu aniha bixwîne? Ne pirsgirêk e: şandiyan ji bo xwendinê tomar bike.]</string>
     <string name="pages_empty_trashed">Ti rûpelên te yên hatine jêbirin nîn e</string>
     <string name="pages_empty_scheduled">Ti rûpelên te yên demsazkirî nîn e</string>
     <string name="pages_empty_drafts">Ti rûpelên te yên reşnivîs nîn e</string>
@@ -407,7 +404,6 @@ Language: ku_TR
     <string name="page_moved_to_published">Rûpel hat weşandin</string>
     <string name="page_parent_change_error">Di guhertina rûpela mak de pirsgirêkek heye</string>
     <string name="set_parent">Makê Saz Bike</string>
-    <string name="dismiss">veşêre</string>
     <string name="page_permanently_deleted">Rûpel bi awayekî mayînde hate jêbirin</string>
     <string name="page_moved_to_trash">Rûpel hat jêbirin</string>
     <string name="page_moved_to_draft">Rûpel bo reşnivîsê hate vegerandin</string>

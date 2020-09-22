@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-24 21:33:54+0000
+Translation-Revision-Date: 2020-09-18 08:04:58+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="reader_menu_report_post">Пожаловаться на запись</string>
+    <string name="gutenberg_native_angle">Угол</string>
+    <string name="mlp_layout_selected">%s выбран</string>
+    <string name="reader_welcome_banner">Добро пожаловать в Чтиво. Откройте миллионы блоков прямо у вас под рукой.</string>
+    <string name="error_media_xmlrcp_server_error">Произошла внутренняя ошибка сервера</string>
+    <string name="error_media_xmlrpc_not_allowed">Это действие недопустимо</string>
+    <string name="show_n_hidden_items_desc">еще элементов: %1$s</string>
     <string name="gutenberg_native_select_a_layout">Выберите макет</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Заметьте: макет колонок может меняться в зависимости от темы и размера экрана</string>
     <string name="contact_fragment_title">\@string/contact_support</string>
@@ -93,7 +100,6 @@ Language: ru
     <string name="my_site_bottom_sheet_add_story">История</string>
     <string name="photo_picker_choose_file">Выбрать с устройства</string>
     <string name="pick_file">Добавить файл</string>
-    <string name="media_error_file_not_allowed_on_free_plan">Этот тип файлов недопустим на бесплатном тарифе</string>
     <string name="gutenberg_native_replace_image_or_video">Заменить изображение или видео</string>
     <string name="gutenberg_native_replace_video">Заменить видео</string>
     <string name="continue_with_google_terms_of_service_text">Если вы продолжите работу с учетной записью Google, не имея учётной записи WordPress.com, вы создадите учётную запись и примете наши %1$sУсловия обслуживания%2$s.</string>
@@ -317,9 +323,9 @@ Language: ru
     <string name="gutenberg_native_what_people_say">Люди говорят</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Мы небольшая команда талантливых профессионалов с широким спектром навыков и опытом. Мы страстно любим свое дело. Мы стремимся начать работать с вами.</string>
     <string name="gutenberg_native_walt_disney">Уолт Дисней</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Посетителям интересно узнать кто за той стороной экрана. Используйте это место для того, чтобы написать о себе, о сайте, о своем бизнесе или чём угодно еще. Используйте отзывы ниже для цитат, на одну тему, своими словами.</string>
     <string name="gutenberg_native_want_to_work_with_us">Хотите работать с нами?</string>
     <string name="gutenberg_native_warning_message">Предупреждающее сообщение</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Посетителям интересно узнать кто за той стороной экрана. Используйте это место для того, чтобы написать о себе, о сайте, о своем бизнесе или чём угодно еще. Используйте отзывы ниже для цитат, на одну тему, своими словами.</string>
     <string name="gutenberg_native_position_or_job_title">Должность</string>
     <string name="gutenberg_native_project_name">Имя проекта</string>
     <string name="gutenberg_native_sally_smith">Елена Васина</string>
@@ -993,9 +999,6 @@ Language: ru
     <string name="pages_empty_drafts">У вас нет страниц в черновиках</string>
     <string name="pages_empty_scheduled">У вас нет запланированных к публикации страниц</string>
     <string name="pages_empty_trashed">У вас нет страниц в корзине</string>
-    <string name="news_card_announcement_title_sample_announcement">[Доступна новая возможность]</string>
-    <string name="news_card_announcement_content_sample_announcement">[Нет времени прочесть сейчас? Сохраните на потом!]</string>
-    <string name="news_card_announcement_action_sample_announcement">[Читать далее]</string>
     <string name="login_error_sms_throttled">Слишком много попыток отправить СМС-код проверки, отдохните и запросите снова через пару минут.</string>
     <string name="pages_published">Опубликовано</string>
     <string name="pages_drafts">Черновики</string>
@@ -1007,7 +1010,6 @@ Language: ru
     <string name="reader_empty_followed_blogs_search_title">Нет сайтов по критериям поиска</string>
     <string name="site_picker_remove_site_empty">Нет сайтов по критериям поиска</string>
     <string name="login_error_email_not_found_v2">Ни одна учетная запись WordPress.com не совпадает с этой записью в Google.</string>
-    <string name="dismiss">закрыть</string>
     <string name="set_parent">Установить родителя</string>
     <string name="page_delete_error">Возникла проблема при удалении страницы</string>
     <string name="page_status_change_error">Возникла проблема установления статуса страницы</string>

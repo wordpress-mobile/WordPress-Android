@@ -39,7 +39,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -298,7 +298,7 @@ public class WPSupportUtils {
 
         // Let the layout settle down before attempting to scroll
         idleFor(100);
-        
+
         while (recyclerView.getLayoutManager().canScrollVertically() && !isElementCompletelyDisplayed(view)) {
             getCurrentActivity().runOnUiThread(new Runnable() {
                 @Override public void run() {

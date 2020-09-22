@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.WPScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
@@ -69,4 +69,4 @@
             android:paddingBottom="@dimen/margin_large" />
     </LinearLayout>
 
-</org.wordpress.android.widgets.WPScrollView>
+</androidx.core.widget.NestedScrollView>
