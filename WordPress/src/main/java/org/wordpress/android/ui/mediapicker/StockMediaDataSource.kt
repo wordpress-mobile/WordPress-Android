@@ -4,10 +4,12 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.NoChange
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import javax.inject.Named
 
 class StockMediaDataSource(
@@ -36,8 +38,20 @@ class StockMediaDataSource(
 
     private suspend fun get(filter: String?): List<MediaItem> {
         return withValidFilter(filter) { validFilter ->
-            stockMediaStore.getStockMedia(validFilter).map { MediaItem(Iden) }
-        } ?: listOf<MediaItem>()
+            stockMediaStore.getStockMedia(validFilter)
+                    .mapNotNull {
+                        it.url?.let { url ->
+                            MediaItem(
+                                    StockMediaIdentifier(it.url, it.name, it.title),
+                                    url,
+                                    it.name,
+                                    IMAGE,
+                                    null,
+                                    it.date?.toLongOrNull() ?: 0
+                            )
+                        }
+                    }
+        } ?: listOf()
     }
 
     private suspend fun <T> withValidFilter(filter: String?, action: suspend (filter: String) -> T): T? {

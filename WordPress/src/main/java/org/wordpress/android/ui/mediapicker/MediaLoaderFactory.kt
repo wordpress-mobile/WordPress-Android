@@ -14,6 +14,7 @@ class MediaLoaderFactory
 @Inject constructor(
     private val deviceListBuilderFactory: DeviceListBuilderFactory,
     private val mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory,
+    private val stockMediaDataSource: StockMediaDataSource,
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
     fun build(mediaPickerSetup: MediaPickerSetup, siteModel: SiteModel?): MediaLoader {
@@ -22,11 +23,10 @@ class MediaLoaderFactory
             WP_LIBRARY -> mediaLibraryDataSourceFactory.build(requireNotNull(siteModel) {
                 "Site is necessary when loading WP media library "
             }, mediaPickerSetup.allowedTypes)
-            STOCK_LIBRARY -> throw NotImplementedError("Source not implemented yet")
+            STOCK_LIBRARY -> stockMediaDataSource
             GIF_LIBRARY -> throw NotImplementedError("Source not implemented yet")
-        }.toMediaLoader(mediaPickerSetup)
+        }.toMediaLoader()
     }
 
-    private fun MediaSource.toMediaLoader(mediaPickerSetup: MediaPickerSetup) =
-            MediaLoader(this, localeManagerWrapper, mediaPickerSetup.allowedTypes)
+    private fun MediaSource.toMediaLoader() = MediaLoader(this, localeManagerWrapper)
 }

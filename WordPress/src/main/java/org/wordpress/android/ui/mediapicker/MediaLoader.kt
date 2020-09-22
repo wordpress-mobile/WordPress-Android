@@ -11,13 +11,13 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.NoChange
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.util.LocaleManagerWrapper
 
 data class MediaLoader(
     private val mediaSource: MediaSource,
-    private val localeManagerWrapper: LocaleManagerWrapper,
-    private val allowedTypes: Set<MediaType>
+    private val localeManagerWrapper: LocaleManagerWrapper
 ) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
@@ -27,7 +27,7 @@ data class MediaLoader(
                     is Start -> {
                         if (state.domainItems.isEmpty() || state.error != null) {
                             state = updateState(
-                                    buildDomainModel(mediaSource.load(allowedTypes, filter = state.filter), state)
+                                    buildDomainModel(mediaSource.load(filter = state.filter), state)
                             )
                         }
                     }
@@ -37,7 +37,6 @@ data class MediaLoader(
                             state = updateState(
                                     buildDomainModel(
                                             mediaSource.load(
-                                                    allowedTypes,
                                                     forced = loadAction.forced,
                                                     filter = state.filter
                                             ), state
@@ -46,14 +45,13 @@ data class MediaLoader(
                         }
                     }
                     is NextPage -> {
-                        val load = mediaSource.load(mediaTypes = allowedTypes, loadMore = true, filter = state.filter)
+                        val load = mediaSource.load(loadMore = true, filter = state.filter)
                         state = updateState(buildDomainModel(load, state))
                     }
                     is Filter -> {
                         if (loadAction.filter != state.filter) {
                             state = updateState(state.copy(filter = loadAction.filter, isLoading = true))
                             val load = mediaSource.load(
-                                    mediaTypes = allowedTypes,
                                     filter = state.filter
                             )
                             state = updateState(buildDomainModel(load, state))
@@ -63,7 +61,6 @@ data class MediaLoader(
                         if (!state.filter.isNullOrEmpty()) {
                             state = updateState(state.copy(filter = null, isLoading = true))
                             val load = mediaSource.load(
-                                    mediaTypes = allowedTypes,
                                     filter = state.filter
                             )
                             state = updateState(buildDomainModel(load, state))
@@ -93,6 +90,7 @@ data class MediaLoader(
                     domainItems = partialResult.data
             )
             is Failure -> state.copy(isLoading = false, error = partialResult.message)
+            is NoChange -> state
         }
     }
 
