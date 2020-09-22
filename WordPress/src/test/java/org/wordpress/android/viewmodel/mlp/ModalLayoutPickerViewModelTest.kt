@@ -142,11 +142,24 @@ class ModalLayoutPickerViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `when the user taps on a layout the layout is selected`() = mockFetchingSelectedSite {
-        viewModel.init()
-        viewModel.onLayoutTapped("about-1")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isEqualTo("about-1")
-    }
+    fun `when the user taps on a layout the layout is selected if the thumbnail has loaded`() =
+            mockFetchingSelectedSite {
+                viewModel.init()
+                viewModel.onThumbnailReady("about-1")
+                viewModel.onLayoutTapped("about-1")
+                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug)
+                        .isEqualTo("about-1")
+            }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when the user taps on a layout the layout is selected if the thumbnail has not loaded`() =
+            mockFetchingSelectedSite {
+                viewModel.init()
+                viewModel.onLayoutTapped("about-1")
+                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug)
+                        .isNotEqualTo("about-1")
+            }
 
     @ExperimentalCoroutinesApi
     @Test
@@ -213,6 +226,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the create blank page button is not visible`() = mockFetchingSelectedSite {
         viewModel.init()
+        viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
                 .isEqualTo(false)
@@ -230,6 +244,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the create page button is visible`() = mockFetchingSelectedSite {
         viewModel.init()
+        viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
                 .isEqualTo(true)
@@ -247,6 +262,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the preview button is visible`() = mockFetchingSelectedSite {
         viewModel.init()
+        viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
                 .isEqualTo(true)

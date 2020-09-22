@@ -180,7 +180,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
     }
 
-    private fun onThumbnailReady(layoutSlug: String) {
+    /**
+     * Layout thumbnail is ready
+     * @param layoutSlug the slug of the tapped layout
+     */
+    fun onThumbnailReady(layoutSlug: String) {
         (uiState.value as? ContentUiState)?.let { state ->
             updateUiState(state.copy(loadedThumbnailSlugs = state.loadedThumbnailSlugs.apply { add(layoutSlug) }))
         }
