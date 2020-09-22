@@ -141,19 +141,20 @@ class StockMediaStore
         emitChange(onStockMediaListFetched)
     }
 
-    suspend fun performUploadStockMedia(site: SiteModel, stockMedia: List<StockMediaUploadItem>) =
-            coroutineEngine.launch(MEDIA, this, "Upload stock media") {
-                val payload = restClient.uploadStockMedia(site, stockMedia)
-                if (payload.isError) {
-                    OnStockMediaUploaded(payload.site, payload.error!!)
-                } else {
-                    // add uploaded media to the store
-                    for (media in payload.mediaList) {
-                        mediaStore.updateMedia(media, false)
-                    }
-                    OnStockMediaUploaded(payload.site, payload.mediaList)
+    suspend fun performUploadStockMedia(site: SiteModel, stockMedia: List<StockMediaUploadItem>): OnStockMediaUploaded {
+        return coroutineEngine.withDefaultContext(MEDIA, this, "Upload stock media") {
+            val payload = restClient.uploadStockMedia(site, stockMedia)
+            if (payload.isError) {
+                OnStockMediaUploaded(payload.site, payload.error!!)
+            } else {
+                // add uploaded media to the store
+                for (media in payload.mediaList) {
+                    mediaStore.updateMedia(media, false)
                 }
+                OnStockMediaUploaded(payload.site, payload.mediaList)
             }
+        }
+    }
 
     companion object {
         // this should be a multiple of both 3 and 4 since WPAndroid shows either 3 or 4 pics per row
