@@ -45,6 +45,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _isModalLayoutPickerShowing = MutableLiveData<Event<Boolean>>()
     val isModalLayoutPickerShowing: LiveData<Event<Boolean>> = _isModalLayoutPickerShowing
 
+    private val _onCategorySelected = MutableLiveData<Event<Unit>>()
+    val onCategorySelected: LiveData<Event<Unit>> = _onCategorySelected
+
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
@@ -137,6 +140,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 ) { onCategoryTapped(it.slug) }
             }
             updateUiState(state.copy(categories = listItems))
+            _onCategorySelected.postValue(Event(Unit))
         }
     }
 

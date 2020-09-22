@@ -157,6 +157,12 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                 }
             }
         })
+
+        viewModel.onCategorySelected.observe(this, Observer {
+            it?.applyIfNotHandled {
+                layoutsRecyclerView?.smoothScrollToPosition(0)
+            }
+        })
     }
 
     private fun showLoadingSkeleton(skeleton: Boolean) {
