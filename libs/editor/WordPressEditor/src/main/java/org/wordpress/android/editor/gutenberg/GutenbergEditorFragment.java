@@ -89,7 +89,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
     public static final String ARG_STORY_BLOCK_ID = "story_block_id";
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
-    public static final String ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA = "status_wait_for_flattened_media";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;

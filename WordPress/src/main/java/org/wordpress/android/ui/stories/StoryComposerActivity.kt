@@ -34,7 +34,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_UPDATED_CONTENT
-import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -452,7 +451,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             getMediaFilesFromBackgroundMediaIdsInStory(storyIndex)
                     )
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
-            savedContentIntent.putExtra(ARG_STORY_STATUS_WAIT_FOR_FLATTENED_MEDIA, true)
             setResult(Activity.RESULT_OK, savedContentIntent)
 
             // TODO add tracks
