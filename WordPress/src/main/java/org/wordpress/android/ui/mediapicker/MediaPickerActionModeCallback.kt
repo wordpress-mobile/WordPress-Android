@@ -40,6 +40,11 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
 
                     if (editItemUiModel.isVisible) {
                         editItem.isVisible = true
+
+                        editItem.actionView.setOnClickListener {
+                            onActionItemClicked(actionMode, editItem)
+                        }
+
                         val editItemBadge = editItem.actionView.findViewById<TextView>(R.id.customize_icon_count)
                         if (editItemUiModel.isCounterBadgeVisible) {
                             editItemBadge.visibility = View.VISIBLE
