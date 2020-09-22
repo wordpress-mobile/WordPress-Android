@@ -35,7 +35,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private var layouts: GutenbergPageLayouts = GutenbergPageLayouts()
+    private lateinit var layouts: GutenbergPageLayouts
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -72,9 +72,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (site.isWPCom) {
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
         } else {
-            layouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
-            loadLayouts()
-            loadCategories()
+            handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
         }
     }
 
@@ -83,10 +81,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (event.isError) {
             updateUiState(ErrorUiState(event.error.message))
         } else {
-            layouts = GutenbergPageLayouts(event.layouts, event.categories)
-            loadLayouts()
-            loadCategories()
+            handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
         }
+    }
+
+    private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
+        layouts = response
+        loadLayouts()
+        loadCategories()
     }
 
     private fun loadLayouts() {
