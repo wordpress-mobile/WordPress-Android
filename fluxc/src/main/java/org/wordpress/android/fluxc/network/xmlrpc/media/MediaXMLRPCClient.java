@@ -225,8 +225,8 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     }
                 } else {
                     AppLog.e(T.MEDIA, "error uploading media: " + response.message());
-                    MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
-                    error.message = response.message();
+                    MediaError error =
+                            new MediaError(MediaErrorType.fromHttpStatusCode(response.code()), response.message());
                     notifyMediaUploaded(media, error);
                 }
             }
@@ -558,25 +558,25 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     }
 
     private MediaError getMediaErrorFromXMLRPCException(XMLRPCException exception) {
-        MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
-        mediaError.message = exception.getLocalizedMessage();
+        String message = exception.getLocalizedMessage();
+        MediaErrorType errorType = MediaErrorType.GENERIC_ERROR;
         if (exception instanceof XMLRPCFault) {
             switch (((XMLRPCFault) exception).getFaultCode()) {
                 case 401:
-                    mediaError.type = MediaErrorType.XMLRPC_OPERATION_NOT_ALLOWED;
+                    errorType = MediaErrorType.XMLRPC_OPERATION_NOT_ALLOWED;
                     break;
                 case 403:
-                    mediaError.type = MediaErrorType.NOT_AUTHENTICATED;
+                    errorType = MediaErrorType.NOT_AUTHENTICATED;
                     break;
                 case 404:
-                    mediaError.type = MediaErrorType.NOT_FOUND;
+                    errorType = MediaErrorType.NOT_FOUND;
                     break;
                 case 500:
-                    mediaError.type = MediaErrorType.XMLRPC_UPLOAD_ERROR;
+                    errorType = MediaErrorType.XMLRPC_UPLOAD_ERROR;
                     break;
             }
         }
-        return mediaError;
+        return new MediaError(errorType, message);
     }
 
     private static Map getMapFromUploadResponse(Response response) throws XMLRPCException {

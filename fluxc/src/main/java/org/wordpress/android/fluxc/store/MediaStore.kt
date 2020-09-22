@@ -1,363 +1,298 @@
-package org.wordpress.android.fluxc.store;
+package org.wordpress.android.fluxc.store
 
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.wellsql.generated.MediaModelTable;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.action.MediaAction;
-import org.wordpress.android.fluxc.annotations.action.Action;
-import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
-import org.wordpress.android.fluxc.model.PostImmutableModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
-import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
-import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
-import org.wordpress.android.fluxc.utils.MediaUtils;
-import org.wordpress.android.fluxc.utils.MimeType;
-import org.wordpress.android.util.AppLog;
-
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import android.text.TextUtils
+import com.wellsql.generated.MediaModelTable
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.ASYNC
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
+import org.wordpress.android.fluxc.action.MediaAction
+import org.wordpress.android.fluxc.action.MediaAction.CANCELED_MEDIA_UPLOAD
+import org.wordpress.android.fluxc.action.MediaAction.CANCEL_MEDIA_UPLOAD
+import org.wordpress.android.fluxc.action.MediaAction.DELETED_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.DELETE_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.FETCHED_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.FETCHED_MEDIA_LIST
+import org.wordpress.android.fluxc.action.MediaAction.FETCH_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.FETCH_MEDIA_LIST
+import org.wordpress.android.fluxc.action.MediaAction.PUSHED_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.PUSH_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.REMOVE_ALL_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.REMOVE_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.UPDATE_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.UPLOADED_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.UPLOADED_STOCK_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.UPLOAD_MEDIA
+import org.wordpress.android.fluxc.action.MediaAction.UPLOAD_STOCK_MEDIA
+import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.DELETING
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.FAILED
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
+import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADING
+import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.StockMediaModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient
+import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient
+import org.wordpress.android.fluxc.persistence.MediaSqlUtils
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.BAD_REQUEST
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.CONNECTION_ERROR
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.DB_QUERY_FAILURE
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.MALFORMED_MEDIA_ARG
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.NULL_MEDIA_ARG
+import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType.TIMEOUT
+import org.wordpress.android.fluxc.utils.MediaUtils
+import org.wordpress.android.fluxc.utils.MimeType.Type
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.MEDIA
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import java.util.ArrayList
+import java.util.Locale
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
-public class MediaStore extends Store {
-    public static final int DEFAULT_NUM_MEDIA_PER_FETCH = 50;
-
+class MediaStore @Inject constructor(
+    dispatcher: Dispatcher?,
+    private val mMediaRestClient: MediaRestClient,
+    private val mMediaXmlrpcClient: MediaXMLRPCClient
+) : Store(dispatcher) {
     //
     // Payloads
     //
-
     /**
      * Actions: FETCH(ED)_MEDIA, PUSH(ED)_MEDIA, UPLOADED_MEDIA, DELETE(D)_MEDIA, UPDATE_MEDIA, and REMOVE_MEDIA
      */
-    public static class MediaPayload extends Payload<MediaError> {
-        public SiteModel site;
-        public MediaModel media;
-        public MediaPayload(SiteModel site, MediaModel media) {
-            this(site, media, null);
-        }
-        public MediaPayload(SiteModel site, MediaModel media, MediaError error) {
-            this.site = site;
-            this.media = media;
-            this.error = error;
+    open class MediaPayload @JvmOverloads constructor(
+        @JvmField var site: SiteModel?,
+        @JvmField var media: MediaModel?,
+        error: MediaError? = null
+    ) : Payload<MediaError?>() {
+        init {
+            this.error = error
         }
     }
 
     /**
      * Action: UPLOAD_MEDIA
      */
-    public static class UploadMediaPayload extends MediaPayload {
-        public final boolean stripLocation;
+    class UploadMediaPayload : MediaPayload {
+        val stripLocation: Boolean
 
-        public UploadMediaPayload(SiteModel site, MediaModel media, boolean stripLocation) {
-            super(site, media, null);
-            this.stripLocation = stripLocation;
+        constructor(site: SiteModel?, media: MediaModel?, stripLocation: Boolean) : super(site, media, null) {
+            this.stripLocation = stripLocation
         }
 
-        public UploadMediaPayload(SiteModel site, MediaModel media, MediaError error, boolean stripLocation) {
-            super(site, media, error);
-            this.stripLocation = stripLocation;
+        constructor(site: SiteModel?, media: MediaModel?, error: MediaError?, stripLocation: Boolean) : super(
+                site,
+                media,
+                error
+        ) {
+            this.stripLocation = stripLocation
         }
     }
 
     /**
      * Actions: FETCH_MEDIA_LIST
      */
-    public static class FetchMediaListPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public boolean loadMore;
-        public MimeType.Type mimeType;
-        public int number = DEFAULT_NUM_MEDIA_PER_FETCH;
-
-        public FetchMediaListPayload(SiteModel site) {
-            this.site = site;
-        }
-
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore) {
-            this.site = site;
-            this.loadMore = loadMore;
-            this.number = number;
-        }
-
-        public FetchMediaListPayload(SiteModel site, int number, boolean loadMore, MimeType.Type mimeType) {
-            this.site = site;
-            this.loadMore = loadMore;
-            this.mimeType = mimeType;
-            this.number = number;
-        }
+    data class FetchMediaListPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val number: Int = DEFAULT_NUM_MEDIA_PER_FETCH,
+        @JvmField val loadMore: Boolean = false,
+        @JvmField val mimeType: Type? = null
+    ) : Payload<BaseNetworkError?>() {
+        constructor(site: SiteModel) : this(site, DEFAULT_NUM_MEDIA_PER_FETCH, false, null)
+        constructor(site: SiteModel, number: Int, loadMore: Boolean) : this(site, number, loadMore, null)
     }
 
     /**
      * Actions: FETCHED_MEDIA_LIST
      */
-    public static class FetchMediaListResponsePayload extends Payload<MediaError> {
-        public SiteModel site;
-        public List<MediaModel> mediaList;
-        public boolean loadedMore;
-        public boolean canLoadMore;
-        public MimeType.Type mimeType;
-        public FetchMediaListResponsePayload(SiteModel site,
-                                             @NonNull List<MediaModel> mediaList,
-                                             boolean loadedMore,
-                                             boolean canLoadMore,
-                                             MimeType.Type mimeType) {
-            this.site = site;
-            this.mediaList = mediaList;
-            this.loadedMore = loadedMore;
-            this.canLoadMore = canLoadMore;
-            this.mimeType = mimeType;
-        }
-
-        public FetchMediaListResponsePayload(SiteModel site, MediaError error, MimeType.Type mimeType) {
-            this.mediaList = new ArrayList<>();
-            this.site = site;
-            this.error = error;
-            this.mimeType = mimeType;
+    data class FetchMediaListResponsePayload(
+        @JvmField val site: SiteModel,
+        @JvmField val mediaList: List<MediaModel>,
+        @JvmField val loadedMore: Boolean,
+        @JvmField val canLoadMore: Boolean,
+        @JvmField val mimeType: Type?
+    ) : Payload<MediaError?>() {
+        constructor(site: SiteModel, error: MediaError?, mimeType: Type?) : this(
+                site,
+                listOf(),
+                false,
+                false,
+                mimeType
+        ) {
+            this.error = error
         }
     }
 
     /**
      * Actions: UPLOADED_MEDIA, CANCELED_MEDIA_UPLOAD
      */
-    public static class ProgressPayload extends Payload<MediaError> {
-        public MediaModel media;
-        public float progress;
-        public boolean completed;
-        public boolean canceled;
-        public ProgressPayload(MediaModel media, float progress, boolean completed, boolean canceled) {
-            this(media, progress, completed, null);
-            this.canceled = canceled;
-        }
-        public ProgressPayload(MediaModel media, float progress, boolean completed, MediaError error) {
-            this.media = media;
-            this.progress = progress;
-            this.completed = completed;
-            this.error = error;
+    data class ProgressPayload(
+        @JvmField val media: MediaModel?,
+        @JvmField val progress: Float,
+        @JvmField val completed: Boolean,
+        @JvmField val canceled: Boolean
+    ) : Payload<MediaError?>() {
+        constructor(media: MediaModel?, progress: Float, completed: Boolean, error: MediaError?) : this(
+                media,
+                progress,
+                completed,
+                false
+        ) {
+            this.error = error
         }
     }
 
     /**
      * Actions: CANCEL_MEDIA_UPLOAD
      */
-    public static class CancelMediaPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public MediaModel media;
-        public boolean delete;
-
-        public CancelMediaPayload(SiteModel site, MediaModel media) {
-            this(site, media, true);
-        }
-
-        public CancelMediaPayload(SiteModel site, MediaModel media, boolean delete) {
-            this.site = site;
-            this.media = media;
-            this.delete = delete;
-        }
-    }
+    data class CancelMediaPayload @JvmOverloads constructor(
+        @JvmField val site: SiteModel,
+        @JvmField val media: MediaModel?,
+        @JvmField val delete: Boolean = true
+    ) : Payload<BaseNetworkError?>()
 
     /**
      * Actions: UPLOAD_STOCK_MEDIA
      */
-    @SuppressWarnings("WeakerAccess")
-    public static class UploadStockMediaPayload extends Payload<BaseNetworkError> {
-        public @NonNull List<StockMediaModel> stockMediaList;
-        public @NonNull SiteModel site;
-
-        public UploadStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaModel> stockMediaList) {
-            this.stockMediaList = stockMediaList;
-            this.site = site;
-        }
-    }
+    data class UploadStockMediaPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val stockMediaList: List<StockMediaModel>
+    ) : Payload<BaseNetworkError?>()
 
     /**
      * Actions: UPLOADED_STOCK_MEDIA
      */
-    @SuppressWarnings("WeakerAccess")
-    public static class UploadedStockMediaPayload extends Payload<UploadStockMediaError> {
-        @NonNull public List<MediaModel> mediaList;
-        @NonNull public SiteModel site;
-
-        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull List<MediaModel> mediaList) {
-            this.site = site;
-            this.mediaList = mediaList;
-        }
-
-        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
-            this.site = site;
-            this.error = error;
-            this.mediaList = new ArrayList<>();
+    data class UploadedStockMediaPayload(
+        @JvmField val site: SiteModel,
+        @JvmField val mediaList: List<MediaModel>
+    ) : Payload<UploadStockMediaError?>() {
+        constructor(site: SiteModel, error: UploadStockMediaError) : this(site, listOf()) {
+            this.error = error
         }
     }
+
     //
     // OnChanged events
     //
+    data class MediaError(@JvmField val type: MediaErrorType, @JvmField val message: String?) : OnChangedError {
+        constructor(type: MediaErrorType) : this(type, null)
 
-    public static class MediaError implements OnChangedError {
-        public MediaErrorType type;
-        public String message;
-        public MediaError(MediaErrorType type) {
-            this.type = type;
-        }
-        public MediaError(MediaErrorType type, String message) {
-            this.type = type;
-            this.message = message;
-        }
-
-        public static MediaError fromIOException(IOException e) {
-            MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
-            mediaError.message = e.getLocalizedMessage();
-
-            if (e instanceof SocketTimeoutException) {
-                mediaError.type = MediaErrorType.TIMEOUT;
-            }
-
-            if (e instanceof ConnectException || e instanceof UnknownHostException) {
-                mediaError.type = MediaErrorType.CONNECTION_ERROR;
-            }
-
-            String errorMessage = e.getMessage();
-            if (TextUtils.isEmpty(errorMessage)) {
-                return mediaError;
-            }
-
-            errorMessage = errorMessage.toLowerCase(Locale.US);
-            if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
-                // do not use the real error message.
-                mediaError.message = "";
-            }
-
-            return mediaError;
-        }
-
-        public String getApiUserMessageIfAvailable() {
-            if (TextUtils.isEmpty(message)) {
-                return "";
-            }
-
-            if (type == MediaErrorType.BAD_REQUEST) {
-                String[] splitMsg = message.split("\\|", 2);
-
-                if (null != splitMsg && splitMsg.length > 1) {
-                    String userMessage = splitMsg[1];
-
-                    if (TextUtils.isEmpty(userMessage)) {
-                        return message;
-                    }
-
-                    // NOTE: It seems the backend is sending a final " Back" string in the message
-                    // Note that the real string depends on current locale; this is not optimal and we thought to
-                    // try to filter it out in the client app but at the end it can be not reliable so we are
-                    // keeping it. We can try to get it filtered on the backend side.
-
-                    return userMessage;
-                } else {
-                    return message;
+        // NOTE: It seems the backend is sending a final " Back" string in the message
+        // Note that the real string depends on current locale; this is not optimal and we thought to
+        // try to filter it out in the client app but at the end it can be not reliable so we are
+        // keeping it. We can try to get it filtered on the backend side.
+        val apiUserMessageIfAvailable: String?
+            get() {
+                if (TextUtils.isEmpty(message)) {
+                    return ""
                 }
-            } else {
-                return message;
+                return if (type == BAD_REQUEST) {
+                    val splitMsg = message?.split("\\|".toRegex(), 2)?.toTypedArray()
+                    if (null != splitMsg && splitMsg.size > 1) {
+                        val userMessage = splitMsg[1]
+                        if (TextUtils.isEmpty(userMessage)) {
+                            message
+                        } else userMessage
+
+                        // NOTE: It seems the backend is sending a final " Back" string in the message
+                        // Note that the real string depends on current locale; this is not optimal and we thought to
+                        // try to filter it out in the client app but at the end it can be not reliable so we are
+                        // keeping it. We can try to get it filtered on the backend side.
+                    } else {
+                        message
+                    }
+                } else {
+                    message
+                }
+            }
+
+        companion object {
+            @JvmStatic fun fromIOException(e: IOException): MediaError {
+                var message = e.localizedMessage
+                val type = when (e) {
+                    is SocketTimeoutException -> {
+                        TIMEOUT
+                    }
+                    is ConnectException, is UnknownHostException -> {
+                        CONNECTION_ERROR
+                    }
+                    else -> {
+                        GENERIC_ERROR
+                    }
+                }
+                var errorMessage = e.message
+                if (errorMessage.isNullOrEmpty()) {
+                    return MediaError(type, message)
+                }
+                errorMessage = errorMessage.toLowerCase(Locale.US)
+                if (errorMessage.contains("broken pipe") || errorMessage.contains("epipe")) {
+                    // do not use the real error message.
+                    message = ""
+                }
+                return MediaError(type, message)
             }
         }
     }
 
-    public static class UploadStockMediaError implements OnChangedError {
-        public UploadStockMediaErrorType type;
-        public String message;
-        public UploadStockMediaError(UploadStockMediaErrorType type, String message) {
-            this.type = type;
-            this.message = message;
+    data class UploadStockMediaError(@JvmField val type: UploadStockMediaErrorType, @JvmField val message: String) :
+            OnChangedError
+
+    data class OnMediaChanged @JvmOverloads constructor(
+        @JvmField val cause: MediaAction?,
+        @JvmField val mediaList: List<MediaModel> = listOf()
+    ) : OnChanged<MediaError?>() {
+        constructor(cause: MediaAction?, error: MediaError?) : this(cause, listOf(), error)
+        constructor(
+            cause: MediaAction?,
+            mediaList: List<MediaModel> = listOf(),
+            error: MediaError? = null
+        ) : this(cause, mediaList) {
+            this.error = error
         }
     }
 
-    public static class OnMediaChanged extends OnChanged<MediaError> {
-        public MediaAction cause;
-        public List<MediaModel> mediaList;
-        public OnMediaChanged(MediaAction cause) {
-            this(cause, new ArrayList<MediaModel>(), null);
-        }
-        public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList) {
-            this(cause, mediaList, null);
-        }
-        public OnMediaChanged(MediaAction cause, MediaError error) {
-            this(cause, new ArrayList<MediaModel>(), error);
-        }
-        public OnMediaChanged(MediaAction cause, @NonNull List<MediaModel> mediaList, MediaError error) {
-            this.cause = cause;
-            this.mediaList = mediaList;
-            this.error = error;
+    data class OnMediaListFetched(
+        @JvmField val site: SiteModel,
+        @JvmField val canLoadMore: Boolean,
+        @JvmField val mimeType: Type?
+    ) : OnChanged<MediaError?>() {
+        constructor(site: SiteModel, error: MediaError?, mimeType: Type?) : this(site, false, mimeType) {
+            this.error = error
         }
     }
 
-    public static class OnMediaListFetched extends OnChanged<MediaError> {
-        public SiteModel site;
-        public boolean canLoadMore;
-        public MimeType.Type mimeType;
-        public OnMediaListFetched(SiteModel site, boolean canLoadMore, MimeType.Type mimeType) {
-            this.site = site;
-            this.canLoadMore = canLoadMore;
-            this.mimeType = mimeType;
-        }
-        public OnMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
-            this.site = site;
-            this.error = error;
-            this.mimeType = mimeType;
-        }
-    }
+    data class OnMediaUploaded(
+        @JvmField val media: MediaModel?,
+        @JvmField val progress: Float,
+        @JvmField val completed: Boolean,
+        @JvmField val canceled: Boolean
+    ) :
+            OnChanged<MediaError?>()
 
-    public static class OnMediaUploaded extends OnChanged<MediaError> {
-        public MediaModel media;
-        public float progress;
-        public boolean completed;
-        public boolean canceled;
-        public OnMediaUploaded(MediaModel media, float progress, boolean completed, boolean canceled) {
-            this.media = media;
-            this.progress = progress;
-            this.completed = completed;
-            this.canceled = canceled;
-        }
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public static class OnStockMediaUploaded extends OnChanged<UploadStockMediaError> {
-        @NonNull public List<MediaModel> mediaList;
-        @Nullable public SiteModel site;
-
-        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull List<MediaModel> mediaList) {
-            this.site = site;
-            this.mediaList = mediaList;
-        }
-        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
-            this.site = site;
-            this.error = error;
-            this.mediaList = new ArrayList<>();
+    data class OnStockMediaUploaded(@JvmField val site: SiteModel, @JvmField val mediaList: List<MediaModel>) :
+            OnChanged<UploadStockMediaError?>() {
+        constructor(site: SiteModel, error: UploadStockMediaError) : this(site, listOf()) {
+            this.error = error
         }
     }
 
     //
     // Errors
     //
-
-    public enum MediaErrorType {
+    enum class MediaErrorType {
         // local errors, occur before sending network requests
         FS_READ_PERMISSION_DENIED,
         NULL_MEDIA_ARG,
@@ -365,611 +300,537 @@ public class MediaStore extends Store {
         DB_QUERY_FAILURE,
         EXCEEDS_FILESIZE_LIMIT,
         EXCEEDS_MEMORY_LIMIT,
-        EXCEEDS_SITE_SPACE_QUOTA_LIMIT,
-
-        // network errors, occur in response to network requests
+        EXCEEDS_SITE_SPACE_QUOTA_LIMIT,  // network errors, occur in response to network requests
         AUTHORIZATION_REQUIRED,
         CONNECTION_ERROR,
         NOT_AUTHENTICATED,
         NOT_FOUND,
         PARSE_ERROR,
         REQUEST_TOO_LARGE,
-        SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
+        SERVER_ERROR,  // this is also returned when PHP max_execution_time or memory_limit is reached
         TIMEOUT,
         BAD_REQUEST,
         XMLRPC_OPERATION_NOT_ALLOWED,
-        XMLRPC_UPLOAD_ERROR,
-
-        // logic constraints errors
-        INVALID_ID,
-
-        // unknown/unspecified
+        XMLRPC_UPLOAD_ERROR,  // logic constraints errors
+        INVALID_ID,  // unknown/unspecified
         GENERIC_ERROR;
 
-        public static MediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
-            switch (baseError.type) {
-                case NOT_FOUND:
-                    return MediaErrorType.NOT_FOUND;
-                case NOT_AUTHENTICATED:
-                    return MediaErrorType.NOT_AUTHENTICATED;
-                case AUTHORIZATION_REQUIRED:
-                    return MediaErrorType.AUTHORIZATION_REQUIRED;
-                case PARSE_ERROR:
-                    return MediaErrorType.PARSE_ERROR;
-                case SERVER_ERROR:
-                    return MediaErrorType.SERVER_ERROR;
-                case TIMEOUT:
-                    return MediaErrorType.TIMEOUT;
-                default:
-                    return MediaErrorType.GENERIC_ERROR;
-            }
-        }
-
-        public static MediaErrorType fromHttpStatusCode(int code) {
-            switch (code) {
-                case 400:
-                    return MediaErrorType.BAD_REQUEST;
-                case 404:
-                    return MediaErrorType.NOT_FOUND;
-                case 403:
-                    return MediaErrorType.NOT_AUTHENTICATED;
-                case 413:
-                    return MediaErrorType.REQUEST_TOO_LARGE;
-                case 500:
-                    return MediaErrorType.SERVER_ERROR;
-                default:
-                    return MediaErrorType.GENERIC_ERROR;
-            }
-        }
-
-        public static MediaErrorType fromString(String string) {
-            if (string != null) {
-                for (MediaErrorType v : MediaErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
-                        return v;
-                    }
+        companion object {
+            @JvmStatic fun fromBaseNetworkError(baseError: BaseNetworkError): MediaErrorType {
+                return when (baseError.type) {
+                    GenericErrorType.NOT_FOUND -> NOT_FOUND
+                    GenericErrorType.NOT_AUTHENTICATED -> NOT_AUTHENTICATED
+                    GenericErrorType.AUTHORIZATION_REQUIRED -> AUTHORIZATION_REQUIRED
+                    GenericErrorType.PARSE_ERROR -> PARSE_ERROR
+                    GenericErrorType.SERVER_ERROR -> SERVER_ERROR
+                    GenericErrorType.TIMEOUT -> TIMEOUT
+                    else -> GENERIC_ERROR
                 }
             }
-            return GENERIC_ERROR;
+
+            @JvmStatic fun fromHttpStatusCode(code: Int): MediaErrorType {
+                return when (code) {
+                    400 -> BAD_REQUEST
+                    404 -> NOT_FOUND
+                    403 -> NOT_AUTHENTICATED
+                    413 -> REQUEST_TOO_LARGE
+                    500 -> SERVER_ERROR
+                    else -> GENERIC_ERROR
+                }
+            }
+
+            @JvmStatic fun fromString(string: String?): MediaErrorType {
+                if (string != null) {
+                    for (v in values()) {
+                        if (string.equals(v.name, ignoreCase = true)) {
+                            return v
+                        }
+                    }
+                }
+                return GENERIC_ERROR
+            }
         }
     }
 
-    public enum UploadStockMediaErrorType {
-        INVALID_INPUT,
-        UNKNOWN,
-        GENERIC_ERROR;
+    enum class UploadStockMediaErrorType {
+        INVALID_INPUT, UNKNOWN, GENERIC_ERROR;
 
-        public static UploadStockMediaErrorType fromNetworkError(WPComGsonNetworkError wpError) {
-            // invalid upload request
-            if (wpError.apiError.equalsIgnoreCase("invalid_input")) {
-                return INVALID_INPUT;
+        companion object {
+            @JvmStatic fun fromNetworkError(wpError: WPComGsonNetworkError): UploadStockMediaErrorType {
+                // invalid upload request
+                if (wpError.apiError.equals("invalid_input", ignoreCase = true)) {
+                    return INVALID_INPUT
+                }
+                // can happen if invalid pexels image url is passed
+                return if (wpError.type == GenericErrorType.UNKNOWN) {
+                    UNKNOWN
+                } else GENERIC_ERROR
             }
-            // can happen if invalid pexels image url is passed
-            if (wpError.type == BaseRequest.GenericErrorType.UNKNOWN) {
-                return UNKNOWN;
-            }
-            return GENERIC_ERROR;
         }
     }
 
-    private final MediaRestClient mMediaRestClient;
-    private final MediaXMLRPCClient mMediaXmlrpcClient;
     // Ensures that the UploadStore is initialized whenever the MediaStore is,
     // to ensure actions are shadowed and repeated by the UploadStore
-    @SuppressWarnings("unused")
-    @Inject UploadStore mUploadStore;
-
-    @Inject
-    public MediaStore(Dispatcher dispatcher, MediaRestClient restClient, MediaXMLRPCClient xmlrpcClient) {
-        super(dispatcher);
-        mMediaRestClient = restClient;
-        mMediaXmlrpcClient = xmlrpcClient;
-    }
-
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    @Override
-    public void onAction(Action action) {
-        IAction actionType = action.getType();
-        if (!(actionType instanceof MediaAction)) {
-            return;
-        }
-
-        switch ((MediaAction) actionType) {
-            case PUSH_MEDIA:
-                performPushMedia((MediaPayload) action.getPayload());
-                break;
-            case UPLOAD_MEDIA:
-                performUploadMedia((UploadMediaPayload) action.getPayload());
-                break;
-            case FETCH_MEDIA_LIST:
-                performFetchMediaList((FetchMediaListPayload) action.getPayload());
-                break;
-            case FETCH_MEDIA:
-                performFetchMedia((MediaPayload) action.getPayload());
-                break;
-            case DELETE_MEDIA:
-                performDeleteMedia((MediaPayload) action.getPayload());
-                break;
-            case CANCEL_MEDIA_UPLOAD:
-                performCancelUpload((CancelMediaPayload) action.getPayload());
-                break;
-            case PUSHED_MEDIA:
-                handleMediaPushed((MediaPayload) action.getPayload());
-                break;
-            case UPLOADED_MEDIA:
-                handleMediaUploaded((ProgressPayload) action.getPayload());
-                break;
-            case FETCHED_MEDIA_LIST:
-                handleMediaListFetched((FetchMediaListResponsePayload) action.getPayload());
-                break;
-            case FETCHED_MEDIA:
-                handleMediaFetched((MediaPayload) action.getPayload());
-                break;
-            case DELETED_MEDIA:
-                handleMediaDeleted((MediaPayload) action.getPayload());
-                break;
-            case CANCELED_MEDIA_UPLOAD:
-                handleMediaCanceled((ProgressPayload) action.getPayload());
-                break;
-            case UPDATE_MEDIA:
-                updateMedia(((MediaModel) action.getPayload()), true);
-                break;
-            case REMOVE_MEDIA:
-                removeMedia(((MediaModel) action.getPayload()));
-                break;
-            case REMOVE_ALL_MEDIA:
-                removeAllMedia();
-                break;
-            case UPLOAD_STOCK_MEDIA:
-                performUploadStockMedia((UploadStockMediaPayload) action.getPayload());
-                break;
-            case UPLOADED_STOCK_MEDIA:
-                handleStockMediaUploaded(((UploadedStockMediaPayload) action.getPayload()));
-                break;
+    @Inject lateinit var uploadStore: UploadStore
+    @Subscribe(threadMode = ASYNC) override fun onAction(action: Action<*>) {
+        val actionType = action.type as? MediaAction ?: return
+        when (actionType) {
+            PUSH_MEDIA -> performPushMedia(action.payload as MediaPayload)
+            UPLOAD_MEDIA -> performUploadMedia(action.payload as UploadMediaPayload)
+            FETCH_MEDIA_LIST -> performFetchMediaList(action.payload as FetchMediaListPayload)
+            FETCH_MEDIA -> performFetchMedia(action.payload as MediaPayload)
+            DELETE_MEDIA -> performDeleteMedia(action.payload as MediaPayload)
+            CANCEL_MEDIA_UPLOAD -> performCancelUpload(action.payload as CancelMediaPayload)
+            PUSHED_MEDIA -> handleMediaPushed(action.payload as MediaPayload)
+            UPLOADED_MEDIA -> handleMediaUploaded(action.payload as ProgressPayload)
+            FETCHED_MEDIA_LIST -> handleMediaListFetched(action.payload as FetchMediaListResponsePayload)
+            FETCHED_MEDIA -> handleMediaFetched(action.payload as MediaPayload)
+            DELETED_MEDIA -> handleMediaDeleted(action.payload as MediaPayload)
+            CANCELED_MEDIA_UPLOAD -> handleMediaCanceled(action.payload as ProgressPayload)
+            UPDATE_MEDIA -> updateMedia(action.payload as MediaModel, true)
+            REMOVE_MEDIA -> removeMedia(action.payload as MediaModel)
+            REMOVE_ALL_MEDIA -> removeAllMedia()
+            UPLOAD_STOCK_MEDIA -> performUploadStockMedia(action.payload as UploadStockMediaPayload)
+            UPLOADED_STOCK_MEDIA -> handleStockMediaUploaded(action.payload as UploadedStockMediaPayload)
         }
     }
 
-    @Override
-    public void onRegister() {
-        AppLog.d(AppLog.T.MEDIA, "MediaStore onRegister");
+    override fun onRegister() {
+        AppLog.d(MEDIA, "MediaStore onRegister")
     }
 
     //
     // Getters
     //
-
-    public MediaModel instantiateMediaModel() {
-        MediaModel media = new MediaModel();
-
-        media = MediaSqlUtils.insertMediaForResult(media);
-
-        if (media.getId() == -1) {
-            media = null;
+    fun instantiateMediaModel(): MediaModel? {
+        var media: MediaModel? = MediaModel()
+        media = MediaSqlUtils.insertMediaForResult(media)
+        if (media.id == -1) {
+            media = null
         }
-
-        return media;
+        return media
     }
 
-    public List<MediaModel> getAllSiteMedia(SiteModel siteModel) {
-        return MediaSqlUtils.getAllSiteMedia(siteModel);
+    fun getAllSiteMedia(siteModel: SiteModel?): List<MediaModel> {
+        return MediaSqlUtils.getAllSiteMedia(siteModel)
     }
 
-    public static final List<String> NOT_DELETED_STATES = new ArrayList<>();
-    static {
-        NOT_DELETED_STATES.add(MediaUploadState.DELETING.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.FAILED.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.QUEUED.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.UPLOADED.toString());
-        NOT_DELETED_STATES.add(MediaUploadState.UPLOADING.toString());
+    companion object {
+        const val DEFAULT_NUM_MEDIA_PER_FETCH = 50
+        @JvmField val NOT_DELETED_STATES = listOf(
+                DELETING.toString(),
+                FAILED.toString(),
+                QUEUED.toString(),
+                UPLOADED.toString(),
+                UPLOADING.toString()
+        )
     }
 
-    public int getSiteMediaCount(SiteModel siteModel) {
-        return getAllSiteMedia(siteModel).size();
+    fun getSiteMediaCount(siteModel: SiteModel?): Int {
+        return getAllSiteMedia(siteModel).size
     }
 
-    public boolean hasSiteMediaWithId(SiteModel siteModel, long mediaId) {
-        return getSiteMediaWithId(siteModel, mediaId) != null;
+    fun hasSiteMediaWithId(siteModel: SiteModel?, mediaId: Long): Boolean {
+        return getSiteMediaWithId(siteModel, mediaId) != null
     }
 
-    public MediaModel getSiteMediaWithId(SiteModel siteModel, long mediaId) {
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId);
-        return media.size() > 0 ? media.get(0) : null;
+    fun getSiteMediaWithId(siteModel: SiteModel?, mediaId: Long): MediaModel? {
+        val media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId)
+        return if (media.size > 0) media[0] else null
     }
 
-    public MediaModel getMediaWithLocalId(int localMediaId) {
-        return MediaSqlUtils.getMediaWithLocalId(localMediaId);
+    fun getMediaWithLocalId(localMediaId: Int): MediaModel {
+        return MediaSqlUtils.getMediaWithLocalId(localMediaId)
     }
 
-    public List<MediaModel> getSiteMediaWithIds(SiteModel siteModel, List<Long> mediaIds) {
-        return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds);
+    fun getSiteMediaWithIds(siteModel: SiteModel?, mediaIds: List<Long?>?): List<MediaModel> {
+        return MediaSqlUtils.getSiteMediaWithIds(siteModel, mediaIds)
     }
 
-    public List<MediaModel> getSiteImages(SiteModel siteModel) {
-        return MediaSqlUtils.getSiteImages(siteModel);
+    fun getSiteImages(siteModel: SiteModel?): List<MediaModel> {
+        return MediaSqlUtils.getSiteImages(siteModel)
     }
 
-    public List<MediaModel> getSiteVideos(SiteModel siteModel) {
-        return MediaSqlUtils.getSiteVideos(siteModel);
+    fun getSiteVideos(siteModel: SiteModel?): List<MediaModel> {
+        return MediaSqlUtils.getSiteVideos(siteModel)
     }
 
-    public List<MediaModel> getSiteAudio(SiteModel siteModel) {
-        return MediaSqlUtils.getSiteAudio(siteModel);
+    fun getSiteAudio(siteModel: SiteModel?): List<MediaModel> {
+        return MediaSqlUtils.getSiteAudio(siteModel)
     }
 
-    public List<MediaModel> getSiteDocuments(SiteModel siteModel) {
-        return MediaSqlUtils.getSiteDocuments(siteModel);
+    fun getSiteDocuments(siteModel: SiteModel?): List<MediaModel> {
+        return MediaSqlUtils.getSiteDocuments(siteModel)
     }
 
-    public int getSiteImageCount(SiteModel siteModel) {
-        return getSiteImages(siteModel).size();
+    fun getSiteImageCount(siteModel: SiteModel?): Int {
+        return getSiteImages(siteModel).size
     }
 
-    public List<MediaModel> getSiteImagesExcludingIds(SiteModel siteModel, List<Long> filter) {
-        return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter);
+    fun getSiteImagesExcludingIds(siteModel: SiteModel?, filter: List<Long?>?): List<MediaModel> {
+        return MediaSqlUtils.getSiteImagesExcluding(siteModel, filter)
     }
 
-    public List<MediaModel> getUnattachedSiteMedia(SiteModel siteModel) {
-        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0);
+    fun getUnattachedSiteMedia(siteModel: SiteModel?): List<MediaModel> {
+        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.POST_ID, 0)
     }
 
-    public int getUnattachedSiteMediaCount(SiteModel siteModel) {
-        return getUnattachedSiteMedia(siteModel).size();
+    fun getUnattachedSiteMediaCount(siteModel: SiteModel?): Int {
+        return getUnattachedSiteMedia(siteModel).size
     }
 
-    public List<MediaModel> getLocalSiteMedia(SiteModel siteModel) {
-        MediaUploadState expectedState = MediaUploadState.UPLOADED;
-        return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
+    fun getLocalSiteMedia(siteModel: SiteModel?): List<MediaModel> {
+        val expectedState = UPLOADED
+        return MediaSqlUtils.getSiteMediaExcluding(siteModel, MediaModelTable.UPLOAD_STATE, expectedState)
     }
 
-    public List<MediaModel> getSiteMediaWithState(SiteModel siteModel, MediaUploadState expectedState) {
-        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.UPLOAD_STATE, expectedState);
+    fun getSiteMediaWithState(siteModel: SiteModel?, expectedState: MediaUploadState?): List<MediaModel> {
+        return MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.UPLOAD_STATE, expectedState)
     }
 
-    public String getUrlForSiteVideoWithVideoPressGuid(SiteModel siteModel, String videoPressGuid) {
-        List<MediaModel> media =
-                MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid);
-        return media.size() > 0 ? media.get(0).getUrl() : null;
+    fun getUrlForSiteVideoWithVideoPressGuid(siteModel: SiteModel?, videoPressGuid: String?): String? {
+        val media = MediaSqlUtils.matchSiteMedia(siteModel, MediaModelTable.VIDEO_PRESS_GUID, videoPressGuid)
+        return if (media.size > 0) media[0].url else null
     }
 
-    public String getThumbnailUrlForSiteMediaWithId(SiteModel siteModel, long mediaId) {
-        List<MediaModel> media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId);
-        return media.size() > 0 ? media.get(0).getThumbnailUrl() : null;
+    fun getThumbnailUrlForSiteMediaWithId(siteModel: SiteModel?, mediaId: Long): String? {
+        val media = MediaSqlUtils.getSiteMediaWithId(siteModel, mediaId)
+        return if (media.size > 0) media[0].thumbnailUrl else null
     }
 
-    public List<MediaModel> searchSiteMedia(SiteModel siteModel, String searchTerm) {
-        return MediaSqlUtils.searchSiteMedia(siteModel, searchTerm);
+    fun searchSiteMedia(siteModel: SiteModel?, searchTerm: String?): List<MediaModel> {
+        return MediaSqlUtils.searchSiteMedia(siteModel, searchTerm)
     }
 
-    public List<MediaModel> searchSiteImages(SiteModel siteModel, String searchTerm) {
-        return MediaSqlUtils.searchSiteImages(siteModel, searchTerm);
+    fun searchSiteImages(siteModel: SiteModel?, searchTerm: String?): List<MediaModel> {
+        return MediaSqlUtils.searchSiteImages(siteModel, searchTerm)
     }
 
-    public List<MediaModel> searchSiteVideos(SiteModel siteModel, String searchTerm) {
-        return MediaSqlUtils.searchSiteVideos(siteModel, searchTerm);
+    fun searchSiteVideos(siteModel: SiteModel?, searchTerm: String?): List<MediaModel> {
+        return MediaSqlUtils.searchSiteVideos(siteModel, searchTerm)
     }
 
-    public List<MediaModel> searchSiteAudio(SiteModel siteModel, String searchTerm) {
-        return MediaSqlUtils.searchSiteAudio(siteModel, searchTerm);
+    fun searchSiteAudio(siteModel: SiteModel?, searchTerm: String?): List<MediaModel> {
+        return MediaSqlUtils.searchSiteAudio(siteModel, searchTerm)
     }
 
-    public List<MediaModel> searchSiteDocuments(SiteModel siteModel, String searchTerm) {
-        return MediaSqlUtils.searchSiteDocuments(siteModel, searchTerm);
+    fun searchSiteDocuments(siteModel: SiteModel?, searchTerm: String?): List<MediaModel> {
+        return MediaSqlUtils.searchSiteDocuments(siteModel, searchTerm)
     }
 
-    public MediaModel getMediaForPostWithPath(PostImmutableModel postModel, String filePath) {
-        List<MediaModel> media = MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.FILE_PATH, filePath);
-        return media.size() > 0 ? media.get(0) : null;
+    fun getMediaForPostWithPath(postModel: PostImmutableModel, filePath: String?): MediaModel? {
+        val media = MediaSqlUtils.matchPostMedia(postModel.id, MediaModelTable.FILE_PATH, filePath)
+        return if (media.size > 0) media[0] else null
     }
 
-    public List<MediaModel> getMediaForPost(PostImmutableModel postModel) {
-        return MediaSqlUtils.matchPostMedia(postModel.getId());
+    fun getMediaForPost(postModel: PostImmutableModel): List<MediaModel> {
+        return MediaSqlUtils.matchPostMedia(postModel.id)
     }
 
-    public List<MediaModel> getMediaForPostWithState(PostImmutableModel postModel, MediaUploadState expectedState) {
-        return MediaSqlUtils.matchPostMedia(postModel.getId(), MediaModelTable.UPLOAD_STATE,
-                expectedState);
+    fun getMediaForPostWithState(postModel: PostImmutableModel, expectedState: MediaUploadState?): List<MediaModel> {
+        return MediaSqlUtils.matchPostMedia(
+                postModel.id, MediaModelTable.UPLOAD_STATE,
+                expectedState
+        )
     }
 
-    public MediaModel getNextSiteMediaToDelete(SiteModel siteModel) {
-        List<MediaModel> media = MediaSqlUtils.matchSiteMedia(siteModel,
-                MediaModelTable.UPLOAD_STATE, MediaUploadState.DELETING.toString());
-        return media.size() > 0 ? media.get(0) : null;
+    fun getNextSiteMediaToDelete(siteModel: SiteModel?): MediaModel? {
+        val media = MediaSqlUtils.matchSiteMedia(
+                siteModel,
+                MediaModelTable.UPLOAD_STATE, DELETING.toString()
+        )
+        return if (media.size > 0) media[0] else null
     }
 
-    public boolean hasSiteMediaToDelete(SiteModel siteModel) {
-        return getNextSiteMediaToDelete(siteModel) != null;
+    fun hasSiteMediaToDelete(siteModel: SiteModel?): Boolean {
+        return getNextSiteMediaToDelete(siteModel) != null
     }
 
-    private void removeAllMedia() {
-        MediaSqlUtils.deleteAllMedia();
-        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_ALL_MEDIA);
-        emitChange(event);
+    private fun removeAllMedia() {
+        MediaSqlUtils.deleteAllMedia()
+        val event = OnMediaChanged(REMOVE_ALL_MEDIA)
+        emitChange(event)
     }
 
     //
     // Action implementations
     //
-
-    private void updateMedia(MediaModel media, boolean emit) {
-        OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
-
-        if (media == null) {
-            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-        } else if (MediaSqlUtils.insertOrUpdateMedia(media) > 0) {
-            event.mediaList.add(media);
-        } else {
-            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
+    private fun updateMedia(media: MediaModel?, emit: Boolean) {
+        val event = when {
+            media == null -> {
+                OnMediaChanged(UPDATE_MEDIA, MediaError(NULL_MEDIA_ARG))
+            }
+            MediaSqlUtils.insertOrUpdateMedia(media) > 0 -> {
+                OnMediaChanged(UPDATE_MEDIA, listOf(media))
+            }
+            else -> {
+                OnMediaChanged(UPDATE_MEDIA, MediaError(DB_QUERY_FAILURE))
+            }
         }
-
         if (emit) {
-            emitChange(event);
+            emitChange(event)
         }
     }
 
-    private void removeMedia(MediaModel media) {
-        OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA);
-
-        if (media == null) {
-            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-        } else if (MediaSqlUtils.deleteMedia(media) > 0) {
-            event.mediaList.add(media);
-        } else {
-            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
+    private fun removeMedia(media: MediaModel?) {
+        val event = when {
+            media == null -> {
+                OnMediaChanged(REMOVE_MEDIA, MediaError(NULL_MEDIA_ARG))
+            }
+            MediaSqlUtils.deleteMedia(media) > 0 -> {
+                OnMediaChanged(REMOVE_MEDIA, listOf(media))
+            }
+            else -> {
+                OnMediaChanged(REMOVE_MEDIA, MediaError(DB_QUERY_FAILURE))
+            }
         }
-        emitChange(event);
+        emitChange(event)
     }
 
     //
     // Helper methods that choose the appropriate network client to perform an action
     //
-
-    private void performPushMedia(MediaPayload payload) {
+    private fun performPushMedia(payload: MediaPayload) {
         if (payload.media == null) {
             // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.PUSH_MEDIA, null);
-            return;
-        } else if (payload.media.getMediaId() <= 0) {
+            notifyMediaError(NULL_MEDIA_ARG, PUSH_MEDIA, null)
+            return
+        } else if (payload.media!!.mediaId <= 0) {
             // need media ID to push changes
-            notifyMediaError(MediaErrorType.MALFORMED_MEDIA_ARG, MediaAction.PUSH_MEDIA, payload.media);
-            return;
+            notifyMediaError(MALFORMED_MEDIA_ARG, PUSH_MEDIA, payload.media)
+            return
         }
-
-        if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.pushMedia(payload.site, payload.media);
+        if (payload.site!!.isUsingWpComRestApi) {
+            mMediaRestClient.pushMedia(payload.site, payload.media)
         } else {
-            mMediaXmlrpcClient.pushMedia(payload.site, payload.media);
+            mMediaXmlrpcClient.pushMedia(payload.site, payload.media)
         }
     }
 
-    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media) {
-        OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
-        onMediaUploaded.error = new MediaError(errorType, errorMessage);
-        emitChange(onMediaUploaded);
+    private fun notifyMediaUploadError(errorType: MediaErrorType, errorMessage: String, media: MediaModel) {
+        val onMediaUploaded = OnMediaUploaded(media, progress = 1F, completed = false, canceled = false)
+        onMediaUploaded.error = MediaError(errorType, errorMessage)
+        emitChange(onMediaUploaded)
     }
 
-    private void performUploadMedia(UploadMediaPayload payload) {
-        String errorMessage = MediaUtils.getMediaValidationError(payload.media);
+    private fun performUploadMedia(payload: UploadMediaPayload) {
+        val errorMessage = MediaUtils.getMediaValidationError(payload.media!!)
         if (errorMessage != null) {
-            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + errorMessage);
-            payload.media.setUploadState(MediaUploadState.FAILED);
-            MediaSqlUtils.insertOrUpdateMedia(payload.media);
-            notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
-            return;
+            AppLog.e(MEDIA, "Media doesn't have required data: $errorMessage")
+            payload.media!!.setUploadState(FAILED)
+            MediaSqlUtils.insertOrUpdateMedia(payload.media)
+            notifyMediaUploadError(MALFORMED_MEDIA_ARG, errorMessage, payload.media!!)
+            return
         }
-
-        payload.media.setUploadState(MediaUploadState.UPLOADING);
-        MediaSqlUtils.insertOrUpdateMedia(payload.media);
-
+        payload.media!!.setUploadState(UPLOADING)
+        MediaSqlUtils.insertOrUpdateMedia(payload.media)
         if (payload.stripLocation) {
-            MediaUtils.stripLocation(payload.media.getFilePath());
+            MediaUtils.stripLocation(payload.media!!.filePath)
         }
-
-        if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.uploadMedia(payload.site, payload.media);
+        if (payload.site!!.isUsingWpComRestApi) {
+            mMediaRestClient.uploadMedia(payload.site, payload.media)
         } else {
-            mMediaXmlrpcClient.uploadMedia(payload.site, payload.media);
+            mMediaXmlrpcClient.uploadMedia(payload.site, payload.media)
         }
     }
 
-    private void performFetchMediaList(FetchMediaListPayload payload) {
-        int offset = 0;
+    private fun performFetchMediaList(payload: FetchMediaListPayload) {
+        var offset = 0
         if (payload.loadMore) {
-            List<String> list = new ArrayList<>();
-            list.add(MediaUploadState.UPLOADED.toString());
-            if (payload.mimeType != null) {
-                offset = MediaSqlUtils.getMediaWithStatesAndMimeType(payload.site, list, payload.mimeType.getValue())
-                                      .size();
+            val list: MutableList<String> = ArrayList()
+            list.add(UPLOADED.toString())
+            offset = if (payload.mimeType != null) {
+                MediaSqlUtils.getMediaWithStatesAndMimeType(
+                        payload.site,
+                        list,
+                        payload.mimeType.value
+                )
+                        .size
             } else {
-                offset = MediaSqlUtils.getMediaWithStates(payload.site, list).size();
+                MediaSqlUtils.getMediaWithStates(payload.site, list).size
             }
         }
-        if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+        if (payload.site.isUsingWpComRestApi) {
+            mMediaRestClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType)
         } else {
-            mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType);
+            mMediaXmlrpcClient.fetchMediaList(payload.site, payload.number, offset, payload.mimeType)
         }
     }
 
-    private void performFetchMedia(MediaPayload payload) {
+    private fun performFetchMedia(payload: MediaPayload) {
         if (payload.site == null || payload.media == null) {
             // null or empty media list -or- list contains a null value
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.FETCH_MEDIA, payload.media);
-            return;
+            notifyMediaError(NULL_MEDIA_ARG, FETCH_MEDIA, payload.media)
+            return
         }
-
-        if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.fetchMedia(payload.site, payload.media);
+        if (payload.site!!.isUsingWpComRestApi) {
+            mMediaRestClient.fetchMedia(payload.site, payload.media)
         } else {
-            mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
+            mMediaXmlrpcClient.fetchMedia(payload.site, payload.media)
         }
     }
 
-    private void performDeleteMedia(@NonNull MediaPayload payload) {
+    private fun performDeleteMedia(payload: MediaPayload) {
         if (payload.media == null) {
-            notifyMediaError(MediaErrorType.NULL_MEDIA_ARG, MediaAction.DELETE_MEDIA, null);
-            return;
+            notifyMediaError(NULL_MEDIA_ARG, DELETE_MEDIA, null)
+            return
         }
-
-        if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.deleteMedia(payload.site, payload.media);
+        if (payload.site!!.isUsingWpComRestApi) {
+            mMediaRestClient.deleteMedia(payload.site, payload.media)
         } else {
-            mMediaXmlrpcClient.deleteMedia(payload.site, payload.media);
+            mMediaXmlrpcClient.deleteMedia(payload.site, payload.media)
         }
     }
 
-    private void performCancelUpload(@NonNull CancelMediaPayload payload) {
+    private fun performCancelUpload(payload: CancelMediaPayload) {
         if (payload.media == null) {
-            return;
+            return
         }
-
-        MediaModel media = payload.media;
+        val media = payload.media
         if (payload.delete) {
-            MediaSqlUtils.deleteMedia(media);
+            MediaSqlUtils.deleteMedia(media)
         } else {
-            media.setUploadState(MediaUploadState.FAILED);
-            MediaSqlUtils.insertOrUpdateMedia(media);
+            media.setUploadState(FAILED)
+            MediaSqlUtils.insertOrUpdateMedia(media)
         }
-
-        if (payload.site.isUsingWpComRestApi()) {
-            mMediaRestClient.cancelUpload(media);
+        if (payload.site.isUsingWpComRestApi) {
+            mMediaRestClient.cancelUpload(media)
         } else {
-            mMediaXmlrpcClient.cancelUpload(media);
+            mMediaXmlrpcClient.cancelUpload(media)
         }
     }
 
-    private void handleMediaPushed(@NonNull MediaPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.PUSH_MEDIA, payload.error);
-        if (payload.media != null) {
-            updateMedia(payload.media, false);
-            onMediaChanged.mediaList = new ArrayList<>();
-            onMediaChanged.mediaList.add(payload.media);
+    private fun handleMediaPushed(payload: MediaPayload) {
+        val media = payload.media?.apply {
+            updateMedia(this, false)
         }
-        emitChange(onMediaChanged);
-    }
-
-    private void handleMediaUploaded(@NonNull ProgressPayload payload) {
-        if (payload.isError() || payload.canceled || payload.completed) {
-            updateMedia(payload.media, false);
+        val onMediaChanged = if (media != null) {
+            OnMediaChanged(PUSH_MEDIA, listOf(media), payload.error)
+        } else {
+            OnMediaChanged(PUSH_MEDIA, payload.error)
         }
-        OnMediaUploaded onMediaUploaded =
-                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
-        onMediaUploaded.error = payload.error;
-        emitChange(onMediaUploaded);
+        emitChange(onMediaChanged)
     }
 
-    private void handleMediaCanceled(@NonNull ProgressPayload payload) {
-        OnMediaUploaded onMediaUploaded =
-                new OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled);
-        onMediaUploaded.error = payload.error;
-
-        emitChange(onMediaUploaded);
+    private fun handleMediaUploaded(payload: ProgressPayload) {
+        if (payload.isError || payload.canceled || payload.completed) {
+            updateMedia(payload.media, false)
+        }
+        val onMediaUploaded = OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled)
+        onMediaUploaded.error = payload.error
+        emitChange(onMediaUploaded)
     }
 
-    private void updateFetchedMediaList(@NonNull FetchMediaListResponsePayload payload) {
+    private fun handleMediaCanceled(payload: ProgressPayload) {
+        val onMediaUploaded = OnMediaUploaded(payload.media, payload.progress, payload.completed, payload.canceled)
+        onMediaUploaded.error = payload.error
+        emitChange(onMediaUploaded)
+    }
+
+    private fun updateFetchedMediaList(payload: FetchMediaListResponsePayload) {
         // if we loaded another page, simply add the fetched media and be done
         if (payload.loadedMore) {
-            for (MediaModel media : payload.mediaList) {
-                updateMedia(media, false);
+            for (media in payload.mediaList) {
+                updateMedia(media, false)
             }
-            return;
+            return
         }
 
         // build separate lists of existing and new media
-        List<MediaModel> existingMediaList = new ArrayList<>();
-        List<MediaModel> newMediaList = new ArrayList<>();
-        for (MediaModel fetchedMedia : payload.mediaList) {
-            MediaModel media = getSiteMediaWithId(payload.site, fetchedMedia.getMediaId());
+        val existingMediaList: MutableList<MediaModel> = ArrayList()
+        val newMediaList: MutableList<MediaModel> = ArrayList()
+        for (fetchedMedia in payload.mediaList) {
+            val media = getSiteMediaWithId(payload.site, fetchedMedia.mediaId)
             if (media != null) {
                 // retain the local ID, then update this media item
-                fetchedMedia.setId(media.getId());
-                existingMediaList.add(fetchedMedia);
-                updateMedia(fetchedMedia, false);
+                fetchedMedia.id = media.id
+                existingMediaList.add(fetchedMedia)
+                updateMedia(fetchedMedia, false)
             } else {
-                newMediaList.add(fetchedMedia);
+                newMediaList.add(fetchedMedia)
             }
         }
 
         // remove media that is NOT in the existing list
-        String mimeTypeValue = "";
+        var mimeTypeValue = ""
         if (payload.mimeType != null) {
-            mimeTypeValue = payload.mimeType.getValue();
+            mimeTypeValue = payload.mimeType.value
         }
         MediaSqlUtils.deleteUploadedSiteMediaNotInList(
-                payload.site, existingMediaList, mimeTypeValue);
+                payload.site, existingMediaList, mimeTypeValue
+        )
 
         // add new media
-        for (MediaModel media : newMediaList) {
-            updateMedia(media, false);
+        for (media in newMediaList) {
+            updateMedia(media, false)
         }
     }
 
-    private void handleMediaListFetched(@NonNull FetchMediaListResponsePayload payload) {
-        OnMediaListFetched onMediaListFetched;
-
-        if (payload.isError()) {
-            onMediaListFetched = new OnMediaListFetched(payload.site, payload.error, payload.mimeType);
+    private fun handleMediaListFetched(payload: FetchMediaListResponsePayload) {
+        val onMediaListFetched: OnMediaListFetched
+        onMediaListFetched = if (payload.isError) {
+            OnMediaListFetched(payload.site, payload.error, payload.mimeType)
         } else {
-            updateFetchedMediaList(payload);
-            onMediaListFetched = new OnMediaListFetched(payload.site, payload.canLoadMore, payload.mimeType);
+            updateFetchedMediaList(payload)
+            OnMediaListFetched(payload.site, payload.canLoadMore, payload.mimeType)
         }
-
-        emitChange(onMediaListFetched);
+        emitChange(onMediaListFetched)
     }
 
-    private void handleMediaFetched(@NonNull MediaPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.FETCH_MEDIA, payload.error);
-        if (payload.media != null) {
-            MediaSqlUtils.insertOrUpdateMedia(payload.media);
-            onMediaChanged.mediaList = new ArrayList<>();
-            onMediaChanged.mediaList.add(payload.media);
-        }
-        emitChange(onMediaChanged);
+    private fun handleMediaFetched(payload: MediaPayload) {
+        val onMediaChanged = payload.media?.let { media ->
+            MediaSqlUtils.insertOrUpdateMedia(media)
+            OnMediaChanged(FETCH_MEDIA, listOf(media), payload.error)
+        } ?: OnMediaChanged(FETCH_MEDIA, payload.error)
+        emitChange(onMediaChanged)
     }
 
-    private void handleMediaDeleted(@NonNull MediaPayload payload) {
-        OnMediaChanged onMediaChanged = new OnMediaChanged(MediaAction.DELETE_MEDIA, payload.error);
-        if (payload.media != null) {
-            MediaSqlUtils.deleteMedia(payload.media);
-            onMediaChanged.mediaList = new ArrayList<>();
-            onMediaChanged.mediaList.add(payload.media);
-        }
-        emitChange(onMediaChanged);
+    private fun handleMediaDeleted(payload: MediaPayload) {
+        val onMediaChanged = payload.media?.let { media ->
+            MediaSqlUtils.deleteMedia(payload.media)
+            OnMediaChanged(DELETE_MEDIA, listOf(media), payload.error)
+        } ?: OnMediaChanged(DELETE_MEDIA, payload.error)
+        emitChange(onMediaChanged)
     }
 
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause,
-                                  List<MediaModel> media) {
-        OnMediaChanged mediaChange = new OnMediaChanged(cause, media);
-        mediaChange.error = new MediaError(errorType, errorMessage);
-        emitChange(mediaChange);
+    private fun notifyMediaError(
+        errorType: MediaErrorType, errorMessage: String?, cause: MediaAction,
+        media: List<MediaModel>
+    ) {
+        val mediaChange = OnMediaChanged(cause, media)
+        mediaChange.error = MediaError(errorType, errorMessage)
+        emitChange(mediaChange)
     }
 
-    private void notifyMediaError(MediaErrorType errorType, MediaAction cause, MediaModel media) {
-        notifyMediaError(errorType, null, cause, media);
+    private fun notifyMediaError(errorType: MediaErrorType, cause: MediaAction, media: MediaModel?) {
+        notifyMediaError(errorType, null, cause, media)
     }
 
-    private void notifyMediaError(MediaErrorType errorType, String errorMessage, MediaAction cause, MediaModel media) {
-        List<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        notifyMediaError(errorType, errorMessage, cause, mediaList);
+    private fun notifyMediaError(
+        errorType: MediaErrorType,
+        errorMessage: String?,
+        cause: MediaAction,
+        media: MediaModel?
+    ) {
+        val mediaList: List<MediaModel> = media?.let { listOf(media) } ?: listOf()
+        notifyMediaError(errorType, errorMessage, cause, mediaList)
     }
 
-    private void performUploadStockMedia(UploadStockMediaPayload payload) {
-        mMediaRestClient.uploadStockMedia(payload.site, payload.stockMediaList);
+    private fun performUploadStockMedia(payload: UploadStockMediaPayload) {
+        mMediaRestClient.uploadStockMedia(payload.site, payload.stockMediaList)
     }
 
-    private void handleStockMediaUploaded(UploadedStockMediaPayload payload) {
-        OnStockMediaUploaded onStockMediaUploaded;
-
-        if (payload.isError()) {
-            onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.error);
+    private fun handleStockMediaUploaded(payload: UploadedStockMediaPayload) {
+        val onStockMediaUploaded: OnStockMediaUploaded
+        onStockMediaUploaded = if (payload.isError) {
+            OnStockMediaUploaded(payload.site, payload.error!!)
         } else {
             // add uploaded media to the store
-            for (MediaModel media : payload.mediaList) {
-                updateMedia(media, false);
+            for (media in payload.mediaList) {
+                updateMedia(media, false)
             }
-            onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.mediaList);
+            OnStockMediaUploaded(payload.site, payload.mediaList)
         }
-
-        emitChange(onStockMediaUploaded);
+        emitChange(onStockMediaUploaded)
     }
 }
