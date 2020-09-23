@@ -1,3 +1,6 @@
+15.9
+-----
+ 
 15.8
 -----
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.

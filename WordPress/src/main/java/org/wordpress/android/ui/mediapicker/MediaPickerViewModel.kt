@@ -220,10 +220,20 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
         }
+
         val onlyImagesSelected = items?.any { it.type != IMAGE && selectedIds.contains(it.identifier) } ?: false
+        val showEditActionButton = mediaPickerSetup.editingEnabled && !onlyImagesSelected
         return ActionModeUiModel.Visible(
                 title,
-                showEditAction = mediaPickerSetup.editingEnabled && !onlyImagesSelected
+                EditActionUiModel(
+                        isVisible = showEditActionButton,
+                        isCounterBadgeVisible = if (!showEditActionButton) {
+                            false
+                        } else {
+                            mediaPickerSetup.canMultiselect
+                        },
+                        counterBadgeValue = numSelected
+                )
         )
     }
 
@@ -480,7 +490,7 @@ class MediaPickerViewModel @Inject constructor(
     sealed class ActionModeUiModel {
         data class Visible(
             val actionModeTitle: UiString? = null,
-            val showEditAction: Boolean = false
+            val editActionUiModel: EditActionUiModel = EditActionUiModel()
         ) : ActionModeUiModel()
 
         object Hidden : ActionModeUiModel()
@@ -501,4 +511,10 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)
+
+    data class EditActionUiModel(
+        val isVisible: Boolean = false,
+        val isCounterBadgeVisible: Boolean = false,
+        val counterBadgeValue: Int = 1
+    )
 }
