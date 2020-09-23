@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaInsertResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
@@ -28,14 +29,17 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SqlUtils
 import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.WPMediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 class DeviceListBuilder(
     private val context: Context,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val mediaTypes: Set<MediaType>
+    private val mediaTypes: Set<MediaType>,
+    private val queueResults: Boolean
 ) : MediaSource {
     private val mimeTypes = MimeTypes()
 
@@ -64,6 +68,26 @@ class DeviceListBuilder(
                 }
             } ?: result
             MediaLoadingResult.Success(filteredResult, false)
+        }
+    }
+
+    override suspend fun insert(identifiers: List<Identifier>): MediaInsertResult {
+        return if (queueResults) {
+            var failed = false
+            val fetchedUris = identifiers.mapNotNull { it as? Identifier.LocalUri }.mapNotNull { localUri ->
+                val fetchedUri = wpMediaUtilsWrapper.fetchMedia(localUri.value.uri)
+                if (fetchedUri == null) {
+                    failed = true
+                }
+                fetchedUri
+            }
+            if (failed) {
+                MediaInsertResult.Failure("Failed to fetch local media")
+            } else {
+                MediaInsertResult.Success(fetchedUris.map { Identifier.LocalUri(UriWrapper(it)) })
+            }
+        } else {
+            MediaInsertResult.Success(identifiers)
         }
     }
 
@@ -152,10 +176,18 @@ class DeviceListBuilder(
     @Inject constructor(
         private val context: Context,
         private val localeManagerWrapper: LocaleManagerWrapper,
+        private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
-        fun build(mediaTypes: Set<MediaType>): DeviceListBuilder {
-            return DeviceListBuilder(context, localeManagerWrapper, bgDispatcher, mediaTypes)
+        fun build(mediaTypes: Set<MediaType>, queueResults: Boolean): DeviceListBuilder {
+            return DeviceListBuilder(
+                    context,
+                    localeManagerWrapper,
+                    wpMediaUtilsWrapper,
+                    bgDispatcher,
+                    mediaTypes,
+                    queueResults
+            )
         }
     }
 }

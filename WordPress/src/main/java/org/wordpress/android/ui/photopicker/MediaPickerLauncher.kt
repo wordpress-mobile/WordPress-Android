@@ -138,11 +138,11 @@ class MediaPickerLauncher
                     cameraEnabled = false,
                     systemPickerEnabled = false,
                     editingEnabled = false,
+                    queueResults = false,
                     title = R.string.photo_picker_stock_media
             )
             val intent = MediaPickerActivity.buildIntent(
                     activity,
-                    browserType,
                     mediaPickerSetup,
                     site
             )

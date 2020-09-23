@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -131,6 +132,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
+import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
@@ -194,6 +196,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
@@ -381,6 +384,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
 
@@ -1064,7 +1068,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     final int requestCode = allowMultipleSelection
                             ? RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
                             : RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK;
-                    ActivityLauncher.showStockMediaPickerForResult(this, mSite, requestCode);
+                    mMediaPickerLauncher.showStockMediaPickerForResult(this, mSite, requestCode);
                     break;
                 case GIF:
                     ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_SINGLE_SELECT);
@@ -2423,6 +2427,34 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
                         setFeaturedImageId(mediaId, true);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
+                        if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                            List<Uri> uris = convertStringArrayIntoUrisList(
+                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                            int postId = getImmutablePost().getId();
+                            mFeaturedImageHelper.trackFeaturedImageEvent(
+                                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                                    postId
+                            );
+                            for (Uri mediaUri : uris) {
+                                String mimeType = getContentResolver().getType(mediaUri);
+                                EnqueueFeaturedImageResult queueImageResult = mFeaturedImageHelper
+                                        .queueFeaturedImageForUpload(
+                                                postId, getSite(), mediaUri,
+                                                mimeType
+                                        );
+                                if (queueImageResult == EnqueueFeaturedImageResult.FILE_NOT_FOUND) {
+                                    Toast.makeText(
+                                            this,
+                                            R.string.file_not_found, Toast.LENGTH_SHORT
+                                    ).show();
+                                } else if (queueImageResult == EnqueueFeaturedImageResult.INVALID_POST_ID) {
+                                    Toast.makeText(
+                                            this,
+                                            R.string.error_generic, Toast.LENGTH_SHORT
+                                    ).show();
+                                }
+                            }
+                        }
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
