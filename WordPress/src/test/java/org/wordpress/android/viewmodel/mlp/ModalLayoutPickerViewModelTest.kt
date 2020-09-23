@@ -45,6 +45,7 @@ class ModalLayoutPickerViewModelTest {
                 dispatcher,
                 siteStore,
                 appPrefsWrapper,
+                NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onCreateNewPageRequested.observeForever(

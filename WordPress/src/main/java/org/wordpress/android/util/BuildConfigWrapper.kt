@@ -11,4 +11,6 @@ class BuildConfigWrapper @Inject constructor() {
     fun getAppVersionName(): String {
         return BuildConfig.VERSION_NAME
     }
+
+    fun isManualFeatureConfigEnabled(): Boolean = BuildConfig.ENABLE_FEATURE_CONFIGURATION
 }
