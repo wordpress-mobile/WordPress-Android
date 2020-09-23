@@ -2,15 +2,16 @@ package org.wordpress.android.viewmodel.mlp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
@@ -35,6 +36,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var layouts: GutenbergPageLayouts
@@ -72,7 +74,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun fetchLayouts() {
         updateUiState(LoadingUiState)
-        viewModelScope.launch {
+        launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
             if (site.isWPCom) {
@@ -94,13 +96,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
         layouts = response
-        loadLayouts()
         loadCategories()
     }
 
     private fun loadLayouts() {
         val state = uiState.value as? ContentUiState ?: ContentUiState()
-        viewModelScope.launch {
+        launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()
 
             val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
@@ -125,13 +126,15 @@ class ModalLayoutPickerViewModel @Inject constructor(
                         )
                 )
             }
-            updateUiState(state.copy(layoutCategories = listItems))
+            withContext(mainDispatcher) {
+                updateUiState(state.copy(layoutCategories = listItems))
+            }
         }
     }
 
     private fun loadCategories() {
         val state = uiState.value as? ContentUiState ?: ContentUiState()
-        viewModelScope.launch {
+        launch(bgDispatcher) {
             val listItems: List<CategoryListItemUiState> = layouts.categories.sortedBy { it.title }.map {
                 CategoryListItemUiState(
                         it.slug,
@@ -140,8 +143,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
                         state.selectedCategoriesSlugs.contains(it.slug)
                 ) { onCategoryTapped(it.slug) }
             }
-            updateUiState(state.copy(categories = listItems))
-            _onCategorySelected.postValue(Event(Unit))
+            withContext(mainDispatcher) {
+                updateUiState(state.copy(categories = listItems))
+            }
+            loadLayouts()
         }
     }
 
@@ -217,7 +222,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 )
             }
             loadCategories()
-            loadLayouts()
+            _onCategorySelected.postValue(Event(Unit))
         }
     }
 
