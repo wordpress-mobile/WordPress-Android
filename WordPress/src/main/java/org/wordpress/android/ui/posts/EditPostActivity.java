@@ -1571,7 +1571,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     FluxCUtils.mediaFileFromMediaModel(media));
         } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                 .getId()) {
-            setFeaturedImageId(media.getMediaId());
+            setFeaturedImageId(media.getMediaId(), false);
         }
     }
 
@@ -2341,9 +2341,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void setFeaturedImageId(final long mediaId) {
+    private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
         }
     }
 
@@ -2421,7 +2421,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // user chose a featured image
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId);
+                        setFeaturedImageId(mediaId, true);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();

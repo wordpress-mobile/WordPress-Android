@@ -990,7 +990,14 @@ public class EditPostSettingsFragment extends Fragment {
 
     // Featured Image Helpers
 
-    public void updateFeaturedImage(long featuredImageId) {
+    public void updateFeaturedImage(long featuredImageId, boolean imagePicked) {
+        if (isAdded() && imagePicked) {
+            int postId = getEditPostRepository().getId();
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                    TrackableEvent.IMAGE_PICKED,
+                    postId
+            );
+        }
         EditPostRepository postRepository = getEditPostRepository();
         if (postRepository == null) {
             return;
@@ -1007,7 +1014,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void clearFeaturedImage() {
-        updateFeaturedImage(0);
+        updateFeaturedImage(0, false);
     }
 
     private void updateFeaturedImageView(PostImmutableModel postModel) {

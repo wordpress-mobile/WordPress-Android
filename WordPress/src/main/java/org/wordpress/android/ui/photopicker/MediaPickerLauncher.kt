@@ -9,7 +9,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.media.MediaBrowserType.BROWSER
+import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
@@ -36,7 +36,6 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val intent = MediaPickerActivity.buildIntent(
                     activity,
-                    browserType,
                     buildLocalMediaPickerSetup(browserType),
                     site,
                     localPostId
@@ -56,7 +55,6 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val intent = MediaPickerActivity.buildIntent(
                     fragment.requireContext(),
-                    browserType,
                     buildLocalMediaPickerSetup(browserType),
                     site,
                     localPostId
@@ -71,7 +69,6 @@ class MediaPickerLauncher
         val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             MediaPickerActivity.buildIntent(
                     fragment.requireContext(),
-                    GRAVATAR_IMAGE_PICKER,
                     buildLocalMediaPickerSetup(GRAVATAR_IMAGE_PICKER)
             )
         } else {
@@ -93,11 +90,11 @@ class MediaPickerLauncher
                     cameraEnabled = false,
                     systemPickerEnabled = true,
                     editingEnabled = true,
+                    queueResults = false,
                     title = R.string.photo_picker_choose_file
             )
             val intent = MediaPickerActivity.buildIntent(
                     activity,
-                    BROWSER,
                     mediaPickerSetup
             )
             activity.startActivityForResult(
@@ -113,7 +110,6 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val intent = MediaPickerActivity.buildIntent(
                     activity,
-                    browserType,
                     buildWPMediaLibraryPickerSetup(browserType),
                     site
             )
@@ -179,6 +175,7 @@ class MediaPickerLauncher
                 cameraEnabled = browserType.isWPStoriesPicker,
                 systemPickerEnabled = true,
                 editingEnabled = browserType.isImagePicker,
+                queueResults = browserType == FEATURED_IMAGE_PICKER,
                 title = title
         )
     }
@@ -199,6 +196,7 @@ class MediaPickerLauncher
                 cameraEnabled = browserType.isWPStoriesPicker,
                 systemPickerEnabled = false,
                 editingEnabled = false,
+                queueResults = false,
                 title = R.string.wp_media_title
         )
     }
