@@ -8,122 +8,84 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Filter
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
+import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.util.LocaleManagerWrapper
 
-data class MediaLoader(private val mediaSource: MediaSource, private val localeManagerWrapper: LocaleManagerWrapper) {
+data class MediaLoader(
+    private val mediaSource: MediaSource,
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val allowedTypes: Set<MediaType>
+) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
-            var state = DomainState()
+            var state = DomainModel()
             for (loadAction in actions) {
                 when (loadAction) {
                     is Start -> {
-                        if (state.mediaTypes != loadAction.mediaTypes || state.items.isEmpty() || state.error != null) {
-                            state = refreshData(state, loadAction.mediaTypes).copy(filter = loadAction.filter)
+                        if (state.domainItems.isEmpty() || state.error != null) {
+                            state = buildDomainModel(mediaSource.load(allowedTypes), state)
+                            emit(state)
                         }
                     }
                     is Refresh -> {
-                        state.mediaTypes?.let { mediaTypes ->
-                            state = refreshData(state, mediaTypes)
+                        if (loadAction.forced || state.domainItems.isEmpty()) {
+                            emit(state.copy(isLoading = true))
+                            state = buildDomainModel(mediaSource.load(allowedTypes, forced = loadAction.forced), state)
+                            emit(state)
                         }
                     }
                     is NextPage -> {
-                        state.mediaTypes?.let { mediaTypes ->
-                            state = when (val mediaLoadingResult = mediaSource.load(
-                                    mediaTypes,
-                                    offset = state.items.size
-                            )) {
-                                is Success -> {
-                                    state.copy(
-                                            items = state.items + mediaLoadingResult.mediaItems,
-                                            hasMore = mediaLoadingResult.hasMore,
-                                            error = null
-                                    )
-                                }
-                                is Failure -> {
-                                    state.copy(
-                                            error = mediaLoadingResult.message
-                                    )
-                                }
-                            }
-                        }
+                        val load = mediaSource.load(mediaTypes = allowedTypes, loadMore = true)
+                        state = buildDomainModel(load, state)
+                        emit(state)
                     }
                     is Filter -> {
-                        state = state.copy(filter = loadAction.filter)
+                        state = state.copy(
+                                filter = loadAction.filter,
+                                domainItems = mediaSource.get(allowedTypes, loadAction.filter)
+                        )
+                        emit(state)
                     }
                     is ClearFilter -> {
-                        state = state.copy(filter = null)
+                        state = state.copy(filter = null, domainItems = mediaSource.get(allowedTypes, null))
+                        emit(state)
                     }
                 }
-                if (state.isNotInitialState()) {
-                    emit(buildDomainModel(state))
-                }
             }
         }
     }
 
-    private suspend fun refreshData(state: DomainState, mediaTypes: Set<MediaType>): DomainState {
-        return when (val mediaLoadingResult = mediaSource.load(mediaTypes)) {
-            is Success -> {
-                state.copy(
-                        items = mediaLoadingResult.mediaItems,
-                        hasMore = mediaLoadingResult.hasMore,
-                        mediaTypes = mediaTypes,
-                        error = null
-                )
-            }
-            is Failure -> {
-                state.copy(
-                        error = mediaLoadingResult.message,
-                        mediaTypes = mediaTypes,
-                        hasMore = false
-                )
-            }
-        }
-    }
-
-    private fun buildDomainModel(state: DomainState): DomainModel {
-        return if (!state.filter.isNullOrEmpty()) {
-            val filter = state.filter.toLowerCase(localeManagerWrapper.getLocale())
-            DomainModel(
-                    state.items.filter {
-                        it.name?.toLowerCase(localeManagerWrapper.getLocale())
-                                ?.contains(filter) == true
-                    },
-                    state.error,
-                    state.hasMore,
-                    isFilteredResult = true,
-                    filter = state.filter
+    private suspend fun buildDomainModel(
+        partialResult: MediaLoadingResult,
+        state: DomainModel
+    ): DomainModel {
+        return when (partialResult) {
+            is Success -> state.copy(
+                    isLoading = false,
+                    error = null,
+                    hasMore = partialResult.hasMore,
+                    domainItems = mediaSource.get(allowedTypes, state.filter)
             )
-        } else {
-            DomainModel(state.items, state.error, state.hasMore, isFilteredResult = false, filter = state.filter)
+            is Failure -> state.copy(isLoading = false, error = partialResult.message)
         }
     }
 
     sealed class LoadAction {
-        data class Start(val mediaTypes: Set<MediaType>, val filter: String? = null) : LoadAction()
-        object Refresh : LoadAction()
+        data class Start(val filter: String? = null) : LoadAction()
+        data class Refresh(val forced: Boolean) : LoadAction()
         data class Filter(val filter: String) : LoadAction()
         object NextPage : LoadAction()
         object ClearFilter : LoadAction()
     }
 
     data class DomainModel(
-        val domainItems: List<MediaItem>,
+        val domainItems: List<MediaItem> = listOf(),
         val error: String? = null,
         val hasMore: Boolean = false,
         val isFilteredResult: Boolean = false,
-        val filter: String? = null
-    )
-
-    private data class DomainState(
-        val mediaTypes: Set<MediaType>? = null,
-        val items: List<MediaItem> = listOf(),
-        val hasMore: Boolean = false,
         val filter: String? = null,
-        val error: String? = null
-    ) {
-        fun isNotInitialState(): Boolean = mediaTypes != null
-    }
+        val isLoading: Boolean = false
+    )
 }

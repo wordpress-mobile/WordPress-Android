@@ -13,6 +13,10 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.reblog.ReblogState.MultipleSites
+import org.wordpress.android.ui.reader.reblog.ReblogState.NoSite
+import org.wordpress.android.ui.reader.reblog.ReblogState.SingleSite
+import org.wordpress.android.ui.reader.reblog.ReblogState.Unknown
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfig
@@ -32,12 +36,12 @@ class ReblogUseCase @Inject constructor(
                 0 -> NoSite
                 1 -> {
                     sites.firstOrNull()?.let {
-                        PostEditor(it, post)
+                        SingleSite(it, post)
                     } ?: Unknown
                 }
                 else -> {
                     sites.firstOrNull()?.let {
-                        SitePicker(it, post)
+                        MultipleSites(it, post)
                     } ?: Unknown
                 }
             }
@@ -49,7 +53,7 @@ class ReblogUseCase @Inject constructor(
             when {
                 post != null -> {
                     val site: SiteModel? = siteStore.getSiteByLocalId(siteLocalId)
-                    if (site != null) PostEditor(site, post) else Unknown
+                    if (site != null) SingleSite(site, post) else Unknown
                 }
                 BuildConfig.DEBUG -> {
                     throw IllegalStateException("Site Selected without passing the SitePicker state")
@@ -65,8 +69,8 @@ class ReblogUseCase @Inject constructor(
     fun convertReblogStateToNavigationEvent(state: ReblogState): ReaderNavigationEvents? {
         return when (state) {
             is NoSite -> ShowNoSitesToReblog
-            is SitePicker -> ShowSitePickerForResult(state.site, state.post, REBLOG_SELECT_MODE)
-            is PostEditor -> OpenEditorForReblog(state.site, state.post, POST_FROM_REBLOG)
+            is MultipleSites -> ShowSitePickerForResult(state.defaultSite, state.post, REBLOG_SELECT_MODE)
+            is SingleSite -> OpenEditorForReblog(state.site, state.post, POST_FROM_REBLOG)
             Unknown -> null
         }
     }

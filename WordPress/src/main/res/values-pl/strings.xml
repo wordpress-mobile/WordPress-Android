@@ -92,7 +92,6 @@ Language: pl
     <string name="error_media_quota_exceeded">Przekroczono dostępną przestrzeń do przechowywania danych</string>
     <string name="my_site_bottom_sheet_add_story">Wpis z relacją</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Edytowanie ikon witryn z samodzielnym hostingiem wymaga wtyczki Jetpack.</string>
-    <string name="media_error_file_not_allowed_on_free_plan">W darmowej wersji nie można korzystać z plików tego typu</string>
     <string name="pick_file">Dodaj plik</string>
     <string name="gutenberg_native_replace_video">Zamień plik wideo</string>
     <string name="gutenberg_native_replace_image_or_video">Zamień zdjęcie lub film</string>
@@ -984,9 +983,6 @@ Language: pl
     <string name="menu_history">Historia</string>
     <string name="pages_open_page_error">Wybrana strona nie jest dostępna</string>
     <string name="pages_pending">Oczekuje na przegląd</string>
-    <string name="news_card_announcement_action_sample_announcement">[Czytaj więcej] </string>
-    <string name="news_card_announcement_content_sample_announcement">[Nie masz czasu aby przeczytać teraz? Nie ma problemu: zapisz wpis do przeczytania kiedy indziej. ]</string>
-    <string name="news_card_announcement_title_sample_announcement">[Dostępna nowa funkcjonalność] </string>
     <string name="pages_empty_trashed">Nie masz żadnych stron w koszu</string>
     <string name="pages_empty_scheduled">Nie masz żadnych zaplanowanych stron</string>
     <string name="pages_empty_drafts">Nie masz żadnych szkiców stron</string>
@@ -1018,7 +1014,6 @@ Language: pl
     <string name="page_status_change_error">Wystąpił błąd podczas zmiany statusu strony</string>
     <string name="page_delete_error">Wystąpił błąd podczas usuwania strony</string>
     <string name="set_parent">Ustaw jako nadrzędną</string>
-    <string name="dismiss">odrzuć</string>
     <string name="quick_start_focus_point_description">stuknij tutaj</string>
     <string name="quick_start_list_create_site_title">Utwórz swoją witrynę</string>
     <string name="quick_start_list_create_site_subtitle">Uruchom swoją witrynę.</string>

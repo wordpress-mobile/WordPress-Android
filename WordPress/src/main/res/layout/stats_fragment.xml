@@ -43,6 +43,7 @@
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
+                android:background="@drawable/bottom_divider_background"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_gravity="start"

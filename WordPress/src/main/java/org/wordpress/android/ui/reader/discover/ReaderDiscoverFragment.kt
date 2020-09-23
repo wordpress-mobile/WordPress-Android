@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -20,9 +19,11 @@ import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
@@ -36,9 +37,11 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSit
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -47,13 +50,14 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout) {
+class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout) {
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +114,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                     is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
                     is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
                     is ShowSitePickerForResult -> ActivityLauncher
-                            .showSitePickerForResult(this@ReaderDiscoverFragment, this.site, this.mode)
+                            .showSitePickerForResult(this@ReaderDiscoverFragment, this.preselectedSite, this.mode)
                     is OpenEditorForReblog -> ActivityLauncher
                             .openEditorForReblog(activity, this.site, this.post, this.source)
                     is ShowBookmarkedTab -> {
@@ -124,6 +128,13 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                             this.siteId,
                             this.feedId
                     )
+                    is ShowReportPost -> {
+                        ReaderActivityLauncher.openUrl(
+                                context,
+                                readerUtilsWrapper.getReportPostUrl(url),
+                                OpenUrlType.INTERNAL
+                        )
+                    }
                 }
             }
         })
@@ -187,6 +198,10 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     override fun onDestroyView() {
         super.onDestroyView()
         bookmarksSavedLocallyDialog?.dismiss()
+    }
+
+    override fun getScrollableViewForUniqueIdProvision(): View {
+        return recycler_view
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
