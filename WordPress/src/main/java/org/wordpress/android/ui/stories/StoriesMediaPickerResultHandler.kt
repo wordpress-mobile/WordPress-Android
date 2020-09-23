@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
@@ -26,7 +25,7 @@ class StoriesMediaPickerResultHandler {
                         PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
                 )
                 return true
-            } else if (isWPStoriesMediaBrowserTypeResult(data)) {
+            } else {
                 if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                     ActivityLauncher.addNewStoryWithMediaIdsForResult(
                             activity,
@@ -56,14 +55,6 @@ class StoriesMediaPickerResultHandler {
                     )
                     return true
                 }
-            }
-            return false
-        }
-
-        private fun isWPStoriesMediaBrowserTypeResult(data: Intent): Boolean {
-            if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
-                val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
-                return (browserType as MediaBrowserType).isWPStoriesPicker
             }
             return false
         }
