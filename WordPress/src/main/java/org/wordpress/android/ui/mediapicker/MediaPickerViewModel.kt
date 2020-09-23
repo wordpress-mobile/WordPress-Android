@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
@@ -20,6 +21,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.MediaLoader.InsertModel
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
@@ -34,6 +36,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Hidden
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -79,6 +83,7 @@ class MediaPickerViewModel @Inject constructor(
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _searchExpanded = MutableLiveData<Boolean>()
+    private val _showProgressDialog = MutableLiveData<Boolean>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onNavigateToEdit: LiveData<Event<List<UriWrapper>>> = _navigateToEdit
@@ -91,8 +96,9 @@ class MediaPickerViewModel @Inject constructor(
             _domainModel.distinct(),
             _selectedIds.distinct(),
             _softAskRequest,
-            _searchExpanded
-    ) { domainModel, selectedIds, softAskRequest, searchExpanded ->
+            _searchExpanded,
+            _showProgressDialog.distinct()
+    ) { domainModel, selectedIds, softAskRequest, searchExpanded, showProgressDialog ->
         MediaPickerUiState(
                 buildUiModel(domainModel, selectedIds, softAskRequest),
                 buildSoftAskView(softAskRequest),
@@ -102,9 +108,13 @@ class MediaPickerViewModel @Inject constructor(
                 buildActionModeUiModel(selectedIds, domainModel?.domainItems),
                 buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
                 !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
-                buildBrowseMenuUiModel(softAskRequest, searchExpanded)
+                buildBrowseMenuUiModel(softAskRequest, searchExpanded),
+                buildProgressDialogUiModel(showProgressDialog)
         )
     }
+
+    private fun buildProgressDialogUiModel(showProgressDialog: Boolean?) =
+            if (showProgressDialog == true) Visible(string.media_uploading_stock_library_photo) else Hidden
 
     private fun buildSearchUiModel(isVisible: Boolean, filter: String?, searchExpanded: Boolean?): SearchUiModel {
         return when {
@@ -313,7 +323,18 @@ class MediaPickerViewModel @Inject constructor(
 
     fun performInsertAction() {
         val ids = selectedIdentifiers()
-        _onInsert.value = Event(ids)
+        launch {
+            mediaLoader.insertMedia(ids).collect {
+                when(it) {
+                    is InsertModel.Progress -> _showProgressDialog.postValue(true)
+                    is InsertModel.Error -> _showProgressDialog.postValue(false)
+                    is InsertModel.Success -> {
+                        _showProgressDialog.postValue(false)
+                        _onInsert.value = Event(it.identifiers)
+                    }
+                }
+            }
+        }
         val isMultiselection = ids.size > 1
         for (identifier in ids) {
             if (identifier is LocalUri) {
@@ -450,6 +471,10 @@ class MediaPickerViewModel @Inject constructor(
         refreshData(true)
     }
 
+    fun cancelProgressDialog() {
+        TODO("Not yet implemented")
+    }
+
     data class MediaPickerUiState(
         val photoListUiModel: PhotoListUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
@@ -457,7 +482,8 @@ class MediaPickerViewModel @Inject constructor(
         val actionModeUiModel: ActionModeUiModel,
         val searchUiModel: SearchUiModel,
         val isRefreshing: Boolean,
-        val browseMenuUiModel: BrowseMenuUiModel
+        val browseMenuUiModel: BrowseMenuUiModel,
+        val progressDialogUiModel: ProgressDialogUiModel
     )
 
     sealed class PhotoListUiModel {
@@ -501,4 +527,9 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)
+
+    sealed class ProgressDialogUiModel {
+        object Hidden: ProgressDialogUiModel()
+        data class Visible(val title: Int): ProgressDialogUiModel()
+    }
 }

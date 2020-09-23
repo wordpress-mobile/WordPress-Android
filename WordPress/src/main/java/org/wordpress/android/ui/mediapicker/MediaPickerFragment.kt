@@ -13,6 +13,8 @@ import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -20,16 +22,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.layout
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
@@ -38,6 +43,8 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiMode
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -83,6 +90,7 @@ class MediaPickerFragment : Fragment() {
             val mimeTypes: List<String>,
             val allowMultipleSelection: Boolean
         ) : MediaPickerAction()
+
         data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
     }
 
@@ -90,6 +98,7 @@ class MediaPickerFragment : Fragment() {
         data class ChooseFromAndroidDevice(
             val allowedTypes: Set<MediaType>
         ) : MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
+
         object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
 
         fun toBundle(bundle: Bundle) {
@@ -249,6 +258,7 @@ class MediaPickerFragment : Fragment() {
                 }
             }
         })
+        setupProgressDialog()
 
         viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
     }
@@ -382,6 +392,39 @@ class MediaPickerFragment : Fragment() {
         } else {
             wp_stories_take_picture.hide()
         }
+    }
+
+    private fun setupProgressDialog() {
+        var progressDialog: AlertDialog? = null
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            it?.progressDialogUiModel?.let { dialogUiModel ->
+                when (dialogUiModel) {
+                    is Visible -> {
+                        progressDialog?.let { dialog ->
+                            if (!dialog.isShowing) {
+                                val builder: Builder = MaterialAlertDialogBuilder(requireContext())
+                                builder.setTitle(string.media_uploading_stock_library_photo)
+                                builder.setView(layout.media_picker_progress_dialog)
+                                builder.setNegativeButton(
+                                        string.cancel
+                                ) { _, _ -> viewModel.cancelProgressDialog() }
+                                builder.setOnCancelListener { viewModel.cancelProgressDialog() }
+                                builder.setCancelable(true)
+                                progressDialog = builder.create()
+                                builder.show()
+                            }
+                        }
+                    }
+                    ProgressDialogUiModel.Hidden -> {
+                        progressDialog?.let { dialog ->
+                            if (dialog.isShowing) {
+                                dialog.hide()
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

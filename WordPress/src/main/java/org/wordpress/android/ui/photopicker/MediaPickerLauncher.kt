@@ -14,6 +14,7 @@ import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -124,6 +125,34 @@ class MediaPickerLauncher
             activity.startActivityForResult(intent, requestCode)
         } else {
             ActivityLauncher.viewMediaPickerForResult(activity, site, browserType)
+        }
+    }
+
+    fun showStockMediaPickerForResult(
+        activity: Activity,
+        site: SiteModel,
+        requestCode: Int
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    dataSource = STOCK_LIBRARY,
+                    canMultiselect = true,
+                    requiresStoragePermissions = false,
+                    allowedTypes = setOf(IMAGE),
+                    cameraEnabled = false,
+                    systemPickerEnabled = false,
+                    editingEnabled = false,
+                    title = R.string.photo_picker_stock_media
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    browserType,
+                    mediaPickerSetup,
+                    site
+            )
+            activity.startActivityForResult(intent, requestCode)
+        } else {
+            ActivityLauncher.showStockMediaPickerForResult(activity, site, requestCode)
         }
     }
 
