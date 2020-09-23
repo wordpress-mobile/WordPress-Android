@@ -82,7 +82,7 @@ public class WPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
 
-        takeScreenshot("4-screenshot-my-site");
+        takeScreenshot("4-keep-tabs-on-your-site");
     }
 
     private void editBlogPost() {
