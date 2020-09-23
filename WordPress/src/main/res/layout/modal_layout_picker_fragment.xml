@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/categoriesBackground"
-        android:layout_marginBottom="@dimen/mlp_layouts_margin_bottom"
+        android:layout_marginBottom="@dimen/toolbar_content_offset"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
@@ -99,7 +99,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="?attr/categoriesBackground"
         android:orientation="vertical">
 
         <View
