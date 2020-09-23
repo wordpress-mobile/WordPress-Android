@@ -13,8 +13,10 @@ import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComV2Endpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPOrgAPIEndpoint;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,15 +38,14 @@ import static javax.lang.model.SourceVersion.latestSupported;
 @SuppressWarnings("unused")
 @AutoService(Processor.class)
 public class EndpointProcessor extends AbstractProcessor {
-    private static final String WPCOMREST_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-endpoints.txt";
-    private static final String WPCOMV2_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-v2-endpoints.txt";
-    private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
-    private static final String WPAPI_ENDPOINT_FILE = "fluxc/src/main/tools/wp-api-endpoints.txt";
-    private static final String WPORG_API_ENDPOINT_FILE = "fluxc/src/main/tools/wporg-api-endpoints.txt";
+    private static final String WPCOMREST_ENDPOINT_FILE = "wp-com-endpoints.txt";
+    private static final String WPCOMV2_ENDPOINT_FILE = "wp-com-v2-endpoints.txt";
+    private static final String XMLRPC_ENDPOINT_FILE = "xmlrpc-endpoints.txt";
+    private static final String WPAPI_ENDPOINT_FILE = "wp-api-endpoints.txt";
+    private static final String WPORG_API_ENDPOINT_FILE = "wporg-api-endpoints.txt";
 
     // Plugin endpoints
-    private static final String WPORG_API_WC_ENDPOINT_FILE =
-            "plugins/woocommerce/src/main/tools/wc-wp-api-endpoints.txt";
+    private static final String WPORG_API_WC_ENDPOINT_FILE = "wc-wp-api-endpoints.txt";
 
     private static final Pattern WPCOMREST_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("\\$");
     private static final Pattern WPAPI_VARIABLE_ENDPOINT_PATTERN = Pattern.compile("^<.*>");
@@ -100,8 +101,8 @@ public class EndpointProcessor extends AbstractProcessor {
     }
 
     private void generateWPCOMRESTEndpointFile() throws IOException {
-        File file = new File(WPCOMREST_ENDPOINT_FILE);
-        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WPCOMREST_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class,
                 WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
@@ -109,8 +110,8 @@ public class EndpointProcessor extends AbstractProcessor {
     }
 
     private void generateWPCOMV2EndpointFile() throws IOException {
-        File file = new File(WPCOMV2_ENDPOINT_FILE);
-        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WPCOMV2_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMV2", WPComV2Endpoint.class,
                 WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
@@ -118,15 +119,19 @@ public class EndpointProcessor extends AbstractProcessor {
     }
 
     private void generateXMLRPCEndpointFile() throws IOException {
-        File file = new File(XMLRPC_ENDPOINT_FILE);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(XMLRPC_ENDPOINT_FILE);
+        // read inputStream into byte array since we will have to use it twice
+        byte[] fileContent = new byte[inputStream.available()];
+        inputStream.read(fileContent);
 
-        TypeSpec endpointClass = XMLRPCPoet.generate(file, "XMLRPC", XML_RPC_ALIASES);
+        EndpointNode rootNode = EndpointTreeGenerator.process(new ByteArrayInputStream(fileContent));
+        TypeSpec endpointClass = XMLRPCPoet.generate(new ByteArrayInputStream(fileContent), "XMLRPC", XML_RPC_ALIASES);
         writeEndpointClassToFile(endpointClass);
     }
 
     private void generateWPAPIEndpointFile() throws IOException {
-        File file = new File(WPAPI_ENDPOINT_FILE);
-        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WPAPI_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPAPI", WPAPIEndpoint.class,
                 WPAPI_VARIABLE_ENDPOINT_PATTERN);
@@ -134,8 +139,8 @@ public class EndpointProcessor extends AbstractProcessor {
     }
 
     private void generateWCWPAPIPluginEndpointFile() throws IOException {
-        File file = new File(WPORG_API_WC_ENDPOINT_FILE);
-        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WPORG_API_WC_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WOOCOMMERCE", WCWPAPIEndpoint.class,
                 WPAPI_VARIABLE_ENDPOINT_PATTERN);
@@ -143,8 +148,8 @@ public class EndpointProcessor extends AbstractProcessor {
     }
 
     private void generateWPORGAPIEndpointFile() throws IOException {
-        File file = new File(WPORG_API_ENDPOINT_FILE);
-        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WPORG_API_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(inputStream);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPORGAPI", WPOrgAPIEndpoint.class,
                 WPORG_API_VARIABLE_ENDPOINT_PATTERN);
