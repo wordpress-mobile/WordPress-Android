@@ -991,6 +991,13 @@ public class EditPostSettingsFragment extends Fragment {
     // Featured Image Helpers
 
     public void updateFeaturedImage(long featuredImageId) {
+        if (isAdded() && featuredImageId != 0) {
+            int postId = getEditPostRepository().getId();
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                    TrackableEvent.IMAGE_PICKED,
+                    postId
+            );
+        }
         EditPostRepository postRepository = getEditPostRepository();
         if (postRepository == null) {
             return;
