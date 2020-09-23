@@ -12,6 +12,8 @@
 /sites/$site/stats/orders/
 /sites/$site/stats/top-earners
 
+/sites/$site/block-layouts
+
 /users/username/suggestions/
 
 /segments

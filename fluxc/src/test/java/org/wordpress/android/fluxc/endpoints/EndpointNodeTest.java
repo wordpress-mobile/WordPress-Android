@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.annotations.endpoint.EndpointTreeGenerator;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -59,7 +60,7 @@ public class EndpointNodeTest {
         temp.deleteOnExit();
 
         // An empty file should return a root EndpointNode with no children
-        EndpointNode endpointTree = EndpointTreeGenerator.process(temp);
+        EndpointNode endpointTree = EndpointTreeGenerator.process(new FileInputStream(temp));
 
         assertFalse(endpointTree.hasChildren());
 
@@ -68,7 +69,7 @@ public class EndpointNodeTest {
         out.newLine();
         out.close();
 
-        endpointTree = EndpointTreeGenerator.process(temp);
+        endpointTree = EndpointTreeGenerator.process(new FileInputStream(temp));
 
         assertFalse(endpointTree.hasChildren());
 
@@ -81,7 +82,7 @@ public class EndpointNodeTest {
         out.write("/sites/$site/posts");
         out.close();
 
-        endpointTree = EndpointTreeGenerator.process(temp);
+        endpointTree = EndpointTreeGenerator.process(new FileInputStream(temp));
 
         assertEquals(1, endpointTree.getChildren().size());
         assertEquals("/sites/$site/posts/",
@@ -98,7 +99,7 @@ public class EndpointNodeTest {
         out.write("/sites/");
         out.close();
 
-        endpointTree = EndpointTreeGenerator.process(temp);
+        endpointTree = EndpointTreeGenerator.process(new FileInputStream(temp));
 
         assertEquals(1, endpointTree.getChildren().size());
         assertEquals("/sites/$site/posts/",
@@ -109,7 +110,7 @@ public class EndpointNodeTest {
         out.write("/sites/$site/posts");
         out.close();
 
-        endpointTree = EndpointTreeGenerator.process(temp);
+        endpointTree = EndpointTreeGenerator.process(new FileInputStream(temp));
 
         assertEquals(1, endpointTree.getChildren().size());
         assertEquals("/sites/$site/posts/",
@@ -122,7 +123,7 @@ public class EndpointNodeTest {
         out.write("/me/");
         out.close();
 
-        endpointTree = EndpointTreeGenerator.process(temp);
+        endpointTree = EndpointTreeGenerator.process(new FileInputStream(temp));
 
         assertEquals(2, endpointTree.getChildren().size());
         assertEquals("/", endpointTree.getLocalEndpoint());
