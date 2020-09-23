@@ -36,24 +36,24 @@
                 android:elevation="0dp"
                 app:layout_collapseMode="pin">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_height="@dimen/toolbar_height"
                     android:orientation="vertical">
 
                     <include
                         layout="@layout/bottom_sheet_handle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/mlp_layouts_handle_margin_bottom" />
+                        android:layout_gravity="top" />
 
                     <include
                         layout="@layout/modal_layout_picker_titlebar"
                         android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content" />
 
-                </LinearLayout>
+                </FrameLayout>
 
             </com.google.android.material.appbar.MaterialToolbar>
 
