@@ -115,6 +115,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onAttach(context: Context) {
