@@ -577,4 +577,6 @@
     <dimen name="mlp_layout_card_radius">@dimen/margin_small</dimen>
     <dimen name="mlp_layouts_margin_bottom">84dp</dimen>
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
+    <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
+    <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
 </resources>

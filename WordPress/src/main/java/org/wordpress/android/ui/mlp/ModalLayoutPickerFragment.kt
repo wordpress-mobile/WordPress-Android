@@ -18,13 +18,18 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
@@ -132,17 +137,36 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
                 is LoadingUiState -> {
+                    setTitleVisibility(uiState.isHeaderVisible)
+                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
                 }
                 is ContentUiState -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                     setButtonsVisibility(uiState.buttonsUiState)
                     setTitleVisibility(uiState.isHeaderVisible)
+                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
                 }
                 is ErrorUiState -> {
+                    setTitleVisibility(uiState.isHeaderVisible)
+                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
+                    ToastUtils.showToast(activity, uiState.message, SHORT)
                 }
             }
         })
+
+        viewModel.onCategorySelected.observe(this, Observer {
+            it?.applyIfNotHandled {
+                layoutsRecyclerView?.smoothScrollToPosition(0)
+            }
+        })
+    }
+
+    private fun showLoadingSkeleton(skeleton: Boolean) {
+        categoriesSkeleton.setVisible(skeleton)
+        categoriesRecyclerView.setVisible(!skeleton)
+        layoutsSkeleton.setVisible(skeleton)
+        layoutsRecyclerView.setVisible(!skeleton)
     }
 
     private fun setButtonsVisibility(uiState: ButtonsUiState) {

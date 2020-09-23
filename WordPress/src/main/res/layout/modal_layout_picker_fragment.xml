@@ -59,6 +59,11 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <include
+            layout="@layout/modal_layout_picker_categories_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categoriesRecyclerView"
             android:layout_width="match_parent"
@@ -72,6 +77,12 @@
             android:scrollbars="none" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        layout="@layout/modal_layout_picker_layouts_skeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/layoutsRecyclerView"
