@@ -234,7 +234,7 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation 'com.squareup.okio:okio:1.14.0'
+    implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
@@ -258,15 +258,15 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation 'androidx.test:core:1.2.0'
 
-    androidTestImplementation 'org.mockito:mockito-android:2.27.0'
+    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     testImplementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
 
-    androidTestImplementation 'com.squareup.okio:okio:1.14.0'
+    androidTestImplementation 'com.squareup.okio:okio:2.8.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
