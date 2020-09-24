@@ -13,7 +13,6 @@ import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaInsertResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.NoChange
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.util.LocaleManagerWrapper
 
@@ -102,7 +101,6 @@ data class MediaLoader(
                     domainItems = partialResult.data
             )
             is Failure -> state.copy(isLoading = false, error = partialResult.message)
-            is NoChange -> state
         }
     }
 
