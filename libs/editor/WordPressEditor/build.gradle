@@ -79,7 +79,8 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    implementation (project(':@wordpress_react-native-bridge')) {
+    implementation('com.github.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge:999.999.999.5') {
+    //implementation (project(':@wordpress_react-native-bridge')) {
         exclude group: 'com.squareup.okhttp3'
         exclude group: "com.android.volley"
         exclude group: 'com.google.code.findbugs'
@@ -92,6 +93,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+
+    def hermesPath = 'libs/'
+    debugImplementation files(hermesPath + "hermes-debug.aar")
+    releaseImplementation files(hermesPath + "hermes-release.aar")
 }
 
 signing {
