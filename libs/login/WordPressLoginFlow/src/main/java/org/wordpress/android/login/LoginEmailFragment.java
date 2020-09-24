@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
@@ -112,11 +113,17 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
                                                  boolean shouldUseNewLayout) {
+        return newInstance(isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, null);
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout, String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
         args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
+        args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
         return fragment;
     }
@@ -142,10 +149,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
-                if (mShouldUseNewLayout) {
-                    label.setText(R.string.enter_email_to_continue_wordpress_com);
-                } else {
+            case SELFHOSTED_ONLY:
+                if (!mShouldUseNewLayout) {
                     label.setText(R.string.enter_email_wordpress_com);
+                } else if (!TextUtils.isEmpty(mLoginSiteUrl)) {
+                    label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                } else {
+                    label.setText(R.string.enter_email_to_continue_wordpress_com);
                 }
                 break;
             case WOO_LOGIN_MODE:
@@ -373,7 +383,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             if (isAdded()) {
                 mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                 mIsSocialLogin = true;
-                mLoginListener.addGoogleLoginFragment();
+                mLoginListener.addGoogleLoginFragment(mIsSignupFromLoginEnabled);
             } else {
                 AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
                 showErrorDialog(getString(R.string.login_error_generic_start));

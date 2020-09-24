@@ -76,7 +76,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setMessage(mMessage)
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                     dismissedByPositiveButton = true

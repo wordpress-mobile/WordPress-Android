@@ -10,7 +10,9 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:liftOnScrollTargetViewId="@+id/recycler">
+        android:elevation="@dimen/appbar_elevation"
+        app:liftOnScrollTargetViewId="@+id/recycler"
+        app:theme="@style/WordPress.ActionBar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"

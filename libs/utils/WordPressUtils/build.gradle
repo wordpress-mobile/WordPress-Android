@@ -91,6 +91,7 @@ bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
     key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
     publications = ['UtilsPublication']
+    publish = true
     pkg {
         repo = 'maven'
         name = 'utils'

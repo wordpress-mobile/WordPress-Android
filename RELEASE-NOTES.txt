@@ -1,16 +1,21 @@
+15.9
+-----
+* [*] Block Editor: Add message that mentions are unavailable when device is offline. [https://github.com/wordpress-mobile/WordPress-Android/pull/12968]
+
 15.8
 -----
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.
+* [***] Block Editor: Full-width and wide alignment support for Group, Cover and Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2559]
+* [**] Block Editor: Add support for rounded style in Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2591]
 * [**] Improved AppBar and Site Picker design.
-
+* [**] Block Editor: Fixed a case where adding a block made the toolbar jump [https://github.com/WordPress/gutenberg/pull/24573] 
  
 15.7
 -----
 * [**] Block Editor: New block: Pullquote
 * [**] Block Editor: Block settings now immediately reflect changes from menu sliders.
- * [***] Reader: Introduced a new Discover tab tailored for each user.
- * [*] Reader: Added "(un)follow" button to the site and topic detail screens.
-
+* [***] Reader: Introduced a new Discover tab tailored for each user.
+* [*] Reader: Added "(un)follow" button to the site and topic detail screens.
 * [*] Media: Fixed a bug that would allow you to pick unsupported media that then couldn't be uploaded.
 
 15.6
