@@ -29,7 +29,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
@@ -706,20 +705,19 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             systemPickerEnabled = true,
             editingEnabled = editingEnabled,
             queueResults = false,
+            defaultSearchView = false,
             title = R.string.wp_media_title
     )
 
     private fun assertStoriesFabIsVisible() {
         uiStates.last().fabUiModel.let { model ->
-            assertThat(model is FabUiModel).isTrue()
-            assertThat((model as FabUiModel).show).isEqualTo(true)
+            assertThat(model.show).isEqualTo(true)
         }
     }
 
     private fun assertStoriesFabIsHidden() {
         uiStates.last().fabUiModel.let { model ->
-            assertThat(model is FabUiModel).isTrue()
-            assertThat((model as FabUiModel).show).isEqualTo(false)
+            assertThat(model.show).isEqualTo(false)
         }
     }
 }

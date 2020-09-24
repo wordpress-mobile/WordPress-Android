@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.channels.Channel
@@ -34,7 +33,7 @@ class MediaLoaderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        mediaLoader = MediaLoader(mediaSource, localeManagerWrapper, mediaTypes)
+        mediaLoader = MediaLoader(mediaSource, localeManagerWrapper)
         firstMediaItem = MediaItem(identifier1, "url://first_item", "first item", IMAGE, "image/jpeg", 1)
         secondMediaItem = MediaItem(identifier2, "url://second_item", "second item", VIDEO, "video/mpeg", 2)
     }
@@ -44,12 +43,10 @@ class MediaLoaderTest : BaseUnitTest() {
         val mediaItems = listOf(firstMediaItem)
         whenever(
                 mediaSource.load(
-                        mediaTypes,
                         forced = false,
                         loadMore = false
                 )
-        ).thenReturn(MediaLoadingResult.Success())
-        whenever(mediaSource.get(mediaTypes)).thenReturn(mediaItems)
+        ).thenReturn(MediaLoadingResult.Success(mediaItems, hasMore = false))
 
         performAction(LoadAction.Start(), true)
 
@@ -59,7 +56,7 @@ class MediaLoaderTest : BaseUnitTest() {
     @Test
     fun `shows an error when loading fails`() = withMediaLoader { resultModel, performAction ->
         val errorMessage = "error"
-        whenever(mediaSource.load(mediaTypes, forced = false, loadMore = false)).thenReturn(
+        whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(
                 MediaLoadingResult.Failure(
                         errorMessage
                 )
@@ -72,14 +69,10 @@ class MediaLoaderTest : BaseUnitTest() {
 
     @Test
     fun `loads next page`() = withMediaLoader { resultModel, performAction ->
-        val firstPage = MediaLoadingResult.Success(hasMore = true)
-        val secondPage = MediaLoadingResult.Success()
-        whenever(mediaSource.load(mediaTypes, forced = false, loadMore = false)).thenReturn(firstPage)
-        whenever(mediaSource.load(mediaTypes, forced = false, loadMore = true)).thenReturn(secondPage)
-        whenever(mediaSource.get(mediaTypes)).thenReturn(
-                listOf(firstMediaItem),
-                listOf(firstMediaItem, secondMediaItem)
-        )
+        val firstPage = MediaLoadingResult.Success(listOf(firstMediaItem), hasMore = true)
+        val secondPage = MediaLoadingResult.Success(listOf(firstMediaItem, secondMediaItem))
+        whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(firstPage)
+        whenever(mediaSource.load(forced = false, loadMore = true)).thenReturn(secondPage)
 
         performAction(LoadAction.Start(), true)
 
@@ -92,12 +85,11 @@ class MediaLoaderTest : BaseUnitTest() {
 
     @Test
     fun `shows an error when loading next page fails`() = withMediaLoader { resultModel, performAction ->
-        val firstPage = MediaLoadingResult.Success(hasMore = true)
-        whenever(mediaSource.get(mediaTypes)).thenReturn(listOf(firstMediaItem))
+        val firstPage = MediaLoadingResult.Success(listOf(firstMediaItem), hasMore = true)
         val message = "error"
         val secondPage = MediaLoadingResult.Failure(message)
-        whenever(mediaSource.load(mediaTypes, forced = false, loadMore = false)).thenReturn(firstPage)
-        whenever(mediaSource.load(mediaTypes, forced = false, loadMore = true)).thenReturn(secondPage)
+        whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(firstPage)
+        whenever(mediaSource.load(forced = false, loadMore = true)).thenReturn(secondPage)
 
         performAction(LoadAction.Start(), true)
 
@@ -110,9 +102,9 @@ class MediaLoaderTest : BaseUnitTest() {
 
     @Test
     fun `refresh overrides data`() = withMediaLoader { resultModel, performAction ->
-        val firstResult = MediaLoadingResult.Success()
-        whenever(mediaSource.load(eq(mediaTypes), any(), any())).thenReturn(firstResult)
-        whenever(mediaSource.get(mediaTypes)).thenReturn(listOf(firstMediaItem), listOf(secondMediaItem))
+        val firstResult = MediaLoadingResult.Success(listOf(firstMediaItem))
+        val secondResult = MediaLoadingResult.Success(listOf(secondMediaItem))
+        whenever(mediaSource.load(any(), any(), isNull())).thenReturn(firstResult, secondResult)
 
         performAction(LoadAction.Start(), true)
 
@@ -126,16 +118,15 @@ class MediaLoaderTest : BaseUnitTest() {
     @Test
     fun `filters out media item`() = withMediaLoader { resultModel, performAction ->
         val mediaItems = listOf(firstMediaItem, secondMediaItem)
+        val filter = "second"
+        whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(MediaLoadingResult.Success(mediaItems))
         whenever(
                 mediaSource.load(
-                        mediaTypes,
                         forced = false,
-                        loadMore = false
+                        loadMore = false,
+                        filter = filter
                 )
-        ).thenReturn(MediaLoadingResult.Success())
-        whenever(mediaSource.get(mediaTypes)).thenReturn(mediaItems)
-        val filter = "second"
-        whenever(mediaSource.get(mediaTypes, filter)).thenReturn(listOf(secondMediaItem))
+        ).thenReturn(MediaLoadingResult.Success(listOf(secondMediaItem)))
 
         performAction(LoadAction.Start(), true)
 
@@ -151,16 +142,20 @@ class MediaLoaderTest : BaseUnitTest() {
     @Test
     fun `clears filter`() = withMediaLoader { resultModel, performAction ->
         val mediaItems = listOf(firstMediaItem, secondMediaItem)
+        val filter = "second"
         whenever(
                 mediaSource.load(
-                        mediaTypes,
+                        forced = false,
+                        loadMore = false,
+                        filter = filter
+                )
+        ).thenReturn(MediaLoadingResult.Success(listOf(secondMediaItem)))
+        whenever(
+                mediaSource.load(
                         forced = false,
                         loadMore = false
                 )
-        ).thenReturn(MediaLoadingResult.Success())
-        val filter = "second"
-        whenever(mediaSource.get(eq(mediaTypes), eq(filter))).thenReturn(listOf(secondMediaItem))
-        whenever(mediaSource.get(eq(mediaTypes), isNull())).thenReturn(mediaItems)
+        ).thenReturn(MediaLoadingResult.Success(mediaItems))
 
         performAction(LoadAction.Start(), true)
         performAction(LoadAction.Filter(filter), true)
