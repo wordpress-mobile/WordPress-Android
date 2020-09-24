@@ -221,8 +221,8 @@ class MediaPickerViewModel @Inject constructor(
             }
         }
 
-        val onlyImagesSelected = items?.any { it.type != IMAGE && selectedIds.contains(it.identifier) } ?: false
-        val showEditActionButton = mediaPickerSetup.editingEnabled && !onlyImagesSelected
+        val onlyImagesSelected = items?.none { it.type != IMAGE && selectedIds.contains(it.identifier) } ?: true
+        val showEditActionButton = mediaPickerSetup.editingEnabled && onlyImagesSelected
         return ActionModeUiModel.Visible(
                 title,
                 EditActionUiModel(
