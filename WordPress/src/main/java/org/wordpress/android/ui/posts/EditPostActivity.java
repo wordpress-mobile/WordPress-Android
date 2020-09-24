@@ -74,6 +74,7 @@ import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
+import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -167,7 +168,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
-import org.wordpress.android.ui.stories.media.StoryEditorMediaSaveListener;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -334,7 +334,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditorMediaUploadListener mEditorMediaUploadListener;
-    private StoryEditorMediaSaveListener mStoryEditorMediaSaveListener;
+    private StorySaveMediaListener mStorySaveMediaListener;
     private EditorPhotoPicker mEditorPhotoPicker;
 
     private ProgressDialog mProgressDialog;
@@ -570,8 +570,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
 
-            if (mEditorFragment instanceof StoryEditorMediaSaveListener) {
-                mStoryEditorMediaSaveListener = (StoryEditorMediaSaveListener) mEditorFragment;
+            if (mEditorFragment instanceof StorySaveMediaListener) {
+                mStorySaveMediaListener = (StorySaveMediaListener) mEditorFragment;
             }
         }
 
@@ -2153,8 +2153,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         reattachUploadingMediaForAztec();
                     }
 
-                    if (mEditorFragment instanceof StoryEditorMediaSaveListener) {
-                        mStoryEditorMediaSaveListener = (StoryEditorMediaSaveListener) mEditorFragment;
+                    if (mEditorFragment instanceof StorySaveMediaListener) {
+                        mStorySaveMediaListener = (StorySaveMediaListener) mEditorFragment;
                     }
                     break;
                 case PAGE_SETTINGS:
@@ -3093,8 +3093,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
         String localMediaId = String.valueOf(event.getFrameId());
-        if (mStoryEditorMediaSaveListener != null) {
-            mStoryEditorMediaSaveListener.onMediaSaveReattached(localMediaId, 0.0f);
+        if (mStorySaveMediaListener != null) {
+            mStorySaveMediaListener.onMediaSaveReattached(localMediaId, 0.0f);
         }
     }
 
@@ -3105,8 +3105,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
         String localMediaId = String.valueOf(event.getFrameId());
-        if (mStoryEditorMediaSaveListener != null) {
-            mStoryEditorMediaSaveListener.onMediaSaveProgress(localMediaId, event.getProgress());
+        if (mStorySaveMediaListener != null) {
+            mStorySaveMediaListener.onMediaSaveProgress(localMediaId, event.getProgress());
         }
     }
 
@@ -3117,11 +3117,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
         String localMediaId = String.valueOf(event.getFrameId());
-        if (mStoryEditorMediaSaveListener != null) {
+        if (mStorySaveMediaListener != null) {
             MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
             if (mediaModel != null) {
                 MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-                mStoryEditorMediaSaveListener.onMediaSaveSucceeded(localMediaId, mediaFile);
+                mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaFile);
             }
         }
     }
@@ -3133,8 +3133,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
         String localMediaId = String.valueOf(event.getFrameId());
-        if (mStoryEditorMediaSaveListener != null) {
-            mStoryEditorMediaSaveListener.onMediaSaveFailed(localMediaId);
+        if (mStorySaveMediaListener != null) {
+            mStorySaveMediaListener.onMediaSaveFailed(localMediaId);
         }
     }
 
