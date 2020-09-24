@@ -327,11 +327,13 @@ class MediaPickerViewModel @Inject constructor(
         var job: Job? = null
         job = launch {
             mediaLoader.insertMedia(ids).collect {
-                when(it) {
-                    is InsertModel.Progress -> _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
-                        job?.cancel()
-                        _showProgressDialog.postValue(Hidden)
-                    })
+                when (it) {
+                    is InsertModel.Progress -> {
+                        _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
+                            job?.cancel()
+                            _showProgressDialog.postValue(Hidden)
+                        })
+                    }
                     is InsertModel.Error -> {
                         job = null
                         _showProgressDialog.postValue(Hidden)
@@ -522,7 +524,7 @@ class MediaPickerViewModel @Inject constructor(
     data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)
 
     sealed class ProgressDialogUiModel {
-        object Hidden: ProgressDialogUiModel()
-        data class Visible(val title: Int, val cancelAction: () -> Unit): ProgressDialogUiModel()
+        object Hidden : ProgressDialogUiModel()
+        data class Visible(val title: Int, val cancelAction: () -> Unit) : ProgressDialogUiModel()
     }
 }
