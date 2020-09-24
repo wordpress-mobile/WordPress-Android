@@ -62,7 +62,7 @@ class StockMediaStoreTest {
 
         val result = store.fetchStockMedia(filter, false)
 
-        verify(sqlUtils).insert(filter, 0, 1, listOf(stockMediaItem))
+        verify(sqlUtils).insert(0, 1, listOf(stockMediaItem))
 
         assertThat(result.searchTerm).isEqualTo(filter)
         assertThat(result.canLoadMore).isTrue()
@@ -80,7 +80,7 @@ class StockMediaStoreTest {
 
         val result = store.fetchStockMedia(filter, false)
 
-        verify(sqlUtils).insert(filter, 0, null, listOf(stockMediaItem))
+        verify(sqlUtils).insert(0, null, listOf(stockMediaItem))
 
         assertThat(result.searchTerm).isEqualTo(filter)
         assertThat(result.canLoadMore).isFalse()
@@ -93,14 +93,14 @@ class StockMediaStoreTest {
         val filter = "filter"
         val mediaList = listOf(stockMediaModel)
         val nextPage = 2
-        whenever(sqlUtils.getNextPage(filter)).thenReturn(nextPage)
+        whenever(sqlUtils.getNextPage()).thenReturn(nextPage)
         whenever(restClient.searchStockMedia(filter, nextPage, StockMediaStore.PAGE_SIZE)).thenReturn(
                 FetchedStockMediaListPayload(mediaList, filter, 0, false)
         )
 
         val result = store.fetchStockMedia(filter, true)
 
-        verify(sqlUtils).insert(filter, 2, null, listOf(stockMediaItem))
+        verify(sqlUtils).insert(2, null, listOf(stockMediaItem))
         verify(sqlUtils, never()).clear()
 
         assertThat(result.searchTerm).isEqualTo(filter)
@@ -113,7 +113,7 @@ class StockMediaStoreTest {
     fun `fetches first page when next page not available and loadMore is true`() = test {
         val filter = "filter"
         val mediaList = listOf(stockMediaModel)
-        whenever(sqlUtils.getNextPage(filter)).thenReturn(null)
+        whenever(sqlUtils.getNextPage()).thenReturn(null)
         whenever(restClient.searchStockMedia(filter, 0, StockMediaStore.PAGE_SIZE)).thenReturn(
                 FetchedStockMediaListPayload(mediaList, filter, 0, false)
         )
@@ -122,7 +122,7 @@ class StockMediaStoreTest {
 
         inOrder(sqlUtils) {
             verify(sqlUtils).clear()
-            verify(sqlUtils).insert(filter, 0, null, listOf(stockMediaItem))
+            verify(sqlUtils).insert(0, null, listOf(stockMediaItem))
         }
 
         assertThat(result.searchTerm).isEqualTo(filter)
