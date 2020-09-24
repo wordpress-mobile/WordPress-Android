@@ -68,9 +68,10 @@ sealed class SiteCreationDomainViewHolder(internal val parent: ViewGroup, @Layou
         }
 
         private fun addRetryCompoundDrawable() {
-            val drawable = itemView.context.getDrawable(R.drawable.retry_icon)
-            drawable.setTint(ContextCompat.getColor(itemView.context, R.color.primary))
-            retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            itemView.context.getDrawable(R.drawable.retry_icon)?.let { drawable ->
+                drawable.setTint(ContextCompat.getColor(itemView.context, R.color.primary))
+                retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+            }
         }
 
         override fun onBind(uiState: DomainsListItemUiState) {

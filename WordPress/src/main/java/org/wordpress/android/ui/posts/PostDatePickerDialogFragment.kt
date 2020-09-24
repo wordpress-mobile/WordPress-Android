@@ -32,7 +32,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
         }
 
         val datePickerDialog = DatePickerDialog(
-                activity,
+                requireContext(),
                 null,
                 viewModel.year ?: 0,
                 viewModel.month ?: 0,
