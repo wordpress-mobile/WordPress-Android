@@ -22,6 +22,7 @@ import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryFrameItemType.VIDEO
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.compose.story.StoryRepository
 import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
@@ -60,12 +61,14 @@ import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -446,10 +449,18 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
 
             val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
+            // if we are editing this Story Block, then the id is assured to be a remote media file id, but
+            // the frame no longer points to such media Id on the site given we are just about to save a
+            // new flattened media. Hence, we need to set a new temporary Id we can use to identify
+            // this frame within the Gutenberg Story block inside a Post, and match it to an existing Story frame in
+            // our StoryRepository.
+            // All of this while still keeping a valid "old" remote URl and mediaId so the block is still
+            // rendered as non-empty on mobile gutenberg while the actual flattening happens on the service.
             val updatedStoryBlock =
-                    saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockString(
-                            getMediaFilesFromBackgroundMediaIdsInStory(storyIndex)
+                    saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
+                            buildStoryMediaFileDataListFromStoryFrameIndexes(storyIndex)
                     )
+
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             setResult(Activity.RESULT_OK, savedContentIntent)
 
@@ -463,23 +474,27 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
-    private fun getMediaFilesFromBackgroundMediaIdsInStory(storyIdx: StoryIndex): List<MediaFile> {
-        val mediaFiles = ArrayList<MediaFile>()
-        val story = StoryRepository.getStoryAtIndex(storyIdx)
-        for (frame in story.frames) {
+    private fun buildStoryMediaFileDataListFromStoryFrameIndexes(
+        storyIndex: StoryIndex
+    ): ArrayList<StoryMediaFileData> {
+        val storyMediaFileDataList = ArrayList<StoryMediaFileData>() // holds media files
+        val story = StoryRepository.getStoryAtIndex(storyIndex)
+        for ((frameIndex, frame) in story.frames.withIndex()) {
             frame.id?.let {
-                // WARNING: we assume the only path to creation is by using the Story Creator (not mobile gutenberg
-                // by inserting a new block from the block picker) so, we ALWAYS should have a remote mediaId
-                // here. If things change, we'll need to cover the situation for finding a MediaModel from both
-                // a local ID (if not yet uploaded to the site) and a remote ID (after uploading to the site).
                 val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
                 val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
                 mediaFile?.let {
-                    mediaFiles.add(it)
+                    val storyMediaFileData =
+                            saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                    mediaFile = it,
+                                    temporaryId = "$storyIndex-$frameIndex"
+                            )
+                    frame.id = storyMediaFileData.id
+                    storyMediaFileDataList.add(storyMediaFileData)
                 }
             }
         }
-        return mediaFiles
+        return storyMediaFileDataList
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

@@ -199,6 +199,13 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             event.metadata?.let {
                 val site = it.getSerializable(WordPress.SITE) as SiteModel
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
+                if (event.isEditMode) {
+                    // we're done using the temporary ids, let's clean mediaFiles attribute from the blocks that have
+                    // those
+                    saveStoryGutenbergBlockUseCase.cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(
+                            editPostRepository
+                    )
+                }
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
             }
