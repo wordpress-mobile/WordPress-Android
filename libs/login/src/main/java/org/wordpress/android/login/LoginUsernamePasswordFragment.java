@@ -279,6 +279,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override public void onResume() {
         super.onResume();
+        mAnalyticsListener.usernamePasswordScreenResumed();
         updatePrimaryButtonEnabledStatus();
     }
 
@@ -695,3 +696,4 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         finishLogin();
     }
 }
+
