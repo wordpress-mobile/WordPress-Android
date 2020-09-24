@@ -67,14 +67,14 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
 private const val POST_PARAM_POSITION = 0
-private const val ON_ITEM_RENDERED_PARAM_POSITION = 8
-private const val ON_TAG_CLICKED_PARAM_POSITION = 14
-private const val ON_BUTTON_CLICKED_PARAM_POSITION = 6
-private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 12
-private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 13
-private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 7
-private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 10
-private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 11
+private const val ON_ITEM_RENDERED_PARAM_POSITION = 7
+private const val ON_TAG_CLICKED_PARAM_POSITION = 13
+private const val ON_BUTTON_CLICKED_PARAM_POSITION = 5
+private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 11
+private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 12
+private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 6
+private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 9
+private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 10
 private const val RECOMMENDED_BLOG_PARAM_POSITION = 0
 private const val ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION = 1
 private const val NUMBER_OF_ITEMS = 10L
@@ -124,7 +124,7 @@ class ReaderDiscoverViewModelTest {
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
+                        anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
                         anyOrNull(), anyOrNull()
                 )

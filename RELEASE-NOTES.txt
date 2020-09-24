@@ -1,6 +1,13 @@
+15.9
+-----
+ 
 15.8
 -----
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.
+* [***] Block Editor: Full-width and wide alignment support for Group, Cover and Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2559]
+* [**] Block Editor: Add support for rounded style in Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2591]
+* [**] Improved AppBar and Site Picker design.
+* [**] Block Editor: Fixed a case where adding a block made the toolbar jump [https://github.com/WordPress/gutenberg/pull/24573] 
 
  
 15.7
@@ -11,13 +18,13 @@
  * [*] Reader: Added "(un)follow" button to the site and topic detail screens.
 
 * [*] Media: Fixed a bug that would allow you to pick unsupported media that then couldn't be uploaded.
- 
+
 15.6
 -----
 * [**] Block Editor: Add settings to allow changing column widths
 * [**] Block Editor: Media editing support in Gallery block.
 * [*] Block Editor: Improved logic for creating undo levels.
- 
+
 15.5
 -----
 * [***] Block Editor: New feature for WordPress.com and Jetpack sites: auto-complete username mentions. An auto-complete popup will show up when the user types the @ character in the block editor.
@@ -36,13 +43,13 @@
 * [***] Block Editor: Media editing support in Media & Text block.
 * [***] Block Editor: New block: Social Icons
 * [*] Block Editor: Cover block placeholder is updated to allow users to start the block with a background color
- 
+
 15.3
 -----
 * [*] Improve wording for confirmation dialogs when trashing posts
 * [***] Block Editor: Adds Copy, Cut, Paste, and Duplicate functionality to blocks
 * [***] Block Editor: Users can now individually edit unsupported blocks found in posts or pages. Not available on self-hosted sites or sites defaulted to classic editor.
- 
+
 15.2
 -----
 * [**] Fixes tons of rendering issues in Reader post detail by changing the technical solution (shared CSS file).

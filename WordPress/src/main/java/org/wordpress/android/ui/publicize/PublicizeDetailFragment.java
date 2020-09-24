@@ -16,6 +16,7 @@ import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeService;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.util.ToastUtils;
@@ -33,6 +34,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
     private RecyclerView mRecycler;
     private View mConnectionsContainer;
     private ViewGroup mServiceContainer;
+    private View mNestedScrollView;
 
     @Inject AccountStore mAccountStore;
 
@@ -83,6 +85,7 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
         mServiceContainer = rootView.findViewById(R.id.service_container);
         mConnectBtn = mServiceContainer.findViewById(R.id.button_connect);
         mRecycler = rootView.findViewById(R.id.recycler_view);
+        mNestedScrollView = rootView.findViewById(R.id.publicize_details_nested_scroll_View);
 
         return rootView;
     }
@@ -92,6 +95,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment
         super.onResume();
         loadData();
         setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+        }
     }
 
     public void loadData() {

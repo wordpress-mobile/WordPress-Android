@@ -145,6 +145,23 @@
             android:name=".ui.accounts.HelpActivity"
             android:label="@string/help_screen_title"
             android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name="zendesk.support.guide.HelpCenterActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.guide.ViewArticleActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.request.RequestActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.requestlist.RequestListActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
         <!-- empty title -->
 
         <!-- Preferences activities -->
@@ -211,7 +228,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:theme="@style/WordPress.Editor.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -266,7 +283,7 @@
         <activity
             android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
-            android:theme="@style/WordPress.Editor.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- plans -->
         <activity
@@ -587,6 +604,10 @@
         <activity
             android:name=".ui.gif.GifPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".util.config.manual.ManualFeatureConfigActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity
@@ -636,7 +657,7 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:label="@string/edit_photo_screen_title"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
         <service

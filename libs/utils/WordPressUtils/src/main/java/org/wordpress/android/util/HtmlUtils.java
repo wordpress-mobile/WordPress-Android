@@ -14,6 +14,8 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.util.helpers.WPHtmlTagHandler;
 import org.wordpress.android.util.helpers.WPQuoteSpan;
 
+import static org.wordpress.android.util.AppLog.T.UTILS;
+
 public class HtmlUtils {
     /**
      * Removes html from the passed string - relies on Html.fromHtml which handles invalid HTML,
@@ -126,8 +128,15 @@ public class HtmlUtils {
             html = (SpannableStringBuilder) Html.fromHtml(source, imageGetter, new WPHtmlTagHandler());
         } catch (RuntimeException runtimeException) {
             // In case our tag handler fails
-            html = (SpannableStringBuilder) Html.fromHtml(source, imageGetter, null);
+            try {
+                html = (SpannableStringBuilder) Html.fromHtml(source, imageGetter, null);
+            } catch (IllegalArgumentException illegalArgumentException) {
+                // In case the html is missing a required parameter (for example: "src" missing from img)
+                html = new SpannableStringBuilder("");
+                AppLog.w(UTILS, "Could not parse html");
+            }
         }
+
         EmoticonsUtils.replaceEmoticonsWithEmoji(html);
         QuoteSpan[] spans = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {

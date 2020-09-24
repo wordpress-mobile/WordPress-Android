@@ -3,7 +3,7 @@ package org.wordpress.android.util.config
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
-import java.lang.IllegalArgumentException
+import org.wordpress.android.util.config.manual.ManualFeatureConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,7 +11,8 @@ import javax.inject.Singleton
 class AppConfig
 @Inject constructor(
     private val remoteConfig: RemoteConfig,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val manualFeatureConfig: ManualFeatureConfig
 ) {
     /**
      * We need to keep the value of an already loaded feature flag to make sure the value is not changed while using the app.
@@ -36,6 +37,9 @@ class AppConfig
      * @param feature feature which we're checking remotely
      */
     fun isEnabled(feature: FeatureConfig): Boolean {
+        if (manualFeatureConfig.hasManualSetup(feature)) {
+            return manualFeatureConfig.isManuallyEnabled(feature)
+        }
         if (feature.remoteField == null) {
             return feature.buildConfigValue
         }
