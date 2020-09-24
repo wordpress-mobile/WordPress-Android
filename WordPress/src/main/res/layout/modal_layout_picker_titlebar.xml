@@ -16,5 +16,6 @@
     <TextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerHeader"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:text="@string/mlp_choose_layout_title" />
 </FrameLayout>

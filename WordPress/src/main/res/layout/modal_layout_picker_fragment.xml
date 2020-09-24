@@ -45,6 +45,7 @@
                         layout="@layout/bottom_sheet_handle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_extra_large"
                         android:layout_gravity="top" />
 
                     <include
