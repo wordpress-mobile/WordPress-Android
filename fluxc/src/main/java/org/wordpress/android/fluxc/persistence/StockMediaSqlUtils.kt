@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.StockMediaPageTable
-import com.wellsql.generated.StockMediaTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
@@ -22,7 +21,6 @@ class StockMediaSqlUtils
         items: List<StockMediaItem>
     ) {
         val writableDb = WellSql.giveMeWritableDb()
-        deleteAllWithoutFilter(filter)
         writableDb.beginTransaction()
         WellSql.insert(StockMediaPageBuilder(filter = filter, page = page, nextPage = nextPage)).execute()
         WellSql.insert(
@@ -41,8 +39,7 @@ class StockMediaSqlUtils
         writableDb.endTransaction()
     }
 
-    fun selectAll(filter: String): List<StockMediaItem> {
-        deleteAllWithoutFilter(filter)
+    fun selectAll(): List<StockMediaItem> {
         return WellSql.select(StockMediaBuilder::class.java).asModel.map {
             StockMediaItem(
                     it.itemId,
@@ -65,19 +62,6 @@ class StockMediaSqlUtils
                 .equals(StockMediaPageTable.FILTER, filter)
                 .endWhere()
                 .orderBy(StockMediaPageTable.PAGE, SelectQuery.ORDER_DESCENDING).asModel.firstOrNull()
-    }
-
-    private fun deleteAllWithoutFilter(filter: String) {
-        WellSql.delete(StockMediaBuilder::class.java)
-                .where()
-                .not()
-                .equals(StockMediaTable.FILTER, filter)
-                .endWhere().execute()
-        WellSql.delete(StockMediaPageBuilder::class.java)
-                .where()
-                .not()
-                .equals(StockMediaPageTable.FILTER, filter)
-                .endWhere().execute()
     }
 
     fun clear() {
