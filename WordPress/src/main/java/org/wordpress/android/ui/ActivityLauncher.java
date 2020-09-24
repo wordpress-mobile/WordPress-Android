@@ -1106,9 +1106,6 @@ public class ActivityLauncher {
                 Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
                 context.startActivity(chooser);
             }
-        } finally {
-            // re-enable deeplinking
-            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 
