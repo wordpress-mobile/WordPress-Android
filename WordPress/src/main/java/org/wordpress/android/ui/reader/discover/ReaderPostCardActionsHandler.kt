@@ -162,7 +162,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         val param = ReaderSiteFollowUseCase.Param(
                 blogId = recommendedBlogUiState.blogId,
                 blogName = recommendedBlogUiState.name,
-                feedId = recommendedBlogUiState.feedId ?: 0
+                feedId = recommendedBlogUiState.feedId
         )
         followSite(param)
     }
@@ -251,8 +251,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                             )
                     )
                 }
-                BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> {
-                } // do nothing
+                BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> Unit // do nothing
                 BlockSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
                             Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))

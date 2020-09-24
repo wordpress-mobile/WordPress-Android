@@ -290,8 +290,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long?) {
-        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId ?: 0)))
+    private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long) {
+        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId)))
     }
 
     private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {

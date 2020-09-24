@@ -86,11 +86,11 @@ sealed class ReaderCardUiState {
             val name: String,
             val url: String,
             val blogId: Long,
-            val feedId: Long?,
+            val feedId: Long,
             val description: String,
             val iconUrl: String?,
             val isFollowed: Boolean,
-            val onItemClicked: (Long, Long?) -> Unit,
+            val onItemClicked: (Long, Long) -> Unit,
             val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
         ) {
             val isDescriptionVisible: Boolean = description.isNotEmpty()

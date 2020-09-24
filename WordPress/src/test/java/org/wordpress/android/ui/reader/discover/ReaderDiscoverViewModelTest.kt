@@ -158,7 +158,7 @@ class ReaderDiscoverViewModelTest {
         ).thenAnswer {
             createReaderRecommendedBlogsCardUiState(
                     recommendedBlogs = it.getArgument<List<ReaderBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
-                    onItemClicked = it.getArgument<(Long, Long?) -> Unit>(
+                    onItemClicked = it.getArgument<(Long, Long) -> Unit>(
                             ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
                     ),
                     onFollowClicked = it.getArgument<(ReaderRecommendedBlogUiState) -> Unit>(
@@ -469,7 +469,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         (uiStates.last() as ContentUiState).let {
             (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
-                card.blogs[0].onItemClicked.invoke(1, null)
+                card.blogs[0].onItemClicked.invoke(1, 0L)
             }
         }
 
@@ -604,7 +604,7 @@ class ReaderDiscoverViewModelTest {
 
     private fun createReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
-        onItemClicked: (Long, Long?) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
         onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(
