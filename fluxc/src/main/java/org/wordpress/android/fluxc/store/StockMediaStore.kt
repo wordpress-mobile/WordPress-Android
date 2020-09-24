@@ -121,9 +121,9 @@ class StockMediaStore
         }
     }
 
-    suspend fun getStockMedia(filter: String): List<StockMediaItem> {
+    suspend fun getStockMedia(): List<StockMediaItem> {
         return coroutineEngine.withDefaultContext(MEDIA, this, "Getting stock media") {
-            sqlUtils.selectAll(filter)
+            sqlUtils.selectAll()
         }
     }
 
