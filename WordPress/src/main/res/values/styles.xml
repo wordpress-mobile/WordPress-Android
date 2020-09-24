@@ -1264,15 +1264,16 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:layout_marginTop">@dimen/margin_medium_large</item>
+        <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
         <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerSubtitle" parent="ModalLayoutPickerTitle">
         <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_extra_medium_large</item>
-        <item name="android:layout_marginTop">@dimen/mlp_titles_mid_margin</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/mlp_titles_bottom_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">normal</item>
