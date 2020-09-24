@@ -458,4 +458,8 @@ public class ReaderUtils {
     public static boolean isExternalFeed(long blogId, long feedId) {
          return (blogId == 0 && feedId != 0) || blogId == feedId;
     }
+
+    public static String getReportPostUrl(String blogUrl) {
+        return "https://wordpress.com/abuse/?report_url=" + blogUrl;
+    }
 }

@@ -6,20 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ListView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
@@ -31,6 +26,8 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.List;
 
 public class WPActivityUtils {
+    public static final String READER_DEEPLINK_ACTIVITY_ALIAS = "org.wordpress.android.WPComPostReaderActivity";
+
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
 
@@ -126,29 +123,6 @@ public class WPActivityUtils {
         }
     }
 
-    public static void setStatusBarColor(Window window, int color) {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(window.getContext().getResources().getColor(color));
-    }
-
-    public static void setLightStatusBar(Window window, boolean showInLightMode) {
-        Context context = window.getContext();
-        boolean isDarkTheme = ConfigurationExtensionsKt.isDarkTheme(context.getResources().getConfiguration());
-        if (!isDarkTheme) {
-            int newColor = showInLightMode ? ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface)
-                    : ContextCompat.getColor(context, R.color.status_bar);
-            window.setStatusBarColor(newColor);
-
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                int systemVisibility = window.getDecorView().getSystemUiVisibility();
-                int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                        : systemVisibility ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                window.getDecorView().setSystemUiVisibility(newSystemVisibility);
-            }
-        }
-    }
-
     public static Context getThemedContext(Context context) {
         if (context instanceof AppCompatActivity) {
             ActionBar actionBar = ((AppCompatActivity) context).getSupportActionBar();
@@ -179,15 +153,15 @@ public class WPActivityUtils {
         context.startActivity(intent);
     }
 
-    public static void disableComponent(Context context, Class<?> klass) {
+    public static void disableReaderDeeplinks(Context context) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+        pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
-    public static void enableComponent(Context context, Class<?> klass) {
+    public static void enableReaderDeeplinks(Context context) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+        pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

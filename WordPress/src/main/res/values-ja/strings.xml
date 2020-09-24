@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-03 10:54:10+0000
+Translation-Revision-Date: 2020-09-17 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="reader_welcome_banner">Reader へようこそ。 いつでもたくさんのブログからお気に入りを見つけられる。</string>
+    <string name="error_media_xmlrpc_not_allowed">操作は許可されていません</string>
+    <string name="show_n_hidden_items_desc">%1$s 件のアイテムをさらに表示</string>
     <string name="reader_discover_interests_header">おすすめ</string>
     <string name="gutenberg_native_video_caption_empty">動画の見出しです。 空にする</string>
     <string name="gutenberg_native_updates_the_title">タイトルを更新します。</string>
@@ -83,7 +86,6 @@ Language: ja_JP
     <string name="reader_toast_err_page_jump_not_found">リンクされたページジャンプが見つかりません</string>
     <string name="error_media_quota_exceeded_toast">ファイルをアップロードできません。\nストレージ割り当ての上限に達しました。</string>
     <string name="error_media_quota_exceeded">ストレージ割り当ての上限に達しました</string>
-    <string name="media_error_file_not_allowed_on_free_plan">このファイルタイプは無料プランでは利用できません</string>
     <string name="pick_file">ファイルを追加</string>
     <string name="gutenberg_native_replace_video">動画を置換</string>
     <string name="gutenberg_native_replace_image_or_video">画像または動画を置換</string>
@@ -438,7 +440,7 @@ Language: ja_JP
     <string name="my_site_bottom_sheet_add_page">サイトのページ</string>
     <string name="reader_following_display_name">フォロー中</string>
     <string name="reader_my_likes_display_name">いいね</string>
-    <string name="reader_discover_display_name">Discover</string>
+    <string name="reader_discover_display_name">ディスカバー</string>
     <string name="reader_save_for_later_display_name">保存しました</string>
     <string name="reader_filter_tags_title">タグ</string>
     <string name="reader_filter_sites_title">サイト</string>
@@ -974,9 +976,6 @@ Language: ja_JP
     <string name="menu_history">履歴</string>
     <string name="pages_open_page_error">選択したページは利用できません</string>
     <string name="pages_pending">レビュー待ち</string>
-    <string name="news_card_announcement_action_sample_announcement">[続きを読む]</string>
-    <string name="news_card_announcement_content_sample_announcement">[今すぐ読む時間がありませんか？ご心配ありません。後で読めるように投稿を保存できます。]</string>
-    <string name="news_card_announcement_title_sample_announcement">[新しい機能が利用できます]</string>
     <string name="pages_empty_trashed">ゴミ箱に移動したページはありません</string>
     <string name="pages_empty_scheduled">予約済みページはありません</string>
     <string name="pages_empty_drafts">ページの下書きはありません</string>
@@ -1008,7 +1007,6 @@ Language: ja_JP
     <string name="page_status_change_error">ページステータスを変更中に問題が発生しました</string>
     <string name="page_delete_error">ページを削除中に問題が発生しました</string>
     <string name="set_parent">親の設定</string>
-    <string name="dismiss">非表示</string>
     <string name="quick_start_focus_point_description">ここをタップ</string>
     <string name="quick_start_list_create_site_title">サイトの作成</string>
     <string name="quick_start_list_create_site_subtitle">サイトを立ち上げましょう。</string>

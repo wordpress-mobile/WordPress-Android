@@ -95,6 +95,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEdito
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
@@ -140,6 +141,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
 
 import kotlin.Unit;
 
@@ -439,6 +441,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                     } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
                         showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
+                    } else if (navTarget instanceof ShowReportPost) {
+                        ShowReportPost data = (ShowReportPost) navTarget;
+                        ReaderActivityLauncher.openUrl(
+                            getContext(),
+                            ReaderUtils.getReportPostUrl(data.getUrl()),
+                            INTERNAL);
                     } else {
                         throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
                     }
@@ -2539,6 +2547,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 break;
             case REBLOG:
                 mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                break;
+            case REPORT_POST:
+                mViewModel.onReportPostButtonClicked(post, isBookmarksList());
                 break;
             case BLOCK_SITE:
                 mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());

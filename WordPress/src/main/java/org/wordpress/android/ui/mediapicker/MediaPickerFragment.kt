@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mediapicker
 import android.Manifest.permission
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.Intent.ACTION_OPEN_DOCUMENT
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
@@ -30,18 +29,21 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
-import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -122,7 +124,7 @@ class MediaPickerFragment : Fragment() {
      * parent activity must implement this listener
      */
     interface MediaPickerListener {
-        fun onMediaChosen(uriList: List<Uri>)
+        fun onItemsChosen(uriList: List<Identifier>)
         fun onIconClicked(action: MediaPickerAction)
     }
 
@@ -157,13 +159,13 @@ class MediaPickerFragment : Fragment() {
 
         val mediaPickerSetup = MediaPickerSetup.fromBundle(requireArguments())
         val site = requireArguments().getSerializable(WordPress.SITE) as? SiteModel
-        var selectedUris: List<UriWrapper>? = null
+        var selectedIds: List<Identifier>? = null
         var lastTappedIcon: MediaPickerIcon? = null
         if (savedInstanceState != null) {
             lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
-            if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
-                selectedUris = savedInstanceState.getStringArrayList(KEY_SELECTED_POSITIONS)
-                        ?.map { UriWrapper(Uri.parse(it)) }
+            if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
+                selectedIds = savedInstanceState.getParcelableArrayList<Identifier.Parcel>(KEY_SELECTED_IDS)
+                        ?.map { Identifier.fromParcel(it) }
             }
         }
         recycler.setEmptyView(actionable_empty_view)
@@ -228,8 +230,8 @@ class MediaPickerFragment : Fragment() {
 
         viewModel.onInsert.observe(viewLifecycleOwner, Observer
         { event ->
-            event.getContentIfNotHandled()?.let { selectedUris ->
-                listener?.onMediaChosen(selectedUris.map { it.uri })
+            event.getContentIfNotHandled()?.let { selectedIds ->
+                listener?.onItemsChosen(selectedIds)
             }
         })
 
@@ -248,7 +250,7 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedUris, mediaPickerSetup, lastTappedIcon, site)
+        viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -327,6 +329,7 @@ class MediaPickerFragment : Fragment() {
                         requestStoragePermission()
                     }
                 }
+
                 soft_ask_view.visibility = View.VISIBLE
             }
             is SoftAskViewUiModel.Hidden -> {
@@ -338,25 +341,35 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
-        if (uiModel is PhotoListUiModel.Data) {
-            if (recycler.adapter == null) {
-                recycler.adapter = MediaPickerAdapter(
-                        imageManager
-                )
-            }
-            val adapter = recycler.adapter as MediaPickerAdapter
+        when (uiModel) {
+            is Data -> {
+                recycler.setEmptyViewIfNull(actionable_empty_view)
+                if (recycler.adapter == null) {
+                    recycler.adapter = MediaPickerAdapter(
+                            imageManager
+                    )
+                }
+                val adapter = recycler.adapter as MediaPickerAdapter
 
-            (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
-                    object : GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
-                            NUM_COLUMNS
-                        } else {
-                            1
+                (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
+                        object : GridLayoutManager.SpanSizeLookup() {
+                            override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
+                                NUM_COLUMNS
+                            } else {
+                                1
+                            }
                         }
-                    }
-            val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
-            adapter.loadData(uiModel.items)
-            recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
+                adapter.loadData(uiModel.items)
+                recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            }
+            Empty -> {
+                recycler.setEmptyView(actionable_empty_view)
+            }
+            Hidden -> {
+                recycler.setEmptyView(null)
+                actionable_empty_view.visibility = View.GONE
+            }
         }
     }
 
@@ -374,9 +387,9 @@ class MediaPickerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.lastTappedIcon?.toBundle(outState)
-        val selectedIds = viewModel.selectedUris.value
-        if (selectedIds != null && selectedIds.isNotEmpty()) {
-            outState.putStringArrayList(KEY_SELECTED_POSITIONS, ArrayList(selectedIds.map { it.uri.toString() }))
+        val selectedIds = viewModel.selectedIdentifiers().map { it.toParcel() }
+        if (selectedIds.isNotEmpty()) {
+            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList(selectedIds))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
@@ -444,7 +457,7 @@ class MediaPickerFragment : Fragment() {
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
         private const val KEY_LAST_TAPPED_ICON_ALLOWED_TYPES = "last_tapped_icon_allowed_types"
-        private const val KEY_SELECTED_POSITIONS = "selected_positions"
+        private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(

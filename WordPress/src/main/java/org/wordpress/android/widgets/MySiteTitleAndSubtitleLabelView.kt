@@ -31,12 +31,12 @@ class MySiteTitleAndSubtitleLabelView @JvmOverloads constructor(
         val guideline = findViewById<View>(R.id.guideline)
 
         title.viewTreeObserver.addOnGlobalLayoutListener {
-            if (title.lineCount == 1) {
+            if (title.lineCount == 1 && (title.layoutParams as LayoutParams).bottomToTop == View.NO_ID) {
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(this@MySiteTitleAndSubtitleLabelView)
                 constraintSet.connect(title.id, ConstraintSet.BOTTOM, guideline.id, ConstraintSet.TOP, 0)
                 constraintSet.applyTo(this@MySiteTitleAndSubtitleLabelView)
-            } else if (title.lineCount == 2) {
+            } else if (title.lineCount == 2 && (title.layoutParams as LayoutParams).bottomToTop == guideline.id) {
                 val constraintSet = ConstraintSet()
                 constraintSet.clone(this@MySiteTitleAndSubtitleLabelView)
                 constraintSet.clear(title.id, ConstraintSet.BOTTOM)
