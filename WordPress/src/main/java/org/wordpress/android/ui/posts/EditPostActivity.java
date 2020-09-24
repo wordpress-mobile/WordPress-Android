@@ -1068,7 +1068,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     final int requestCode = allowMultipleSelection
                             ? RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
                             : RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK;
-                    mMediaPickerLauncher.showStockMediaPickerForResult(this, mSite, requestCode);
+                    mMediaPickerLauncher
+                            .showStockMediaPickerForResult(this, mSite, requestCode, allowMultipleSelection);
                     break;
                 case GIF:
                     ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_SINGLE_SELECT);
@@ -2497,7 +2498,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                     if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
-                        long[] mediaIds = data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
+                        String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
+                        if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                            key = MediaBrowserActivity.RESULT_IDS;
+                        }
+                        long[] mediaIds = data.getLongArrayExtra(key);
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }

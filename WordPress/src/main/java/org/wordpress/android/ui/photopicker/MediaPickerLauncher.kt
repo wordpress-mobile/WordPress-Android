@@ -91,6 +91,7 @@ class MediaPickerLauncher
                     systemPickerEnabled = true,
                     editingEnabled = true,
                     queueResults = false,
+                    defaultSearchView = false,
                     title = R.string.photo_picker_choose_file
             )
             val intent = MediaPickerActivity.buildIntent(
@@ -127,18 +128,20 @@ class MediaPickerLauncher
     fun showStockMediaPickerForResult(
         activity: Activity,
         site: SiteModel,
-        requestCode: Int
+        requestCode: Int,
+        allowMultipleSelection: Boolean
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     dataSource = STOCK_LIBRARY,
-                    canMultiselect = true,
+                    canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),
                     cameraEnabled = false,
                     systemPickerEnabled = false,
                     editingEnabled = false,
                     queueResults = false,
+                    defaultSearchView = true,
                     title = R.string.photo_picker_stock_media
             )
             val intent = MediaPickerActivity.buildIntent(
@@ -176,6 +179,7 @@ class MediaPickerLauncher
                 systemPickerEnabled = true,
                 editingEnabled = browserType.isImagePicker,
                 queueResults = browserType == FEATURED_IMAGE_PICKER,
+                defaultSearchView = false,
                 title = title
         )
     }
@@ -197,6 +201,7 @@ class MediaPickerLauncher
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
+                defaultSearchView = false,
                 title = R.string.wp_media_title
         )
     }
