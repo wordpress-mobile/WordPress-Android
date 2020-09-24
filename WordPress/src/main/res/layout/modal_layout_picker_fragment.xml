@@ -11,7 +11,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/modal_layout_picker_background"
+        android:background="?attr/categoriesBackground"
         android:fitsSystemWindows="false">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -32,7 +32,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/modal_layout_picker_background"
+                android:background="?attr/categoriesBackground"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin">
 
