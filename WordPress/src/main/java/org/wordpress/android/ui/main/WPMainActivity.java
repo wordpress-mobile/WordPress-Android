@@ -1078,6 +1078,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
                 Fragment fragment = mBottomNav.getActiveFragment();
                 if (fragment instanceof MySiteFragment) {

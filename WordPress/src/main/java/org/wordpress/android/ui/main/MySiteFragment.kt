@@ -157,6 +157,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -196,6 +197,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+    @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -773,7 +775,12 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
+                if (consolidatedMediaPickerFeatureConfig.isEnabled() ||
+                        !storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                                data,
+                                activity,
+                                selectedSite
+                        )) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
@@ -812,6 +819,13 @@ class MySiteFragment : Fragment(),
                         }
                     }
                 }
+            }
+            RequestCodes.STORIES_PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
+                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                        data,
+                        activity,
+                        selectedSite
+                )
             }
             UCrop.REQUEST_CROP -> if (resultCode == Activity.RESULT_OK) {
                 AnalyticsTracker.track(MY_SITE_ICON_CROPPED)

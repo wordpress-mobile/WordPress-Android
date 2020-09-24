@@ -210,7 +210,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> {
                     handleMediaPickerIntentData(it)
                 }
-                RequestCodes.PHOTO_PICKER -> {
+                RequestCodes.PHOTO_PICKER, RequestCodes.STORIES_PHOTO_PICKER -> {
                     if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
                                 it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
