@@ -2170,9 +2170,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isUnsupportedBlockEditorEnabled =
                 mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
 
+        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
+                unsupportedBlockEditorSwitch,
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
@@ -3263,5 +3265,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         return "";
+    }
+
+    @Override
+    public void showJetpackSettings() {
+        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        startActivity(intent);
     }
 }

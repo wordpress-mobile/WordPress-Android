@@ -655,6 +655,10 @@
             android:label="@string/edit_photo_screen_title"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity
+            android:name=".ui.posts.JetpackSecuritySettingsActivity"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"
