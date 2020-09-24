@@ -13,4 +13,5 @@ class StoryRepositoryWrapper @Inject constructor() {
     fun loadStory(storyIndex: StoryIndex) = StoryRepository.loadStory(storyIndex)
     fun addStoryFrameItemToCurrentStory(item: StoryFrameItem) = StoryRepository.addStoryFrameItemToCurrentStory(item)
     fun getStoryAtIndex(index: StoryIndex) = StoryRepository.getStoryAtIndex(index)
+    fun getImmutableStories() = StoryRepository.getImmutableStories()
 }

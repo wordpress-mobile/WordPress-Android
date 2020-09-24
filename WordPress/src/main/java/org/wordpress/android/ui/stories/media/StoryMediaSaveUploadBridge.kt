@@ -8,7 +8,6 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
-import com.wordpress.stories.compose.story.StoryRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
+import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
 import org.wordpress.android.ui.uploads.UploadServiceFacade
@@ -54,6 +54,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
+    private val storyRepositoryWrapper: StoryRepositoryWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope, LifecycleObserver {
     // region Fields
@@ -90,7 +91,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     // region Adding new composed / processed frames to a Story post
     private fun addNewStoryFrameMediaItemsToPostAndUploadAsync(site: SiteModel, saveResult: StorySaveResult) {
         // let's invoke the UploadService and enqueue all the files that were saved by the FrameSaveService
-        val frames = StoryRepository.getStoryAtIndex(saveResult.storyIndex).frames
+        val frames = storyRepositoryWrapper.getStoryAtIndex(saveResult.storyIndex).frames
         val uriList = frames.map { Uri.fromFile(it.composedFrameFile) }
         addNewMediaItemsToPostAsync(site, uriList, saveResult.isEditMode)
     }
@@ -130,7 +131,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                     // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image
                     // urls with the new URLs which may have been replaced after image optimization
-                    for (story in StoryRepository.getImmutableStories()) {
+                    for (story in storyRepositoryWrapper.getImmutableStories()) {
                         // find the MediaModel for a given Uri from composedFrameFile
                         for (frame in story.frames) {
                             // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
@@ -214,6 +215,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     private fun isStorySavingComplete(event: StorySaveResult): Boolean {
         return (event.isSuccess() &&
-                event.frameSaveResult.size == StoryRepository.getStoryAtIndex(event.storyIndex).frames.size)
+                event.frameSaveResult.size == storyRepositoryWrapper.getStoryAtIndex(event.storyIndex).frames.size)
     }
 }
