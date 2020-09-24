@@ -222,19 +222,19 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
     }
 
-    public void clearFileSaveStatus(final int mediaId) {
+    public void clearFileSaveStatus(final String mediaId) {
         mWPAndroidGlueCode.clearFileSaveStatus(mediaId);
     }
 
-    public void mediaFileSaveProgress(final int mediaId, final float progress) {
+    public void mediaFileSaveProgress(final String mediaId, final float progress) {
         mWPAndroidGlueCode.mediaFileSaveProgress(mediaId, progress);
     }
 
-    public void mediaFileSaveFailed(final int mediaId) {
+    public void mediaFileSaveFailed(final String mediaId) {
         mWPAndroidGlueCode.mediaFileSaveFailed(mediaId);
     }
 
-    public void mediaFileSaveSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {
-        mWPAndroidGlueCode.mediaFileSaveSucceeded(mediaId, mediaUrl, serverMediaId);
+    public void mediaFileSaveSucceeded(final String mediaId, final String mediaUrl) {
+        mWPAndroidGlueCode.mediaFileSaveSucceeded(mediaId, mediaUrl);
     }
 }

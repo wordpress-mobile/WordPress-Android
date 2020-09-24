@@ -44,6 +44,7 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart;
+import com.wordpress.stories.compose.story.StoryFrameItem;
 import com.wordpress.stories.compose.story.StoryRepository;
 
 import org.greenrobot.eventbus.EventBus;
@@ -236,6 +237,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+import static org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.TEMPORARY_ID_PREFIX;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -391,6 +393,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject StoryRepositoryWrapper mStoryRepositoryWrapper;
 
     private StorePostViewModel mViewModel;
 
@@ -3035,7 +3038,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
         LoadStoryFromStoriesPrefsUseCase loadStoryFromStoriesPrefsUseCase = new LoadStoryFromStoriesPrefsUseCase(
-                new StoryRepositoryWrapper(),
+                mStoryRepositoryWrapper,
                 mSite,
                 mMediaStore,
                 this
@@ -3116,12 +3119,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (isFinishing()) {
             return;
         }
-        String localMediaId = String.valueOf(event.getFrameId());
+        String localMediaId = event.getFrameId();
         if (mStorySaveMediaListener != null) {
-            MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
-            if (mediaModel != null) {
-                MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-                mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaFile);
+            // check whether this is a temporary file being just saved (so we don't have a proper local MediaModel yet)
+            // catch ( NumberFormatException e)
+            if (localMediaId.startsWith(TEMPORARY_ID_PREFIX)) {
+                StoryFrameItem frame =
+                        mStoryRepositoryWrapper.getStoryAtIndex(
+                                event.getStoryIndex()).getFrames().get(event.getFrameIndex()
+                        );
+                mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId,
+                        frame.getComposedFrameFile().getAbsolutePath());
+            } else {
+                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
+                if (mediaModel != null) {
+                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
+                    mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaFile.getFileURL());
+                }
             }
         }
     }

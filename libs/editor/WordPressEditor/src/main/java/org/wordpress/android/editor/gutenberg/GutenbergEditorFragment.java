@@ -1009,22 +1009,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override public void onMediaSaveReattached(String localId, float currentProgress) {
         mUploadingMediaProgressMax.put(localId, currentProgress);
-        getGutenbergContainerFragment().mediaFileSaveProgress(Integer.valueOf(localId), currentProgress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(localId, currentProgress);
     }
 
-    @Override public void onMediaSaveSucceeded(String localId, MediaFile mediaFile) {
+    @Override public void onMediaSaveSucceeded(String localId, String mediaUrl) {
         mUploadingMediaProgressMax.remove(localId);
-        getGutenbergContainerFragment().mediaFileSaveSucceeded(Integer.valueOf(localId), mediaFile.getFileURL(),
-                Integer.valueOf(mediaFile.getMediaId()));
+        getGutenbergContainerFragment().mediaFileSaveSucceeded(localId, mediaUrl);
     }
 
     @Override public void onMediaSaveProgress(String localId, float progress) {
         mUploadingMediaProgressMax.put(localId, progress);
-        getGutenbergContainerFragment().mediaFileSaveProgress(Integer.valueOf(localId), progress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
     }
 
     @Override public void onMediaSaveFailed(String localId) {
-        getGutenbergContainerFragment().mediaFileSaveFailed(Integer.valueOf(localId));
+        getGutenbergContainerFragment().mediaFileSaveFailed(localId);
         mFailedMediaIds.add(localId);
         mUploadingMediaProgressMax.remove(localId);
     }
