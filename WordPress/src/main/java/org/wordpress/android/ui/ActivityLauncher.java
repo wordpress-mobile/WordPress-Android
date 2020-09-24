@@ -68,7 +68,6 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -1087,8 +1086,9 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            // disable deeplinking activity so to not catch WP URLs
-            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+            // Disable deeplinking activity so to not catch WP URLs.
+            // We'll re-enable them later - see callers of WPActivityUtils#enableReaderDeeplinks.
+            WPActivityUtils.disableReaderDeeplinks(context);
 
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
