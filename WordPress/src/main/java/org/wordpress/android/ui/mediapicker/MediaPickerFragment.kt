@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mediapicker
 
 import android.Manifest.permission
+import android.app.Activity
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.Intent.ACTION_OPEN_DOCUMENT
 import android.os.Bundle
@@ -258,6 +259,13 @@ class MediaPickerFragment : Fragment() {
                 }
             }
         })
+        viewModel.onExit.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                val activity = requireActivity()
+                activity.setResult(Activity.RESULT_CANCELED)
+                activity.finish()
+            }
+        })
         setupProgressDialog()
 
         viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
@@ -280,6 +288,7 @@ class MediaPickerFragment : Fragment() {
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
                 searchView.setQuery(uiState.searchUiModel.filter, true)
+                searchView.setOnCloseListener { !uiState.searchUiModel.closeable }
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.collapseActionView()
             }
@@ -353,7 +362,8 @@ class MediaPickerFragment : Fragment() {
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
         when (uiModel) {
             is Data -> {
-                recycler.setEmptyViewIfNull(actionable_empty_view)
+                actionable_empty_view.visibility = View.GONE
+                recycler.visibility = View.VISIBLE
                 if (recycler.adapter == null) {
                     recycler.adapter = MediaPickerAdapter(
                             imageManager
@@ -374,11 +384,13 @@ class MediaPickerFragment : Fragment() {
                 recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
             }
             Empty -> {
-                recycler.setEmptyView(actionable_empty_view)
+                actionable_empty_view.visibility = View.VISIBLE
+                recycler.removeAllViews()
+                recycler.visibility = View.GONE
             }
             Hidden -> {
-                recycler.setEmptyView(null)
                 actionable_empty_view.visibility = View.GONE
+                recycler.visibility = View.GONE
             }
         }
     }
@@ -397,22 +409,20 @@ class MediaPickerFragment : Fragment() {
     private fun setupProgressDialog() {
         var progressDialog: AlertDialog? = null
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            it?.progressDialogUiModel?.let { dialogUiModel ->
-                when (dialogUiModel) {
+            it?.progressDialogUiModel?.apply {
+                when (this) {
                     is Visible -> {
-                        progressDialog?.let { dialog ->
-                            if (!dialog.isShowing) {
-                                val builder: Builder = MaterialAlertDialogBuilder(requireContext())
-                                builder.setTitle(string.media_uploading_stock_library_photo)
-                                builder.setView(layout.media_picker_progress_dialog)
-                                builder.setNegativeButton(
-                                        string.cancel
-                                ) { _, _ -> viewModel.cancelProgressDialog() }
-                                builder.setOnCancelListener { viewModel.cancelProgressDialog() }
-                                builder.setCancelable(true)
-                                progressDialog = builder.create()
-                                builder.show()
-                            }
+                        if (progressDialog == null || progressDialog?.isShowing == false) {
+                            val builder: Builder = MaterialAlertDialogBuilder(requireContext())
+                            builder.setTitle(string.media_uploading_stock_library_photo)
+                            builder.setView(layout.media_picker_progress_dialog)
+                            builder.setNegativeButton(
+                                    string.cancel
+                            ) { _, _ -> this.cancelAction() }
+                            builder.setOnCancelListener { this.cancelAction() }
+                            builder.setCancelable(true)
+                            progressDialog = builder.create()
+                            builder.show()
                         }
                     }
                     ProgressDialogUiModel.Hidden -> {

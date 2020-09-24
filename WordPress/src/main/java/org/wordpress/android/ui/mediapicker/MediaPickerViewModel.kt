@@ -4,6 +4,7 @@ import android.Manifest.permission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -13,7 +14,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
@@ -47,7 +47,6 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPPermissionUtils
@@ -83,12 +82,14 @@ class MediaPickerViewModel @Inject constructor(
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _searchExpanded = MutableLiveData<Boolean>()
-    private val _showProgressDialog = MutableLiveData<Boolean>()
+    private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
+    private val _onExit = MutableLiveData<Event<Unit>>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onNavigateToEdit: LiveData<Event<List<UriWrapper>>> = _navigateToEdit
     val onInsert: LiveData<Event<List<Identifier>>> = _onInsert
     val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
+    val onExit: LiveData<Event<Unit>> = _onExit
 
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
@@ -98,7 +99,7 @@ class MediaPickerViewModel @Inject constructor(
             _softAskRequest,
             _searchExpanded,
             _showProgressDialog.distinct()
-    ) { domainModel, selectedIds, softAskRequest, searchExpanded, showProgressDialog ->
+    ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel ->
         MediaPickerUiState(
                 buildUiModel(domainModel, selectedIds, softAskRequest),
                 buildSoftAskView(softAskRequest),
@@ -109,16 +110,13 @@ class MediaPickerViewModel @Inject constructor(
                 buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
                 !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
                 buildBrowseMenuUiModel(softAskRequest, searchExpanded),
-                buildProgressDialogUiModel(showProgressDialog)
+                progressDialogUiModel ?: Hidden
         )
     }
 
-    private fun buildProgressDialogUiModel(showProgressDialog: Boolean?) =
-            if (showProgressDialog == true) Visible(string.media_uploading_stock_library_photo) else Hidden
-
     private fun buildSearchUiModel(isVisible: Boolean, filter: String?, searchExpanded: Boolean?): SearchUiModel {
         return when {
-            searchExpanded == true -> SearchUiModel.Expanded(filter ?: "")
+            searchExpanded == true -> SearchUiModel.Expanded(filter ?: "", !mediaPickerSetup.defaultSearchView)
             isVisible -> SearchUiModel.Collapsed
             else -> SearchUiModel.Hidden
         }
@@ -142,7 +140,7 @@ class MediaPickerViewModel @Inject constructor(
         val data = domainModel?.domainItems
         return if (null != softAskRequest && softAskRequest.show) {
             PhotoListUiModel.Hidden
-        } else if (data != null) {
+        } else if (data != null && data.isNotEmpty()) {
             val uiItems = data.map {
                 val showOrderCounter = mediaPickerSetup.canMultiselect
                 val toggleAction = ToggleAction(it.identifier, showOrderCounter, this::toggleItem)
@@ -275,6 +273,9 @@ class MediaPickerViewModel @Inject constructor(
                 loadActions.send(LoadAction.Start())
             }
         }
+        if (mediaPickerSetup.defaultSearchView) {
+            _searchExpanded.postValue(true)
+        }
     }
 
     fun numSelected(): Int {
@@ -323,32 +324,24 @@ class MediaPickerViewModel @Inject constructor(
 
     fun performInsertAction() {
         val ids = selectedIdentifiers()
-        launch {
+        var job: Job? = null
+        job = launch {
             mediaLoader.insertMedia(ids).collect {
                 when(it) {
-                    is InsertModel.Progress -> _showProgressDialog.postValue(true)
-                    is InsertModel.Error -> _showProgressDialog.postValue(false)
+                    is InsertModel.Progress -> _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
+                        job?.cancel()
+                        _showProgressDialog.postValue(Hidden)
+                    })
+                    is InsertModel.Error -> {
+                        job = null
+                        _showProgressDialog.postValue(Hidden)
+                    }
                     is InsertModel.Success -> {
-                        _showProgressDialog.postValue(false)
+                        job = null
+                        _showProgressDialog.postValue(Hidden)
                         _onInsert.value = Event(it.identifiers)
                     }
                 }
-            }
-        }
-        val isMultiselection = ids.size > 1
-        for (identifier in ids) {
-            if (identifier is LocalUri) {
-                val isVideo = MediaUtils.isVideo(identifier.toString())
-                val properties = analyticsUtilsWrapper.getMediaProperties(
-                        isVideo,
-                        identifier.value,
-                        null
-                )
-                properties["is_part_of_multiselection"] = isMultiselection
-                if (isMultiselection) {
-                    properties["number_of_media_selected"] = ids.size
-                }
-                analyticsTrackerWrapper.track(MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties)
             }
         }
     }
@@ -461,18 +454,18 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun onSearchCollapsed() {
-        _searchExpanded.value = false
-        launch(bgDispatcher) {
-            loadActions.send(LoadAction.ClearFilter)
+        if (!mediaPickerSetup.defaultSearchView) {
+            _searchExpanded.value = false
+            launch(bgDispatcher) {
+                loadActions.send(LoadAction.ClearFilter)
+            }
+        } else {
+            _onExit.postValue(Event(Unit))
         }
     }
 
     fun onPullToRefresh() {
         refreshData(true)
-    }
-
-    fun cancelProgressDialog() {
-        TODO("Not yet implemented")
     }
 
     data class MediaPickerUiState(
@@ -514,7 +507,7 @@ class MediaPickerViewModel @Inject constructor(
 
     sealed class SearchUiModel {
         object Collapsed : SearchUiModel()
-        data class Expanded(val filter: String) : SearchUiModel()
+        data class Expanded(val filter: String, val closeable: Boolean = true) : SearchUiModel()
         object Hidden : SearchUiModel()
     }
 
@@ -530,6 +523,6 @@ class MediaPickerViewModel @Inject constructor(
 
     sealed class ProgressDialogUiModel {
         object Hidden: ProgressDialogUiModel()
-        data class Visible(val title: Int): ProgressDialogUiModel()
+        data class Visible(val title: Int, val cancelAction: () -> Unit): ProgressDialogUiModel()
     }
 }
