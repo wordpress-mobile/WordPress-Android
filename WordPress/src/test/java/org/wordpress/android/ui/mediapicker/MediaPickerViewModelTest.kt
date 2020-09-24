@@ -29,6 +29,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.EditActionUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
@@ -159,7 +160,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
-        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_photo))
+        assertActionModeVisible(
+                UiStringRes(R.string.photo_picker_use_photo),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = false)
+        )
     }
 
     @Test
@@ -286,7 +290,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_photo))
+        assertActionModeVisible(
+                UiStringRes(R.string.photo_picker_use_photo),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = false)
+        )
     }
 
     @Test
@@ -300,7 +307,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_video), showEditAction = false)
+        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_video), EditActionUiModel(isVisible = false))
     }
 
     @Test
@@ -311,7 +318,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringRes(R.string.photo_picker_use_media))
+        assertActionModeVisible(
+                UiStringRes(R.string.photo_picker_use_media),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = false)
+        )
     }
 
     @Test
@@ -322,9 +332,16 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         selectItem(0)
-        selectItem(1)
+        assertActionModeVisible(
+                UiStringText("1 selected"),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = true, counterBadgeValue = 1)
+        )
 
-        assertActionModeVisible(UiStringText("2 selected"))
+        selectItem(1)
+        assertActionModeVisible(
+                UiStringText("2 selected"),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = true, counterBadgeValue = 2)
+        )
     }
 
     @Test
@@ -336,7 +353,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+        assertActionModeVisible(UiStringText("1 selected"), EditActionUiModel(isVisible = false))
     }
 
     @Test
@@ -348,7 +365,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+        assertActionModeVisible(UiStringText("1 selected"), EditActionUiModel(isVisible = false))
     }
 
     @Test
@@ -360,7 +377,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
         selectItem(0)
 
-        assertActionModeVisible(UiStringText("1 selected"), showEditAction = false)
+        assertActionModeVisible(UiStringText("1 selected"), EditActionUiModel(isVisible = false))
     }
 
     @Test
@@ -665,11 +682,11 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         }
     }
 
-    private fun assertActionModeVisible(title: UiString, showEditAction: Boolean = true) {
+    private fun assertActionModeVisible(title: UiString, editActionUiModel: EditActionUiModel) {
         uiStates.last().actionModeUiModel.let {
             val model = it as ActionModeUiModel.Visible
             assertThat(model.actionModeTitle).isEqualTo(title)
-            assertThat(model.showEditAction).isEqualTo(showEditAction)
+            assertThat(model.editActionUiModel).isEqualTo(editActionUiModel)
         }
     }
 
