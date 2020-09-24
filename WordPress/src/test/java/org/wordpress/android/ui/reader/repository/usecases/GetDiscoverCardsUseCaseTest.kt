@@ -18,7 +18,7 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderDiscoverCardsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.utils.AppLogWrapper
-import org.wordpress.android.models.ReaderCardRecommendedBlog
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
@@ -61,8 +61,8 @@ class GetDiscoverCardsUseCaseTest {
         whenever(mockedJsonArray.getJSONObject(2)).thenReturn(mockedRecommendedBlogsCardJson)
         whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(listOf(""))
         whenever(parseDiscoverCardsJsonUseCase.parseInterestCard(anyOrNull())).thenReturn(mock())
-        whenever(parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(anyOrNull()))
-                .thenReturn(listOf(createRecommendedBlog()))
+        whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedRecommendedBlogsCard(anyOrNull()))
+                .thenReturn(listOf(Pair(1L, 0L), Pair(2L, 0L)))
         whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedPostCard(anyOrNull())).thenReturn(Pair(101, 102))
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean())).thenReturn(mock())
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
@@ -162,22 +162,36 @@ class GetDiscoverCardsUseCaseTest {
     }
 
     @Test
-    fun `recommended blog isFollow is set from the blog table`() = test {
+    fun `recommended blog is retrieved from local db and added to the card`() = test {
         // Arrange
-        whenever(readerBlogTableWrapper.isSiteFollowed(anyLong(), anyOrNull())).thenReturn(true)
+        val localReaderBlog = createReaderBlog()
+        whenever(readerBlogTableWrapper.getReaderBlog(1L, 0L)).thenReturn(localReaderBlog)
         // Act
         val result = useCase.get()
 
         // Assert
-        assertThat((result.cards[2] as ReaderRecommendedBlogsCard).blogs.first().isFollowed).isTrue()
+        assertThat((result.cards[2] as ReaderRecommendedBlogsCard).blogs.first()).isEqualTo(localReaderBlog)
     }
 
-    private fun createRecommendedBlog() = ReaderCardRecommendedBlog(
-            blogId = 1L,
-            description = "description",
-            url = "url",
-            name = "name",
-            iconUrl = null,
-            feedId = null
-    )
+    @Test
+    fun `if recommended blog retrieved from local db is null it's not added to the card`() = test {
+        // Arrange
+        val localReaderBlog = createReaderBlog()
+        whenever(readerBlogTableWrapper.getReaderBlog(1L, 0L)).thenReturn(localReaderBlog)
+        whenever(readerBlogTableWrapper.getReaderBlog(2L, 0L)).thenReturn(null)
+        // Act
+        val result = useCase.get()
+
+        // Assert
+        assertThat((result.cards[2] as ReaderRecommendedBlogsCard).blogs.size).isEqualTo(1)
+    }
+
+    private fun createReaderBlog() = ReaderBlog().apply {
+        blogId = 1L
+        description = "description"
+        url = "url"
+        name = "name"
+        imageUrl = null
+        feedId = 0L
+    }
 }

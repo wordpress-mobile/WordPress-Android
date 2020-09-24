@@ -93,4 +93,8 @@ public class ReaderConstants {
     public static final String KEY_DISCOVER = "discover";
     public static final String KEY_LIKES = "likes";
     public static final String KEY_SAVED = "saved";
+
+    // JSON Recommended blog key names
+    public static final String RECOMMENDED_BLOG_ID = "blog_id";
+    public static final String RECOMMENDED_FEED_ID = "feed_id";
 }

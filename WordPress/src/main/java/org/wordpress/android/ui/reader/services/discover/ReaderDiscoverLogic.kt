@@ -9,14 +9,19 @@ import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.ReaderDiscoverCardsTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.discover.ReaderDiscoverCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
@@ -28,6 +33,8 @@ import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_TYPE
 import org.wordpress.android.ui.reader.ReaderConstants.POST_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_PSEUDO_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_SITE_ID
+import org.wordpress.android.ui.reader.ReaderConstants.RECOMMENDED_BLOG_ID
+import org.wordpress.android.ui.reader.ReaderConstants.RECOMMENDED_FEED_ID
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
@@ -130,8 +137,9 @@ class ReaderDiscoverLogic(
         val fullCardsJson = json.optJSONArray(JSON_CARDS)
 
         // Parse the json into cards model objects
-        val postCards = parsePostCards(fullCardsJson)
-        insertPostsIntoDb(postCards.map { it.post })
+        val cards = parseCards(fullCardsJson)
+        insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
+        insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
 
         // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
         val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
@@ -145,14 +153,24 @@ class ReaderDiscoverLogic(
         resultListener.onUpdateResult(HAS_NEW)
     }
 
-    private fun parsePostCards(cardsJsonArray: JSONArray): ArrayList<ReaderPostCard> {
-        val cards: ArrayList<ReaderPostCard> = arrayListOf()
+    private fun parseCards(cardsJsonArray: JSONArray): ArrayList<ReaderDiscoverCard> {
+        val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
+                JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
+                    val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
+                    cards.add(InterestsYouMayLikeCard(interests))
+                }
                 JSON_CARD_POST -> {
                     val post = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
                     cards.add(ReaderPostCard(post))
+                }
+                JSON_CARD_RECOMMENDED_BLOGS -> {
+                    cardJson?.let {
+                        val recommendedBlogs = parseDiscoverCardsJsonUseCase.parseRecommendedBlogsCard(it)
+                        cards.add(ReaderRecommendedBlogsCard(recommendedBlogs))
+                    }
                 }
             }
         }
@@ -163,6 +181,12 @@ class ReaderDiscoverLogic(
         val postList = ReaderPostList()
         postList.addAll(posts)
         ReaderPostTable.addOrUpdatePosts(ReaderTag.createDiscoverPostCardsTag(), postList)
+    }
+
+    private fun insertBlogsIntoDb(blogs: List<ReaderBlog>) {
+        blogs.forEach { blog ->
+            ReaderBlogTable.addOrUpdateBlog(blog)
+        }
     }
 
     /**
@@ -180,7 +204,7 @@ class ReaderDiscoverLogic(
                 JSON_CARD_RECOMMENDED_BLOGS -> {
                     val recommendedBlogsCardJson = cardJson.optJSONArray(JSON_CARD_DATA)
                     if (recommendedBlogsCardJson.length() > 0) {
-                        simplifiedJson.put(index++, cardJson)
+                        simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
@@ -210,6 +234,27 @@ class ReaderDiscoverLogic(
         simplifiedCardJson.put(JSON_CARD_TYPE, originalCardJson.getString(JSON_CARD_TYPE))
         simplifiedCardJson.put(JSON_CARD_DATA, simplifiedPostData)
         return simplifiedCardJson
+    }
+
+    private fun createSimplifiedRecommendedBlogsCardJson(originalCardJson: JSONObject): JSONObject {
+        return JSONObject().apply {
+            JSONArray().apply {
+                originalCardJson.optJSONArray(JSON_CARD_DATA)?.let { jsonRecommendedBlogs ->
+                    for (i in 0 until jsonRecommendedBlogs.length()) {
+                        JSONObject().apply {
+                            val jsonRecommendedBlog = jsonRecommendedBlogs.getJSONObject(i)
+                            put(RECOMMENDED_BLOG_ID, jsonRecommendedBlog.getLong(RECOMMENDED_BLOG_ID))
+                            put(RECOMMENDED_FEED_ID, jsonRecommendedBlog.getLong(RECOMMENDED_FEED_ID))
+                        }.let {
+                            put(it)
+                        }
+                    }
+                }
+            }.let { simplifiedRecommendedBlogsJson ->
+                put(JSON_CARD_TYPE, originalCardJson.getString(JSON_CARD_TYPE))
+                put(JSON_CARD_DATA, simplifiedRecommendedBlogsJson)
+            }
+        }
     }
 
     private fun insertCardsJsonIntoDb(simplifiedCardsJson: JSONArray) {

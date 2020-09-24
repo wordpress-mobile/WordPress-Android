@@ -21,6 +21,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -29,7 +30,6 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderRecommendedBlogsCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
-import org.wordpress.android.models.discover.RecommendedBlog
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -157,7 +157,7 @@ class ReaderDiscoverViewModelTest {
                 )
         ).thenAnswer {
             createReaderRecommendedBlogsCardUiState(
-                    recommendedBlogs = it.getArgument<List<RecommendedBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
+                    recommendedBlogs = it.getArgument<List<ReaderBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
                     onItemClicked = it.getArgument<(Long, Long?) -> Unit>(
                             ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
                     ),
@@ -603,7 +603,7 @@ class ReaderDiscoverViewModelTest {
             ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<RecommendedBlog>,
+        recommendedBlogs: List<ReaderBlog>,
         onItemClicked: (Long, Long?) -> Unit,
         onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
@@ -614,11 +614,11 @@ class ReaderDiscoverViewModelTest {
                             name = it.name,
                             url = it.url,
                             description = it.description,
-                            iconUrl = it.iconUrl,
+                            iconUrl = it.imageUrl,
                             feedId = it.feedId,
                             onItemClicked = onItemClicked,
                             onFollowClicked = onFollowClicked,
-                            isFollowed = it.isFollowed
+                            isFollowed = it.isFollowing
                     )
                 }
         )
@@ -630,7 +630,7 @@ class ReaderDiscoverViewModelTest {
         }
     }
 
-    private fun createRecommendedBlogsList(numOfBlogs: Int = 1): List<RecommendedBlog> {
+    private fun createRecommendedBlogsList(numOfBlogs: Int = 1): List<ReaderBlog> {
         return List(numOfBlogs) { createRecommendedBlog() }
     }
 
@@ -643,15 +643,15 @@ class ReaderDiscoverViewModelTest {
             false
     )
 
-    private fun createRecommendedBlog() = RecommendedBlog(
-            blogId = 1L,
-            description = "description",
-            url = "url",
-            name = "name",
-            iconUrl = null,
-            feedId = null,
-            isFollowed = false
-    )
+    private fun createRecommendedBlog() = ReaderBlog().apply {
+        blogId = 1L
+        description = "description"
+        url = "url"
+        name = "name"
+        imageUrl = null
+        feedId = 0L
+        isFollowing = false
+    }
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
     private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)
