@@ -15,18 +15,14 @@ import javax.inject.Singleton
 class StockMediaSqlUtils
 @Inject constructor() {
     fun insert(
-        filter: String,
         page: Int,
         nextPage: Int?,
         items: List<StockMediaItem>
     ) {
-        val writableDb = WellSql.giveMeWritableDb()
-        writableDb.beginTransaction()
-        WellSql.insert(StockMediaPageBuilder(filter = filter, page = page, nextPage = nextPage)).execute()
+        WellSql.insert(StockMediaPageBuilder(page = page, nextPage = nextPage)).execute()
         WellSql.insert(
                 items.map {
                     StockMediaBuilder(
-                            filter = filter,
                             itemId = it.id,
                             name = it.name,
                             title = it.title,
@@ -36,7 +32,6 @@ class StockMediaSqlUtils
                     )
                 }
         ).execute()
-        writableDb.endTransaction()
     }
 
     fun selectAll(): List<StockMediaItem> {
@@ -52,16 +47,9 @@ class StockMediaSqlUtils
         }
     }
 
-    fun getNextPage(filter: String): Int? {
-        return selectLastPage(filter)?.nextPage
-    }
-
-    private fun selectLastPage(filter: String): StockMediaPageBuilder? {
+    fun getNextPage(): Int? {
         return WellSql.select(StockMediaPageBuilder::class.java)
-                .where()
-                .equals(StockMediaPageTable.FILTER, filter)
-                .endWhere()
-                .orderBy(StockMediaPageTable.PAGE, SelectQuery.ORDER_DESCENDING).asModel.firstOrNull()
+                .orderBy(StockMediaPageTable.PAGE, SelectQuery.ORDER_DESCENDING).asModel.firstOrNull()?.nextPage
     }
 
     fun clear() {
@@ -72,11 +60,10 @@ class StockMediaSqlUtils
     @Table(name = "StockMediaPage")
     data class StockMediaPageBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
-        @Column var filter: String,
         @Column var page: Int,
         @Column var nextPage: Int?
     ) : Identifiable {
-        constructor() : this(-1, "", -1, null)
+        constructor() : this(-1, -1, null)
 
         override fun setId(id: Int) {
             this.mId = id
@@ -88,7 +75,6 @@ class StockMediaSqlUtils
     @Table(name = "StockMedia")
     data class StockMediaBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
-        @Column var filter: String,
         @Column var itemId: String?,
         @Column var name: String?,
         @Column var title: String?,
@@ -96,7 +82,7 @@ class StockMediaSqlUtils
         @Column var date: String?,
         @Column var thumbnail: String?
     ) : Identifiable {
-        constructor() : this(-1, "", null, null, null, null, null, null)
+        constructor() : this(-1, null, null, null, null, null, null)
 
         override fun setId(id: Int) {
             this.mId = id

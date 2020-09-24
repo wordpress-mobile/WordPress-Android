@@ -97,7 +97,7 @@ class StockMediaStore
     suspend fun fetchStockMedia(filter: String, loadMore: Boolean): OnStockMediaListFetched {
         return coroutineEngine.withDefaultContext(MEDIA, this, "Fetching stock media") {
             val loadedPage = if (loadMore) {
-                sqlUtils.getNextPage(filter) ?: 0
+                sqlUtils.getNextPage() ?: 0
             } else {
                 0
             }
@@ -110,7 +110,6 @@ class StockMediaStore
                 OnStockMediaListFetched(requireNotNull(payload.error), filter)
             } else {
                 sqlUtils.insert(
-                        filter,
                         loadedPage,
                         if (payload.canLoadMore) payload.nextPage else null,
                         payload.mediaList.map {
