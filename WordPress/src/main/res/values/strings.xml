@@ -2873,7 +2873,7 @@
     <string name="content_description_logo">WordPress Logo</string>
 
     <!-- Modal Layout Picker -->
-    <string name="mlp_choose_layout_title">Choose a Layout</string>
+    <string name="mlp_choose_layout_title">Choose a layout</string>
     <string name="mlp_choose_layout_subtitle">Get started by choosing from a wide variety of pre-made page layouts. Or just start with a blank page.</string>
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
