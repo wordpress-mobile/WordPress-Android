@@ -56,7 +56,7 @@ class ActivityLogDetailFragment : Fragment() {
             val (site, activityLogId) = when {
                 savedInstanceState != null -> {
                     val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-                    val activityLogId = savedInstanceState.getString(ACTIVITY_LOG_ID_KEY)
+                    val activityLogId = requireNotNull(savedInstanceState.getString(ACTIVITY_LOG_ID_KEY))
                     site to activityLogId
                 }
                 intent != null -> {

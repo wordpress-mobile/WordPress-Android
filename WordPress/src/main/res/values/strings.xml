@@ -2306,6 +2306,7 @@
     <string name="add_media_progress">Adding media</string>
     <string name="suggestion_invalid_user">"%s is not a valid user"</string>
     <string name="suggestion_no_matching_users">"No matching users available."</string>
+    <string name="suggestion_no_connection">"No internet connection.\nSuggestions are unavailable."</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 

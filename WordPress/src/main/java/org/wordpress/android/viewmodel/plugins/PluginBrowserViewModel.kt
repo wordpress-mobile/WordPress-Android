@@ -140,7 +140,7 @@ class PluginBrowserViewModel @Inject constructor(
             return
         }
         site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        searchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY)
+        searchQuery = requireNotNull(savedInstanceState.getString(KEY_SEARCH_QUERY))
         setTitle(savedInstanceState.getString(KEY_TITLE))
     }
 
