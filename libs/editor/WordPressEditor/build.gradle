@@ -32,13 +32,13 @@ apply plugin: 'kotlin-android-extensions'
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/3b91756fca76e4c2a9b573313e186c47842e1f7d/submoduleGitHash.gradle'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         versionCode 13
         versionName "1.3"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", (rootProject.ext.has("buildGutenbergFromSource") ? rootProject.ext.buildGutenbergFromSource : false).toString()
     }
     compileOptions {
