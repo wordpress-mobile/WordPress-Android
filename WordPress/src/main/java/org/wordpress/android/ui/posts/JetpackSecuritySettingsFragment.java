@@ -4,16 +4,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.WPSwitchPreference;
 import org.wordpress.android.util.WPPrefUtils;
@@ -21,8 +17,7 @@ import org.wordpress.android.util.WPPrefUtils;
 @SuppressWarnings("deprecation")
 public class JetpackSecuritySettingsFragment extends PreferenceFragment
         implements SiteSettingsInterface.SiteSettingsListener,
-        Preference.OnPreferenceChangeListener{
-
+        Preference.OnPreferenceChangeListener {
     private static final long FETCH_DELAY = 1000;
 
     public SiteModel mSite;
@@ -50,7 +45,6 @@ public class JetpackSecuritySettingsFragment extends PreferenceFragment
         mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
 
         if (mSite != null) {
-
             // setup state to fetch remote settings
             mShouldFetch = true;
 
@@ -60,13 +54,6 @@ public class JetpackSecuritySettingsFragment extends PreferenceFragment
 
         // toggle which preferences are shown and set references
         initPreferences();
-    }
-
-    @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                                       @Nullable Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        //mDispatcher.register(this);
-        return view;
     }
 
     @Override
@@ -96,14 +83,10 @@ public class JetpackSecuritySettingsFragment extends PreferenceFragment
 
     // SiteSettingsListener
     @Override
-    public void onSaveError(Exception error) {
-
-    }
+    public void onSaveError(Exception error) { }
 
     @Override
-    public void onFetchError(Exception error) {
-
-    }
+    public void onFetchError(Exception error) { }
 
     @Override
     public void onSettingsUpdated() {
@@ -113,14 +96,10 @@ public class JetpackSecuritySettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSettingsSaved() {
-
-    }
+    public void onSettingsSaved() { }
 
     @Override
-    public void onCredentialsValidated(Exception error) {
-
-    }
+    public void onCredentialsValidated(Exception error) { }
 
     /**
      * Helper method to retrieve {@link Preference} references and initialize any data.

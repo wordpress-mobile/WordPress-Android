@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import org.wordpress.android.R;
 
 public class JetpackSecuritySettingsActivity extends AppCompatActivity {
+    public static final int JETPACK_SECURITY_SETTINGS_REQUEST_CODE = 101;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,9 +43,17 @@ public class JetpackSecuritySettingsActivity extends AppCompatActivity {
         int itemID = item.getItemId();
 
         if (itemID == android.R.id.home) {
+            setResult(RESULT_OK, null);
             finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK, null);
+        finish();
     }
 }
