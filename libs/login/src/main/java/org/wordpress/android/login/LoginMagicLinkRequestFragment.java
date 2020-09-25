@@ -202,6 +202,11 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         getActivity().setTitle(R.string.magic_link_login_title);
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        mAnalyticsListener.magicLinkRequestScreenResumed();
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
