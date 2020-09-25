@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
+package org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers
 
 import android.content.Context
 import com.android.volley.RequestQueue
@@ -16,9 +16,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.StatsStore.ReportReferrerAsSpamPayload
 import org.wordpress.android.fluxc.store.toStatsError
 import java.util.Date
 import javax.inject.Inject
@@ -65,6 +67,26 @@ class ReferrersRestClient
             }
             is Error -> {
                 FetchStatsPayload(response.error.toStatsError())
+            }
+        }
+    }
+    suspend fun reportReferrerAsSpam(site: SiteModel, domain: String): ReportReferrerAsSpamPayload<ReportReferrerAsSpamApiResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.new_.urlV1_1
+        val params = mapOf(
+                "domain" to domain
+        )
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                params,
+                ReportReferrerAsSpamApiResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                ReportReferrerAsSpamPayload(response.data)
+            }
+            is Error -> {
+                ReportReferrerAsSpamPayload(response.error.toStatsError())
             }
         }
     }
