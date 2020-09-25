@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -560,18 +561,23 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchWpComBlockLayouts(final SiteModel site) {
+    public void fetchWpComBlockLayouts(final SiteModel site, List<String> supportedBlocks) {
         String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
-        fetchBlockLayouts(site, url);
+        fetchBlockLayouts(site, url, supportedBlocks);
     }
 
-    public void fetchSelfHostedBlockLayouts(final SiteModel site) {
+    public void fetchSelfHostedBlockLayouts(final SiteModel site, List<String> supportedBlocks) {
         String url = WPCOMV2.common_block_layouts.getUrl();
-        fetchBlockLayouts(site, url);
+        fetchBlockLayouts(site, url, supportedBlocks);
     }
 
-    private void fetchBlockLayouts(final SiteModel site, String url) {
+    private void fetchBlockLayouts(final SiteModel site, String url, List<String> supportedBlocks) {
         Map<String, String> params = new HashMap<>();
+
+        if (supportedBlocks != null && !supportedBlocks.isEmpty()) {
+            params.put("supported_blocks", TextUtils.join(",", supportedBlocks));
+        }
+
         final WPComGsonRequest<BlockLayoutsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 BlockLayoutsResponse.class,
                 new Listener<BlockLayoutsResponse>() {
