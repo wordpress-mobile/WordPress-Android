@@ -19,7 +19,7 @@ data class GutenbergPropsBuilder(
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
             enableMentions = enableMentions,
             enableUnsupportedBlockEditor = enableUnsupportedBlockEditor,
-            unsupportedBlockEditorSwitch = unsupportedBlockEditorSwitch,
+            canEnableUnsupportedBlockEditor = unsupportedBlockEditorSwitch,
             localeSlug = localeSlug,
             postType = postType,
             editorTheme = editorTheme,
