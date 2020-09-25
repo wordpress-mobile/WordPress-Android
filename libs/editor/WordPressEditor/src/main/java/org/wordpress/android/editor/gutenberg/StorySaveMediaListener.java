@@ -5,4 +5,5 @@ public interface StorySaveMediaListener {
     void onMediaSaveSucceeded(String localId, String mediaUrl);
     void onMediaSaveProgress(String localId, float progress);
     void onMediaSaveFailed(String localId);
+    void onStorySaveResult(String storyFirstMediaId, boolean success);
 }

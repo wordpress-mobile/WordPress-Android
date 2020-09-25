@@ -237,4 +237,8 @@ public class GutenbergContainerFragment extends Fragment {
     public void mediaFileSaveSucceeded(final String mediaId, final String mediaUrl) {
         mWPAndroidGlueCode.mediaFileSaveSucceeded(mediaId, mediaUrl);
     }
+
+    public void onStorySaveResult(final String storyFirstMediaId, final boolean success) {
+        mWPAndroidGlueCode.storySaveResult(storyFirstMediaId, success);
+    }
 }
