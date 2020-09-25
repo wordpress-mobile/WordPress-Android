@@ -560,9 +560,18 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchBlockLayouts(final SiteModel site) {
-        Map<String, String> params = new HashMap<>();
+    public void fetchWpComBlockLayouts(final SiteModel site) {
         String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
+        fetchBlockLayouts(site, url);
+    }
+
+    public void fetchSelfHostedBlockLayouts(final SiteModel site) {
+        String url = WPCOMV2.common_block_layouts.getUrl();
+        fetchBlockLayouts(site, url);
+    }
+
+    private void fetchBlockLayouts(final SiteModel site, String url) {
+        Map<String, String> params = new HashMap<>();
         final WPComGsonRequest<BlockLayoutsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 BlockLayoutsResponse.class,
                 new Listener<BlockLayoutsResponse>() {

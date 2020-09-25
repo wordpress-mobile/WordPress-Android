@@ -1819,7 +1819,9 @@ public class SiteStore extends Store {
 
     private void fetchBlockLayouts(SiteModel site) {
         if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchBlockLayouts(site);
+            mSiteRestClient.fetchWpComBlockLayouts(site);
+        } else {
+            mSiteRestClient.fetchSelfHostedBlockLayouts(site);
         }
     }
 
