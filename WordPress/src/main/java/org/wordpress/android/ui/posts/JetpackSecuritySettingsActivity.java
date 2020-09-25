@@ -24,7 +24,7 @@ public class JetpackSecuritySettingsActivity extends AppCompatActivity {
     private void setupToolbar() {
         setTitle(getResources().getText(R.string.jetpack_security_setting_title));
 
-        Toolbar toolbar = findViewById(org.wordpress.mobile.ReactNativeGutenbergBridge.R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
 
