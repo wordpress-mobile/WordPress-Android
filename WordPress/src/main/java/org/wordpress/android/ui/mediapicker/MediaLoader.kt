@@ -32,12 +32,12 @@ data class MediaLoader(
                     is Refresh -> {
                         if (loadAction.forced || state.domainItems.isEmpty()) {
                             emit(state.copy(isLoading = true))
-                            state = buildDomainModel(mediaSource.load(allowedTypes), state)
+                            state = buildDomainModel(mediaSource.load(allowedTypes, forced = loadAction.forced), state)
                             emit(state)
                         }
                     }
                     is NextPage -> {
-                        val load = mediaSource.load(mediaTypes = allowedTypes, offset = state.domainItems.size)
+                        val load = mediaSource.load(mediaTypes = allowedTypes, loadMore = true)
                         state = buildDomainModel(load, state)
                         emit(state)
                     }
