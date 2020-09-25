@@ -19,6 +19,7 @@ import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
+import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -40,6 +41,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var layouts: GutenbergPageLayouts
+    private lateinit var supportedBlocks: SupportedBlocks
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -77,19 +79,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-
-            // TODO load from JSON
-            val supported = listOf(
-                    "core/paragraph", "core/heading", "core/more", "core/image", "core/video",
-                    "core/nextpage", "core/separator", "core/list", "core/quote", "core/media-text",
-                    "core/preformatted", "core/gallery", "core/columns", "core/column", "core/group",
-                    "core/freeform", "core/button", "core/spacer", "core/shortcode", "core/buttons",
-                    "core/latest-posts", "core/verse", "core/cover", "core/social-link", "core/social-links",
-                    "jetpack/contact-info", "jetpack/email", "jetpack/phone", "jetpack/address", "core/pullquote",
-                    "core/code"
-            )
-
-            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(FetchBlockLayoutsPayload(site, supported)))
+            val payload = FetchBlockLayoutsPayload(site, supportedBlocks.supported)
+            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
 
@@ -160,8 +151,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     /**
      * Shows the MLP
+     * @param supportedBlocks the supported blocks to filter fetched layouts (by default no filtering occurs)
      */
-    fun show() {
+    fun show(supportedBlocks: SupportedBlocks = SupportedBlocks()) {
+        this.supportedBlocks = supportedBlocks
         init()
         _isModalLayoutPickerShowing.value = Event(true)
     }

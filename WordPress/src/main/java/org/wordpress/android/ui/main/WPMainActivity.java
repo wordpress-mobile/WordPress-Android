@@ -82,6 +82,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mlp.SupportedBlocks;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -439,7 +440,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case CREATE_NEW_PAGE:
                     if (mModalLayoutPickerFeatureConfig.isEnabled()) {
-                        mMLPViewModel.show();
+                        mMLPViewModel.show(SupportedBlocks.fromAssets(this));
                     } else {
                         handleNewPageAction(""/*empty page*/, PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     }
