@@ -107,6 +107,8 @@
 /sites/$site/stats/visits
 /sites/$site/stats/top-posts
 /sites/$site/stats/referrers
+/sites/$site/stats/referrers/spam/new
+/sites/$site/stats/referrers/spam/delete
 /sites/$site/stats/clicks
 /sites/$site/stats/country-views
 /sites/$site/stats/top-authors
