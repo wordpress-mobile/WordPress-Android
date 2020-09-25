@@ -1,0 +1,18 @@
+/*
+This file is completely optional, but its usage makes it easier to work with libraries
+in local path. This example file needs to be copied as `local-builds.gradle` to take
+effect.
+
+`settings.gradle` will check these properties and if the given path is valid, it'll include it
+in the project and substitute the binary dependency with the local one.
+
+Once this file is updated Gradle will need to re-configure the project. (sync)
+
+Please note that some included builds may be slow to compile. Specifically, as of Sep 25, 2020,
+making a change to FluxC can take around 2 minutes to build. This is something that'll hopefully
+get better with some build improvements, but in the meantime it might be best to prefer the
+binary build if you're not working on a specific library.
+*/
+ext {
+    localFluxCPath = "../WordPress-FluxC-Android"
+}

@@ -301,10 +301,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    def fluxCDependency = project.findProperty("localFluxC")?.toBoolean()
-            ? "org.wordpress:fluxc"
-            : "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
-    implementation (fluxCDependency) {
+    implementation ("$gradle.ext.fluxCDependency:$fluxCVersion") {
         exclude group: "com.android.volley"
     }
 
