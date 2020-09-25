@@ -7,7 +7,6 @@ buildscript {
     ext.androidx_work_version = "2.0.1"
     ext.buildGutenbergMobileJSBundle = 1
     ext.wordPressUtilsVersion = '1.30'
-    ext.buildUtilsFromLocalDirectory = false
 
     repositories {
         google()

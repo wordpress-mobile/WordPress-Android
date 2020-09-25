@@ -18,15 +18,6 @@ include ':libs:login:WordPressLoginFlow'
 include ':libs:WordPressProcessors'
 include ':libs:WordPressAnnotations'
 
-def includedBuilds = new File('./included-builds.txt')
-if (includedBuilds.exists()) {
-    includedBuilds.eachLine { line ->
-        if (!line.isEmpty() && !line.startsWith("#")) {
-            includeBuild(line)
-        }
-    }
-}
-
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
@@ -64,6 +55,7 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 }
 
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
+gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -85,6 +77,15 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting fluxc with the local build"
                 substitute module("$gradle.ext.fluxCBinaryPath:fluxc") with project(':fluxc')
+            }
+        }
+    }
+
+    if (ext.has("localWPUtilsPath")) {
+        includeBuild(ext.localWPUtilsPath) {
+            dependencySubstitution {
+                println "Substituting wputils with the local build"
+                substitute module("$gradle.ext.wputilsBinaryPath") with project(':WordPressUtils')
             }
         }
     }
