@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.mlp
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
@@ -17,11 +18,19 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
+import org.wordpress.android.fluxc.store.SiteStore.SiteError
+import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
 
 @RunWith(MockitoJUnitRunner::class)
 class ModalLayoutPickerViewModelTest {
@@ -39,6 +48,24 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
 
+    private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
+        get() {
+            val aboutCategory = GutenbergLayoutCategory(
+                    slug = "about",
+                    title = "About",
+                    description = "About pages",
+                    emoji = "👋"
+            )
+            val aboutLayout = GutenbergLayout(
+                    slug = "about",
+                    title = "About",
+                    preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+                    content = "",
+                    categories = listOf(aboutCategory)
+            )
+            return OnBlockLayoutsFetched(listOf(aboutLayout), listOf(aboutCategory), null)
+        }
+
     @Before
     fun setUp() {
         viewModel = ModalLayoutPickerViewModel(
@@ -54,14 +81,28 @@ class ModalLayoutPickerViewModelTest {
     }
 
     @ExperimentalCoroutinesApi
-    private fun <T> mockFetchingSelectedSite(block: suspend CoroutineScope.() -> T) {
+    private fun <T> mockFetchingSelectedSite(isError: Boolean = false, block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             val siteId = 1
             val site = SiteModel()
             whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+            setupFetchLayoutsDispatcher(isError)
             block()
+        }
+    }
+
+    private fun setupFetchLayoutsDispatcher(isError: Boolean) {
+        val event = if (isError) {
+            OnBlockLayoutsFetched(null, null, SiteError(GENERIC_ERROR, "Error"))
+        } else {
+            defaultPageLayoutsEvent
+        }
+        whenever(dispatcher.dispatch(argWhere<Action<Void>> {
+            it.type == SiteAction.FETCH_BLOCK_LAYOUTS
+        })).then {
+            viewModel.onBlockLayoutsFetched(event)
         }
     }
 
@@ -109,6 +150,13 @@ class ModalLayoutPickerViewModelTest {
     fun `when modal layout picker starts the layouts are loaded`() = mockFetchingSelectedSite {
         viewModel.init()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).layoutCategories.size).isGreaterThan(0)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when modal layout picker starts fetch errors are handled`() = mockFetchingSelectedSite(true) {
+        viewModel.init()
+        assertThat(viewModel.uiState.value is ErrorUiState).isEqualTo(true)
     }
 
     @ExperimentalCoroutinesApi
