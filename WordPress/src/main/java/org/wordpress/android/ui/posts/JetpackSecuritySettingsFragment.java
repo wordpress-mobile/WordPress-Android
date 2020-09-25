@@ -135,27 +135,28 @@ public class JetpackSecuritySettingsFragment extends PreferenceFragment
             return false;
         }
 
+        Boolean prefBool = (Boolean) newValue;
         if (preference == mJpMonitorActivePref) {
-            mJpMonitorActivePref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackMonitor((Boolean) newValue);
+            mJpMonitorActivePref.setChecked(prefBool);
+            mSiteSettings.enableJetpackMonitor(prefBool);
         } else if (preference == mJpMonitorEmailNotesPref) {
-            mJpMonitorEmailNotesPref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackMonitorEmailNotifications((Boolean) newValue);
+            mJpMonitorEmailNotesPref.setChecked(prefBool);
+            mSiteSettings.enableJetpackMonitorEmailNotifications(prefBool);
         } else if (preference == mJpMonitorWpNotesPref) {
-            mJpMonitorWpNotesPref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackMonitorWpNotifications((Boolean) newValue);
+            mJpMonitorWpNotesPref.setChecked(prefBool);
+            mSiteSettings.enableJetpackMonitorWpNotifications(prefBool);
         } else if (preference == mJpBruteForcePref) {
-            mJpBruteForcePref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackProtect((Boolean) newValue);
+            mJpBruteForcePref.setChecked(prefBool);
+            mSiteSettings.enableJetpackProtect(prefBool);
         } else if (preference == mJpSsoPref) {
-            mJpSsoPref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackSso((Boolean) newValue);
+            mJpSsoPref.setChecked(prefBool);
+            mSiteSettings.enableJetpackSso(prefBool);
         } else if (preference == mJpMatchEmailPref) {
-            mJpMatchEmailPref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackSsoMatchEmail((Boolean) newValue);
+            mJpMatchEmailPref.setChecked(prefBool);
+            mSiteSettings.enableJetpackSsoMatchEmail(prefBool);
         } else if (preference == mJpUseTwoFactorPref) {
-            mJpUseTwoFactorPref.setChecked((Boolean) newValue);
-            mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
+            mJpUseTwoFactorPref.setChecked(prefBool);
+            mSiteSettings.enableJetpackSsoTwoFactor(prefBool);
         }
 
         mSiteSettings.saveSettings();
