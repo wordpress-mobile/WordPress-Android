@@ -55,7 +55,7 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
     project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-reanimated/android')
 }
 
-gradle.ext.fluxCDependency = "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc"
+gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -65,7 +65,7 @@ if (localBuilds.exists()) {
     In order to add a new included build:
     1. Define a property for its path in the `local-builds.gradle-example` file. 
     2. Check if that property exists in `ext` since it may be commented out.
-    3. Include the build using the property
+    3. Include the build using the property.
     4. Add dependencySubstitution block and substitute the binary module with the project.
 
     Note that `project` dependencies are resolved in the context of the included build.
@@ -76,7 +76,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localFluxCPath) {
             dependencySubstitution {
                 println "Substituting fluxc with the local build"
-                substitute module(gradle.ext.fluxCDependency) with project(':fluxc')
+                substitute module("$gradle.ext.fluxCBinaryPath:fluxc") with project(':fluxc')
             }
         }
     }
