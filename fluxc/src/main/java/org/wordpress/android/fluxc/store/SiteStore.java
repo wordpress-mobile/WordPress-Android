@@ -148,6 +148,16 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class FetchBlockLayoutsPayload extends Payload<BaseNetworkError> {
+        @NonNull public SiteModel site;
+        @NonNull public List<String> supportedBlocks;
+
+        public FetchBlockLayoutsPayload(@NonNull SiteModel site, @NonNull List<String> supportedBlocks) {
+            this.site = site;
+            this.supportedBlocks = supportedBlocks;
+        }
+    }
+
     public static class FetchedBlockLayoutsResponsePayload extends Payload<SiteError> {
         public SiteModel site;
         public List<GutenbergLayout> layouts;
@@ -1497,7 +1507,7 @@ public class SiteStore extends Store {
                 fetchSiteEditors((SiteModel) action.getPayload());
                 break;
             case FETCH_BLOCK_LAYOUTS:
-                fetchBlockLayouts((SiteModel) action.getPayload());
+                fetchBlockLayouts((FetchBlockLayoutsPayload) action.getPayload());
                 break;
             case FETCHED_BLOCK_LAYOUTS:
                 handleFetchedBlockLayouts((FetchedBlockLayoutsResponsePayload) action.getPayload());
@@ -1817,11 +1827,11 @@ public class SiteStore extends Store {
         }
     }
 
-    private void fetchBlockLayouts(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchWpComBlockLayouts(site);
+    private void fetchBlockLayouts(FetchBlockLayoutsPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchWpComBlockLayouts(payload.site, payload.supportedBlocks);
         } else {
-            mSiteRestClient.fetchSelfHostedBlockLayouts(site);
+            mSiteRestClient.fetchSelfHostedBlockLayouts(payload.site, payload.supportedBlocks);
         }
     }
 
