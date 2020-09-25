@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -76,7 +77,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
+
+            // TODO load from JSON
+            val supported = listOf(
+                    "core/paragraph", "core/heading", "core/more", "core/image", "core/video",
+                    "core/nextpage", "core/separator", "core/list", "core/quote", "core/media-text",
+                    "core/preformatted", "core/gallery", "core/columns", "core/column", "core/group",
+                    "core/freeform", "core/button", "core/spacer", "core/shortcode", "core/buttons",
+                    "core/latest-posts", "core/verse", "core/cover", "core/social-link", "core/social-links",
+                    "jetpack/contact-info", "jetpack/email", "jetpack/phone", "jetpack/address", "core/pullquote",
+                    "core/code"
+            )
+
+            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(FetchBlockLayoutsPayload(site, supported)))
         }
     }
 
