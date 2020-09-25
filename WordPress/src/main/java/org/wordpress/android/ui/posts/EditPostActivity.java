@@ -40,10 +40,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.wordpress.stories.compose.frame.StorySaveEvents;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart;
+import com.wordpress.stories.compose.story.Story;
 import com.wordpress.stories.compose.story.StoryFrameItem;
 import com.wordpress.stories.compose.story.StoryRepository;
 
@@ -3124,12 +3126,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
             // check whether this is a temporary file being just saved (so we don't have a proper local MediaModel yet)
             // catch ( NumberFormatException e)
             if (localMediaId.startsWith(TEMPORARY_ID_PREFIX)) {
-                StoryFrameItem frame =
-                        mStoryRepositoryWrapper.getStoryAtIndex(
-                                event.getStoryIndex()).getFrames().get(event.getFrameIndex()
-                        );
+                Story story = mStoryRepositoryWrapper.getStoryAtIndex(event.getStoryIndex());
+                StoryFrameItem frame = story.getFrames().get(event.getFrameIndex());
                 mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId,
                         frame.getComposedFrameFile().getAbsolutePath());
+
+                // calculate progress and emit overall story progress update signal
+                int successCount = 0;
+                for (StoryFrameItem frameItem : story.getFrames()) {
+                    if (frameItem.getComposedFrameFile() != null
+                        && frameItem.getSaveResultReason() instanceof StorySaveEvents.SaveResultReason.SaveSuccess) {
+                        successCount++;
+                    }
+                }
+
+                float totalProgress = successCount / story.getFrames().size();
+                mStorySaveMediaListener.onMediaSaveProgress(localMediaId, totalProgress);
             } else {
                 MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
                 if (mediaModel != null) {
