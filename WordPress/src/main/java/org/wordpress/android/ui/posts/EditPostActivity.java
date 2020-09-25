@@ -45,6 +45,7 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart;
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
 import com.wordpress.stories.compose.story.Story;
 import com.wordpress.stories.compose.story.StoryFrameItem;
 import com.wordpress.stories.compose.story.StoryRepository;
@@ -3099,7 +3100,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
         String localMediaId = String.valueOf(event.getFrameId());
         if (mStorySaveMediaListener != null) {
-            mStorySaveMediaListener.onMediaSaveReattached(localMediaId, 0.0f);
+            float progress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(event.getStoryIndex(), 0.0f);
+            mStorySaveMediaListener.onMediaSaveReattached(localMediaId, progress);
         }
     }
 
@@ -3111,7 +3113,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
         String localMediaId = String.valueOf(event.getFrameId());
         if (mStorySaveMediaListener != null) {
-            mStorySaveMediaListener.onMediaSaveProgress(localMediaId, event.getProgress());
+            float progress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(
+                    event.getStoryIndex(),
+                    event.getProgress()
+            );
+            mStorySaveMediaListener.onMediaSaveProgress(localMediaId, progress);
         }
     }
 
@@ -3127,20 +3133,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
             // catch ( NumberFormatException e)
             if (localMediaId.startsWith(TEMPORARY_ID_PREFIX)) {
                 Story story = mStoryRepositoryWrapper.getStoryAtIndex(event.getStoryIndex());
+
+                // first, update the media's url
                 StoryFrameItem frame = story.getFrames().get(event.getFrameIndex());
                 mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId,
-                        frame.getComposedFrameFile().getAbsolutePath());
+                        Uri.fromFile(frame.getComposedFrameFile()).toString());
 
-                // calculate progress and emit overall story progress update signal
-                int successCount = 0;
-                for (StoryFrameItem frameItem : story.getFrames()) {
-                    if (frameItem.getComposedFrameFile() != null
-                        && frameItem.getSaveResultReason() instanceof StorySaveEvents.SaveResultReason.SaveSuccess) {
-                        successCount++;
-                    }
-                }
-
-                float totalProgress = successCount / story.getFrames().size();
+                // now update progress
+                float totalProgress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(event.getStoryIndex(), 0.0f);
                 mStorySaveMediaListener.onMediaSaveProgress(localMediaId, totalProgress);
             } else {
                 MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
@@ -3159,8 +3159,38 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
         String localMediaId = String.valueOf(event.getFrameId());
+//        if (mStorySaveMediaListener != null) {
+//            mStorySaveMediaListener.onMediaSaveFailed(localMediaId);
+//        }
+        // just update progress, we may have still some other frames in this story that need be saved.
+        // we will send the Failed signal once all the Story frames have been processed
         if (mStorySaveMediaListener != null) {
-            mStorySaveMediaListener.onMediaSaveFailed(localMediaId);
+            float progress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(event.getStoryIndex(), 0.0f);
+            mStorySaveMediaListener.onMediaSaveReattached(localMediaId, progress);
+        }
+    }
+
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStorySaveProcessFinished(StorySaveResult event) {
+        if (isFinishing()) {
+            return;
+        }
+
+        Story story = mStoryRepositoryWrapper.getStoryAtIndex(event.getStoryIndex());
+        if (event.isSuccess() && event.getFrameSaveResult().size() == story.getFrames().size()) {
+            // take the first frame IDs and mediaUri
+            String localMediaId = String.valueOf(story.getFrames().get(0).getId());
+            String mediaUrl = Uri.fromFile(story.getFrames().get(0).getComposedFrameFile()).toString();
+            if (mStorySaveMediaListener != null) {
+                mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaUrl);
+            }
+        } else {
+            String localMediaId = String.valueOf(story.getFrames().get(0).getId());
+            if (mStorySaveMediaListener != null) {
+                mStorySaveMediaListener.onMediaSaveFailed(localMediaId);
+            }
         }
     }
 

@@ -14,4 +14,6 @@ class StoryRepositoryWrapper @Inject constructor() {
     fun addStoryFrameItemToCurrentStory(item: StoryFrameItem) = StoryRepository.addStoryFrameItemToCurrentStory(item)
     fun getStoryAtIndex(index: StoryIndex) = StoryRepository.getStoryAtIndex(index)
     fun getImmutableStories() = StoryRepository.getImmutableStories()
+    fun getCurrentStorySaveProgress(storyIndex: StoryIndex, oneItemActualProgress: Float = 0.0F)
+            = StoryRepository.getCurrentStorySaveProgress(storyIndex, oneItemActualProgress)
 }
