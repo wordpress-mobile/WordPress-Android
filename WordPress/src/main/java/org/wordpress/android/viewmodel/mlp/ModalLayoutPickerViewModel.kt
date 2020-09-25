@@ -15,7 +15,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
-import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
@@ -77,11 +76,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            if (site.isWPCom) {
-                dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
-            } else {
-                handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
-            }
+            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
         }
     }
 
