@@ -3,9 +3,10 @@ package org.wordpress.android.fluxc.store.stats.time
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.OnReportReferrerAsSpam
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
@@ -48,4 +49,16 @@ class ReferrersStore
             coroutineEngine.run(STATS, this, "getReferrers") {
                 sqlUtils.select(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
             }
+
+    suspend fun reportReferrerAsSpam(
+        site: SiteModel,
+        domain: String
+    ) = coroutineEngine.withDefaultContext(STATS, this, "reportReferrerAsSpam") {
+        val payload = restClient.reportReferrerAsSpam(site, domain)
+        return@withDefaultContext when {
+            payload.isError -> OnReportReferrerAsSpam(payload.error)
+            payload.response != null -> OnReportReferrerAsSpam(payload.response)
+            else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
+        }
+    }
 }

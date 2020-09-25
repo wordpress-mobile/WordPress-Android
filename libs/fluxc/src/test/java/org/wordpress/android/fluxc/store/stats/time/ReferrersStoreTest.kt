@@ -16,11 +16,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamApiResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.StatsStore.ReportReferrerAsSpamPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
@@ -39,6 +41,7 @@ class ReferrersStoreTest {
     @Mock lateinit var sqlUtils: ReferrersSqlUtils
     @Mock lateinit var mapper: TimeStatsMapper
     private lateinit var store: ReferrersStore
+    private val domain: String = "example.referral.com"
     @Before
     fun setUp() {
         store = ReferrersStore(
@@ -108,4 +111,20 @@ class ReferrersStoreTest {
 
         assertThat(result).isEqualTo(model)
     }
+
+    @Test
+    fun `returns successful when report referrer as spam`() = test {
+        val restResponse =  ReportReferrerAsSpamPayload(ReportReferrerAsSpamApiResponse(true))
+        whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(restResponse)
+
+        val result = store.reportReferrerAsSpam(site, domain)
+
+        assertThat(result.model?.success).isEqualTo(true)
+    }
+
+    @Test
+    fun `returns error when report referrer as spam causes network error`() = test {
+        // TODO Implement this method
+    }
 }
+

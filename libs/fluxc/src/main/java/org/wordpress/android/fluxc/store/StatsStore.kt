@@ -209,6 +209,20 @@ class StatsStore
         }
     }
 
+    data class OnReportReferrerAsSpam<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
+        constructor(error: StatsError) : this() {
+            this.error = error
+        }
+    }
+
+    data class ReportReferrerAsSpamPayload<T>(
+        val response: T? = null
+    ) : Payload<StatsError>() {
+        constructor(error: StatsError) : this() {
+            this.error = error
+        }
+    }
+
     enum class StatsErrorType {
         GENERIC_ERROR,
         TIMEOUT,
