@@ -45,7 +45,7 @@ class ReferrersRestClient
         date: Date,
         pageSize: Int,
         forced: Boolean
-    ): FetchStatsPayload<ReferrersResponse> {
+    ): FetchStatsPayload<FetchReferrersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.referrers.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
@@ -56,7 +56,7 @@ class ReferrersRestClient
                 this,
                 url,
                 params,
-                ReferrersResponse::class.java,
+                FetchReferrersResponse::class.java,
                 enableCaching = false,
                 forced = forced
         )
@@ -70,7 +70,10 @@ class ReferrersRestClient
             }
         }
     }
-    suspend fun reportReferrerAsSpam(site: SiteModel, domain: String): ReportReferrerAsSpamPayload<ReportReferrerAsSpamApiResponse> {
+    suspend fun reportReferrerAsSpam(
+        site: SiteModel,
+        domain: String
+    ): ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.new_.urlV1_1
         val params = mapOf(
                 "domain" to domain
@@ -79,7 +82,7 @@ class ReferrersRestClient
                 this,
                 url,
                 params,
-                ReportReferrerAsSpamApiResponse::class.java
+                ReportReferrerAsSpamResponse::class.java
         )
         return when (response) {
             is Success -> {
@@ -91,7 +94,7 @@ class ReferrersRestClient
         }
     }
 
-    data class ReferrersResponse(
+    data class FetchReferrersResponse(
         @SerializedName("period") val statsGranularity: String?,
         @SerializedName("days") val groups: Map<String, Groups>
     ) {

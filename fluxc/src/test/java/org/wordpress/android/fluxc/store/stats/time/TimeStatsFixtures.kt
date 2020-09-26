@@ -16,11 +16,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse.PostViewsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse.Child
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse.Group
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse.Groups
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse.Referrer
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Child
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Group
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Groups
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Referrer
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse.SearchTerm
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
@@ -69,7 +69,7 @@ val REFERRER = Referrer(
         listOf(Child("Child", 20, "child.jpg", "child.com"))
 )
 val GROUP = Group(GROUP_ID, "Group 1", "icon.jpg", "url.com", 50, null, referrers = listOf(REFERRER))
-val REFERRERS_RESPONSE = ReferrersResponse(null, mapOf("2018-10-10" to Groups(10, 20, listOf(GROUP))))
+val REFERRERS_RESPONSE = FetchReferrersResponse(null, mapOf("2018-10-10" to Groups(10, 20, listOf(GROUP))))
 val CLICK_GROUP = ClickGroup(GROUP_ID, "Click name", "click.jpg", "click.com", 20, null)
 val CLICKS_RESPONSE = ClicksResponse(null, mapOf("2018-10-10" to ClicksResponse.Groups(10, 15, listOf(CLICK_GROUP))))
 val VISITS_AND_VIEWS_RESPONSE = VisitsAndViewsResponse(
