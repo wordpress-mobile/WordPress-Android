@@ -47,6 +47,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
+    @Mock lateinit var onPreviewPageRequestedObserver: Observer<String>
 
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
         get() {
@@ -77,6 +78,9 @@ class ModalLayoutPickerViewModelTest {
         )
         viewModel.onCreateNewPageRequested.observeForever(
                 onCreateNewPageRequestedObserver
+        )
+        viewModel.onPreviewPageRequested.observeForever(
+                onPreviewPageRequestedObserver
         )
     }
 
@@ -176,10 +180,18 @@ class ModalLayoutPickerViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `when the create page is triggered the page creation flow starts`() = mockFetchingSelectedSite {
+    fun `when the create page is clicked the page creation flow starts`() = mockFetchingSelectedSite {
         viewModel.show()
         viewModel.onCreatePageClicked()
         verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when the preview page is clicked the preview flow starts`() = mockFetchingSelectedSite {
+        viewModel.show()
+        viewModel.onPreviewPageClicked()
+        verify(onPreviewPageRequestedObserver).onChanged(anyOrNull())
     }
 
     @ExperimentalCoroutinesApi

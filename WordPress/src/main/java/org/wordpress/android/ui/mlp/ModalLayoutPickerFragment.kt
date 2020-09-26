@@ -86,7 +86,9 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         createPageButton.setOnClickListener {
             viewModel.onCreatePageClicked()
         }
-        previewButton.setOnClickListener { /* TODO */ }
+        previewButton.setOnClickListener {
+            viewModel.onPreviewPageClicked()
+        }
 
         setScrollListener()
 
