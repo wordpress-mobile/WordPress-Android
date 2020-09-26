@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -494,7 +495,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
             // second also perform a media upload cancel action, through the onMediaUploadCancelClicked interface
             mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
-            mUploadingMediaProgressMax.remove(localMediaId);
+            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
         } else {
             // upload has already finished by the time the user deleted the block, so no op
         }
@@ -512,7 +513,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // remove from editor
                             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
                             getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
-                            mUploadingMediaProgressMax.remove(localMediaId);
+                            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                         }
