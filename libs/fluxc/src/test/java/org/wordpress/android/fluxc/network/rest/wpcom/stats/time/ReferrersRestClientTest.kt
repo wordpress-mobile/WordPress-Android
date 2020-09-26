@@ -221,12 +221,9 @@ class ReferrersRestClientTest {
         assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/new/")
-        assertThat(paramsCaptor.lastValue).isEqualTo(
-                mapOf(
-                        "domain" to domain
+                .isEqualTo(
+                        "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/new/?domain=$domain"
                 )
-        )
     }
 
     @Test
@@ -244,6 +241,44 @@ class ReferrersRestClientTest {
 
         val domain = "referrers.example.com"
         val responseModel = restClient.reportReferrerAsSpam(site, domain)
+
+        assertThat(responseModel.error).isNotNull
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+    }
+
+    @Test
+    fun `returns success when unreporting referrer as spam`() = test {
+        val response = mock<ReportReferrerAsSpamResponse>()
+        initReportReferrerAsSpamApiResponse(response)
+
+        val domain = "referrers.example.com"
+        val responseModel = restClient.unreportReferrerAsSpam(site, domain)
+
+        assertThat(responseModel.response).isNotNull
+        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo(
+                        "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/delete/" +
+                                "?domain=$domain"
+                )
+    }
+
+    @Test
+    fun `returns error when unreporting referrer as spam`() = test {
+        val errorMessage = "message"
+        initReportReferrerAsSpamApiResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+
+        val domain = "referrers.example.com"
+        val responseModel = restClient.unreportReferrerAsSpam(site, domain)
 
         assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
