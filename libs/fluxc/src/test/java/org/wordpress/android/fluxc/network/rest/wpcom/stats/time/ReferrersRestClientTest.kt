@@ -28,8 +28,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse.Group
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Group
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -76,42 +77,42 @@ class ReferrersRestClientTest {
 
     @Test
     fun `returns post & page day views success response`() = test {
-        testSuccessResponse(DAYS)
+        testFetchReferrersSuccessResponse(DAYS)
     }
 
     @Test
     fun `returns post & page day views error response`() = test {
-        testErrorResponse(DAYS)
+        testFetchReferrersErrorResponse(DAYS)
     }
 
     @Test
     fun `returns post & page week views success response`() = test {
-        testSuccessResponse(WEEKS)
+        testFetchReferrersSuccessResponse(WEEKS)
     }
 
     @Test
     fun `returns post & page week views error response`() = test {
-        testErrorResponse(WEEKS)
+        testFetchReferrersErrorResponse(WEEKS)
     }
 
     @Test
     fun `returns post & page month views success response`() = test {
-        testSuccessResponse(MONTHS)
+        testFetchReferrersSuccessResponse(MONTHS)
     }
 
     @Test
     fun `returns post & page month views error response`() = test {
-        testErrorResponse(MONTHS)
+        testFetchReferrersErrorResponse(MONTHS)
     }
 
     @Test
     fun `returns post & page year views success response`() = test {
-        testSuccessResponse(YEARS)
+        testFetchReferrersSuccessResponse(YEARS)
     }
 
     @Test
     fun `returns post & page year views error response`() = test {
-        testErrorResponse(YEARS)
+        testFetchReferrersErrorResponse(YEARS)
     }
 
     @Test
@@ -171,13 +172,13 @@ class ReferrersRestClientTest {
         }
     }
 
-    private suspend fun testSuccessResponse(granularity: StatsGranularity) {
-        val response = mock<ReferrersResponse>()
-        initReferrersResponse(response)
+    private suspend fun testFetchReferrersSuccessResponse(granularity: StatsGranularity) {
+        val response = mock<FetchReferrersResponse>()
+        initFetchReferrersResponse(response)
 
         val responseModel = restClient.fetchReferrers(site, granularity, currentDate, pageSize, false)
 
-        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/")
@@ -190,9 +191,9 @@ class ReferrersRestClientTest {
         )
     }
 
-    private suspend fun testErrorResponse(granularity: StatsGranularity) {
+    private suspend fun testFetchReferrersErrorResponse(granularity: StatsGranularity) {
         val errorMessage = "message"
-        initReferrersResponse(
+        initFetchReferrersResponse(
                 error = WPComGsonNetworkError(
                         BaseNetworkError(
                                 NETWORK_ERROR,
@@ -204,25 +205,72 @@ class ReferrersRestClientTest {
 
         val responseModel = restClient.fetchReferrers(site, granularity, currentDate, pageSize, false)
 
-        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
-    private suspend fun initReferrersResponse(
-        data: ReferrersResponse? = null,
-        error: WPComGsonNetworkError? = null
-    ): Response<ReferrersResponse> {
-        return initResponse(ReferrersResponse::class.java, data ?: mock(), error)
+    @Test
+    fun `returns success when reporting referrer as spam`() = test {
+        val response = mock<ReportReferrerAsSpamResponse>()
+        initReportReferrerAsSpamApiResponse(response)
+
+        val domain = "referrers.example.com"
+        val responseModel = restClient.reportReferrerAsSpam(site, domain)
+
+        assertThat(responseModel.response).isNotNull
+        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(urlCaptor.lastValue)
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/new/")
+        assertThat(paramsCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "domain" to domain
+                )
+        )
     }
 
-    private suspend fun <T> initResponse(
+    @Test
+    fun `returns error when reporting referrer as spam`() = test {
+        val errorMessage = "message"
+        initReportReferrerAsSpamApiResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+
+        val domain = "referrers.example.com"
+        val responseModel = restClient.reportReferrerAsSpam(site, domain)
+
+        assertThat(responseModel.error).isNotNull
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+    }
+
+    private suspend fun initFetchReferrersResponse(
+        data: FetchReferrersResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<FetchReferrersResponse> {
+        return initGetResponse(FetchReferrersResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initReportReferrerAsSpamApiResponse(
+        data: ReportReferrerAsSpamResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<ReportReferrerAsSpamResponse> {
+        return initPostResponse(ReportReferrerAsSpamResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun <T> initGetResponse(
         kclass: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null,
         cachingEnabled: Boolean = false
     ): Response<T> {
-        val response = if (error != null) Response.Error<T>(error) else Success(data)
+        val response = if (error != null) Response.Error(error) else Success(data)
         whenever(
                 wpComGsonRequestBuilder.syncGetRequest(
                         eq(restClient),
@@ -232,6 +280,24 @@ class ReferrersRestClientTest {
                         eq(cachingEnabled),
                         any(),
                         eq(false)
+                )
+        ).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun <T> initPostResponse(
+        kclass: Class<T>,
+        data: T,
+        error: WPComGsonNetworkError? = null
+    ): Response<T> {
+        val response = if (error != null) Response.Error(error) else Success(data)
+        whenever(
+                wpComGsonRequestBuilder.syncPostRequest(
+                        eq(restClient),
+                        urlCaptor.capture(),
+                        paramsCaptor.capture(),
+                        eq(kclass)
                 )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)

@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClien
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
@@ -52,7 +52,7 @@ class TimeStatsMapper
         return PostAndPageViewsModel(stats, cacheMode is LimitMode.Top && postViews.size > cacheMode.limit)
     }
 
-    fun map(response: ReferrersResponse, cacheMode: LimitMode): ReferrersModel {
+    fun map(response: FetchReferrersResponse, cacheMode: LimitMode): ReferrersModel {
         val first = response.groups.values.firstOrNull()
         val groups = first?.let {
             first.groups.let {

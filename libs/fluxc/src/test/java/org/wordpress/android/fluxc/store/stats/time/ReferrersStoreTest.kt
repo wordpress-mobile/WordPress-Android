@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.ReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamApiResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
@@ -89,7 +89,7 @@ class ReferrersStoreTest {
     fun `returns error when referrers call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchStatsPayload<ReferrersResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<FetchReferrersResponse>(StatsError(type, message))
         val forced = true
         whenever(restClient.fetchReferrers(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
@@ -114,7 +114,7 @@ class ReferrersStoreTest {
 
     @Test
     fun `returns successful when report referrer as spam`() = test {
-        val restResponse =  ReportReferrerAsSpamPayload(ReportReferrerAsSpamApiResponse(true))
+        val restResponse =  ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
         whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(restResponse)
 
         val result = store.reportReferrerAsSpam(site, domain)
@@ -124,7 +124,17 @@ class ReferrersStoreTest {
 
     @Test
     fun `returns error when report referrer as spam causes network error`() = test {
-        // TODO Implement this method
+        val type = API_ERROR
+        val message = "message"
+        val errorPayload = ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse>(StatsError(type, message))
+        whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(errorPayload)
+
+        val result = store.reportReferrerAsSpam(site, domain)
+
+        assertNotNull(result.error)
+        val error = result.error!!
+        assertEquals(type, error.type)
+        assertEquals(message, error.message)
     }
 }
 
