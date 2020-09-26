@@ -97,9 +97,6 @@ class ReferrersRestClient
         domain: String
     ): ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.delete.urlV1_1
-        val params = mapOf(
-                "domain" to domain
-        )
         val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 "$url?domain=$domain",
