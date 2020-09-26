@@ -114,7 +114,7 @@ class ReferrersStoreTest {
 
     @Test
     fun `returns successful when report referrer as spam`() = test {
-        val restResponse =  ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
+        val restResponse = ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
         whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(restResponse)
 
         val result = store.reportReferrerAsSpam(site, domain)
@@ -136,5 +136,29 @@ class ReferrersStoreTest {
         assertEquals(type, error.type)
         assertEquals(message, error.message)
     }
-}
 
+    @Test
+    fun `returns successful when unreport referrer as spam`() = test {
+        val restResponse = ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
+        whenever(restClient.unreportReferrerAsSpam(site, domain)).thenReturn(restResponse)
+
+        val result = store.unreportReferrerAsSpam(site, domain)
+
+        assertThat(result.model?.success).isEqualTo(true)
+    }
+
+    @Test
+    fun `returns error when unreport referrer as spam causes network error`() = test {
+        val type = API_ERROR
+        val message = "message"
+        val errorPayload = ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse>(StatsError(type, message))
+        whenever(restClient.unreportReferrerAsSpam(site, domain)).thenReturn(errorPayload)
+
+        val result = store.unreportReferrerAsSpam(site, domain)
+
+        assertNotNull(result.error)
+        val error = result.error!!
+        assertEquals(type, error.type)
+        assertEquals(message, error.message)
+    }
+}
