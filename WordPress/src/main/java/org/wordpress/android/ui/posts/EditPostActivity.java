@@ -2174,6 +2174,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
+                false, // TODO
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
