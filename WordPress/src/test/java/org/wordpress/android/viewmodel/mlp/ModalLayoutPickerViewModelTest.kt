@@ -178,7 +178,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the create page is triggered the page creation flow starts`() = mockFetchingSelectedSite {
         viewModel.show()
-        viewModel.createPage()
+        viewModel.onCreatePageClicked()
         verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
     }
 
