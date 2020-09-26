@@ -239,6 +239,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
+     * Create page tapped
+     */
+    fun onCreatePageClicked() {
+        createPage()
+        dismiss()
+    }
+
+    /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
@@ -251,7 +259,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Triggers the creation of a new page
      */
-    fun createPage() {
+    private fun createPage() {
         (uiState.value as? ContentUiState)?.let { state ->
             val selection = state.selectedLayoutSlug != null
             _onCreateNewPageRequested.value = if (selection) {
