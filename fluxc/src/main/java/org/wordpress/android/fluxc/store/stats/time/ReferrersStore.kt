@@ -61,4 +61,16 @@ class ReferrersStore
             else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
         }
     }
+
+    suspend fun unreportReferrerAsSpam(
+        site: SiteModel,
+        domain: String
+    ) = coroutineEngine.withDefaultContext(STATS, this, "unreportReferrerAsSpam") {
+        val payload = restClient.unreportReferrerAsSpam(site, domain)
+        return@withDefaultContext when {
+            payload.isError -> OnReportReferrerAsSpam(payload.error)
+            payload.response != null -> OnReportReferrerAsSpam(payload.response)
+            else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
+        }
+    }
 }

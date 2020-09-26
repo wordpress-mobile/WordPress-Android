@@ -70,18 +70,40 @@ class ReferrersRestClient
             }
         }
     }
+
     suspend fun reportReferrerAsSpam(
         site: SiteModel,
         domain: String
     ): ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.new_.urlV1_1
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                "$url?domain=$domain",
+                HashMap(),
+                ReportReferrerAsSpamResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                ReportReferrerAsSpamPayload(response.data)
+            }
+            is Error -> {
+                ReportReferrerAsSpamPayload(response.error.toStatsError())
+            }
+        }
+    }
+
+    suspend fun unreportReferrerAsSpam(
+        site: SiteModel,
+        domain: String
+    ): ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.delete.urlV1_1
         val params = mapOf(
                 "domain" to domain
         )
         val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
-                url,
-                params,
+                "$url?domain=$domain",
+                HashMap(),
                 ReportReferrerAsSpamResponse::class.java
         )
         return when (response) {
