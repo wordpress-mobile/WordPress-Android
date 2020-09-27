@@ -87,13 +87,12 @@ sealed class ReaderCardUiState {
             val url: String,
             val blogId: Long,
             val feedId: Long,
-            val description: String,
+            val description: String?,
             val iconUrl: String?,
             val isFollowed: Boolean,
             val onItemClicked: (Long, Long) -> Unit,
             val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
         ) {
-            val isDescriptionVisible: Boolean = description.isNotEmpty()
             val followContentDescription: UiStringRes by lazy {
                 when (isFollowed) {
                     true -> R.string.reader_btn_unfollow

@@ -185,7 +185,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                             url = urlUtilsWrapper.removeScheme(it.url),
                             blogId = it.blogId,
                             feedId = it.feedId,
-                            description = it.description,
+                            description = it.description.ifEmpty { null },
                             iconUrl = it.imageUrl,
                             isFollowed = it.isFollowing,
                             onFollowClicked = onFollowClicked,

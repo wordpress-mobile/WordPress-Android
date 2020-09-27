@@ -835,7 +835,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `blog description is not visible when description is empty`() = test {
+    fun `blog description is not null when description is empty`() = test {
         // Arrange
         whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
         val blogs = List(1) { createRecommendedBlog(blogDescription = "") }
@@ -848,7 +848,7 @@ class ReaderPostUiStateBuilderTest {
         )
 
         // Assert
-        assertThat(uiState.blogs[0].isDescriptionVisible).isFalse()
+        assertThat(uiState.blogs[0].description).isNull()
     }
 
     // region Private methods
