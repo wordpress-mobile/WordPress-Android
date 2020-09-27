@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
@@ -64,8 +65,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Preview page event
      */
-    private val _onPreviewPageRequested = SingleLiveEvent<String>()
-    val onPreviewPageRequested: LiveData<String> = _onPreviewPageRequested
+    private val _onPreviewPageRequested = SingleLiveEvent<PreviewPageRequest>()
+    val onPreviewPageRequested: LiveData<PreviewPageRequest> = _onPreviewPageRequested
+
+    data class PreviewPageRequest(val site: SiteModel, val content: String)
 
     init {
         dispatcher.register(this)
@@ -263,13 +266,15 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun onPreviewPageClicked() {
         (uiState.value as? ContentUiState)?.let { state ->
+            val siteId = appPrefsWrapper.getSelectedSite()
+            val site = siteStore.getSiteByLocalId(siteId)
             val selection = state.selectedLayoutSlug != null
-            _onPreviewPageRequested.value = if (selection) {
+            val content = if (selection) {
                 layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
             } else ""
+            _onPreviewPageRequested.value = PreviewPageRequest(site, content)
         }
     }
-
 
     /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value

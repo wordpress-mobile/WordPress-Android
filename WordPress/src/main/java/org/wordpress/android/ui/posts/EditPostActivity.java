@@ -254,6 +254,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
+    public static final String EXTRA_IS_PREVIEW = "isPreviewMode";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_UPLOAD_NOT_STARTED = "savedAsLocalDraft";
@@ -332,6 +333,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mIsPreview;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
 
     @Nullable Consumer<String> mOnGetMentionResult;
@@ -437,7 +439,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.register(this);
         mViewModel =
                 ViewModelProviders.of(this, mViewModelFactory).get(StorePostViewModel.class);
-        setContentView(R.layout.new_edit_post_activity);
+
+        mIsPreview = getIntent().getExtras().getBoolean(EXTRA_IS_PREVIEW);
+        setContentView(mIsPreview ? R.layout.mlp_preview_post_activity : R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -619,7 +623,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+        if (mIsPreview) {
+            setTitle(R.string.mlp_preview_title);
+        } else {
+            setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+        }
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
@@ -1079,6 +1088,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (mIsPreview) {
+            return false;
+        }
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
@@ -1087,6 +1099,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mIsPreview) {
+            return false;
+        }
         boolean showMenuItems = true;
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
@@ -1871,6 +1886,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_IS_PREVIEW, mIsPreview);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
@@ -1990,6 +2006,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
         if (mEditorFragment == null || !mEditorFragment.isAdded()) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
+
+        if (mIsPreview) {
+            if (doFinish) {
+                mViewModel.finish(ActivityFinishState.CANCELLED);
+            }
             return;
         }
 
@@ -2174,7 +2197,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
-                false, // TODO
+                mIsPreview,
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,

@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.mlp
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +28,8 @@ import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
@@ -159,6 +163,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             }
         })
 
+        viewModel.onPreviewPageRequested.observe(this, Observer { request ->
+            ActivityLauncher.previewPageForResult(this, request.site, request.content)
+        })
+
         viewModel.onCategorySelected.observe(this, Observer {
             it?.applyIfNotHandled {
                 layoutsRecyclerView?.smoothScrollToPosition(0)
@@ -194,5 +202,15 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         val layoutParams = bottomSheet.layoutParams
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
         bottomSheet.layoutParams = layoutParams
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RequestCodes.PREVIEW_POST) {
+            if (resultCode == Activity.RESULT_OK) {
+                viewModel.onCreatePageClicked() // TODO
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // TODO
+            }
+        }
     }
 }

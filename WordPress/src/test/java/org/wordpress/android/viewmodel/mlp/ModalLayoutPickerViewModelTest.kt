@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PreviewPageRequest
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
 
@@ -47,7 +48,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
-    @Mock lateinit var onPreviewPageRequestedObserver: Observer<String>
+    @Mock lateinit var onPreviewPageRequestedObserver: Observer<PreviewPageRequest>
 
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
         get() {
