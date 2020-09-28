@@ -32,7 +32,7 @@
     <string name="license_screen_title">License</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="notif_settings_screen_title">Notification settings</string>
-    <string name="my_site_section_screen_title">My site</string>
+    <string name="my_site_section_screen_title">My Site</string>
     <string name="me_section_screen_title">Me</string>
     <string name="reader_screen_title">Reader</string>
     <string name="notifications_screen_title">Notifications</string>
@@ -416,6 +416,7 @@
     <string name="comment_read_source_post">Read the source post</string>
     <string name="comment_toast_err_share_intent">Unable to share</string>
     <string name="comment_share_link_via">Share via</string>
+    <string name="comment_unable_to_show_error">Unable to show this comment</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -874,6 +875,13 @@
         <item>@string/app_theme_entry_value_light</item>
         <item>@string/app_theme_entry_value_dark</item>
     </string-array>
+
+    <!-- Feature configuration -->
+    <string name="preference_open_feature_config" translatable="false">Test feature configuration</string>
+    <string name="manual_config_remote_features" translatable="false">Remote features</string>
+    <string name="manual_config_features_in_development" translatable="false">Features in development</string>
+    <string name="manual_config_restart_app" translatable="false">Restart the app</string>
+    <string name="missing_developed_feature" translatable="false">Don\'t see a feature you\'re working on? Check that your feature config file is annotated with the FeatureInDevelopment annotation.</string>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -1701,6 +1709,7 @@
     <!-- menu text -->
     <string name="reader_menu_tags">Edit tags and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
+    <string name="reader_menu_report_post">Report this post</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -2297,6 +2306,7 @@
     <string name="add_media_progress">Adding media</string>
     <string name="suggestion_invalid_user">"%s is not a valid user"</string>
     <string name="suggestion_no_matching_users">"No matching users available."</string>
+    <string name="suggestion_no_connection">"No internet connection.\nSuggestions are unavailable."</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 
@@ -2402,12 +2412,13 @@
     <string name="login_text_otp">Text me a code instead</string>
     <string name="login_text_otp_another">Text me another code instead</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
+    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed.</string>
+    <string name="login_magic_links_label">We\'ll email you a link that\'ll log you in instantly, no password needed.</string>
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
+    <string name="login_get_link_by_email">Get a login link by email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="connect_more">Connect another site</string>
@@ -2476,15 +2487,15 @@
     <string name="signup_epilogue_error_button_positive">Retry</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
-    <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
+    <string name="signup_epilogue_hint_password_detail">You can always log in with a link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_username">Username</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We’ve emailed you a magic link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
+    <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="signup_confirmation_magic_link_message">We’ll email you a magic link to create your new WordPress.com account.</string>
+    <string name="signup_confirmation_magic_link_message">We’ll email you a signup link to create your new WordPress.com account.</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
@@ -3185,5 +3196,12 @@ translators: sample content for "Services" page template -->
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_what_people_say" tools:ignore="UnusedResources">What People Say</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
+    <string name="toast_capture_operation_permission_needed">You need to grant the app audio recording permission in order to record video</string>
+    <string name="typeface_label_nunito">Casual</string>
+    <string name="typeface_label_libre_baskerville">Classic</string>
+    <string name="typeface_label_oswald">Strong</string>
+    <string name="typeface_label_pacifico">Playful</string>
+    <string name="typeface_label_space_mono">Modern</string>
+    <string name="typeface_label_shrikhand">Bold</string>
     <!--/Autogenerated:Gutenberg Native-->
 </resources>

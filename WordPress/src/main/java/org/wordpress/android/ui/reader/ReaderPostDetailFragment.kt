@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
@@ -27,7 +28,6 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
@@ -70,6 +70,7 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
@@ -127,7 +128,7 @@ import org.wordpress.android.widgets.WPTextView
 import java.util.EnumSet
 import javax.inject.Inject
 
-class ReaderPostDetailFragment : Fragment(),
+class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
         ReaderCustomViewListener,
@@ -232,6 +233,10 @@ class ReaderPostDetailFragment : Fragment(),
             }
             postSlugsResolutionUnderway = args.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
         }
+    }
+
+    override fun getScrollableViewForUniqueIdProvision(): View? {
+        return scrollView
     }
 
     override fun onAttach(context: Context) {
@@ -1533,6 +1538,11 @@ class ReaderPostDetailFragment : Fragment(),
     private fun shouldOpenExternal(url: String): Boolean {
         // open YouTube videos in external app so they launch the YouTube player
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            return true
+        }
+
+        // Open Stories links in external browser so they have more fullscreen play real estate
+        if (Uri.parse(url).queryParameterNames.any { it.contains("wp-story") }) {
             return true
         }
 

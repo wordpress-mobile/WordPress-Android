@@ -19,6 +19,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel
 import javax.inject.Inject
@@ -136,5 +137,12 @@ class DomainSuggestionsFragment : Fragment() {
         selectedPosition: Int
     ) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (activity is ScrollableViewInitializedListener) {
+            (activity as ScrollableViewInitializedListener).onScrollableViewInitialized(R.id.domain_suggestions_list)
+        }
     }
 }

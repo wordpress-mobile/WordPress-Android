@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.models.PublicizeButton;
+import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
@@ -162,6 +163,10 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
     @Override public void onResume() {
         super.onResume();
         setTitle(R.string.publicize_buttons_screen_title);
+        if (getActivity() instanceof ScrollableViewInitializedListener) {
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(
+                    mSharingSettingsWrapper.getId());
+        }
     }
 
     /**

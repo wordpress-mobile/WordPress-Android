@@ -19,6 +19,7 @@ git submodule update
 1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
 1. `git submodule update --init --recursive`  to pull the submodules (optionally use `--depth=1 --recommend-shallow` flags to skip pulling full submodules' history).
 1. In Android Studio, open the project from the local repository. This will auto-generate `local.properties` with the SDK location.
+1. Recommended: The CI uses JDK11 to build the app and run the tests. Some tests won't pass on the JDK embedded in Android Studio (JDK8). You might want to set JAVA_HOME and JDK location in Android Studio to JDK11.
 1. Go to Tools → AVD Manager and create an emulated device.
 1. Run.
 

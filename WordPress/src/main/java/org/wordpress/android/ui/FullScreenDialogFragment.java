@@ -30,6 +30,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
@@ -50,11 +52,13 @@ public class FullScreenDialogFragment extends DialogFragment {
     private String mTitle;
     private Toolbar mToolbar;
     private boolean mHideActivityBar;
+    private boolean mIsLiftOnScroll;
     private int mToolbarTheme;
     private int mToolbarColor;
 
     private static final String ARG_ACTION = "ARG_ACTION";
-    private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_HIDE_ACTIVITY_BAR";
+    private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_IS_LIFT_ON_SCROLL";
+    private static final String ARG_IS_LIFT_ON_SCROLL = "ARG_LIFT_ON_SCROLL";
     private static final String ARG_SUBTITLE = "ARG_SUBTITLE";
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final String ARG_TOOLBAR_THEME = "ARG_TOOLBAR_THEME";
@@ -94,6 +98,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         dialog.setOnConfirmListener(builder.mOnConfirmListener);
         dialog.setOnDismissListener(builder.mOnDismissListener);
         dialog.setHideActivityBar(builder.mHideActivityBar);
+        dialog.setLiftOnScroll(builder.mIsLiftOnScroll);
         return dialog;
     }
 
@@ -105,6 +110,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         bundle.putInt(ARG_TOOLBAR_THEME, builder.mToolbarTheme);
         bundle.putInt(ARG_TOOLBAR_COLOR, builder.mToolbarColor);
         bundle.putBoolean(ARG_HIDE_ACTIVITY_BAR, builder.mHideActivityBar);
+        bundle.putBoolean(ARG_IS_LIFT_ON_SCROLL, builder.mIsLiftOnScroll);
         return bundle;
     }
 
@@ -259,6 +265,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         mToolbarTheme = bundle.getInt(ARG_TOOLBAR_THEME);
         mToolbarColor = bundle.getInt(ARG_TOOLBAR_COLOR);
         mHideActivityBar = bundle.getBoolean(ARG_HIDE_ACTIVITY_BAR);
+        mIsLiftOnScroll = bundle.getBoolean(ARG_IS_LIFT_ON_SCROLL);
     }
 
     /**
@@ -284,6 +291,12 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         if (mToolbarColor > 0) {
             mToolbar.setBackgroundColor(getResources().getColor(mToolbarColor));
+        }
+
+        AppBarLayout appBarLayout = view.findViewById(R.id.appbar_main);
+        appBarLayout.setLiftOnScroll(mIsLiftOnScroll);
+        if (!mIsLiftOnScroll) {
+            appBarLayout.setLifted(false);
         }
 
         if (!mAction.isEmpty()) {
@@ -341,6 +354,15 @@ public class FullScreenDialogFragment extends DialogFragment {
      */
     public void setHideActivityBar(boolean hide) {
         this.mHideActivityBar = hide;
+    }
+
+    /**
+     * Set flag to enable or disable AppBar's lift on scroll.
+     *
+     * @param isLiftOnScroll boolean to toggle lift on scroll
+     */
+    public void setLiftOnScroll(boolean isLiftOnScroll) {
+        this.mIsLiftOnScroll = isLiftOnScroll;
     }
 
     /**
@@ -429,6 +451,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         String mSubtitle = "";
         String mTitle = "";
         boolean mHideActivityBar = false;
+        boolean mIsLiftOnScroll = true;
         int mToolbarTheme = 0;
         int mToolbarColor = 0;
 
@@ -580,6 +603,17 @@ public class FullScreenDialogFragment extends DialogFragment {
          */
         public Builder setOnDismissListener(@Nullable OnDismissListener listener) {
             this.mOnDismissListener = listener;
+            return this;
+        }
+
+        /**
+         * Set flag to enable or disable AppBar's lift on scroll.
+         *
+         * @param isLifOnScroll boolean to toggle lift on scroll
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setIsLifOnScroll(Boolean isLifOnScroll) {
+            this.mIsLiftOnScroll = isLifOnScroll;
             return this;
         }
     }

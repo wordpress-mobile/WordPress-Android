@@ -14,9 +14,15 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -49,6 +55,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.manual.ManualFeatureConfigActivity;
 import org.wordpress.android.viewmodel.ContextProvider;
 
 import java.util.EnumSet;
@@ -124,6 +131,8 @@ public class AppSettingsFragment extends PreferenceFragment
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
                 .setOnPreferenceClickListener(this);
+        findPreference(getString(R.string.pref_key_feature_config))
+                .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_oss_licenses))
@@ -181,6 +190,22 @@ public class AppSettingsFragment extends PreferenceFragment
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
+
+        if (!BuildConfig.ENABLE_FEATURE_CONFIGURATION) {
+            removeFeatureConfigCategory();
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        final ListView listOfPreferences = view.findViewById(android.R.id.list);
+        if (listOfPreferences != null) {
+            ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
+        }
+        return view;
     }
 
     private void removeExperimentalCategory() {
@@ -189,6 +214,14 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreferenceCategory);
+    }
+
+    private void removeFeatureConfigCategory() {
+        Preference experimentalPreference =
+                findPreference(getString(R.string.pref_key_feature_config));
+        PreferenceScreen preferenceScreen =
+                (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(experimentalPreference);
     }
 
 
@@ -297,6 +330,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
+        } else if (preferenceKey.equals(getString(R.string.pref_key_feature_config))) {
+            return handleFeatureConfigPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
@@ -431,6 +466,11 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private boolean handleAboutPreferenceClick() {
         startActivity(new Intent(getActivity(), AboutActivity.class));
+        return true;
+    }
+
+    private boolean handleFeatureConfigPreferenceClick() {
+        startActivity(new Intent(getActivity(), ManualFeatureConfigActivity.class));
         return true;
     }
 

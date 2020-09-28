@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.photopicker
 
 import android.Manifest.permission
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -69,7 +68,6 @@ class PhotoPickerViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
     private val tenorFeatureConfig: TenorFeatureConfig,
-    private val context: Context,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
@@ -443,7 +441,7 @@ class PhotoPickerViewModel @Inject constructor(
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
                 val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
-                        context,
+                        resourceProvider,
                         permission.WRITE_EXTERNAL_STORAGE
                 )}</strong>")
                 String.format(

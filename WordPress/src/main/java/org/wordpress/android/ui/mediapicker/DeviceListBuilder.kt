@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
@@ -41,16 +42,16 @@ class DeviceListBuilder
 
     override suspend fun load(
         mediaTypes: Set<MediaType>,
-        offset: Int,
-        pageSize: Int?
+        forced: Boolean,
+        loadMore: Boolean
     ): MediaLoadingResult {
         return withContext(bgDispatcher) {
             val result = mutableListOf<MediaItem>()
             val deferredJobs = mediaTypes.map { mediaType ->
                 when (mediaType) {
-                    IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, IMAGE) }
-                    VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, VIDEO) }
-                    AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, AUDIO) }
+                    IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, mediaType) }
+                    VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, mediaType) }
+                    AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaType) }
                     DOCUMENT -> async { addDownloads() }
                 }
             }
@@ -102,7 +103,8 @@ class DeviceListBuilder
                 val title = cursor.getString(titleIndex)
                 val uri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = MediaItem(
-                        UriWrapper(uri),
+                        Identifier.LocalUri(UriWrapper(uri)),
+                        uri.toString(),
                         title,
                         mediaType,
                         getMimeType(uri),
@@ -125,7 +127,14 @@ class DeviceListBuilder
                     val uri = parse(file.toURI().toString())
                     val mimeType = getMimeType(uri)
                     if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)) {
-                        MediaItem(UriWrapper(uri), file.name, DOCUMENT, mimeType, file.lastModified())
+                        MediaItem(
+                                Identifier.LocalUri(UriWrapper(uri)),
+                                uri.toString(),
+                                file.name,
+                                DOCUMENT,
+                                mimeType,
+                                file.lastModified()
+                        )
                     } else {
                         null
                     }

@@ -29,6 +29,7 @@ import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_NOTIFS_EMPTY_VIEW
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.notifications.NotificationEvents.NoteLikeOrModerationStatusChanged
@@ -56,7 +57,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
-class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoadedListener {
+class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener, DataLoadedListener {
     private var notesAdapter: NotesAdapter? = null
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
@@ -154,6 +155,10 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     override fun onPause() {
         super.onPause()
         shouldRefreshNotifications = true
+    }
+
+    override fun getScrollableViewForUniqueIdProvision(): View? {
+        return notifications_list
     }
 
     override fun onResume() {

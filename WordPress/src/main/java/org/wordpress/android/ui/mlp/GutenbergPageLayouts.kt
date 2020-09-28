@@ -1,26 +1,15 @@
 package org.wordpress.android.ui.mlp
 
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory
+
 data class GutenbergPageLayouts(
-    val layouts: List<GutenbergLayout>,
-    val categories: List<GutenbergLayoutCategory>
+    val layouts: List<GutenbergLayout> = listOf(),
+    val categories: List<GutenbergLayoutCategory> = listOf()
 ) {
     fun getFilteredLayouts(categorySlug: String) =
             layouts.filter { l -> l.categories.any { c -> c.slug == categorySlug } }
 }
-
-data class GutenbergLayout(
-    val slug: String,
-    val title: String,
-    val preview: String,
-    val categories: List<GutenbergLayoutCategory>
-)
-
-data class GutenbergLayoutCategory(
-    val slug: String,
-    val title: String,
-    val description: String,
-    val emoji: String
-)
 
 /**
  * Static page layout data factory
@@ -88,6 +77,7 @@ object GutenbergPageLayoutFactory {
             slug = "about",
             title = "About",
             preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            content = "",
             categories = listOf(aboutCategory)
     )
 
@@ -95,6 +85,7 @@ object GutenbergPageLayoutFactory {
             slug = "blog",
             title = "Blog",
             preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
+            content = "",
             categories = listOf(blogCategory)
     )
 
@@ -102,6 +93,7 @@ object GutenbergPageLayoutFactory {
             slug = "contact",
             title = "Contact",
             preview = "https://headstartdata.files.wordpress.com/2019/06/contact-2.png",
+            content = "",
             categories = listOf(contactCategory)
     )
 
@@ -109,6 +101,7 @@ object GutenbergPageLayoutFactory {
             slug = "portfolio",
             title = "Portfolio",
             preview = "https://headstartdata.files.wordpress.com/2019/06/portfolio-2.png",
+            content = "",
             categories = listOf(portfolioCategory)
     )
 
@@ -116,6 +109,7 @@ object GutenbergPageLayoutFactory {
             slug = "services",
             title = "Services",
             preview = "https://headstartdata.files.wordpress.com/2019/06/services-2.png",
+            content = "",
             categories = listOf(servicesCategory)
     )
 
@@ -123,6 +117,7 @@ object GutenbergPageLayoutFactory {
             slug = "team",
             title = "Team",
             preview = "https://headstartdata.files.wordpress.com/2020/03/team.png",
+            content = "",
             categories = listOf(teamCategory)
     )
 
@@ -139,26 +134,8 @@ object GutenbergPageLayoutFactory {
     )
 
     /**
-     * DEMO Code: TO BE REMOVED
-     */
-    private const val demoModes = true
-    private const val times = 30
-
-    private fun GutenbergLayout.repeat(times: Int): List<GutenbergLayout> = ArrayList<GutenbergLayout>().apply {
-        for (i in 1..times) {
-            add(GutenbergLayout("$slug-$i", title, preview, categories))
-        }
-    }
-
-    /**
      * Creates a a default set of Layout meta data to be used on for creating starter pages layouts.
      */
-    private fun makeDefaultLayouts(): List<GutenbergLayout> = if (demoModes) ArrayList<GutenbergLayout>().apply {
-        addAll(aboutLayout.repeat(times))
-        addAll(blogLayout.repeat(times))
-        addAll(contactLayout.repeat(times))
-        addAll(portfolioLayout.repeat(times))
-        addAll(servicesLayout.repeat(times))
-        addAll(teamLayout.repeat(times))
-    } else listOf(aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout)
+    private fun makeDefaultLayouts(): List<GutenbergLayout> =
+            listOf(aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout)
 }
