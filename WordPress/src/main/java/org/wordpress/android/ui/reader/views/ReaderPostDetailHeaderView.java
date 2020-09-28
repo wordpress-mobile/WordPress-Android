@@ -18,7 +18,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -64,7 +63,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         TextView txtTitle = findViewById(R.id.text_header_title);
         TextView txtSubtitle = findViewById(R.id.text_header_subtitle);
-        View avatarFrame = findViewById(R.id.frame_avatar);
+        ImageView blavatar = findViewById(R.id.image_header_blavatar);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
@@ -78,18 +77,17 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 txtTitle.setText(mPost.getAuthorName());
                 txtSubtitle.setText(mPost.getBlogName());
             }
-            avatarFrame.setContentDescription(mPost.getBlogName());
+            blavatar.setContentDescription(mPost.getBlogName());
         } else if (hasBlogName) {
             txtTitle.setText(mPost.getBlogName());
-            avatarFrame.setContentDescription(mPost.getBlogName());
+            blavatar.setContentDescription(mPost.getBlogName());
             txtSubtitle.setVisibility(View.GONE);
         } else if (hasAuthorName) {
             txtTitle.setText(mPost.getAuthorName());
-            avatarFrame.setContentDescription(mPost.getAuthorName());
+            blavatar.setContentDescription(mPost.getAuthorName());
             txtSubtitle.setVisibility(View.GONE);
         } else {
             txtTitle.setText(R.string.untitled);
-            avatarFrame.setContentDescription(getContext().getString(R.string.untitled));
             txtSubtitle.setVisibility(View.GONE);
         }
 
@@ -115,70 +113,32 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
             mFollowButton.setVisibility(View.GONE);
         }
 
-        showBlavatarAndAvatar(mPost.getBlogImageUrl(), mPost.getPostAvatar());
+        showBlavatar(mPost.getBlogImageUrl(), mPost.getPostAvatar());
     }
 
-    private void showBlavatarAndAvatar(String blavatarUrl, String avatarUrl) {
+    private void showBlavatar(String blavatarUrl, String avatarUrl) {
         ImageManager imageManager = ImageManager.getInstance();
         boolean hasBlavatar = !TextUtils.isEmpty(blavatarUrl);
-        boolean hasAvatar = !TextUtils.isEmpty(avatarUrl);
 
         AppLog.w(AppLog.T.READER, avatarUrl);
 
-        int frameSize = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar_frame);
-
-        View avatarFrame = findViewById(R.id.frame_avatar);
         ImageView imgBlavatar = findViewById(R.id.image_header_blavatar);
-        ImageView imgAvatar = findViewById(R.id.image_header_avatar);
         imageManager.cancelRequestAndClearImageView(imgBlavatar);
-        imageManager.cancelRequestAndClearImageView(imgAvatar);
 
-        /*
-         * - if there's a blavatar and an avatar, show both of them overlaid using default sizing
-         * - if there's only a blavatar, show it the full size of the parent frame and hide the avatar
-         * - if there's only an avatar, show it the full size of the parent frame and hide the blavatar
-         * - if there's neither a blavatar nor an avatar, hide them both
-         */
-        if (hasBlavatar && hasAvatar) {
+        if (hasBlavatar) {
             int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
             imgBlavatar.getLayoutParams().height = blavatarSz;
             imgBlavatar.getLayoutParams().width = blavatarSz;
             imageManager.load(imgBlavatar, ImageType.BLAVATAR,
                     PhotonUtils.getPhotonImageUrl(blavatarUrl, blavatarSz, blavatarSz));
             imgBlavatar.setVisibility(View.VISIBLE);
-
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_avatar);
-            imgAvatar.getLayoutParams().height = avatarSz;
-            imgAvatar.getLayoutParams().width = avatarSz;
-            imageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR,
-                    GravatarUtils.fixGravatarUrl(avatarUrl, avatarSz));
-            imgAvatar.setVisibility(View.VISIBLE);
-        } else if (hasBlavatar) {
-            imgBlavatar.getLayoutParams().height = frameSize;
-            imgBlavatar.getLayoutParams().width = frameSize;
-            imageManager.load(imgBlavatar, ImageType.BLAVATAR,
-                    PhotonUtils.getPhotonImageUrl(blavatarUrl, frameSize, frameSize));
-            imgBlavatar.setVisibility(View.VISIBLE);
-
-            imgAvatar.setVisibility(View.GONE);
-        } else if (hasAvatar) {
-            imgBlavatar.setVisibility(View.GONE);
-
-            imgAvatar.getLayoutParams().height = frameSize;
-            imgAvatar.getLayoutParams().width = frameSize;
-            imageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR,
-                    GravatarUtils.fixGravatarUrl(avatarUrl, frameSize));
-            imgAvatar.setVisibility(View.VISIBLE);
         } else {
             imgBlavatar.setVisibility(View.GONE);
-            imgAvatar.setVisibility(View.GONE);
         }
 
-        // hide the frame if there's neither a blavatar nor an avatar
-        avatarFrame.setVisibility(hasAvatar || hasBlavatar ? View.VISIBLE : View.GONE);
 
         if (mEnableBlogPreview) {
-            avatarFrame.setOnClickListener(mClickListener);
+            imgBlavatar.setOnClickListener(mClickListener);
         }
     }
 
