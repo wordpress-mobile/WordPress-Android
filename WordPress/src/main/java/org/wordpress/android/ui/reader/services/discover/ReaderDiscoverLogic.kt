@@ -243,8 +243,8 @@ class ReaderDiscoverLogic(
                     for (i in 0 until jsonRecommendedBlogs.length()) {
                         JSONObject().apply {
                             val jsonRecommendedBlog = jsonRecommendedBlogs.getJSONObject(i)
-                            put(RECOMMENDED_BLOG_ID, jsonRecommendedBlog.getLong(RECOMMENDED_BLOG_ID))
-                            put(RECOMMENDED_FEED_ID, jsonRecommendedBlog.getLong(RECOMMENDED_FEED_ID))
+                            put(RECOMMENDED_BLOG_ID, jsonRecommendedBlog.optLong(RECOMMENDED_BLOG_ID))
+                            put(RECOMMENDED_FEED_ID, jsonRecommendedBlog.optLong(RECOMMENDED_FEED_ID))
                         }.let {
                             put(it)
                         }
