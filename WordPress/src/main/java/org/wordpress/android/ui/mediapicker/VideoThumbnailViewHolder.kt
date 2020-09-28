@@ -33,7 +33,7 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
         }
         mediaThumbnailViewUtils.setupThumbnailImage(
                 imgThumbnail,
-                item.uri.toString(),
+                item.url,
                 item.isSelected,
                 item.clickAction,
                 item.toggleAction,

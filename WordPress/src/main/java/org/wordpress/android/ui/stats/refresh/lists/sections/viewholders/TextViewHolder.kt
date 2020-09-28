@@ -44,17 +44,17 @@ class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         onClickListener: (Context) -> Unit
     ): SpannableString {
         val clickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View?) {
-                widget?.context?.let { onClickListener.invoke(it) }
+            override fun onClick(widget: View) {
+                widget.context?.let { onClickListener.invoke(it) }
             }
 
-            override fun updateDrawState(ds: TextPaint?) {
-                ds?.color = context.getColorFromAttribute(R.attr.colorPrimary)
-                ds?.typeface = Typeface.create(
+            override fun updateDrawState(ds: TextPaint) {
+                ds.color = context.getColorFromAttribute(R.attr.colorPrimary)
+                ds.typeface = Typeface.create(
                         Typeface.DEFAULT_BOLD,
                         Typeface.NORMAL
                 )
-                ds?.isUnderlineText = false
+                ds.isUnderlineText = false
             }
         }
         val clickablePartStart = indexOf(clickablePart)

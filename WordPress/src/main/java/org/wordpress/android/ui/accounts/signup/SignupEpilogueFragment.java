@@ -687,7 +687,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             ));
             options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
             options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
-                    context, R.attr.colorOnPrimarySurface
+                    context, R.attr.colorOnSurface
             ));
             options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
             options.setHideBottomControls(true);
@@ -785,18 +785,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         PushUsernamePayload payload = new PushUsernamePayload(
                 mUsername, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
         mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
-    }
-
-    private void startProgressIfNeeded() {
-        if (!isInProgress()) {
-            startProgress(false);
-        }
-    }
-
-    private void endProgressIfNeeded() {
-        if (isInProgress()) {
-            endProgress();
-        }
     }
 
     private class DownloadAvatarAndUploadGravatarThread extends Thread {

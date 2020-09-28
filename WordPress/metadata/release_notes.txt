@@ -1,1 +1,4 @@
-Block Editor improvements: Added settings for changing column widths to the Column block, added media editing support in the Gallery block, and improved the logic for undo/redo while drafting — enjoy smarter undoing in chunks, instead of undoing a few letters or tiny changes at a time.
+- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.
+- Reader update: Preview images are now displayed on posts when no featured image is set.
+
+ 

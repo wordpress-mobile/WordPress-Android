@@ -44,6 +44,10 @@ class UiHelpers @Inject constructor() {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    fun setInvisible(view: View, invisible: Boolean) {
+        view.visibility = if (invisible) View.INVISIBLE else View.VISIBLE
+    }
+
     fun setTextOrHide(view: TextView, uiString: UiString?) {
         val text = uiString?.let { getTextOfUiString(view.context, uiString) }
         setTextOrHide(view, text)
@@ -70,7 +74,7 @@ class UiHelpers @Inject constructor() {
 
     companion object {
         fun adjustDialogSize(dialog: Dialog) {
-            val window = dialog.window
+            val window = requireNotNull(dialog.window)
             val size = Point()
 
             val display = window.windowManager.defaultDisplay

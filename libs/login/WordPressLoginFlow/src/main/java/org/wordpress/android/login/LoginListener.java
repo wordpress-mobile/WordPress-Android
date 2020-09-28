@@ -18,7 +18,7 @@ public interface LoginListener {
     LoginMode getLoginMode();
 
     // Login Email input callbacks
-    void gotWpcomEmail(String email, boolean verifyEmail);
+    void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions);
     void gotUnregisteredEmail(String email);
     void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
                                       String service);
@@ -29,13 +29,12 @@ public interface LoginListener {
     void loginViaSiteCredentials(String inputSiteAddress);
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
-    void addGoogleLoginFragment();
+    void addGoogleLoginFragment(boolean isSignupFromLoginEnabled);
     void showHelpFindingConnectedEmail();
 
     // Login Request Magic Link callbacks
-    void showMagicLinkSentScreen(String email);
+    void showMagicLinkSentScreen(String email, boolean allowPassword);
     void usePasswordInstead(String email);
-    void forgotPassword(String url);
     void helpMagicLinkRequest(String email);
 
     // Login Magic Link Sent callbacks
@@ -43,6 +42,8 @@ public interface LoginListener {
     void helpMagicLinkSent(String email);
 
     // Login email password callbacks
+    void forgotPassword(String url);
+    void useMagicLinkInstead(String email, boolean verifyEmail);
     void needs2fa(String email, String password);
     void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup, String nonceSms);
     void needs2faSocialConnect(String email, String password, String idToken, String service);
@@ -51,7 +52,7 @@ public interface LoginListener {
 
     // Login Site Address input callbacks
     void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds);
-    void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl);
+    void gotWpcomSiteInfo(String siteAddress);
     void gotConnectedSiteInfo(@NonNull String siteAddress, @Nullable String redirectUrl, boolean hasJetpack);
     void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress);
     void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager, SelfSignedSSLCallback callback);

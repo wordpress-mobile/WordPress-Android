@@ -67,6 +67,11 @@
         android:key="@string/pref_key_device_settings"
         android:title="@string/preference_open_device_settings" />
 
+    <Preference
+        android:key="@string/pref_key_feature_config"
+        app:isPreferenceVisible="false"
+        android:title="@string/preference_open_feature_config" />
+
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"
         android:title="@string/media">

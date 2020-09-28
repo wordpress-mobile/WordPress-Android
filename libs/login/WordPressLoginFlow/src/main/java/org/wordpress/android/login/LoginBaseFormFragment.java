@@ -232,6 +232,12 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         super.onDestroy();
     }
 
+    protected void startProgressIfNeeded() {
+        if (!isInProgress()) {
+            startProgress();
+        }
+    }
+
     protected void startProgress() {
         startProgress(true);
     }
@@ -248,12 +254,16 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
                         new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
-                                if (isInProgress()) {
-                                    endProgress();
-                                }
+                                endProgressIfNeeded();
                             }
                         });
         mInProgress = true;
+    }
+
+    protected void endProgressIfNeeded() {
+        if (isInProgress()) {
+            endProgress();
+        }
     }
 
     @CallSuper

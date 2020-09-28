@@ -931,7 +931,7 @@ class MySiteFragment : Fragment(),
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))

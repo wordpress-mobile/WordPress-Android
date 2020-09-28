@@ -102,7 +102,6 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderFragment;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -115,7 +114,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -329,7 +327,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
-        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+        WPActivityUtils.enableReaderDeeplinks(this);
 
         // monitor whether we're not the default app
         trackDefaultApp();
@@ -563,11 +561,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // initialized with the most restrictive rights case. This is OK and will be frequently checked
         // to normalize the UI state whenever mSelectedSite changes.
         // It also means that the ViewModel must accept a nullable SiteModel.
-        mViewModel.start(
-                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                mSelectedSite);
-
-        mMLPViewModel.init(DisplayUtils.isLandscape(this));
+        mViewModel.start(mSelectedSite);
     }
 
     private @Nullable String getAuthToken() {
@@ -781,7 +775,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // ensure the deep linking activity is enabled. We might be returning from the external-browser
         // viewing of a post
-        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+        WPActivityUtils.enableReaderDeeplinks(this);
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -809,7 +803,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(mSelectedSite);
+        mViewModel.onResume(mSelectedSite,
+                mSelectedSite != null && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
 
         mFirstResume = false;
     }

@@ -137,7 +137,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
         mThumbWidth = displayWidth / getColumnCount();
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

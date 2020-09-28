@@ -80,14 +80,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
-    private static final String ARG_SITE_URL = "param_site_url";
-    private static final String ARG_IS_SITE_PRIVATE = "param_is_site_private";
-    private static final String ARG_SITE_USER_ID = "param_user_id";
-    private static final String ARG_SITE_USERNAME = "param_site_username";
-    private static final String ARG_SITE_PASSWORD = "param_site_password";
-    private static final String ARG_SITE_TOKEN = "param_site_token";
-    private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
-    private static final String ARG_SITE_USER_AGENT = "param_user_agent";
+    private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
 
@@ -117,22 +110,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Set<String> mFailedMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
+    private boolean mIsJetpackSsoEnabled;
 
     private boolean mEditorDidMount;
+    private GutenbergPropsBuilder mLatestGutenbergPropsBuilder;
 
     private ProgressDialog mSavingContentProgressDialog;
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
                                                       boolean isNewPost,
-                                                      String siteUrl,
-                                                      boolean isPrivate,
-                                                      long userId,
-                                                      String username,
-                                                      String password,
-                                                      String token,
-                                                      boolean isSiteUsingWpComRestApi,
-                                                      String userAgent,
+                                                      GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       boolean tenorEnabled,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
@@ -140,14 +128,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
-        args.putString(ARG_SITE_URL, siteUrl);
-        args.putBoolean(ARG_IS_SITE_PRIVATE, isPrivate);
-        args.putLong(ARG_SITE_USER_ID, userId);
-        args.putString(ARG_SITE_USERNAME, username);
-        args.putString(ARG_SITE_PASSWORD, password);
-        args.putString(ARG_SITE_TOKEN, token);
-        args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
-        args.putString(ARG_SITE_USER_AGENT, userAgent);
+        args.putParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         fragment.setArguments(args);
@@ -369,25 +350,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void openGutenbergWebViewActivity(String content, String blockId, String blockName) {
-        String siteUrl = getArguments().getString(ARG_SITE_URL);
-        boolean isSitePrivate = getArguments().getBoolean(ARG_IS_SITE_PRIVATE, false);
-        long userId = getArguments().getLong(ARG_SITE_USER_ID);
-        String siteUsername = getArguments().getString(ARG_SITE_USERNAME);
-        String sitePassword = getArguments().getString(ARG_SITE_PASSWORD);
-        String siteToken = getArguments().getString(ARG_SITE_TOKEN);
-        String userAgent = getArguments().getString(ARG_SITE_USER_AGENT);
+        GutenbergWebViewAuthorizationData gutenbergWebViewAuthData =
+                getArguments().getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
+
+        // There is a chance that isJetpackSsoEnabled has changed on the server
+        // so we need to make sure that we have fresh value of it.
+        gutenbergWebViewAuthData.setJetpackSsoEnabled(mIsJetpackSsoEnabled);
 
         Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_NAME, blockName);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_URL_TO_LOAD, siteUrl);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_IS_SITE_PRIVATE, isSitePrivate);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_ID, userId);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_USER, siteUsername);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_PASSWD, sitePassword);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_TOKEN, siteToken);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_AGENT, userAgent);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, gutenbergWebViewAuthData);
 
         startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
 
@@ -415,6 +389,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+                // We need to send latest capabilities as JS side clears them
+                getGutenbergContainerFragment().updateCapabilities(mLatestGutenbergPropsBuilder);
                 trackWebViewClosed("save");
             } else {
                 trackWebViewClosed("dismiss");
@@ -424,26 +400,31 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ArrayList<MediaOption> initOtherMediaImageOptions() {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
-        FragmentActivity activity = getActivity();
 
         Bundle arguments = getArguments();
-        boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SITE_USING_WPCOM_REST_API);
-        boolean supportGifs = arguments != null && arguments.getBoolean(ARG_TENOR_ENABLED);
-        if (activity != null) {
-            String packageName = activity.getApplication().getPackageName();
-            if (supportStockPhotos) {
-                int stockMediaResourceId =
-                        getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+        FragmentActivity activity = getActivity();
+        if (activity == null || arguments == null) {
+            AppLog.e(T.EDITOR,
+                    "Failed to initialize other media options because the activity or getArguments() is null");
+            return otherMediaOptions;
+        }
 
-                otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
-            }
-            if (supportGifs) {
-                int gifMediaResourceId =
-                        getResources().getIdentifier("photo_picker_gif", "string", packageName);
-                otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
-            }
-        } else {
-            AppLog.e(T.EDITOR, "Failed to initialize other media options because the activity is null");
+        GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
+                arguments.getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
+        boolean supportStockPhotos = gutenbergWebViewAuthorizationData.isSiteUsingWPComRestAPI();
+        boolean supportGifs = arguments.getBoolean(ARG_TENOR_ENABLED, false);
+
+        String packageName = activity.getApplication().getPackageName();
+        if (supportStockPhotos) {
+            int stockMediaResourceId =
+                    getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
+
+            otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+        }
+        if (supportGifs) {
+            int gifMediaResourceId =
+                    getResources().getIdentifier("photo_picker_gif", "string", packageName);
+            otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
         }
 
         return otherMediaOptions;
@@ -698,6 +679,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         String postContent = removeVisualEditorProgressTag(text.toString());
         getGutenbergContainerFragment().setContent(postContent);
+    }
+
+    public void updateCapabilities(boolean isJetpackSsoEnabled, GutenbergPropsBuilder gutenbergPropsBuilder) {
+        mIsJetpackSsoEnabled = isJetpackSsoEnabled;
+        mLatestGutenbergPropsBuilder = gutenbergPropsBuilder;
+        getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
     }
 
     public void onToggleHtmlMode() {

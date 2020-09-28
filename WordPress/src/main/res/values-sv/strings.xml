@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-25 21:18:44+0000
+Translation-Revision-Date: 2020-09-18 08:20:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="reader_menu_report_post">Rapportera detta inlägg</string>
+    <string name="show_n_hidden_items_desc">%1$s fler objekt</string>
+    <string name="error_media_xmlrpc_not_allowed">Din åtgärd är inte tillåten</string>
+    <string name="error_media_xmlrcp_server_error">Ett internt serverfel inträffade</string>
+    <string name="reader_welcome_banner">Välkommen till läsaren. Upptäck miljontals bloggar som finns smidigt tillgängliga.</string>
+    <string name="mlp_layout_selected">%s valda</string>
+    <string name="gutenberg_native_angle">Vinkel</string>
     <string name="gutenberg_native_select_a_layout">Välj en layout</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Obs: Kolumnlayouten kan variera mellan olika teman och skärmstorlekar</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Dölj</string>
@@ -93,7 +100,6 @@ Language: sv_SE
     <string name="my_site_bottom_sheet_add_story">Berättelseinlägg</string>
     <string name="photo_picker_choose_file">Välj från enheten</string>
     <string name="pick_file">Lägg till fil</string>
-    <string name="media_error_file_not_allowed_on_free_plan">Med gratispaketet är denna filtyp inte tillåten</string>
     <string name="gutenberg_native_replace_video">Byt video</string>
     <string name="gutenberg_native_replace_image_or_video">Ersätt en bild eller ett videoklipp</string>
     <string name="continue_with_wpcom">Fortsätt med WordPress.com</string>
@@ -993,9 +999,6 @@ Language: sv_SE
     <string name="pages_empty_drafts">Du har inga utkast till sidor</string>
     <string name="pages_empty_scheduled">Du har inte några schemalagda sidor</string>
     <string name="pages_empty_trashed">Du har inga sidor i papperskorgen</string>
-    <string name="news_card_announcement_title_sample_announcement">[Nya funktioner tillgängliga]</string>
-    <string name="news_card_announcement_content_sample_announcement">[Hinner du inte läsa just nu? Det är lugnt: spara inlägg tills du har tid.]</string>
-    <string name="news_card_announcement_action_sample_announcement">[Fortsätt läsa]</string>
     <string name="login_error_sms_throttled">Vi har gjort för många försök att leverera en verifieringskod via SMS – Vänta lite och be om en ny om en minut.</string>
     <string name="pages_published">Publicerade</string>
     <string name="pages_drafts">Utkast</string>
@@ -1007,7 +1010,6 @@ Language: sv_SE
     <string name="reader_empty_followed_blogs_search_title">Inga webbplatser motsvarar din sökning</string>
     <string name="site_picker_remove_site_empty">Inga webbplatser motsvarar din sökning</string>
     <string name="login_error_email_not_found_v2">Det finns inget WordPress.com-konto som stämmer mot detta Google-konto.</string>
-    <string name="dismiss">avfärda</string>
     <string name="set_parent">Ange överordnad</string>
     <string name="page_delete_error">Det gick inte att radera sidan</string>
     <string name="page_status_change_error">Det gick inte att ändra sidans status</string>

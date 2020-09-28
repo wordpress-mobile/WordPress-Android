@@ -154,7 +154,8 @@ public class AppPrefs {
         // Need to be done just once for a logged out user
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
 
-        READER_DISCOVER_WELCOME_BANNER_SHOWN
+        READER_DISCOVER_WELCOME_BANNER_SHOWN,
+        MANUAL_FEATURE_CONFIG
     }
 
     /**
@@ -1207,6 +1208,22 @@ public class AppPrefs {
             return;
         }
         setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
+    }
+
+    public static void setManualFeatureConfig(boolean isEnabled, String featureKey) {
+        prefs().edit().putBoolean(getManualFeatureConfigKey(featureKey), isEnabled).apply();
+    }
+
+    public static boolean getManualFeatureConfig(String featureKey) {
+        return prefs().getBoolean(getManualFeatureConfigKey(featureKey), false);
+    }
+
+    public static boolean hasManualFeatureConfig(String featureKey) {
+        return prefs().contains(getManualFeatureConfigKey(featureKey));
+    }
+
+    @NonNull private static String getManualFeatureConfigKey(String featureKey) {
+        return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
     }
 
     /*

@@ -1,38 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="false"
+    android:focusableInTouchMode="true"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/categoriesBackground"
+        android:fitsSystemWindows="false">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="false"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <include
+                layout="@layout/modal_layout_picker_header_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/toolbar_height" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/categoriesBackground"
+                android:elevation="0dp"
+                app:layout_collapseMode="pin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical">
+
+                    <include
+                        layout="@layout/bottom_sheet_handle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/mlp_layouts_handle_margin_bottom" />
+
+                    <include
+                        layout="@layout/modal_layout_picker_titlebar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <include
+            layout="@layout/modal_layout_picker_categories_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoriesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mlp_categories_bar_height"
+            android:background="?attr/categoriesBackground"
+            android:clipToPadding="false"
+            android:descendantFocusability="beforeDescendants"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/mlp_layout_card_margin_end"
+            android:paddingStart="@dimen/mlp_layout_card_margin_start"
+            android:scrollbars="none" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        layout="@layout/bottom_sheet_handle_view"
-        android:layout_marginBottom="@dimen/mlp_layouts_handle_margin_bottom"
+        layout="@layout/modal_layout_picker_layouts_skeleton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <include
-        layout="@layout/modal_layout_picker_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/layoutsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="?attr/categoriesBackground"
+        android:layout_marginBottom="@dimen/mlp_layouts_margin_bottom"
         android:clipToPadding="false"
-        android:layout_marginBottom="@dimen/mlp_bottom_shadow_height_overlap"
         android:descendantFocusability="beforeDescendants"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/mlp_bottom_shadow_height"
-        android:background="@drawable/modal_layout_picker_bottom_shadow" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?attr/categoriesBackground"
+        android:orientation="vertical">
 
-    <include
-        layout="@layout/modal_layout_picker_bottom_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mlp_bottom_shadow_height"
+            android:background="@drawable/modal_layout_picker_bottom_shadow" />
+
+        <include
+            layout="@layout/modal_layout_picker_bottom_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
