@@ -454,7 +454,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
             mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
             // initialize settings with locally cached values, fetch remote on first pass
-            mSiteSettings.init(true);
+            fetchSiteSettings();
         }
 
         // Check whether to show the visual editor
@@ -632,6 +632,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+    }
+
+    private void fetchSiteSettings() {
+        mSiteSettings.init(true);
     }
 
     @SuppressWarnings("unused")
@@ -1575,8 +1579,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-
-
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
         if (mEditorMediaUploadListener != null) {
@@ -2170,9 +2172,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isUnsupportedBlockEditorEnabled =
                 mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
 
+        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
+
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
+                unsupportedBlockEditorSwitch,
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
@@ -2501,6 +2506,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
             }
+        }
+
+        if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
+            fetchSiteSettings();
         }
     }
 
@@ -3263,5 +3272,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         return "";
+    }
+
+    @Override
+    public void showJetpackSettings() {
+        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 }
