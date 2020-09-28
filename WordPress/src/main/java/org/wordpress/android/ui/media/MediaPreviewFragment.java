@@ -310,7 +310,7 @@ public class MediaPreviewFragment extends Fragment {
                 });
     }
 
-    void initializePlayer() {
+    private void initializePlayer() {
         DefaultHttpDataSourceFactory dataSourceFactory = mExoPlayerUtils
                 .getHttpDataSourceFactory(Uri.parse(mContentUri));
         MediaSourceFactory mediaSourceFactory =
@@ -338,12 +338,13 @@ public class MediaPreviewFragment extends Fragment {
         mPlayer.prepare();
     }
 
-    void releasePlayer() {
-        if (mPlayer != null) {
-            mPosition = (int) mPlayer.getCurrentPosition();
-            mPlayer.release();
-            mPlayer = null;
+    private void releasePlayer() {
+        if (mPlayer == null) {
+            return;
         }
+        mPosition = (int) mPlayer.getCurrentPosition();
+        mPlayer.release();
+        mPlayer = null;
     }
 
     boolean showAudioOrVideo() {
