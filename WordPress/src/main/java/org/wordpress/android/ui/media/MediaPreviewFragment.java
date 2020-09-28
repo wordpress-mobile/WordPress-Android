@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -66,7 +68,6 @@ public class MediaPreviewFragment extends Fragment {
     private String mTitle;
     private boolean mIsVideo;
     private boolean mIsAudio;
-    private boolean mFragmentWasPaused;
     private boolean mAutoPlay;
     private int mPosition;
 
@@ -76,10 +77,6 @@ public class MediaPreviewFragment extends Fragment {
     private PlayerView mExoPlayerView;
     private PlayerControlView mExoPlayerControlsView;
     private ImageView mExoPlayerArtworkView;
-
-    private ViewGroup mVideoFrame;
-    private ViewGroup mAudioFrame;
-
     private OnMediaTappedListener mMediaTapListener;
 
     @Inject MediaStore mMediaStore;
@@ -165,11 +162,11 @@ public class MediaPreviewFragment extends Fragment {
         mExoPlayerArtworkView = mExoPlayerView.findViewById(R.id.exo_artwork);
         mExoPlayerControlsView = view.findViewById(R.id.controls);
 
-        mVideoFrame = view.findViewById(R.id.frame_video);
-        mAudioFrame = view.findViewById(R.id.frame_audio);
+        FrameLayout videoFrame = view.findViewById(R.id.frame_video);
+        RelativeLayout audioFrame = view.findViewById(R.id.frame_audio);
 
-        mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
-        mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
+        videoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
+        audioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
 
         if (mIsAudio && !TextUtils.isEmpty(mTitle)) {
             TextView txtAudioTitle = view.findViewById(R.id.text_audio_title);
@@ -183,8 +180,8 @@ public class MediaPreviewFragment extends Fragment {
                     mMediaTapListener.onMediaTapped();
                 }
             };
-            mAudioFrame.setOnClickListener(listener);
-            mVideoFrame.setOnClickListener(listener);
+            audioFrame.setOnClickListener(listener);
+            videoFrame.setOnClickListener(listener);
         }
 
         return view;
@@ -201,38 +198,29 @@ public class MediaPreviewFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (showAudioOrVideo() && Util.SDK_INT > VERSION_CODES.M) {
+        if ((showAudioOrVideo() && Util.SDK_INT > VERSION_CODES.M) || mPlayer != null) {
             releasePlayer();
         }
     }
 
     @Override
     public void onPause() {
-        mFragmentWasPaused = true;
-        if (showAudioOrVideo() && Util.SDK_INT <= VERSION_CODES.M) {
+        super.onPause();
+        if ((showAudioOrVideo() && Util.SDK_INT <= VERSION_CODES.M) || mPlayer != null) {
             releasePlayer();
         }
-        super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (mFragmentWasPaused) {
-            mFragmentWasPaused = false;
-        } else if (showAudioOrVideo()) {
+        if (showAudioOrVideo()) {
             if (Util.SDK_INT <= VERSION_CODES.M || mPlayer == null) {
                 initializePlayer();
             }
         } else {
             loadImage(mContentUri, mImageView);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -264,12 +252,16 @@ public class MediaPreviewFragment extends Fragment {
      * loads and displays a remote or local image
      */
     private void loadImage(String mediaUri, ImageView imageView) {
+        if (imageView == null) {
+            return;
+        }
+
         if (TextUtils.isEmpty(mediaUri)) {
             showLoadingError();
             return;
         }
 
-        mImageView.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.VISIBLE);
         if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.isContentUri(mediaUri)) {
             int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
                     DisplayUtils.getDisplayPixelHeight(getActivity()));
@@ -287,7 +279,7 @@ public class MediaPreviewFragment extends Fragment {
                             // assign the photo attacher to enable pinch/zoom - must come before
                             // setImageBitmap
                             // for it to be correctly resized upon loading
-                            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                            PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
                             attacher.setOnViewTapListener((view, x, y) -> {
                                 if (mMediaTapListener != null) {
                                     mMediaTapListener.onMediaTapped();
@@ -321,7 +313,7 @@ public class MediaPreviewFragment extends Fragment {
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {
-            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl) && mExoPlayerArtworkView != null) {
+            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl, mExoPlayerArtworkView);
             }
             mExoPlayerView.setPlayer(mPlayer);
