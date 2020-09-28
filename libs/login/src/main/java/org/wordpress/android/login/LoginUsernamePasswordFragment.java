@@ -279,6 +279,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override public void onResume() {
         super.onResume();
+        mAnalyticsListener.usernamePasswordScreenResumed();
         updatePrimaryButtonEnabledStatus();
     }
 
@@ -634,7 +635,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
             return;
         }
 
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+        if (!mIsWpcom && mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
             SiteModel lastAddedXMLRPCSite = SiteUtils.getXMLRPCSiteByUrl(mSiteStore, mInputSiteAddress);
             if (lastAddedXMLRPCSite != null) {
                 // the wp.getOptions endpoint is already called
@@ -695,3 +696,4 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         finishLogin();
     }
 }
+

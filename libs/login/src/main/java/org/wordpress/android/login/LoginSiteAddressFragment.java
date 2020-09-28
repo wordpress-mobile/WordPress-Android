@@ -166,6 +166,12 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         });
     }
 
+    @Override public void onResume() {
+        super.onResume();
+
+        mAnalyticsListener.siteAddressFormScreenResumed();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
