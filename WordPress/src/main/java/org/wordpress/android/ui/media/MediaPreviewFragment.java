@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSourceFactory;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -296,20 +295,19 @@ public class MediaPreviewFragment extends Fragment {
                                 AppLog.e(T.MEDIA, e);
                             }
                             showProgress(false);
-                            showLoadingError();
+                            if (!mIsVideo) {
+                                showLoadingError();
+                            }
                         }
                     }
                 });
     }
 
     private void initializePlayer() {
-        DefaultHttpDataSourceFactory dataSourceFactory = mExoPlayerUtils
-                .getHttpDataSourceFactory(Uri.parse(mContentUri));
-        MediaSourceFactory mediaSourceFactory =
-                new DefaultMediaSourceFactory(dataSourceFactory);
-        mPlayer = new SimpleExoPlayer.Builder(requireActivity())
-                .setMediaSourceFactory(mediaSourceFactory)
-                .build();
+        DefaultHttpDataSourceFactory httpDataSourceFactory = mExoPlayerUtils.buildHttpDataSourceFactory(mContentUri);
+        MediaSourceFactory mediaSourceFactory = mExoPlayerUtils.buildMediaSourceFactory(httpDataSourceFactory);
+
+        mPlayer = new SimpleExoPlayer.Builder(requireActivity()).setMediaSourceFactory(mediaSourceFactory).build();
         mPlayer.addListener(new PlayerEventListener());
 
         if (mIsVideo) {
