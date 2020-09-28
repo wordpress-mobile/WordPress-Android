@@ -313,7 +313,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         featuredImageView = appBar.findViewById(R.id.featured_image)
-        featuredImageView.setOnClickListener{ showFullScreen() }
+        featuredImageView.setOnClickListener { showFullScreen() }
 
         val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
         (activity as AppCompatActivity).setSupportActionBar(toolBar)
