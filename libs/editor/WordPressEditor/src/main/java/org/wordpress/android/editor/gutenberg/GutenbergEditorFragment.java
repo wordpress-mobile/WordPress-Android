@@ -1031,4 +1031,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
         getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
     }
+
+    @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
+        getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
+    }
 }

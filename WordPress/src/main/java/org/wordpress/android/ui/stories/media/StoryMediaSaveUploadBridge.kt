@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.WordPress
@@ -136,8 +137,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                         for (frame in story.frames) {
                             // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
                             // value with the new (probably optimized) URL and also keep track of the new id.
-                            val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
+                            val oldUri = Uri.fromFile(frame.composedFrameFile)
+                            val mediaModel = oldUriToMediaFiles.get(oldUri)
                             mediaModel?.let {
+                                val oldTemporaryId = frame.id ?: ""
                                 frame.id = it.id.toString()
                                 StoriesPrefs.saveSlideWithLocalId(
                                         appContext,
@@ -147,6 +150,19 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                                         LocalMediaId(it.id.toLong()),
                                         frame
                                 )
+
+                                // for editMode, we'll need to tell the Gutenberg Editor to replace their mediaFiles
+                                // ids with the new MediaModel local ids so, broadcasting the event.
+                                if (isEditMode) {
+                                    // finally send the event that this frameId has changed
+                                    EventBus.getDefault().post(
+                                            StoryFrameMediaModelCreatedEvent(
+                                                    oldTemporaryId,
+                                                    it.id.toString(),
+                                                    oldUri.toString()
+                                            )
+                                    )
+                                }
                             }
                         }
                     }
@@ -217,4 +233,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         return (event.isSuccess() &&
                 event.frameSaveResult.size == storyRepositoryWrapper.getStoryAtIndex(event.storyIndex).frames.size)
     }
+
+    data class StoryFrameMediaModelCreatedEvent (val oldId: String, val newId: String, val oldUrl: String)
 }

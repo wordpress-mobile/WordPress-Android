@@ -172,6 +172,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
+import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -3149,6 +3150,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaFile.getFileURL());
                 }
             }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStoryFrameMediaModelCreated(StoryFrameMediaModelCreatedEvent event) {
+        if (isFinishing()) {
+            return;
+        }
+
+        if (mStorySaveMediaListener != null) {
+            mStorySaveMediaListener.onMediaModelCreatedForFile(event.getOldId(), event.getNewId(), event.getOldUrl());
         }
     }
 
