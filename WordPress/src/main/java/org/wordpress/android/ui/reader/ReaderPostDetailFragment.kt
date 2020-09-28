@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.PorterDuff.Mode.SRC_ATOP
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -31,6 +30,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.AppBarLayout
@@ -81,6 +82,7 @@ import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
@@ -122,7 +124,6 @@ import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
-import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.WPUrlUtils
@@ -191,7 +192,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var errorMessage: String? = null
 
     private var isToolbarShowing = true
-    private lateinit var resourceVars: ReaderResourceVars
 
     private var fileForDownload: String? = null
 
@@ -239,12 +239,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 R.attr.colorSurface
             }
             val color = context.getColorFromAttribute(colorAttr)
+            val colorFilter = BlendModeColorFilterCompat
+                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
 
             toolbar.setTitleTextColor(color)
-            toolbar.navigationIcon?.setColorFilter(color, SRC_ATOP)
+            toolbar.navigationIcon?.colorFilter = colorFilter
 
-            menuBrowse?.icon?.setColorFilter(color, SRC_ATOP)
-            menuShare?.icon?.setColorFilter(color, SRC_ATOP)
+            menuBrowse?.icon?.colorFilter = colorFilter
+            menuShare?.icon?.colorFilter = colorFilter
         }
     }
 
@@ -287,8 +289,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        WPActivityUtils.setLightStatusBar(requireActivity().window, false,
-                ContextCompat.getColor(requireContext(), R.color.black_translucent_40))
         val view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false)
 
         val swipeRefreshLayout = view.findViewById<CustomSwipeRefreshLayout>(R.id.swipe_to_refresh)
@@ -313,7 +313,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         featuredImageView = appBar.findViewById(R.id.featured_image)
-        resourceVars = ReaderResourceVars(context)
+        featuredImageView.setOnClickListener{ showFullScreen() }
 
         val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
         (activity as AppCompatActivity).setSupportActionBar(toolBar)
@@ -1431,14 +1431,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     val imageUrl = ReaderUtils.getResizedImageUrl(
                             it.featuredImage,
                             displayWidth,
-                            resourceVars.mFeaturedImageHeightPx,
+                            0,
                             it.isPrivate,
                             it.isPrivateAtomic
                     )
 
-                    val params = featuredImageView.layoutParams
-                    params.height = resourceVars.mFeaturedImageHeightPx
-                    featuredImageView.layoutParams = params
+                    // make image 40% of screen height
+                    val displayHeight = DisplayUtils.getDisplayPixelHeight(requireContext())
+                    val imageHeight = (displayHeight * 0.4).toInt()
+                    featuredImageView.layoutParams.height = imageHeight
 
                     imageManager.load(
                             featuredImageView,
@@ -1833,6 +1834,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onShowHideToolbar(show: Boolean) {
         if (isAdded) {
             AniUtils.animateTopBar(appBar, show)
+        }
+    }
+
+    private fun showFullScreen() {
+        post?.let {
+            val site = siteStore.getSiteBySiteId(it.blogId)
+            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
         }
     }
 }

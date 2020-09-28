@@ -14,6 +14,7 @@
         android:fitsSystemWindows="true"
         app:contentScrim="?attr/colorSurface"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        app:scrimVisibleHeightTrigger="@dimen/scrim_visible_height_trigger"
         app:titleEnabled="false">
 
         <FrameLayout
