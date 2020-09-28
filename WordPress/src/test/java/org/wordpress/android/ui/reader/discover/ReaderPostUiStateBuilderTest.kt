@@ -835,7 +835,7 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `blog description is not null when description is empty`() = test {
+    fun `ReaderRecommendedBlogUiState description is null when description is empty`() = test {
         // Arrange
         whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
         val blogs = List(1) { createRecommendedBlog(blogDescription = "") }
