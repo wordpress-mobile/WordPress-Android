@@ -1436,9 +1436,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                             it.isPrivateAtomic
                     )
 
-                    // make image 40% of screen height
                     val displayHeight = DisplayUtils.getDisplayPixelHeight(requireContext())
-                    val imageHeight = (displayHeight * 0.4).toInt()
+                    val imageHeight = (displayHeight * FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
                     featuredImageView.layoutParams.height = imageHeight
 
                     imageManager.load(
@@ -1790,6 +1789,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // min scroll distance before toggling toolbar
         private const val MIN_SCROLL_DISTANCE_Y = 10f
+
+        private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
