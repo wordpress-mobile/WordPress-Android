@@ -7,6 +7,7 @@
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/negative_margin_medium"
         android:backgroundTint="@color/transparent"
         android:contentDescription="@string/navigate_back_desc"
         android:src="@drawable/ic_arrow_left_white_24dp"
@@ -15,5 +16,6 @@
     <TextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerHeader"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:text="@string/mlp_choose_layout_title" />
 </FrameLayout>
