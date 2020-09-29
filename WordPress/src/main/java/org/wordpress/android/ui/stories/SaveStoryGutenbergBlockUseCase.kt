@@ -89,7 +89,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
 
     private fun hasTemporaryIdsInStoryData(storyBlockData: StoryBlockData): Boolean {
         val temporaryIds = storyBlockData.mediaFiles.filter {
-            it.alt.startsWith(TEMPORARY_ID_PREFIX)
+            it.id.startsWith(TEMPORARY_ID_PREFIX)
         }
         return temporaryIds.size > 0
     }
