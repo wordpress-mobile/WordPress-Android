@@ -152,7 +152,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                                 )
 
                                 // for editMode, we'll need to tell the Gutenberg Editor to replace their mediaFiles
-                                // ids with the new MediaModel local ids so, broadcasting the event.
+                                // ids with the new MediaModel local ids are created so, broadcasting the event.
                                 if (isEditMode) {
                                     // finally send the event that this frameId has changed
                                     EventBus.getDefault().post(
