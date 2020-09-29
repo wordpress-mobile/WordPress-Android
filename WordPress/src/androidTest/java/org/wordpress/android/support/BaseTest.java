@@ -37,6 +37,7 @@ import java.util.TimeZone;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 
 public class BaseTest {
@@ -97,7 +98,7 @@ public class BaseTest {
     protected void wpLogin() {
         logoutIfNecessary();
         new LoginFlow().chooseContinueWithWpCom()
-                       .enterEmailAddress()
+                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .enterPassword()
                        .confirmLogin();
     }
