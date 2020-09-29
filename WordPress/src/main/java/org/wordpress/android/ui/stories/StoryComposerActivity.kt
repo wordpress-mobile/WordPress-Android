@@ -22,9 +22,7 @@ import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
-import com.wordpress.stories.compose.story.StoryFrameItemType.VIDEO
 import com.wordpress.stories.compose.story.StoryIndex
-import com.wordpress.stories.compose.story.StoryRepository
 import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
@@ -107,6 +105,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     @Inject lateinit var mediaStore: MediaStore
     @Inject lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+    @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
 
     private lateinit var viewModel: StoryComposerViewModel
 
@@ -478,7 +477,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         storyIndex: StoryIndex
     ): ArrayList<StoryMediaFileData> {
         val storyMediaFileDataList = ArrayList<StoryMediaFileData>() // holds media files
-        val story = StoryRepository.getStoryAtIndex(storyIndex)
+        val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
         for ((frameIndex, frame) in story.frames.withIndex()) {
             frame.id?.let {
                 val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
