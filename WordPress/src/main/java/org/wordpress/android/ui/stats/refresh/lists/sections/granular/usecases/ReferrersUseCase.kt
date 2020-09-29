@@ -130,8 +130,7 @@ constructor(
                             value = group.total?.let { statsUtils.toFormattedString(it) },
                             showDivider = index < domainModel.groups.size - 1,
                             navigationAction = group.url?.let {
-//                                create(it, this::onItemClick)
-                                create(it, this::onItemLongClick)
+                                create(it, this::onItemClick)
                             },
                             contentDescription = contentDescription
                     )
@@ -166,8 +165,7 @@ constructor(
                                     value = statsUtils.toFormattedString(referrer.views),
                                     showDivider = false,
                                     navigationAction = referrer.url?.let {
-//                                        create(it, this::onItemClick)
-                                        create(it, this::onItemLongClick)
+                                        create(it, this::onItemClick)
                                     },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
@@ -212,11 +210,6 @@ constructor(
     }
 
     private fun onItemClick(url: String) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED, statsGranularity)
-        navigateTo(ViewUrl(url))
-    }
-
-    private fun onItemLongClick(url: String) {
         navigateTo(ViewReportReferrer(url, this))
     }
 

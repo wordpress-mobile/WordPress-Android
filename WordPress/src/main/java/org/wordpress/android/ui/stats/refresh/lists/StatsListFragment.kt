@@ -27,6 +27,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReportReferrer
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
@@ -258,6 +260,8 @@ class StatsListFragment : ViewPagerFragment() {
                 ReferrerIconTextAdapter(activity, description, imageId)
         ) { dialog: DialogInterface?, which: Int ->
             if (which == 0) {
+                // TODO Track stats
+//                analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED, statsGranularity)
                 navigator.navigate(activity, ViewUrl(target.url))
             }
             if (which == 1) {
