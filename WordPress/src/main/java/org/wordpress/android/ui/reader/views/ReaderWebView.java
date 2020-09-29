@@ -215,10 +215,7 @@ public class ReaderWebView extends WPWebView {
                 return false;
             }
 
-            if (!UrlUtils.getHost(url).equalsIgnoreCase("www.instagram.com")) {
-                return false;
-            }
-            return true;
+            return UrlUtils.getHost(url).equalsIgnoreCase("www.instagram.com");
         } else {
             return false;
         }
