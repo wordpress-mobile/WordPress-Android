@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh
 
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import java.util.Date
 
 sealed class NavigationTarget {
@@ -31,6 +32,7 @@ sealed class NavigationTarget {
     data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewFileDownloads(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewUrl(val url: String) : NavigationTarget()
+    data class ViewReportReferrer(val url: String, val referrersUseCase: ReferrersUseCase) : NavigationTarget()
     object ViewMonthsAndYearsStats : NavigationTarget()
     object ViewDayAverageStats : NavigationTarget()
     object ViewRecentWeeksStats : NavigationTarget()

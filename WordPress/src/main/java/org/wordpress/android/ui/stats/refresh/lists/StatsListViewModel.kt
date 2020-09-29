@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
@@ -152,6 +154,13 @@ abstract class StatsListViewModel(
     fun onTypesChanged() {
         launch {
             statsUseCase.refreshTypes()
+        }
+    }
+
+    fun onMarkReferrerAsSpam(url: String, referrersUseCase: ReferrersUseCase) {
+        launch {
+            referrersUseCase.markReferrerAsSpam(url)
+            Log.d("Foo", "onMarkReferrerAsSpam: Marked as spam")
         }
     }
 }

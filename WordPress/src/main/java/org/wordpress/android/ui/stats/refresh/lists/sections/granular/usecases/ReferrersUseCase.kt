@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -12,6 +14,7 @@ import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReportReferrer
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
@@ -36,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,6 +71,9 @@ constructor(
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
+
+    private val mutableMarkedReferrerAsSpam: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val markedReferrerAsSpam: LiveData<Event<Unit>> = mutableMarkedReferrerAsSpam
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ReferrersModel? {
         return referrersStore.getReferrers(
@@ -122,7 +129,10 @@ constructor(
                             text = group.name,
                             value = group.total?.let { statsUtils.toFormattedString(it) },
                             showDivider = index < domainModel.groups.size - 1,
-                            navigationAction = group.url?.let { create(it, this::onItemClick) },
+                            navigationAction = group.url?.let {
+//                                create(it, this::onItemClick)
+                                create(it, this::onItemLongClick)
+                            },
                             contentDescription = contentDescription
                     )
                     items.add(headerItem)
@@ -155,7 +165,10 @@ constructor(
                                     text = referrer.name,
                                     value = statsUtils.toFormattedString(referrer.views),
                                     showDivider = false,
-                                    navigationAction = referrer.url?.let { create(it, this::onItemClick) },
+                                    navigationAction = referrer.url?.let {
+//                                        create(it, this::onItemClick)
+                                        create(it, this::onItemLongClick)
+                                    },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
                                             referrer.name,
@@ -201,6 +214,14 @@ constructor(
     private fun onItemClick(url: String) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
+    }
+
+    private fun onItemLongClick(url: String) {
+        navigateTo(ViewReportReferrer(url, this))
+    }
+
+    suspend fun markReferrerAsSpam(urlDomain: String) {
+        referrersStore.reportReferrerAsSpam(statsSiteProvider.siteModel, urlDomain)
     }
 
     data class SelectedGroup(val groupId: String? = null)

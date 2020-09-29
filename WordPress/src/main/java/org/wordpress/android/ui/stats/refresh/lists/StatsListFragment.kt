@@ -1,10 +1,14 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import android.app.Dialog
+import android.app.DialogFragment
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,16 +17,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReportReferrer
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
@@ -193,7 +201,25 @@ class StatsListFragment : ViewPagerFragment() {
 
         viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
+                if(target is ViewReportReferrer) {
+                    val items = arrayOf<CharSequence>(
+                            "Mark as Spam"
+                    )
+                    val builder = MaterialAlertDialogBuilder(
+                            activity
+                    )
+                    builder.setTitle(target.url)
+                    builder.setAdapter(
+                            ArrayAdapter(activity, layout.mark_referrer_as_spam_dialog_item, R.id.text, items)
+                    ) { dialog: DialogInterface?, which: Int ->
+//                        target.mutableMarkedReferrerAsSpam.value = Event(Unit)
+                        onMarkReferrerAsSpam(target.url, target.referrersUseCase)
+                    }
+                    builder.show()
+                }
+                else {
+                    navigator.navigate(activity, target)
+                }
             }
         })
 
@@ -222,6 +248,33 @@ class StatsListFragment : ViewPagerFragment() {
                 }
             }
         })
+    }
+
+    class MarkReferrerAsSpamDialog() : DialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val items = arrayOf<CharSequence>(
+                    "Mark as Spam"
+            )
+            val builder = MaterialAlertDialogBuilder(
+                    activity
+            )
+            val urlDomain = arguments.getCharSequence("url")
+            builder.setTitle(urlDomain)
+            builder.setAdapter(
+                    ArrayAdapter(activity, layout.mark_referrer_as_spam_dialog_item, R.id.text, items)
+            ) { dialog: DialogInterface?, which: Int ->
+                dialog?.dismiss()
+            }
+            return builder.create()
+        }
+
+        companion object {
+            const val MARK_REFERRER_AS_SPAM_DIALOG_TAG = "mark_referrer_as_spam_dialog"
+        }
+    }
+
+    private fun onMarkReferrerAsSpam(url: String, referrersUseCase: ReferrersUseCase) {
+        viewModel.onMarkReferrerAsSpam(url, referrersUseCase)
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
