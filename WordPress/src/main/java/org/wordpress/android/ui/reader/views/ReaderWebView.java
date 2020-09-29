@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.views;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -189,6 +192,38 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
+    /***
+     * isValidInstagramImageClick checks if this is an embedded instragram situation.
+     * If so, we want to ignore image click so that the iframe src gets handled
+     * The additional URL grab is an additional check for the instagram.com host
+     * @param hr - the HitTestResult
+     * @return true if is instagram or false otherwise
+     */
+    private boolean isValidInstagramImageClick(HitTestResult hr) {
+        if (!Objects.requireNonNull(hr.getExtra()).contains("cdninstagram")) {
+            return false;
+        }
+
+        // Referenced https://pacheco.dev/posts/android/webview-image-anchor/
+        if (hr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
+            Handler handler = new Handler();
+            Message message = handler.obtainMessage();
+
+            this.requestFocusNodeHref(message);
+            String url = message.getData().getString("url");
+            if (url == null) {
+                return false;
+            }
+
+            if (!UrlUtils.getHost(url).equalsIgnoreCase("www.instagram.com")) {
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /*
      * detect when a link is tapped
      */
@@ -200,11 +235,15 @@ public class ReaderWebView extends WPWebView {
             if (hr != null) {
                 if (isValidClickedUrl(hr.getExtra())) {
                     if (UrlUtils.isImageUrl(hr.getExtra())) {
-                        return mUrlClickListener.onImageUrlClick(
-                                hr.getExtra(),
-                                this,
-                                (int) event.getX(),
-                                (int) event.getY());
+                        if (isValidInstagramImageClick(hr)) {
+                            return super.onTouchEvent(event);
+                        } else {
+                            return mUrlClickListener.onImageUrlClick(
+                                    hr.getExtra(),
+                                    this,
+                                    (int) event.getX(),
+                                    (int) event.getY());
+                        }
                     } else {
                         return mUrlClickListener.onUrlClick(hr.getExtra());
                     }
