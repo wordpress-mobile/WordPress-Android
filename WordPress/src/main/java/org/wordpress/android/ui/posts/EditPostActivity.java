@@ -1588,6 +1588,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                         FluxCUtils.mediaFileFromMediaModel(media));
                 if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
+                    // make sure to sync the local post object with the UI and save
+                    updateAndSavePostAsync();
                     // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
                     // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
                     // mediaId.
