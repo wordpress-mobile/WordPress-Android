@@ -176,22 +176,27 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     editorMediaListener = localEditorMediaListener,
                     doUploadAfterAdding = true
             )
-            postUtils.preparePostForPublish(requireNotNull(editPostRepository.getEditablePost()), site)
-            savePostToDbUseCase.savePostToDb(editPostRepository, site)
 
-            if (networkUtils.isNetworkAvailable()) {
-                postUtils.trackSavePostAnalytics(
-                        editPostRepository.getPost(),
-                        site
-                )
-                uploadService.uploadPost(appContext, editPostRepository.id, true)
-                // SAVED_ONLINE
-                storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, false)
-            } else {
-                // SAVED_LOCALLY
-                storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, true)
-                // no op, when network is available the offline mode in WPAndroid will gather the queued Post
-                // and try to upload.
+            // only save this post if we're not currently in edit mode
+            // In edit mode, we'll let the Gutenberg editor save the edited block if / when needed.
+            if (!isEditMode) {
+                postUtils.preparePostForPublish(requireNotNull(editPostRepository.getEditablePost()), site)
+                savePostToDbUseCase.savePostToDb(editPostRepository, site)
+
+                if (networkUtils.isNetworkAvailable()) {
+                    postUtils.trackSavePostAnalytics(
+                            editPostRepository.getPost(),
+                            site
+                    )
+                    uploadService.uploadPost(appContext, editPostRepository.id, true)
+                    // SAVED_ONLINE
+                    storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, false)
+                } else {
+                    // SAVED_LOCALLY
+                    storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, true)
+                    // no op, when network is available the offline mode in WPAndroid will gather the queued Post
+                    // and try to upload.
+                }
             }
         }
     }
