@@ -40,10 +40,10 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow enterPassword() {
+    public LoginFlow enterPassword(String password) {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
-        populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
+        populateTextField(R.id.input, password);
         clickOn(R.id.primary_button);
         return this;
     }
