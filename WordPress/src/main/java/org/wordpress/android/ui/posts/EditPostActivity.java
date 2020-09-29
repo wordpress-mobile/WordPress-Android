@@ -40,7 +40,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.wordpress.stories.compose.frame.StorySaveEvents;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress;
@@ -91,6 +90,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.EditorTheme;
 import org.wordpress.android.fluxc.model.EditorThemeSupport;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -3073,6 +3073,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ActivityLauncher.editStoryForResult(
                     this,
                     mSite,
+                    new LocalId(mEditPostRepository.getId()),
                     storyIndex,
                     allStorySlidesAreEditable,
                     true,
