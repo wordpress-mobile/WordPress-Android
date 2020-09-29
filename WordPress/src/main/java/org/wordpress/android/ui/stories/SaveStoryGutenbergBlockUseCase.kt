@@ -132,33 +132,36 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                         storyBlockData?.let { storyBlockDataNonNull ->
                             val localMediaId = mediaFile.id.toString()
                             // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
-                            storyBlockDataNonNull.mediaFiles?.filter { it.id == localMediaId }?.get(0)?.apply {
-                                id = mediaFile.mediaId
-                                link = mediaFile.fileURL
-                                url = mediaFile.fileURL
+                            val mediaFiles = storyBlockDataNonNull.mediaFiles.filter { it.id == localMediaId }
+                            if (mediaFiles.isNotEmpty()) {
+                                mediaFiles[0].apply {
+                                    id = mediaFile.mediaId
+                                    link = mediaFile.fileURL
+                                    url = mediaFile.fileURL
 
-                                // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
-                                val localIdKey = mediaFile.id.toLong()
-                                val remoteIdKey = mediaFile.mediaId.toLong()
-                                val localSiteId = postModel.localSiteId.toLong()
-                                StoriesPrefs.getSlideWithLocalId(
-                                        WordPress.getContext(),
-                                        localSiteId,
-                                        LocalMediaId(localIdKey)
-                                )?.let {
-                                    it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
-                                    StoriesPrefs.saveSlideWithRemoteId(
-                                            WordPress.getContext(),
-                                            localSiteId,
-                                            RemoteMediaId(remoteIdKey), // use the new mediaId as key
-                                            it
-                                    )
-                                    // now delete the old entry
-                                    StoriesPrefs.deleteSlideWithLocalId(
+                                    // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
+                                    val localIdKey = mediaFile.id.toLong()
+                                    val remoteIdKey = mediaFile.mediaId.toLong()
+                                    val localSiteId = postModel.localSiteId.toLong()
+                                    StoriesPrefs.getSlideWithLocalId(
                                             WordPress.getContext(),
                                             localSiteId,
                                             LocalMediaId(localIdKey)
-                                    )
+                                    )?.let {
+                                        it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
+                                        StoriesPrefs.saveSlideWithRemoteId(
+                                                WordPress.getContext(),
+                                                localSiteId,
+                                                RemoteMediaId(remoteIdKey), // use the new mediaId as key
+                                                it
+                                        )
+                                        // now delete the old entry
+                                        StoriesPrefs.deleteSlideWithLocalId(
+                                                WordPress.getContext(),
+                                                localSiteId,
+                                                LocalMediaId(localIdKey)
+                                        )
+                                    }
                                 }
                             }
                             processedContent = content.replace(mediaFilesJsonString, gson.toJson(storyBlockDataNonNull))
