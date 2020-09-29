@@ -123,6 +123,30 @@ object StoriesPrefs {
         editor.apply()
     }
 
+    @JvmStatic
+    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(context: Context, localIdKey: Long, remoteIdKey: Long, localSiteId: Long) {
+        // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
+        getSlideWithLocalId(
+                context,
+                localSiteId,
+                LocalMediaId(localIdKey)
+        )?.let {
+            it.id = remoteIdKey.toString() // update the StoryFrameItem id to hold the same value as the remote mediaID
+            saveSlideWithRemoteId(
+                    context,
+                    localSiteId,
+                    RemoteMediaId(remoteIdKey), // use the new mediaId as key
+                    it
+            )
+            // now delete the old entry
+            deleteSlideWithLocalId(
+                    context,
+                    localSiteId,
+                    LocalMediaId(localIdKey)
+            )
+        }
+    }
+
     data class RemoteMediaId(val mediaId: Long)
     data class LocalMediaId(val id: Long)
 }

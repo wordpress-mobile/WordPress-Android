@@ -23,7 +23,7 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             if (PostUtils.contentContainsWPStoryGutenbergBlocks(post.getContent())) {
                 SaveStoryGutenbergBlockUseCase saveStoryGutenbergBlockUseCase = new SaveStoryGutenbergBlockUseCase();
                 saveStoryGutenbergBlockUseCase
-                        .replaceLocalMediaIdsWithRemoteMediaIdsInPost(post, mediaFile);
+                        .replaceLocalMediaIdsWithRemoteMediaIdsInPost(WordPress.getContext(), post, mediaFile);
             } else if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {
                 post.setContent(
                         PostUtils.replaceMediaFileWithUrlInGutenbergPost(post.getContent(), localMediaId, mediaFile,

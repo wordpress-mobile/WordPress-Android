@@ -173,6 +173,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent;
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -1589,9 +1590,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .getId()) {
             setFeaturedImageId(media.getMediaId());
         }
+
+        // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
+        // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
+        // mediaId.
+        // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload within
+        // a story block: we will only replace items for which a local-keyed frame has been created before,
+        // which can only happen when using the Story Creator.
+        if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
+            StoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                    this,
+                    media.getId(),
+                    media.getMediaId(),
+                    mSite.getId()
+            );
+        }
     }
-
-
 
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());

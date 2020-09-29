@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.stories
 
+import android.content.Context
 import com.google.gson.Gson
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -120,7 +118,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         postModel.setContent(content)
     }
 
-    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
+    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(context: Context, postModel: PostModel, mediaFile: MediaFile) {
         val gson = Gson()
         findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
                 postModel,
@@ -139,29 +137,14 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                                     link = mediaFile.fileURL
                                     url = mediaFile.fileURL
 
-                                    // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
-                                    val localIdKey = mediaFile.id.toLong()
-                                    val remoteIdKey = mediaFile.mediaId.toLong()
-                                    val localSiteId = postModel.localSiteId.toLong()
-                                    StoriesPrefs.getSlideWithLocalId(
-                                            WordPress.getContext(),
-                                            localSiteId,
-                                            LocalMediaId(localIdKey)
-                                    )?.let {
-                                        it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
-                                        StoriesPrefs.saveSlideWithRemoteId(
-                                                WordPress.getContext(),
-                                                localSiteId,
-                                                RemoteMediaId(remoteIdKey), // use the new mediaId as key
-                                                it
-                                        )
-                                        // now delete the old entry
-                                        StoriesPrefs.deleteSlideWithLocalId(
-                                                WordPress.getContext(),
-                                                localSiteId,
-                                                LocalMediaId(localIdKey)
-                                        )
-                                    }
+                                    // look for the slide saved with the local id key (mediaFile.id), and re-convert to
+                                    // mediaId.
+                                    StoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                                            context,
+                                            mediaFile.id.toLong(),
+                                            mediaFile.mediaId.toLong(),
+                                            postModel.localSiteId.toLong()
+                                    )
                                 }
                             }
                             processedContent = content.replace(mediaFilesJsonString, gson.toJson(storyBlockDataNonNull))
