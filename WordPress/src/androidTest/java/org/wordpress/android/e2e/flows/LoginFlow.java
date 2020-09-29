@@ -41,13 +41,6 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow choosePassword() {
-        // Magic Link Request or Magic Link Sent Screen – Choose "Or type your password"
-        // See LoginMagicLinkRequestFragment or LoginMagicLinkSentFragment
-        clickOn(R.id.login_enter_password);
-        return this;
-    }
-
     public LoginFlow enterPassword() {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
