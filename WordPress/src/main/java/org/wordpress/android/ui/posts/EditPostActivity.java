@@ -1582,28 +1582,28 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void onUploadSuccess(MediaModel media) {
-        // TODO Should this statement check media.getLocalPostId() == mEditPostRepository.getId()?
-        if (media != null && !media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media));
-        } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
-                .getId()) {
-            setFeaturedImageId(media.getMediaId());
-        }
-
-        // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
-        // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
-        // mediaId.
-        // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload within
-        // a story block: we will only replace items for which a local-keyed frame has been created before,
-        // which can only happen when using the Story Creator.
-        if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
-            StoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                    this,
-                    media.getId(),
-                    media.getMediaId(),
-                    mSite.getId()
-            );
+        if (media != null) {
+            // TODO Should this statement check media.getLocalPostId() == mEditPostRepository.getId()?
+            if (!media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
+                mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                        FluxCUtils.mediaFileFromMediaModel(media));
+            } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
+                    .getId()) {
+                setFeaturedImageId(media.getMediaId());
+            } else if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
+                // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
+                // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
+                // mediaId.
+                // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload within
+                // a story block: we will only replace items for which a local-keyed frame has been created before,
+                // which can only happen when using the Story Creator.
+                StoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                        this,
+                        media.getId(),
+                        media.getMediaId(),
+                        mSite.getId()
+                );
+            }
         }
     }
 
