@@ -85,7 +85,7 @@ public class EditorPage {
 
         waitForElementToBeDisplayed(publishButton);
     }
-
+    
     public void openSettings() {
         openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
         clickOn(onView(withText(R.string.post_settings)));
