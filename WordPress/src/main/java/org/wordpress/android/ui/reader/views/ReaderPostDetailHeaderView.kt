@@ -1,205 +1,155 @@
-package org.wordpress.android.ui.reader.views;
+package org.wordpress.android.ui.reader.views
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-
-import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.util.image.ImageType;
-
+import android.content.Context
+import android.text.TextUtils
+import android.util.AttributeSet
+import android.view.View
+import android.view.View.OnClickListener
+import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.reader_post_detail_header_view.view.*
+import org.wordpress.android.R
+import org.wordpress.android.R.dimen
+import org.wordpress.android.R.layout
+import org.wordpress.android.WordPress
+import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.PhotonUtils
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.BLAVATAR
+import org.wordpress.android.util.setVisible
+import javax.inject.Inject
 
 /**
- * topmost view in post detail - shows blavatar + avatar, author name, blog name, and follow button
+ * topmost view in post detail - shows blavatar, author name, blog name, and follow button
  */
-public class ReaderPostDetailHeaderView extends LinearLayout {
-    private OnFollowListener mFollowListener;
-    private ReaderPost mPost;
-    private ReaderFollowButton mFollowButton;
-    private boolean mEnableBlogPreview = true;
+class ReaderPostDetailHeaderView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : LinearLayout(context, attrs, defStyleAttr) {
+    private var followListener: OnFollowListener? = null
+    private var post: ReaderPost? = null
 
-    public ReaderPostDetailHeaderView(Context context) {
-        super(context);
-        initView(context);
+    @Inject lateinit var imageManager: ImageManager
+
+    init {
+        (context.applicationContext as WordPress).component().inject(this)
+        View.inflate(context, layout.reader_post_detail_header_view, this)
     }
 
-    public ReaderPostDetailHeaderView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
+    fun setOnFollowListener(listener: OnFollowListener?) {
+        followListener = listener
     }
 
-    public ReaderPostDetailHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initView(context);
-    }
-
-    private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_post_detail_header_view, this);
-        mFollowButton = view.findViewById(R.id.header_follow_button);
-    }
-
-    public void setOnFollowListener(OnFollowListener listener) {
-        mFollowListener = listener;
-    }
-
-    public void setPost(@NonNull ReaderPost post, boolean isSignedInWPCom) {
-        mPost = post;
-
-        TextView txtTitle = findViewById(R.id.text_header_title);
-        TextView txtSubtitle = findViewById(R.id.text_header_subtitle);
-        ImageView blavatar = findViewById(R.id.image_header_blavatar);
-
-        boolean hasBlogName = mPost.hasBlogName();
-        boolean hasAuthorName = mPost.hasAuthorName();
-
+    fun setPost(post: ReaderPost, isSignedInWPCom: Boolean) {
+        this.post = post
+        val hasBlogName = post.hasBlogName()
+        val hasAuthorName = post.hasAuthorName()
         if (hasBlogName && hasAuthorName) {
             // don't show author name if it's the same as the blog name
-            if (mPost.getAuthorName().equals(mPost.getBlogName())) {
-                txtTitle.setText(mPost.getAuthorName());
-                txtSubtitle.setVisibility(View.GONE);
+            if (post.authorName == post.blogName) {
+                text_header_title.text = post.authorName
+                text_header_subtitle.visibility = View.GONE
             } else {
-                txtTitle.setText(mPost.getAuthorName());
-                txtSubtitle.setText(mPost.getBlogName());
+                text_header_title.text = post.authorName
+                text_header_subtitle.text = post.blogName
             }
-            blavatar.setContentDescription(mPost.getBlogName());
+            image_header_blavatar.contentDescription = post.blogName
         } else if (hasBlogName) {
-            txtTitle.setText(mPost.getBlogName());
-            blavatar.setContentDescription(mPost.getBlogName());
-            txtSubtitle.setVisibility(View.GONE);
+            text_header_title.text = post.blogName
+            image_header_blavatar.contentDescription = post.blogName
+            text_header_subtitle.visibility = View.GONE
         } else if (hasAuthorName) {
-            txtTitle.setText(mPost.getAuthorName());
-            blavatar.setContentDescription(mPost.getAuthorName());
-            txtSubtitle.setVisibility(View.GONE);
+            text_header_title.text = post.authorName
+            image_header_blavatar.contentDescription = post.authorName
+            text_header_subtitle.visibility = View.GONE
         } else {
-            txtTitle.setText(R.string.untitled);
-            txtSubtitle.setVisibility(View.GONE);
+            text_header_title.setText(R.string.untitled)
+            text_header_subtitle.visibility = View.GONE
         }
-
-        if (mEnableBlogPreview) {
-            txtTitle.setOnClickListener(mClickListener);
-            txtSubtitle.setOnClickListener(mClickListener);
-        } else {
-            int color = ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.colorOnSurface);
-            txtTitle.setTextColor(color);
-            txtSubtitle.setTextColor(color);
-        }
-
+        text_header_title.setOnClickListener(clickListener)
+        text_header_subtitle.setOnClickListener(clickListener)
         if (isSignedInWPCom) {
-            mFollowButton.setVisibility(View.VISIBLE);
-            mFollowButton.setIsFollowed(mPost.isFollowedByCurrentUser);
-            mFollowButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollowStatus(v);
-                }
-            });
-        } else {
-            mFollowButton.setVisibility(View.GONE);
+            header_follow_button.setIsFollowed(post.isFollowedByCurrentUser)
+            header_follow_button.setOnClickListener { v -> toggleFollowStatus(v) }
         }
-
-        showBlavatar(mPost.getBlogImageUrl(), mPost.getPostAvatar());
+        header_follow_button.setVisible(isSignedInWPCom)
+        showBlavatar(post.blogImageUrl, post.postAvatar)
     }
 
-    private void showBlavatar(String blavatarUrl, String avatarUrl) {
-        ImageManager imageManager = ImageManager.getInstance();
-        boolean hasBlavatar = !TextUtils.isEmpty(blavatarUrl);
-
-        AppLog.w(AppLog.T.READER, avatarUrl);
-
-        ImageView imgBlavatar = findViewById(R.id.image_header_blavatar);
-        imageManager.cancelRequestAndClearImageView(imgBlavatar);
-
+    private fun showBlavatar(blavatarUrl: String, avatarUrl: String) {
+        val hasBlavatar = !TextUtils.isEmpty(blavatarUrl)
+        AppLog.w(READER, avatarUrl)
+        imageManager.cancelRequestAndClearImageView(image_header_blavatar)
         if (hasBlavatar) {
-            int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
-            imgBlavatar.getLayoutParams().height = blavatarSz;
-            imgBlavatar.getLayoutParams().width = blavatarSz;
-            imageManager.load(imgBlavatar, ImageType.BLAVATAR,
-                    PhotonUtils.getPhotonImageUrl(blavatarUrl, blavatarSz, blavatarSz));
-            imgBlavatar.setVisibility(View.VISIBLE);
-        } else {
-            imgBlavatar.setVisibility(View.GONE);
+            val blavatarSz = resources.getDimensionPixelSize(dimen.reader_detail_header_blavatar)
+            image_header_blavatar.layoutParams.height = blavatarSz
+            image_header_blavatar.layoutParams.width = blavatarSz
+            imageManager.load(
+                    image_header_blavatar, BLAVATAR,
+                    PhotonUtils.getPhotonImageUrl(blavatarUrl, blavatarSz, blavatarSz)
+            )
         }
-
-
-        if (mEnableBlogPreview) {
-            imgBlavatar.setOnClickListener(mClickListener);
-        }
+        image_header_blavatar.setVisible(hasBlavatar)
+        image_header_blavatar.setOnClickListener(clickListener)
     }
 
     /*
      * click listener which shows blog preview
      */
-    private final OnClickListener mClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (mPost != null) {
-                ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost);
-            }
+    private val clickListener = OnClickListener { v ->
+        post?.let {
+            ReaderActivityLauncher.showReaderBlogPreview(v.context, post)
         }
-    };
+    }
 
-    private void toggleFollowStatus(final View followButton) {
-        if (!NetworkUtils.checkConnection(getContext())) {
-            return;
+    private fun toggleFollowStatus(followButton: View) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return
         }
-
-        final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
-
-        if (mFollowListener != null) {
+        post?.let { post ->
+            val isAskingToFollow = !post.isFollowedByCurrentUser
             if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(followButton, mPost.getBlogName(), mPost.blogId);
+                followListener?.onFollowTapped(followButton, post.blogName, post.blogId)
             } else {
-                mFollowListener.onFollowingTapped();
+                followListener?.onFollowingTapped()
             }
-        }
 
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (getContext() == null) {
-                    return;
+            val listener = ActionListener { succeeded ->
+                if (context == null) {
+                    return@ActionListener
                 }
-
-                mFollowButton.setEnabled(true);
+                header_follow_button.isEnabled = true
                 if (succeeded) {
-                    mPost.isFollowedByCurrentUser = isAskingToFollow;
+                    post.isFollowedByCurrentUser = isAskingToFollow
                 } else {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                            : R.string.reader_toast_err_unfollow_blog;
-                    ToastUtils.showToast(getContext(), errResId);
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
+                    val errResId = if (isAskingToFollow) {
+                        R.string.reader_toast_err_follow_blog
+                    } else {
+                        R.string.reader_toast_err_unfollow_blog
+                    }
+                    ToastUtils.showToast(context, errResId)
+                    header_follow_button.setIsFollowed(!isAskingToFollow)
                 }
             }
-        };
 
-        // disable follow button until API call returns
-        mFollowButton.setEnabled(false);
-
-        boolean result;
-        if (mPost.isExternal) {
-            result = ReaderBlogActions.followFeedById(mPost.feedId, isAskingToFollow, listener);
-        } else {
-            result = ReaderBlogActions.followBlogById(mPost.blogId, isAskingToFollow, listener);
-        }
-
-        if (result) {
-            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            // disable follow button until API call returns
+            header_follow_button.isEnabled = false
+            val result = if (post.isExternal) {
+                ReaderBlogActions.followFeedById(post.feedId, isAskingToFollow, listener)
+            } else {
+                ReaderBlogActions.followBlogById(post.blogId, isAskingToFollow, listener)
+            }
+            if (result) {
+                header_follow_button.setIsFollowedAnimated(isAskingToFollow)
+            }
         }
     }
 }
