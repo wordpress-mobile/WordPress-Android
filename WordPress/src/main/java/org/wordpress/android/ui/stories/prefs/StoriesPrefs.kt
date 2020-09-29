@@ -124,7 +124,12 @@ object StoriesPrefs {
     }
 
     @JvmStatic
-    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(context: Context, localIdKey: Long, remoteIdKey: Long, localSiteId: Long) {
+    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+        context: Context,
+        localIdKey: Long,
+        remoteIdKey: Long,
+        localSiteId: Long
+    ) {
         // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
         getSlideWithLocalId(
                 context,
