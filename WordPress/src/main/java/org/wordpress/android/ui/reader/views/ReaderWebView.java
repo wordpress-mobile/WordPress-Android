@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -200,10 +199,6 @@ public class ReaderWebView extends WPWebView {
      * @return true if is instagram or false otherwise
      */
     private boolean isValidInstagramImageClick(HitTestResult hr) {
-        if (!Objects.requireNonNull(hr.getExtra()).contains("cdninstagram")) {
-            return false;
-        }
-
         // Referenced https://pacheco.dev/posts/android/webview-image-anchor/
         if (hr.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE) {
             Handler handler = new Handler();
@@ -215,7 +210,7 @@ public class ReaderWebView extends WPWebView {
                 return false;
             }
 
-            return UrlUtils.getHost(url).equalsIgnoreCase("www.instagram.com");
+            return url.contains("ig_embed");
         } else {
             return false;
         }
