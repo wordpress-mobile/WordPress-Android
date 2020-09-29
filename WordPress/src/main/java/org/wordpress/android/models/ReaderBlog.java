@@ -2,7 +2,6 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
@@ -25,28 +24,6 @@ public class ReaderBlog {
     private String mUrl;
     private String mImageUrl;
     private String mFeedUrl;
-
-    public static ReaderBlog fromRecommendedBlogJson(@NotNull JSONObject json) {
-        ReaderBlog blog = new ReaderBlog();
-        blog.blogId = json.optLong("blog_id");
-        blog.feedId = json.optLong("feed_id");
-        blog.setName(JSONUtils.getStringDecoded(json, "name"));
-        blog.setUrl(JSONUtils.getString(json, "url"));
-        blog.setDescription(JSONUtils.getStringDecoded(json, "description"));
-        blog.setFeedUrl(JSONUtils.getString(json, "feed_url"));
-        blog.isJetpack = JSONUtils.getBool(json, "is_jetpack");
-        blog.isPrivate = JSONUtils.getBool(json, "is_private");
-        blog.numSubscribers = json.optInt("subscribers_count");
-        JSONObject jsonNotification = JSONUtils.getJSONChild(json, "subscription/delivery_methods/notification");
-        if (jsonNotification != null) {
-            blog.isNotificationsEnabled = JSONUtils.getBool(jsonNotification, "send_posts");
-        }
-        JSONObject jsonIcon = json.optJSONObject("icon");
-        if (jsonIcon != null) {
-            blog.setImageUrl(JSONUtils.getString(jsonIcon, "img"));
-        }
-        return blog;
-    }
 
     public static ReaderBlog fromJson(JSONObject json) {
         ReaderBlog blog = new ReaderBlog();

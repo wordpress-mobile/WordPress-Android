@@ -95,6 +95,6 @@ public class ReaderConstants {
     public static final String KEY_SAVED = "saved";
 
     // JSON Recommended blog key names
-    public static final String RECOMMENDED_BLOG_ID = "blog_id";
-    public static final String RECOMMENDED_FEED_ID = "feed_id";
+    public static final String RECOMMENDED_BLOG_ID = "ID";
+    public static final String RECOMMENDED_FEED_ID = "feed_ID";
 }

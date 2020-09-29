@@ -31,8 +31,8 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
                     List(recommendedBlogsJson.length()) { index ->
                         val recommendedBlog = recommendedBlogsJson.getJSONObject(index)
                         Pair(
-                                recommendedBlog.getLong(ReaderConstants.RECOMMENDED_BLOG_ID),
-                                recommendedBlog.getLong(ReaderConstants.RECOMMENDED_FEED_ID)
+                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_BLOG_ID),
+                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_FEED_ID)
                         )
                     }
                 }
@@ -55,7 +55,7 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         return cardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
                 ?.let { jsonRecommendedBlogs ->
                     List(jsonRecommendedBlogs.length()) { index ->
-                        ReaderBlog.fromRecommendedBlogJson(jsonRecommendedBlogs.getJSONObject(index))
+                        ReaderBlog.fromJson(jsonRecommendedBlogs.getJSONObject(index))
                     }
                 }
                 ?: emptyList()
