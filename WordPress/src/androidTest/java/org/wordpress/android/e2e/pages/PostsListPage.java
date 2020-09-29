@@ -24,6 +24,7 @@ public class PostsListPage {
 
     private static RecyclerView getRecyclerView() {
         ViewPager pager = getCurrentActivity().findViewById(R.id.postPager);
-        return (RecyclerView) ((ViewGroup) ((ViewGroup) (pager.getChildAt(pager.getCurrentItem())).findViewById(R.id.ptr_layout)).getChildAt(0)).getChildAt(0);
+        return (RecyclerView) ((ViewGroup) ((ViewGroup) (pager.getChildAt(pager.getCurrentItem()))
+                .findViewById(R.id.ptr_layout)).getChildAt(0)).getChildAt(0);
     }
 }
