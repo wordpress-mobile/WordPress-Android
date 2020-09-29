@@ -6,6 +6,7 @@
     android:gravity="center_vertical">
 
     <ImageView
+        style="@style/MySiteBlavatarImageView"
         android:id="@+id/image_blavatar"
         android:layout_width="@dimen/blavatar_sz"
         android:layout_height="@dimen/blavatar_sz"

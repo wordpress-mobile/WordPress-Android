@@ -1,27 +1,29 @@
 default_platform(:android)
 fastlane_require 'dotenv'
 
+# NOTE: When updating the `promo_config` keys of those locale, ensure it matches the list
+# of locales enabled in `.circleci/config.yml` for the `raw-screenshots` job
 SUPPORTED_LOCALES = [
-  { glotpress: "ar", google_play: "ar",  promo_config: {}},
-  { glotpress: "de", google_play: "de-DE",  promo_config: {} },
+  { glotpress: "ar",    google_play: "ar",     promo_config: {} },
+  { glotpress: "de",    google_play: "de-DE",  promo_config: {} },
   { glotpress: "en-gb", google_play: "en-US",  promo_config: {} },
-  { glotpress: "es", google_play: "es-ES",  promo_config: {} },
-  { glotpress: "fr", google_play: "fr-CA",  promo_config: false },
-  { glotpress: "fr", google_play: "fr-FR",  promo_config: {} },
-  { glotpress: "he", google_play: "iw-IL",  promo_config: {} },
-  { glotpress: "id", google_play: "id",  promo_config: {} },
-  { glotpress: "it", google_play: "it-IT",  promo_config: {} },
-  { glotpress: "ja", google_play: "ja-JP",  promo_config: {} },
-  { glotpress: "ko", google_play: "ko-KR",  promo_config: {} },
-  { glotpress: "nl", google_play: "nl-NL",  promo_config: {} },
-  { glotpress: "pl", google_play: "pl-PL",  promo_config: {} },
+  { glotpress: "es",    google_play: "es-ES",  promo_config: {} },
+  { glotpress: "fr",    google_play: "fr-CA",  promo_config: false },
+  { glotpress: "fr",    google_play: "fr-FR",  promo_config: {} },
+  { glotpress: "he",    google_play: "iw-IL",  promo_config: {} },
+  { glotpress: "id",    google_play: "in",     promo_config: {} },
+  { glotpress: "it",    google_play: "it-IT",  promo_config: {} },
+  { glotpress: "ja",    google_play: "ja-JP",  promo_config: {} },
+  { glotpress: "ko",    google_play: "ko-KR",  promo_config: {} },
+  { glotpress: "nl",    google_play: "nl-NL",  promo_config: {} },
+  { glotpress: "pl",    google_play: "pl-PL",  promo_config: {} },
   { glotpress: "pt-br", google_play: "pt-BR",  promo_config: {} },
-  { glotpress: "ru", google_play: "ru-RU",  promo_config: {} },
-  { glotpress: "sr", google_play:  "sr",  promo_config: false },
-  { glotpress: "sv", google_play: "sv-SE",  promo_config: {} },
-  { glotpress: "th", google_play: "th",  promo_config: {} },
-  { glotpress: "tr", google_play: "tr-TR",  promo_config: {} },
-  { glotpress: "vi", google_play: "vi",  promo_config: {} },
+  { glotpress: "ru",    google_play: "ru-RU",  promo_config: {} },
+  { glotpress: "sr",    google_play: "sr",     promo_config: {} },
+  { glotpress: "sv",    google_play: "sv-SE",  promo_config: {} },
+  { glotpress: "th",    google_play: "th",     promo_config: {} },
+  { glotpress: "tr",    google_play: "tr-TR",  promo_config: {} },
+  { glotpress: "vi",    google_play: "vi",     promo_config: {} },
   { glotpress: "zh-cn", google_play: "zh-CN",  promo_config: {} },
   { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {} },
 ].freeze
@@ -105,6 +107,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
       play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
       play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
       play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
+      play_store_screenshot_6: prj_folder + "/WordPress/metadata/screenshot_6.txt",
+      play_store_screenshot_7: prj_folder + "/WordPress/metadata/screenshot_7.txt",
 
       enhanced_app_store_screenshot_1: prj_folder + "/WordPress/metadata/enhanced_screenshot_1.html",
       enhanced_app_store_screenshot_2: prj_folder + "/WordPress/metadata/enhanced_screenshot_2.html",
@@ -230,7 +234,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"Vanilla", buildType: "release")
+    build_bundle(version: version, flavor:"vanilla", buildType: "release")
 
     upload_build_to_play_store(version: version, track: "production")
 
@@ -258,7 +262,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
       alpha: true,
       beta: true,
       final: false)
-    android_build_preflight()
+    android_build_preflight() unless (options[:skip_prechecks])
     build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
     build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
@@ -283,10 +287,10 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Create the file names
     version=android_get_alpha_version()
-    build_bundle(version: version, flavor:"Zalpha", buildType: "release")
+    build_bundle(version: version, flavor:"zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
-        upload_build_to_play_store(version: version, track: "alpha")
+       upload_build_to_play_store(version: version, track: "alpha")
     end
 
     if (options[:create_release])
@@ -314,10 +318,10 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     # Create the file names
     version=android_get_release_version()
-    build_bundle(version: version, flavor:"Vanilla", buildType: "release")
+    build_bundle(version: version, flavor:"vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
-        upload_build_to_play_store(version: version, track: "beta")
+       upload_build_to_play_store(version: version, track: "beta")
     end
 
     if (options[:create_release])
@@ -522,7 +526,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
-      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1")
+      sh("./gradlew lint#{options[:flavor]}Release >> #{logfile_path} 2>&1") unless is_ci
       UI.message("Building #{version["name"]} / #{version["code"]} - #{aab_file}...")
       sh("echo \"Building #{version["name"]} / #{version["code"]} - #{aab_file}...\" >> #{logfile_path}")
       sh("./gradlew bundle#{options[:flavor]}Release >> #{logfile_path} 2>&1")
@@ -595,6 +599,49 @@ ENV["HAS_ALPHA_VERSION"]="true"
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoRelease #{cmd_params}")
   end 
 
+  #####################################################################################
+  # trigger_ci
+  # -----------------------------------------------------------------------------------
+  # This lane triggers a CircleCI build on demand, with custom parameters
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  #   trigger_ci(
+  #     [token:<circleci_token>,]
+  #     [fork:<github_fork_name>,]
+  #     [branch:<git branch>,]
+  #     [parameters:<CircleCI pipeline parameters>]
+  #   )
+  # -----------------------------------------------------------------------------------
+  # Notes:
+  #   - The CircleCI token can be passed via the CIRCLECI_TOKEN env var instead of as a parameter to the lane call
+  #   - The fork parameter allows us to trigger a build on a fork of WPAndroid instead of the default repo on `wordpress-mobile` org.
+  #####################################################################################
+  desc "Trigger a CircleCI Build"
+  private_lane :trigger_ci do |options|
+    token = options[:token] || ENV['CIRCLECI_TOKEN']
+    UI.user_error!("You need to provide a CircleCI token either via the token: option or CIRCLECI_TOKEN env var") if token.nil?
+
+    require 'net/http'
+    require 'uri'
+    require 'json'
+
+    fork = options[:fork] || 'wordpress-mobile'
+    uri = URI.parse("https://circleci.com/api/v2/project/github/#{fork}/WordPress-Android/pipeline")
+    headers = {
+      'Content-Type' => 'application/json',
+      'Accept' => 'application/json',
+      "Circle-Token" => token
+    }
+
+    Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
+      request = Net::HTTP::Post.new(uri.request_uri, headers)
+      body = { "branch": options[:branch], "parameters": options[:parameters] }
+      request.body = body.to_json
+      response = http.request(request)
+      UI.message(response.body)
+    end
+  end
+
 #####################################################################################
 # Private lanes
 #####################################################################################
@@ -611,14 +658,21 @@ ENV["HAS_ALPHA_VERSION"]="true"
     apk_path=options[:apk_path]
     temp_dir = Dir.mktmpdir()
 
-    command = "source ./tools/gradle-functions.sh"
-    command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
-    --output=\"#{temp_dir}/universal.apks\" \\
-    --mode=universal \\
-    --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
-    --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
-    --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
-    --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
+    command = ""
+    if is_ci 
+      command << "bundletool build-apks --bundle=\"#{bundle_path}\" \\
+      --output=\"#{temp_dir}/universal.apks\" \\
+      --mode=universal"
+    else
+      command = "source ./tools/gradle-functions.sh"
+      command << "&& bundletool build-apks --bundle=\"#{bundle_path}\" \\
+      --output=\"#{temp_dir}/universal.apks\" \\
+      --mode=universal \\
+      --ks=\"$(get_gradle_property gradle.properties storeFile)\" \\
+      --ks-pass=\"pass:$(get_gradle_property gradle.properties storePassword)\" \\
+      --ks-key-alias=\"$(get_gradle_property gradle.properties keyAlias)\" \\
+      --key-pass=\"pass:$(get_gradle_property gradle.properties keyPassword)\""
+    end
     sh(command)
 
     sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")

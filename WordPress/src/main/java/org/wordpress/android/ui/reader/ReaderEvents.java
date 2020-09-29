@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.util.StringUtils;
 
@@ -69,13 +70,19 @@ public class ReaderEvents {
 
     public static class FetchDiscoverCardsEnded {
         final UpdateResult mResult;
+        final DiscoverTasks mTask;
 
-        public FetchDiscoverCardsEnded(UpdateResult result) {
+        public FetchDiscoverCardsEnded(DiscoverTasks task, UpdateResult result) {
             this.mResult = result;
+            this.mTask = task;
         }
 
         public ReaderActions.UpdateResult getResult() {
             return mResult;
+        }
+
+        public DiscoverTasks getTask() {
+            return mTask;
         }
     }
 

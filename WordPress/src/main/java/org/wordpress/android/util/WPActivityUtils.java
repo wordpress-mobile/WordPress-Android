@@ -6,18 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ListView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -28,6 +26,8 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.List;
 
 public class WPActivityUtils {
+    public static final String READER_DEEPLINK_ACTIVITY_ALIAS = "org.wordpress.android.WPComPostReaderActivity";
+
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
 
@@ -41,11 +41,6 @@ public class WPActivityUtils {
 
         View dialogContainerView = DialogExtensionsKt.getPreferenceDialogContainerView(dialog);
 
-        // just in case, try to find a container of our own custom dialog
-        if (dialogContainerView == null) {
-            dialogContainerView = dialog.findViewById(R.id.list);
-        }
-
         if (dialogContainerView == null) {
             AppLog.e(T.SETTINGS, "Preference Dialog View was null when adding Toolbar");
             return;
@@ -53,22 +48,46 @@ public class WPActivityUtils {
 
         // find the root view, then make sure the toolbar doesn't already exist
         ViewGroup root = (ViewGroup) dialogContainerView.getParent();
-        if (root.findViewById(R.id.toolbar) != null || root.findViewById(R.id.appbar_main) != null) {
+
+        // if we already added an appbar to the dialog it will be in the view one level above it's parent
+        ViewGroup modifiedRoot = (ViewGroup) dialogContainerView.getParent().getParent();
+        if (modifiedRoot != null && modifiedRoot.findViewById(R.id.appbar_main) != null) {
             return;
         }
 
-        AppBarLayout appbar = (AppBarLayout) LayoutInflater.from(context.getActivity())
-                                                           .inflate(R.layout.toolbar_main, root, false);
+        // remove view from the root
+        root.removeView(dialogContainerView);
 
+        // inflate our own layout with coordinator layout and appbar
+        ViewGroup dialogViewWrapper = (ViewGroup) LayoutInflater.from(
+                context.getActivity()).inflate(
+                R.layout.preference_screen_wrapper, root,
+                false);
+
+        // container that will host content of the dialog
+        ViewGroup listContainer = dialogViewWrapper.findViewById(R.id.list_container);
+
+        final ListView listOfPreferences = dialogContainerView.findViewById(android.R.id.list);
+        if (listOfPreferences != null) {
+            ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
+        }
+
+        // add dialog view into container
+        LayoutParams lp = dialogContainerView.getLayoutParams();
+        lp.height = LayoutParams.MATCH_PARENT;
+        lp.width = LayoutParams.MATCH_PARENT;
+        listContainer.addView(dialogContainerView, lp);
+
+        // add layout with container back to root view
+        root.addView(dialogViewWrapper);
+
+        AppBarLayout appbar = dialogViewWrapper.findViewById(R.id.appbar_main);
         MaterialToolbar toolbar = appbar.findViewById(R.id.toolbar_main);
 
-        root.addView(appbar, 0);
+        appbar.setLiftOnScrollTargetViewId(android.R.id.list);
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
-
-
         toolbar.setTitle(title);
-        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_white_24dp);
         toolbar.setNavigationOnClickListener(v -> dialog.dismiss());
         toolbar.setNavigationContentDescription(R.string.navigate_up_desc);
     }
@@ -97,33 +116,10 @@ public class WPActivityUtils {
             return;
         }
 
-        ViewGroup root = (ViewGroup) dialogContainerView.getParent();
+        ViewGroup root = (ViewGroup) dialogContainerView.getParent().getParent();
 
         if (root.getChildAt(0) instanceof Toolbar) {
             root.removeViewAt(0);
-        }
-    }
-
-    public static void setStatusBarColor(Window window, int color) {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(window.getContext().getResources().getColor(color));
-    }
-
-    public static void setLightStatusBar(Window window, boolean showInLightMode) {
-        Context context = window.getContext();
-        boolean isDarkTheme = ConfigurationExtensionsKt.isDarkTheme(context.getResources().getConfiguration());
-        if (!isDarkTheme) {
-            int newColor = showInLightMode ? ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface)
-                    : ContextCompat.getColor(context, R.color.status_bar);
-            window.setStatusBarColor(newColor);
-
-            if (VERSION.SDK_INT >= VERSION_CODES.M) {
-                int systemVisibility = window.getDecorView().getSystemUiVisibility();
-                int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                : systemVisibility ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                window.getDecorView().setSystemUiVisibility(newSystemVisibility);
-            }
         }
     }
 
@@ -157,15 +153,15 @@ public class WPActivityUtils {
         context.startActivity(intent);
     }
 
-    public static void disableComponent(Context context, Class<?> klass) {
+    public static void disableReaderDeeplinks(Context context) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+        pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
-    public static void enableComponent(Context context, Class<?> klass) {
+    public static void enableReaderDeeplinks(Context context) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+        pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

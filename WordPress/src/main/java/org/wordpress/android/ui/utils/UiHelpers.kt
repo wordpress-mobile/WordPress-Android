@@ -25,7 +25,7 @@ class UiHelpers @Inject constructor() {
                 is UIDimenDPInt -> DisplayUtils.dpToPx(context, uiDimen.dimensionDP)
             }
 
-    fun getTextOfUiString(context: Context, uiString: UiString): String =
+    fun getTextOfUiString(context: Context, uiString: UiString): CharSequence =
             when (uiString) {
                 is UiStringRes -> context.getString(uiString.stringRes)
                 is UiStringText -> uiString.text
@@ -42,6 +42,10 @@ class UiHelpers @Inject constructor() {
 
     fun updateVisibility(view: View, visible: Boolean) {
         view.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    fun setInvisible(view: View, invisible: Boolean) {
+        view.visibility = if (invisible) View.INVISIBLE else View.VISIBLE
     }
 
     fun setTextOrHide(view: TextView, uiString: UiString?) {
@@ -70,7 +74,7 @@ class UiHelpers @Inject constructor() {
 
     companion object {
         fun adjustDialogSize(dialog: Dialog) {
-            val window = dialog.window
+            val window = requireNotNull(dialog.window)
             val size = Point()
 
             val display = window.windowManager.defaultDisplay

@@ -16,6 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
@@ -44,8 +45,10 @@ import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.Standard
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -85,9 +88,13 @@ class PostListMainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
-) : ViewModel(), LifecycleOwner, CoroutineScope {
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+) : ViewModel(), CoroutineScope {
+    private val lifecycleOwner = object : LifecycleOwner {
+        val lifecycleRegistry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle {
+            return lifecycleRegistry
+        }
+    }
 
     private val scrollToTargetPostJob: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -158,7 +165,7 @@ class PostListMainViewModel @Inject constructor(
     private val featuredImageTracker = PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
     private val postFetcher by lazy {
-        PostFetcher(lifecycle, dispatcher)
+        PostFetcher(lifecycleOwner.lifecycle, dispatcher)
     }
 
     private val postListDialogHelper: PostListDialogHelper by lazy {
@@ -214,7 +221,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     init {
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 
     fun start(
@@ -240,7 +247,7 @@ class PostListMainViewModel @Inject constructor(
         }
 
         postListEventListenerFactory.createAndStartListening(
-                lifecycle = lifecycle,
+                lifecycle = lifecycleOwner.lifecycle,
                 dispatcher = dispatcher,
                 bgDispatcher = bgDispatcher,
                 postStore = postStore,
@@ -280,19 +287,19 @@ class PostListMainViewModel @Inject constructor(
             }
         }
 
-        lifecycleRegistry.markState(Lifecycle.State.STARTED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
         uploadStarter.queueUploadFromSite(site)
 
         editPostRepository.run {
-            postChanged.observe(this@PostListMainViewModel, Observer {
+            postChanged.observe(lifecycleOwner, Observer {
                 savePostToDbUseCase.savePostToDb(editPostRepository, site)
             })
         }
     }
 
     override fun onCleared() {
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         scrollToTargetPostJob.cancel() // cancels all coroutines with the default coroutineContext
         super.onCleared()
     }
@@ -352,7 +359,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun fabClicked() {
-        if (wpStoriesFeatureConfig.isEnabled()) {
+        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
             _onFabClicked.postValue(Event(Unit))
         } else {
             newPost()
@@ -393,7 +400,7 @@ class PostListMainViewModel @Inject constructor(
     fun showTargetPost(targetPostId: Int) {
         val postModel = postStore.getPostByLocalPostId(targetPostId)
         if (postModel == null) {
-            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(string.error_post_does_not_exist))
         } else {
             launch(mainDispatcher) {
                 val targetTab = PostListType.fromPostStatus(PostStatus.fromPost(postModel))
@@ -417,7 +424,7 @@ class PostListMainViewModel @Inject constructor(
         if (post != null) {
             _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = true))
         } else {
-            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes((R.string.error_post_does_not_exist)))
         }
     }
 
@@ -426,7 +433,7 @@ class PostListMainViewModel @Inject constructor(
         if (post != null) {
             _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
         } else {
-            _snackBarMessage.value = SnackbarMessageHolder(R.string.error_post_does_not_exist)
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.error_post_does_not_exist))
         }
     }
 
@@ -581,7 +588,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun onFabLongPressed() {
-        if (wpStoriesFeatureConfig.isEnabled()) {
+        if (wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)) {
             _onFabLongPressedForCreateMenu.postValue(Event(Unit))
         } else {
             _onFabLongPressedForPostList.postValue(Event(Unit))

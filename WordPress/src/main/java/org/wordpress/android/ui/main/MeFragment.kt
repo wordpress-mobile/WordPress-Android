@@ -47,7 +47,8 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.photopicker.MediaPickerConstants
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.util.AppLog
@@ -74,6 +75,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -279,7 +281,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         } else {
             getString(R.string.sign_out_wpcom_confirm_with_no_changes)
         }
-        MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder(requireActivity())
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
@@ -319,7 +321,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         when (requestCode) {
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val mediaUriStringsArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
+                val mediaUriStringsArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                 if (mediaUriStringsArray == null || mediaUriStringsArray.size == 0) {
                     AppLog.e(
                             UTILS,
@@ -328,7 +330,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                     return
                 }
                 val source = PhotoPickerMediaSource.fromString(
-                        data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                        data.getStringExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE)
                 )
                 val stat = if (source == ANDROID_CAMERA) ME_GRAVATAR_SHOT_NEW else ME_GRAVATAR_GALLERY_PICKED
                 AnalyticsTracker.track(stat)
@@ -373,7 +375,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showPhotoPickerForGravatar() {
-        ActivityLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
+        mediaPickerLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
     }
 
     private fun startCropActivity(uri: Uri) {
@@ -382,7 +384,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))

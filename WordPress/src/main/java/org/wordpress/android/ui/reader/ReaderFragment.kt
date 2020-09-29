@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,15 +18,13 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.ui.WPWebViewActivity
-import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
-import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
@@ -35,11 +32,10 @@ import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
 
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ReaderViewModel
-    private lateinit var newsCardViewModel: NewsCardViewModel
 
     private var searchMenuItem: MenuItem? = null
 
@@ -47,10 +43,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                val currentUiState = it as ContentUiState
-                val selectedTag = currentUiState.readerTagList[position]
-                newsCardViewModel.onTagChanged(selectedTag)
-                viewModel.onTagChanged(selectedTag)
+                if (it is ContentUiState) {
+                    val selectedTag = it.readerTagList[position]
+                    viewModel.onTagChanged(selectedTag)
+                }
             }
         }
     }
@@ -110,8 +106,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
-        newsCardViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(NewsCardViewModel::class.java)
         startObserving()
     }
 
@@ -125,7 +119,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                         updateTabs(it)
                     }
                 }
-                app_bar.setExpanded(uiState.appBarExpanded)
                 uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
             }
@@ -138,8 +131,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         })
 
         viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
-            selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
-                view_pager.setCurrentItem(tabPosition, false)
+            selectTabAction.getContentIfNotHandled()?.let { navTarget ->
+                view_pager.setCurrentItem(navTarget.position, navTarget.smoothAnimation)
             }
         })
 
@@ -161,15 +154,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             }
         })
 
-        newsCardViewModel.openUrlEvent.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { url ->
-                val activity: Activity? = activity
-                if (activity != null) {
-                    WPWebViewActivity.openURL(activity, url)
-                }
-            }
-        })
-
         viewModel.start()
     }
 
@@ -182,11 +166,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         }.attach()
     }
 
+    fun requestBookmarkTab() {
+        viewModel.bookmarkTabRequested()
+    }
+
     private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
         override fun getItemCount(): Int = tags.size
 
         override fun createFragment(position: Int): Fragment {
-            return if (AppPrefs.isReaderImprovementsPhase2Enabled() && tags[position].isDiscover) {
+            return if (tags[position].isDiscover) {
                 ReaderDiscoverFragment()
             } else {
                 ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)
@@ -198,12 +186,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment == null) {
             childFragmentManager.beginTransaction()
-                .replace(
-                    R.id.interests_fragment_container,
-                    ReaderInterestsFragment(),
-                    ReaderInterestsFragment.TAG
-                )
-                .commitNow()
+                    .replace(
+                            R.id.interests_fragment_container,
+                            ReaderInterestsFragment(),
+                            ReaderInterestsFragment.TAG
+                    )
+                    .commitNow()
         }
     }
 
@@ -211,8 +199,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
         if (readerInterestsFragment?.isAdded == true) {
             childFragmentManager.beginTransaction()
-                .remove(readerInterestsFragment)
-                .commitNow()
+                    .remove(readerInterestsFragment)
+                    .commitNow()
         }
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        app_bar.liftOnScrollTargetViewId = containerId
     }
 }

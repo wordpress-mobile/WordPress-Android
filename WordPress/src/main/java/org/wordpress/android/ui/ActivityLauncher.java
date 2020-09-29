@@ -18,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -53,6 +52,7 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
@@ -63,13 +63,11 @@ import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -100,8 +98,8 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
-import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
+import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -166,6 +164,10 @@ public class ActivityLauncher {
         return intent;
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
+     */
+    @Deprecated
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site,
@@ -174,6 +176,11 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
+
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
+     */
+    @Deprecated
     public static void showPhotoPickerForResult(Fragment fragment,
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site,
@@ -192,7 +199,7 @@ public class ActivityLauncher {
             intent.putExtra(WordPress.SITE, site);
         }
         if (localPostId != null) {
-            intent.putExtra(PhotoPickerActivity.LOCAL_POST_ID, localPostId.intValue());
+            intent.putExtra(MediaPickerConstants.LOCAL_POST_ID, localPostId.intValue());
         }
         return intent;
     }
@@ -399,14 +406,12 @@ public class ActivityLauncher {
     }
 
     public static void viewSavedPostsListInReader(Context context) {
-        // Easiest way to show reader with saved posts filter is to update the "last used filter" preference and make
-        // WPMainActivity restart itself with Intent.FLAG_ACTIVITY_CLEAR_TOP
-        if (!ReaderTagTable.getBookmarkTags().isEmpty()) {
-            AppPrefs.setReaderTag(ReaderTagTable.getBookmarkTags().get(0));
-        }
         ReaderPostTable.purgeUnbookmarkedPostsWithBookmarkTag();
-
-        viewReader(context);
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.putExtra(WPMainActivity.ARG_READER_BOOKMARK_TAB, true);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(intent);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
@@ -676,7 +681,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
@@ -709,7 +714,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS, mediaUris);
+        intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, mediaUris);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
@@ -764,12 +769,14 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Activity activity,
             @NonNull SiteModel site,
+            @NonNull String content,
             @NonNull PagePostCreationSourcesDetail source
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -777,11 +784,13 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
+            @NonNull String content,
             @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1081,8 +1090,9 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            // disable deeplinking activity so to not catch WP URLs
-            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+            // Disable deeplinking activity so to not catch WP URLs.
+            // We'll re-enable them later - see callers of WPActivityUtils#enableReaderDeeplinks.
+            WPActivityUtils.disableReaderDeeplinks(context);
 
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -1100,9 +1110,6 @@ public class ActivityLauncher {
                 Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
                 context.startActivity(chooser);
             }
-        } finally {
-            // re-enable deeplinking
-            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 

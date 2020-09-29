@@ -1,4 +1,4 @@
-* Block Editor: Username @mentions now auto-complete in the Block Editor on WordPress.com and Jetpack sites. Type the “@” character to see a username popup. Edit media in the Cover block. A Heading block bug fix removes an unwanted white shadow on headings with a link and string formatting in dark mode.
-* Search for self-hosted sites on the post list.
-* Upload audio and document files to the media library.
+- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.
+- Reader update: Preview images are now displayed on posts when no featured image is set.
 
+ 

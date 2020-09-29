@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.animation.StateListAnimator
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,7 +21,10 @@ import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
-import kotlinx.android.synthetic.main.stats_view_all_fragment.*
+import kotlinx.android.synthetic.main.stats_view_all_fragment.app_bar_layout
+import kotlinx.android.synthetic.main.stats_view_all_fragment.pullToRefresh
+import kotlinx.android.synthetic.main.stats_view_all_fragment.tabLayout
+import kotlinx.android.synthetic.main.stats_view_all_fragment.toolbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -35,6 +38,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
@@ -46,6 +50,7 @@ class StatsViewAllFragment : DaggerFragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var navigator: StatsNavigator
     @Inject lateinit var statsSiteProvider: StatsSiteProvider
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -166,11 +171,21 @@ class StatsViewAllFragment : DaggerFragment() {
             event?.getContentIfNotHandled()?.let { holder ->
                 val parent = activity.findViewById<View>(R.id.coordinatorLayout)
                 if (parent != null) {
-                    if (holder.buttonTitleRes == null) {
-                        WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                    if (holder.buttonTitle == null) {
+                        WPSnackbar.make(
+                                parent,
+                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                                Snackbar.LENGTH_LONG
+                        ).show()
                     } else {
-                        val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                        snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                        val snackbar = WPSnackbar.make(
+                                parent,
+                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                                Snackbar.LENGTH_LONG
+                        )
+                        snackbar.setAction(
+                                uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
+                        ) { holder.buttonAction() }
                         snackbar.show()
                     }
                 }
@@ -221,16 +236,28 @@ class StatsViewAllFragment : DaggerFragment() {
         })
 
         viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            app_bar_layout.postDelayed({
-                if (app_bar_layout != null) {
-                    val elevation = if (hasShadow == true) {
-                        resources.getDimension(R.dimen.appbar_elevation)
-                    } else {
-                        0f
-                    }
-                    ViewCompat.setElevation(app_bar_layout, elevation)
-                }
-            }, 100)
+            app_bar_layout.postDelayed(
+                    {
+                        if (app_bar_layout != null) {
+                            val originalStateListAnimator = app_bar_layout.stateListAnimator
+                            if (originalStateListAnimator != null) {
+                                app_bar_layout.setTag(
+                                        R.id.appbar_layout_original_animator_tag_key,
+                                        originalStateListAnimator
+                                )
+                            }
+
+                            if (hasShadow == true) {
+                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
+                                        R.id.appbar_layout_original_animator_tag_key
+                                ) as StateListAnimator
+                            } else {
+                                app_bar_layout.stateListAnimator = null
+                            }
+                        }
+                    },
+                    100
+            )
         })
     }
 

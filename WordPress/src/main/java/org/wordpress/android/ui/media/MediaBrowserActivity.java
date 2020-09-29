@@ -70,6 +70,8 @@ import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -87,6 +89,7 @@ import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.AnyFileUploadFeatureConfig;
+import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.widgets.AppRatingDialog;
 
@@ -121,6 +124,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject AnyFileUploadFeatureConfig mAnyFileUploadFeatureConfig;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
     private SiteModel mSite;
 
@@ -471,14 +476,24 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.VIDEO_LIBRARY:
             case RequestCodes.FILE_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    ClipData clipData = data.getClipData();
-                    if (clipData != null) {
-                        for (int i = 0; i < clipData.getItemCount(); i++) {
-                            ClipData.Item item = clipData.getItemAt(i);
-                            getMediaFromDeviceAndTrack(item.getUri(), requestCode);
+                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                            List<Uri> uris = convertStringArrayIntoUrisList(
+                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                            for (Uri uri : uris) {
+                                getMediaFromDeviceAndTrack(uri, requestCode);
+                            }
                         }
                     } else {
-                        getMediaFromDeviceAndTrack(data.getData(), requestCode);
+                        ClipData clipData = data.getClipData();
+                        if (clipData != null) {
+                            for (int i = 0; i < clipData.getItemCount(); i++) {
+                                ClipData.Item item = clipData.getItemAt(i);
+                                getMediaFromDeviceAndTrack(item.getUri(), requestCode);
+                            }
+                        } else {
+                            getMediaFromDeviceAndTrack(data.getData(), requestCode);
+                        }
                     }
                 }
                 break;
@@ -523,6 +538,14 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 }
                 break;
         }
+    }
+
+    private List<Uri> convertStringArrayIntoUrisList(String[] stringArray) {
+        List<Uri> uris = new ArrayList<>(stringArray.length);
+        for (String stringUri : stringArray) {
+            uris.add(Uri.parse(stringUri));
+        }
+        return uris;
     }
 
     /**
@@ -987,7 +1010,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 WPMediaUtils.launchVideoLibrary(this, true);
                 break;
             case ITEM_CHOOSE_FILE:
-                WPMediaUtils.launchFileLibrary(this, true);
+                mMediaPickerLauncher.showFilePicker(this);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(this,

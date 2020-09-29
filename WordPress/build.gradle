@@ -45,7 +45,6 @@ android {
     }
 
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolVersion
 
     defaultConfig {
         applicationId "org.wordpress.android"
@@ -55,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-239"
+            versionName "alpha-246"
         }
-        versionCode 908
+        versionCode 926
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -68,7 +67,6 @@ android {
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "TENOR_AVAILABLE", "true"
-        buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "true"
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
@@ -77,6 +75,7 @@ android {
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
+        buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -93,31 +92,32 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "15.5-rc-3"
+                versionName "15.8-rc-1"
             }
-            versionCode 907
+            versionCode 925
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
-            buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "false"
             buildConfigField "boolean", "WP_STORIES_AVAILABLE", "false"
             buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
+            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
-            buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
+            buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
-            buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
+            // Enable this for testing consolidated media picker
+            // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -223,7 +223,7 @@ dependencies {
 
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.5'
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
@@ -234,7 +234,7 @@ dependencies {
     implementation 'org.wordpress:graphview:3.4.0'
     implementation 'org.wordpress:persistentedittext:1.0.2'
     implementation 'org.wordpress:emailchecker2:1.1.0'
-    implementation 'com.squareup.okio:okio:1.14.0'
+    implementation 'com.squareup.okio:okio:2.8.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:3.0.7'
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
@@ -251,18 +251,22 @@ dependencies {
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
     testImplementation "junit:junit:$jUnitVersion"
-    testImplementation 'org.robolectric:robolectric:4.3'
-    testImplementation 'org.robolectric:shadows-multidex:4.3'
+
+    testImplementation 'org.robolectric:robolectric:4.4'
+    testImplementation 'org.robolectric:shadows-multidex:4.4'
+
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation 'androidx.test:core:1.2.0'
 
-    androidTestImplementation 'org.mockito:mockito-android:2.27.0'
+    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
-    androidTestImplementation 'com.squareup.okio:okio:1.14.0'
+    testImplementation('org.bouncycastle:bcprov-jdk15on:1.64') { force = true }
+
+    androidTestImplementation 'com.squareup.okio:okio:2.8.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
@@ -288,6 +292,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
+    androidTestCompile (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -318,7 +323,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
-    implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
+    implementation (group: 'com.zendesk', name: 'support', version: '5.0.1') {
         exclude group: 'com.google.dagger'
     }
 
@@ -346,7 +351,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
@@ -414,6 +419,12 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
     violations = [
             ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
     ]
+}
+
+task printVersionName {
+    doLast {
+        println android.productFlavors.vanilla.versionName
+    }
 }
 
 def checkGradlePropertiesFile() {

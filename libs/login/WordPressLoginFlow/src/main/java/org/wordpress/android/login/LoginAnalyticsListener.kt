@@ -23,7 +23,7 @@ interface LoginAnalyticsListener {
     fun trackLoginMagicLinkOpenEmailClientViewed()
     fun trackMagicLinkRequested()
     fun trackMagicLinkRequestFormViewed()
-    fun trackPasswordFormViewed()
+    fun trackPasswordFormViewed(isSocialChallenge: Boolean)
     fun trackSignupCanceled()
     fun trackSignupEmailButtonTapped()
     fun trackSignupEmailToLogin()

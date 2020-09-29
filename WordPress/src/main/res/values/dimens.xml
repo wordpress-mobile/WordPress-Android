@@ -10,8 +10,11 @@
     <dimen name="tab_height">48dp</dimen>
     <dimen name="me_menu_width">64dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="prominent_toolbar_height">112dp</dimen>
+    <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
+    <dimen name="collapsible_toolbar_expanded_bottom_margin">28dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
@@ -25,7 +28,10 @@
 
     <item name="emphasis_low" format="float" type="dimen">0.20</item>
 
+    <item name="emphasis_extra_low" format="float" type="dimen">0.05</item>
+
     <dimen name="divider_size">1dp</dimen>
+    <dimen name="bottom_tabs_divider_size">0.3dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
     <dimen name="list_with_fab_endlist_indicator_height">86dp</dimen>
@@ -49,6 +55,8 @@
     <dimen name="media_settings_margin_tablet_large">96dp</dimen>
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
+    <dimen name="media_picker_selection_dot">20dp</dimen>
+    <dimen name="media_picker_action_mode_dot">16dp</dimen>
     <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
@@ -108,7 +116,7 @@
     <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="margin_extra_extra_large">48dp</dimen>
-    <dimen name="margin_filter_spinner">64dp</dimen>
+    <dimen name="margin_filter_spinner">16dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
     <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
@@ -150,6 +158,10 @@
     <!-- padding inside the tag header view -->
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
+
+    <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
+        @dimen/emphasis_extra_low
+    </item>
 
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
@@ -214,6 +226,8 @@
     <dimen name="reader_chip_radius">8dp</dimen>
     <dimen name="reader_chip_height">44dp</dimen>
     <dimen name="reader_site_header_avatar_padding">2dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_radius">4dp</dimen>
+    <dimen name="reader_expandable_tags_view_chip_height">24dp</dimen>
 
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
@@ -278,12 +292,14 @@
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
     <dimen name="my_site_bottom_spacing">64dp</dimen>
+    <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
+    <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
-    <dimen name="me_avatar_padding">2dp</dimen>
-    <dimen name="me_avatar_width">2dp</dimen>
+    <dimen name="me_avatar_padding">1dp</dimen>
+    <dimen name="me_avatar_width">1dp</dimen>
 
     <!--site picker-->
     <dimen name="menu_item_height">48dp</dimen>
@@ -430,7 +446,7 @@
     <!-- author spinner for pages and posts lists -->
     <dimen name="author_spinner_width">60dp</dimen>
     <dimen name="author_spinner_avatar_size">32dp</dimen>
-    <dimen name="author_spinner_avatar_padding">2dp</dimen>
+    <dimen name="author_spinner_avatar_padding">1dp</dimen>
     <dimen name="author_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
 
     <!--posts list-->
@@ -538,14 +554,29 @@
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
     <!-- Modal Layout Picker Styles -->
-    <dimen name="mlp_header_scroll_snap_threshold">24dp</dimen>
-    <dimen name="mlp_layouts_handle_margin_bottom">8dp</dimen>
-    <dimen name="mlp_layouts_row_height">150dp</dimen>
-    <dimen name="mlp_layouts_title_start_margin">15dp</dimen>
-    <dimen name="mlp_bottom_shadow_height">5dp</dimen>
-    <dimen name="mlp_bottom_shadow_height_overlap">-5dp</dimen>
-    <dimen name="mlp_bottom_button_vertical_margin">16dp</dimen>
-    <dimen name="mlp_bottom_button_horizontal_margin">20dp</dimen>
-    <dimen name="mlp_categories_row_height">52dp</dimen>
-
+    <dimen name="mlp_header_scroll_snap_threshold">-36dp</dimen>
+    <dimen name="mlp_layouts_row_height">281dp</dimen>
+    <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
+    <dimen name="mlp_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
+    <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="mlp_categories_bar_height">44dp</dimen>
+    <dimen name="mlp_layout_card_height">204dp</dimen>
+    <dimen name="mlp_layout_card_width">136dp</dimen>
+    <dimen name="mlp_layout_card_margin_start">20dp</dimen>
+    <dimen name="mlp_layouts_category_radius">40dp</dimen>
+    <dimen name="mlp_layouts_category_height">36dp</dimen>
+    <dimen name="mlp_category_horizontal_margin">@dimen/margin_large</dimen>
+    <dimen name="mlp_category_horizontal_central_margin">@dimen/margin_medium</dimen>
+    <dimen name="mlp_categories_margin">@dimen/margin_medium</dimen>
+    <dimen name="mlp_categories_emoji_size">18dp</dimen>
+    <dimen name="mlp_titles_top_margin">14dp</dimen>
+    <dimen name="mlp_titles_bottom_margin">28dp</dimen>
+    <dimen name="mlp_layout_card_margin_end">@dimen/margin_medium</dimen>
+    <dimen name="mlp_layout_card_margin_top">@dimen/margin_extra_large</dimen>
+    <dimen name="mlp_layout_card_elevation">@dimen/margin_small</dimen>
+    <dimen name="mlp_layout_card_radius">@dimen/margin_small</dimen>
+    <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
+    <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
+    <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
 </resources>

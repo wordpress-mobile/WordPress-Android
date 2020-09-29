@@ -86,6 +86,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.posts.editor.ImageEditorFileUtils;
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer;
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -114,6 +115,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -133,6 +135,9 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
 import dagger.android.support.HasSupportFragmentInjector;
+import kotlinx.coroutines.CoroutineScope;
+
+import static org.wordpress.android.modules.ThreadModuleKt.DEFAULT_SCOPE;
 
 public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
         LifecycleObserver {
@@ -179,6 +184,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject CrashLogging mCrashLogging;
     @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
+    @Inject ImageEditorFileUtils mImageEditorFileUtils;
+    @Inject @Named(DEFAULT_SCOPE) CoroutineScope mDefaultScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -348,7 +355,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
 
         mSystemNotificationsTracker.checkSystemNotificationsState();
-        ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
+        ImageEditorInitializer.Companion.init(
+                mImageManager,
+                mImageEditorTracker,
+                mImageEditorFileUtils,
+                mDefaultScope
+        );
 
         initEmojiCompat();
         mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
@@ -915,6 +927,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 mApplicationOpenedDate = null;
             }
             properties.putAll(mReaderTracker.getAnalyticsData());
+
+            mReaderTracker.onAppGoesToBackground();
+
+            // Ensure that the deeplinking activity is re-enabled.
+            WPActivityUtils.enableReaderDeeplinks(getContext());
+
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
             // Methods onAppComesFromBackground and onAppGoesToBackground are only workarounds to track when the

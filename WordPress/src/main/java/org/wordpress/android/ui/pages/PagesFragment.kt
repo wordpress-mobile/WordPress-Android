@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditPostActivity
@@ -62,6 +63,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
@@ -78,12 +80,13 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class PagesFragment : Fragment() {
+class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
     private lateinit var mlpViewModel: ModalLayoutPickerViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
+
     /**
      * PostStore needs to be injected here as otherwise FluxC doesn't accept emitted events.
      */
@@ -136,8 +139,13 @@ class PagesFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
             if (EditPostActivity.checkToRestart(data)) {
-                ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0), false)
+                ActivityLauncher.editPageForResult(
+                        data,
+                        this@PagesFragment,
+                        viewModel.site,
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0),
+                        false
+                )
 
                 // a restart will happen so, no need to continue here
                 return
@@ -186,7 +194,7 @@ class PagesFragment : Fragment() {
                 newPageButton.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
 
-            Toast.makeText(newPageButton.context, R.string.pages_empty_list_button, Toast.LENGTH_SHORT).show()
+            Toast.makeText(newPageButton.context, R.string.create_page_fab_tooltip, Toast.LENGTH_SHORT).show()
             return@setOnLongClickListener true
         }
         newPageButton.redirectContextClickToLongPressListener()
@@ -307,8 +315,6 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.start(site)
-
-        mlpViewModel.init(DisplayUtils.isLandscape(context))
     }
 
     private fun showToast(toastMessageHolder: ToastMessageHolder) {
@@ -348,18 +354,29 @@ class PagesFragment : Fragment() {
             }
         })
 
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer {
-            createNewPage()
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer { content ->
+            createNewPage(content)
         })
 
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
-                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                if (holder.buttonTitle == null) {
+                    WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    ).show()
                 } else {
-                    val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                    val snackbar = WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    )
+                    snackbar.setAction(
+                            uiHelpers.getTextOfUiString(requireContext(),
+                            holder.buttonTitle)) { holder.buttonAction()
+                    }
                     snackbar.show()
                 }
             }
@@ -432,7 +449,8 @@ class PagesFragment : Fragment() {
                                     activity,
                                     post,
                                     site
-                            ) }
+                            )
+                        }
                 )
             }
         })
@@ -472,11 +490,12 @@ class PagesFragment : Fragment() {
 
     /**
      * Triggers new page creation
+     * @param content the page content
      */
-    private fun createNewPage() {
+    private fun createNewPage(content: String = "") {
         QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
                 viewModel.site, quickStartEvent, context)
-        ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
+        ActivityLauncher.addNewPageForResult(this, viewModel.site, content, PAGE_FROM_PAGES_LIST)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -505,6 +524,9 @@ class PagesFragment : Fragment() {
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
+        appbar_main.getTag(R.id.pages_non_search_recycler_view_id_tag_key)?.let {
+            appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(it as Int)
+        }
     }
 
     private fun showSearchList(myActionMenuItem: MenuItem) {
@@ -515,6 +537,7 @@ class PagesFragment : Fragment() {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
+        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(R.id.pages_search_recycler_view_id)
     }
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -560,9 +583,17 @@ class PagesFragment : Fragment() {
             }
         }
     }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        appbar_main.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
+    }
 }
 
-class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
+        fm,
+        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+) {
     companion object {
         val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
     }

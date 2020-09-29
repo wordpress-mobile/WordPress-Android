@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-25 15:03:51+0000
+Translation-Revision-Date: 2020-09-18 08:02:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="reader_menu_report_post">Informar de esta entrada</string>
+    <string name="gutenberg_native_angle">Ángulo</string>
+    <string name="mlp_layout_selected">%s seleccionado</string>
+    <string name="reader_welcome_banner">Bienvenido al Lector. Descubre millones de blogs a tu alcance.</string>
+    <string name="error_media_xmlrcp_server_error">Ha ocurrido un error interno del servidor</string>
+    <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>
+    <string name="show_n_hidden_items_desc">%1$s elementos más</string>
     <string name="login_log_in_for_share_intent">Accede a WordPress.com para compartir el contenido.</string>
     <string name="enter_site_address_share_intent">Introduce la dirección de tu sitio WordPress en el que quieras compartir el contenido.</string>
     <string name="jetpack_disconnect_error_toast">Error al desconectar el sitio</string>
@@ -417,7 +424,6 @@ Language: es_CO
     <string name="site_settings_export_content_title">Exportar contenido</string>
     <string name="confirm_delete_site_prompt">Por favor, escribe en %1$s en el campo arriba para confirmar. Tu sitio desaparecerá para siempre.</string>
     <string name="confirm_delete_site">Confirmar borrado del sitio</string>
-    <string name="contact_support">Contactar con el soporte</string>
     <string name="start_over_text">Si quieres un sitio, pero no quieres ninguna de las entradas y las páginas que tiene ahora, nuestro equipo de soporte puede borrar sus mensajes, páginas, archivos multimedia y tus comentarios.\n\nEsto mantendrá su sitio y la URL activos, pero tendrás un nuevo comienzo en la creación de contenidos. Sólo tienes que contactar con nosotros para limpiar tu contenido actual..</string>
     <string name="let_us_help">Déjanos ayudarte</string>
     <string name="site_settings_start_over_hint">Comienza tu sitio encima</string>
@@ -629,7 +635,6 @@ Language: es_CO
     <string name="reader_discover_attribution_author_and_blog">Originalmente publicado por %1$s en %2$s</string>
     <string name="reader_short_like_count_multi">%s Me gusta</string>
     <string name="reader_short_like_count_none">Me gusta</string>
-    <string name="reader_label_follow_count">%,d seguidores</string>
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
     <string name="notifications_push_summary">Opciones para las notificaciones que aparecen en tu dispositivo.</string>
@@ -681,8 +686,8 @@ Language: es_CO
     <string name="hide">Ocultar</string>
     <string name="show">Mostrar</string>
     <string name="deselect_all">Anular todas las selecciones</string>
-    <string name="verification_code">Código de verificación</string>
     <string name="language">Idioma</string>
+    <string name="verification_code">Código de verificación</string>
     <string name="auth_required">Accede de nuevo para continuar.</string>
     <string name="invalid_verification_code">Código de verificación no válido</string>
     <string name="stats_search_terms_unknown_search_terms">Términos de búsqueda desconocidos</string>
@@ -746,7 +751,6 @@ Language: es_CO
     <string name="reader_empty_comments">Aún no hay comentarios</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
-    <string name="contact_us">Contacta con nosotros</string>
     <string name="schedule_verb">Programación</string>
     <string name="update_verb">Actualizar</string>
     <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
@@ -841,11 +845,11 @@ Language: es_CO
     <string name="pick_video">Elige un vídeo</string>
     <string name="pick_photo">Elige una foto</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
-    <string name="reader_btn_unfollow">Siguiendo</string>
-    <string name="reader_btn_follow">Seguir</string>
-    <string name="reader_btn_share">Compartir</string>
     <string name="reader_label_removed_tag">Eliminado %s</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>
+    <string name="reader_btn_share">Compartir</string>
+    <string name="reader_btn_follow">Seguir</string>
+    <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
     <string name="reader_likes_only_you">Te gusta esto</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
@@ -857,19 +861,19 @@ Language: es_CO
     <string name="reader_hint_comment_on_comment">Contestar al comentario </string>
     <string name="reader_untitled_post">Sin título</string>
     <string name="empty_list_default">Esta lista esta vacía</string>
-    <string name="media_gallery_type_squares">Cuadrados</string>
-    <string name="media_edit_title_text">Título</string>
-    <string name="media_edit_description_text">Descripción</string>
+    <string name="stats_timeframe_days">Días</string>
+    <string name="stats_timeframe_weeks">Semanas</string>
+    <string name="stats_timeframe_months">Meses</string>
+    <string name="theme_activate_button">Activar</string>
     <string name="share_action">Compartir</string>
     <string name="stats">Estadísticas</string>
     <string name="stats_view_clicks">Clics</string>
     <string name="stats_timeframe_today">Hoy</string>
     <string name="stats_timeframe_yesterday">Ayer</string>
     <string name="media_gallery_type_circles">Círculos</string>
-    <string name="theme_activate_button">Activar</string>
-    <string name="stats_timeframe_months">Meses</string>
-    <string name="stats_timeframe_days">Días</string>
-    <string name="stats_timeframe_weeks">Semanas</string>
+    <string name="media_edit_title_text">Título</string>
+    <string name="media_edit_description_text">Descripción</string>
+    <string name="media_gallery_type_squares">Cuadrados</string>
     <string name="stats_view_referrers">Referentes</string>
     <string name="stats_view_tags_and_categories">Etiquetas y categorías</string>
     <string name="media_edit_failure">No se pudo actualizar</string>
@@ -879,9 +883,9 @@ Language: es_CO
     <string name="themes">Temas</string>
     <string name="discard">Descartar</string>
     <string name="manage">Gestionar</string>
-    <string name="more_notifications">y %d más.</string>
     <string name="note_reply_successful">Respuesta publicada</string>
     <string name="new_notifications">%d nuevas notificaciones</string>
+    <string name="more_notifications">y %d más.</string>
     <string name="follows">Seguimientos</string>
     <string name="sign_in">Acceder</string>
     <string name="loading">Cargando…</string>
@@ -893,14 +897,14 @@ Language: es_CO
     <string name="username">Nombre de usuario</string>
     <string name="log_in">Acceder</string>
     <string name="reader">Lector</string>
-    <string name="pages">Páginas</string>
     <string name="anonymous">Anónimo</string>
+    <string name="pages">Páginas</string>
     <string name="posts">Entradas</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
-    <string name="app_title">WordPress para Android</string>
     <string name="version">Versión</string>
+    <string name="app_title">WordPress para Android</string>
     <string name="tos">Términos del servicio</string>
     <string name="image_alignment">Alineamiento</string>
     <string name="refresh">Refrescar</string>
@@ -910,8 +914,8 @@ Language: es_CO
     <string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
     <string name="settings">Ajustes</string>
     <string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
-    <string name="categories">Categorías</string>
     <string name="title">Título</string>
+    <string name="categories">Categorías</string>
     <string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
     <string name="dlg_deleting_comments">Eliminando comentarios</string>
     <string name="sdcard_title">Requiere tarjeta SD</string>
@@ -921,11 +925,11 @@ Language: es_CO
     <string name="none">Ninguno</string>
     <string name="error">Error</string>
     <string name="cancel">Cancelar</string>
-    <string name="on">en</string>
+    <string name="no">No</string>
+    <string name="save">Guardar</string>
     <string name="preview">Vista previa</string>
     <string name="reply">Responder</string>
-    <string name="save">Guardar</string>
-    <string name="no">No</string>
+    <string name="on">en</string>
     <string name="yes">Sí</string>
     <string name="notification_settings">Ajustes de avisos</string>
     <string name="category_refresh_error">Error de actualización de categorías</string>

@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -20,6 +19,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
+import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -56,6 +56,9 @@ public class AppPrefs {
         READER_TAG_NAME,
         READER_TAG_TYPE,
         READER_TAG_WAS_FOLLOWING,
+
+        // currently active tab on the main Reader screen when the user is in Reader
+        READER_ACTIVE_TAB,
 
         // last selected subfilter in the reader
         READER_SUBFILTER,
@@ -117,10 +120,6 @@ public class AppPrefs {
         SUPPORT_EMAIL,
         SUPPORT_NAME,
 
-        // Store a version of the last dismissed News Card
-        NEWS_CARD_DISMISSED_VERSION,
-        // Store a version of the last shown News Card
-        NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
         USER_IN_GUTENBERG_ROLLOUT_GROUP,
@@ -153,7 +152,10 @@ public class AppPrefs {
 
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
-        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
+        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
+
+        READER_DISCOVER_WELCOME_BANNER_SHOWN,
+        MANUAL_FEATURE_CONFIG
     }
 
     /**
@@ -238,9 +240,6 @@ public class AppPrefs {
 
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
-
-        // feature flag for Reader Improvements Phase 2
-        FF_READER_IMPROVEMENTS_PHASE_2,
 
         // used to indicate that we do not need to show the Post List FAB tooltip
         IS_POST_LIST_FAB_TOOLTIP_DISABLED,
@@ -373,6 +372,15 @@ public class AppPrefs {
                    .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
                    .apply();
         }
+    }
+
+    public static void setReaderActiveTab(ReaderTab readerTab) {
+        setInt(DeletablePrefKey.READER_ACTIVE_TAB, readerTab != null ? readerTab.getId() : 0);
+    }
+
+    public static ReaderTab getReaderActiveTab() {
+        int lastTabId = getInt(DeletablePrefKey.READER_ACTIVE_TAB);
+        return lastTabId != 0 ? ReaderTab.Companion.fromId(lastTabId) : null;
     }
 
     public static String getReaderSubfilter() {
@@ -685,7 +693,7 @@ public class AppPrefs {
     }
 
     /**
-     * @deprecated  As of release 13.0, replaced by SiteSettings mobile editor value
+     * @deprecated As of release 13.0, replaced by SiteSettings mobile editor value
      */
     @Deprecated
     public static boolean isGutenbergDefaultForNewPosts() {
@@ -961,22 +969,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
-    public static void setNewsCardDismissedVersion(int version) {
-        setInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, version);
-    }
-
-    public static int getNewsCardDismissedVersion() {
-        return getInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, -1);
-    }
-
-    public static void setNewsCardShownVersion(int version) {
-        setInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, version);
-    }
-
-    public static int getNewsCardShownVersion() {
-        return getInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, -1);
-    }
-
     public static void setQuickStartDisabled(Boolean isDisabled) {
         setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
     }
@@ -1194,6 +1186,14 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
     }
 
+    public static boolean getReaderDiscoverWelcomeBannerShown() {
+        return getBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, false);
+    }
+
+    public static void setReaderDiscoverWelcomeBannerShown(boolean shown) {
+        setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
+    }
+
     public static QuickStartTask getLastSkippedQuickStartTask() {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
@@ -1208,6 +1208,22 @@ public class AppPrefs {
             return;
         }
         setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
+    }
+
+    public static void setManualFeatureConfig(boolean isEnabled, String featureKey) {
+        prefs().edit().putBoolean(getManualFeatureConfigKey(featureKey), isEnabled).apply();
+    }
+
+    public static boolean getManualFeatureConfig(String featureKey) {
+        return prefs().getBoolean(getManualFeatureConfigKey(featureKey), false);
+    }
+
+    public static boolean hasManualFeatureConfig(String featureKey) {
+        return prefs().contains(getManualFeatureConfigKey(featureKey));
+    }
+
+    @NonNull private static String getManualFeatureConfigKey(String featureKey) {
+        return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
     }
 
     /*
@@ -1235,18 +1251,5 @@ public class AppPrefs {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Feature Flag for Reader Improvements Phase 2. Both BuildTime and RunTime feature flag is used.
-     *
-     * BuildTime feature flag is used to make sure we never enable the feature in production builds - even when the
-     * user manually overrides the shared preferences record using adb.
-     *
-     * RunTime feature flag is used for us to enable the feature during development.
-     */
-    public static boolean isReaderImprovementsPhase2Enabled() {
-        return BuildConfig.READER_IMPROVEMENTS_PHASE_2 && getBoolean(UndeletablePrefKey.FF_READER_IMPROVEMENTS_PHASE_2,
-                false);
     }
 }

@@ -1,6 +1,7 @@
 package org.wordpress.android.util.config
 
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
@@ -12,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
+import org.wordpress.android.util.config.manual.ManualFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class AppConfigTest {
@@ -19,6 +21,7 @@ class AppConfigTest {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var featureConfig: FeatureConfig
     @Mock lateinit var experimentConfig: ExperimentConfig
+    @Mock lateinit var manualFeatureConfig: ManualFeatureConfig
     private lateinit var appConfig: AppConfig
     private val remoteField = "remote_field"
     private val experimentVariantA = "variantA"
@@ -26,7 +29,8 @@ class AppConfigTest {
 
     @Before
     fun setUp() {
-        appConfig = AppConfig(remoteConfig, analyticsTracker)
+        appConfig = AppConfig(remoteConfig, analyticsTracker, manualFeatureConfig)
+        whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(false)
     }
 
     @Test
@@ -58,6 +62,26 @@ class AppConfigTest {
 
         assertThat(appConfig.isEnabled(featureConfig)).isFalse()
         verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to false))
+    }
+
+    @Test
+    fun `returns feature as enabled when the manual config is enabled and does not track the event`() {
+        setupFeatureConfig(buildConfigValue = false, remoteConfigValue = false)
+        whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(true)
+        whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(true)
+
+        assertThat(appConfig.isEnabled(featureConfig)).isTrue()
+        verifyZeroInteractions(analyticsTracker)
+    }
+
+    @Test
+    fun `returns feature as disabled when the manual config is disabled and does not track the event`() {
+        setupFeatureConfig(buildConfigValue = true, remoteConfigValue = false)
+        whenever(manualFeatureConfig.hasManualSetup(featureConfig)).thenReturn(true)
+        whenever(manualFeatureConfig.isManuallyEnabled(featureConfig)).thenReturn(false)
+
+        assertThat(appConfig.isEnabled(featureConfig)).isFalse()
+        verifyZeroInteractions(analyticsTracker)
     }
 
     @Test

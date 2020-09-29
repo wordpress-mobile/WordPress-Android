@@ -6,7 +6,7 @@ import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.PreferenceMatchers.withTitle;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;

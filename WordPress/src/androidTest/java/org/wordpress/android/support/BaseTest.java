@@ -107,20 +107,19 @@ public class BaseTest {
     }
 }
 
-class UnlocalizedDateHelper extends HandlebarsHelper<Date> {
-    @Override public Object apply(Date context, Options options) throws IOException {
+class UnlocalizedDateHelper extends HandlebarsHelper<Object> {
+    @Override public Object apply(Object context, Options options) throws IOException {
         String format = options.hash("format", null);
         String offset = options.hash("offset", null);
         String timezone = options.hash("timezone", null);
-        String localeCode = options.hash("locale", "US");
+        String localeCode = options.hash("locale", "en_US_POSIX");
 
-        Date date = context != null ? context : new Date();
+        Date date = new Date();
         if (offset != null) {
             date = new DateOffset(offset).shift(date);
         }
 
         Locale locale = Locale.getDefault();
-
         if (localeCode != null) {
             locale = LocaleUtils.toLocale(localeCode);
         }

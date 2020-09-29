@@ -10,6 +10,7 @@ import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
+import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
@@ -19,6 +20,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveList
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
@@ -60,6 +62,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                                  OnGutenbergDidSendButtonPressedActionListener
+                                          onGutenbergDidSendButtonPressedActionListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
                                   boolean isDarkMode) {
@@ -75,6 +79,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onMediaEditorListener,
                     onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                    onGutenbergDidSendButtonPressedActionListener,
                     addMentionUtil,
                     onSPTTooltipShownEventListener,
                     isDarkMode);
@@ -204,5 +209,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void updateTheme(Bundle editorTheme) {
         mWPAndroidGlueCode.updateTheme(editorTheme);
+    }
+
+    public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
+        GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
+        mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
     }
 }

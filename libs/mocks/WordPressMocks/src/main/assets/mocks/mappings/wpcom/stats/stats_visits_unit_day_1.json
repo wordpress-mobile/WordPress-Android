@@ -20,7 +20,7 @@
     "response": {
         "status": 200,
         "jsonBody": {
-            "date": "{{now format='yyyy-MM-dd'}}",
+            "date": "{{fnow format='yyyy-MM-dd'}}",
             "unit": "day",
             "fields": [
                 "period",
@@ -33,7 +33,7 @@
             ],
             "data": [
                 [
-                    "{{now format='yyyy-MM-dd'}}",
+                    "{{fnow format='yyyy-MM-dd'}}",
                     0,
                     0,
                     0,

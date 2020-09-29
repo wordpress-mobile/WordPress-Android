@@ -89,7 +89,7 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
                 ), HtmlCompat.FROM_HTML_MODE_LEGACY
         )
 
-        MaterialAlertDialogBuilder(activity).apply {
+        MaterialAlertDialogBuilder(requireActivity()).apply {
             setTitle(R.string.settings_username_changer_confirm_dialog_title)
             setView(layout)
             setPositiveButton(

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.animation.StateListAnimator
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -21,6 +21,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.WPSnackbar
@@ -37,8 +39,9 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment() {
+class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private val selectedTabListener: SelectedTabListener
@@ -113,11 +116,21 @@ class StatsFragment : DaggerFragment() {
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitleRes == null) {
-                    WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
+                if (holder.buttonTitle == null) {
+                    WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    ).show()
                 } else {
-                    val snackbar = WPSnackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
+                    val snackbar = WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    )
+                    snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
+                        holder.buttonAction()
+                    }
                     snackbar.show()
                 }
             }
@@ -127,12 +140,21 @@ class StatsFragment : DaggerFragment() {
             app_bar_layout.postDelayed(
                     {
                         if (app_bar_layout != null) {
-                            val elevation = if (hasShadow == true) {
-                                resources.getDimension(R.dimen.appbar_elevation)
-                            } else {
-                                0f
+                            val originalStateListAnimator = app_bar_layout.stateListAnimator
+                            if (originalStateListAnimator != null) {
+                                app_bar_layout.setTag(
+                                        R.id.appbar_layout_original_animator_tag_key,
+                                        originalStateListAnimator
+                                )
                             }
-                            ViewCompat.setElevation(app_bar_layout, elevation)
+
+                            if (hasShadow == true) {
+                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
+                                        R.id.appbar_layout_original_animator_tag_key
+                                ) as StateListAnimator
+                            } else {
+                                app_bar_layout.stateListAnimator = null
+                            }
                         }
                     },
                     100
@@ -175,9 +197,16 @@ class StatsFragment : DaggerFragment() {
             }
         })
     }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        app_bar_layout.liftOnScrollTargetViewId = containerId
+    }
 }
 
-class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(
+        fm,
+        BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+) {
     override fun getCount(): Int = statsSections.size
 
     override fun getItem(position: Int): Fragment {

@@ -38,6 +38,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -68,6 +69,7 @@ import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
+import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -122,10 +124,12 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
@@ -152,6 +156,7 @@ import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -163,9 +168,11 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
+import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -239,7 +246,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditPostSettingsCallback,
         PrepublishingBottomSheetListener,
         PrivateAtCookieProgressDialogOnDismissListener,
-        ExceptionLogger {
+        ExceptionLogger,
+        SiteSettingsInterface.SiteSettingsListener {
     public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
@@ -258,6 +266,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_CONTENT = "pageContent";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -330,6 +339,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+
+    private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
+
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
 
@@ -369,10 +382,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject CrashLogging mCrashLogging;
+    @Inject MediaPickerLauncher mMediaPickerLauncher;
 
     private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
+    private SiteSettingsInterface mSiteSettings;
+    private boolean mIsJetpackSsoEnabled;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -435,6 +452,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (refreshedSite != null) {
                 mSite.setMobileEditor(refreshedSite.getMobileEditor());
             }
+
+            mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
+            // initialize settings with locally cached values, fetch remote on first pass
+            fetchSiteSettings();
         }
 
         // Check whether to show the visual editor
@@ -451,12 +472,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Set up the action bar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
@@ -612,6 +635,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
     }
 
+    private void fetchSiteSettings() {
+        mSiteSettings.init(true);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
@@ -635,6 +662,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupViewPager();
     }
 
+    // SiteSettingsListener
+    @Override
+    public void onSaveError(Exception error) { }
+
+    @Override
+    public void onFetchError(Exception error) { }
+
+    @Override
+    public void onSettingsUpdated() {
+        // Let's hold the value in local variable as listener is too noisy
+        boolean isJetpackSsoEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
+        if (mIsJetpackSsoEnabled != isJetpackSsoEnabled) {
+            mIsJetpackSsoEnabled = isJetpackSsoEnabled;
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                ((GutenbergEditorFragment) mEditorFragment)
+                        .updateCapabilities(mIsJetpackSsoEnabled, getGutenbergPropsBuilder());
+            }
+        }
+    }
+
+    @Override
+    public void onSettingsSaved() { }
+
+    @Override
+    public void onCredentialsValidated(Exception error) { }
+
     private void setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
@@ -651,15 +704,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackgroundResource(R.drawable.tab_layout_background);
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mEditPostRepository.isPage() ? R.string.page_settings : R.string.post_settings);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.settings_fragment_root);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_PUBLISH_SETTINGS) {
                     setTitle(R.string.publish_date);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.empty_recycler_view);
+                    mToolbar.setBackground(null);
                 }
             }
         });
@@ -679,8 +740,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorMedia.getSnackBarMessage().observe(this, event -> {
             SnackbarMessageHolder messageHolder = event.getContentIfNotHandled();
             if (messageHolder != null) {
-                WPSnackbar
-                        .make(findViewById(R.id.editor_activity), messageHolder.getMessageRes(), Snackbar.LENGTH_SHORT)
+                WPSnackbar.make(
+                                findViewById(R.id.editor_activity),
+                                mUiHelpers.getTextOfUiString(this, messageHolder.getMessage()),
+                                Snackbar.LENGTH_SHORT
+                        )
                         .show();
             }
         });
@@ -963,7 +1027,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ((AztecEditorFragment) mEditorFragment).enableMediaMode(false);
         }
     }
-    
+
     /*
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
@@ -999,7 +1063,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     launchVideoLibrary();
                     break;
                 case WP_MEDIA:
-                    ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+                    mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                     break;
                 case STOCK_MEDIA:
                     final int requestCode = allowMultipleSelection
@@ -1516,8 +1580,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-
-
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
         if (mEditorMediaUploadListener != null) {
@@ -1560,10 +1622,55 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 (post, result) -> {
                     // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
                     if (listener != null) {
-                        listener.onPostUpdatedFromUI();
+                        listener.onPostUpdatedFromUI(result);
                     }
                     return null;
                 });
+    }
+
+    /**
+     * This method:
+     *   1. Shows and hides the editor's progress dialog;
+     *   2. Saves the post via {@link EditPostActivity#updateAndSavePostAsync(OnPostUpdatedFromUIListener)};
+     *   3. Invokes the listener method parameter
+     *   4. If there were changes in the post that needed to be saved, for debug builds the app will crash, and
+     *      for release builds we send an exception to Sentry because this
+     *      indicates that the editor's autosave mechanism failed to save all changes to the post. Ideally,
+     *      there should never be any changes that need to be saved when exiting the editor because all changes
+     *      should be caught by the autosave mechanism, but there is a known issue where there will be unsaved
+     *      changes when the user quickly exits the editor after making changes. For that reason we send that as
+     *      a separate event to Sentry.
+     */
+    private void updateAndSavePostAsyncOnEditorExit(@NonNull final OnPostUpdatedFromUIListener listener) {
+        if (mEditorFragment == null) {
+            return;
+        }
+
+        // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
+        boolean isAutosavePending = mViewModel.isAutosavePending();
+
+        mEditorFragment.showSavingProgressDialogIfNeeded();
+        updateAndSavePostAsync((result) -> {
+            if (mEditorFragment != null) {
+                mEditorFragment.hideSavingProgressDialog();
+            }
+
+            listener.onPostUpdatedFromUI(result);
+
+            if (result == Updated.INSTANCE) {
+                SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
+                if (BuildConfig.DEBUG) {
+                    throw new RuntimeException(
+                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
+                    );
+                } else {
+                    mCrashLogging.reportException(exception, T.EDITOR.toString());
+                    AppLog.e(T.EDITOR, exception.getMessage());
+                }
+            } else {
+                AppLog.d(T.EDITOR, "Post had no unsaved changes when exiting the editor.");
+            }
+        });
     }
 
     private UpdateFromEditor updateFromEditor(String oldContent) {
@@ -1714,7 +1821,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     public interface OnPostUpdatedFromUIListener {
-        void onPostUpdatedFromUI();
+        void onPostUpdatedFromUI(@Nullable UpdatePostResult updatePostResult);
     }
 
     @Override
@@ -1804,79 +1911,82 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void uploadPost(final boolean publishPost) {
-        AccountModel account = mAccountStore.getAccount();
-        // prompt user to verify e-mail before publishing
-        if (!account.getEmailVerified()) {
-            String message = TextUtils.isEmpty(account.getEmail())
-                    ? getString(R.string.editor_confirm_email_prompt_message)
-                    : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
-                            account.getEmail());
+        updateAndSavePostAsyncOnEditorExit(((updatePostResult) -> {
+            AccountModel account = mAccountStore.getAccount();
+            // prompt user to verify e-mail before publishing
+            if (!account.getEmailVerified()) {
+                String message = TextUtils.isEmpty(account.getEmail())
+                        ? getString(R.string.editor_confirm_email_prompt_message)
+                        : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
+                                account.getEmail());
 
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(R.string.editor_confirm_email_prompt_title)
-                   .setMessage(message)
-                   .setPositiveButton(android.R.string.ok,
-                           (dialog, id) -> {
-                               ToastUtils.showToast(EditPostActivity.this,
-                                       getString(R.string.toast_saving_post_as_draft));
-                               savePostAndOptionallyFinish(true, false);
-                           })
-                   .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
-                           (dialog, id) -> mDispatcher
-                                   .dispatch(AccountActionBuilder.newSendVerificationEmailAction()));
-            builder.create().show();
-            return;
-        }
-        if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
-            // TODO we don't want to show "publish" message when the user clicked on eg. save
-            mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
-            EditPostActivity.this.runOnUiThread(() -> {
-                String message = getString(
-                        mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
-                ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
-            });
-            return;
-        }
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                builder.setTitle(R.string.editor_confirm_email_prompt_title)
+                       .setMessage(message)
+                       .setPositiveButton(android.R.string.ok,
+                               (dialog, id) -> {
+                                   ToastUtils.showToast(EditPostActivity.this,
+                                           getString(R.string.toast_saving_post_as_draft));
+                                   savePostAndOptionallyFinish(true, false);
+                               })
+                       .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
+                               (dialog, id) -> mDispatcher
+                                       .dispatch(AccountActionBuilder.newSendVerificationEmailAction()));
+                builder.create().show();
+                return;
+            }
+            if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
+                // TODO we don't want to show "publish" message when the user clicked on eg. save
+                mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
+                EditPostActivity.this.runOnUiThread(() -> {
+                    String message = getString(
+                            mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                    ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
+                });
+                return;
+            }
 
-        // Loading the content from the GB HTML editor can take time on long posts.
-        // Let's show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
-        mEditorFragment.showSavingProgressDialogIfNeeded();
+            // Loading the content from the GB HTML editor can take time on long posts.
+            // Let's show a progress dialog for now.
+            // Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
+            mEditorFragment.showSavingProgressDialogIfNeeded();
 
-        boolean isFirstTimePublish = isFirstTimePublish(publishPost);
-        mEditPostRepository.updateAsync(postModel -> {
-            if (publishPost) {
-                // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
-                // otherwise we'd have an incorrect value
-                // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
-                    postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
-                }
+            boolean isFirstTimePublish = isFirstTimePublish(publishPost);
+            mEditPostRepository.updateAsync(postModel -> {
+                if (publishPost) {
+                    // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
+                    // otherwise we'd have an incorrect value
+                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                    if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
+                        postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
+                    }
 
-                if (mUploadUtilsWrapper.userCanPublish(getSite())) {
-                    postModel.setStatus(PostStatus.PUBLISHED.toString());
+                    if (mUploadUtilsWrapper.userCanPublish(getSite())) {
+                        postModel.setStatus(PostStatus.PUBLISHED.toString());
+                    } else {
+                        postModel.setStatus(PostStatus.PENDING.toString());
+                    }
+
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
                 } else {
-                    postModel.setStatus(PostStatus.PENDING.toString());
+                    mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
                 }
 
-                mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
-            } else {
-                mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-            }
+                AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
+                // the user explicitly confirmed an intention to upload the post
+                postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
-            AppLog.d(T.POSTS, "User explicitly confirmed changes. Post Title: " + postModel.getTitle());
-            // the user explicitly confirmed an intention to upload the post
-            postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
-
-            // Hide the progress dialog now
-            mEditorFragment.hideSavingProgressDialog();
-            return true;
-        }, (postModel, result) -> {
-            if (result == UpdatePostResult.Updated.INSTANCE) {
-                ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-                mViewModel.finish(activityFinishState);
-            }
-            return null;
-        });
+                // Hide the progress dialog now
+                mEditorFragment.hideSavingProgressDialog();
+                return true;
+            }, (postModel, result) -> {
+                if (result == Updated.INSTANCE) {
+                    ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                    mViewModel.finish(activityFinishState);
+                }
+                return null;
+            });
+        }));
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
@@ -1884,39 +1994,42 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
             return;
         }
-        // check if the opened post had some unsaved local changes
-        boolean isFirstTimePublish = isFirstTimePublish(false);
 
-        // if post was modified during this editing session, save it
-        boolean shouldSave = shouldSavePost() || forceSave;
+        updateAndSavePostAsyncOnEditorExit(((updatePostResult) -> {
+            // check if the opened post had some unsaved local changes
+            boolean isFirstTimePublish = isFirstTimePublish(false);
 
-        mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
-        ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
-        if (shouldSave) {
-            /*
-             * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
-             * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
-             * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
-             * user didn't confirm the changes in this code path.
-             */
-            boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
-            if (isWpComOrIsLocalDraft) {
-                activityFinishState = savePostOnline(isFirstTimePublish);
-            } else if (forceSave) {
-                activityFinishState = savePostOnline(false);
-            } else {
-                activityFinishState = ActivityFinishState.SAVED_LOCALLY;
+            // if post was modified during this editing session, save it
+            boolean shouldSave = shouldSavePost() || forceSave;
+
+            mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
+            ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
+            if (shouldSave) {
+                /*
+                 * Remote-auto-save isn't supported on self-hosted sites. We can save the post online (as draft)
+                 * only when it doesn't exist in the remote yet. When it does exist in the remote, we can upload
+                 * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
+                 * user didn't confirm the changes in this code path.
+                 */
+                boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
+                if (isWpComOrIsLocalDraft) {
+                    activityFinishState = savePostOnline(isFirstTimePublish);
+                } else if (forceSave) {
+                    activityFinishState = savePostOnline(false);
+                } else {
+                    activityFinishState = ActivityFinishState.SAVED_LOCALLY;
+                }
             }
-        }
-        // discard post if new & empty
-        if (isDiscardable()) {
-            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-            mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-            activityFinishState = ActivityFinishState.CANCELLED;
-        }
-        if (doFinish) {
-            mViewModel.finish(activityFinishState);
-        }
+            // discard post if new & empty
+            if (isDiscardable()) {
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+                activityFinishState = ActivityFinishState.CANCELLED;
+            }
+            if (doFinish) {
+                mViewModel.finish(activityFinishState);
+            }
+        }));
     }
 
     private boolean shouldSavePost() {
@@ -1958,7 +2071,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private static final int NUM_PAGES_EDITOR = 4;
         SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
@@ -1970,45 +2083,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
-                        String postType = mIsPage ? "page" : "post";
-                        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
-                        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
+                        GutenbergPropsBuilder gutenbergPropsBuilder = getGutenbergPropsBuilder();
 
-                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-                        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
-
-                        // The Unsupported Block Editor is disabled for all self-hosted sites
-                        // even the one that are connected via Jetpack to a WP.com account.
-                        // The option is disabled on Self-hosted sites because they can have their web editor
-                        // to be set to classic and then the fallback will not work.
-                        // We disable in Jetpack site because we don't have the self-hosted site's credentials
-                        // which are required for us to be able to fetch the site's authentication cookie.
-                        boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
-
-                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
-                        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
-                        GutenbergPropsBuilder gutenbergPropsBuilder = new GutenbergPropsBuilder(
-                                enableMentions,
-                                isUnsupportedBlockEditorEnabled,
-                                mModalLayoutPickerFeatureConfig.isEnabled(),
-                                wpcomLocaleSlug,
-                                postType,
-                                themeBundle
-                        );
+                        GutenbergWebViewAuthorizationData gutenbergWebViewAuthorizationData =
+                                new GutenbergWebViewAuthorizationData(
+                                        mSite.getUrl(),
+                                        isWpCom,
+                                        mAccountStore.getAccount().getUserId(),
+                                        mAccountStore.getAccount().getUserName(),
+                                        mAccountStore.getAccessToken(),
+                                        mSite.getSelfHostedSiteId(),
+                                        mSite.getUsername(),
+                                        mSite.getPassword(),
+                                        mSite.isUsingWpComRestApi(),
+                                        mSite.getWebEditor(),
+                                        WordPress.getUserAgent(),
+                                        mIsJetpackSsoEnabled);
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
                                 mIsNewPost,
-                                mSite.getUrl(),
-                                !isWpCom,
-                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
-                                isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
-                                isWpCom ? "" : mSite.getPassword(),
-                                mAccountStore.getAccessToken(),
-                                isSiteUsingWpComRestApi,
-                                WordPress.getUserAgent(),
+                                gutenbergWebViewAuthorizationData,
                                 mTenorFeatureConfig.isEnabled(),
                                 gutenbergPropsBuilder
                         );
@@ -2059,6 +2157,33 @@ public class EditPostActivity extends LocaleAwareActivity implements
         public int getCount() {
             return NUM_PAGES_EDITOR;
         }
+    }
+
+    private GutenbergPropsBuilder getGutenbergPropsBuilder() {
+        String postType = mIsPage ? "page" : "post";
+        String languageString = LocaleManager.getLanguage(EditPostActivity.this);
+        String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+
+        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
+
+        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
+        boolean isUnsupportedBlockEditorEnabled =
+                mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
+
+        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
+
+        return new GutenbergPropsBuilder(
+                enableMentions,
+                isUnsupportedBlockEditorEnabled,
+                unsupportedBlockEditorSwitch,
+                mModalLayoutPickerFeatureConfig.isEnabled(),
+                wpcomLocaleSlug,
+                postType,
+                themeBundle
+        );
     }
 
     // Moved from EditPostContentFragment
@@ -2131,6 +2256,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (ACTION_REBLOG.equals(action)) {
                 setPostContentFromReblogAction();
             }
+        }
+
+        if (mIsPage) {
+            setPageContent();
         }
 
         // Set post title and content
@@ -2255,6 +2384,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    /**
+     * Sets the page content
+     */
+    private void setPageContent() {
+        Intent intent = getIntent();
+        final String content = intent.getStringExtra(EXTRA_PAGE_CONTENT);
+        if (content != null && !content.isEmpty()) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2300,23 +2450,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                     // user chose a featured image
-                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                        long mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0);
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                        long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
                         setFeaturedImageId(mediaId);
-                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_QUEUED)) {
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
                         }
-                    } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         List<Uri> uris = convertStringArrayIntoUrisList(
-                                data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
-                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         // pass array with single item
-                        long[] mediaIds = {data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0)};
+                        long[] mediaIds = {data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)};
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
@@ -2382,6 +2532,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
             }
+        }
+
+        if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
+            fetchSiteSettings();
         }
     }
 
@@ -2539,39 +2693,40 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorPhotoPicker.showPhotoPicker(mSite);
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+            mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
     }
 
     @Override
     public void onAddMediaImageClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
+        mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
     @Override
     public void onAddMediaVideoClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
+        mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
     public void onAddLibraryMediaClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         if (allowMultipleSelection) {
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+            mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else {
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
+            mMediaPickerLauncher
+                    .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
         }
     }
 
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
@@ -2584,10 +2739,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddVideoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_VIDEO_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_VIDEO_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
@@ -2595,10 +2750,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddDeviceMediaClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_MEDIA_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
+            mMediaPickerLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
@@ -3132,5 +3287,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {
         mAddingMediaToEditorProgressDialog = mProgressDialogHelper
                 .updateProgressDialogState(this, mAddingMediaToEditorProgressDialog, uiState, mUiHelpers);
+    }
+
+    @Override
+    public String getErrorMessageFromMedia(int mediaId) {
+        MediaModel media = mMediaStore.getMediaWithLocalId(mediaId);
+
+        if (media != null) {
+            return UploadUtils.getErrorMessageFromMedia(this, media);
+        }
+
+        return "";
+    }
+
+    @Override
+    public void showJetpackSettings() {
+        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 }

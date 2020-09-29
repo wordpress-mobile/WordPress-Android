@@ -279,15 +279,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 predefinedEventProperties.put("source", "other_post_list");
                 break;
-            case READER_SAVED_LIST_VIEWED_FROM_FILTER:
-                predefinedEventProperties.put("source", "reader_filter");
-                break;
-            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
-                predefinedEventProperties.put("source", "post_list_saved_post_notice");
-                break;
-            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
-                predefinedEventProperties.put("source", "post_details_saved_post_notice");
-                break;
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -732,10 +723,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_SAVED_POST_OPENED_FROM_SAVED_POST_LIST:
             case READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST:
                 return "reader_saved_post_opened";
-            case READER_SAVED_LIST_VIEWED_FROM_FILTER:
-            case READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE:
-            case READER_SAVED_LIST_VIEWED_FROM_POST_DETAILS_NOTICE:
-                return "reader_saved_list_viewed";
             case READER_SITE_SHARED:
                 return "reader_site_shared";
             case EDITOR_CREATED_POST:
@@ -1234,6 +1221,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_url_form_viewed";
             case LOGIN_URL_HELP_SCREEN_VIEWED:
                 return "login_url_help_screen_viewed";
+            case LOGIN_CONNECTED_SITE_INFO_REQUESTED:
+                return "login_connected_site_info_requested";
+            case LOGIN_CONNECTED_SITE_INFO_FAILED:
+                return "login_connected_site_info_failed";
+            case LOGIN_CONNECTED_SITE_INFO_SUCCEEDED:
+                return "login_connected_site_info_succeeded";
             case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
                 return "login_username_password_form_viewed";
             case LOGIN_TWO_FACTOR_FORM_VIEWED:
@@ -1616,12 +1609,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_form_viewed";
             case SUPPORT_IDENTITY_SET:
                 return "support_identity_set";
-            case NEWS_CARD_SHOWN:
-                return "news_card_shown";
-            case NEWS_CARD_DIMISSED:
-                return "news_card_dismissed";
-            case NEWS_CARD_EXTENDED_INFO_REQUESTED:
-                return "news_card_extended_info_requested";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
@@ -1808,6 +1795,38 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
                 return "prepublishing_bottom_sheet_dismissed";
+            case SELECT_INTERESTS_SHOWN:
+                return "select_interests_shown";
+            case SELECT_INTERESTS_PICKED:
+                return "select_interests_picked";
+            case READER_FOLLOWING_SHOWN:
+                return "reader_following_shown";
+            case READER_LIKED_SHOWN:
+                return "reader_liked_shown";
+            case READER_SAVED_LIST_SHOWN:
+                return "reader_saved_list_shown";
+            case READER_CUSTOM_TAB_SHOWN:
+                return "reader_custom_tab_shown";
+            case READER_DISCOVER_SHOWN:
+                return "reader_discover_shown";
+            case READER_DISCOVER_PAGINATED:
+                return "reader_discover_paginated";
+            case READER_DISCOVER_TOPIC_TAPPED:
+                return "reader_discover_topic_tapped";
+            case READER_POST_CARD_TAPPED:
+                return "reader_post_card_tapped";
+            case READER_PULL_TO_REFRESH:
+                return "reader_pull_to_refresh";
+            case POST_CARD_MORE_TAPPED:
+                return "post_card_more_tapped";
+            case READER_CHIPS_MORE_TOGGLED:
+                return "reader_chips_more_toggled";
+            case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:
+                return "encrypted_logging_upload_successful";
+            case ENCRYPTED_LOGGING_UPLOAD_FAILED:
+                return "encrypted_logging_upload_failed";
+            case READER_POST_REPORTED:
+                return "reader_post_reported";
         }
         return null;
     }
