@@ -155,7 +155,12 @@
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/Widget.AppCompat.Toolbar.Button.Navigation
+        </item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
