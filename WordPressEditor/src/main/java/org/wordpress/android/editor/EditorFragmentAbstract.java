@@ -9,6 +9,7 @@ import android.view.DragEvent;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
@@ -18,8 +19,8 @@ import java.util.HashMap;
 public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
-    public abstract CharSequence getTitle();
-    public abstract CharSequence getContent();
+    public abstract CharSequence getTitle() throws IllegalEditorStateException;
+    public abstract CharSequence getContent() throws IllegalEditorStateException;
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendGallery(MediaGallery mediaGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);

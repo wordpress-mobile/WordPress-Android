@@ -68,6 +68,11 @@ import java.util.concurrent.TimeUnit;
 public class EditorFragment extends EditorFragmentAbstract implements View.OnClickListener, View.OnTouchListener,
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
+
+    public class IllegalEditorStateException extends Exception {
+
+    }
+
     private static final String ARG_PARAM_TITLE = "param_title";
     private static final String ARG_PARAM_CONTENT = "param_content";
 
@@ -423,8 +428,12 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence(KEY_TITLE, getTitle());
-        outState.putCharSequence(KEY_CONTENT, getContent());
+        try {
+            outState.putCharSequence(KEY_TITLE, getTitle());
+            outState.putCharSequence(KEY_CONTENT, getContent());
+        } catch (IllegalEditorStateException e) {
+            AppLog.e(T.EDITOR, "onSaveInstanceState: unable to get title or content");
+        }
     }
 
     private ActionBar getActionBar() {
@@ -636,9 +645,19 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     }
 
                     // Update mTitle and mContentHtml with the latest state from the ZSSEditor
-                    getTitle();
-                    getContent();
-
+                    try {
+                        getTitle();
+                        getContent();
+                    } catch (IllegalEditorStateException e) {
+                        AppLog.e(T.EDITOR, "toggleHtmlMode: unable to get title or content");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                toggleButton.setChecked(false);
+                            }
+                        });
+                        return;
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -922,9 +941,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getTitle() {
+    public CharSequence getTitle() throws IllegalEditorStateException {
         if (!isAdded()) {
-            return "";
+            throw new IllegalEditorStateException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -961,9 +980,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getContent() {
+    public CharSequence getContent() throws IllegalEditorStateException {
         if (!isAdded()) {
-            return "";
+            throw new IllegalEditorStateException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
