@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,10 +24,12 @@ import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.drawable
 import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReportReferrer
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
@@ -202,20 +205,7 @@ class StatsListFragment : ViewPagerFragment() {
         viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { target ->
                 if(target is ViewReportReferrer) {
-                    val items = arrayOf<CharSequence>(
-                            "Mark as Spam"
-                    )
-                    val builder = MaterialAlertDialogBuilder(
-                            activity
-                    )
-                    builder.setTitle(target.url)
-                    builder.setAdapter(
-                            ArrayAdapter(activity, layout.mark_referrer_as_spam_dialog_item, R.id.text, items)
-                    ) { dialog: DialogInterface?, which: Int ->
-//                        target.mutableMarkedReferrerAsSpam.value = Event(Unit)
-                        onMarkReferrerAsSpam(target.url, target.referrersUseCase)
-                    }
-                    builder.show()
+                    buildReferrerDialog(activity, target)
                 }
                 else {
                     navigator.navigate(activity, target)
@@ -250,27 +240,31 @@ class StatsListFragment : ViewPagerFragment() {
         })
     }
 
-    class MarkReferrerAsSpamDialog() : DialogFragment() {
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val items = arrayOf<CharSequence>(
-                    "Mark as Spam"
-            )
-            val builder = MaterialAlertDialogBuilder(
-                    activity
-            )
-            val urlDomain = arguments.getCharSequence("url")
-            builder.setTitle(urlDomain)
-            builder.setAdapter(
-                    ArrayAdapter(activity, layout.mark_referrer_as_spam_dialog_item, R.id.text, items)
-            ) { dialog: DialogInterface?, which: Int ->
-                dialog?.dismiss()
+    private fun buildReferrerDialog(
+        activity: FragmentActivity,
+        target: ViewReportReferrer
+    ): AlertDialog? {
+        val description = arrayOf(
+                "Open website",
+                "Mark as Spam"
+        )
+        val imageId = arrayOf(
+                drawable.ic_external_grey_min_24dp,
+                drawable.ic_spam_red_24dp
+        )
+        val builder = MaterialAlertDialogBuilder(activity)
+        builder.setTitle(target.url)
+        builder.setAdapter(
+                ReferrerIconTextAdapter(activity, description, imageId)
+        ) { dialog: DialogInterface?, which: Int ->
+            if (which == 0) {
+                navigator.navigate(activity, ViewUrl(target.url))
             }
-            return builder.create()
+            if (which == 1) {
+                onMarkReferrerAsSpam(target.url, target.referrersUseCase)
+            }
         }
-
-        companion object {
-            const val MARK_REFERRER_AS_SPAM_DIALOG_TAG = "mark_referrer_as_spam_dialog"
-        }
+        return builder.show()
     }
 
     private fun onMarkReferrerAsSpam(url: String, referrersUseCase: ReferrersUseCase) {
