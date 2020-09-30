@@ -12,6 +12,7 @@ sealed class MediaPickerUiItem(
 ) {
     data class PhotoItem(
         val uri: UriWrapper? = null,
+        val mimeTypeNotSupported: Boolean = false,
         val isSelected: Boolean = false,
         val selectedOrder: Int? = null,
         val showOrderCounter: Boolean = false,
@@ -21,6 +22,7 @@ sealed class MediaPickerUiItem(
 
     data class VideoItem(
         val uri: UriWrapper? = null,
+        val mimeTypeNotSupported: Boolean = false,
         val isSelected: Boolean = false,
         val selectedOrder: Int? = null,
         val showOrderCounter: Boolean = false,
@@ -30,6 +32,7 @@ sealed class MediaPickerUiItem(
 
     data class FileItem(
         val uri: UriWrapper? = null,
+        val mimeTypeNotSupported: Boolean = false,
         val fileName: String,
         val fileExtension: String? = null,
         val isSelected: Boolean = false,

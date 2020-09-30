@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,6 +13,7 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
         ThumbnailViewHolder(parent, R.layout.media_picker_thumbnail_item) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
+    private val disabledView: View = itemView.findViewById(R.id.media_item_disabled_overlay)
 
     fun bind(item: MediaPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
@@ -28,11 +30,13 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
         }
         mediaThumbnailViewUtils.setupThumbnailImage(
                 imgThumbnail,
+                disabledView,
                 item.uri.toString(),
                 item.isSelected,
                 item.clickAction,
                 item.toggleAction,
-                animateSelection
+                animateSelection,
+                item.mimeTypeNotSupported
         )
     }
 }

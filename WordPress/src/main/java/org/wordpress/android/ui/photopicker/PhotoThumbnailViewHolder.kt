@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.photopicker
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +16,7 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
         ThumbnailViewHolder(parent, R.layout.photo_picker_thumbnail) {
     private val imgThumbnail: ImageView = itemView.findViewById(R.id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
+    private val disabledView: View = itemView.findViewById(R.id.media_item_disabled_overlay)
 
     fun bind(item: PhotoPickerUiItem.PhotoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
@@ -31,11 +33,13 @@ class PhotoThumbnailViewHolder(parent: ViewGroup, private val thumbnailViewUtils
         }
         thumbnailViewUtils.setupThumbnailImage(
                 imgThumbnail,
+                disabledView,
                 item.uri.toString(),
                 item.isSelected,
                 item.clickAction,
                 item.toggleAction,
-                animateSelection
+                animateSelection,
+                item.mimeTypeNotSupported
         )
     }
 }

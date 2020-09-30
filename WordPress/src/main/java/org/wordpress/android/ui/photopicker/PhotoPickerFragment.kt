@@ -41,6 +41,7 @@ import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -80,6 +81,7 @@ class PhotoPickerFragment : Fragment() {
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var mediaUtilsWrapper: MediaUtilsWrapper
     private lateinit var viewModel: PhotoPickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -226,7 +228,8 @@ class PhotoPickerFragment : Fragment() {
         if (uiModel is PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
-                        imageManager
+                        imageManager,
+                        mediaUtilsWrapper
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter

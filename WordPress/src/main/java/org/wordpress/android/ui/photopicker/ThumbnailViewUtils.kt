@@ -24,11 +24,13 @@ import java.util.Locale
 class ThumbnailViewUtils(val imageManager: ImageManager) {
     fun setupThumbnailImage(
         imgThumbnail: ImageView,
+        disabledView: View,
         url: String,
         isSelected: Boolean,
         clickAction: ClickAction,
         toggleAction: ToggleAction,
-        animateSelection: Boolean
+        animateSelection: Boolean,
+        mimeTypeNotSupported: Boolean
     ) {
         imageManager.cancelRequestAndClearImageView(imgThumbnail)
         imageManager.load(
@@ -37,20 +39,25 @@ class ThumbnailViewUtils(val imageManager: ImageManager) {
                 url,
                 FIT_CENTER
         )
-        addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
-        imgThumbnail.setOnClickListener {
-            toggleAction.toggle()
-            PhotoPickerUtils.announceSelectedImageForAccessibility(
-                    imgThumbnail,
-                    isSelected
-            )
+        if (mimeTypeNotSupported) {
+            disabledView.visibility = View.VISIBLE
+        } else {
+            disabledView.visibility = View.GONE
+            addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
+            imgThumbnail.setOnClickListener {
+                toggleAction.toggle()
+                PhotoPickerUtils.announceSelectedImageForAccessibility(
+                        imgThumbnail,
+                        isSelected
+                )
+            }
+            imgThumbnail.setOnLongClickListener {
+                clickAction.click()
+                true
+            }
+            imgThumbnail.redirectContextClickToLongPressListener()
+            displaySelection(animateSelection, isSelected, imgThumbnail)
         }
-        imgThumbnail.setOnLongClickListener {
-            clickAction.click()
-            true
-        }
-        imgThumbnail.redirectContextClickToLongPressListener()
-        displaySelection(animateSelection, isSelected, imgThumbnail)
     }
 
     private fun addImageSelectedToAccessibilityFocusedEvent(

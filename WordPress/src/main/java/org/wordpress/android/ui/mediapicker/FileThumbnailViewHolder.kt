@@ -13,6 +13,7 @@ class FileThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewU
     private val fileType: TextView = itemView.findViewById(R.id.media_item_filetype)
     private val fileName: TextView = itemView.findViewById(R.id.media_item_name)
     private val txtSelectionCount: TextView = itemView.findViewById(R.id.text_selection_count)
+    private val disabledView: View = itemView.findViewById(R.id.media_item_disabled_overlay)
 
     fun bind(item: MediaPickerUiItem.FileItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
@@ -30,11 +31,13 @@ class FileThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewU
         mediaThumbnailViewUtils.setupFileImageView(
                 container,
                 imgThumbnail,
+                disabledView,
                 item.fileName,
                 item.isSelected,
                 item.clickAction,
                 item.toggleAction,
-                animateSelection
+                animateSelection,
+                item.mimeTypeNotSupported
         )
         fileType.text = item.fileExtension
         fileName.text = item.fileName

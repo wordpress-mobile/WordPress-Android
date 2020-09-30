@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
+import org.wordpress.android.fluxc.utils.MediaUtils.isSupportedMimeType
 import javax.inject.Inject
 
 /**
@@ -49,4 +50,6 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
 
     fun getExtensionForMimeType(mimeType: String?): String = MediaUtils.getExtensionForMimeType(mimeType)
+
+    fun isSupportedMimeType(uri: Uri): Boolean = isSupportedMimeType(appContext.contentResolver.getType(uri))
 }

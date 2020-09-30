@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker
 
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +18,7 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
     private val imgThumbnail: ImageView = itemView.findViewById(id.image_thumbnail)
     private val txtSelectionCount: TextView = itemView.findViewById(id.text_selection_count)
     private val videoOverlay: ImageView = itemView.findViewById(id.image_video_overlay)
+    private val disabledView: View = itemView.findViewById(R.id.media_item_disabled_overlay)
 
     fun bind(item: MediaPickerUiItem.VideoItem, animateSelection: Boolean, updateCount: Boolean) {
         val isSelected = item.isSelected
@@ -33,11 +35,13 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
         }
         mediaThumbnailViewUtils.setupThumbnailImage(
                 imgThumbnail,
+                disabledView,
                 item.uri.toString(),
                 item.isSelected,
                 item.clickAction,
                 item.toggleAction,
-                animateSelection
+                animateSelection,
+                item.mimeTypeNotSupported
         )
         mediaThumbnailViewUtils.setupVideoOverlay(videoOverlay, item.clickAction)
     }

@@ -10,6 +10,7 @@ sealed class PhotoPickerUiItem(
     val type: Type,
     open val id: Long,
     open val uri: UriWrapper? = null,
+    open var mimeTypeNotSupported: Boolean = false,
     open val isSelected: Boolean = false,
     open val selectedOrder: Int? = null,
     open val showOrderCounter: Boolean = false,
@@ -19,22 +20,26 @@ sealed class PhotoPickerUiItem(
     data class PhotoItem(
         override val id: Long,
         override val uri: UriWrapper? = null,
+        override var mimeTypeNotSupported: Boolean = false,
         override val isSelected: Boolean = false,
         override val selectedOrder: Int? = null,
         override val showOrderCounter: Boolean = false,
         override val toggleAction: ToggleAction,
         override val clickAction: ClickAction
-    ) : PhotoPickerUiItem(PHOTO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
+    ) : PhotoPickerUiItem(PHOTO, id, uri, mimeTypeNotSupported, isSelected, selectedOrder, showOrderCounter,
+            toggleAction, clickAction)
 
     data class VideoItem(
         override val id: Long,
         override val uri: UriWrapper? = null,
+        override var mimeTypeNotSupported: Boolean = false,
         override val isSelected: Boolean = false,
         override val selectedOrder: Int? = null,
         override val showOrderCounter: Boolean = false,
         override val toggleAction: ToggleAction,
         override val clickAction: ClickAction
-    ) : PhotoPickerUiItem(VIDEO, id, uri, isSelected, selectedOrder, showOrderCounter, toggleAction, clickAction)
+    ) : PhotoPickerUiItem(VIDEO, id, uri, mimeTypeNotSupported, isSelected, selectedOrder, showOrderCounter,
+            toggleAction, clickAction)
 
     data class ToggleAction(
         val id: Long,

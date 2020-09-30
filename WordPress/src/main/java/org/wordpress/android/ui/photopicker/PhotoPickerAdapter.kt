@@ -8,11 +8,15 @@ import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Paylo
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.PhotoItem
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.VideoItem
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mediapicker.MedaPickerAdapter}")
-class PhotoPickerAdapter internal constructor(private val imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
+class PhotoPickerAdapter internal constructor(
+    private val imageManager: ImageManager,
+    private val mediaUtilsWrapper: MediaUtilsWrapper
+) : Adapter<ThumbnailViewHolder>() {
     private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
     private var mediaList = listOf<PhotoPickerUiItem>()
 
@@ -64,6 +68,9 @@ class PhotoPickerAdapter internal constructor(private val imageManager: ImageMan
                 updateCount = true
             }
         }
+        item.mimeTypeNotSupported = item.uri?.let {
+            mediaUtilsWrapper.isSupportedMimeType(it.uri)
+        } ?: false
         when (item) {
             is PhotoItem -> (holder as PhotoThumbnailViewHolder).bind(item, animateSelection, updateCount)
             is VideoItem -> (holder as VideoThumbnailViewHolder).bind(item, animateSelection, updateCount)

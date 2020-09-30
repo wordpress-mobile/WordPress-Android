@@ -53,4 +53,12 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <View
+        android:id="@+id/media_item_disabled_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/black_translucent_40"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

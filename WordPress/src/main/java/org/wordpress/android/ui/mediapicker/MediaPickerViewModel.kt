@@ -151,6 +151,7 @@ class MediaPickerViewModel @Inject constructor(
                 when (it.type) {
                     IMAGE -> PhotoItem(
                             uri = it.uri,
+                            mimeTypeNotSupported = mediaUtilsWrapper.isSupportedMimeType(it.uri.uri),
                             isSelected = isSelected,
                             selectedOrder = selectedOrder,
                             showOrderCounter = showOrderCounter,
@@ -159,6 +160,7 @@ class MediaPickerViewModel @Inject constructor(
                     )
                     VIDEO -> VideoItem(
                             uri = it.uri,
+                            mimeTypeNotSupported = mediaUtilsWrapper.isSupportedMimeType(it.uri.uri),
                             isSelected = isSelected,
                             selectedOrder = selectedOrder,
                             showOrderCounter = showOrderCounter,
@@ -167,6 +169,7 @@ class MediaPickerViewModel @Inject constructor(
                     )
                     AUDIO, DOCUMENT -> FileItem(
                             uri = it.uri,
+                            mimeTypeNotSupported = mediaUtilsWrapper.isSupportedMimeType(it.uri.uri),
                             fileName = it.name ?: "",
                             fileExtension = fileExtension,
                             isSelected = isSelected,

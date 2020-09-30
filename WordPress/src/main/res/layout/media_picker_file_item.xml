@@ -60,6 +60,14 @@
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/media_item_disabled_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/black_translucent_40"
+        />
+
     <include layout="@layout/media_picker_selection_count" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
