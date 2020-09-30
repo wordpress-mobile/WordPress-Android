@@ -683,7 +683,18 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case EMAIL:
                 if (event.isAvailable) {
                     ActivityUtils.hideKeyboardForced(mEmailInput);
-                    if (mIsSignupFromLoginEnabled) {
+
+                    // Will be true if in the Woo app and currently in the WPcom login
+                    // flow. We need to check this to know if we should display the
+                    // 'No WPcom account found' error screen.
+                    boolean isWooWPcomLoginFlow = false;
+                    if (mLoginListener != null
+                        && mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE
+                        && !mOptionalSiteCredsLayout) {
+                        isWooWPcomLoginFlow = true;
+                    }
+
+                    if (mIsSignupFromLoginEnabled || isWooWPcomLoginFlow) {
                         if (mLoginListener != null) {
                             mLoginListener.gotUnregisteredEmail(event.value);
                         }
