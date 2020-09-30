@@ -18,6 +18,6 @@
         android:minHeight="@dimen/avatar_sz_small"
         android:padding="@dimen/me_avatar_padding"
         android:src="@drawable/ic_user_white_24dp"
-        tools:targetApi="m" />
+        tools:ignore="UnusedAttribute" />
 
 </LinearLayout>
