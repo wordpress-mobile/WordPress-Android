@@ -46,6 +46,23 @@ class MediaPickerLauncher
         }
     }
 
+    fun showStoriesPhotoPickerForResult(
+        activity: Activity,
+        site: SiteModel?
+    ) {
+        val browserType = MediaBrowserType.WP_STORIES_MEDIA_PICKER
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    buildLocalMediaPickerSetup(browserType),
+                    site
+            )
+            activity.startActivityForResult(intent, RequestCodes.STORIES_PHOTO_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(activity, browserType, site, null)
+        }
+    }
+
     fun showPhotoPickerForResult(
         fragment: Fragment,
         browserType: MediaBrowserType,
