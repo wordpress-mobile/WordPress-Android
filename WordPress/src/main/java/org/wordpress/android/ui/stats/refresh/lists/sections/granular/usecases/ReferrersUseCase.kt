@@ -127,6 +127,7 @@ class ReferrersUseCase(
                             navigationAction = group.url?.let {
                                 create(it, this::onItemClick)
                             },
+                            menuAction = { view -> this.onMenuClick(view, group.url) },
                             contentDescription = contentDescription
                     )
                     items.add(headerItem)

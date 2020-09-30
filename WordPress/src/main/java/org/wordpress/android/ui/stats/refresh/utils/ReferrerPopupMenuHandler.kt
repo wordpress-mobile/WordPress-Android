@@ -11,8 +11,6 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
-import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
@@ -34,8 +32,8 @@ class ReferrerPopupMenuHandler
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
-    private val mutableMarkedAsSpam = MutableLiveData<Event<Unit>>()
-    val markedAsSpam: LiveData<Event<Unit>> = mutableMarkedAsSpam
+    private val mutableMarkedAsSpam = MutableLiveData<Event<String>>()
+    val markedAsSpam: LiveData<Event<String>> = mutableMarkedAsSpam
 
     fun onMenuClick(view: View, statsGranularity: StatsGranularity, url: String, referrersUseCase: ReferrersUseCase) {
         coroutineScope.launch {
@@ -58,7 +56,7 @@ class ReferrerPopupMenuHandler
                                         statsGranularity
                                 )
                                 referrersUseCase.markReferrerAsSpam(url)
-                                mutableMarkedAsSpam.postValue(Event(Unit))
+                                mutableMarkedAsSpam.postValue(Event(url))
                             }
                         }
                     }

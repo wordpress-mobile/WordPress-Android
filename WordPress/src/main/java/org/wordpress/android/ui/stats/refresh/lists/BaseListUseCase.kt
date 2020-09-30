@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -104,6 +105,11 @@ class BaseListUseCase(
             }
         }
         return items
+    }
+
+
+    suspend fun refreshReferrers() {
+        refreshData(true)
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean) {

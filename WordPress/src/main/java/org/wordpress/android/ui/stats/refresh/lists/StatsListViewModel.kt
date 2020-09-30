@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,9 +24,9 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
+import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
@@ -47,7 +46,8 @@ abstract class StatsListViewModel(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val dateSelector: StatsDateSelector,
     popupMenuHandler: ItemPopupMenuHandler? = null,
-    private val newsCardHandler: NewsCardHandler? = null
+    private val newsCardHandler: NewsCardHandler? = null,
+    referrerPopupMenuHandler: ReferrerPopupMenuHandler? = null
 ) : ScopedViewModel(defaultDispatcher) {
     private var trackJob: Job? = null
     private var isInitialized = false
@@ -80,6 +80,8 @@ abstract class StatsListViewModel(
     }
 
     val typesChanged = merge(popupMenuHandler?.typeMoved, newsCardHandler?.cardDismissed)
+
+    val markedAsSpam = referrerPopupMenuHandler?.markedAsSpam
 
     val scrollTo = newsCardHandler?.scrollTo
 
@@ -156,6 +158,12 @@ abstract class StatsListViewModel(
             statsUseCase.refreshTypes()
         }
     }
+
+    fun onMarkedAsSpam() {
+        launch {
+            statsUseCase.refreshReferrers()
+        }
+    }
 }
 
 class InsightsListViewModel
@@ -179,26 +187,54 @@ class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEAR_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(YEARS))
+    dateSelectorFactory: StatsDateSelector.Factory,
+    referrerPopupMenuHandler: ReferrerPopupMenuHandler
+) : StatsListViewModel(
+        mainDispatcher,
+        statsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(YEARS),
+        referrerPopupMenuHandler = referrerPopupMenuHandler
+)
 
 class MonthsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTH_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(MONTHS))
+    dateSelectorFactory: StatsDateSelector.Factory,
+    referrerPopupMenuHandler: ReferrerPopupMenuHandler
+) : StatsListViewModel(
+        mainDispatcher,
+        statsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(MONTHS),
+        referrerPopupMenuHandler = referrerPopupMenuHandler
+)
 
 class WeeksListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEK_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
+    dateSelectorFactory: StatsDateSelector.Factory,
+    referrerPopupMenuHandler: ReferrerPopupMenuHandler
+) : StatsListViewModel(
+        mainDispatcher,
+        statsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(WEEKS),
+        referrerPopupMenuHandler = referrerPopupMenuHandler
+)
 
 class DaysListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(DAYS))
+    dateSelectorFactory: StatsDateSelector.Factory,
+    referrerPopupMenuHandler: ReferrerPopupMenuHandler
+) : StatsListViewModel(
+        mainDispatcher,
+        statsUseCase,
+        analyticsTracker,
+        dateSelectorFactory.build(DAYS),
+        referrerPopupMenuHandler = referrerPopupMenuHandler
+)

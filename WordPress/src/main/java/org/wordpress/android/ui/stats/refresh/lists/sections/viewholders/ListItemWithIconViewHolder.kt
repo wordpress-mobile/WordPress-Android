@@ -41,12 +41,14 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         }
         val clickAction = item.navigationAction
         val longClickAction = item.menuAction
+        if (longClickAction != null) {
+            itemView.setOnLongClickListener { longClickAction.invoke(itemView) }
+        }
         if (clickAction != null) {
             val outValue = TypedValue()
             itemView.context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
             itemView.setBackgroundResource(outValue.resourceId)
             itemView.setOnClickListener { clickAction.click() }
-            itemView.setOnLongClickListener { longClickAction?.invoke(itemView)!! }
         } else {
             itemView.setOnClickListener(null)
             itemView.background = null
