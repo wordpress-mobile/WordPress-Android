@@ -65,6 +65,9 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetList
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -112,6 +115,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+    private val frameIdsToRemove = ArrayList<String>()
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
@@ -431,6 +435,19 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
+    override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
+        // keep record of the frames users deleted.
+        // But we'll only actually do cleanup once they tap on the DONE/SAVE button, because they could
+        // still bail out of the StoryComposer by tapping back or the cross and then admiting they want to lose
+        // the changes they made (this means, they'd want to keep the stories).
+        val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
+        if (storyFrameIndex < story.frames.size) {
+            story.frames[storyFrameIndex].id?.let {
+                frameIdsToRemove.add(it)
+            }
+        }
+    }
+
     private fun openPrepublishingBottomSheet() {
         val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
         if (fragment == null) {
@@ -445,6 +462,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onStorySaveButtonPressed() {
         if (intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)) {
+            // first of all, remove any StoriesPref for removed slides
+            site?.let {
+                val siteLocalId = it.id.toLong()
+                for (frameId in frameIdsToRemove) {
+                    if (StoriesPrefs.checkSlideIdExists(this, siteLocalId, RemoteMediaId(frameId.toLong()))) {
+                        StoriesPrefs.deleteSlideWithRemoteId(this, siteLocalId, RemoteMediaId(frameId.toLong()))
+                    } else {
+                        // shouldn't happen but just in case the story frame has just been created but not yet uploaded
+                        // let's delete the local slide pref.
+                        StoriesPrefs.deleteSlideWithLocalId(this, siteLocalId, LocalMediaId(frameId.toLong()))
+                    }
+                }
+            }
+
             val savedContentIntent = Intent()
             val blockId = intent.extras.getString(ARG_STORY_BLOCK_ID)
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
