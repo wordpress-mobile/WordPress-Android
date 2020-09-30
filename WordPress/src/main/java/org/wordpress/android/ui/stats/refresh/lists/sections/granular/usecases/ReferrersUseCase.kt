@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import android.view.View
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -40,7 +38,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.Event
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -72,9 +69,6 @@ class ReferrersUseCase(
     private val itemsToLoad = if (useCaseMode == VIEW_ALL) VIEW_ALL_ITEM_COUNT else BLOCK_ITEM_COUNT
 
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
-
-    private val mutableMarkedReferrerAsSpam: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val markedReferrerAsSpam: LiveData<Event<Unit>> = mutableMarkedReferrerAsSpam
 
     override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): ReferrersModel? {
         return referrersStore.getReferrers(
@@ -168,7 +162,7 @@ class ReferrersUseCase(
                                     navigationAction = referrer.url?.let {
                                         create(it, this::onItemClick)
                                     },
-                                    menuAction = this::onMenuClick,
+                                    menuAction = { view -> this.onMenuClick(view, referrer.url) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
                                             referrer.name,
@@ -212,12 +206,21 @@ class ReferrersUseCase(
     }
 
     private fun onItemClick(url: String) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_TAPPED, statsGranularity)
+        openWebsite(url)
+    }
+
+    fun openWebsite(url: String) {
         navigateTo(ViewUrl(url))
     }
 
-    private fun onMenuClick(view: View): Boolean {
-        popupMenuHandler.onMenuClick(view, type)
-        return true
+    private fun onMenuClick(view: View, url: String?): Boolean {
+        if (url != null) {
+            analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_LONG_PRESSED, statsGranularity)
+            popupMenuHandler.onMenuClick(view, statsGranularity, url, this)
+            return true
+        }
+        return false
     }
 
     suspend fun markReferrerAsSpam(urlDomain: String) {

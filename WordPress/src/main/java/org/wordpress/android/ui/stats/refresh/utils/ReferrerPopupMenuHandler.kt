@@ -9,15 +9,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.StatsType
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType
+import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.DOWN
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.REMOVE
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsMenuAdapter.InsightsMenuItem.UP
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.MARK_AS_SPAM
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.OPEN_WEBSITE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -29,15 +31,13 @@ class ReferrerPopupMenuHandler
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val statsStore: StatsStore,
-    private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
-    private val mutableTypeMoved = MutableLiveData<Event<StatsType>>()
-    val typeMoved: LiveData<Event<StatsType>> = mutableTypeMoved
+    private val mutableMarkedAsSpam = MutableLiveData<Event<Unit>>()
+    val markedAsSpam: LiveData<Event<Unit>> = mutableMarkedAsSpam
 
-    fun onMenuClick(view: View, statsType: StatsType) {
+    fun onMenuClick(view: View, statsGranularity: StatsGranularity, url: String, referrersUseCase: ReferrersUseCase) {
         coroutineScope.launch {
             withContext(mainDispatcher) {
                 val popup = ListPopupWindow(view.context, null, R.attr.listPopupWindowStyle)
@@ -47,12 +47,19 @@ class ReferrerPopupMenuHandler
                 popup.anchorView = view
                 popup.isModal = true
                 popup.setOnItemClickListener { _, _, _, id ->
-                    when (InsightsMenuItem.values()[id.toInt()]) {
-                        UP -> {
+                    when (ReferrerMenuItem.values()[id.toInt()]) {
+                        OPEN_WEBSITE -> {
+                            referrersUseCase.openWebsite(url)
                         }
-                        DOWN -> {
-                        }
-                        REMOVE -> {
+                        MARK_AS_SPAM -> {
+                            coroutineScope.launch {
+                                analyticsTrackerWrapper.trackGranular(
+                                        Stat.STATS_REFERRERS_ITEM_MARKED_AS_SPAM,
+                                        statsGranularity
+                                )
+                                referrersUseCase.markReferrerAsSpam(url)
+                                mutableMarkedAsSpam.postValue(Event(Unit))
+                            }
                         }
                     }
                     popup.dismiss()
