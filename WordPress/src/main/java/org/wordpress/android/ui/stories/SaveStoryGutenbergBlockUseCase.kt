@@ -50,8 +50,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
 
     fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",    // notation abuse: we're repurposing this field to
-                                                            // hold a temporaryId
+                alt = "",
                 id = TEMPORARY_ID_PREFIX + temporaryId, // mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
