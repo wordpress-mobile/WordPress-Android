@@ -388,8 +388,6 @@
     <style name="MySiteQuickActionButtonContainer">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -399,10 +397,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_alignParentTop">true</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>

@@ -65,7 +65,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_extra_medium_large"
-                        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large">
+                        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+                        android:paddingEnd="@dimen/margin_medium_large"
+                        tools:ignore="RtlSymmetry">
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/blavatar_container"
@@ -124,10 +126,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginStart="@dimen/margin_small"
-                            android:layout_marginTop="@dimen/margin_small"
-                            android:layout_marginEnd="@dimen/margin_medium_large"
-                            android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_margin="@dimen/margin_small"
                             android:background="@drawable/ripple_oval"
                             android:contentDescription="@string/my_site_btn_switch_site"
                             android:padding="@dimen/margin_large"
@@ -148,7 +147,7 @@
                         android:clipToPadding="false"
                         android:orientation="horizontal">
 
-                        <LinearLayout style="@style/MySiteQuickActionButtonContainer">
+                        <RelativeLayout style="@style/MySiteQuickActionButtonContainer">
 
                             <com.google.android.material.floatingactionbutton.FloatingActionButton
                                 android:id="@+id/quick_action_stats_button"
@@ -157,16 +156,19 @@
 
                             <org.wordpress.android.widgets.WPTextView
                                 style="@style/MySiteQuickActionButtonLabel"
+                                android:layout_below="@+id/quick_action_stats_button"
+                                android:layout_alignStart="@+id/quick_action_stats_button"
+                                android:layout_alignEnd="@+id/quick_action_stats_button"
                                 android:text="@string/stats" />
 
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <Space
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/quick_action_pages_container"
                             style="@style/MySiteQuickActionButtonContainer">
 
@@ -177,8 +179,11 @@
 
                             <org.wordpress.android.widgets.WPTextView
                                 style="@style/MySiteQuickActionButtonLabel"
+                                android:layout_below="@+id/quick_action_pages_button"
+                                android:layout_alignStart="@+id/quick_action_pages_button"
+                                android:layout_alignEnd="@+id/quick_action_pages_button"
                                 android:text="@string/pages" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <Space
                             android:id="@+id/middle_quick_action_spacing"
@@ -186,7 +191,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
 
-                        <LinearLayout style="@style/MySiteQuickActionButtonContainer">
+                        <RelativeLayout style="@style/MySiteQuickActionButtonContainer">
 
                             <com.google.android.material.floatingactionbutton.FloatingActionButton
                                 android:id="@+id/quick_action_posts_button"
@@ -195,15 +200,18 @@
 
                             <org.wordpress.android.widgets.WPTextView
                                 style="@style/MySiteQuickActionButtonLabel"
+                                android:layout_below="@+id/quick_action_posts_button"
+                                android:layout_alignStart="@+id/quick_action_posts_button"
+                                android:layout_alignEnd="@+id/quick_action_posts_button"
                                 android:text="@string/posts" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
                         <Space
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
 
-                        <LinearLayout style="@style/MySiteQuickActionButtonContainer">
+                        <RelativeLayout style="@style/MySiteQuickActionButtonContainer">
 
                             <com.google.android.material.floatingactionbutton.FloatingActionButton
                                 android:id="@+id/quick_action_media_button"
@@ -212,8 +220,11 @@
 
                             <org.wordpress.android.widgets.WPTextView
                                 style="@style/MySiteQuickActionButtonLabel"
+                                android:layout_below="@+id/quick_action_media_button"
+                                android:layout_alignStart="@+id/quick_action_media_button"
+                                android:layout_alignEnd="@+id/quick_action_media_button"
                                 android:text="@string/media" />
-                        </LinearLayout>
+                        </RelativeLayout>
 
                     </LinearLayout>
 
