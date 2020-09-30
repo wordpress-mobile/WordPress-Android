@@ -9,12 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.MARK_AS_NOT_SPAM
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.MARK_AS_SPAM
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.OPEN_WEBSITE
 
-class ReferrerMenuAdapter(context: Context) : BaseAdapter() {
+class ReferrerMenuAdapter(context: Context, spam: Boolean?) : BaseAdapter() {
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
-    private val items = listOfNotNull(OPEN_WEBSITE, MARK_AS_SPAM)
+    private val items = listOfNotNull(OPEN_WEBSITE, if (spam != null && spam) MARK_AS_NOT_SPAM else MARK_AS_SPAM)
 
     override fun getCount(): Int {
         return items.size
@@ -50,6 +51,10 @@ class ReferrerMenuAdapter(context: Context) : BaseAdapter() {
                 textRes = R.string.mark_as_spam
                 iconRes = R.drawable.ic_spam_red_24dp
             }
+            MARK_AS_NOT_SPAM -> {
+                textRes = R.string.unmark_as_spam
+                iconRes = R.drawable.ic_spam_red_24dp
+            }
         }
 
         holder.text.setText(textRes)
@@ -63,6 +68,6 @@ class ReferrerMenuAdapter(context: Context) : BaseAdapter() {
     }
 
     enum class ReferrerMenuItem(val id: Long) {
-        OPEN_WEBSITE(0), MARK_AS_SPAM(1)
+        OPEN_WEBSITE(0), MARK_AS_SPAM(1), MARK_AS_NOT_SPAM(2)
     }
 }

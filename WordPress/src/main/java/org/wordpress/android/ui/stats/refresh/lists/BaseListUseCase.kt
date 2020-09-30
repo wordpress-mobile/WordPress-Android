@@ -109,7 +109,7 @@ class BaseListUseCase(
 
 
     suspend fun refreshReferrers() {
-        refreshData(true)
+        refreshData()
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean) {

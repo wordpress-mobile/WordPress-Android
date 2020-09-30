@@ -112,11 +112,11 @@ class ReferrersUseCase(
             domainModel.groups.forEachIndexed { index, group ->
                 val icon = buildIcon(group.icon)
                 val contentDescription =
-                    contentDescriptionHelper.buildContentDescription(
-                            header,
-                            group.name ?: "",
-                            group.total ?: 0
-                    )
+                        contentDescriptionHelper.buildContentDescription(
+                                header,
+                                group.name ?: "",
+                                group.total ?: 0
+                        )
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
                             icon = icon,
@@ -127,7 +127,7 @@ class ReferrersUseCase(
                             navigationAction = group.url?.let {
                                 create(it, this::onItemClick)
                             },
-                            menuAction = { view -> this.onMenuClick(view, group.url) },
+                            menuAction = { view -> this.onMenuClick(view, group.url, false) },
                             contentDescription = contentDescription
                     )
                     items.add(headerItem)
@@ -153,7 +153,8 @@ class ReferrersUseCase(
                                 NORMAL
                             }
                             ListItemWithIcon(
-                                    icon = referrerIcon,
+                                    icon = if (referrer.spam != null && referrer.spam!!)
+                                        R.drawable.ic_spam_red_24dp else referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     iconStyle = iconStyle,
                                     textStyle = LIGHT,
@@ -163,7 +164,7 @@ class ReferrersUseCase(
                                     navigationAction = referrer.url?.let {
                                         create(it, this::onItemClick)
                                     },
-                                    menuAction = { view -> this.onMenuClick(view, referrer.url) },
+                                    menuAction = { view -> this.onMenuClick(view, referrer.url, referrer.spam) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
                                             referrer.name,
@@ -215,17 +216,25 @@ class ReferrersUseCase(
         navigateTo(ViewUrl(url))
     }
 
-    private fun onMenuClick(view: View, url: String?): Boolean {
+    private fun onMenuClick(view: View, url: String?, spam: Boolean?): Boolean {
         if (url != null) {
             analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_LONG_PRESSED, statsGranularity)
-            popupMenuHandler.onMenuClick(view, statsGranularity, url, this)
+            popupMenuHandler.onMenuClick(view, statsGranularity, url, spam, this)
             return true
         }
         return false
     }
 
     suspend fun markReferrerAsSpam(urlDomain: String) {
-        referrersStore.reportReferrerAsSpam(statsSiteProvider.siteModel, urlDomain)
+        selectedDateProvider.getSelectedDate(statsGranularity)?.let {
+            referrersStore.reportReferrerAsSpam(
+                    statsSiteProvider.siteModel,
+                    urlDomain,
+                    statsGranularity,
+                    LimitMode.Top(itemsToLoad),
+                    it
+            )
+        }
     }
 
     data class SelectedGroup(val groupId: String? = null)

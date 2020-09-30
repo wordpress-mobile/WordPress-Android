@@ -35,11 +35,17 @@ class ReferrerPopupMenuHandler
     private val mutableMarkedAsSpam = MutableLiveData<Event<String>>()
     val markedAsSpam: LiveData<Event<String>> = mutableMarkedAsSpam
 
-    fun onMenuClick(view: View, statsGranularity: StatsGranularity, url: String, referrersUseCase: ReferrersUseCase) {
+    fun onMenuClick(
+        view: View,
+        statsGranularity: StatsGranularity,
+        url: String,
+        spam: Boolean?,
+        referrersUseCase: ReferrersUseCase
+    ) {
         coroutineScope.launch {
             withContext(mainDispatcher) {
                 val popup = ListPopupWindow(view.context, null, R.attr.listPopupWindowStyle)
-                val adapter = ReferrerMenuAdapter(view.context)
+                val adapter = ReferrerMenuAdapter(view.context, spam)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)
                 popup.anchorView = view

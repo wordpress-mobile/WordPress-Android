@@ -304,7 +304,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
-    implementation ("com.github.marco-altran.WordPress-FluxC-Android:fluxc:092698fa80f14c4c6d2e8da50fd133bae5ea1e4e") {
+    implementation ("com.github.marco-altran.WordPress-FluxC-Android:fluxc:b642c5327c15fcd1fd488c6d6a841a1899ca703f") {
         exclude group: "com.android.volley"
     }
 
