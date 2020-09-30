@@ -45,7 +45,7 @@
 		// The world's most popular website builder
 		{
 			"device": "Pixel 3",
-			"filename": "images/phoneScreenshots/1-build-and-manage-your-website-pt1.png",
+			"filename": "images/phoneScreenshots/1-the-worlds-most-popular-website-builder.png",
 			"attachments": [
 				{
 					"file": "playstoreres/assets/attachments/phone-backgrounds/Circles-1.png",
@@ -69,7 +69,7 @@
 		// Create a site or start a blog
 		{
 			"device": "Pixel 3",
-			"screenshot": "images/phoneScreenshots/2-create-beautiful-posts-and-pages.png",
+			"screenshot": "images/phoneScreenshots/2-create-a-site-or-start-a-blog.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-2.png",
 			"attachments": [
 				{
@@ -84,7 +84,7 @@
 		// Discover new reads
 		{
 			"device": "Pixel 3",
-			"screenshot": "images/phoneScreenshots/3-track-what-your-visitors-love.png",
+			"screenshot": "images/phoneScreenshots/3-discover-new-reads.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-3.png",
 			"attachments": [
 				{
@@ -99,7 +99,7 @@
 		// Build an audience
 		{
 			"device": "Pixel 3",
-			"screenshot": "images/phoneScreenshots/4-check-whats-happening-in-real-time.png",
+			"screenshot": "images/phoneScreenshots/4-build-an-audience.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-4.png",
 			"attachments": [
 				{
@@ -114,7 +114,7 @@
 		// Keep tabs on your site
 		{
 			"device": "Pixel 3",
-			"screenshot": "images/phoneScreenshots/5-share-from-anywhere.png",
+			"screenshot": "images/phoneScreenshots/5-keep-tabs-on-your-site.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-5.png",
 			"attachments": [
 				{
@@ -129,7 +129,7 @@
 		// Reply in real time
 		{
 			"device": "Pixel 3",
-			"screenshot": "images/phoneScreenshots/6-capture-ideas-on-the-go.png",
+			"screenshot": "images/phoneScreenshots/6-reply-in-real-time.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-6.png",
 			"attachments": [
 				{
@@ -144,7 +144,7 @@
 		// Upload on the go
 		{
 			"device": "Pixel 3",
-			"screenshot": "images/phoneScreenshots/6-capture-ideas-on-the-go.png",
+			"screenshot": "images/phoneScreenshots/6-upload-on-the-go.png",
 			"filename": "images/phoneScreenshots/7-capture-ideas-on-the-go.png",
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-7.png",
 			"attachments": [
@@ -160,7 +160,7 @@
 		// The world's most popular website builder
 		{
 			"device": "Nexus 9",
-			"filename": "images/tenInchScreenshots/1-build-and-manage-your-website-pt1.png",
+			"filename": "images/tenInchScreenshots/1-the-worlds-most-popular-website-builder.png",
 			"attachments": [
 				{
 					"file": "playstoreres/assets/attachments/tablet-backgrounds/Circles-1.png",
@@ -184,7 +184,7 @@
 		// Create a site or start a blog
 		{
 			"device": "Nexus 9",
-			"screenshot": "images/tenInchScreenshots/2-create-beautiful-posts-and-pages.png",
+			"screenshot": "images/tenInchScreenshots/2-create-a-site-or-start-a-blog.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-2.png",
 			"attachments": [
 				{
@@ -199,7 +199,7 @@
 		// Discover new reads
 		{
 			"device": "Nexus 9",
-			"screenshot": "images/tenInchScreenshots/3-track-what-your-visitors-love.png",
+			"screenshot": "images/tenInchScreenshots/3-discover-new-reads.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-3.png",
 			"attachments": [
 				{
@@ -214,7 +214,7 @@
 		// Build an audience
 		{
 			"device": "Nexus 9",
-			"screenshot": "images/tenInchScreenshots/4-check-whats-happening-in-real-time.png",
+			"screenshot": "images/tenInchScreenshots/4-build-an-audience.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-4.png",
 			"attachments": [
 				{
@@ -229,7 +229,7 @@
 		// Keep tabs on your site
 		{
 			"device": "Nexus 9",
-			"screenshot": "images/tenInchScreenshots/5-share-from-anywhere.png",
+			"screenshot": "images/tenInchScreenshots/5-keep-tabs-on-your-site.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-5.png",
 			"attachments": [
 				{
@@ -244,7 +244,7 @@
 		// Reply in real time
 		{
 			"device": "Nexus 9",
-			"screenshot": "images/tenInchScreenshots/6-capture-ideas-on-the-go.png",
+			"screenshot": "images/tenInchScreenshots/6-reply-in-real-time.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-6.png",
 			"attachments": [
 				{
@@ -259,8 +259,7 @@
 		// Upload on the go
 		{
 			"device": "Nexus 9",
-			"screenshot": "images/tenInchScreenshots/6-capture-ideas-on-the-go.png",
-			"filename": "images/tenInchScreenshots/7-capture-ideas-on-the-go.png",
+			"screenshot": "images/tenInchScreenshots/6-upload-on-the-go.png",
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-7.png",
 			"attachments": [
 				{
