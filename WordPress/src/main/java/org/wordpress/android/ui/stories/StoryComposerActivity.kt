@@ -22,6 +22,9 @@ import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
+import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.UriBackgroundSource
+import com.wordpress.stories.compose.story.StoryFrameItemType.VIDEO
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
@@ -66,7 +69,6 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
-import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -479,17 +481,41 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         val storyMediaFileDataList = ArrayList<StoryMediaFileData>() // holds media files
         val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
         for ((frameIndex, frame) in story.frames.withIndex()) {
-            frame.id?.let {
-                val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
-                val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
-                mediaFile?.let {
+            when (frame.id) {
+                // if the frame.id is null, this is a new frame that has been added to an edited Story
+                // so, we don't have much information yet. We do have the background source (not the flattened
+                // image yet) so, let's use that for now, and assign the temporaryID we'll use to send
+                // save progress events to Gutenberg.
+                null -> {
                     val storyMediaFileData =
-                            saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                    mediaFile = it,
-                                    temporaryId = "$storyIndex-$frameIndex"
+                            saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
+                                    temporaryId = "$storyIndex-$frameIndex",
+                                    url = if (frame.source is FileBackgroundSource) {
+                                        (frame.source as FileBackgroundSource).file.toString()
+                                    } else {
+                                        (frame.source as UriBackgroundSource).contentUri.toString()
+                                    },
+                                    isVideo = (frame.frameItemType is VIDEO)
                             )
                     frame.id = storyMediaFileData.id
                     storyMediaFileDataList.add(storyMediaFileData)
+                }
+                // if the frame.id is populated, this should be an actual MediaModel mediaId so,
+                // let's use that to obtain the mediaFile and then replace it with the temporary frame.id
+                else -> {
+                    frame.id?.let {
+                        val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
+                        val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
+                        mediaFile?.let {
+                            val storyMediaFileData =
+                                    saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                            mediaFile = it,
+                                            temporaryId = "$storyIndex-$frameIndex"
+                                    )
+                            frame.id = storyMediaFileData.id
+                            storyMediaFileDataList.add(storyMediaFileData)
+                        }
+                    }
                 }
             }
         }

@@ -60,6 +60,18 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         )
     }
 
+    fun buildMediaFileDataWithTemporaryIdNoMediaFile(temporaryId: String, url: String, isVideo: Boolean): StoryMediaFileData {
+        return StoryMediaFileData(
+                alt = "",
+                id = TEMPORARY_ID_PREFIX + temporaryId, // mediaFile.id,
+                link = url,
+                type = if (isVideo) "video" else "image",
+                mime = "",
+                caption = "",
+                url = url
+        )
+    }
+
     fun cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(editPostRepository: EditPostRepository) {
         editPostRepository.update { postModel: PostModel ->
             val gson = Gson()
