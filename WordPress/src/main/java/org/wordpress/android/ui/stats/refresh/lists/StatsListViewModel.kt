@@ -156,13 +156,6 @@ abstract class StatsListViewModel(
             statsUseCase.refreshTypes()
         }
     }
-
-    fun onMarkReferrerAsSpam(url: String, referrersUseCase: ReferrersUseCase) {
-        launch {
-            referrersUseCase.markReferrerAsSpam(url)
-            Log.d("Foo", "onMarkReferrerAsSpam: Marked as spam")
-        }
-    }
 }
 
 class InsightsListViewModel

@@ -32,7 +32,6 @@ sealed class NavigationTarget {
     data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewFileDownloads(val statsGranularity: StatsGranularity, val selectedDate: Date) : NavigationTarget()
     data class ViewUrl(val url: String) : NavigationTarget()
-    data class ViewReportReferrer(val url: String, val referrersUseCase: ReferrersUseCase) : NavigationTarget()
     object ViewMonthsAndYearsStats : NavigationTarget()
     object ViewDayAverageStats : NavigationTarget()
     object ViewRecentWeeksStats : NavigationTarget()
