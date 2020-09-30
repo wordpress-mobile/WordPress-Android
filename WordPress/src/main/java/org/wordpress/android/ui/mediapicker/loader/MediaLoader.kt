@@ -1,19 +1,18 @@
-package org.wordpress.android.ui.mediapicker
+package org.wordpress.android.ui.mediapicker.loader
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.ClearFilter
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Filter
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Refresh
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.Start
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaInsertResult
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Failure
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.ui.mediapicker.MediaItem
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.ClearFilter
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Filter
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Refresh
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Start
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.util.LocaleManagerWrapper
 
 data class MediaLoader(
@@ -72,16 +71,6 @@ data class MediaLoader(
         }
     }
 
-    suspend fun insertMedia(identifiers: List<Identifier>): Flow<InsertModel> {
-        return flow {
-            emit(InsertModel.Progress)
-            when (val result = mediaSource.insert(identifiers)) {
-                is MediaInsertResult.Success -> emit(InsertModel.Success(result.identifiers))
-                is MediaInsertResult.Failure -> emit(InsertModel.Error(result.message))
-            }
-        }
-    }
-
     private suspend fun FlowCollector<DomainModel>.updateState(
         updatedState: DomainModel
     ): DomainModel {
@@ -120,10 +109,4 @@ data class MediaLoader(
         val filter: String? = null,
         val isLoading: Boolean = false
     )
-
-    sealed class InsertModel {
-        data class Success(val identifiers: List<Identifier>) : InsertModel()
-        data class Error(val error: String) : InsertModel()
-        object Progress : InsertModel()
-    }
 }

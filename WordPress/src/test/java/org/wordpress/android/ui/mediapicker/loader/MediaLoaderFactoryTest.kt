@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mediapicker
+package org.wordpress.android.ui.mediapicker.loader
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -8,15 +8,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mediapicker.DeviceListBuilder.DeviceListBuilderFactory
-import org.wordpress.android.ui.mediapicker.MediaLibraryDataSource.MediaLibraryDataSourceFactory
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
-import org.wordpress.android.ui.mediapicker.StockMediaDataSource.StockMediaDataSourceFactory
+import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
+import org.wordpress.android.ui.mediapicker.loader.MediaLibraryDataSource.MediaLibraryDataSourceFactory
 import org.wordpress.android.util.LocaleManagerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -25,7 +25,6 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var deviceListBuilder: DeviceListBuilder
     @Mock lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
     @Mock lateinit var mediaLibraryDataSource: MediaLibraryDataSource
-    @Mock lateinit var stockMediaDataSourceFactory: StockMediaDataSourceFactory
     @Mock lateinit var stockMediaDataSource: StockMediaDataSource
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var site: SiteModel
@@ -36,7 +35,7 @@ class MediaLoaderFactoryTest {
         mediaLoaderFactory = MediaLoaderFactory(
                 deviceListBuilderFactory,
                 mediaLibraryDataSourceFactory,
-                stockMediaDataSourceFactory,
+                stockMediaDataSource,
                 localeManagerWrapper
         )
     }
@@ -53,9 +52,9 @@ class MediaLoaderFactoryTest {
                 editingEnabled = true,
                 queueResults = false,
                 defaultSearchView = false,
-                title = R.string.wp_media_title
+                title = string.wp_media_title
         )
-        whenever(deviceListBuilderFactory.build(setOf(), false)).thenReturn(deviceListBuilder)
+        whenever(deviceListBuilderFactory.build(setOf())).thenReturn(deviceListBuilder)
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
         assertThat(mediaLoader).isEqualTo(
@@ -78,7 +77,7 @@ class MediaLoaderFactoryTest {
                 editingEnabled = false,
                 queueResults = false,
                 defaultSearchView = false,
-                title = R.string.wp_media_title
+                title = string.wp_media_title
         )
         whenever(mediaLibraryDataSourceFactory.build(site, setOf())).thenReturn(mediaLibraryDataSource)
 
@@ -104,9 +103,8 @@ class MediaLoaderFactoryTest {
                 editingEnabled = false,
                 queueResults = false,
                 defaultSearchView = false,
-                title = R.string.wp_media_title
+                title = string.wp_media_title
         )
-        whenever(stockMediaDataSourceFactory.build(site)).thenReturn(stockMediaDataSource)
 
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
 
@@ -132,7 +130,7 @@ class MediaLoaderFactoryTest {
                             editingEnabled = true,
                             queueResults = false,
                             defaultSearchView = false,
-                            title = R.string.wp_media_title
+                            title = string.wp_media_title
                     ),
                     site
             )

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mediapicker
+package org.wordpress.android.ui.mediapicker.loader
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
@@ -11,20 +11,16 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.StockMediaModel
-import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded
 import org.wordpress.android.fluxc.store.StockMediaItem
 import org.wordpress.android.fluxc.store.StockMediaStore
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched
-import org.wordpress.android.fluxc.store.StockMediaUploadItem
 import org.wordpress.android.test
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaInsertResult
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaItem
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 
 @InternalCoroutinesApi
 class StockMediaDataSourceTest : BaseUnitTest() {
@@ -46,7 +42,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        stockMediaDataSource = StockMediaDataSource(site, stockMediaStore, TEST_DISPATCHER)
+        stockMediaDataSource = StockMediaDataSource(stockMediaStore, TEST_DISPATCHER)
     }
 
     @Test
@@ -78,7 +74,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
             assertThat(this.data).hasSize(1)
             assertThat(this.data).containsExactly(
                     MediaItem(
-                            Identifier.StockMediaIdentifier(url, name, title),
+                            StockMediaIdentifier(url, name, title),
                             url,
                             name,
                             IMAGE,
@@ -90,23 +86,5 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         }
         verify(stockMediaStore).fetchStockMedia(any(), any())
         verify(stockMediaStore).getStockMedia()
-    }
-
-    @Test
-    fun `uploads media on insert`() = test {
-        val itemToInsert = Identifier.StockMediaIdentifier(url, name, title)
-        val insertedMediaModel = MediaModel()
-        val mediaId: Long = 10
-        insertedMediaModel.mediaId = mediaId
-        whenever(stockMediaStore.performUploadStockMedia(any(), any())).thenReturn(OnStockMediaUploaded(site, listOf(
-                insertedMediaModel
-        )))
-
-        val result = stockMediaDataSource.insert(listOf(itemToInsert))
-
-        (result as MediaInsertResult.Success).apply {
-            assertThat(this.identifiers).containsExactly(RemoteId(mediaId))
-        }
-        verify(stockMediaStore).performUploadStockMedia(site, listOf(StockMediaUploadItem(name, title, url)))
     }
 }

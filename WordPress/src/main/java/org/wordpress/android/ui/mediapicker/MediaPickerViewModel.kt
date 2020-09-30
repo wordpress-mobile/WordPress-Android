@@ -18,12 +18,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
-import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
-import org.wordpress.android.ui.mediapicker.MediaLoader.InsertModel
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction
-import org.wordpress.android.ui.mediapicker.MediaLoader.LoadAction.NextPage
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
@@ -42,6 +42,10 @@ import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader
+import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -64,6 +68,7 @@ class MediaPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val mediaLoaderFactory: MediaLoaderFactory,
+    private val mediaInsertHandlerFactory: MediaInsertHandlerFactory,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
@@ -72,6 +77,7 @@ class MediaPickerViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var mediaLoader: MediaLoader
+    private lateinit var mediaInsertHandler: MediaInsertHandler
     private val loadActions = Channel<LoadAction>()
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _navigateToEdit = MutableLiveData<Event<List<UriWrapper>>>()
@@ -262,6 +268,7 @@ class MediaPickerViewModel @Inject constructor(
         this.site = site
         if (_domainModel.value == null) {
             this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
+            this.mediaInsertHandler = mediaInsertHandlerFactory.build(mediaPickerSetup, site)
             launch(bgDispatcher) {
                 mediaLoader.loadMedia(loadActions).collect { domainModel ->
                     withContext(mainDispatcher) {
@@ -326,7 +333,7 @@ class MediaPickerViewModel @Inject constructor(
         val ids = selectedIdentifiers()
         var job: Job? = null
         job = launch {
-            mediaLoader.insertMedia(ids).collect {
+            mediaInsertHandler.insertMedia(ids).collect {
                 when (it) {
                     is InsertModel.Progress -> {
                         _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {

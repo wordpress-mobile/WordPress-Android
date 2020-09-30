@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mediapicker
+package org.wordpress.android.ui.mediapicker.loader
 
 import android.content.ContentResolver
 import android.content.Context
@@ -14,14 +14,13 @@ import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaInsertResult
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -31,21 +30,14 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SqlUtils
 import org.wordpress.android.util.UriWrapper
-import org.wordpress.android.util.WPMediaUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 class DeviceListBuilder(
     private val context: Context,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val mediaTypes: Set<MediaType>,
-    private val queueResults: Boolean
+    private val mediaTypes: Set<MediaType>
 ) : MediaSource {
     private val mimeTypes = MimeTypes()
 
@@ -74,45 +66,6 @@ class DeviceListBuilder(
                 }
             } ?: result
             MediaLoadingResult.Success(filteredResult, false)
-        }
-    }
-
-    override suspend fun insert(identifiers: List<Identifier>): MediaInsertResult {
-        val localUris = identifiers.mapNotNull { it as? LocalUri }
-        return if (queueResults) {
-            var failed = false
-            val fetchedUris = localUris.mapNotNull { localUri ->
-                val fetchedUri = wpMediaUtilsWrapper.fetchMedia(localUri.value.uri)
-                if (fetchedUri == null) {
-                    failed = true
-                }
-                fetchedUri
-            }
-            if (failed) {
-                MediaInsertResult.Failure("Failed to fetch local media")
-            } else {
-                MediaInsertResult.Success(fetchedUris.map { LocalUri(UriWrapper(it)) })
-            }
-        } else {
-            trackLocalItemsSelected(localUris)
-            MediaInsertResult.Success(localUris)
-        }
-    }
-
-    private fun trackLocalItemsSelected(identifiers: List<LocalUri>) {
-        val isMultiselection = identifiers.size > 1
-        for (identifier in identifiers) {
-            val isVideo = org.wordpress.android.util.MediaUtils.isVideo(identifier.toString())
-            val properties = analyticsUtilsWrapper.getMediaProperties(
-                    isVideo,
-                    identifier.value,
-                    null
-            )
-            properties["is_part_of_multiselection"] = isMultiselection
-            if (isMultiselection) {
-                properties["number_of_media_selected"] = identifiers.size
-            }
-            analyticsTrackerWrapper.track(MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties)
         }
     }
 
@@ -201,21 +154,14 @@ class DeviceListBuilder(
     @Inject constructor(
         private val context: Context,
         private val localeManagerWrapper: LocaleManagerWrapper,
-        private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
-        private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-        private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
-        fun build(mediaTypes: Set<MediaType>, queueResults: Boolean): DeviceListBuilder {
+        fun build(mediaTypes: Set<MediaType>): DeviceListBuilder {
             return DeviceListBuilder(
                     context,
                     localeManagerWrapper,
-                    wpMediaUtilsWrapper,
-                    analyticsTrackerWrapper,
-                    analyticsUtilsWrapper,
                     bgDispatcher,
-                    mediaTypes,
-                    queueResults
+                    mediaTypes
             )
         }
     }
