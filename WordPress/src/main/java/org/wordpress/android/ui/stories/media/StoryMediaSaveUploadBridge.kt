@@ -100,7 +100,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private fun addNewMediaItemsToPostAsync(site: SiteModel, uriList: List<Uri>, isEditMode: Boolean) {
         // this is similar to addNewMediaItemsToEditorAsync in EditorMedia
         launch {
-            val localEditorMediaListener = object: EditorMediaListener {
+            val localEditorMediaListener = object : EditorMediaListener {
                 override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
                     if (!isEditMode) {
                         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
@@ -239,5 +239,5 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 event.frameSaveResult.size == storyRepositoryWrapper.getStoryAtIndex(event.storyIndex).frames.size)
     }
 
-    data class StoryFrameMediaModelCreatedEvent (val oldId: String, val newId: String, val oldUrl: String)
+    data class StoryFrameMediaModelCreatedEvent(val oldId: String, val newId: String, val oldUrl: String)
 }

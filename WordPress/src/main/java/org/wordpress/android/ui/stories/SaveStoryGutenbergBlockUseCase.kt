@@ -60,7 +60,11 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         )
     }
 
-    fun buildMediaFileDataWithTemporaryIdNoMediaFile(temporaryId: String, url: String, isVideo: Boolean): StoryMediaFileData {
+    fun buildMediaFileDataWithTemporaryIdNoMediaFile(
+        temporaryId: String,
+        url: String,
+        isVideo: Boolean
+    ): StoryMediaFileData {
         return StoryMediaFileData(
                 alt = "",
                 id = TEMPORARY_ID_PREFIX + temporaryId, // mediaFile.id,
@@ -80,8 +84,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                     object : DoWithMediaFilesListener {
                         override fun doWithMediaFilesJsonString(content: String, mediaFilesJsonString: String): String {
                             var processedContent = content
-                            val storyBlockData: StoryBlockData?
-                                    = gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
+                            val storyBlockData: StoryBlockData? =
+                                    gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
                             storyBlockData?.let {
                                 if (hasTemporaryIdsInStoryData(it)) {
                                     // here remove the whole mediaFiles attribute
@@ -136,8 +140,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
                 object : DoWithMediaFilesListener {
                     override fun doWithMediaFilesJsonString(content: String, mediaFilesJsonString: String): String {
                         var processedContent = content
-                        val storyBlockData: StoryBlockData?
-                                = gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
+                        val storyBlockData: StoryBlockData? =
+                                gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
                         storyBlockData?.let { storyBlockDataNonNull ->
                             val localMediaId = mediaFile.id.toString()
                             // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
