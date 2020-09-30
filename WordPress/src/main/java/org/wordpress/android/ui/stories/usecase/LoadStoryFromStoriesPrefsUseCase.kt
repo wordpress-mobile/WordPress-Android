@@ -9,7 +9,6 @@ import dagger.Reusable
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.getSlideWithRemoteId
@@ -36,6 +35,20 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
             mediaIds.add(mediaIdString)
         }
         return mediaIds
+    }
+
+    fun anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles: ArrayList<Object>): Boolean {
+        for (mediaFile in mediaFiles) {
+            try {
+                (mediaFile as HashMap<String?, Any?>)["id"]
+                        .toString()
+                        .toDouble() // this conversion is needed to strip off decimals that can come from RN
+                        .toLong()
+            } catch (exception: NumberFormatException) {
+                return true
+            }
+        }
+        return false
     }
 
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
