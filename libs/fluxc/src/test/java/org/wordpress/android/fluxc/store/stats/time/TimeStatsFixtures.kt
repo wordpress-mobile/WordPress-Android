@@ -66,7 +66,8 @@ val REFERRER = Referrer(
         "john.jpg",
         "john.com",
         30,
-        listOf(Child("Child", 20, "child.jpg", "child.com"))
+        listOf(Child("Child", 20, "child.jpg", "child.com", false)),
+        false
 )
 val GROUP = Group(GROUP_ID, "Group 1", "icon.jpg", "url.com", 50, null, referrers = listOf(REFERRER))
 val REFERRERS_RESPONSE = FetchReferrersResponse(null, mapOf("2018-10-10" to Groups(10, 20, listOf(GROUP))))

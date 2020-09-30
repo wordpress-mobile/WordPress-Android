@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersR
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.ReportReferrerAsSpamPayload
@@ -30,9 +31,11 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 private const val ITEMS_TO_LOAD = 8
 private val DATE = Date(0)
+private val LIMIT_MODE = LimitMode.Top(ITEMS_TO_LOAD)
 
 @RunWith(MockitoJUnitRunner::class)
 class ReferrersStoreTest {
@@ -114,10 +117,36 @@ class ReferrersStoreTest {
 
     @Test
     fun `returns successful when report referrer as spam`() = test {
+        val date = Date()
         val restResponse = ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
         whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(restResponse)
+        whenever(sqlUtils.select(site, YEARS, date)).thenReturn(REFERRERS_RESPONSE)
 
-        val result = store.reportReferrerAsSpam(site, domain)
+        val result = store.reportReferrerAsSpam(
+                site,
+                domain,
+                YEARS,
+                LIMIT_MODE,
+                date
+        )
+
+        assertThat(result.model?.success).isEqualTo(true)
+    }
+
+    @Test
+    fun `report referrer as spam doesnt mark spam when cache fails`() = test {
+        val date = Date()
+        val restResponse = ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
+        whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(restResponse)
+        whenever(sqlUtils.select(site, YEARS, date)).thenReturn(null)
+
+        val result = store.reportReferrerAsSpam(
+                site,
+                domain,
+                YEARS,
+                LIMIT_MODE,
+                date
+        )
 
         assertThat(result.model?.success).isEqualTo(true)
     }
@@ -129,7 +158,12 @@ class ReferrersStoreTest {
         val errorPayload = ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse>(StatsError(type, message))
         whenever(restClient.reportReferrerAsSpam(site, domain)).thenReturn(errorPayload)
 
-        val result = store.reportReferrerAsSpam(site, domain)
+        val result = store.reportReferrerAsSpam(
+                site,
+                domain,
+                YEARS,
+                LIMIT_MODE,
+                Date())
 
         assertNotNull(result.error)
         val error = result.error!!
@@ -160,5 +194,18 @@ class ReferrersStoreTest {
         val error = result.error!!
         assertEquals(type, error.type)
         assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `set spam to true`() = test {
+        val referrerResult = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com")
+        assertTrue(
+                ((referrerResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
+                [0] as FetchReferrersResponse.Referrer).spam!!)
+
+        val childResult = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com")
+        assertTrue(
+                ((childResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
+                        [0] as FetchReferrersResponse.Referrer).children?.get(0)?.spam!!)
     }
 }

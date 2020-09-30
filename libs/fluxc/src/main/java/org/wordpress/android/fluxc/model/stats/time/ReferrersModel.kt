@@ -9,5 +9,11 @@ data class ReferrersModel(val otherViews: Int, val totalViews: Int, val groups: 
         val total: Int?,
         val referrers: List<Referrer>
     )
-    data class Referrer(val name: String, val views: Int, val icon: String?, val url: String?)
+    data class Referrer(
+        val name: String,
+        val views: Int,
+        val icon: String?,
+        val url: String?,
+        var spam: Boolean? = false
+    )
 }
