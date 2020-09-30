@@ -545,6 +545,7 @@ public class ReaderPostRenderer {
           .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
           .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
           .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("--color-neutral-10: ").append(mResourceVars.mGreyDisabledStr).append("; ")
           .append("} ");
     }
 
