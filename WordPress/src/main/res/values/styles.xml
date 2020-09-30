@@ -386,7 +386,7 @@
     </style>
 
     <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
@@ -398,6 +398,7 @@
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
@@ -407,6 +408,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteListRowLayout">
