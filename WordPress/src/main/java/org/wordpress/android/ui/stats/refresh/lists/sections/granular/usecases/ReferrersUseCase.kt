@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUs
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.SelectedGroup
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
+import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
@@ -47,8 +49,7 @@ import javax.inject.Named
 private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_ITEM_COUNT = 1000
 
-class ReferrersUseCase
-constructor(
+class ReferrersUseCase(
     statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
@@ -58,7 +59,8 @@ constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val statsUtils: StatsUtils,
-    private val useCaseMode: UseCaseMode
+    private val useCaseMode: UseCaseMode,
+    private val popupMenuHandler: ReferrerPopupMenuHandler
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
@@ -167,6 +169,7 @@ constructor(
                                     navigationAction = referrer.url?.let {
                                         create(it, this::onItemClick)
                                     },
+                                    menuAction = this::onMenuClick,
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
                                             referrer.name,
@@ -210,7 +213,12 @@ constructor(
     }
 
     private fun onItemClick(url: String) {
-        navigateTo(ViewReportReferrer(url, this))
+        navigateTo(ViewUrl(url))
+    }
+
+    private fun onMenuClick(view: View): Boolean {
+        popupMenuHandler.onMenuClick(view, type)
+        return true
     }
 
     suspend fun markReferrerAsSpam(urlDomain: String) {
@@ -228,7 +236,8 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val contentDescriptionHelper: ContentDescriptionHelper,
         private val statsUtils: StatsUtils,
-        private val analyticsTracker: AnalyticsTrackerWrapper
+        private val analyticsTracker: AnalyticsTrackerWrapper,
+        private val popupMenuHandler: ReferrerPopupMenuHandler
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
                 ReferrersUseCase(
@@ -241,7 +250,8 @@ constructor(
                         analyticsTracker,
                         contentDescriptionHelper,
                         statsUtils,
-                        useCaseMode
+                        useCaseMode,
+                        popupMenuHandler
                 )
     }
 }

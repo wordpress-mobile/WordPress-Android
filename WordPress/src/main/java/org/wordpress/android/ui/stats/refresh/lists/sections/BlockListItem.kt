@@ -124,6 +124,7 @@ sealed class BlockListItem(val type: Type) {
         val showDivider: Boolean = true,
         val textStyle: TextStyle = TextStyle.NORMAL,
         val navigationAction: NavigationAction? = null,
+        val menuAction: ((View) -> Boolean)? = null,
         val contentDescription: String,
         @ColorRes val tint: Int? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
