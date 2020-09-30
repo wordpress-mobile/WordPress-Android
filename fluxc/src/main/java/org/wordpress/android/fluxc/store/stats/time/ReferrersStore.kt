@@ -4,11 +4,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Groups
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnReportReferrerAsSpam
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T.STATS
@@ -52,14 +55,60 @@ class ReferrersStore
 
     suspend fun reportReferrerAsSpam(
         site: SiteModel,
-        domain: String
+        domain: String,
+        granularity: StatsGranularity,
+        limitMode: Top,
+        date: Date
     ) = coroutineEngine.withDefaultContext(STATS, this, "reportReferrerAsSpam") {
         val payload = restClient.reportReferrerAsSpam(site, domain)
+
+        if (payload.response != null || payload.error.type == StatsErrorType.ALREADY_SPAMMED) {
+            updateCacheWithMarkedSpam(site, granularity, date, domain, limitMode)
+        }
         return@withDefaultContext when {
             payload.isError -> OnReportReferrerAsSpam(payload.error)
             payload.response != null -> OnReportReferrerAsSpam(payload.response)
             else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
         }
+    }
+
+    private fun updateCacheWithMarkedSpam(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        date: Date,
+        domain: String,
+        limitMode: Top
+    ) {
+        val select = sqlUtils.select(site, granularity, date)
+        if (select != null) {
+            val selectMarked = setSelectForSpam(select, domain)
+            sqlUtils.insert(site, selectMarked, granularity, date, limitMode.limit)
+        }
+    }
+
+    fun setSelectForSpam(select: FetchReferrersResponse, domain: String): FetchReferrersResponse {
+        select.groups.entries.forEach {
+            (it.value as Groups).groups.forEach {
+                it.referrers?.forEach {
+                    if (it.url == domain) {
+                        it.spam = true
+                    }
+                }
+            }
+        }
+
+        select.groups.entries.forEach {
+            (it.value as Groups).groups.forEach {
+                it.referrers?.forEach {
+                    it.children?.forEach {
+                        if (it.url == domain) {
+                            it.spam = true
+                        }
+                    }
+                }
+            }
+        }
+        return select
     }
 
     suspend fun unreportReferrerAsSpam(

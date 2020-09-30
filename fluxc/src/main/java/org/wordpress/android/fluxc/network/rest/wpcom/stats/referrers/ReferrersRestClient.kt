@@ -152,14 +152,16 @@ class ReferrersRestClient
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("views") val views: Int?,
-            @SerializedName("children") val children: List<Child>?
+            @SerializedName("children") val children: List<Child>?,
+            @SerializedName("spam") var spam: Boolean?
         )
 
         data class Child(
             @SerializedName("name") val name: String?,
             @SerializedName("views") val totals: Int?,
             @SerializedName("icon") val icon: String?,
-            @SerializedName("url") val url: String?
+            @SerializedName("url") val url: String?,
+            @SerializedName("spam") var spam: Boolean?
         )
     }
 }
