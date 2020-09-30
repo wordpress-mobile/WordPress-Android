@@ -17,7 +17,7 @@ import javax.inject.Inject
 class StockMediaInsertUseCase(
     private val site: SiteModel,
     private val stockMediaStore: StockMediaStore
-): MediaInsertUseCase {
+) : MediaInsertUseCase {
     override suspend fun insert(identifiers: List<Identifier>): MediaInsertResult {
         val result = stockMediaStore.performUploadStockMedia(site, identifiers.mapNotNull { identifier ->
             (identifier as? StockMediaIdentifier)?.let {
