@@ -77,7 +77,8 @@ class TimeStatsMapper
                         group.icon,
                         group.url,
                         group.total,
-                        children ?: listOf()
+                        children ?: listOf(),
+                        group.spam
                 )
             }
         }
