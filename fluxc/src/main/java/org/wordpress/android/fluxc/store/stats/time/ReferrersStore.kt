@@ -88,20 +88,19 @@ class ReferrersStore
 
     fun setSelectForSpam(select: FetchReferrersResponse, domain: String): FetchReferrersResponse {
         select.groups.entries.forEach {
-            (it.value as Groups).groups.forEach {
+            it.value.groups.forEach {
+                if (it.url == domain) {
+                    // Setting group.spam as true
+                    it.spam = true
+                }
                 it.referrers?.forEach {
                     if (it.url == domain) {
+                        // Setting referrer.spam as true
                         it.spam = true
                     }
-                }
-            }
-        }
-
-        select.groups.entries.forEach {
-            (it.value as Groups).groups.forEach {
-                it.referrers?.forEach {
                     it.children?.forEach {
                         if (it.url == domain) {
+                            // Setting child.spam as true
                             it.spam = true
                         }
                     }

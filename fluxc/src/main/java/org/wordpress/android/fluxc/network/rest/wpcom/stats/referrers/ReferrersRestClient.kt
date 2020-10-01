@@ -131,7 +131,8 @@ class ReferrersRestClient
             @SerializedName("total") val total: Int?,
             @SerializedName("results") val results: JsonElement?,
             @SerializedName("referrers") var referrers: List<Referrer>? = null,
-            @SerializedName("views") var views: Int? = null
+            @SerializedName("views") var views: Int? = null,
+            @SerializedName("spam") var spam: Boolean?
         ) {
             fun build(gson: Gson) {
                 when (this.results) {

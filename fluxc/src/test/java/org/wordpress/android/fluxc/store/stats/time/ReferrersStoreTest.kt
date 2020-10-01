@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -198,6 +199,12 @@ class ReferrersStoreTest {
 
     @Test
     fun `set spam to true`() = test {
+        val groupResult = store.setSelectForSpam(REFERRERS_RESPONSE, "url_group_2.com")
+
+        // Asserting group 1 is set with spam as false and group 2 is set with spam as true
+        assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!)
+        assertTrue(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!)
+
         val referrerResult = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com")
         assertTrue(
                 ((referrerResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)

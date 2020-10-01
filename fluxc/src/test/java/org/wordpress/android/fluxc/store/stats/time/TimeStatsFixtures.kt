@@ -59,9 +59,10 @@ val POST_AND_PAGE_VIEWS_RESPONSE = PostAndPageViewsResponse(
         DAY_GRANULARITY
 )
 
-const val GROUP_ID = "group ID"
+const val GROUP_ID_1 = "group ID 1"
+const val GROUP_ID_2 = "group ID 2"
 val REFERRER = Referrer(
-        GROUP_ID,
+        GROUP_ID_1,
         "John Smith",
         "john.jpg",
         "john.com",
@@ -69,9 +70,37 @@ val REFERRER = Referrer(
         listOf(Child("Child", 20, "child.jpg", "child.com", false)),
         false
 )
-val GROUP = Group(GROUP_ID, "Group 1", "icon.jpg", "url.com", 50, null, referrers = listOf(REFERRER))
-val REFERRERS_RESPONSE = FetchReferrersResponse(null, mapOf("2018-10-10" to Groups(10, 20, listOf(GROUP))))
-val CLICK_GROUP = ClickGroup(GROUP_ID, "Click name", "click.jpg", "click.com", 20, null)
+val GROUP_WITH_REFERRALS = Group(
+        GROUP_ID_1,
+        "Group 1",
+        "icon_group_1.jpg",
+        "url_group_1.com",
+        50,
+        null,
+        referrers = listOf(REFERRER),
+        spam = false
+)
+val GROUP_WITH_EMPTY_REFERRALS = Group(
+        GROUP_ID_2,
+        "Group 2",
+        "icon_group_2.jpg",
+        "url_group_2.com",
+        50,
+        null,
+        referrers = null,
+        spam = false
+)
+val REFERRERS_RESPONSE = FetchReferrersResponse(
+        null,
+        mapOf(
+                "2018-10-10" to Groups(
+                        10,
+                        20,
+                        listOf(GROUP_WITH_REFERRALS, GROUP_WITH_EMPTY_REFERRALS)
+                )
+        )
+)
+val CLICK_GROUP = ClickGroup(GROUP_ID_1, "Click name", "click.jpg", "click.com", 20, null)
 val CLICKS_RESPONSE = ClicksResponse(null, mapOf("2018-10-10" to ClicksResponse.Groups(10, 15, listOf(CLICK_GROUP))))
 val VISITS_AND_VIEWS_RESPONSE = VisitsAndViewsResponse(
         "2018-10-10",
