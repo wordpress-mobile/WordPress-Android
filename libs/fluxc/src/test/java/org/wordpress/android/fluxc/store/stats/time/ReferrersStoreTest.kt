@@ -164,7 +164,8 @@ class ReferrersStoreTest {
                 domain,
                 YEARS,
                 LIMIT_MODE,
-                Date())
+                Date()
+        )
 
         assertNotNull(result.error)
         val error = result.error!!
@@ -177,7 +178,13 @@ class ReferrersStoreTest {
         val restResponse = ReportReferrerAsSpamPayload(ReportReferrerAsSpamResponse(true))
         whenever(restClient.unreportReferrerAsSpam(site, domain)).thenReturn(restResponse)
 
-        val result = store.unreportReferrerAsSpam(site, domain)
+        val result = store.unreportReferrerAsSpam(
+                site,
+                domain,
+                YEARS,
+                LIMIT_MODE,
+                Date()
+        )
 
         assertThat(result.model?.success).isEqualTo(true)
     }
@@ -189,7 +196,13 @@ class ReferrersStoreTest {
         val errorPayload = ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse>(StatsError(type, message))
         whenever(restClient.unreportReferrerAsSpam(site, domain)).thenReturn(errorPayload)
 
-        val result = store.unreportReferrerAsSpam(site, domain)
+        val result = store.unreportReferrerAsSpam(
+                site,
+                domain,
+                YEARS,
+                LIMIT_MODE,
+                Date()
+        )
 
         assertNotNull(result.error)
         val error = result.error!!
@@ -199,19 +212,41 @@ class ReferrersStoreTest {
 
     @Test
     fun `set spam to true`() = test {
-        val groupResult = store.setSelectForSpam(REFERRERS_RESPONSE, "url_group_2.com")
+        val groupResult = store.setSelectForSpam(REFERRERS_RESPONSE, "url_group_2.com", true)
 
         // Asserting group 1 is set with spam as false and group 2 is set with spam as true
         assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!)
         assertTrue(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!)
 
-        val referrerResult = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com")
+        val referrerResult = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com", true)
         assertTrue(
                 ((referrerResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
                 [0] as FetchReferrersResponse.Referrer).spam!!)
 
-        val childResult = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com")
+        val childResult = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com", true)
         assertTrue(
+                ((childResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
+                        [0] as FetchReferrersResponse.Referrer).children?.get(0)?.spam!!)
+    }
+
+    @Test
+    fun `set spam to false`() = test {
+        val groupResultWithSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "url_group_2.com", true)
+        val groupResult = store.setSelectForSpam(groupResultWithSpam, "url_group_2.com", false)
+
+        // Asserting group 1 and group 2 is set with spam to false
+        assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!)
+        assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!)
+
+        val referrerResultWitSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com", true)
+        val referrerResult = store.setSelectForSpam(referrerResultWitSpam, "john.com", false)
+        assertFalse(
+                ((referrerResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
+                [0] as FetchReferrersResponse.Referrer).spam!!)
+
+        val childResultWithSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com", true)
+        val childResult = store.setSelectForSpam(childResultWithSpam, "child.com", false)
+        assertFalse(
                 ((childResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
                         [0] as FetchReferrersResponse.Referrer).children?.get(0)?.spam!!)
     }
