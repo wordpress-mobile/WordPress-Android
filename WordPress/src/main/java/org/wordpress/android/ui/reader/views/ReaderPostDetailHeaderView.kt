@@ -19,7 +19,7 @@ import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
 /**
- * topmost view in post detail - shows blavatar, author name, blog name, and follow button
+ * topmost view in post detail
  */
 class ReaderPostDetailHeaderView @JvmOverloads constructor(
     context: Context,
@@ -40,10 +40,15 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateBlavatar(blogSectionUiState)
         updateFollowButton(uiState.followButtonUiState)
 
+        uiHelpers.setTextOrHide(text_title, uiState.title)
+        uiHelpers.setTextOrHide(text_author, uiState.authorName)
         uiHelpers.setTextOrHide(text_author_and_blog_name, blogSectionUiState.blogName)
         uiHelpers.setTextOrHide(text_blog_url, blogSectionUiState.blogUrl)
         uiHelpers.updateVisibility(dot_separator, blogSectionUiState.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, blogSectionUiState.dateLine)
+
+        dot_separator.setVisible(blogSectionUiState.dotSeparatorVisibility)
+        text_by.setVisible(uiState.authorName != null)
 
         layout_post_header.setBackgroundResource(
                 layout_post_header.context.getDrawableResIdFromAttribute(

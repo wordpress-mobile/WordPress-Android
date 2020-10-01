@@ -144,7 +144,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
-    fun mapPostToPostHeaderUiState(
+    fun mapPostToBlogSectionUiState(
         post: ReaderPost,
         onPostHeaderViewClicked: (Long, Long) -> Unit
     ): ReaderBlogSectionUiState {

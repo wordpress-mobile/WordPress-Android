@@ -122,7 +122,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -1414,9 +1413,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            val txtTitle = view!!.findViewById<TextView>(R.id.text_title)
-            val txtDateline = view!!.findViewById<TextView>(R.id.text_dateline)
-
             val tagStrip = view!!.findViewById<ReaderTagStrip>(R.id.tag_strip)
             val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
             if (!canShowFooter()) {
@@ -1501,14 +1497,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
 
-            txtTitle.text = if (post!!.hasTitle()) post!!.title else getString(R.string.reader_untitled_post)
-
-            val timestamp = DateTimeUtils.javaDateToTimeSpan(
-                    post!!.displayDate,
-                    WordPress.getContext()
-            )
-            txtDateline.text = timestamp
-
             val postDetailsHeaderUiState = createPostDetailsHeaderUiState(post!!, headerView)
             headerView.updatePost(postDetailsHeaderUiState)
 
@@ -1530,8 +1518,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.showReaderBlogPreview(context, post)
             }
             val hasAccessToken = accountStore.hasAccessToken()
+            val textTitle = post
+                    .takeIf { post.hasTitle() }
+                    ?.title ?: getString(string.reader_untitled_post)
 
             return ReaderPostDetailsHeaderUiState(
+                    textTitle,
+                    post.authorName,
                     postUiStateBuilder.mapPostToPostHeaderUiState(
                             post,
                             onPostHeaderClicked
