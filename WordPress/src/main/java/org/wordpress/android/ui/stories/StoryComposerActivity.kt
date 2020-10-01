@@ -474,7 +474,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
 
             val savedContentIntent = Intent()
-            val blockId = intent.extras.getString(ARG_STORY_BLOCK_ID)
+            val blockId = intent.extras?.getString(ARG_STORY_BLOCK_ID)
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
 
             val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
