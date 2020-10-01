@@ -24,7 +24,6 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -32,6 +31,8 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -115,10 +116,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogUrl = buildBlogUrl(post),
-                dateLine = buildDateLine(post),
-                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-                blogName = buildBlogName(post),
+                blogSection = buildHeaderSection(post, onPostHeaderViewClicked, postListType),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
                 tagItems = buildTagItems(post, onTagItemClicked),
@@ -142,9 +140,15 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 onItemRendered = onItemRendered,
                 onMoreButtonClicked = onMoreButtonClicked,
                 onMoreDismissed = onMoreDismissed,
-                onVideoOverlayClicked = onVideoOverlayClicked,
-                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+                onVideoOverlayClicked = onVideoOverlayClicked
         )
+    }
+
+    fun mapPostToPostHeaderUiState(
+        post: ReaderPost,
+        onPostHeaderViewClicked: (Long, Long) -> Unit
+    ): ReaderBlogSectionUiState {
+        return buildHeaderSection(post, onPostHeaderViewClicked, ReaderPostListType.BLOG_PREVIEW)
     }
 
     suspend fun mapTagListToReaderInterestUiState(
@@ -169,18 +173,36 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
     }
 
+    private fun buildHeaderSection(
+        post: ReaderPost,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType
+    ) = buildHeaderSectionUiState(post, onPostHeaderViewClicked, postListType)
+
+    private fun buildHeaderSectionUiState(
+        post: ReaderPost,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType
+    ): ReaderBlogSectionUiState {
+        return ReaderBlogSectionUiState(
+                postId = post.postId,
+                blogId = post.blogId,
+                blogName = buildBlogName(post),
+                blogUrl = buildBlogUrl(post),
+                dateLine = buildDateLine(post),
+                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+                blogSectionClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+        )
+    }
+
     private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
             readerTagList.indexOf(readerTag) != lastIndex
 
     private fun buildOnPostHeaderViewClicked(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType
-    ): PostHeaderClickData? {
-        return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
-            PostHeaderClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
-        } else {
-            null
-        }
+    ): ReaderBlogSectionClickData? {
+        return ReaderBlogSectionClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
     }
 
     private fun buildBlogUrl(post: ReaderPost) = post
