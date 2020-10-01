@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.accounts.login
 
-import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -10,15 +10,23 @@ import org.wordpress.android.R
 class LoginProloguePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val pages = listOf(
             Page(
-                    R.string.login_promo_title_37_percent,
-                    R.string.login_promo_text_unlock_the_power,
-                    R.drawable.img_illustration_promo
+                    R.string.login_promo_title_first,
+                    R.layout.login_intro_promo_first
+            ),
+             Page(
+                    R.string.login_promo_title_second,
+                    R.layout.login_intro_promo_second
+            )
+    ,
+             Page(
+                    R.string.login_promo_title_third,
+                    R.layout.login_intro_promo_third
             )
     )
 
     override fun getItem(position: Int): Fragment {
         val page = pages[position]
-        return LoginProloguePageFragment.newInstance(page.promoTitle, page.promoText, page.promoImage)
+        return LoginProloguePageFragment.newInstance(page.promoTitle, page.promoLayoutId)
     }
 
     override fun getCount(): Int {
@@ -27,7 +35,6 @@ class LoginProloguePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, 
 
     private data class Page(
         @StringRes val promoTitle: Int = 0,
-        @StringRes val promoText: Int = 0,
-        @DrawableRes val promoImage: Int = 0
+        @LayoutRes val promoLayoutId: Int = 0
     )
 }
