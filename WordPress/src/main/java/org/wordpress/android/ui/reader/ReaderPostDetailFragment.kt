@@ -1513,13 +1513,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             post: ReaderPost,
             headerView: ReaderPostDetailHeaderView
         ): ReaderPostDetailsHeaderUiState {
-            val onPostHeaderClicked = { postId: Long?, blogId: Long? ->
+            val onBlogSectionClicked = { postId: Long?, blogId: Long? ->
                 ReaderActivityLauncher.showReaderBlogPreview(context, post)
             }
             val onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) }
             return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
                     post,
-                    onPostHeaderClicked,
+                    onBlogSectionClicked,
                     onFollowButtonClicked
             )
         }

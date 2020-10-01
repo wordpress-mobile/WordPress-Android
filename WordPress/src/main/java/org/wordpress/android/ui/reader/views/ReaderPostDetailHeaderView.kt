@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.reader_post_detail_header_view.view.*
-import kotlinx.android.synthetic.main.reader_post_header.view.*
+import kotlinx.android.synthetic.main.reader_blog_section_view.view.*
 import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
@@ -50,21 +50,21 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         dot_separator.setVisible(blogSectionUiState.dotSeparatorVisibility)
         text_by.setVisible(uiState.authorName != null)
 
-        layout_post_header.setBackgroundResource(
-                layout_post_header.context.getDrawableResIdFromAttribute(
+        layout_blog_section.setBackgroundResource(
+                layout_blog_section.context.getDrawableResIdFromAttribute(
                         blogSectionUiState.blogSectionClickData?.background ?: 0
                 )
         )
         blogSectionUiState.blogSectionClickData?.onBlogSectionClicked?.let {
-            layout_post_header.setOnClickListener {
+            layout_blog_section.setOnClickListener {
                 blogSectionUiState.blogSectionClickData.onBlogSectionClicked.invoke(
                         blogSectionUiState.postId,
                         blogSectionUiState.blogId
                 )
             }
         } ?: run {
-            layout_post_header.setOnClickListener(null)
-            layout_post_header.isClickable = false
+            layout_blog_section.setOnClickListener(null)
+            layout_blog_section.isClickable = false
         }
     }
 

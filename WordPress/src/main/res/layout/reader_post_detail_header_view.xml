@@ -15,8 +15,8 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="text_title" />
 
-    <include layout="@layout/reader_post_header"
-        android:id="@+id/layout_post_header"
+    <include layout="@layout/reader_blog_section_view"
+        android:id="@+id/layout_blog_section"
         android:layout_width="0dp"
         android:layout_height="@dimen/reader_post_header_height"
         android:importantForAccessibility="no"
@@ -38,7 +38,7 @@
         android:text="@string/reader_post_details_header_by"
         android:includeFontPadding="false"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_post_header"
+        app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
         tools:text="By"/>
 
     <com.google.android.material.textview.MaterialTextView
@@ -50,7 +50,7 @@
         android:layout_marginStart="@dimen/margin_small"
         android:includeFontPadding="false"
         app:layout_constraintStart_toEndOf="@id/text_by"
-        app:layout_constraintTop_toBottomOf="@id/layout_post_header"
+        app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
         tools:text="text_author"/>
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton
