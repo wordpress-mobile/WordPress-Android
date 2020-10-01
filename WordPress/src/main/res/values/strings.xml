@@ -2389,6 +2389,14 @@
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
     <string name="login_promo_viewpager_content_description">Introduction</string>
+    <string name="login_promo_title_first">Welcome to the world\'s most popular website builder.</string>
+    <string name="login_promo_title_second">With the powerful editor you can post on the go.</string>
+    <string name="login_promo_title_third">See comments and notification in real time.</string>
+    <string name="login_promo_title_fourth">Watch your audience grow with in-depth analytics.</string>
+    <string name="login_promo_title_fifth">Follow your favorite sites and discover new ads.</string>
+    <string name="login_promo_second_promo_first_subtitle"><b>Madison Ruiz</b> liked your post</string>
+    <string name="login_promo_second_promo_second_subtitle">You received <b>50 likes</b> on your site today</string>
+    <string name="login_promo_second_promo_third_subtitle"><b>Johan Brandt</b> responded to your post</string>
     <string name="login_promo_title_37_percent">37\% of the web is built on WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
