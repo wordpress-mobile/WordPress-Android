@@ -414,6 +414,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
     }
 
+    override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
+        // TODO will implement later
+    }
+
     private fun openPrepublishingBottomSheet() {
         val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
         if (fragment == null) {
