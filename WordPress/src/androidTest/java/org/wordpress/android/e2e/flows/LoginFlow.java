@@ -17,7 +17,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
@@ -33,24 +32,19 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow enterEmailAddress() {
+    public LoginFlow enterEmailAddress(String emailAddress) {
         // Email Address Screen – Fill it in and click "Continue"
         // See LoginEmailFragment
-        populateTextField(R.id.input, E2E_WP_COM_USER_EMAIL);
+        populateTextField(R.id.input, emailAddress);
         clickOn(R.id.login_continue_button);
         return this;
     }
 
-    public LoginFlow enterPassword() {
-        // Receive Magic Link or Enter Password Screen – Choose "Or type your password"
-        // See LoginMagicLinkRequestFragment
-        clickOn(R.id.login_enter_password);
-
+    public LoginFlow enterPassword(String password) {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
-        populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
+        populateTextField(R.id.input, password);
         clickOn(R.id.primary_button);
-
         return this;
     }
 
@@ -68,12 +62,15 @@ public class LoginFlow {
         waitForElementToBeDisplayed(R.id.nav_sites);
     }
 
-    public LoginFlow chooseMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
-        // Receive Magic Link or Enter Password Screen – Choose "Send link by email"
-        // See LoginMagicLinkRequestFragment
-        clickOn(R.id.login_request_magic_link);
+    public LoginFlow chooseMagicLink() {
+        // Password Screen – Choose "Get a login link by email"
+        // See LoginEmailPasswordFragment
+        clickOn(R.id.login_get_email_link);
+        return this;
+    }
 
-        // Should see "Check email" button
+    public LoginFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+        // Magic Link Sent Screen – Should see "Check email" button
         // See LoginMagicLinkSentFragment
         waitForElementToBeDisplayed(R.id.login_open_email_client);
 

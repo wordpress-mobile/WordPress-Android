@@ -38,6 +38,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
@@ -185,6 +186,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
@@ -284,6 +286,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_CONTENT = "pageContent";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -356,6 +359,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
+
+
+    private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
 
     private Handler mShowPrepublishingBottomSheetHandler;
     private Runnable mShowPrepublishingBottomSheetRunnable;
@@ -470,7 +477,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
             mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
             // initialize settings with locally cached values, fetch remote on first pass
-            mSiteSettings.init(true);
+            fetchSiteSettings();
         }
 
         // Check whether to show the visual editor
@@ -487,12 +494,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         // Set up the action bar.
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        mAppBarLayout = findViewById(R.id.appbar_main);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
@@ -659,6 +668,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
     }
 
+    private void fetchSiteSettings() {
+        mSiteSettings.init(true);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
@@ -724,15 +737,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackgroundResource(R.drawable.tab_layout_background);
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mEditPostRepository.isPage() ? R.string.page_settings : R.string.post_settings);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.settings_fragment_root);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_PUBLISH_SETTINGS) {
                     setTitle(R.string.publish_date);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mAppBarLayout, View.NO_ID);
+                    mToolbar.setBackground(null);
                 } else if (position == PAGE_HISTORY) {
                     setTitle(R.string.history_title);
                     mEditorPhotoPicker.hidePhotoPicker();
+                    mAppBarLayout.setLiftOnScrollTargetViewId(R.id.empty_recycler_view);
+                    mToolbar.setBackground(null);
                 }
             }
         });
@@ -1039,7 +1060,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ((AztecEditorFragment) mEditorFragment).enableMediaMode(false);
         }
     }
-    
+
     /*
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
@@ -1075,7 +1096,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     launchVideoLibrary();
                     break;
                 case WP_MEDIA:
-                    ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+                    mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                     break;
                 case STOCK_MEDIA:
                     final int requestCode = allowMultipleSelection
@@ -1605,7 +1626,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                     .getId()) {
-                setFeaturedImageId(media.getMediaId());
+                setFeaturedImageId(media.getMediaId(), false);
             }
         }
     }
@@ -2101,7 +2122,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private static final int NUM_PAGES_EDITOR = 4;
         SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         }
 
         @Override
@@ -2205,12 +2226,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
-        boolean isUnsupportedBlockEditorEnabled = (mSite.isWPCom() || mIsJetpackSsoEnabled)
-                && "gutenberg".equals(mSite.getWebEditor());
+        boolean isUnsupportedBlockEditorEnabled =
+                mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
+
+        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
+                unsupportedBlockEditorSwitch,
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
@@ -2288,6 +2312,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (ACTION_REBLOG.equals(action)) {
                 setPostContentFromReblogAction();
             }
+        }
+
+        if (mIsPage) {
+            setPageContent();
         }
 
         // Set post title and content
@@ -2379,9 +2407,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void setFeaturedImageId(final long mediaId) {
+    private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
         }
     }
 
@@ -2412,6 +2440,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    /**
+     * Sets the page content
+     */
+    private void setPageContent() {
+        Intent intent = getIntent();
+        final String content = intent.getStringExtra(EXTRA_PAGE_CONTENT);
+        if (content != null && !content.isEmpty()) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2429,6 +2478,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                 case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STORIES_PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
@@ -2466,7 +2516,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // user chose a featured image
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId);
+                        setFeaturedImageId(mediaId, true);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
@@ -2546,6 +2596,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
             }
+        }
+
+        if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
+            fetchSiteSettings();
         }
     }
 
@@ -2703,29 +2757,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mEditorPhotoPicker.showPhotoPicker(mSite);
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+            mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         }
     }
 
     @Override
     public void onAddMediaImageClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
+        mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
     @Override
     public void onAddMediaVideoClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
-        ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
+        mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_VIDEO_PICKER);
     }
 
     @Override
     public void onAddLibraryMediaClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
         if (allowMultipleSelection) {
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
+            mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else {
-            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
+            mMediaPickerLauncher
+                    .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_MEDIA_PICKER);
         }
     }
 
@@ -3512,5 +3567,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         return "";
+    }
+
+    @Override
+    public void showJetpackSettings() {
+        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 }

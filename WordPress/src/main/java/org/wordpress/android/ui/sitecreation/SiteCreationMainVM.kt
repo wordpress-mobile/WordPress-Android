@@ -75,7 +75,7 @@ class SiteCreationMainVM @Inject constructor(
             tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
         } else {
-            siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
+            siteCreationState = requireNotNull(savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
         }

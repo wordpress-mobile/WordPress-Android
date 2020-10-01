@@ -18,14 +18,18 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.WPActivityUtils
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
@@ -77,10 +81,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         }
 
         createBlankPageButton.setOnClickListener {
-            closeModal()
-            viewModel.createPage()
+            viewModel.onCreatePageClicked()
         }
-        createPageButton.setOnClickListener { /* TODO */ }
+        createPageButton.setOnClickListener {
+            viewModel.onCreatePageClicked()
+        }
         previewButton.setOnClickListener { /* TODO */ }
 
         setScrollListener()
@@ -108,7 +113,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
-        setStatusBarColor(this)
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onAttach(context: Context) {
@@ -122,7 +127,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun closeModal() {
-        WPActivityUtils.setLightStatusBar(activity?.window, false)
         viewModel.dismiss()
     }
 
@@ -135,17 +139,36 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
                 is LoadingUiState -> {
+                    setTitleVisibility(uiState.isHeaderVisible)
+                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
                 }
                 is ContentUiState -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                     setButtonsVisibility(uiState.buttonsUiState)
                     setTitleVisibility(uiState.isHeaderVisible)
+                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
                 }
                 is ErrorUiState -> {
+                    setTitleVisibility(uiState.isHeaderVisible)
+                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
+                    ToastUtils.showToast(activity, uiState.message, SHORT)
                 }
             }
         })
+
+        viewModel.onCategorySelected.observe(this, Observer {
+            it?.applyIfNotHandled {
+                layoutsRecyclerView?.smoothScrollToPosition(0)
+            }
+        })
+    }
+
+    private fun showLoadingSkeleton(skeleton: Boolean) {
+        categoriesSkeleton.setVisible(skeleton)
+        categoriesRecyclerView.setVisible(!skeleton)
+        layoutsSkeleton.setVisible(skeleton)
+        layoutsRecyclerView.setVisible(!skeleton)
     }
 
     private fun setButtonsVisibility(uiState: ButtonsUiState) {
@@ -155,11 +178,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val parentLayout =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            parentLayout?.let { it ->
+        dialog.setOnShowListener {
+            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let {
                 val behaviour = BottomSheetBehavior.from(it)
                 setupFullHeight(it)
                 behaviour.skipCollapsed = true
@@ -172,14 +192,5 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         val layoutParams = bottomSheet.layoutParams
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
         bottomSheet.layoutParams = layoutParams
-    }
-
-    private fun setStatusBarColor(dialog: BottomSheetDialog) {
-        dialog.behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                WPActivityUtils.setLightStatusBar(activity?.window, newState == BottomSheetBehavior.STATE_EXPANDED)
-            }
-        })
     }
 }

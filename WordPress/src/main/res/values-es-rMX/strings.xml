@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-25 14:51:39+0000
+Translation-Revision-Date: 2020-09-11 13:54:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
+    <string name="show_n_hidden_items_desc">%1$s elementos más</string>
+    <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>
+    <string name="error_media_xmlrcp_server_error">Ha ocurrido un error interno del servidor</string>
+    <string name="reader_welcome_banner">Bienvenido al Lector. Descubre millones de blogs a tu alcance.</string>
+    <string name="mlp_layout_selected">%s seleccionado</string>
+    <string name="gutenberg_native_angle">Ángulo</string>
     <string name="gutenberg_native_select_a_layout">Seleccionar un layout</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Nota: el layout de la columna puede variar entre temas y tamaños de pantalla</string>
     <string name="create_post_fab_tooltip">Crear una entrada</string>
@@ -93,7 +99,6 @@ Language: es_MX
     <string name="my_site_bottom_sheet_add_story">Entrada de la historia</string>
     <string name="photo_picker_choose_file">Elegir el dispositivo</string>
     <string name="pick_file">Añadir un archivo</string>
-    <string name="media_error_file_not_allowed_on_free_plan">Este tipo de archivo no está permitido en un plan gratuito</string>
     <string name="gutenberg_native_replace_video">Reemplazar el video</string>
     <string name="gutenberg_native_replace_image_or_video">Reemplazar la imagen o video</string>
     <string name="continue_with_google_terms_of_service_text">Si continúas con Google y aún no tienes una cuenta de WordPress.com, crearás una cuenta y aceptas nuestros %1$stérminos del servicio%2$s.</string>
@@ -984,9 +989,6 @@ Language: es_MX
     <string name="menu_history">Historia</string>
     <string name="pages_pending">Pendiente de revisión</string>
     <string name="pages_open_page_error">La página seleccionada no está disponible</string>
-    <string name="news_card_announcement_action_sample_announcement">[Leer más]</string>
-    <string name="news_card_announcement_content_sample_announcement">[¿No tienes tiempo para leer ahora mismo?] No hay problema, guarda entradas para cuando puedas.]</string>
-    <string name="news_card_announcement_title_sample_announcement">[Nueva característica disponible]</string>
     <string name="pages_empty_trashed">No tienes ninguna página en la papelera</string>
     <string name="pages_empty_scheduled">No tienes ninguna página programada</string>
     <string name="pages_empty_drafts">No tienes ninguna página en probador</string>
@@ -1018,7 +1020,6 @@ Language: es_MX
     <string name="page_status_change_error">Hubo un problema al cambiar el estado de la página</string>
     <string name="page_delete_error">Hubo un problema al borrar la página</string>
     <string name="set_parent">Hacer superior</string>
-    <string name="dismiss">descartar</string>
     <string name="quick_start_focus_point_description">toca aquí</string>
     <string name="quick_start_list_create_site_title">Crea tu sitio</string>
     <string name="quick_start_list_create_site_subtitle">Pon tu sitio en marcha.</string>

@@ -10,7 +10,7 @@
         android:layout_width="@dimen/author_spinner_avatar_size"
         android:layout_height="@dimen/author_spinner_avatar_size"
         android:layout_gravity="center"
-        android:background="@drawable/bg_oval_transparent_stroke_white"
+        android:background="@drawable/bg_oval_transparent_stroke_on_surface_lowest"
         android:padding="@dimen/author_spinner_avatar_padding"
         tools:src="@drawable/bg_oval_neutral_30_multiple_users_white_40dp"/>
 </FrameLayout>

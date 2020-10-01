@@ -13,6 +13,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
@@ -122,6 +123,16 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = BLOCK_SITE,
                             label = UiStringRes(R.string.reader_menu_block_blog),
+                            labelColor = R.attr.colorOnSurface,
+                            iconRes = R.drawable.ic_block_white_24dp,
+                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            onClicked = onButtonClicked
+                    )
+            )
+            menuItems.add(
+                    SecondaryAction(
+                            type = REPORT_POST,
+                            label = UiStringRes(R.string.reader_menu_report_post),
                             labelColor = R.attr.colorOnSurface,
                             iconRes = R.drawable.ic_block_white_24dp,
                             iconColor = R.attr.wpColorOnSurfaceMedium,

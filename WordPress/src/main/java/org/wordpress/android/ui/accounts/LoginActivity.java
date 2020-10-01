@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.AuthOptions;
 import org.wordpress.android.login.GoogleFragment;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
@@ -148,10 +149,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             switch (getLoginMode()) {
                 case FULL:
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
+                    mIsSignupFromLoginEnabled = true;
                     loginFromPrologue();
                     break;
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
+                    mIsSignupFromLoginEnabled = true;
                     if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                         checkSmartLockPasswordAndStartLogin();
                     } else {
@@ -163,8 +166,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
                     break;
                 case JETPACK_STATS:
-                    mIsSignupFromLoginEnabled = true;
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
+                    mIsSignupFromLoginEnabled = true;
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
@@ -200,7 +203,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loginFromPrologue() {
-        mIsSignupFromLoginEnabled = true;
         showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             mIsSmartLockTriggeredFromPrologue = true;
@@ -361,9 +363,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void jumpToUsernamePassword(String username, String password) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
-                "wordpress.com", "wordpress.com", "WordPress.com", "https://s0.wp.com/i/webclip.png", username,
-                password, true);
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance("wordpress.com", "wordpress.com", username, password, true);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
@@ -486,18 +487,40 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     // LoginListener implementation methods
 
     @Override
-    public void gotWpcomEmail(String email, boolean verifyEmail) {
+    public void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions) {
         initSmartLockIfNotFinished(false);
-        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
-            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
-                    email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
-                    mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, verifyEmail);
-            slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+        boolean isMagicLinkEnabled =
+                getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT;
+
+        if (authOptions != null) {
+            if (authOptions.isPasswordless()) {
+                showMagicLinkRequestScreen(email, verifyEmail, false, true);
+            } else {
+                showEmailPasswordScreen(email, verifyEmail, isMagicLinkEnabled);
+            }
         } else {
-            LoginEmailPasswordFragment loginEmailPasswordFragment =
-                    LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
-            slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+            if (isMagicLinkEnabled) {
+                showMagicLinkRequestScreen(email, verifyEmail, true, false);
+            } else {
+                showEmailPasswordScreen(email, verifyEmail, false);
+            }
         }
+    }
+
+    private void showEmailPasswordScreen(String email, boolean verifyEmail, boolean allowMagicLink) {
+        LoginEmailPasswordFragment loginEmailPasswordFragment = LoginEmailPasswordFragment
+                .newInstance(email, null, null, null, false, allowMagicLink, verifyEmail);
+        slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+    }
+
+    private void showMagicLinkRequestScreen(String email, boolean verifyEmail, boolean allowPassword,
+                                            boolean forceRequestAtStart) {
+        AuthEmailPayloadScheme scheme = AuthEmailPayloadScheme.WORDPRESS;
+        String jetpackConnectionSource = mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null;
+        LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment
+                .newInstance(email, scheme, mIsJetpackConnect, jetpackConnectionSource, verifyEmail, allowPassword,
+                        forceRequestAtStart);
+        slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
     }
 
     @Override
@@ -540,8 +563,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void showMagicLinkSentScreen(String email) {
-        LoginMagicLinkSentFragment loginMagicLinkSentFragment = LoginMagicLinkSentFragment.newInstance(email);
+    public void showMagicLinkSentScreen(String email, boolean allowPassword) {
+        LoginMagicLinkSentFragment loginMagicLinkSentFragment =
+                LoginMagicLinkSentFragment.newInstance(email, allowPassword);
         slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
     }
 
@@ -591,6 +615,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void useMagicLinkInstead(String email, boolean verifyEmail) {
+        showMagicLinkRequestScreen(email, verifyEmail, false, true);
+    }
+
+    @Override
     public void needs2fa(String email, String password) {
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstance(email, password);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
@@ -626,16 +655,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         loggedInAndFinish(oldSitesIds, false);
     }
 
-    public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
-                siteAddress, siteAddress, siteName, siteIconUrl, null, null, true);
-        slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
+    @Override
+    public void gotWpcomSiteInfo(String siteAddress) {
+        LoginEmailFragment loginEmailFragment = LoginEmailFragment.newInstance(false, false, true, siteAddress);
+        slideInFragment(loginEmailFragment, true, LoginEmailFragment.TAG);
     }
 
     @Override
     public void gotXmlRpcEndpoint(String inputSiteAddress, String endpointAddress) {
-        LoginUsernamePasswordFragment loginUsernamePasswordFragment = LoginUsernamePasswordFragment.newInstance(
-                inputSiteAddress, endpointAddress, null, null, null, null, false);
+        LoginUsernamePasswordFragment loginUsernamePasswordFragment =
+                LoginUsernamePasswordFragment.newInstance(inputSiteAddress, endpointAddress, null, null, false);
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
@@ -698,8 +727,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void addGoogleLoginFragment() {
-        addGoogleFragment(LoginGoogleFragment.newInstance(mIsSignupFromLoginEnabled), LoginGoogleFragment.TAG);
+    public void addGoogleLoginFragment(boolean isSignupFromLoginEnabled) {
+        addGoogleFragment(LoginGoogleFragment.newInstance(isSignupFromLoginEnabled), LoginGoogleFragment.TAG);
     }
 
     @Override
