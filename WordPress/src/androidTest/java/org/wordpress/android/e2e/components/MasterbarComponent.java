@@ -3,7 +3,7 @@ package org.wordpress.android.e2e.components;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 

@@ -58,6 +58,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceive
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -312,13 +313,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         );
                     }
                 },
+                new OnGutenbergDidSendButtonPressedActionListener() {
+                    @Override
+                    public void gutenbergDidSendButtonPressedAction(String buttonType) {
+                        mEditorFragmentListener.showJetpackSettings();
+                    }
+                },
                 mEditorFragmentListener::getMention,
                 new OnStarterPageTemplatesTooltipShownEventListener() {
                     @Override
                     public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
                         mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
                     }
-                    
+
                     @Override
                     public boolean onRequestStarterPageTemplatesTooltipShown() {
                         return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();

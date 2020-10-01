@@ -80,7 +80,6 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -102,7 +101,6 @@ import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderFragment;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -328,7 +326,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         // ensure the deep linking activity is enabled. It may have been disabled elsewhere and failed to get re-enabled
-        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+        WPActivityUtils.enableReaderDeeplinks(this);
 
         // monitor whether we're not the default app
         trackDefaultApp();
@@ -442,7 +440,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (mModalLayoutPickerFeatureConfig.isEnabled()) {
                         mMLPViewModel.show();
                     } else {
-                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                        handleNewPageAction(""/*empty page*/, PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     }
                     break;
                 case CREATE_NEW_STORY:
@@ -465,8 +463,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         });
 
-        mMLPViewModel.getOnCreateNewPageRequested().observe(this, action -> {
-            handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+        mMLPViewModel.getOnCreateNewPageRequested().observe(this, content -> {
+            handleNewPageAction(content, PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -562,9 +560,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // initialized with the most restrictive rights case. This is OK and will be frequently checked
         // to normalize the UI state whenever mSelectedSite changes.
         // It also means that the ViewModel must accept a nullable SiteModel.
-        mViewModel.start(
-                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                mSelectedSite);
+        mViewModel.start(mSelectedSite);
     }
 
     private @Nullable String getAuthToken() {
@@ -778,7 +774,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // ensure the deep linking activity is enabled. We might be returning from the external-browser
         // viewing of a post
-        WPActivityUtils.enableComponent(this, ReaderPostPagerActivity.class);
+        WPActivityUtils.enableReaderDeeplinks(this);
 
         // We need to track the current item on the screen when this activity is resumed.
         // Ex: Notifications -> notifications detail -> back to notifications
@@ -806,7 +802,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        mViewModel.onResume(mSelectedSite);
+        mViewModel.onResume(mSelectedSite,
+                mSelectedSite != null && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE);
 
         mFirstResume = false;
     }
@@ -882,7 +879,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
     }
 
-    private void handleNewPageAction(PagePostCreationSourcesDetail source) {
+    private void handleNewPageAction(String content, PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -892,7 +889,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewPageForResult(this, site, source);
+            ActivityLauncher.addNewPageForResult(this, site, content, source);
         }
     }
 
@@ -917,11 +914,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (site != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            mMediaPickerLauncher.showPhotoPickerForResult(
+            mMediaPickerLauncher.showStoriesPhotoPickerForResult(
                     this,
-                    MediaBrowserType.WP_STORIES_MEDIA_PICKER,
-                    site,
-                    null // this is not required, only used for featured image in normal Posts
+                    site
             );
         }
     }
@@ -1082,6 +1077,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getNotificationsListFragment().onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+            case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
                 Fragment fragment = mBottomNav.getActiveFragment();
                 if (fragment instanceof MySiteFragment) {

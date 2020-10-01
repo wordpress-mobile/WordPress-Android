@@ -158,6 +158,18 @@ class AppPrefsWrapper @Inject constructor() {
     fun isPostListFabTooltipDisabled() = AppPrefs.isPostListFabTooltipDisabled()
     fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setPostListFabTooltipDisabled(disable)
 
+    fun hasManualFeatureConfig(featureKey: String): Boolean {
+        return AppPrefs.hasManualFeatureConfig(featureKey)
+    }
+
+    fun setManualFeatureConfig(isEnabled: Boolean, featureKey: String) {
+        AppPrefs.setManualFeatureConfig(isEnabled, featureKey)
+    }
+
+    fun getManualFeatureConfig(featureKey: String): Boolean {
+        return AppPrefs.getManualFeatureConfig(featureKey)
+    }
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

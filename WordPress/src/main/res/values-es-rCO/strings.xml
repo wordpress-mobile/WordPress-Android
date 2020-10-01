@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-25 15:03:51+0000
+Translation-Revision-Date: 2020-09-18 08:02:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="reader_menu_report_post">Informar de esta entrada</string>
+    <string name="gutenberg_native_angle">Ángulo</string>
+    <string name="mlp_layout_selected">%s seleccionado</string>
+    <string name="reader_welcome_banner">Bienvenido al Lector. Descubre millones de blogs a tu alcance.</string>
+    <string name="error_media_xmlrcp_server_error">Ha ocurrido un error interno del servidor</string>
+    <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>
+    <string name="show_n_hidden_items_desc">%1$s elementos más</string>
     <string name="login_log_in_for_share_intent">Accede a WordPress.com para compartir el contenido.</string>
     <string name="enter_site_address_share_intent">Introduce la dirección de tu sitio WordPress en el que quieras compartir el contenido.</string>
     <string name="jetpack_disconnect_error_toast">Error al desconectar el sitio</string>

@@ -2,141 +2,143 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/webview_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorSurface"
-            app:contentInsetEnd="@dimen/toolbar_content_offset_end"
-            app:contentInsetLeft="@dimen/toolbar_content_offset"
-            app:contentInsetRight="@dimen/toolbar_content_offset_end"
-            app:contentInsetStart="@dimen/toolbar_content_offset"
-            app:subtitleTextColor="?attr/wpColorOnSurfaceMedium"
-            app:theme="@style/WordPress.WebPreview.ActionBar" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <RelativeLayout
-        android:id="@+id/preview_container"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/webview_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/appbar">
+        android:layout_above="@+id/navbar_container">
 
-        <org.wordpress.android.ui.WPWebView
-            android:id="@+id/webView"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:liftOnScrollTargetViewId="@+id/webView">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tab_layout_background"
+                android:duplicateParentState="true"
+                app:contentInsetEnd="@dimen/toolbar_content_offset_end"
+                app:contentInsetLeft="@dimen/toolbar_content_offset"
+                app:contentInsetRight="@dimen/toolbar_content_offset_end"
+                app:contentInsetStart="@dimen/toolbar_content_offset"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:subtitleTextColor="?attr/wpColorOnSurfaceMedium"
+                app:theme="@style/WordPress.ActionBar" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            android:id="@+id/preview_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/navbar_container"
-            android:layout_alignParentTop="true" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include
-            layout="@layout/progress_layout"
+            <org.wordpress.android.widgets.NestedWebView
+                android:id="@+id/webView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include
+                layout="@layout/progress_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/navbar_container"
+                android:layout_alignParentTop="true"
+                tools:visibility="gone" />
+
+        </RelativeLayout>
+
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/actionable_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/navbar_container"
-            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            app:aevButton="@string/retry"
+            app:aevImage="@drawable/img_illustration_cloud_off_152dp"
+            app:aevSubtitle="@string/error_network_connection"
+            app:aevTitle="@string/error_browser_no_network"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:visibility="gone" />
 
-        <TextView
-            android:id="@+id/desktop_preview_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/navbar_container"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/preview_mode_indicator_background"
-            android:padding="@dimen/margin_medium"
-            android:text="@string/web_preview_desktop"
-            android:textColor="?attr/colorOnPrimarySurface" />
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/snackbar_anchor"
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/navbar_container" />
+            android:layout_height="@dimen/progress_bar_height"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/progressbar_horizontal"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <TextView
+        android:id="@+id/desktop_preview_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/navbar_container"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/preview_mode_indicator_background"
+        android:padding="@dimen/margin_medium"
+        android:text="@string/web_preview_desktop"
+        android:textColor="?attr/colorOnPrimarySurface" />
+
+    <LinearLayout
+        android:id="@+id/navbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
-            android:id="@+id/navbar_container"
+            android:id="@+id/navbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+            android:layout_height="@dimen/web_preview_navbar_height"
+            android:orientation="horizontal"
+            android:weightSum="100">
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_size"
-                android:background="?android:attr/listDivider" />
+            <ImageButton
+                android:id="@+id/back_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/navigate_back_desc"
+                android:src="@drawable/ic_arrow_left_white_24dp" />
 
-            <LinearLayout
-                android:id="@+id/navbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/web_preview_navbar_height"
-                android:orientation="horizontal"
-                android:weightSum="100">
+            <ImageButton
+                android:id="@+id/forward_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/navigate_forward_desc"
+                android:src="@drawable/ic_arrow_right_white_24dp" />
 
-                <ImageButton
-                    android:id="@+id/back_button"
-                    style="@style/WebPreviewNavbarButton"
-                    android:contentDescription="@string/navigate_back_desc"
-                    android:src="@drawable/ic_arrow_left_white_24dp" />
+            <ImageButton
+                android:id="@+id/share_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/share_desc"
+                android:src="@drawable/ic_share_white_24dp" />
 
-                <ImageButton
-                    android:id="@+id/forward_button"
-                    style="@style/WebPreviewNavbarButton"
-                    android:contentDescription="@string/navigate_forward_desc"
-                    android:src="@drawable/ic_arrow_right_white_24dp" />
+            <ImageButton
+                android:id="@+id/external_browser_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/open_external_link_desc"
+                android:src="@drawable/ic_globe_white_24dp" />
 
-                <ImageButton
-                    android:id="@+id/share_button"
-                    style="@style/WebPreviewNavbarButton"
-                    android:contentDescription="@string/share_desc"
-                    android:src="@drawable/ic_share_white_24dp" />
+            <ImageButton
+                android:id="@+id/preview_type_selector_button"
+                style="@style/WebPreviewNavbarButton"
+                android:contentDescription="@string/preview_type_desc"
+                android:src="@drawable/ic_devices_white_24dp" />
 
-                <ImageButton
-                    android:id="@+id/external_browser_button"
-                    style="@style/WebPreviewNavbarButton"
-                    android:contentDescription="@string/open_external_link_desc"
-                    android:src="@drawable/ic_globe_white_24dp" />
-
-                <ImageButton
-                    android:id="@+id/preview_type_selector_button"
-                    style="@style/WebPreviewNavbarButton"
-                    android:contentDescription="@string/preview_type_desc"
-                    android:src="@drawable/ic_devices_white_24dp" />
-
-            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/appbar"
-        android:visibility="gone"
-        app:aevButton="@string/retry"
-        app:aevImage="@drawable/img_illustration_cloud_off_152dp"
-        app:aevSubtitle="@string/error_network_connection"
-        app:aevTitle="@string/error_browser_no_network"
-        tools:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/progress_bar_height"
-        android:layout_alignTop="@+id/preview_container"
-        android:indeterminate="false"
-        android:progressDrawable="@drawable/progressbar_horizontal" />
-
+    </LinearLayout>
 </RelativeLayout>

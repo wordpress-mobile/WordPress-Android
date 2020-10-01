@@ -158,7 +158,6 @@ class ReaderDiscoverViewModel @Inject constructor(
                         isDiscover = true,
                         photonWidth = photonWidth,
                         photonHeight = photonHeight,
-                        isBookmarkList = false,
                         onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
                         onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
                         onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,

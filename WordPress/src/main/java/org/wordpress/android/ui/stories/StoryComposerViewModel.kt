@@ -35,9 +35,11 @@ class StoryComposerViewModel @Inject constructor(
     private val setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase,
     private val postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper,
     private val dispatcher: Dispatcher
-) : ViewModel(), LifecycleOwner {
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+) : ViewModel() {
+    private val lifecycleOwner = object : LifecycleOwner {
+        val lifecycleRegistry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    }
 
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var site: SiteModel
@@ -53,7 +55,7 @@ class StoryComposerViewModel @Inject constructor(
     val submitButtonClicked: LiveData<Event<Unit>> = _submitButtonClicked
 
     init {
-        lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 
     private val _trackEditorCreatedPost = MutableLiveData<Event<Unit>>()
@@ -84,7 +86,7 @@ class StoryComposerViewModel @Inject constructor(
             systemNotificationsTracker.trackTappedNotification(it)
         }
 
-        lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
         updateStoryPostWithChanges()
     }
 
@@ -121,7 +123,7 @@ class StoryComposerViewModel @Inject constructor(
     }
 
     private fun updateStoryPostWithChanges() {
-        editPostRepository.postChanged.observe(this, Observer {
+        editPostRepository.postChanged.observe(lifecycleOwner, Observer {
             savePostToDbUseCase.savePostToDb(editPostRepository, site)
         })
     }
@@ -151,7 +153,7 @@ class StoryComposerViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         postEditorAnalyticsSession.end()
     }
 }

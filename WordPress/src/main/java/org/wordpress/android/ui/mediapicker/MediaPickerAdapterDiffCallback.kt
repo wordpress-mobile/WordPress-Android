@@ -24,9 +24,9 @@ class MediaPickerAdapterDiffCallback(
         val oldItem = oldItems[oldItemPosition]
         val updatedItem = updatedItems[newItemPosition]
         return when {
-            oldItem is PhotoItem && updatedItem is PhotoItem -> oldItem.uri == updatedItem.uri
-            oldItem is VideoItem && updatedItem is VideoItem -> oldItem.uri == updatedItem.uri
-            oldItem is FileItem && updatedItem is FileItem -> oldItem.uri == updatedItem.uri
+            oldItem is PhotoItem && updatedItem is PhotoItem -> oldItem.identifier == updatedItem.identifier
+            oldItem is VideoItem && updatedItem is VideoItem -> oldItem.identifier == updatedItem.identifier
+            oldItem is FileItem && updatedItem is FileItem -> oldItem.identifier == updatedItem.identifier
             oldItem is NextPageLoader && updatedItem is NextPageLoader -> true
             else -> false
         }

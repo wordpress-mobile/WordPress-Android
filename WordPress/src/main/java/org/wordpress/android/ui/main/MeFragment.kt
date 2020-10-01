@@ -281,7 +281,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         } else {
             getString(R.string.sign_out_wpcom_confirm_with_no_changes)
         }
-        MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder(requireActivity())
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
@@ -384,7 +384,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))
