@@ -57,7 +57,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:includeFontPadding="false"
-            android:inputType="none"
+            android:inputType="textMultiLine|textNoSuggestions"
             android:text="I am so inspired by photographer Cameron Karsten's work. I will be trying these techniques on my next"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
@@ -122,7 +122,6 @@
     <com.google.android.material.button.MaterialButton
         style="@style/Widget.LoginFlow.Prologue.CircularButton"
         android:id="@+id/fab_two"
-
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="52dp"

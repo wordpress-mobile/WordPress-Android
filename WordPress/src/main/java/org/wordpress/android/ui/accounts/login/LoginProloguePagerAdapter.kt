@@ -13,14 +13,21 @@ class LoginProloguePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, 
                     R.string.login_promo_title_first,
                     R.layout.login_intro_promo_first
             ),
-             Page(
+            Page(
                     R.string.login_promo_title_second,
                     R.layout.login_intro_promo_second
-            )
-    ,
-             Page(
+            ),
+            Page(
                     R.string.login_promo_title_third,
                     R.layout.login_intro_promo_third
+            ),
+            Page(
+                    R.string.login_promo_title_fourth,
+                    R.layout.login_intro_promo_fourth
+            ),
+            Page(
+                    R.string.login_promo_title_fifth,
+                    R.layout.login_intro_promo_fifth
             )
     )
 

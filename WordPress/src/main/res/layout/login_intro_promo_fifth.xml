@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="320dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_one"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="60dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/avatar_one"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_user_grey_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="Pamela Nguyen"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_one"
+                app:layout_constraintStart_toEndOf="@+id/avatar_one"
+                app:layout_constraintTop_toTopOf="@+id/avatar_one" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/avatar_two"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_user_grey_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/avatar_one" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="Web News"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_two"
+                app:layout_constraintStart_toEndOf="@+id/avatar_two"
+                app:layout_constraintTop_toTopOf="@+id/avatar_two" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/avatar_three"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_user_grey_24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/avatar_two" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="Rock n' Roll Weekly"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_three"
+                app:layout_constraintStart_toEndOf="@+id/avatar_three"
+                app:layout_constraintTop_toTopOf="@+id/avatar_three" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_two"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="52dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_one">
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            app:chipSpacing="8dp">
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.LoginFlow.Prologue.Chip"
+                android:text="Art" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.LoginFlow.Prologue.Chip"
+                android:text="Cooking" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.LoginFlow.Prologue.Chip"
+                android:text="Football" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.LoginFlow.Prologue.Chip"
+                android:text="Gardening" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.LoginFlow.Prologue.Chip"
+                android:text="Music"
+                android:textAlignment="center" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.LoginFlow.Prologue.Chip"
+                android:text="Politics" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_three"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_two">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="4dp"
+            android:paddingTop="8dp"
+            tools:ignore="RtlSymmetry">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/image_one"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="My Top Ten Cafes"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/image_one"
+                app:layout_constraintStart_toStartOf="@+id/image_one"
+                app:layout_constraintTop_toBottomOf="@+id/image_one" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/image_two"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@+id/image_one"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="The World's Best Fans"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/image_two"
+                app:layout_constraintStart_toStartOf="@+id/image_two"
+                app:layout_constraintTop_toBottomOf="@+id/image_two" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/image_three"
+                android:layout_width="64dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@+id/image_two"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Museums in London"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@+id/image_three"
+                app:layout_constraintStart_toStartOf="@+id/image_three"
+                app:layout_constraintTop_toBottomOf="@+id/image_three" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_one"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="128dp"
+        android:backgroundTint="#E9C852"
+        app:borderWidth="0dp"
+        app:icon="@drawable/ic_star_white_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_two"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="46dp"
+        android:backgroundTint="#8E5198"
+        app:icon="@drawable/ic_bookmark_outline_white_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/card_three"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_three"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="#D65A59"
+        app:icon="@drawable/ic_reader_follow_white_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
