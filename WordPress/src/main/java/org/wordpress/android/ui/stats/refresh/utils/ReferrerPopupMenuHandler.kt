@@ -2,8 +2,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import android.view.View
 import androidx.appcompat.widget.ListPopupWindow
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -19,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMe
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.MARK_AS_SPAM
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.OPEN_WEBSITE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,8 +29,6 @@ class ReferrerPopupMenuHandler
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
-    private val mutableMarkedAsSpam = MutableLiveData<Event<String>>()
-    val markedAsSpam: LiveData<Event<String>> = mutableMarkedAsSpam
 
     fun onMenuClick(
         view: View,
@@ -62,7 +57,7 @@ class ReferrerPopupMenuHandler
                                         statsGranularity
                                 )
                                 referrersUseCase.markReferrerAsSpam(url)
-                                mutableMarkedAsSpam.postValue(Event(url))
+                                referrersUseCase.fetch(refresh = true, forced = false)
                             }
                         }
                     }

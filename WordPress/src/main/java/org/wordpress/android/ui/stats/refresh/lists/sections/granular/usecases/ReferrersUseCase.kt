@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.EMPTY_SPACE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -118,8 +119,11 @@ class ReferrersUseCase(
                                 group.total ?: 0
                         )
                 if (group.referrers.isEmpty()) {
+                    val spam = group.spam != null && group.spam!!
+
                     val headerItem = ListItemWithIcon(
-                            icon = icon,
+                            icon = if (spam)
+                                R.drawable.ic_spam_red_24dp else icon,
                             iconUrl = if (icon == null) group.icon else null,
                             text = group.name,
                             value = group.total?.let { statsUtils.toFormattedString(it) },
@@ -127,7 +131,7 @@ class ReferrersUseCase(
                             navigationAction = group.url?.let {
                                 create(it, this::onItemClick)
                             },
-                            menuAction = { view -> this.onMenuClick(view, group.url, false) },
+                            menuAction = { view -> this.onMenuClick(view, group.url, spam) },
                             contentDescription = contentDescription
                     )
                     items.add(headerItem)
@@ -152,12 +156,13 @@ class ReferrersUseCase(
                             } else {
                                 NORMAL
                             }
+                            val spam = referrer.spam != null && referrer.spam!!
                             ListItemWithIcon(
-                                    icon = if (referrer.spam != null && referrer.spam!!)
+                                    icon = if (spam)
                                         R.drawable.ic_spam_red_24dp else referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     iconStyle = iconStyle,
-                                    textStyle = LIGHT,
+                                    textStyle = if (spam) LIGHT else TextStyle.NORMAL,
                                     text = referrer.name,
                                     value = statsUtils.toFormattedString(referrer.views),
                                     showDivider = false,

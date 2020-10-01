@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh
 
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import java.util.Date
 
 sealed class NavigationTarget {

@@ -222,12 +222,6 @@ class StatsListFragment : ViewPagerFragment() {
                 }
             }
         })
-
-        viewModel.markedAsSpam?.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                viewModel.onMarkedAsSpam()
-            }
-        })
     }
 
     private fun updateInsights(statsState: List<StatsBlock>) {
