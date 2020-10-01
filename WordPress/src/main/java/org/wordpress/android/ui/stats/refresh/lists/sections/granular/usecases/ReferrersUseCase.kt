@@ -242,6 +242,18 @@ class ReferrersUseCase(
         }
     }
 
+    suspend fun unmarkReferrerAsSpam(urlDomain: String) {
+        selectedDateProvider.getSelectedDate(statsGranularity)?.let {
+            referrersStore.unreportReferrerAsSpam(
+                    statsSiteProvider.siteModel,
+                    urlDomain,
+                    statsGranularity,
+                    LimitMode.Top(itemsToLoad),
+                    it
+            )
+        }
+    }
+
     data class SelectedGroup(val groupId: String? = null)
 
     class ReferrersUseCaseFactory

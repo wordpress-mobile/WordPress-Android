@@ -106,6 +106,7 @@ public final class AnalyticsTracker {
         // FIXME Verify p2 post before adding these stats
         STATS_REFERRERS_ITEM_LONG_PRESSED,
         STATS_REFERRERS_ITEM_MARKED_AS_SPAM,
+        STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM,
 
         STATS_CLICKS_VIEW_MORE_TAPPED,
         STATS_COUNTRIES_VIEW_MORE_TAPPED,

@@ -14,6 +14,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.MARK_AS_NOT_SPAM
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.MARK_AS_SPAM
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.ReferrerMenuAdapter.ReferrerMenuItem.OPEN_WEBSITE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -57,6 +58,16 @@ class ReferrerPopupMenuHandler
                                         statsGranularity
                                 )
                                 referrersUseCase.markReferrerAsSpam(url)
+                                referrersUseCase.fetch(refresh = true, forced = false)
+                            }
+                        }
+                        MARK_AS_NOT_SPAM -> {
+                            coroutineScope.launch {
+                                analyticsTrackerWrapper.trackGranular(
+                                        Stat.STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM,
+                                        statsGranularity
+                                )
+                                referrersUseCase.unmarkReferrerAsSpam(url)
                                 referrersUseCase.fetch(refresh = true, forced = false)
                             }
                         }
