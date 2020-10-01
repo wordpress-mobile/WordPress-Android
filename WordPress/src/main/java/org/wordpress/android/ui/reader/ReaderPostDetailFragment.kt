@@ -98,7 +98,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
@@ -109,6 +108,7 @@ import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
+import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderTagStrip
@@ -116,7 +116,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
-import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
@@ -208,7 +207,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
     @Inject internal lateinit var imageManager: ImageManager
-    @Inject lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
+    @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1517,24 +1516,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val onPostHeaderClicked = { postId: Long?, blogId: Long? ->
                 ReaderActivityLauncher.showReaderBlogPreview(context, post)
             }
-            val hasAccessToken = accountStore.hasAccessToken()
-            val textTitle = post
-                    .takeIf { post.hasTitle() }
-                    ?.title ?: getString(string.reader_untitled_post)
-
-            return ReaderPostDetailsHeaderUiState(
-                    textTitle,
-                    post.authorName,
-                    postUiStateBuilder.mapPostToPostHeaderUiState(
-                            post,
-                            onPostHeaderClicked
-                    ),
-                    FollowButtonUiState(
-                            onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) },
-                            isFollowed = post.isFollowedByCurrentUser,
-                            isEnabled = hasAccessToken,
-                            isVisible = hasAccessToken
-                    )
+            val onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) }
+            return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
+                    post,
+                    onPostHeaderClicked,
+                    onFollowButtonClicked
             )
         }
     }
