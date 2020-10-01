@@ -62,7 +62,26 @@ class ReferrersStore
         val payload = restClient.reportReferrerAsSpam(site, domain)
 
         if (payload.response != null || payload.error.type == StatsErrorType.ALREADY_SPAMMED) {
-            updateCacheWithMarkedSpam(site, granularity, date, domain, limitMode)
+            updateCacheWithMarkedSpam(site, granularity, date, domain, limitMode, true)
+        }
+        return@withDefaultContext when {
+            payload.isError -> OnReportReferrerAsSpam(payload.error)
+            payload.response != null -> OnReportReferrerAsSpam(payload.response)
+            else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    suspend fun unreportReferrerAsSpam(
+        site: SiteModel,
+        domain: String,
+        granularity: StatsGranularity,
+        limitMode: Top,
+        date: Date
+    ) = coroutineEngine.withDefaultContext(STATS, this, "unreportReferrerAsSpam") {
+        val payload = restClient.unreportReferrerAsSpam(site, domain)
+
+        if (payload.response != null || payload.error.type == StatsErrorType.ALREADY_SPAMMED) {
+            updateCacheWithMarkedSpam(site, granularity, date, domain, limitMode, false)
         }
         return@withDefaultContext when {
             payload.isError -> OnReportReferrerAsSpam(payload.error)
@@ -76,48 +95,37 @@ class ReferrersStore
         granularity: StatsGranularity,
         date: Date,
         domain: String,
-        limitMode: Top
+        limitMode: Top,
+        spam: Boolean
     ) {
         val select = sqlUtils.select(site, granularity, date)
         if (select != null) {
-            val selectMarked = setSelectForSpam(select, domain)
+            val selectMarked = setSelectForSpam(select, domain, spam)
             sqlUtils.insert(site, selectMarked, granularity, date, limitMode.limit)
         }
     }
 
-    fun setSelectForSpam(select: FetchReferrersResponse, domain: String): FetchReferrersResponse {
+    fun setSelectForSpam(select: FetchReferrersResponse, domain: String, spam: Boolean): FetchReferrersResponse {
         select.groups.entries.forEach {
             it.value.groups.forEach {
                 if (it.url == domain) {
                     // Setting group.spam as true
-                    it.spam = true
+                    it.spam = spam
                 }
                 it.referrers?.forEach {
                     if (it.url == domain) {
                         // Setting referrer.spam as true
-                        it.spam = true
+                        it.spam = spam
                     }
                     it.children?.forEach {
                         if (it.url == domain) {
                             // Setting child.spam as true
-                            it.spam = true
+                            it.spam = spam
                         }
                     }
                 }
             }
         }
         return select
-    }
-
-    suspend fun unreportReferrerAsSpam(
-        site: SiteModel,
-        domain: String
-    ) = coroutineEngine.withDefaultContext(STATS, this, "unreportReferrerAsSpam") {
-        val payload = restClient.unreportReferrerAsSpam(site, domain)
-        return@withDefaultContext when {
-            payload.isError -> OnReportReferrerAsSpam(payload.error)
-            payload.response != null -> OnReportReferrerAsSpam(payload.response)
-            else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
-        }
     }
 }
