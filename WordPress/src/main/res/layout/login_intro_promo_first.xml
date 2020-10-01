@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="320dp">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_one"
+        android:layout_width="64dp"
+        android:layout_height="152dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_two"
+        android:layout_width="96dp"
+        android:layout_height="128dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintStart_toEndOf="@+id/image_one"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_three"
+        android:layout_width="64dp"
+        android:layout_height="152dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toEndOf="@+id/image_two"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_four"
+        android:layout_width="48dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/image_one"
+        app:layout_constraintTop_toBottomOf="@+id/image_one" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_five"
+        android:layout_width="40dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/image_four"
+        app:layout_constraintTop_toBottomOf="@+id/image_one" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_six"
+        android:layout_width="40dp"
+        android:layout_height="72dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@+id/image_five"
+        app:layout_constraintTop_toTopOf="@+id/image_five" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/image_seven"
+        android:layout_width="64dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@+id/image_six"
+        app:layout_constraintTop_toBottomOf="@+id/image_three" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_one"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#4BA586"
+        app:icon="@drawable/ic_pages_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_two"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="#DA8E40"
+        app:icon="@drawable/ic_customize_white_24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/image_one"
+        app:layout_constraintStart_toStartOf="@+id/image_one" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_three"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#D35883"
+        app:icon="@drawable/ic_create_white_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/image_three" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
