@@ -17,9 +17,4 @@ class DetailListViewModel
     @Named(BLOCK_DETAIL_USE_CASE) private val detailUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(
-        mainDispatcher,
-        detailUseCase,
-        analyticsTracker,
-        dateSelectorFactory.build(DETAIL)
-)
+) : StatsListViewModel(mainDispatcher, detailUseCase, analyticsTracker, dateSelectorFactory.build(DETAIL))

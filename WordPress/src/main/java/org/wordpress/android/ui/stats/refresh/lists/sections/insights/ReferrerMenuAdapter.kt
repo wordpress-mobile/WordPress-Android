@@ -44,16 +44,16 @@ class ReferrerMenuAdapter(context: Context, spam: Boolean?) : BaseAdapter() {
         val iconRes: Int
         when (items[position]) {
             OPEN_WEBSITE -> {
-                textRes = R.string.open_website
+                textRes = R.string.stats_referrer_popup_menu_open_website
                 iconRes = R.drawable.ic_external_grey_min_24dp
             }
             MARK_AS_SPAM -> {
-                textRes = R.string.mark_as_spam
-                iconRes = R.drawable.ic_spam_red_24dp
+                textRes = R.string.stats_referrer_popup_menu_mark_as_spam
+                iconRes = R.drawable.ic_spam_white_24dp
             }
             MARK_AS_NOT_SPAM -> {
-                textRes = R.string.unmark_as_spam
-                iconRes = R.drawable.ic_spam_red_24dp
+                textRes = R.string.stats_referrer_popup_unmark_as_spam
+                iconRes = R.drawable.ic_spam_white_24dp
             }
         }
 

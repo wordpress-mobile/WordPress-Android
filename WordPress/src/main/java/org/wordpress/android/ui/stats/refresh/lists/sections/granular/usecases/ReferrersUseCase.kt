@@ -111,7 +111,6 @@ class ReferrersUseCase(
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
             items.add(header)
             domainModel.groups.forEachIndexed { index, group ->
-                val icon = buildIcon(group.icon)
                 val contentDescription =
                         contentDescriptionHelper.buildContentDescription(
                                 header,
@@ -120,11 +119,11 @@ class ReferrersUseCase(
                         )
                 if (group.referrers.isEmpty()) {
                     val spam = group.spam != null && group.spam!!
-
+                    val icon = buildIcon(group.icon, spam)
                     val headerItem = ListItemWithIcon(
-                            icon = if (spam)
-                                R.drawable.ic_spam_red_24dp else icon,
+                            icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
+                            textStyle = buildTextStyle(spam),
                             text = group.name,
                             value = group.total?.let { statsUtils.toFormattedString(it) },
                             showDivider = index < domainModel.groups.size - 1,
@@ -136,6 +135,7 @@ class ReferrersUseCase(
                     )
                     items.add(headerItem)
                 } else {
+                    val icon = buildIcon(group.icon, false)
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
@@ -150,19 +150,18 @@ class ReferrersUseCase(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
-                            val referrerIcon = buildIcon(referrer.icon)
+                            val spam = referrer.spam != null && referrer.spam!!
+                            val referrerIcon = buildIcon(referrer.icon, spam)
                             val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
                                 EMPTY_SPACE
                             } else {
                                 NORMAL
                             }
-                            val spam = referrer.spam != null && referrer.spam!!
                             ListItemWithIcon(
-                                    icon = if (spam)
-                                        R.drawable.ic_spam_red_24dp else referrerIcon,
+                                    icon = referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     iconStyle = iconStyle,
-                                    textStyle = if (spam) LIGHT else TextStyle.NORMAL,
+                                    textStyle = buildTextStyle(spam),
                                     text = referrer.name,
                                     value = statsUtils.toFormattedString(referrer.views),
                                     showDivider = false,
@@ -194,7 +193,12 @@ class ReferrersUseCase(
         return items
     }
 
-    private fun buildIcon(iconUrl: String?): Int? {
+    private fun buildTextStyle(spam: Boolean) = if (spam) LIGHT else TextStyle.NORMAL
+
+    private fun buildIcon(iconUrl: String?, spam: Boolean): Int? {
+        if (spam) {
+            return R.drawable.ic_spam_white_24dp
+        }
         return when (iconUrl) {
             null -> R.drawable.ic_globe_white_24dp
             "https://wordpress.com/i/stats/search-engine.png" -> R.drawable.ic_search_white_24dp

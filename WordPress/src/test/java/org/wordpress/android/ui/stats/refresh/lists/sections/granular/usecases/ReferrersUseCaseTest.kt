@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
@@ -64,9 +65,26 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: ReferrersUseCase
     private val firstGroupViews = 50
     private val secondGroupViews = 30
-    private val singleReferrer = Group("group1", "Group 1", "group1.jpg", "group1.com", firstGroupViews, listOf())
-    private val referrer = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com")
-    private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(referrer))
+    private val singleReferrer = Group(
+            "group1",
+            "Group 1",
+            "group1.jpg",
+            "group1.com",
+            firstGroupViews,
+            listOf(),
+            false
+    )
+    private val referrer1 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", false)
+    private val referrer2 = Referrer("Referrer 1", 20, "referrer.jpg", "referrer.com", true)
+    private val group = Group(
+            "group2",
+            "Group 2",
+            "group2.jpg",
+            "group2.com",
+            secondGroupViews,
+            listOf(referrer1, referrer2),
+            true
+    )
     private val contentDescription = "title, views"
     @InternalCoroutinesApi
     @Before
@@ -132,24 +150,27 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 this[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
-                singleReferrer.icon
+                singleReferrer.icon,
+                singleReferrer.spam
         )
         return assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
-        assertThat(this).hasSize(6)
+        assertThat(this).hasSize(7)
         assertTitle(this[0])
         assertLabel(this[1])
         assertSingleItem(
                 this[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
-                singleReferrer.icon
+                singleReferrer.icon,
+                singleReferrer.spam
         )
         val expandableItem = assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
-        assertSingleItem(this[4], referrer.name, referrer.views, referrer.icon)
-        assertThat(this[5]).isEqualTo(Divider)
+        assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.spam)
+        assertSingleItem(this[5], referrer2.name, referrer2.views, referrer2.icon, referrer2.spam)
+        assertThat(this[6]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -176,7 +197,8 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                     this[2],
                     singleReferrer.name!!,
                     singleReferrer.total,
-                    singleReferrer.icon
+                    singleReferrer.icon,
+                    singleReferrer.spam
             )
             assertLink(this[3])
         }
@@ -231,7 +253,8 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         item: BlockListItem,
         key: String,
         views: Int?,
-        icon: String?
+        icon: String?,
+        spam: Boolean?
     ) {
         assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((item as ListItemWithIcon).text).isEqualTo(key)
@@ -240,7 +263,15 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.value).isNull()
         }
-        assertThat(item.iconUrl).isEqualTo(icon)
+        if (spam != null && spam) {
+            assertThat(item.icon).isEqualTo(R.drawable.ic_spam_white_24dp)
+            assertThat(item.textStyle).isEqualTo(TextStyle.LIGHT)
+            assertThat(item.iconUrl).isNull()
+        } else {
+            assertThat(item.icon).isNull()
+            assertThat(item.textStyle).isEqualTo(TextStyle.NORMAL)
+            assertThat(item.iconUrl).isEqualTo(icon)
+        }
         assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 
