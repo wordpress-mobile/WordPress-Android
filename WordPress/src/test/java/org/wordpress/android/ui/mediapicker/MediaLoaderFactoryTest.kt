@@ -41,6 +41,7 @@ class MediaLoaderFactoryTest {
                 cameraEnabled = false,
                 systemPickerEnabled = true,
                 editingEnabled = true,
+                queueResults = false,
                 title = R.string.wp_media_title
         )
         val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
@@ -64,6 +65,7 @@ class MediaLoaderFactoryTest {
                 cameraEnabled = false,
                 systemPickerEnabled = false,
                 editingEnabled = false,
+                queueResults = false,
                 title = R.string.wp_media_title
         )
         whenever(mediaLibraryDataSourceFactory.build(site)).thenReturn(mediaLibraryDataSource)
@@ -90,6 +92,7 @@ class MediaLoaderFactoryTest {
                             cameraEnabled = false,
                             systemPickerEnabled = true,
                             editingEnabled = true,
+                            queueResults = false,
                             title = R.string.wp_media_title
                     ),
                     site
@@ -104,6 +107,7 @@ class MediaLoaderFactoryTest {
                             cameraEnabled = false,
                             systemPickerEnabled = true,
                             editingEnabled = true,
+                            queueResults = false,
                             title = R.string.wp_media_title
                     ),
                     site

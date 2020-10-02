@@ -56,8 +56,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Create new page event
      */
-    private val _onCreateNewPageRequested = SingleLiveEvent<Unit>()
-    val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
+    private val _onCreateNewPageRequested = SingleLiveEvent<String>()
+    val onCreateNewPageRequested: LiveData<String> = _onCreateNewPageRequested
 
     init {
         dispatcher.register(this)
@@ -244,6 +244,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
+     * Create page tapped
+     */
+    fun onCreatePageClicked() {
+        createPage()
+        dismiss()
+    }
+
+    /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
@@ -254,10 +262,15 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
-     * Triggers the creation of a new blank page
+     * Triggers the creation of a new page
      */
-    fun createPage() {
-        _onCreateNewPageRequested.call()
+    private fun createPage() {
+        (uiState.value as? ContentUiState)?.let { state ->
+            val selection = state.selectedLayoutSlug != null
+            _onCreateNewPageRequested.value = if (selection) {
+                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+            } else ""
+        }
     }
 
     private fun updateUiState(uiState: UiState) {
