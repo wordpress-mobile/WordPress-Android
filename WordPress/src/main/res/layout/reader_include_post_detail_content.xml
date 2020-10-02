@@ -12,12 +12,6 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_medium">
 
-    <org.wordpress.android.ui.reader.views.ReaderTagStrip
-        android:id="@+id/tag_strip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
-
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
         android:layout_width="match_parent"

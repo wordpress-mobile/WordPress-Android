@@ -113,7 +113,6 @@ import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView
-import org.wordpress.android.ui.reader.views.ReaderTagStrip
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
@@ -1414,8 +1413,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
-
-            val tagStrip = view!!.findViewById<ReaderTagStrip>(R.id.tag_strip)
+            
             val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
             if (!canShowFooter()) {
                 layoutFooter.visibility = View.GONE
@@ -1501,8 +1499,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             val postDetailsHeaderUiState = createPostDetailsHeaderUiState(post!!, headerView)
             headerView.updatePost(postDetailsHeaderUiState)
-
-            tagStrip.setPost(post!!)
 
             if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
                 AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
