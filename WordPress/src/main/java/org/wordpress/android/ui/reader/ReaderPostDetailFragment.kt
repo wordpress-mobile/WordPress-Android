@@ -1413,7 +1413,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
-            
+
             val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
             if (!canShowFooter()) {
                 layoutFooter.visibility = View.GONE
