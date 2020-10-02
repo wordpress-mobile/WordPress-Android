@@ -143,7 +143,7 @@ Language: ku_TR
     <string name="create_account">Hesabekî biafirîne</string>
     <string name="send_link_by_email">Girêdanê bi emaîlê re bişîne</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
-    <string name="login_promo_title_37_percent">37% ê webê li ser WordPressê hatiye avakirin.</string>
+    <string name="login_promo_title_37_percent">37\% ê webê li ser WordPressê hatiye avakirin.</string>
     <string name="reset_your_password">Pêborîna xwe nûsaz bike</string>
     <string name="reader_error_request_failed_title">Di hênana daxwazê de pirsgirêkek derket. Ji kerema xwe paşê dîsa biceribîne.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>

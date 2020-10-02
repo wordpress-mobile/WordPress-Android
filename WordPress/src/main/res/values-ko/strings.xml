@@ -143,7 +143,7 @@ Language: ko_KR
     <string name="create_account">계정 만들기</string>
     <string name="send_link_by_email">이메일로 링크 보내기</string>
     <string name="login_promo_text_unlock_the_power">가장 유연한 웹사이트 제작 도구의 능력을 직접 경험해보세요.</string>
-    <string name="login_promo_title_37_percent">웹의 37%가 워드프레스로 만들어졌습니다.</string>
+    <string name="login_promo_title_37_percent">웹의 37\%가 워드프레스로 만들어졌습니다.</string>
     <string name="reset_your_password">비밀번호 재설정하기</string>
     <string name="reader_error_request_failed_title">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하시기 바랍니다.</string>
     <string name="quick_start_list_update_site_title_subtitle">개성과 주제를 반영할 사이트 이름을 주세요. 첫 인상이 중요합니다!</string>
