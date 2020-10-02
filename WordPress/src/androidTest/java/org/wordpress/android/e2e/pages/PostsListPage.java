@@ -24,7 +24,12 @@ public class PostsListPage {
 
     private static RecyclerView getRecyclerView() {
         ViewPager pager = getCurrentActivity().findViewById(R.id.postPager);
-        return (RecyclerView) ((ViewGroup) ((ViewGroup) (pager.getChildAt(pager.getCurrentItem()))
-                .findViewById(R.id.ptr_layout)).getChildAt(0)).getChildAt(0);
+        RecyclerView recyclerView = (RecyclerView) pager.getChildAt(pager.getCurrentItem()).findViewById(R.id.recycler_view);
+        if (recyclerView == null) {
+            // Workaround for cases when recyclerview id missing
+            recyclerView = (RecyclerView) ((ViewGroup) ((ViewGroup) (pager.getChildAt(pager.getCurrentItem()))
+                    .findViewById(R.id.ptr_layout)).getChildAt(0)).getChildAt(0);
+        }
+        return recyclerView;
     }
 }
