@@ -65,7 +65,7 @@ public class WPScreenshotTest extends BaseTest {
         idleFor(1000);
         takeScreenshot("1-build-and-manage-your-website");
 
-        navigateMySite();
+//        navigateMySite();
         editBlogPost();
         manageMedia();
         navigateNotifications();
