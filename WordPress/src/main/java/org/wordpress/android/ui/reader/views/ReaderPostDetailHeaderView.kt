@@ -35,20 +35,29 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     }
 
     fun updatePost(uiState: ReaderPostDetailsHeaderUiState) {
-        val blogSectionUiState = uiState.blogSectionUiState
-
-        updateBlavatar(blogSectionUiState)
-        updateFollowButton(uiState.followButtonUiState)
+        expandable_tags_view.setVisible(uiState.tagItemsVisibility)
+        expandable_tags_view.updateUi(uiState.tagItems)
 
         uiHelpers.setTextOrHide(text_title, uiState.title)
+
+        updateBlogSection(uiState.blogSectionUiState)
+        updateFollowButton(uiState.followButtonUiState)
+
         uiHelpers.setTextOrHide(text_author, uiState.authorName)
+        text_by.setVisible(uiState.authorName != null)
+    }
+
+    private fun updateBlogSection(
+        blogSectionUiState: ReaderBlogSectionUiState
+    ) {
+        updateBlavatar(blogSectionUiState)
+
         uiHelpers.setTextOrHide(text_author_and_blog_name, blogSectionUiState.blogName)
         uiHelpers.setTextOrHide(text_blog_url, blogSectionUiState.blogUrl)
         uiHelpers.updateVisibility(dot_separator, blogSectionUiState.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, blogSectionUiState.dateLine)
 
         dot_separator.setVisible(blogSectionUiState.dotSeparatorVisibility)
-        text_by.setVisible(uiState.authorName != null)
 
         layout_blog_section.setBackgroundResource(
                 layout_blog_section.context.getDrawableResIdFromAttribute(

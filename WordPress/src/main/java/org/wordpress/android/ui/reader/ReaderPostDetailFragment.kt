@@ -74,6 +74,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
+import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -102,6 +103,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.views.ReaderBookmarkButton
 import org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -208,6 +210,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
     @Inject internal lateinit var imageManager: ImageManager
     @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1517,10 +1520,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.showReaderBlogPreview(context, post)
             }
             val onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) }
+
+            val onTagItemClicked = { tagSlug: String ->
+                val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
+                ReaderActivityLauncher.showReaderTagPreview(context, readerTag)
+            }
+
             return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
                     post,
                     onBlogSectionClicked,
-                    onFollowButtonClicked
+                    onFollowButtonClicked,
+                    onTagItemClicked
             )
         }
     }
