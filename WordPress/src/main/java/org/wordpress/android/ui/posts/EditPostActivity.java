@@ -266,6 +266,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_CONTENT = "pageContent";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -1575,7 +1576,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     FluxCUtils.mediaFileFromMediaModel(media));
         } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                 .getId()) {
-            setFeaturedImageId(media.getMediaId());
+            setFeaturedImageId(media.getMediaId(), false);
         }
     }
 
@@ -2257,6 +2258,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
+        if (mIsPage) {
+            setPageContent();
+        }
+
         // Set post title and content
         if (mEditPostRepository.hasPost()) {
             // don't avoid calling setContent() for GutenbergEditorFragment so RN gets initialized
@@ -2346,9 +2351,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void setFeaturedImageId(final long mediaId) {
+    private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
         }
     }
 
@@ -2379,6 +2384,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    /**
+     * Sets the page content
+     */
+    private void setPageContent() {
+        Intent intent = getIntent();
+        final String content = intent.getStringExtra(EXTRA_PAGE_CONTENT);
+        if (content != null && !content.isEmpty()) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2396,6 +2422,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                 case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STORIES_PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
@@ -2426,7 +2453,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // user chose a featured image
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId);
+                        setFeaturedImageId(mediaId, true);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
