@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-17 10:54:08+0000
+Translation-Revision-Date: 2020-10-01 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Grassetto</string>
+    <string name="typeface_label_space_mono">Moderno</string>
+    <string name="typeface_label_pacifico">Giocoso</string>
+    <string name="typeface_label_oswald">Forte</string>
+    <string name="typeface_label_libre_baskerville">Classico</string>
+    <string name="typeface_label_nunito">Casual</string>
+    <string name="toast_capture_operation_permission_needed">Devi fornire all\'applicazione i permessi per registrare l\'audio per poter registrare dei video</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s selezionato</string>
+    <string name="login_get_link_by_email">Ottieni un link di accesso tramite e-mail</string>
+    <string name="email_not_registered_wpcom">Hmm, non riusciamo a trovare un account di WordPress.com collegato a questo indirizzo email.</string>
+    <string name="permission_microphone">Microfono</string>
+    <string name="comment_unable_to_show_error">Impossibile mostrare questo commento</string>
+    <string name="media_browse_for_items">Sfoglia gli elementi</string>
+    <string name="reader_menu_report_post">Segnala questo articolo</string>
     <string name="gutenberg_native_angle">Angolo</string>
-    <string name="mlp_layout_selected">%s selezionato</string>
     <string name="reader_welcome_banner">Benvenuto al Reader Scopri milioni di blog con il tocco delle dita.</string>
     <string name="error_media_xmlrcp_server_error">Si è verificato un errore del server interno</string>
     <string name="error_media_xmlrpc_not_allowed">L\'azione non è consentita</string>
@@ -111,9 +125,9 @@ Language: it
     <string name="signup_confirmation_title">Conferma dell\'iscrizione</string>
     <string name="continue_with_google_terms_of_service_text">Se continui con Google e non hai già un account WordPress.com, crei un account e accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="continue_terms_of_service_text">Continuando, accetti i nostri %1$sTermini di servizio%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Ti invieremo una e-mail con un link per creare un nuovo account WordPress.com.</string>
+    <string name="signup_confirmation_magic_link_message">Ti invieremo una email con un link per creare il tuo nuovo account WordPress.com.</string>
     <string name="signup_confirmation_message">Useremo un indirizzo e-mail per creare un nuovo account WordPress.com.</string>
-    <string name="signup_magic_link_message">Ti abbiamo inviato una e-mail con un link per creare un nuovo account WordPress.com. Controlla la tua e-mail su questo dispositivo e tocca il link nell\'e-mail ricevuta da WordPress.com.</string>
+    <string name="signup_magic_link_message">Ti abbiamo inviato una e-mail con un link per creare il tuo nuovo account WordPress.com. Controlla la tua e-mail su questo dispositivo e tocca il link nell\'email ricevuta da WordPress.com.</string>
     <string name="enter_account_info_for_site">Inserisci le informazioni dell’account per %1$s.</string>
     <string name="login_or">o</string>
     <string name="continue_google_button_suffix">Continua con Google</string>
@@ -121,7 +135,7 @@ Language: it
     <string name="login_done">Fatto</string>
     <string name="magic_link_not_seeing_email_message">Non trovi l\'e-mail? Controlla la cartella dello spam o della posta indesiderata.</string>
     <string name="login_magic_links_sent_label">Controlla la tua e-mail su questo dispositivo e premi il link nell\'e-mail ricevuta da WordPress.com.</string>
-    <string name="login_magic_links_label">Ti invieremo per e-mail un link per l\'accesso immediato, senza bisogno di password.</string>
+    <string name="login_magic_links_label">Ti invieremo per email un link per l\'accesso immediato, senza bisogno di password.</string>
     <string name="check_email">Controlla l\'e-mail</string>
     <string name="get_started">Inizia ora</string>
     <string name="enter_email_to_continue_wordpress_com">Inserisci il tuo indirizzo e-mail per accedere o creare un account WordPress.com.</string>
@@ -129,7 +143,7 @@ Language: it
     <string name="create_account">Crea account</string>
     <string name="send_link_by_email">Invia link tramite e-mail</string>
     <string name="login_promo_text_unlock_the_power">Libera tutto il potenziale del costruttore di siti più flessibile al mondo.</string>
-    <string name="login_promo_title_37_percent">Il 37\% del web viene costruito con WordPress.</string>
+    <string name="login_promo_title_37_percent">Il 37% del web viene costruito con WordPress.</string>
     <string name="reset_your_password">Reimposta la password</string>
     <string name="reader_error_request_failed_title">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento. La prima impressione conta.</string>
@@ -1286,7 +1300,6 @@ Language: it
     <string name="license_screen_title">Licenza</string>
     <string name="release_notes_screen_title">Note di rilascio</string>
     <string name="signup_epilogue_error_avatar_view">Il tuo avatar è stato caricato e sarà disponibile a breve.</string>
-    <string name="email_not_registered_wpcom">Hmm, non siamo in grado di trovare un account WordPress.com connesso a questo indirizzo email. Prova ad accedere con il seguente link usando l’indirizzo del tuo sito.</string>
     <string name="permissions_denied_message">Sembra che tu abbia disattivato le autorizzazioni necessarie per questa funzionalità.&lt;br/>&lt;br/>Per cambiare, modifica le tue autorizzazioni e assicurati che sia attivo &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">Autorizzazioni</string>
     <string name="plugin_caption_featured">In evidenza</string>

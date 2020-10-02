@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-18 07:41:39+0000
+Translation-Revision-Date: 2020-09-24 06:12:10+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sk
@@ -424,7 +424,6 @@ Language: sk
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Poznámky k verzii</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar bol nahraný a zakrátko bude dostupný.</string>
-    <string name="email_not_registered_wpcom">Nemôžeme nájsť účet WordPress.com pripojený k tejto e-mailovej adrese. Vyskúšajte nižšie uvedený odkaz a prihláste sa pomocou svojej adresy webovej stránky.</string>
     <string name="permissions_denied_message">Zdá sa, že ste vypli oprávnenia požadované pre túto funkciu.&lt;br/>&lt;br/>Ak to chcete zmeniť, upravte svoje oprávnenia a uistite sa, že je povolené &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">Oprávnenia</string>
     <string name="plugin_caption_featured">Odporúčaný</string>
@@ -490,7 +489,7 @@ Language: sk
     <string name="signup_magic_link_error_button_negative">Zatvoriť</string>
     <string name="signup_magic_link_error">Vyskytol sa problém s odoslaním e-mailu. Môžete to zopakovať teraz alebo zavrieť a skúsiť to neskôr.</string>
     <string name="signup_epilogue_hint_username">Používateľské meno</string>
-    <string name="signup_epilogue_hint_password_detail">Vždy sa môžete prihlásiť pomocou magického odkazu, ako je ten, ktorý ste práve použili, ale ak chcete, môžete si tiež nastaviť heslo.</string>
+    <string name="signup_epilogue_hint_password_detail">Vždy sa môžete prihlásiť pomocou odkazu, ako je ten, ktorý ste práve použili, ale ak chcete, môžete si tiež nastaviť heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (voliteľné)</string>
     <string name="signup_epilogue_hint_display">Zobrazované meno</string>
     <string name="signup_epilogue_error_button_positive">Skúsiť znova</string>

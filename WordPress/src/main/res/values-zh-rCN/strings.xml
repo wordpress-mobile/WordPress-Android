@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-04 08:54:09+0000
+Translation-Revision-Date: 2020-09-25 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="reader_menu_report_post">报告此文章</string>
+    <string name="gutenberg_native_angle">角度</string>
+    <string name="reader_welcome_banner">欢迎使用阅读器。 动动手指即可发现数百万个博客。</string>
+    <string name="error_media_xmlrcp_server_error">发生内部服务器错误</string>
+    <string name="error_media_xmlrpc_not_allowed">您不能执行此操作</string>
+    <string name="show_n_hidden_items_desc">%1$s 更多项目</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">注意：主题和屏幕尺寸之间的分栏布局可能会有所不同</string>
     <string name="gutenberg_native_select_a_layout">选择布局</string>
     <string name="contact_fragment_title">\@string/contact_support</string>
@@ -101,9 +107,7 @@ Language: zh_CN
     <string name="signup_confirmation_title">注册确认</string>
     <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
     <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
-    <string name="signup_confirmation_magic_link_message">我们将通过电子邮件向您发送一个免密登录链接，供您创建新的 WordPress.com 帐户。</string>
     <string name="signup_confirmation_message">我们将使用此电子邮件地址为您创建新 WordPress.com 帐户。</string>
-    <string name="signup_magic_link_message">我们已经通过电子邮件向您发送了一个免密登录链接，供您创建新的 WordPress.com 帐户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
     <string name="enter_account_info_for_site">输入您的 %1$s 帐户信息。</string>
     <string name="login_or">或</string>
     <string name="continue_google_button_suffix">继续使用 Google</string>
@@ -111,7 +115,6 @@ Language: zh_CN
     <string name="login_done">完成</string>
     <string name="magic_link_not_seeing_email_message">没有看到电子邮件？ 请检查您的垃圾邮件文件夹。</string>
     <string name="login_magic_links_sent_label">在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
-    <string name="login_magic_links_label">我们将通过电子邮件向您发送一个神奇链接，利用它您无需密码即可立即登录。</string>
     <string name="check_email">查收电子邮件</string>
     <string name="get_started">开始</string>
     <string name="enter_email_to_continue_wordpress_com">输入您的电子邮件地址以登录或创建 WordPress.com 帐户。</string>
@@ -119,7 +122,7 @@ Language: zh_CN
     <string name="create_account">创建帐户</string>
     <string name="send_link_by_email">通过电子邮件发送链接</string>
     <string name="login_promo_text_unlock_the_power">发挥最灵活的网站生成器的强大功能。</string>
-    <string name="login_promo_title_37_percent">网上有 37\% 的内容是在 WordPress 上构建的。</string>
+    <string name="login_promo_title_37_percent">网上有 37% 的内容是在 WordPress 上构建的。</string>
     <string name="reset_your_password">重置密码</string>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
@@ -1267,13 +1270,11 @@ Language: zh_CN
     <string name="notifications_screen_title">通知</string>
     <string name="reader_screen_title">阅读器</string>
     <string name="me_section_screen_title">我</string>
-    <string name="my_site_section_screen_title">我的站点</string>
     <string name="notif_settings_screen_title">通知设置</string>
     <string name="help_screen_title">帮助与支持</string>
     <string name="license_screen_title">许可</string>
     <string name="release_notes_screen_title">版本说明</string>
     <string name="signup_epilogue_error_avatar_view">您的头像已上传，很快便会显示。</string>
-    <string name="email_not_registered_wpcom">找不到与此电子邮件地址关联的 WordPress.com 帐户。请尝试使用您的站点地址通过以下链接登录。</string>
     <string name="permissions_denied_message">您似乎关闭了此功能所需的权限。&lt;br/>&lt;br/>要对此进行更改，请编辑您的权限并确保已启用&lt;strong>%s&lt;/strong>。</string>
     <string name="permissions_denied_title">权限</string>
     <string name="plugin_caption_featured">精选</string>
@@ -1338,7 +1339,6 @@ Language: zh_CN
     <string name="signup_magic_link_error_button_positive">重试</string>
     <string name="signup_magic_link_error_button_negative">关闭</string>
     <string name="signup_epilogue_hint_username">用户名</string>
-    <string name="signup_epilogue_hint_password_detail">通常情况下，您可以随时使用刚刚用过的免密登录链接登录。但如果您愿意，也可以设置密码。</string>
     <string name="signup_epilogue_hint_password">密码（可选）</string>
     <string name="signup_epilogue_hint_display">显示名称</string>
     <string name="signup_epilogue_error_button_positive">重试</string>

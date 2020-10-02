@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-18 10:49:01+0000
+Translation-Revision-Date: 2020-09-24 06:50:19+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Aldin</string>
+    <string name="typeface_label_space_mono">Modern</string>
+    <string name="typeface_label_pacifico">Vesel</string>
+    <string name="typeface_label_oswald">Intens</string>
+    <string name="typeface_label_libre_baskerville">Clasic</string>
+    <string name="typeface_label_nunito">Cazual</string>
+    <string name="toast_capture_operation_permission_needed">Pentru a înregistra un video, trebuie să acorzi aplicației permisiunea de înregistrare audio</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s selectat</string>
+    <string name="login_get_link_by_email">Primești o legătură de autentificare prin email</string>
+    <string name="email_not_registered_wpcom">Nu putem găsi un cont WordPress.com conectat la această adresă de email.</string>
+    <string name="permission_microphone">Microfon</string>
+    <string name="comment_unable_to_show_error">Nu pot să arăt acest comentariu</string>
+    <string name="media_browse_for_items">Răsfoiește pentru a căuta elemente</string>
     <string name="reader_menu_report_post">Raportează acest articol</string>
     <string name="gutenberg_native_angle">Unghi</string>
-    <string name="mlp_layout_selected">%s selectat</string>
     <string name="reader_welcome_banner">Bine ai venit la Cititor. Descoperi milioane de bloguri la îndemână.</string>
     <string name="error_media_xmlrcp_server_error">A apărut o eroare internă la server</string>
     <string name="error_media_xmlrpc_not_allowed">Acțiunea ta nu este permisă</string>
@@ -112,9 +125,9 @@ Language: ro
     <string name="signup_confirmation_title">Confirmare înregistrare</string>
     <string name="continue_with_google_terms_of_service_text">Dacă continui cu Google și nu ai deja un cont WordPress.com, îți creezi un cont și ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
     <string name="continue_terms_of_service_text">Dacă continui, ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
-    <string name="signup_confirmation_magic_link_message">Îți vom trimite prin email o legătură magică pentru a-ți crea noul cont WordPress.com.</string>
+    <string name="signup_confirmation_magic_link_message">Îți vom trimite prin email o legătură de înregistrare pentru a-ți crea noul cont WordPress.com.</string>
     <string name="signup_confirmation_message">Vom folosi această adresă de email pentru a-ți crea noul cont WordPress.com.</string>
-    <string name="signup_magic_link_message">Ți-am trimis prin email o legătură magică pentru a-ți crea noul cont WordPress.com. Verifică emailurile primite pe acest dispozitiv și atinge legătura din emailul primit de la WordPress.com.</string>
+    <string name="signup_magic_link_message">Ți-am trimis prin email o legătură de înregistrare pentru a-ți crea noul cont WordPress.com. Verifică emailurile primite pe acest dispozitiv și atinge legătura din emailul primit de la WordPress.com.</string>
     <string name="enter_account_info_for_site">Introdu informațiile contului pentru %1$s.</string>
     <string name="login_or">sau</string>
     <string name="continue_google_button_suffix">Continuă cu Google</string>
@@ -122,7 +135,7 @@ Language: ro
     <string name="login_done">Gata</string>
     <string name="magic_link_not_seeing_email_message">Nu ai găsit emailul? Uită-te și în dosarele Spam sau Junk.</string>
     <string name="login_magic_links_sent_label">Verifică emailurile primite pe acest dispozitiv și atinge legătura din emailul primit de la WordPress.com.</string>
-    <string name="login_magic_links_label">Îți vom trimite prin email o legătură magică care te va autentifica instantaneu, fără nicio parolă.</string>
+    <string name="login_magic_links_label">Îți vom trimite prin email o legătură care te va autentifica instantaneu, fără nicio parolă.</string>
     <string name="check_email">Verifică emailurile primite</string>
     <string name="get_started">Începe</string>
     <string name="enter_email_to_continue_wordpress_com">Introdu adresa ta de email pentru a te autentifica sau creează un cont WordPress.com.</string>
@@ -130,7 +143,7 @@ Language: ro
     <string name="create_account">Creează un cont</string>
     <string name="send_link_by_email">Trimite legătura prin email</string>
     <string name="login_promo_text_unlock_the_power">Deblochează puterea celui mai flexibil constructor de situri web.</string>
-    <string name="login_promo_title_37_percent">37\% din web este construit cu WordPress.</string>
+    <string name="login_promo_title_37_percent">37% din web este construit cu WordPress.</string>
     <string name="reset_your_password">Resetează-ți parola</string>
     <string name="reader_error_request_failed_title">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dă-i sitului un nume care să-i reflecte personalitatea și subiectul (tema). Prima impresie este foarte importantă!</string>
@@ -1287,7 +1300,6 @@ Language: ro
     <string name="license_screen_title">Licență</string>
     <string name="release_notes_screen_title">Note de lansare</string>
     <string name="signup_epilogue_error_avatar_view">Avatarul tău a fost încărcat și va fi disponibil în scurt timp.</string>
-    <string name="email_not_registered_wpcom">Hm, nu putem găsi un cont WordPress.com conectat la această adresă de email. Încearcă legătura de mai jos pentru a te autentifica folosind adresa sitului.</string>
     <string name="permissions_denied_message">Se pare că ai dezactivat permisiunile necesare pentru această funcționalitate.&lt;br/>&lt;br/>Pentru a modifica asta, editează-ți permisiunile și asigură-te că &lt;strong>%s&lt;/strong> este activată.</string>
     <string name="permissions_denied_title">Permisiuni</string>
     <string name="plugin_caption_featured">Reprezentativ</string>
@@ -1353,7 +1365,7 @@ Language: ro
     <string name="signup_magic_link_error_button_negative">Închide</string>
     <string name="signup_magic_link_error">Au fost unele probleme la trimiterea emailului. Poți reîncerca acum sau închide și încercă din nou mai târziu.</string>
     <string name="signup_epilogue_hint_username">Nume utilizator</string>
-    <string name="signup_epilogue_hint_password_detail">Poți să te autentifici mereu cu o legătură magică precum cea pe care tocmai ai folosit-o, dar poți, de asemenea, să inițializezi o parolă dacă preferi.</string>
+    <string name="signup_epilogue_hint_password_detail">Poți să te autentifici mereu cu o legătură, ca cea pe care tocmai ai folosit-o, dar poți, de asemenea, să inițializezi o parolă, dacă preferi.</string>
     <string name="signup_epilogue_hint_password">Parolă (opțional)</string>
     <string name="signup_epilogue_hint_display">Nume afișat</string>
     <string name="signup_epilogue_error_button_positive">Reîncearcă</string>
@@ -1480,7 +1492,7 @@ Language: ro
     <string name="media_files_not_uploaded">%d fișiere neîncărcate</string>
     <string name="remove_image_from_post">Înlătură din articol</string>
     <string name="confirm_remove_media_image">Înlături această imagine din articol?</string>
-    <string name="media_edit_customize_card_caption">Personalizare</string>
+    <string name="media_edit_customize_card_caption">Personalizează</string>
     <string name="media_edit_file_details_card_caption">Detalii fișier</string>
     <string name="login_error_suffix">\nPoate încerci un alt cont?</string>
     <string name="login_error_generic">Au fost probleme cu conectarea la contul Google.</string>
@@ -1963,7 +1975,7 @@ Language: ro
     <string name="detail_approve_auto_if_previously_approved">Aprobare automată dacă utilizatorul are un comentariu aprobat anterior</string>
     <string name="detail_approve_manual">Necesită aprobare manuală pentru comentariile oricui.</string>
     <string name="days_quantity_other">%d zile</string>
-    <string name="days_quantity_one">1 zi</string>
+    <string name="days_quantity_one">O zi</string>
     <string name="web_address">Adresă web</string>
     <string name="primary_site">Sit primar</string>
     <string name="pending_email_change_snackbar">Dă clic pe legătura de verificare din emailul trimis la %1$s pentru a confirma noua ta adresă</string>

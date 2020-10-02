@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-11 01:21:23+0000
+Translation-Revision-Date: 2020-09-30 19:11:41+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="typeface_label_shrikhand">عريض</string>
+    <string name="typeface_label_space_mono">عصري</string>
+    <string name="typeface_label_pacifico">مرح</string>
+    <string name="typeface_label_oswald">قوي</string>
+    <string name="typeface_label_libre_baskerville">تقليدي</string>
+    <string name="typeface_label_nunito">عادي</string>
+    <string name="mlp_notselected_description">%s </string>
+    <string name="mlp_selected_description">%s محدد</string>
+    <string name="login_get_link_by_email">الحصول على رابط تسجيل الدخول عن طريق البريد الإلكتروني</string>
+    <string name="permission_microphone">الميكروفون</string>
+    <string name="comment_unable_to_show_error">تعذر إظهار هذا التعليق</string>
+    <string name="media_browse_for_items">استعراض العناصر</string>
+    <string name="reader_menu_report_post">الإبلاغ عن هذه المقالة</string>
     <string name="gutenberg_native_angle">زاوية</string>
-    <string name="mlp_layout_selected">%s محدد</string>
+    <string name="reader_welcome_banner">مرحبًا بك في القارئ. اكتشف ملايين المدونات في متناول يديك.</string>
+    <string name="error_media_xmlrcp_server_error">حدث خطأ داخلي في الخادم</string>
+    <string name="error_media_xmlrpc_not_allowed">إجراؤك غير مسموح به</string>
+    <string name="show_n_hidden_items_desc">⁦%1$s⁩ المزيد من العناصر</string>
     <string name="gutenberg_native_select_a_layout">اختيار تخطيط</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">ملحوظة: قد يختلف تخطيط العمود بين القوالب وأحجام الشاشة</string>
     <string name="create_post_story_fab_tooltip">إنشاء مقالة أو قصة</string>
@@ -107,9 +123,9 @@ Language: ar
     <string name="signup_confirmation_title">تأكيد التسجيل</string>
     <string name="continue_with_google_terms_of_service_text">إذا تابعت مع Google وليس لديك حساب WordPress.com بالفعل، فأنت تقوم بإنشاء حساب وتوافق على %1$sشروط الخدمة%2$s.</string>
     <string name="continue_terms_of_service_text">بالمتابعة، أنت توافق على %1$sشروط الخدمة%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">سنرسل إليك رسالة على البريد الإلكتروني تحتوي على رابط سحري لإنشاء حساب WordPress.com.</string>
+    <string name="signup_confirmation_magic_link_message">سنرسل لك عبر البريد الإلكتروني رابطًا لإنشاء حسابك الجديد على WordPress.com.</string>
     <string name="signup_confirmation_message">سنستخدم عنوان البريد الإلكتروني هذا لإنشاء حسابك الجديد على WordPress.com.</string>
-    <string name="signup_magic_link_message">أرسلنا إليك رسالة على بريدك الإلكتروني تحتوي على رابط سحري لإنشاء حسابك على WordPress.com. تحقّق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي استلمتها من WordPress.com.</string>
+    <string name="signup_magic_link_message">أرسلنا لك عبر البريد الإلكتروني رسالة تتضمن رابط التسجيل لإنشاء حسابك الجديد على WordPress.com. تحقَّق من بريدك الإلكتروني على هذا الجهاز، وانقر على الرابط الموجود في الرسالة التي تم تلقيها عبر البريد الإلكتروني من WordPress.com.</string>
     <string name="enter_account_info_for_site">أدخل معلومات حسابك لـ %1$s.</string>
     <string name="login_or">أو</string>
     <string name="continue_google_button_suffix">المتابعة باستخدام Google</string>
@@ -117,7 +133,7 @@ Language: ar
     <string name="login_done">تمّ</string>
     <string name="magic_link_not_seeing_email_message">لم تشاهد البريد الإلكتروني؟ تحقّق من مجلد البريد المزعج أو البريد العشوائي.</string>
     <string name="login_magic_links_sent_label">تحقق من بريدك الإلكتروني على هذا الجهاز، واضغط على الرابط في رسالة البريد الإلكتروني التي ستستلمها من WordPress.com.</string>
-    <string name="login_magic_links_label">سنرسل إليك رسالة على البريد الإلكتروني تحتوي على رابط سحري يمكنك من تسجيل الدخول على الفور، دون الحاجة إلى كلمة مرور.</string>
+    <string name="login_magic_links_label">سنرسل لك عبر البريد الإلكتروني رابطًا يسجّل دخولك على الفور، دون الحاجة إلى كلمة مرور.</string>
     <string name="check_email">التحقق من البريد الإلكتروني</string>
     <string name="get_started">البدء</string>
     <string name="enter_email_to_continue_wordpress_com">أدخل عنوان بريدك الإلكتروني لتسجيل الدخول أو إنشاء حساب WordPress.com.</string>
@@ -125,7 +141,7 @@ Language: ar
     <string name="create_account">إنشاء حساب</string>
     <string name="send_link_by_email">إرسال الرابط عبر البريد الإلكتروني</string>
     <string name="login_promo_text_unlock_the_power">أطلق العنان لقدرات منشئ المواقع الأكثر مرونة.</string>
-    <string name="login_promo_title_37_percent">37\% من مواقع الويب مبنية على ووردبريس.</string>
+    <string name="login_promo_title_37_percent">37% من مواقع الويب مبنية على ووردبريس.</string>
     <string name="reset_your_password">إعادة تعيين كلمة المرور الخاصة بك</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه. الاعتماد على الانطباعات الأولى!</string>
@@ -1282,7 +1298,6 @@ Language: ar
     <string name="license_screen_title">الترخيص</string>
     <string name="release_notes_screen_title">ملاحظات الإصدار</string>
     <string name="signup_epilogue_error_avatar_view">تم رفع الصورة الرمزية الخاصة بك وستصبح متاحة قريبًا.</string>
-    <string name="email_not_registered_wpcom">حسنًا، لا يمكننا العثور على حساب WordPress.com متصل بعنوان البريد الإلكتروني هذا. حاول الرابط أدناه لتسجيل الدخول باستخدام عنوان موقعك.</string>
     <string name="permissions_denied_message">يبدو أنك أوقفت الأذونات المطلوبة لهذه الميزة.&lt;br/>&lt;br/>لتغيير هذا، قم بتحرير أذوناتك وتأكد من تمكين &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">أذونات</string>
     <string name="plugin_caption_featured">بارز</string>
@@ -1348,7 +1363,7 @@ Language: ar
     <string name="signup_magic_link_error_button_negative">إغلاق</string>
     <string name="signup_magic_link_error">حدثت بعض المشكلات في إرسال البريد الإلكتروني. يمكنك إعادة المحاولة الآن أو الإغلاق والمحاولة مرة أخرى لاحقًا.</string>
     <string name="signup_epilogue_hint_username">اسم المستخدم</string>
-    <string name="signup_epilogue_hint_password_detail">يمكنك دائمًا تسجيل الدخول باستخدام رابط لا يحتاج إلى كلمة مرور مثل الرابط الذي استخدمته، لكن يمكنك أيضًا إعداد كلمة مرور إذا كنت تفضل ذلك.</string>
+    <string name="signup_epilogue_hint_password_detail">يمكنك دائمًا تسجيل الدخول باستخدام رابط مثل الرابط الذي استخدمته للتو، ولكن يمكنك أيضًا إعداد كلمة مرور إذا كنت تفضل ذلك.</string>
     <string name="signup_epilogue_hint_password">كلمة المرور (اختياري)</string>
     <string name="signup_epilogue_hint_display">اسم العرض</string>
     <string name="signup_epilogue_error_button_positive">إعادة المحاولة</string>

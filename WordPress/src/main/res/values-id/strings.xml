@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-18 08:54:08+0000
+Translation-Revision-Date: 2020-09-25 08:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="reader_menu_report_post">Melaporkan Pos Ini</string>
     <string name="gutenberg_native_angle">Sudut</string>
-    <string name="mlp_layout_selected">%s dipilih</string>
     <string name="reader_welcome_banner">Selamat datang di Pembaca. Temukan jutaan blog dengan ujung jari Anda.</string>
     <string name="error_media_xmlrcp_server_error">Terjadi kesalahan server internal</string>
     <string name="error_media_xmlrpc_not_allowed">Tindakan Anda tidak diizinkan</string>
@@ -111,9 +111,7 @@ Language: id
     <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
     <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
-    <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi Magic Link untuk membuat akun WordPress.com baru.</string>
     <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
-    <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi Magic Link untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
     <string name="enter_account_info_for_site">Masukkan informasi akun Anda untuk %1$s.</string>
     <string name="login_or">atau</string>
     <string name="continue_google_button_suffix">Lanjutkan dengan Google</string>
@@ -121,7 +119,6 @@ Language: id
     <string name="login_done">Selesai</string>
     <string name="magic_link_not_seeing_email_message">Tidak melihat emailnya? Periksa folder Email Spam atau Sampah.</string>
     <string name="login_magic_links_sent_label">Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
-    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan ajaib yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi.</string>
     <string name="check_email">Periksa email</string>
     <string name="get_started">Memulai</string>
     <string name="enter_email_to_continue_wordpress_com">Masukkan alamat email Anda untuk login atau membuat akun WordPress.com.</string>
@@ -129,7 +126,7 @@ Language: id
     <string name="create_account">Buat akun</string>
     <string name="send_link_by_email">Kirim tautan lewat email</string>
     <string name="login_promo_text_unlock_the_power">Kenali kekuatan dari pembuat situs web yang paling andal.</string>
-    <string name="login_promo_title_37_percent">37\% dari situs web dikembangkan dari WordPress.</string>
+    <string name="login_promo_title_37_percent">37% dari situs web dikembangkan dari WordPress.</string>
     <string name="reset_your_password">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda. Kesan pertama sangat berarti!</string>
@@ -1280,13 +1277,11 @@ Language: id
     <string name="notifications_screen_title">Pemberitahuan</string>
     <string name="reader_screen_title">Pembaca</string>
     <string name="me_section_screen_title">Saya</string>
-    <string name="my_site_section_screen_title">Situs saya</string>
     <string name="notif_settings_screen_title">Pengaturan pemberitahuan</string>
     <string name="help_screen_title">Bantuan dan Dukungan</string>
     <string name="license_screen_title">Lisensi</string>
     <string name="release_notes_screen_title">Catatan rilis</string>
     <string name="signup_epilogue_error_avatar_view">Avatar Anda telah diunggah dan akan tersedia sesaat lagi.</string>
-    <string name="email_not_registered_wpcom">Hmm, kami tidak dapat menemukan akun WordPress.com yang terhubung dengan alamat email ini. Coba tautan di bawah ini untuk login menggunakan alamat situs Anda.</string>
     <string name="permissions_denied_message">Tampaknya Anda mematikan izin wajib untuk fitur ini.&lt;br/>&lt;br/>Untuk mengubahnya, edit izin Anda dan pastikan &lt;strong>%s&lt;/strong> telah aktif.</string>
     <string name="permissions_denied_title">Izin</string>
     <string name="plugin_caption_featured">Andalan</string>
@@ -1351,7 +1346,6 @@ Language: id
     <string name="signup_magic_link_error_button_positive">Coba lagi</string>
     <string name="signup_magic_link_error_button_negative">Tutup</string>
     <string name="signup_epilogue_hint_username">Nama pengguna</string>
-    <string name="signup_epilogue_hint_password_detail">Anda dapat login dengan tautan tanpa kata sandi kapan saja seperti yang Anda lakukan sebelumnya, tetapi Anda juga dapat menyiapkan kata sandi jika ingin.</string>
     <string name="signup_epilogue_hint_password">Kata Sandi (opsional)</string>
     <string name="signup_epilogue_hint_display">Nama Tampilan</string>
     <string name="signup_epilogue_error_button_positive">Coba lagi</string>

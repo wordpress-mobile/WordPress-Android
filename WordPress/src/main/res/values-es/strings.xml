@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-18 08:10:33+0000
+Translation-Revision-Date: 2020-09-23 14:54:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Negrita</string>
+    <string name="typeface_label_space_mono">Moderno</string>
+    <string name="typeface_label_pacifico">Alegre</string>
+    <string name="typeface_label_oswald">Fuerte</string>
+    <string name="typeface_label_libre_baskerville">Clásico</string>
+    <string name="typeface_label_nunito">Casual</string>
+    <string name="toast_capture_operation_permission_needed">Tienes que conceder permisos de grabación de audio a la aplicación para grabar vídeo</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s seleccionado</string>
+    <string name="login_get_link_by_email">Obtener un enlace de acceso por correo electrónico</string>
+    <string name="email_not_registered_wpcom">Vaya, no encontramos una cuenta de WordPress.com conectada a esta dirección de correo electrónico.</string>
+    <string name="permission_microphone">Micrófono</string>
+    <string name="comment_unable_to_show_error">No se puede mostrar este comentario</string>
+    <string name="media_browse_for_items">Navegar por elementos</string>
     <string name="reader_menu_report_post">Informar de esta entrada</string>
     <string name="gutenberg_native_angle">Ángulo</string>
-    <string name="mlp_layout_selected">%s seleccionado</string>
     <string name="reader_welcome_banner">Bienvenido al Lector. Descubre millones de blogs a tu alcance.</string>
     <string name="error_media_xmlrcp_server_error">Ha ocurrido un error interno del servidor</string>
     <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>
@@ -112,9 +125,9 @@ Language: es
     <string name="signup_confirmation_title">Confirmación del registro</string>
     <string name="continue_with_google_terms_of_service_text">Si continúas con Google y aún no tienes una cuenta de WordPress.com, crearás una cuenta y aceptas nuestros %1$stérminos del servicio%2$s.</string>
     <string name="continue_terms_of_service_text">Si continúas, aceptas nuestros %1$stérminos del servicio%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Te enviaremos un enlace mágico por correo electrónico para crear tu nueva cuenta de WordPress.com.</string>
+    <string name="signup_confirmation_magic_link_message">Te enviaremos por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos esta dirección de correo electrónico para crear tu nueva cuenta de WordPress.com.</string>
-    <string name="signup_magic_link_message">Te hemos enviado un enlace mágico por correo electrónico para crear tu nueva cuenta de WordPress.com. Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
+    <string name="signup_magic_link_message">Te hemos enviado por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com. Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
     <string name="enter_account_info_for_site">Introduce la información de tu cuenta para %1$s.</string>
     <string name="login_or">o</string>
     <string name="continue_google_button_suffix">Continuar con Google</string>
@@ -122,7 +135,7 @@ Language: es
     <string name="login_done">Hecho</string>
     <string name="magic_link_not_seeing_email_message">¿No ves el correo electrónico? Comprueba tu carpeta de spam o correo no deseado.</string>
     <string name="login_magic_links_sent_label">Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
-    <string name="login_magic_links_label">Te enviaremos un enlace mágico por correo electrónico que te hará acceder automáticamente, sin necesidad de contraseña.</string>
+    <string name="login_magic_links_label">Te enviaremos por correo electrónico un enlace que te hará acceder automáticamente, sin necesidad de contraseña.</string>
     <string name="check_email">Comprobar el correo electrónico</string>
     <string name="get_started">Primeros pasos</string>
     <string name="enter_email_to_continue_wordpress_com">Introduce tu dirección de correo electrónico para acceder o crear una cuenta de WordPress.com.</string>
@@ -130,7 +143,7 @@ Language: es
     <string name="create_account">Crear una cuenta</string>
     <string name="send_link_by_email">Enviar el enlace por correo electrónico</string>
     <string name="login_promo_text_unlock_the_power">Desbloquea el poder del creador de webs más flexible.</string>
-    <string name="login_promo_title_37_percent">El 37\% de la web está creada con WordPress.</string>
+    <string name="login_promo_title_37_percent">El 37 % de la web está creada con WordPress.</string>
     <string name="reset_your_password">Restablecer tu contraseña</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dale a tu sitio un nombre que refleje su personalidad y temática. ¡Las primeras impresiones cuentan!</string>
@@ -1287,7 +1300,6 @@ Language: es
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Notas de la versión</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
-    <string name="email_not_registered_wpcom">Umm, no encontramos una cuenta WordPress.com conectada a esta dirección de correo electrónico. Prueba con el enlace de abajo para acceder usando la dirección de tu sitio.</string>
     <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta característica.&lt;br/>&lt;br/>Para cambiarlo, edita tus permisos y asegúrate de que &lt;strong>%s&lt;/strong> está activado.</string>
     <string name="permissions_denied_title">Permisos</string>
     <string name="plugin_caption_featured">Destacados</string>
@@ -1353,7 +1365,7 @@ Language: es
     <string name="signup_magic_link_error_button_negative">Cerrar</string>
     <string name="signup_magic_link_error">Hubo algún problema al enviar el correo. Puedes reintentarlo ahora o cerrar e intentarlo más tarde.</string>
     <string name="signup_epilogue_hint_username">Nombre de usuario</string>
-    <string name="signup_epilogue_hint_password_detail">Siempre puedes acceder con un enlace mágico como el que acabas de usar, pero también puedes configurar una contraseña si lo prefieres.</string>
+    <string name="signup_epilogue_hint_password_detail">Siempre puedes acceder con un enlace como el que acabas de usar, pero también puedes configurar una contraseña si lo prefieres.</string>
     <string name="signup_epilogue_hint_password">Contraseña (opcional)</string>
     <string name="signup_epilogue_hint_display">Nombre a mostrar</string>
     <string name="signup_epilogue_error_button_positive">Reintentar</string>
