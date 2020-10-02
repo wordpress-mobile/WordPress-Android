@@ -64,6 +64,7 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:maxLines">5</item>
         <item name="textColor">?attr/textColor</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">

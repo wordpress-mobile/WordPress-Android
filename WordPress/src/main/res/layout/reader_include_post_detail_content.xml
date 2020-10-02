@@ -9,8 +9,7 @@
     android:id="@+id/layout_post_detail_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/margin_medium">
+    android:orientation="vertical">
 
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
