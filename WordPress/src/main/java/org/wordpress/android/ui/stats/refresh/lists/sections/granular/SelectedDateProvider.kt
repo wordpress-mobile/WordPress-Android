@@ -221,9 +221,9 @@ class SelectedDateProvider
                 } else {
                     null
                 }
-                val availableTimeStamps = mutableListOf<Long>()
+                val availableTimeStamps = mutableListOf<Any?>()
                 parcel.readList(availableTimeStamps, null)
-                val availableDates = availableTimeStamps.map { Date(it) }
+                val availableDates = availableTimeStamps.map { Date(it as Long) }
                 val loading = parcel.readValue(null) as Boolean
                 val error = parcel.readValue(null) as Boolean
                 return SelectedDate(date, availableDates, loading, error)

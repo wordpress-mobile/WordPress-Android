@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
@@ -178,8 +179,6 @@ class MediaPickerFragment : Fragment() {
                         ?.map { Identifier.fromParcel(it) }
             }
         }
-        recycler.setEmptyView(actionable_empty_view)
-        recycler.setHasFixedSize(true)
 
         val layoutManager = GridLayoutManager(
                 activity,
@@ -191,6 +190,8 @@ class MediaPickerFragment : Fragment() {
         }
 
         recycler.layoutManager = layoutManager
+        recycler.setEmptyView(actionable_empty_view)
+        recycler.setHasFixedSize(true)
 
         val swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
@@ -364,35 +365,37 @@ class MediaPickerFragment : Fragment() {
             is Data -> {
                 actionable_empty_view.visibility = View.GONE
                 recycler.visibility = View.VISIBLE
-                if (recycler.adapter == null) {
-                    recycler.adapter = MediaPickerAdapter(
-                            imageManager
-                    )
-                }
-                val adapter = recycler.adapter as MediaPickerAdapter
-
-                (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
-                        object : GridLayoutManager.SpanSizeLookup() {
-                            override fun getSpanSize(position: Int) = if (uiModel.items[position].fullWidthItem) {
-                                NUM_COLUMNS
-                            } else {
-                                1
-                            }
-                        }
-                val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
-                adapter.loadData(uiModel.items)
-                recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                setupAdapter(uiModel.items)
             }
             Empty -> {
                 actionable_empty_view.visibility = View.VISIBLE
-                recycler.removeAllViews()
-                recycler.visibility = View.GONE
+                recycler.visibility = View.INVISIBLE
+                setupAdapter(listOf())
             }
             Hidden -> {
                 actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.GONE
+                recycler.visibility = View.INVISIBLE
             }
         }
+    }
+
+    private fun setupAdapter(items: List<MediaPickerUiItem>) {
+        if (recycler.adapter == null) {
+            recycler.adapter = MediaPickerAdapter(
+                    imageManager
+            )
+        }
+        val adapter = recycler.adapter as MediaPickerAdapter
+
+        (recycler.layoutManager as? GridLayoutManager)?.spanSizeLookup =
+                object : SpanSizeLookup() {
+                    override fun getSpanSize(position: Int) = if (items[position].fullWidthItem) {
+                        NUM_COLUMNS
+                    } else {
+                        1
+                    }
+                }
+        adapter.loadData(items)
     }
 
     private fun setupFab(fabUiModel: FabUiModel) {
@@ -421,14 +424,13 @@ class MediaPickerFragment : Fragment() {
                             ) { _, _ -> this.cancelAction() }
                             builder.setOnCancelListener { this.cancelAction() }
                             builder.setCancelable(true)
-                            progressDialog = builder.create()
-                            builder.show()
+                            progressDialog = builder.show()
                         }
                     }
                     ProgressDialogUiModel.Hidden -> {
                         progressDialog?.let { dialog ->
                             if (dialog.isShowing) {
-                                dialog.hide()
+                                dialog.dismiss()
                             }
                         }
                     }

@@ -12,6 +12,8 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <bytecodeTargetLevel>
+      <module name="fluxc-annotations" target="1.7" />
+      <module name="fluxc-processor" target="1.7" />
       <module name="WordPressAnnotations" target="1.7" />
       <module name="WordPressProcessors" target="1.7" />
     </bytecodeTargetLevel>

@@ -18,12 +18,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
-import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
-import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
-import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
@@ -43,8 +39,12 @@ import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
@@ -234,10 +234,20 @@ class MediaPickerViewModel @Inject constructor(
                 }
             }
         }
-        val onlyImagesSelected = items?.any { it.type != IMAGE && selectedIds.contains(it.identifier) } ?: false
+
+        val onlyImagesSelected = items?.none { it.type != IMAGE && selectedIds.contains(it.identifier) } ?: true
+        val showEditActionButton = mediaPickerSetup.editingEnabled && onlyImagesSelected
         return ActionModeUiModel.Visible(
                 title,
-                showEditAction = mediaPickerSetup.editingEnabled && !onlyImagesSelected
+                EditActionUiModel(
+                        isVisible = showEditActionButton,
+                        isCounterBadgeVisible = if (!showEditActionButton) {
+                            false
+                        } else {
+                            mediaPickerSetup.canMultiselect
+                        },
+                        counterBadgeValue = numSelected
+                )
         )
     }
 
@@ -338,16 +348,16 @@ class MediaPickerViewModel @Inject constructor(
                     is InsertModel.Progress -> {
                         _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
                             job?.cancel()
-                            _showProgressDialog.postValue(Hidden)
+                            _showProgressDialog.value = Hidden
                         })
                     }
                     is InsertModel.Error -> {
                         job = null
-                        _showProgressDialog.postValue(Hidden)
+                        _showProgressDialog.value = Hidden
                     }
                     is InsertModel.Success -> {
                         job = null
-                        _showProgressDialog.postValue(Hidden)
+                        _showProgressDialog.value = Hidden
                         _onInsert.value = Event(it.identifiers)
                     }
                 }
@@ -508,7 +518,7 @@ class MediaPickerViewModel @Inject constructor(
     sealed class ActionModeUiModel {
         data class Visible(
             val actionModeTitle: UiString? = null,
-            val showEditAction: Boolean = false
+            val editActionUiModel: EditActionUiModel = EditActionUiModel()
         ) : ActionModeUiModel()
 
         object Hidden : ActionModeUiModel()
@@ -529,6 +539,12 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     data class SoftAskRequest(val show: Boolean, val isAlwaysDenied: Boolean)
+
+    data class EditActionUiModel(
+        val isVisible: Boolean = false,
+        val isCounterBadgeVisible: Boolean = false,
+        val counterBadgeValue: Int = 1
+    )
 
     sealed class ProgressDialogUiModel {
         object Hidden : ProgressDialogUiModel()

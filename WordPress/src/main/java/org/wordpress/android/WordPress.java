@@ -115,6 +115,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -928,6 +929,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             properties.putAll(mReaderTracker.getAnalyticsData());
 
             mReaderTracker.onAppGoesToBackground();
+
+            // Ensure that the deeplinking activity is re-enabled.
+            WPActivityUtils.enableReaderDeeplinks(getContext());
 
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);
