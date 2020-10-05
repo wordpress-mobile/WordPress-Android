@@ -63,7 +63,9 @@
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:maxLines">5</item>
-        <item name="textColor">?attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
@@ -175,7 +177,6 @@
         <item name="textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
         <item name="android:fontFamily">serif</item>
-        <item name="android:textStyle">bold</item>-->
     </style>
 
     <style name="ReaderTextView.Site.Header.Caption" parent="ReaderTextView">
