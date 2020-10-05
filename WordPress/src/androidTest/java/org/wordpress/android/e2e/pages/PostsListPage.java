@@ -24,7 +24,8 @@ public class PostsListPage {
 
     private static RecyclerView getRecyclerView() {
         ViewPager pager = getCurrentActivity().findViewById(R.id.postPager);
-        RecyclerView recyclerView = (RecyclerView) pager.getChildAt(pager.getCurrentItem()).findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) pager.getChildAt(pager.getCurrentItem())
+                                                        .findViewById(R.id.recycler_view);
         if (recyclerView == null) {
             // Workaround for cases when recyclerview id missing
             recyclerView = (RecyclerView) ((ViewGroup) ((ViewGroup) (pager.getChildAt(pager.getCurrentItem()))
