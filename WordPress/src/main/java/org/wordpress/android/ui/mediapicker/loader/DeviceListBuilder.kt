@@ -14,7 +14,6 @@ import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem
@@ -104,9 +103,7 @@ class DeviceListBuilder(
                         getMimeType(uri),
                         dateModified
                 )
-                if (MediaUtils.isSupportedMimeType(context.contentResolver.getType(uri))) {
-                    result.add(item)
-                }
+                result.add(item)
             }
         } finally {
             SqlUtils.closeCursor(cursor)

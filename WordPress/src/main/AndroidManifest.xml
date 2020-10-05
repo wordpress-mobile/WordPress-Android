@@ -459,6 +459,10 @@
             android:label="@string/reader_title_deeplink"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity-alias
+            android:name=".WPComPostReaderActivity"
+            android:targetActivity=".ui.reader.ReaderPostPagerActivity">
             <intent-filter>
                 <data
                     android:host="wordpress.com"
@@ -513,7 +517,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-        </activity>
+        </activity-alias>
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
@@ -657,6 +661,10 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:label="@string/edit_photo_screen_title"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity
+            android:name=".ui.posts.JetpackSecuritySettingsActivity"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->

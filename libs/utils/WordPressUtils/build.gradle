@@ -50,12 +50,12 @@ dependencies {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         versionName "1.30"
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
