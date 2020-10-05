@@ -8,7 +8,6 @@ Language: es_CO
 <resources>
     <string name="reader_menu_report_post">Informar de esta entrada</string>
     <string name="gutenberg_native_angle">Ángulo</string>
-    <string name="mlp_layout_selected">%s seleccionado</string>
     <string name="reader_welcome_banner">Bienvenido al Lector. Descubre millones de blogs a tu alcance.</string>
     <string name="error_media_xmlrcp_server_error">Ha ocurrido un error interno del servidor</string>
     <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>

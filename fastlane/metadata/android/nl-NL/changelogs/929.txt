@@ -1,0 +1,5 @@
+15.8:
+- Verbeteringen in de blok-editor: Ondersteuning voor uitlijning over de volledige breedte en breedte toegevoegd voor groeps-, cover- en afbeelding blokken; ondersteuning toegevoegd voor de stijl Afgerond in het afbeelding blok; en loste een probleem op waarbij de toolbar zich onverwacht gedroeg bij het toevoegen van een blok.
+-Reader update: voorbeeld afbeeldingen worden nu getoond in berichten als er geen uitgelichte afbeelding is ingesteld.
+
+
