@@ -19,19 +19,26 @@ class StockMediaSqlUtils
         nextPage: Int?,
         items: List<StockMediaItem>
     ) {
-        WellSql.insert(StockMediaPageBuilder(page = page, nextPage = nextPage)).execute()
-        WellSql.insert(
-                items.map {
-                    StockMediaBuilder(
-                            itemId = it.id,
-                            name = it.name,
-                            title = it.title,
-                            url = it.url,
-                            date = it.date,
-                            thumbnail = it.thumbnail
-                    )
-                }
-        ).execute()
+        val writableDb = WellSql.giveMeWritableDb()
+        writableDb.beginTransaction()
+        try {
+            WellSql.insert(StockMediaPageBuilder(page = page, nextPage = nextPage)).execute()
+            WellSql.insert(
+                    items.map {
+                        StockMediaBuilder(
+                                itemId = it.id,
+                                name = it.name,
+                                title = it.title,
+                                url = it.url,
+                                date = it.date,
+                                thumbnail = it.thumbnail
+                        )
+                    }
+            ).execute()
+            writableDb.setTransactionSuccessful()
+        } finally {
+            writableDb.endTransaction()
+        }
     }
 
     fun selectAll(): List<StockMediaItem> {
@@ -53,8 +60,15 @@ class StockMediaSqlUtils
     }
 
     fun clear() {
-        WellSql.delete(StockMediaBuilder::class.java).execute()
-        WellSql.delete(StockMediaPageBuilder::class.java).execute()
+        val writableDb = WellSql.giveMeWritableDb()
+        writableDb.beginTransaction()
+        try {
+            WellSql.delete(StockMediaBuilder::class.java).execute()
+            WellSql.delete(StockMediaPageBuilder::class.java).execute()
+            writableDb.setTransactionSuccessful()
+        } finally {
+            writableDb.endTransaction()
+        }
     }
 
     @Table(name = "StockMediaPage")
