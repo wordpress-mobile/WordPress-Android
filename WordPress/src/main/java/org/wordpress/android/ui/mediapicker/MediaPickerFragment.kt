@@ -424,14 +424,13 @@ class MediaPickerFragment : Fragment() {
                             ) { _, _ -> this.cancelAction() }
                             builder.setOnCancelListener { this.cancelAction() }
                             builder.setCancelable(true)
-                            progressDialog = builder.create()
-                            builder.show()
+                            progressDialog = builder.show()
                         }
                     }
                     ProgressDialogUiModel.Hidden -> {
                         progressDialog?.let { dialog ->
                             if (dialog.isShowing) {
-                                dialog.hide()
+                                dialog.dismiss()
                             }
                         }
                     }
