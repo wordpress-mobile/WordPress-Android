@@ -68,7 +68,6 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 permissionsHandler,
                 tenorFeatureConfig,
-                context,
                 resourceProvider
         )
         uiStates.clear()

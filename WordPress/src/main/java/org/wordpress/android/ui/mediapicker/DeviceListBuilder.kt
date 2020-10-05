@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.utils.MimeTypes
-import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -24,6 +23,7 @@ import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SqlUtils
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
@@ -32,9 +32,11 @@ import javax.inject.Named
 class DeviceListBuilder
 @Inject constructor(
     val context: Context,
+    private val localeManagerWrapper: LocaleManagerWrapper,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : MediaSource {
     private val mimeTypes = MimeTypes()
+    private val cachedData = mutableListOf<MediaItem>()
 
     override suspend fun load(
         mediaTypes: Set<MediaType>,
@@ -53,7 +55,21 @@ class DeviceListBuilder
             }
             deferredJobs.forEach { result.addAll(it.await()) }
             result.sortByDescending { it.dataModified }
-            MediaLoadingResult.Success(result, false)
+            cachedData.clear()
+            cachedData.addAll(result)
+            MediaLoadingResult.Success(false)
+        }
+    }
+
+    override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
+        return if (filter == null) {
+            cachedData
+        } else {
+            val lowerCaseFilter = filter.toLowerCase(localeManagerWrapper.getLocale())
+            cachedData.filter {
+                it.name?.toLowerCase(localeManagerWrapper.getLocale())
+                        ?.contains(lowerCaseFilter) == true
+            }
         }
     }
 
@@ -91,9 +107,7 @@ class DeviceListBuilder
                         getMimeType(uri),
                         dateModified
                 )
-                if (MediaUtils.isSupportedMimeType(context.contentResolver.getType(uri))) {
-                    result.add(item)
-                }
+                result.add(item)
             }
         } finally {
             SqlUtils.closeCursor(cursor)

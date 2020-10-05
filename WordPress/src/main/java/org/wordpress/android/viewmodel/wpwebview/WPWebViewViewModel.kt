@@ -26,7 +26,7 @@ class WPWebViewViewModel
 @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     connectionStatus: LiveData<ConnectionStatus>
-) : ViewModel(), LifecycleOwner {
+) : ViewModel() {
     private var isStarted = false
     private var wpWebViewUsageCategory: WPWebViewUsageCategory = WPWebViewUsageCategory.WEBVIEW_STANDARD
 
@@ -56,12 +56,14 @@ class WPWebViewViewModel
     private val _previewMode: MutableLiveData<PreviewMode> = MutableLiveData()
     val previewMode: LiveData<PreviewMode> = _previewMode
 
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    private val lifecycleOwner = object : LifecycleOwner {
+        val lifecycleRegistry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    }
 
     init {
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
-        connectionStatus.observe(this, Observer {
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        connectionStatus.observe(lifecycleOwner, Observer {
             if (it == AVAILABLE) {
                 loadIfNecessary()
             }
@@ -93,11 +95,11 @@ class WPWebViewViewModel
         } else {
             updateUiState(WebPreviewFullscreenErrorUiState())
         }
-        lifecycleRegistry.markState(Lifecycle.State.STARTED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
     }
 
     override fun onCleared() {
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         super.onCleared()
     }
 

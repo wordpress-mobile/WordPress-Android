@@ -107,6 +107,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
       play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
       play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
       play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
+      play_store_screenshot_6: prj_folder + "/WordPress/metadata/screenshot_6.txt",
+      play_store_screenshot_7: prj_folder + "/WordPress/metadata/screenshot_7.txt",
 
       enhanced_app_store_screenshot_1: prj_folder + "/WordPress/metadata/enhanced_screenshot_1.html",
       enhanced_app_store_screenshot_2: prj_folder + "/WordPress/metadata/enhanced_screenshot_2.html",
@@ -679,7 +681,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   private_lane :create_gh_release do | options |
-    set_prerelease_flag = options["prerelease"].nil? ? false : options["prerelease"]
+    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
     version = options[:version]
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(version)

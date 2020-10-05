@@ -30,7 +30,7 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     atomos (0.1.3)
     aws-eventstream (1.1.0)
-    aws-partitions (1.362.0)
+    aws-partitions (1.366.0)
     aws-sdk-core (3.105.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
@@ -54,10 +54,10 @@ GEM
     commander-fastlane (4.4.6)
       highline (~> 1.7.2)
     concurrent-ruby (1.1.7)
-    declarative (0.0.10)
+    declarative (0.0.20)
     declarative-option (0.1.0)
     diffy (3.4.0)
-    digest-crc (0.5.1)
+    digest-crc (0.6.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
@@ -65,13 +65,13 @@ GEM
     excon (0.76.0)
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
-    faraday-cookie_jar (0.0.6)
-      faraday (>= 0.7.4)
+    faraday-cookie_jar (0.0.7)
+      faraday (>= 0.8.0)
       http-cookie (~> 1.0.0)
     faraday_middleware (1.0.0)
       faraday (~> 1.0)
     fastimage (2.2.0)
-    fastlane (2.157.2)
+    fastlane (2.158.0)
       CFPropertyList (>= 2.3, < 4.0.0)
       addressable (>= 2.3, < 3.0.0)
       aws-sdk-s3 (~> 1.0)
@@ -155,7 +155,7 @@ GEM
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
     minitest (5.14.2)
-    multi_json (1.14.1)
+    multi_json (1.15.0)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.0)
@@ -230,7 +230,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  fastlane (~> 2.157)!
+  fastlane (~> 2.158)!
   fastlane-plugin-wpmreleasetoolkit!
   nokogiri!
   rmagick (~> 4.1)

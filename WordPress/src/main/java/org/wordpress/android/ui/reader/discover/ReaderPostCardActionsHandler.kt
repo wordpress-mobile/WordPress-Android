@@ -64,7 +64,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
+import org.wordpress.android.widgets.AppRatingDialogWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -81,6 +81,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
+    private val appRatingDialogWrapper: AppRatingDialogWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
@@ -124,7 +125,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     suspend fun handleOnItemClicked(post: ReaderPost) {
         withContext(bgDispatcher) {
-            incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
+            appRatingDialogWrapper.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST)
 
             if (post.isBookmarked) {
                 analyticsTrackerWrapper.track(READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST)

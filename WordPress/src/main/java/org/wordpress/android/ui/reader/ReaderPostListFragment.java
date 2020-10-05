@@ -26,7 +26,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -76,6 +75,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -83,8 +83,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
-import org.wordpress.android.ui.reader.ReaderInterfaces.BlockSiteActionListener;
-import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -97,6 +95,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEdito
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
@@ -118,7 +117,6 @@ import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
@@ -142,20 +140,17 @@ import java.util.Stack;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTED;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
 
 import kotlin.Unit;
 
-public class ReaderPostListFragment extends Fragment
+public class ReaderPostListFragment extends ViewPagerFragment
         implements ReaderInterfaces.OnPostSelectedListener,
         ReaderInterfaces.OnFollowListener,
         ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener,
-        ReblogActionListener,
-        BlockSiteActionListener {
+        WPMainActivity.OnScrollToTopListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -429,7 +424,7 @@ public class ReaderPostListFragment extends Fragment
                         ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
                         ActivityLauncher.showSitePickerForResult(
                                 ReaderPostListFragment.this,
-                                data.getSite(),
+                                data.getPreselectedSite(),
                                 data.getMode()
                         );
                     } else if (navTarget instanceof OpenEditorForReblog) {
@@ -446,6 +441,12 @@ public class ReaderPostListFragment extends Fragment
                         ActivityLauncher.viewSavedPostsListInReader(getActivity());
                     } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
                         showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
+                    } else if (navTarget instanceof ShowReportPost) {
+                        ShowReportPost data = (ShowReportPost) navTarget;
+                        ReaderActivityLauncher.openUrl(
+                            getContext(),
+                            ReaderUtils.getReportPostUrl(data.getUrl()),
+                            INTERNAL);
                     } else {
                         throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
                     }
@@ -1068,14 +1069,7 @@ public class ReaderPostListFragment extends Fragment
         int spacingVertical = getResources().getDimensionPixelSize(R.dimen.reader_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
-        // the following will change the look and feel of the toolbar to match the current design
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedAppBarColor = elevationOverlayProvider
-                .compositeOverlayIfNeeded(
-                        ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.wpColorAppBar),
-                        appbarElevation);
-        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
+        mRecyclerView.setToolbarBackgroundColor(0);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
         if (mIsTopLevel) {
@@ -1877,9 +1871,6 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
-    private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
-
     private void announceListStateForAccessibility() {
         if (getView() != null) {
             getView().announceForAccessibility(getString(R.string.reader_acessibility_list_loaded,
@@ -1964,13 +1955,10 @@ public class ReaderPostListFragment extends Fragment
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
-            mPostAdapter.setReblogActionListener(this);
-            mPostAdapter.setBlockSiteActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
-            mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
@@ -2102,6 +2090,11 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
+    }
+
+    @Override
+    public View getScrollableViewForUniqueIdProvision() {
+        return mRecyclerView.getInternalRecyclerView();
     }
 
     /*
@@ -2552,23 +2545,21 @@ public class ReaderPostListFragment extends Fragment
             case LIKE:
                 mViewModel.onLikeButtonClicked(post, isBookmarksList());
                 break;
+            case REBLOG:
+                mViewModel.onReblogButtonClicked(post, isBookmarksList());
+                break;
             case REPORT_POST:
-                HashMap<String, Object> properties = new HashMap();
-                properties.put("blog_id", post.blogId);
-                properties.put("is_jetpack", post.isJetpack);
-                properties.put("post_id", post.postId);
-                AnalyticsTracker.track(READER_POST_REPORTED, properties);
-                ReaderActivityLauncher.openUrl(
-                        getContext(),
-                        ReaderUtils.getReportPostUrl(post.getUrl()),
-                        INTERNAL
-                );
+                mViewModel.onReportPostButtonClicked(post, isBookmarksList());
                 break;
             case BLOCK_SITE:
+                mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
+                break;
             case BOOKMARK:
-            case REBLOG:
+                mViewModel.onBookmarkButtonClicked(post.blogId, post.postId, isBookmarksList());
+                break;
             case COMMENTS:
-                throw new IllegalStateException("These actions should be handled in ReaderPostAdapter.");
+                ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
         }
     }
 
@@ -2645,16 +2636,6 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    @Override
-    public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post, isBookmarksList());
-    }
-
-    @Override
-    public void blockSite(ReaderPost post) {
-        mViewModel.onBlockSiteButtonClicked(post, isBookmarksList());
     }
 
     @Override
