@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import kotlinx.android.synthetic.main.login_intro_template_view.view.*
 import kotlinx.android.synthetic.main.login_prologue_bottom_buttons_container_default.*
 import kotlinx.android.synthetic.main.login_signup_screen.*
 import org.wordpress.android.BuildConfig
@@ -79,6 +80,15 @@ class LoginPrologueFragment : Fragment() {
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
+        intros_pager.setPageTransformer(false) { page, position ->
+            // If position is between -1 and 1, it means at least a part of the page is visible.
+            if (position >= -1 && position <= 1) {
+                page.apply {
+                    promo_title.translationX = position * (width / 4f) // 1.25x normal speed
+                    promo_layout_container.translationX = position * (width / 2f) // 1.5x normal speed
+                }
+            }
+        }
 
         if (adapter.count > 1) {
             // Using a TabLayout for simulating a page indicator strip
