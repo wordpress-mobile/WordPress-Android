@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_author_and_blog_name"
         style="@style/ReaderTextView.Site.Title"
         android:layout_width="0dp"
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="text_blog_nametext_blog_name text_blog_name" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_blog_url"
         style="@style/ReaderTextView.Label"
         android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         tools:text="text_blog_url" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/dot_separator"
         style="@style/ReaderTextView.Label"
         android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
         app:layout_constrainedWidth="true"
         tools:text="text_blog_url" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_dateline"
         style="@style/ReaderTextView.Label"
         android:layout_width="wrap_content"

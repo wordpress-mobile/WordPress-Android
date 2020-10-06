@@ -116,7 +116,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogSection = buildHeaderSection(post, onPostHeaderViewClicked, postListType),
+                blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
                 tagItems = buildTagItems(post, onTagItemClicked),
@@ -146,9 +146,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     fun mapPostToPostHeaderUiState(
         post: ReaderPost,
-        onPostHeaderViewClicked: (Long, Long) -> Unit
+        onBlogSectionClicked: (Long, Long) -> Unit
     ): ReaderBlogSectionUiState {
-        return buildHeaderSection(post, onPostHeaderViewClicked, ReaderPostListType.BLOG_PREVIEW)
+        return buildBlogSection(post, onBlogSectionClicked)
     }
 
     suspend fun mapTagListToReaderInterestUiState(
@@ -173,16 +173,16 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
     }
 
-    private fun buildHeaderSection(
+    private fun buildBlogSection(
         post: ReaderPost,
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType
-    ) = buildHeaderSectionUiState(post, onPostHeaderViewClicked, postListType)
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType? = null
+    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType)
 
-    private fun buildHeaderSectionUiState(
+    private fun buildBlogSectionUiState(
         post: ReaderPost,
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType?
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
                 postId = post.postId,
@@ -191,18 +191,22 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 blogUrl = buildBlogUrl(post),
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-                blogSectionClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+                blogSectionClickData = buildOnBlogSectionClicked(onBlogSectionClicked, postListType)
         )
     }
 
     private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
             readerTagList.indexOf(readerTag) != lastIndex
 
-    private fun buildOnPostHeaderViewClicked(
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType
+    private fun buildOnBlogSectionClicked(
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType?
     ): ReaderBlogSectionClickData? {
-        return ReaderBlogSectionClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
+        return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
+            ReaderBlogSectionClickData(onBlogSectionClicked, android.R.attr.selectableItemBackground)
+        } else {
+            null
+        }
     }
 
     private fun buildBlogUrl(post: ReaderPost) = post

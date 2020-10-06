@@ -49,8 +49,8 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_end"
             app:layout_constraintTop_toTopOf="@id/guideline_top"/>
 
-        <include layout="@layout/reader_post_header"
-            android:id="@+id/layout_post_header"
+        <include layout="@layout/reader_blog_section_view"
+            android:id="@+id/layout_blog_section"
             android:layout_width="0dp"
             android:layout_height="@dimen/reader_post_header_height"
             android:importantForAccessibility="no"
@@ -89,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintBottom_toTopOf="@id/text_title"
-            app:layout_constraintTop_toBottomOf="@+id/layout_post_header" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_blog_section" />
 
         <ImageView
             android:id="@+id/image_video_overlay"
@@ -101,7 +101,7 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toBottomOf="@+id/layout_post_header"
+            app:layout_constraintTop_toBottomOf="@+id/layout_blog_section"
             app:layout_constraintBottom_toBottomOf="@+id/image_featured"
             tools:visibility="visible" />
 
@@ -136,7 +136,7 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toBottomOf="@id/layout_post_header"
+            app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
             app:layout_constraintBottom_toTopOf="@+id/text_title"
             tools:visibility="visible" />
 

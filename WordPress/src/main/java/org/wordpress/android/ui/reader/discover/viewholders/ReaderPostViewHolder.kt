@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
 import kotlinx.android.synthetic.main.reader_cardview_post.*
-import kotlinx.android.synthetic.main.reader_post_header.*
+import kotlinx.android.synthetic.main.reader_blog_section_view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -48,7 +48,7 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
         expandable_tags_view.updateUi(state.tagItems)
 
-        // Header section
+        // Blog section
         updateBlogSection(state)
 
         // More menu
@@ -97,18 +97,18 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(dot_separator, state.blogSection.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, state.blogSection.dateLine)
 
-        layout_post_header.setBackgroundResource(
-                layout_post_header.context.getDrawableResIdFromAttribute(
+        layout_blog_section.setBackgroundResource(
+                layout_blog_section.context.getDrawableResIdFromAttribute(
                         state.blogSection.blogSectionClickData?.background ?: 0
                 )
         )
         state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
-            layout_post_header.setOnClickListener {
+            layout_blog_section.setOnClickListener {
                 state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke(state.postId, state.blogId)
             }
         } ?: run {
-            layout_post_header.setOnClickListener(null)
-            layout_post_header.isClickable = false
+            layout_blog_section.setOnClickListener(null)
+            layout_blog_section.isClickable = false
         }
     }
 
