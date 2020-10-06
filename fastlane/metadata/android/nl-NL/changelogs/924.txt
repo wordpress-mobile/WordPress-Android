@@ -1,5 +1,0 @@
-15.7:
-Verbeteringen in de Reader: een nieuw tabblad Ontdekken dat je kan afstemmen op je interesses en een knop "(ont) volgen" voor de detailschermen van de site en het onderwerp.
-
-Verbeteringen in blok-editor:een nieuw Pullquote-blok waarmee je de nadruk kunt leggen op een gekozen stuk tekst. Eventuele wijzigingen in menu sliders worden nu ook onmiddellijk weerspiegeld in de blok instellingen.
-
