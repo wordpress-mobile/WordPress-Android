@@ -16,9 +16,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReportReferrerAsSpamResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
@@ -29,10 +29,6 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 private const val ITEMS_TO_LOAD = 8
 private val DATE = Date(0)
@@ -85,7 +81,7 @@ class ReferrersStoreTest {
         val responseModel = store.fetchReferrers(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        assertThat(responseModel.cached).isTrue()
+        assertThat(responseModel.cached).isTrue
         verify(sqlUtils, never()).insert(any(), any(), any(), any<Date>(), isNull())
     }
 
@@ -93,16 +89,16 @@ class ReferrersStoreTest {
     fun `returns error when referrers call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchStatsPayload<FetchReferrersResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<ReferrersResponse>(StatsError(type, message))
         val forced = true
         whenever(restClient.fetchReferrers(site, DAYS, DATE, ITEMS_TO_LOAD + 1, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchReferrers(site, DAYS, LimitMode.Top(ITEMS_TO_LOAD), DATE, forced)
 
-        assertNotNull(responseModel.error)
+        assertThat(responseModel.error).isNotNull
         val error = responseModel.error!!
-        assertEquals(type, error.type)
-        assertEquals(message, error.message)
+        assertThat(error.type).isEqualTo(type)
+        assertThat(error.message).isEqualTo(message)
     }
 
     @Test
@@ -167,10 +163,10 @@ class ReferrersStoreTest {
                 Date()
         )
 
-        assertNotNull(result.error)
+        assertThat(result.error).isNotNull
         val error = result.error!!
-        assertEquals(type, error.type)
-        assertEquals(message, error.message)
+        assertThat(error.type).isEqualTo(type)
+        assertThat(error.message).isEqualTo(message)
     }
 
     @Test
@@ -186,7 +182,7 @@ class ReferrersStoreTest {
                 Date()
         )
 
-        assertThat(result.model?.success).isEqualTo(true)
+        assertThat(result.model?.success).isTrue
     }
 
     @Test
@@ -204,10 +200,10 @@ class ReferrersStoreTest {
                 Date()
         )
 
-        assertNotNull(result.error)
+        assertThat(result.error).isNotNull
         val error = result.error!!
-        assertEquals(type, error.type)
-        assertEquals(message, error.message)
+        assertThat(error.type).isEqualTo(type)
+        assertThat(error.message).isEqualTo(message)
     }
 
     @Test
@@ -215,18 +211,18 @@ class ReferrersStoreTest {
         val groupResult = store.setSelectForSpam(REFERRERS_RESPONSE, "url_group_2.com", true)
 
         // Asserting group 1 is set with spam as false and group 2 is set with spam as true
-        assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!)
-        assertTrue(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!)
+        assertThat(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!).isFalse
+        assertThat(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!).isTrue
 
         val referrerResult = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com", true)
-        assertTrue(
+        assertThat(
                 ((referrerResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
-                [0] as FetchReferrersResponse.Referrer).spam!!)
+                [0] as ReferrersResponse.Referrer).spam!!).isTrue
 
         val childResult = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com", true)
-        assertTrue(
+        assertThat(
                 ((childResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
-                        [0] as FetchReferrersResponse.Referrer).children?.get(0)?.spam!!)
+                        [0] as ReferrersResponse.Referrer).children?.get(0)?.spam!!).isTrue
     }
 
     @Test
@@ -235,19 +231,19 @@ class ReferrersStoreTest {
         val groupResult = store.setSelectForSpam(groupResultWithSpam, "url_group_2.com", false)
 
         // Asserting group 1 and group 2 is set with spam to false
-        assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!)
-        assertFalse(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!)
+        assertThat(groupResult.groups.entries.toTypedArray()[0].value.groups[0].spam!!).isFalse
+        assertThat(groupResult.groups.entries.toTypedArray()[0].value.groups[1].spam!!).isFalse
 
         val referrerResultWitSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com", true)
         val referrerResult = store.setSelectForSpam(referrerResultWitSpam, "john.com", false)
-        assertFalse(
+        assertThat(
                 ((referrerResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
-                [0] as FetchReferrersResponse.Referrer).spam!!)
+                [0] as ReferrersResponse.Referrer).spam!!).isFalse
 
         val childResultWithSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com", true)
         val childResult = store.setSelectForSpam(childResultWithSpam, "child.com", false)
-        assertFalse(
+        assertThat(
                 ((childResult.groups.entries.toTypedArray()[0].value.groups[0].referrers as List<*>)
-                        [0] as FetchReferrersResponse.Referrer).children?.get(0)?.spam!!)
+                        [0] as ReferrersResponse.Referrer).children?.get(0)?.spam!!).isFalse
     }
 }

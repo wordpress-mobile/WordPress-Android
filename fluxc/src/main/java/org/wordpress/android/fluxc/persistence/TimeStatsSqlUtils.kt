@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClien
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.FileDownloadsRestClient.FileDownloadsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
@@ -124,12 +124,12 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
         statsSqlUtils: StatsSqlUtils,
         statsUtils: StatsUtils,
         statsRequestSqlUtils: StatsRequestSqlUtils
-    ) : TimeStatsSqlUtils<FetchReferrersResponse>(
+    ) : TimeStatsSqlUtils<ReferrersResponse>(
             statsSqlUtils,
             statsUtils,
             statsRequestSqlUtils,
             REFERRERS,
-            FetchReferrersResponse::class.java
+            ReferrersResponse::class.java
     )
 
     class ClicksSqlUtils

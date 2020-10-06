@@ -3,8 +3,8 @@ package org.wordpress.android.fluxc.store.stats.time
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnReportReferrerAsSpam
@@ -105,7 +105,7 @@ class ReferrersStore
         }
     }
 
-    fun setSelectForSpam(select: FetchReferrersResponse, domain: String, spam: Boolean): FetchReferrersResponse {
+    fun setSelectForSpam(select: ReferrersResponse, domain: String, spam: Boolean): ReferrersResponse {
         select.groups.entries.forEach {
             it.value.groups.forEach {
                 if (it.url == domain) {

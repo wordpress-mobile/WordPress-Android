@@ -27,10 +27,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReferrersRestClient.FetchReferrersResponse.Group
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers.ReportReferrerAsSpamResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReportReferrerAsSpamResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -173,7 +172,7 @@ class ReferrersRestClientTest {
     }
 
     private suspend fun testFetchReferrersSuccessResponse(granularity: StatsGranularity) {
-        val response = mock<FetchReferrersResponse>()
+        val response = mock<ReferrersResponse>()
         initFetchReferrersResponse(response)
 
         val responseModel = restClient.fetchReferrers(site, granularity, currentDate, pageSize, false)
@@ -286,10 +285,10 @@ class ReferrersRestClientTest {
     }
 
     private suspend fun initFetchReferrersResponse(
-        data: FetchReferrersResponse? = null,
+        data: ReferrersResponse? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<FetchReferrersResponse> {
-        return initGetResponse(FetchReferrersResponse::class.java, data ?: mock(), error)
+    ): Response<ReferrersResponse> {
+        return initGetResponse(ReferrersResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun initReportReferrerAsSpamApiResponse(
