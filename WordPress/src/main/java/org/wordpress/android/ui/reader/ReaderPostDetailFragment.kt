@@ -317,6 +317,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
         (activity as AppCompatActivity).setSupportActionBar(toolBar)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
         ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
@@ -334,6 +335,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (isRelatedPost) {
             toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().finish() }
+            toolBar.setTitle(string.reader_title_related_post_detail)
         } else {
             toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
