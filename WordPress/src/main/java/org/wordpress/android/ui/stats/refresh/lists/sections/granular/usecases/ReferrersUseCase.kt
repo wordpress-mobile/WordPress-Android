@@ -118,7 +118,7 @@ class ReferrersUseCase(
                                 group.total ?: 0
                         )
                 if (group.referrers.isEmpty()) {
-                    val spam = group.spam != null && group.spam!!
+                    val spam = group.markedAsSpam != null && group.markedAsSpam!!
                     val icon = buildIcon(group.icon, spam)
                     val headerItem = ListItemWithIcon(
                             icon = icon,
@@ -150,7 +150,7 @@ class ReferrersUseCase(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
-                            val spam = referrer.spam != null && referrer.spam!!
+                            val spam = referrer.markedAsSpam != null && referrer.markedAsSpam!!
                             val referrerIcon = buildIcon(referrer.icon, spam)
                             val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
                                 EMPTY_SPACE
@@ -168,7 +168,7 @@ class ReferrersUseCase(
                                     navigationAction = referrer.url?.let {
                                         create(it, this::onItemClick)
                                     },
-                                    menuAction = { view -> this.onMenuClick(view, referrer.url, referrer.spam) },
+                                    menuAction = { view -> this.onMenuClick(view, referrer.url, referrer.markedAsSpam) },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
                                             referrer.name,
