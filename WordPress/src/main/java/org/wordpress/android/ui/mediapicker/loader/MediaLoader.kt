@@ -5,14 +5,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.ui.mediapicker.MediaItem
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel.EmptyState
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.ClearFilter
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Filter
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Refresh
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManagerWrapper
 
 data class MediaLoader(
@@ -87,7 +90,15 @@ data class MediaLoader(
                     isLoading = false,
                     error = null,
                     hasMore = partialResult.hasMore,
-                    domainItems = partialResult.data
+                    domainItems = partialResult.data,
+                    emptyState = null
+            )
+            is Empty -> state.copy(
+                    isLoading = false,
+                    error = null,
+                    hasMore = false,
+                    domainItems = listOf(),
+                    emptyState = EmptyState(partialResult.title, partialResult.htmlSubtitle, partialResult.image)
             )
             is Failure -> state.copy(isLoading = false, error = partialResult.message)
         }
@@ -107,6 +118,9 @@ data class MediaLoader(
         val hasMore: Boolean = false,
         val isFilteredResult: Boolean = false,
         val filter: String? = null,
-        val isLoading: Boolean = false
-    )
+        val isLoading: Boolean = false,
+        val emptyState: EmptyState? = null
+    ) {
+        data class EmptyState(val title: UiString, val htmlSubtitle: UiString? = null, val image: Int? = null)
+    }
 }

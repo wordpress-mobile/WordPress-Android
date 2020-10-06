@@ -208,8 +208,17 @@ class MediaPickerViewModel @Inject constructor(
             } else {
                 PhotoListUiModel.Data(uiItems)
             }
+        } else if (domainModel?.emptyState != null) {
+            PhotoListUiModel.Empty(
+                    domainModel.emptyState.title,
+                    domainModel.emptyState.htmlSubtitle,
+                    domainModel.emptyState.image
+            )
         } else {
-            PhotoListUiModel.Empty
+            PhotoListUiModel.Empty(
+                    UiStringRes(R.string.media_empty_list),
+                    image = R.drawable.img_illustration_media_105dp
+            )
         }
     }
 
@@ -525,7 +534,9 @@ class MediaPickerViewModel @Inject constructor(
         data class Data(val items: List<MediaPickerUiItem>) :
                 PhotoListUiModel()
 
-        object Empty : PhotoListUiModel()
+        data class Empty(val title: UiString, val htmlSubtitle: UiString? = null, val image: Int? = null) :
+                PhotoListUiModel()
+
         object Hidden : PhotoListUiModel()
     }
 

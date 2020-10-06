@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mediapicker.loader
 
 import org.wordpress.android.ui.mediapicker.MediaItem
+import org.wordpress.android.ui.utils.UiString
 
 interface MediaSource {
     suspend fun load(
@@ -11,6 +12,9 @@ interface MediaSource {
 
     sealed class MediaLoadingResult {
         data class Success(val data: List<MediaItem>, val hasMore: Boolean = false) : MediaLoadingResult()
+        data class Empty(val title: UiString, val htmlSubtitle: UiString? = null, val image: Int? = null) :
+                MediaLoadingResult()
+
         data class Failure(val message: String) : MediaLoadingResult()
     }
 }

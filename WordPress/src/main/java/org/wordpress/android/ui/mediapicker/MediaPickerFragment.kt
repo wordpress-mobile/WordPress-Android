@@ -51,6 +51,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogU
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
@@ -59,6 +60,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -151,6 +153,7 @@ class MediaPickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: MediaPickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -379,8 +382,29 @@ class MediaPickerFragment : Fragment() {
                 recycler.visibility = View.VISIBLE
                 setupAdapter(uiModel.items)
             }
-            Empty -> {
+            is Empty -> {
                 actionable_empty_view.visibility = View.VISIBLE
+                actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
+                if (uiModel.htmlSubtitle != null) {
+                    actionable_empty_view.subtitle.text = Html.fromHtml(
+                            uiHelpers.getTextOfUiString(
+                                    requireContext(),
+                                    uiModel.htmlSubtitle
+                            ).toString()
+                    )
+                    actionable_empty_view.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
+                    actionable_empty_view.subtitle.visibility = View.VISIBLE
+                } else {
+                    actionable_empty_view.subtitle.visibility = View.GONE
+                }
+
+                if (uiModel.image != null) {
+                    actionable_empty_view.image.setImageResource(uiModel.image)
+                    actionable_empty_view.image.visibility = View.VISIBLE
+                } else {
+                    actionable_empty_view.image.visibility = View.GONE
+                }
+
                 recycler.visibility = View.INVISIBLE
                 setupAdapter(listOf())
             }
