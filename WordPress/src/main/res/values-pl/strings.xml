@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-29 13:34:42+0000
+Translation-Revision-Date: 2020-09-30 14:00:52+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Pogrubiona</string>
+    <string name="typeface_label_space_mono">Nowoczesna</string>
+    <string name="typeface_label_pacifico">Zabawna</string>
+    <string name="typeface_label_oswald">Silna</string>
+    <string name="typeface_label_libre_baskerville">Klasyczna</string>
+    <string name="typeface_label_nunito">Codzienna</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">wybrano %s</string>
+    <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
+    <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
+    <string name="permission_microphone">Mikrofon</string>
+    <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
+    <string name="media_browse_for_items">Przeglądaj elementy</string>
+    <string name="email_not_registered_wpcom">Hmm, nie możemy odnaleźć konta WordPress.com skojarzonego z tym adresem email.</string>
+    <string name="reader_menu_report_post">Opublikuj wpis ponownie</string>
+    <string name="reader_welcome_banner">Witamy w Czytniku. Odkryj miliony blogów. Są w zasięgu ręki.</string>
+    <string name="error_media_xmlrcp_server_error">Wystąpił wewnętrzny błąd serwera</string>
+    <string name="error_media_xmlrpc_not_allowed">Twoje działanie nie jest dozwolone</string>
+    <string name="show_n_hidden_items_desc">%1$s więcej elementów</string>
+    <string name="gutenberg_native_angle">Obrót</string>
     <string name="gutenberg_native_select_a_layout">Wybierz układ</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Uwaga: Układ kolumny może różnić się pomiędzy motywami i różnymi wymiarami ekranów</string>
     <string name="contact_fragment_title">\@string/contact_support</string>
@@ -1283,7 +1303,6 @@ Language: pl
     <string name="permissions_denied_title">Uprawnienia</string>
     <string name="plugin_caption_featured">Wyróżniający</string>
     <string name="version_with_name_param">Wersja %s</string>
-    <string name="email_not_registered_wpcom">Hmm, nie możemy odnaleźć konta WordPress.com połączonego z tym adresem email. Spróbuj poniższej odnośnika aby zalogować się używając adresu swojej witryny.</string>
     <string name="permissions_denied_message">Wygląda na to, że wyłączyłeś uprawnienia wymagane do tej funkcjonalności.&lt;br/>&lt;br/>Aby to zmienić, edytuj uprawnienia i upewnij się, iż &lt;strong>%s&lt;/strong> jest uaktywnione.</string>
     <string name="sharing_disabled_description">Nie możesz uzyskać dostępu do ustawień udostępniania ponieważ twój moduł udostępniania Jetpack jest wyłączony.</string>
     <string name="sharing_disabled">Moduł udostępniania wyłączony</string>
