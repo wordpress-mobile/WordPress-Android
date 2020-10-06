@@ -62,6 +62,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
                     listOf(UiStringText("<a href='https://pexels.com/'>Pexels</a>"))
             )
             assertThat(this.htmlSubtitle).isEqualTo(subtitle)
+            assertThat(this.image).isNull()
         }
         verifyZeroInteractions(stockMediaStore)
     }
@@ -91,6 +92,27 @@ class StockMediaDataSourceTest : BaseUnitTest() {
                     )
             )
             assertThat(this.hasMore).isTrue()
+        }
+        verify(stockMediaStore).fetchStockMedia(any(), any())
+        verify(stockMediaStore).getStockMedia()
+    }
+
+    @Test
+    fun `returns empty from store with filter with more than 2 chars`() = test {
+        val filter = "dog"
+        val loadMore = false
+        val hasMore = false
+        whenever(stockMediaStore.fetchStockMedia(filter, loadMore)).thenReturn(
+                OnStockMediaListFetched(listOf(), filter, 0, hasMore)
+        )
+        whenever(stockMediaStore.getStockMedia()).thenReturn(listOf())
+
+        val result = stockMediaDataSource.load(forced = false, loadMore = loadMore, filter = filter)
+
+        (result as MediaLoadingResult.Empty).apply {
+            assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.media_empty_search_list)
+            assertThat(this.htmlSubtitle).isNull()
+            assertThat(this.image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
         }
         verify(stockMediaStore).fetchStockMedia(any(), any())
         verify(stockMediaStore).getStockMedia()
