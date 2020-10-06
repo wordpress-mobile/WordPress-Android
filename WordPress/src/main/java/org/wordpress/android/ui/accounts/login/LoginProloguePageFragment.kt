@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -50,6 +51,14 @@ class LoginProloguePageFragment : Fragment() {
         promoLayoutId?.let {
             val inflater = LayoutInflater.from(view.context)
             inflater.inflate(promoLayoutId!!, promo_layout_container, true)
+
+            if (promoLayoutId == R.layout.login_prologue_second) {
+                val editText = view.findViewById<EditText>(R.id.edit_text)
+                editText.post {
+                    editText.isPressed = true
+                    editText.setSelection(editText.length())
+                }
+            }
         }
     }
 }
