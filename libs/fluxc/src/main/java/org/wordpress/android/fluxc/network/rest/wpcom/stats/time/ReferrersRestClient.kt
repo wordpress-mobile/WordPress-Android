@@ -132,7 +132,7 @@ class ReferrersRestClient
             @SerializedName("results") val results: JsonElement?,
             @SerializedName("referrers") var referrers: List<Referrer>? = null,
             @SerializedName("views") var views: Int? = null,
-            @SerializedName("spam") var spam: Boolean?
+            @SerializedName("markedAsSpam") var markedAsSpam: Boolean?
         ) {
             fun build(gson: Gson) {
                 when (this.results) {
@@ -154,7 +154,7 @@ class ReferrersRestClient
             @SerializedName("url") val url: String?,
             @SerializedName("views") val views: Int?,
             @SerializedName("children") val children: List<Child>?,
-            @SerializedName("spam") var spam: Boolean?
+            @SerializedName("markedAsSpam") var markedAsSpam: Boolean?
         )
 
         data class Child(
@@ -162,7 +162,7 @@ class ReferrersRestClient
             @SerializedName("views") val totals: Int?,
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
-            @SerializedName("spam") var spam: Boolean?
+            @SerializedName("markedAsSpam") var markedAsSpam: Boolean?
         )
     }
 
