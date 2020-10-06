@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-26 17:08:10+0000
+Translation-Revision-Date: 2020-10-01 19:31:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Fet</string>
+    <string name="typeface_label_space_mono">Moderne</string>
+    <string name="typeface_label_pacifico">Lekende</string>
+    <string name="typeface_label_oswald">Sterkt</string>
+    <string name="typeface_label_libre_baskerville">Klassisk</string>
+    <string name="typeface_label_nunito">Hverdagslig</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s valgt</string>
+    <string name="login_get_link_by_email">Få en innloggingslenke med e-post</string>
     <string name="gutenberg_native_select_a_layout">Velg et oppsett</string>
     <string name="create_post_story_fab_tooltip">Lag et innlegg eller en fortelling</string>
     <string name="create_page_fab_tooltip">Lag en side</string>
@@ -79,9 +88,9 @@ Language: nb_NO
     <string name="enter_your_site_address">Oppgi din nettstedsadresse</string>
     <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
     <string name="signup_confirmation_title">Registreringsbekreftelse</string>
-    <string name="signup_confirmation_magic_link_message">Vi vil sende deg en magisk lenke for å lage din nye WordPress.com-konto.</string>
+    <string name="signup_confirmation_magic_link_message">Vi vil sende deg en registreringslenke for å opprette din nye WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
-    <string name="signup_magic_link_message">Vi har sendt deg en magisk lenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
+    <string name="signup_magic_link_message">Vi har sendt deg en registreringslenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
     <string name="enter_account_info_for_site">Oppgi din kontoinformasjon for %1$s.</string>
     <string name="login_or">eller</string>
     <string name="continue_google_button_suffix">Fortsett med Google</string>
@@ -1177,7 +1186,6 @@ Language: nb_NO
     <string name="license_screen_title">Lisens</string>
     <string name="release_notes_screen_title">Utgivelsesnotater</string>
     <string name="signup_epilogue_error_avatar_view">Ditt profilbilde er lastet opp og vil bli synlig om kort tid.</string>
-    <string name="email_not_registered_wpcom">Hmm, vi kan ikke finne en WordPress.com-konto knyttet til denne e-postadressen. Forsøk lenken nedenfor for å logge inn med din nettstedsadresse.</string>
     <string name="permissions_denied_title">Tillatelser</string>
     <string name="plugin_caption_featured">Fremhevet</string>
     <string name="sharing_disabled">Delingsmodulen er deaktivert</string>

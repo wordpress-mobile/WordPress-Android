@@ -508,7 +508,6 @@ Language: es_CL
     <string name="help_screen_title">Ayuda y Soporte</string>
     <string name="me_section_screen_title">Yo</string>
     <string name="media_settings_screen_title">Detalles del archivo</string>
-    <string name="my_site_section_screen_title">Mi sitio</string>
     <string name="notif_settings_screen_title">Configuración de notificaciones</string>
     <string name="notifications_screen_title">Notificaciones</string>
     <string name="person_detail_screen_title">Detalle de la persona</string>
@@ -520,7 +519,6 @@ Language: es_CL
     <string name="plugin_caption_featured">Destacado</string>
     <string name="version_with_name_param">Versión %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="email_not_registered_wpcom">Hmm, no podemos encontrar una cuenta WordPress.com conectada a esta dirección de correo electrónico. Intenta el enlace de abajo para iniciar sesión usando tu dirección del sitio.</string>
     <string name="permissions_denied_message">Parece que ha desactivado los permisos requeridos para esta función. &lt;br/>&lt;br/>Para cambiar esto, edita tus permisos y asegúrate de que &lt;strong>%s&lt;/strong> está habilitado.</string>
     <string name="sharing_disabled">Módulo de uso inhabilitado</string>
     <string name="sharing_disabled_description">No puedes acceder a tu configuración de uso compartido porque tu módulo compartido de Jetpack está deshabilitado.</string>
@@ -589,7 +587,6 @@ Language: es_CL
     <string name="signup_epilogue_error_generic">Hubo algunos problemas al actualizar tu cuenta. Puedes reintentar o revertir los cambios para continuar.</string>
     <string name="signup_epilogue_hint_display">Nombre para Mostrar</string>
     <string name="signup_epilogue_hint_password">Contraseña (opcional)</string>
-    <string name="signup_epilogue_hint_password_detail">Siempre puedes iniciar sesión con un enlace mágico como el que acabas de usar, pero también puedes configurar una contraseña si lo prefieres.</string>
     <string name="signup_magic_link_error">Hubo algunos problemas para enviar el correo electrónico. Puedes reintentar ahora o cerrar y volver a intentarlo más tarde.</string>
     <string name="enter_site_address_instead">Inicia sesión ingresando la dirección de tu sitio.</string>
     <string name="enter_username_instead">Inicia sesión con tu nombre de usuario.</string>

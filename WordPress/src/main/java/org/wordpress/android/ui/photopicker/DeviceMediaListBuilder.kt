@@ -7,7 +7,6 @@ import android.provider.MediaStore.Images.Media
 import android.provider.MediaStore.Video
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.util.AppLog
@@ -71,9 +70,7 @@ class DeviceMediaListBuilder
                         UriWrapper(completeUri),
                         isVideo
                 )
-                if (MediaUtils.isSupportedMimeType(context.contentResolver.getType(completeUri))) {
-                    result.add(item)
-                }
+                result.add(item)
             }
         } finally {
             SqlUtils.closeCursor(cursor)

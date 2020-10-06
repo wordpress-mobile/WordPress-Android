@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.view.ActionMode.Callback
+import androidx.appcompat.widget.TooltipCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Lifecycle.Event.ON_START
 import androidx.lifecycle.Lifecycle.Event.ON_STOP
@@ -41,8 +42,11 @@ class MediaPickerActionModeCallback(private val viewModel: MediaPickerViewModel)
                     if (editItemUiModel.isVisible) {
                         editItem.isVisible = true
 
-                        editItem.actionView.setOnClickListener {
-                            onActionItemClicked(actionMode, editItem)
+                        editItem.actionView.let { actionView ->
+                            actionView.setOnClickListener {
+                                onActionItemClicked(actionMode, editItem)
+                            }
+                            TooltipCompat.setTooltipText(actionView, editItem.title)
                         }
 
                         val editItemBadge = editItem.actionView.findViewById<TextView>(R.id.customize_icon_count)

@@ -722,6 +722,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             cameraEnabled = cameraAllowed,
             systemPickerEnabled = true,
             editingEnabled = editingEnabled,
+            queueResults = false,
             title = R.string.wp_media_title
     )
 

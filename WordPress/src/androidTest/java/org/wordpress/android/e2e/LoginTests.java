@@ -15,6 +15,9 @@ import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRESS;
 import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_USERNAME;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_PASSWORDLESS_USER_EMAIL;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
+import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_SITE_ADDRESS;
 
 @RunWith(AndroidJUnit4.class)
@@ -31,8 +34,16 @@ public class LoginTests extends BaseTest {
     @Test
     public void loginWithEmailPassword() {
         new LoginFlow().chooseContinueWithWpCom()
-                       .enterEmailAddress()
-                       .enterPassword()
+                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
+                       .enterPassword(E2E_WP_COM_USER_PASSWORD)
+                       .confirmLogin();
+    }
+
+    @Test
+    public void loginWithPasswordlessAccount() {
+        new LoginFlow().chooseContinueWithWpCom()
+                       .enterEmailAddress(E2E_WP_COM_PASSWORDLESS_USER_EMAIL)
+                       .openMagicLink(mMagicLinkActivityTestRule)
                        .confirmLogin();
     }
 
@@ -40,15 +51,15 @@ public class LoginTests extends BaseTest {
     public void loginWithSiteAddress() {
         new LoginFlow().chooseEnterYourSiteAddress()
                        .enterSiteAddress(E2E_WP_COM_USER_SITE_ADDRESS)
-                       .enterEmailAddress()
-                       .enterPassword()
+                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
+                       .enterPassword(E2E_WP_COM_USER_PASSWORD)
                        .confirmLogin();
     }
 
     @Test
     public void loginWithMagicLink() {
         new LoginFlow().chooseContinueWithWpCom()
-                       .enterEmailAddress()
+                       .enterEmailAddress(E2E_WP_COM_USER_EMAIL)
                        .chooseMagicLink()
                        .openMagicLink(mMagicLinkActivityTestRule)
                        .confirmLogin();
