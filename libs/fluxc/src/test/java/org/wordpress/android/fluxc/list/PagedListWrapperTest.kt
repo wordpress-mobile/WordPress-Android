@@ -10,7 +10,6 @@ import com.nhaarman.mockitokotlin2.firstValue
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -33,7 +32,6 @@ import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 
-@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class PagedListWrapperTest {
     @get:Rule
