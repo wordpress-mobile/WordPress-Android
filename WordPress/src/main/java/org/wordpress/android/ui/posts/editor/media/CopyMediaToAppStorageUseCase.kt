@@ -20,17 +20,13 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
    * Some media providers (eg. Google Photos) give us a limited access to media files just so we can copy them and then
    * they revoke the access. Copying these files must be performed on the UI thread, otherwise the access might be
    * revoked before the action completes. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+   *
+   * From API 29 we need to download also the files from the media store
    */
     suspend fun copyFilesToAppStorageIfNecessary(uriList: List<Uri>): CopyMediaResult {
         return withContext(mainDispatcher) {
             uriList
-                    .map { mediaUri ->
-                        if (!mediaUtilsWrapper.isInMediaStore(mediaUri)) {
-                            copyToAppStorage(mediaUri)
-                        } else {
-                            mediaUri
-                        }
-                    }
+                    .map { mediaUri -> copyToAppStorage(mediaUri) }
                     .toList()
                     .let {
                         CopyMediaResult(
