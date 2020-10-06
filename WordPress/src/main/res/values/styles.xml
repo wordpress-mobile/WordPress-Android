@@ -1048,6 +1048,24 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Small" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="iconSize">20dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Medium" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Large" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="iconSize">28dp</item>
+    </style>
+
     <style name="Widget.LoginFlow.Prologue.Chip" parent="Widget.MaterialComponents.Chip.Action">
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAlignment">center</item>
@@ -1062,7 +1080,7 @@
     </style>
 
     <style name="Widget.LoginFlow.Prologue.Chip.TextAppearance" parent="TextAppearance.MaterialComponents.Chip">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">9sp</item>
     </style>
 
     <!-- Main actions styles -->

@@ -579,4 +579,8 @@
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
+
+    <!-- Login Prologue -->
+    <dimen name="login_prologue_content_area">320dp</dimen>
+    <dimen name="login_prologue_card_opacity">0.8</dimen>
 </resources>
