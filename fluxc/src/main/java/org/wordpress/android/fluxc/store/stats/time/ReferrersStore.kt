@@ -108,7 +108,8 @@ class ReferrersStore
     fun setSelectForSpam(select: ReferrersResponse, domain: String, spam: Boolean): ReferrersResponse {
         select.groups.entries.forEach {
             it.value.groups.forEach {
-                if (it.url == domain) {
+                if (it.url == domain || it.name == domain) {
+                    // Many groups has url as null, but they can still be spammed using their names as url
                     // Setting group.spam as true
                     it.markedAsSpam = spam
                 }
