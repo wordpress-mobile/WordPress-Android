@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mediapicker.loader
 
 import android.content.ContentResolver
+import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -70,20 +71,9 @@ class DeviceMediaLoader
             val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
             val dateIndex = cursor.getColumnIndexOrThrow(ID_DATE_MODIFIED)
             val titleIndex = cursor.getColumnIndexOrThrow(ID_TITLE)
-            var previousDateModified: Long? = null
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idIndex)
                 val dateModified = cursor.getLong(dateIndex)
-                val message = if (previousDateModified != null) {
-                    if (previousDateModified > dateModified) {
-                        "correct"
-                    } else {
-                        "incorrect"
-                    }
-                } else {
-                    "first"
-                }
-                previousDateModified = dateModified
                 val title = cursor.getString(titleIndex)
                 val uri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = DeviceMediaItem(
