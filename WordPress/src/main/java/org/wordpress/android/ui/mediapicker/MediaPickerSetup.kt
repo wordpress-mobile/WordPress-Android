@@ -13,6 +13,7 @@ data class MediaPickerSetup(
     val cameraEnabled: Boolean,
     val systemPickerEnabled: Boolean,
     val editingEnabled: Boolean,
+    val queueResults: Boolean,
     @StringRes val title: Int
 ) {
     enum class DataSource {
@@ -27,6 +28,7 @@ data class MediaPickerSetup(
         bundle.putBoolean(KEY_CAMERA_ENABLED, cameraEnabled)
         bundle.putBoolean(KEY_SYSTEM_PICKER_ENABLED, systemPickerEnabled)
         bundle.putBoolean(KEY_EDITING_ENABLED, editingEnabled)
+        bundle.putBoolean(KEY_QUEUE_RESULTS, queueResults)
         bundle.putInt(KEY_TITLE, title)
     }
 
@@ -38,6 +40,7 @@ data class MediaPickerSetup(
         intent.putExtra(KEY_CAMERA_ENABLED, cameraEnabled)
         intent.putExtra(KEY_SYSTEM_PICKER_ENABLED, systemPickerEnabled)
         intent.putExtra(KEY_EDITING_ENABLED, editingEnabled)
+        intent.putExtra(KEY_QUEUE_RESULTS, queueResults)
         intent.putExtra(KEY_TITLE, title)
     }
 
@@ -49,6 +52,7 @@ data class MediaPickerSetup(
         private const val KEY_CAMERA_ENABLED = "key_camera_enabled"
         private const val KEY_SYSTEM_PICKER_ENABLED = "key_system_picker_enabled"
         private const val KEY_EDITING_ENABLED = "key_editing_enabled"
+        private const val KEY_QUEUE_RESULTS = "key_queue_results"
         private const val KEY_TITLE = "key_title"
 
         fun fromBundle(bundle: Bundle): MediaPickerSetup {
@@ -63,6 +67,7 @@ data class MediaPickerSetup(
             val requiresStoragePermissions = bundle.getBoolean(KEY_REQUIRES_STORAGE_PERMISSIONS)
             val systemPickerEnabled = bundle.getBoolean(KEY_SYSTEM_PICKER_ENABLED)
             val editingEnabled = bundle.getBoolean(KEY_EDITING_ENABLED)
+            val queueResults = bundle.getBoolean(KEY_QUEUE_RESULTS)
             val title = bundle.getInt(KEY_TITLE)
             return MediaPickerSetup(
                     dataSource,
@@ -72,6 +77,7 @@ data class MediaPickerSetup(
                     cameraAllowed,
                     systemPickerEnabled,
                     editingEnabled,
+                    queueResults,
                     title
             )
         }
@@ -88,6 +94,7 @@ data class MediaPickerSetup(
             val requiresStoragePermissions = intent.getBooleanExtra(KEY_REQUIRES_STORAGE_PERMISSIONS, false)
             val systemPickerEnabled = intent.getBooleanExtra(KEY_SYSTEM_PICKER_ENABLED, false)
             val editingEnabled = intent.getBooleanExtra(KEY_SYSTEM_PICKER_ENABLED, false)
+            val queueResults = intent.getBooleanExtra(KEY_QUEUE_RESULTS, false)
             val title = intent.getIntExtra(KEY_TITLE, R.string.photo_picker_photo_or_video_title)
             return MediaPickerSetup(
                     dataSource,
@@ -97,6 +104,7 @@ data class MediaPickerSetup(
                     cameraAllowed,
                     systemPickerEnabled,
                     editingEnabled,
+                    queueResults,
                     title
             )
         }
