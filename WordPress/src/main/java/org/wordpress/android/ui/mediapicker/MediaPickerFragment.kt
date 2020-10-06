@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
@@ -49,10 +50,15 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogU
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
+import org.wordpress.android.util.SnackbarItem
+import org.wordpress.android.util.SnackbarItem.Action
+import org.wordpress.android.util.SnackbarItem.Info
+import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -144,6 +150,7 @@ class MediaPickerFragment : Fragment() {
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var snackbarSequencer: SnackbarSequencer
     private lateinit var viewModel: MediaPickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -265,6 +272,11 @@ class MediaPickerFragment : Fragment() {
                 val activity = requireActivity()
                 activity.setResult(Activity.RESULT_CANCELED)
                 activity.finish()
+            }
+        })
+        viewModel.onSnackbarMessage.observe(viewLifecycleOwner, Observer {
+            it?.getContentIfNotHandled()?.let { messageHolder ->
+                showSnackbar(messageHolder)
             }
         })
         setupProgressDialog()
@@ -437,6 +449,25 @@ class MediaPickerFragment : Fragment() {
                 }
             }
         })
+    }
+
+    private fun showSnackbar(holder: SnackbarMessageHolder) {
+        snackbarSequencer.enqueue(
+                SnackbarItem(
+                        Info(
+                                view = coordinator,
+                                textRes = holder.message,
+                                duration = Snackbar.LENGTH_LONG
+                        ),
+                        holder.buttonTitle?.let {
+                            Action(
+                                    textRes = holder.buttonTitle,
+                                    clickListener = View.OnClickListener { holder.buttonAction() }
+                            )
+                        },
+                        dismissCallback = { _, _ -> holder.onDismissAction() }
+                )
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
