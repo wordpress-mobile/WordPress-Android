@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
@@ -46,9 +46,11 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -90,12 +92,14 @@ class MediaPickerViewModel @Inject constructor(
     private val _searchExpanded = MutableLiveData<Boolean>()
     private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
     private val _onExit = MutableLiveData<Event<Unit>>()
+    private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onNavigateToEdit: LiveData<Event<List<UriWrapper>>> = _navigateToEdit
     val onInsert: LiveData<Event<List<Identifier>>> = _onInsert
     val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
     val onExit: LiveData<Event<Unit>> = _onExit
+    val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
 
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
@@ -343,19 +347,38 @@ class MediaPickerViewModel @Inject constructor(
         val ids = selectedIdentifiers()
         var job: Job? = null
         job = launch {
+            var progressDialogJob: Job? = null
             mediaInsertHandler.insertMedia(ids).collect {
                 when (it) {
                     is InsertModel.Progress -> {
-                        _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
-                            job?.cancel()
-                            _showProgressDialog.value = Hidden
-                        })
+                        progressDialogJob = launch {
+                            delay(100)
+                            _showProgressDialog.value = Visible(R.string.media_uploading_stock_library_photo) {
+                                job?.cancel()
+                                _showProgressDialog.value = Hidden
+                            }
+                        }
                     }
                     is InsertModel.Error -> {
+                        val message = if (it.error.isNotEmpty()) {
+                            UiStringResWithParams(
+                                    R.string.media_insert_failed_with_reason,
+                                    listOf(UiStringText(it.error))
+                            )
+                        } else {
+                            UiStringRes(R.string.media_insert_failed)
+                        }
+                        _onSnackbarMessage.value = Event(
+                                SnackbarMessageHolder(
+                                        message
+                                )
+                        )
+                        progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
                     }
                     is InsertModel.Success -> {
+                        progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
                         _onInsert.value = Event(it.identifiers)
