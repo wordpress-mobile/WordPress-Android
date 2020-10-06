@@ -45,6 +45,8 @@ class ReaderFollowButton @JvmOverloads constructor(
     private fun hideCaptionAndEnlargeIcon(context: Context) {
         text = null
         iconSize = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption)
+        iconPadding = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_padding_no_caption)
+        iconGravity = ICON_GRAVITY_TEXT_START
     }
 
     private fun updateFollowTextAndIcon() {

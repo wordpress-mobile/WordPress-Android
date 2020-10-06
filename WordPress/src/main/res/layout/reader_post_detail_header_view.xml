@@ -45,6 +45,17 @@
         app:layout_constraintEnd_toStartOf="@id/header_follow_button"
         app:layout_constraintTop_toBottomOf="@id/text_title" />
 
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        android:id="@+id/header_follow_button"
+        style="@style/Reader.Follow.Button.PostDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/layout_blog_section"
+        app:layout_constraintBottom_toBottomOf="@id/layout_blog_section"
+        tools:visibility="visible" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_by"
         android:layout_width="wrap_content"
@@ -69,17 +80,5 @@
         app:layout_constraintStart_toEndOf="@id/text_by"
         app:layout_constraintTop_toBottomOf="@id/layout_blog_section"
         tools:text="text_author"/>
-
-    <org.wordpress.android.ui.reader.views.ReaderFollowButton
-        android:id="@+id/header_follow_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
-        app:wpShowFollowButtonCaption="false"
-        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
