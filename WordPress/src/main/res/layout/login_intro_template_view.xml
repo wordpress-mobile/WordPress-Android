@@ -8,20 +8,12 @@
     android:paddingEnd="24dp"
     android:background="?attr/wpColorLoginPrologueBg">
 
-    <View
-        android:id="@+id/illustration_center_guide"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/promo_title"
-        app:layout_constraintTop_toTopOf="@+id/promo_layout_container" />
-
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/promo_title"
         style="@style/Widget.LoginFlow.TextView.PromoTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="126dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="@dimen/prologue_promo_title_margin_vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,7 +26,6 @@
         android:layout_width="320dp"
         android:layout_height="320dp"
         android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/promo_title"
