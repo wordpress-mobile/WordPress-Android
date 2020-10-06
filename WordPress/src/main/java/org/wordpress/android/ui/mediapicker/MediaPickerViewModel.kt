@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -343,19 +344,25 @@ class MediaPickerViewModel @Inject constructor(
         val ids = selectedIdentifiers()
         var job: Job? = null
         job = launch {
+            var progressDialogJob: Job? = null
             mediaInsertHandler.insertMedia(ids).collect {
                 when (it) {
                     is InsertModel.Progress -> {
-                        _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
-                            job?.cancel()
-                            _showProgressDialog.value = Hidden
-                        })
+                        progressDialogJob = launch {
+                            delay(100)
+                            _showProgressDialog.value = Visible(string.media_uploading_stock_library_photo) {
+                                job?.cancel()
+                                _showProgressDialog.value = Hidden
+                            }
+                        }
                     }
                     is InsertModel.Error -> {
+                        progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
                     }
                     is InsertModel.Success -> {
+                        progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
                         _onInsert.value = Event(it.identifiers)
