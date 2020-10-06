@@ -207,9 +207,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.PREVIEW_POST) {
             if (resultCode == Activity.RESULT_OK) {
-                viewModel.onCreatePageClicked() // TODO
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // TODO
+                viewModel.onCreatePageClicked()
             }
         }
     }

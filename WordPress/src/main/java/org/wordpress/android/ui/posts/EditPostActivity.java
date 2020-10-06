@@ -443,6 +443,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mIsPreview = getIntent().getExtras().getBoolean(EXTRA_IS_PREVIEW);
         setContentView(mIsPreview ? R.layout.mlp_preview_post_activity : R.layout.new_edit_post_activity);
 
+        if (mIsPreview) {
+            findViewById(R.id.createPageButton).setOnClickListener(view -> {
+                Intent i = getIntent();
+                setResult(RESULT_OK, i);
+                finish();
+            });
+        }
+
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
@@ -1895,7 +1903,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
         i.putExtra(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
-        setResult(RESULT_OK, i);
+        setResult(mIsPreview ? RESULT_CANCELED : RESULT_OK, i);
     }
 
     private void setupPrepublishingBottomSheetRunnable() {
