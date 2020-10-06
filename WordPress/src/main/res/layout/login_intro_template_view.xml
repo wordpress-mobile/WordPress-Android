@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/login_promo_title_37_percent" />
+        tools:text="@string/login_prologue_title_fifth" />
 
     <FrameLayout
         android:id="@+id/promo_layout_container"

@@ -10,24 +10,24 @@ import org.wordpress.android.R
 class LoginProloguePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val pages = listOf(
             Page(
-                    R.string.login_promo_title_first,
-                    R.layout.login_intro_promo_first
+                    R.string.login_prologue_title_first,
+                    R.layout.login_prologue_first
             ),
             Page(
-                    R.string.login_promo_title_second,
-                    R.layout.login_intro_promo_second
+                    R.string.login_prologue_title_second,
+                    R.layout.login_prologue_second
             ),
             Page(
-                    R.string.login_promo_title_third,
-                    R.layout.login_intro_promo_third
+                    R.string.login_prologue_title_third,
+                    R.layout.login_prologue_third
             ),
             Page(
-                    R.string.login_promo_title_fourth,
-                    R.layout.login_intro_promo_fourth
+                    R.string.login_prologue_title_fourth,
+                    R.layout.login_prologue_fourth
             ),
             Page(
-                    R.string.login_promo_title_fifth,
-                    R.layout.login_intro_promo_fifth
+                    R.string.login_prologue_title_fifth,
+                    R.layout.login_prologue_fifth
             )
     )
 

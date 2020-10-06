@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="320dp"
-    android:layout_height="320dp">
+    android:layout_width="@dimen/login_prologue_content_area"
+    android:layout_height="@dimen/login_prologue_content_area">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_one"
@@ -27,14 +27,14 @@
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_third_asset_one" />
+                android:src="@drawable/login_prologue_third_asset_one" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="38dp"
-                android:text="@string/login_promo_second_promo_first_subtitle"
+                android:text="@string/login_prologue_third_subtitle_one"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -42,7 +42,6 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-
         android:id="@+id/card_two"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -65,14 +64,14 @@
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_third_asset_two" />
+                android:src="@drawable/login_prologue_third_asset_two" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="31dp"
-                android:text="@string/login_promo_second_promo_second_subtitle"
+                android:text="@string/login_prologue_third_subtitle_two"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -102,14 +101,14 @@
                 android:layout_height="46dp"
                 android:layout_margin="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_third_asset_three" />
+                android:src="@drawable/login_prologue_third_asset_three" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="32dp"
-                android:text="@string/login_promo_second_promo_third_subtitle"
+                android:text="@string/login_prologue_third_subtitle_three"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -145,6 +144,5 @@
         app:icon="@drawable/ic_star_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

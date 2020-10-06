@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="320dp"
-    android:layout_height="320dp">
+    android:layout_width="@dimen/login_prologue_content_area"
+    android:layout_height="@dimen/login_prologue_content_area">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_one"
@@ -12,6 +12,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="64dp"
+        android:alpha="0.8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +27,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_fifth_asset_one"
+                android:src="@drawable/login_prologue_fifth_asset_one"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,12 +37,13 @@
                 android:layout_marginStart="8dp"
                 android:letterSpacing="0.009375"
                 android:maxLines="1"
-                android:text="Pamela Nguyen"
+                android:text="@string/login_prologue_fifth_subtitle_one"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@+id/avatar_one"
                 app:layout_constraintStart_toEndOf="@+id/avatar_one"
-                app:layout_constraintTop_toTopOf="@+id/avatar_one" />
+                app:layout_constraintTop_toTopOf="@+id/avatar_one"
+                tools:ignore="SmallSp" />
 
             <ImageView
                 android:id="@+id/avatar_two"
@@ -49,7 +51,7 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_fifth_asset_two"
+                android:src="@drawable/login_prologue_fifth_asset_two"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/avatar_one" />
 
@@ -59,12 +61,13 @@
                 android:layout_marginStart="8dp"
                 android:letterSpacing="0.009375"
                 android:maxLines="1"
-                android:text="Web News"
+                android:text="@string/login_prologue_fifth_subtitle_two"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@+id/avatar_two"
                 app:layout_constraintStart_toEndOf="@+id/avatar_two"
-                app:layout_constraintTop_toTopOf="@+id/avatar_two" />
+                app:layout_constraintTop_toTopOf="@+id/avatar_two"
+                tools:ignore="SmallSp" />
 
             <ImageView
                 android:id="@+id/avatar_three"
@@ -72,7 +75,7 @@
                 android:layout_height="24dp"
                 android:layout_marginTop="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_fifth_asset_three"
+                android:src="@drawable/login_prologue_fifth_asset_three"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/avatar_two" />
 
@@ -82,12 +85,13 @@
                 android:layout_marginStart="8dp"
                 android:letterSpacing="0.009375"
                 android:maxLines="1"
-                android:text="Rock n' Roll Weekly"
+                android:text="@string/login_prologue_fifth_subtitle_three"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@+id/avatar_three"
                 app:layout_constraintStart_toEndOf="@+id/avatar_three"
-                app:layout_constraintTop_toTopOf="@+id/avatar_three" />
+                app:layout_constraintTop_toTopOf="@+id/avatar_three"
+                tools:ignore="SmallSp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -100,6 +104,7 @@
         android:layout_marginStart="56dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="56dp"
+        android:alpha="0.8"
         android:minHeight="56dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,28 +120,27 @@
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.LoginFlow.Prologue.Chip"
-                android:text="Art" />
+                android:text="@string/login_prologue_fifth_tag_one" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.LoginFlow.Prologue.Chip"
-                android:text="Cooking" />
+                android:text="@string/login_prologue_fifth_tag_two" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.LoginFlow.Prologue.Chip"
-                android:text="Football" />
+                android:text="@string/login_prologue_fifth_tag_three" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.LoginFlow.Prologue.Chip"
-                android:text="Gardening" />
+                android:text="@string/login_prologue_fifth_tag_four" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.LoginFlow.Prologue.Chip"
-                android:text="Music"
-                android:textAlignment="center" />
+                android:text="@string/login_prologue_fifth_tag_five" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.LoginFlow.Prologue.Chip"
-                android:text="Politics" />
+                android:text="@string/login_prologue_fifth_tag_six" />
 
         </com.google.android.material.chip.ChipGroup>
     </com.google.android.material.card.MaterialCardView>
@@ -148,6 +152,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="64dp"
+        android:alpha="0.8"
         android:minHeight="72dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -165,7 +170,7 @@
                 android:layout_width="64dp"
                 android:layout_height="32dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_fifth_asset_four"
+                android:src="@drawable/login_prologue_fifth_asset_four"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -173,12 +178,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="My Top Ten Cafes"
+                android:text="@string/login_prologue_fifth_caption_one"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="9sp"
                 app:layout_constraintEnd_toEndOf="@+id/image_one"
                 app:layout_constraintStart_toStartOf="@+id/image_one"
-                app:layout_constraintTop_toBottomOf="@+id/image_one" />
+                app:layout_constraintTop_toBottomOf="@+id/image_one"
+                tools:ignore="SmallSp" />
 
             <ImageView
                 android:id="@+id/image_two"
@@ -186,22 +192,21 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_fifth_asset_five"
+                android:src="@drawable/login_prologue_fifth_asset_five"
                 app:layout_constraintStart_toEndOf="@+id/image_one"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textview.MaterialTextView
-
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="The World's Best Fans"
+                android:text="@string/login_prologue_fifth_caption_two"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="9sp"
                 app:layout_constraintEnd_toEndOf="@+id/image_two"
                 app:layout_constraintStart_toStartOf="@+id/image_two"
-                app:layout_constraintTop_toBottomOf="@+id/image_two" />
-
+                app:layout_constraintTop_toBottomOf="@+id/image_two"
+                tools:ignore="SmallSp" />
 
             <ImageView
                 android:id="@+id/image_three"
@@ -209,7 +214,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_fifth_asset_five"
+                android:src="@drawable/login_prologue_fifth_asset_five"
                 app:layout_constraintStart_toEndOf="@+id/image_two"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -217,15 +222,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Museums in London"
+                android:text="@string/login_prologue_fifth_caption_three"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="9sp"
                 app:layout_constraintEnd_toEndOf="@+id/image_three"
                 app:layout_constraintStart_toStartOf="@+id/image_three"
-                app:layout_constraintTop_toBottomOf="@+id/image_three" />
+                app:layout_constraintTop_toBottomOf="@+id/image_three"
+                tools:ignore="SmallSp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -258,6 +263,5 @@
         app:icon="@drawable/ic_reader_follow_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

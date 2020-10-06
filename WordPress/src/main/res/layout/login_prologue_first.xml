@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="320dp"
-    android:layout_height="320dp">
+    android:layout_width="@dimen/login_prologue_content_area"
+    android:layout_height="@dimen/login_prologue_content_area">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_one"
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
-            android:src="@drawable/login_promo_first_assert_one" />
+            android:src="@drawable/login_prologue_first_assert_one" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -30,11 +30,11 @@
         app:layout_constraintStart_toEndOf="@+id/image_one"
         app:layout_constraintTop_toTopOf="parent">
 
-          <ImageView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
-            android:src="@drawable/login_promo_first_assert_two" />
+            android:src="@drawable/login_prologue_first_assert_two" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -45,8 +45,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toEndOf="@+id/image_two"
-        app:layout_constraintTop_toTopOf="parent" >
-
+        app:layout_constraintTop_toTopOf="parent">
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -65,13 +64,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/image_four"
-        app:layout_constraintTop_toBottomOf="@+id/image_one" >
+        app:layout_constraintTop_toBottomOf="@+id/image_one">
 
-             <ImageView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
-            android:src="@drawable/login_promo_first_assert_five" />
+            android:src="@drawable/login_prologue_first_assert_five" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -82,13 +81,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@+id/image_five"
-        app:layout_constraintTop_toTopOf="@+id/image_five"  >
+        app:layout_constraintTop_toTopOf="@+id/image_five">
 
-             <ImageView
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
-            android:src="@drawable/login_promo_first_assert_six" />
+            android:src="@drawable/login_prologue_first_assert_six" />
 
     </com.google.android.material.card.MaterialCardView>
 

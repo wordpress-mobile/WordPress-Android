@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="320dp"
-    android:layout_height="320dp">
+    android:layout_width="@dimen/login_prologue_content_area"
+    android:layout_height="@dimen/login_prologue_content_area">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_one"
@@ -56,7 +55,7 @@
             android:cursorVisible="true"
             android:fontFamily="serif"
             android:includeFontPadding="false"
-            android:text="Getting Inspired"
+            android:text="@string/login_prologue_second_subtitle_one"
             android:textColor="?attr/colorOnSurface"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -90,12 +89,13 @@
             android:cursorVisible="true"
             android:focusable="false"
             android:focusableInTouchMode="false"
+            android:importantForAutofill="no"
             android:includeFontPadding="false"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:lineHeight="18sp"
-            android:text="I am so inspired by photographer Cameron Karsten's work. I will be trying these techniques on my next"
+            android:text="@string/login_prologue_second_subtitle_two"
             android:textCursorDrawable="@null"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:lineHeight="18sp" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -123,24 +123,23 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_second_assert_one" />
+                android:src="@drawable/login_prologue_second_assert_one" />
 
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_marginStart="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_second_assert_two" />
+                android:src="@drawable/login_prologue_second_assert_two" />
 
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_marginStart="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_promo_second_assert_three" />
+                android:src="@drawable/login_prologue_second_assert_three" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
