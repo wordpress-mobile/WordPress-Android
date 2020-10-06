@@ -133,6 +133,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
@@ -310,35 +311,41 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         scrollView.setScrollDirectionListener(this)
 
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
-        appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
-
-        featuredImageView = appBar.findViewById(R.id.featured_image)
-        featuredImageView.setOnClickListener { showFullScreen() }
-
         val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
-        (activity as AppCompatActivity).setSupportActionBar(toolBar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
-        ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
-            val insetTop = insets.systemWindowInsetTop
-            if (insetTop > 0) {
-                toolBar.setPadding(0, insetTop, 0, 0)
+        if (activity is ReaderPostPagerActivity) {
+            toolBar.setVisible(true)
+            appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
+
+            (activity as AppCompatActivity).setSupportActionBar(toolBar)
+            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+
+            // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
+            ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+                val insetTop = insets.systemWindowInsetTop
+                if (insetTop > 0) {
+                    toolBar.setPadding(0, insetTop, 0, 0)
+                }
+                insets.consumeSystemWindowInsets()
             }
-            insets.consumeSystemWindowInsets()
-        }
 
-        // Fixes viewpager not displaying menu items for first fragment
-        toolBar.inflateMenu(R.menu.reader_detail)
+            // Fixes viewpager not displaying menu items for first fragment
+            toolBar.inflateMenu(R.menu.reader_detail)
 
-        // for related posts, show an X in the toolbar which closes the activity
-        if (isRelatedPost) {
-            toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
-            toolBar.setNavigationOnClickListener { requireActivity().finish() }
-            toolBar.setTitle(string.reader_title_related_post_detail)
+            // for related posts, show an X in the toolbar which closes the activity
+            if (isRelatedPost) {
+                toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
+                toolBar.setNavigationOnClickListener { requireActivity().finish() }
+                toolBar.setTitle(string.reader_title_related_post_detail)
+            } else {
+                toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+            }
+
+            featuredImageView = appBar.findViewById(R.id.featured_image)
+            featuredImageView.setOnClickListener { showFullScreen() }
         } else {
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+            toolBar.setVisible(false)
         }
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
