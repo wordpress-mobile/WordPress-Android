@@ -5,13 +5,44 @@
     android:layout_width="320dp"
     android:layout_height="320dp">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_one"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Small"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/purple_50"
+        app:icon="@drawable/ic_align_image_left_white_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_two" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_two"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="52dp"
+        android:backgroundTint="@color/pink_40"
+        app:icon="@drawable/ic_image_multiple_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/card_three" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_three"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="@color/blue_50"
+        app:icon="@drawable/ic_plus_white_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_one"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="48dp"
+        android:alpha="0.8"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +57,8 @@
             android:fontFamily="serif"
             android:includeFontPadding="false"
             android:text="Getting Inspired"
-            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </com.google.android.material.card.MaterialCardView>
@@ -35,22 +67,24 @@
         android:id="@+id/card_two"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
-        android:minHeight="48dp"
+        android:alpha="0.8"
+        android:minHeight="96dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_one">
 
         <EditText
+            android:id="@+id/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="11dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="13dp"
             android:background="@android:color/transparent"
             android:clickable="false"
             android:cursorVisible="true"
@@ -58,6 +92,7 @@
             android:focusableInTouchMode="false"
             android:includeFontPadding="false"
             android:inputType="textMultiLine|textNoSuggestions"
+            android:lineHeight="18sp"
             android:text="I am so inspired by photographer Cameron Karsten's work. I will be trying these techniques on my next"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
@@ -68,10 +103,11 @@
         android:id="@+id/card_three"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
-        android:minHeight="48dp"
+        android:alpha="0.8"
+        android:minHeight="80dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_two">
@@ -86,62 +122,25 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:background="@color/blue_10"
-                android:importantForAccessibility="no" />
-
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="8dp"
-                android:background="@color/blue_20"
-                android:importantForAccessibility="no" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_promo_second_assert_one" />
 
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_marginStart="8dp"
-                android:background="@color/blue_30"
-                android:importantForAccessibility="no" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_promo_second_assert_two" />
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_promo_second_assert_three" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/fab_one"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="#8E5198"
-        app:icon="@drawable/ic_align_image_left_white_24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/card_two" />
-
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:id="@+id/fab_two"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="#D35883"
-        app:icon="@drawable/ic_image_multiple_white_24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/card_three" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/fab_three"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#3871AC"
-        app:icon="@drawable/ic_plus_white_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

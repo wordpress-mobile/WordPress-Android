@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="320dp"
     android:layout_height="320dp">
 
@@ -12,7 +11,8 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="48dp"
-        android:minHeight="48dp"
+        android:alpha="0.8"
+        android:minHeight="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,33 +20,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingEnd="16dp">
+            android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="46dp"
-                android:layout_height="46dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_user_circle_grey_24dp" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_promo_third_asset_one" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                 android:layout_marginEnd="8dp"
-                android:text="@string/login_promo_second_promo_first_subtitle" />
+                android:layout_marginEnd="38dp"
+                android:text="@string/login_promo_second_promo_first_subtitle"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
+
         android:id="@+id/card_two"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
+        android:layout_marginStart="64dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="28dp"
-        android:minHeight="48dp"
+        android:layout_marginEnd="32dp"
+        android:alpha="0.8"
+        android:minHeight="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_one">
@@ -57,19 +61,20 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="46dp"
-                android:layout_height="46dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_gridicons_user_circle_100dp" />
-
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_promo_third_asset_two" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"
-                android:cursorVisible="true"
-                android:text="@string/login_promo_second_promo_second_subtitle" />
+                android:layout_marginEnd="31dp"
+                android:text="@string/login_promo_second_promo_second_subtitle"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
@@ -81,66 +86,62 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
-        android:minHeight="48dp"
+        android:alpha="0.8"
+        android:minHeight="64dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_two">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_user_circle_grey_24dp" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_promo_third_asset_three" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                 android:layout_marginEnd="8dp"
                 android:layout_gravity="center_vertical"
-                android:text="@string/login_promo_second_promo_third_subtitle" />
+                android:layout_marginEnd="32dp"
+                android:text="@string/login_promo_second_promo_third_subtitle"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_one"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="94dp"
-        android:backgroundTint="#4BA586"
-        app:borderWidth="0dp"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Small"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="96dp"
+        android:backgroundTint="@color/celadon_30"
         app:icon="@drawable/ic_reply_white_24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_two"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="12dp"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="48dp"
-        android:backgroundTint="#3871AC"
+        android:backgroundTint="@color/blue_50"
         app:icon="@drawable/ic_comment_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_three"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="36dp"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Small"
         android:layout_marginTop="40dp"
-        android:backgroundTint="#EAC952"
-        android:src="@drawable/ic_stats_alt_white_24dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/yellow_20"
         app:icon="@drawable/ic_star_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

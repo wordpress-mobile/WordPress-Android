@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="320dp"
     android:layout_height="320dp">
-
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_one"
@@ -13,8 +11,15 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:src="@drawable/login_promo_first_assert_one" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_two"
@@ -23,7 +28,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="48dp"
         app:layout_constraintStart_toEndOf="@+id/image_one"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+          <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:src="@drawable/login_promo_first_assert_two" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_three"
@@ -32,7 +45,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toEndOf="@+id/image_two"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_four"
@@ -49,7 +65,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/image_four"
-        app:layout_constraintTop_toBottomOf="@+id/image_one" />
+        app:layout_constraintTop_toBottomOf="@+id/image_one" >
+
+             <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:src="@drawable/login_promo_first_assert_five" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_six"
@@ -58,7 +82,15 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toEndOf="@+id/image_five"
-        app:layout_constraintTop_toTopOf="@+id/image_five" />
+        app:layout_constraintTop_toTopOf="@+id/image_five"  >
+
+             <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:src="@drawable/login_promo_first_assert_six" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_seven"
@@ -71,38 +103,32 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_one"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Small"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="#4BA586"
+        android:backgroundTint="@color/celadon_30"
         app:icon="@drawable/ic_pages_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_two"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="47dp"
-        android:layout_height="47dp"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
         android:layout_marginStart="52dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="#DA8E40"
+        android:backgroundTint="@color/orange_30"
         app:icon="@drawable/ic_customize_white_24dp"
         app:layout_constraintBottom_toBottomOf="@+id/image_one"
         app:layout_constraintStart_toStartOf="@+id/image_one" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_three"
-        style="@style/Widget.LoginFlow.Prologue.CircularButton"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="120dp"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Large"
+        android:layout_marginTop="152dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="#D35883"
+        android:backgroundTint="@color/pink_40"
         app:icon="@drawable/ic_create_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image_three" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
