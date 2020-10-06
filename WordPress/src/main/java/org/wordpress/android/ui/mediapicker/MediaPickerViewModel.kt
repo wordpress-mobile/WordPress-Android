@@ -458,15 +458,23 @@ class MediaPickerViewModel @Inject constructor(
         if (softAskRequest != null && softAskRequest.show) {
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val permissionName = ("<strong>${
+                val writePermission = ("<strong>${
                     WPPermissionUtils.getPermissionName(
                             resourceProvider,
                             permission.WRITE_EXTERNAL_STORAGE
                     )
                 }</strong>")
+                val readPermission = ("<strong>${
+                    WPPermissionUtils.getPermissionName(
+                            resourceProvider,
+                            permission.READ_EXTERNAL_STORAGE
+                    )
+                }</strong>")
                 String.format(
-                        resourceProvider.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
-                        permissionName
+                        resourceProvider.getString(R.string.media_picker_soft_ask_permissions_denied),
+                        appName,
+                        writePermission,
+                        readPermission
                 )
             } else {
                 String.format(
