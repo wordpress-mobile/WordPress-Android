@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts.editor.media
 import android.net.Uri
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -16,29 +15,14 @@ import org.wordpress.android.test
 import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-@UseExperimental(InternalCoroutinesApi::class)
+@InternalCoroutinesApi
 class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     @Test
-    fun `do NOT copy files which are present in media store`() = test {
-        // Arrange
-        val uris = listOf<Uri>(mock())
-        val mediaUtilsWrapper = createMediaUtilsWrapper(resultForIsInMediaStore = true)
-        // Act
-        val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
-
-        // Assert
-        verify(mediaUtilsWrapper, never()).copyFileToAppStorage(any())
-        assertThat(result.permanentlyAccessibleUris[0]).isEqualTo(uris[0])
-    }
-
-    @Test
-    fun `copy only files which are NOT present in media store`() = test {
+    fun `copy all files`() = test {
         // Arrange
         val expectedCopiedFileUri = mock<Uri>()
         val uris = listOf<Uri>(mock())
         val mediaUtilsWrapper = createMediaUtilsWrapper(
-                resultForIsInMediaStore = false,
                 resultForCopiedFileUri = (uris[0] to expectedCopiedFileUri)
         )
         // Act
@@ -88,15 +72,14 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
+        @InternalCoroutinesApi
         fun createCopyMediaToAppStorageUseCase(mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper()) =
                 CopyMediaToAppStorageUseCase(mediaUtilsWrapper, TEST_DISPATCHER)
 
         fun createMediaUtilsWrapper(
-            resultForIsInMediaStore: Boolean = false,
             resultForCopiedFileUri: Pair<Uri, Uri?>? = null
         ) =
                 mock<MediaUtilsWrapper> {
-                    on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
                     on { copyFileToAppStorage(any()) }.thenReturn(mock())
                     resultForCopiedFileUri?.let {
                         on { copyFileToAppStorage(resultForCopiedFileUri.first) }.thenReturn(
