@@ -6,6 +6,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_one"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="64dp"
         android:layout_height="152dp"
         android:layout_marginStart="32dp"
@@ -23,6 +24,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_two"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="96dp"
         android:layout_height="128dp"
         android:layout_marginStart="16dp"
@@ -40,6 +42,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_three"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="64dp"
         android:layout_height="152dp"
         android:layout_marginStart="16dp"
@@ -51,6 +54,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_four"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="48dp"
         android:layout_height="96dp"
         android:layout_marginTop="8dp"
@@ -59,6 +63,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_five"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="40dp"
         android:layout_height="72dp"
         android:layout_marginStart="16dp"
@@ -76,6 +81,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_six"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="40dp"
         android:layout_height="72dp"
         android:layout_marginStart="16dp"
@@ -93,6 +99,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/image_seven"
+        style="@style/Widget.LoginFlow.Prologue.Card.ImageOnly"
         android:layout_width="64dp"
         android:layout_height="110dp"
         android:layout_marginStart="16dp"
