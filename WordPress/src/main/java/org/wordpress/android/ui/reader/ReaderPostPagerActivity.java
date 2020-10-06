@@ -13,13 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.appbar.AppBarLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -218,55 +215,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                 }
 
                 mLastSelectedPosition = position;
-                updateTitle(position);
             }
         });
 
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-    }
-
-    /*
-     * set the activity title based on the post at the passed position
-     */
-    private void updateTitle(int position) {
-        Fragment fragment = getActivePagerFragment();
-        if (fragment == null || fragment.getView() == null) {
-            return;
-        }
-        AppBarLayout fragActionBar = fragment.getView().findViewById(R.id.appbar_with_collapsing_toolbar_layout);
-        Toolbar toolbar = fragActionBar.findViewById(R.id.toolbar_main);
-
-        // for related posts, always show "Related Post" as the title
-        if (mIsRelatedPostView) {
-            toolbar.setTitle(R.string.reader_title_related_post_detail);
-            return;
-        }
-
-        // otherwise set the title to the title of the post
-        ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
-        if (ids != null) {
-            String title = ReaderPostTable.getPostTitle(ids.getBlogId(), ids.getPostId());
-            if (!title.isEmpty()) {
-                toolbar.setTitle(title);
-                return;
-            }
-        }
-
-        // default when post hasn't been retrieved yet
-        toolbar.setTitle(ActivityUtils.isDeepLinking(getIntent()) ? R.string.reader_title_post_detail_wpcom
-                : R.string.reader_title_post_detail);
-    }
-
-    /*
-     * used by the detail fragment when a post was requested due to not existing locally
-     */
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.SinglePostDownloaded event) {
-        if (!isFinishing()) {
-            updateTitle(mViewPager.getCurrentItem());
-        }
     }
 
     private void handleDeepLinking() {
@@ -705,11 +658,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
-                            updateTitle(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
-                            updateTitle(currentPosition);
                         }
 
                         // let the user know they can swipe between posts
