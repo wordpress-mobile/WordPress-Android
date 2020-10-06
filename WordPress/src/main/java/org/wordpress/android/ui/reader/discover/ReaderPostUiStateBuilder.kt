@@ -175,9 +175,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildBlogSection(
         post: ReaderPost,
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType? = null
-    ) = buildBlogSectionUiState(post, onPostHeaderViewClicked, postListType)
+    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType)
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
