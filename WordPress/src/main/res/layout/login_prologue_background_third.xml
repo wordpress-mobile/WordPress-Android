@@ -6,25 +6,25 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/purple_circle"
+        android:id="@+id/yellow_circle"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
-        android:tint="@color/purple_10"
-        app:layout_constraintBottom_toBottomOf="@id/guideline_purple_circle_bottom"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_purple_circle_end"
+        android:tint="@color/yellow_10"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_yellow_circle_bottom"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_yellow_circle_end"
         tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_purple_circle_bottom"
+        android:id="@+id/guideline_yellow_circle_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="60dp" />
+        app:layout_constraintGuide_begin="90dp" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_purple_circle_end"
+        android:id="@+id/guideline_yellow_circle_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -34,48 +34,74 @@
         android:id="@+id/blue_circle"
         android:layout_width="140dp"
         android:layout_height="140dp"
+        android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
-        android:tint="@color/wordpress_blue_20"
+        android:tint="@color/blue_5"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_blue_circle_bottom"
         app:layout_constraintEnd_toEndOf="@+id/guideline_blue_circle_end"
-        app:layout_constraintTop_toTopOf="@id/guideline_blue_circle_top"
         tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_blue_circle_top"
+        android:id="@+id/guideline_blue_circle_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="130dp" />
+        app:layout_constraintGuide_begin="60dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_blue_circle_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="60dp" />
+        app:layout_constraintGuide_begin="20dp" />
 
     <ImageView
-        android:id="@+id/green_circle"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:id="@+id/purple_circle"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
-        android:tint="@color/green_5"
-        app:layout_constraintStart_toStartOf="@+id/guideline_green_circle_start"
-        app:layout_constraintTop_toTopOf="@id/guideline_green_circle_top"
+        android:tint="@color/purple_20"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_purple_circle_bottom"
+        app:layout_constraintStart_toStartOf="@+id/guideline_purple_circle_start"
         tools:ignore="ContentDescription" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_green_circle_top"
+        android:id="@+id/guideline_purple_circle_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="80dp" />
+        app:layout_constraintGuide_begin="70dp" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_green_circle_start"
+        android:id="@+id/guideline_purple_circle_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_end="60dp" />
+
+    <ImageView
+        android:id="@+id/orange_circle"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/bg_oval_translucent_stroke_3dp"
+        android:tint="@color/orange_10"
+        app:layout_constraintStart_toStartOf="@+id/guideline_orange_circle_start"
+        app:layout_constraintTop_toTopOf="@id/guideline_orange_circle_top"
+        tools:ignore="ContentDescription" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_orange_circle_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintGuide_end="40dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_orange_circle_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="80dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
