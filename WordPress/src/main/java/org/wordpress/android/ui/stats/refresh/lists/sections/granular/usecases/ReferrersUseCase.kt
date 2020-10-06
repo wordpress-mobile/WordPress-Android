@@ -130,7 +130,7 @@ class ReferrersUseCase(
                             navigationAction = group.url?.let {
                                 create(it, this::onItemClick)
                             },
-                            menuAction = { view -> this.onMenuClick(view, group.url, spam) },
+                            longClickAction = { view -> this.onMenuClick(view, group.url, spam) },
                             contentDescription = contentDescription
                     )
                     items.add(headerItem)
@@ -168,7 +168,9 @@ class ReferrersUseCase(
                                     navigationAction = referrer.url?.let {
                                         create(it, this::onItemClick)
                                     },
-                                    menuAction = { view -> this.onMenuClick(view, referrer.url, referrer.markedAsSpam) },
+                                    longClickAction = {
+                                        view -> this.onMenuClick(view, referrer.url, referrer.markedAsSpam)
+                                    },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
                                             referrer.name,
@@ -196,12 +198,10 @@ class ReferrersUseCase(
     private fun buildTextStyle(spam: Boolean) = if (spam) LIGHT else TextStyle.NORMAL
 
     private fun buildIcon(iconUrl: String?, spam: Boolean): Int? {
-        if (spam) {
-            return R.drawable.ic_spam_white_24dp
-        }
-        return when (iconUrl) {
-            null -> R.drawable.ic_globe_white_24dp
-            "https://wordpress.com/i/stats/search-engine.png" -> R.drawable.ic_search_white_24dp
+        return when {
+            spam -> R.drawable.ic_spam_white_24dp
+            iconUrl == null -> R.drawable.ic_globe_white_24dp
+            iconUrl == "https://wordpress.com/i/stats/search-engine.png" -> R.drawable.ic_search_white_24dp
             else -> null
         }
     }

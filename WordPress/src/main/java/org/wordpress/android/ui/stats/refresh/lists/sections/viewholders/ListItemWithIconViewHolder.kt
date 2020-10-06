@@ -40,7 +40,7 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
             View.GONE
         }
         val clickAction = item.navigationAction
-        val longClickAction = item.menuAction
+        val longClickAction = item.longClickAction
         if (longClickAction != null) {
             itemView.setOnLongClickListener { longClickAction.invoke(itemView) }
         }

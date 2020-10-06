@@ -151,7 +151,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon,
-                singleReferrer.markedAsSpam 
+                singleReferrer.markedAsSpam
         )
         return assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
     }
@@ -165,11 +165,11 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon,
-                singleReferrer.markedAsSpam 
+                singleReferrer.markedAsSpam
         )
         val expandableItem = assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
-        assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam )
-        assertSingleItem(this[5], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam )
+        assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
+        assertSingleItem(this[5], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
         assertThat(this[6]).isEqualTo(Divider)
         return expandableItem
     }
@@ -198,7 +198,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                     singleReferrer.name!!,
                     singleReferrer.total,
                     singleReferrer.icon,
-                    singleReferrer.markedAsSpam 
+                    singleReferrer.markedAsSpam
             )
             assertLink(this[3])
         }

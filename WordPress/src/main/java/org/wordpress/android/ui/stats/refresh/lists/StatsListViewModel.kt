@@ -27,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
-import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector.Factory
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -162,7 +161,7 @@ class InsightsListViewModel
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: Factory,
+    dateSelectorFactory: StatsDateSelector.Factory,
     popupMenuHandler: ItemPopupMenuHandler,
     newsCardHandler: NewsCardHandler
 ) : StatsListViewModel(
@@ -178,26 +177,26 @@ class YearsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(YEAR_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: Factory
+    dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(YEARS))
 
 class MonthsListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(MONTH_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: Factory
+    dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(MONTHS))
 
 class WeeksListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(WEEK_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: Factory
+    dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(WEEKS))
 
 class DaysListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(DAY_STATS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: Factory
+    dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(mainDispatcher, statsUseCase, analyticsTracker, dateSelectorFactory.build(DAYS))
