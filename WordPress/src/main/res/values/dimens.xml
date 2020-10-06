@@ -582,5 +582,4 @@
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
-    <dimen name="login_prologue_card_opacity">0.8</dimen>
 </resources>

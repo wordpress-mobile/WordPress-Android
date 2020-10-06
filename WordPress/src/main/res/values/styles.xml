@@ -1037,7 +1037,17 @@
         <item name="fontFamily">sans-serif</item>
     </style>
 
-     <style name="Widget.LoginFlow.Prologue.CircularButton" parent="Widget.MaterialComponents.Button.Icon">
+    <style name="Widget.LoginFlow.Prologue.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="android:alpha">0.9</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Card.ImageOnly" parent="Widget.LoginFlow.Prologue.Card">
+        <item name="android:alpha">1</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton" parent="Widget.MaterialComponents.Button.Icon">
         <item name="android:insetLeft">0dp</item>
         <item name="android:insetRight">0dp</item>
         <item name="android:insetTop">0dp</item>
@@ -1046,6 +1056,11 @@
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
         <item name="android:padding">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:selectable">false</item>
+        <item name="android:focusable">false</item>
     </style>
 
     <style name="Widget.LoginFlow.Prologue.CircularButton.Small" parent="Widget.LoginFlow.Prologue.CircularButton">
