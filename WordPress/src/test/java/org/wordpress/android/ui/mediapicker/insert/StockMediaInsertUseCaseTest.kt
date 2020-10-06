@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,7 +19,7 @@ import org.wordpress.android.fluxc.store.StockMediaUploadItem
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
-import org.wordpress.android.ui.mediapicker.insert.MediaInsertUseCase.MediaInsertResult
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 
 @InternalCoroutinesApi
 class StockMediaInsertUseCaseTest : BaseUnitTest() {
@@ -53,9 +54,10 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
                 insertedMediaModel
         )))
 
-        val result = stockMediaInsertUseCase.insert(listOf(itemToInsert))
+        val result = stockMediaInsertUseCase.insert(listOf(itemToInsert)).toList()
 
-        (result as MediaInsertResult.Success).apply {
+        assertThat(result[0] is InsertModel.Progress).isTrue()
+        (result[1] as InsertModel.Success).apply {
             assertThat(this.identifiers).containsExactly(RemoteId(mediaId))
         }
         verify(stockMediaStore).performUploadStockMedia(site, listOf(StockMediaUploadItem(name, title, url)))
