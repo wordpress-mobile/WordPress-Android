@@ -78,7 +78,7 @@ val GROUP_WITH_REFERRALS = Group(
         50,
         null,
         referrers = listOf(REFERRER),
-        spam = false
+        markedAsSpam = false
 )
 val GROUP_WITH_EMPTY_REFERRALS = Group(
         GROUP_ID_2,
@@ -88,7 +88,7 @@ val GROUP_WITH_EMPTY_REFERRALS = Group(
         50,
         null,
         referrers = null,
-        spam = false
+        markedAsSpam = false
 )
 val REFERRERS_RESPONSE = ReferrersResponse(
         null,

@@ -110,17 +110,17 @@ class ReferrersStore
             it.value.groups.forEach {
                 if (it.url == domain) {
                     // Setting group.spam as true
-                    it.spam = spam
+                    it.markedAsSpam = spam
                 }
                 it.referrers?.forEach {
                     if (it.url == domain) {
                         // Setting referrer.spam as true
-                        it.spam = spam
+                        it.markedAsSpam = spam
                     }
                     it.children?.forEach {
                         if (it.url == domain) {
                             // Setting child.spam as true
-                            it.spam = spam
+                            it.markedAsSpam = spam
                         }
                     }
                 }
