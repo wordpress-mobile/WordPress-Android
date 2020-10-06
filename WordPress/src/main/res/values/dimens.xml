@@ -582,4 +582,6 @@
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
+    <dimen name="login_prologue_background_circle_size">140dp</dimen>
+    <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
 </resources>

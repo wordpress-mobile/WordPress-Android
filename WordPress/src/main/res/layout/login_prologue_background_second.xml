@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/yellow_circle"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="@dimen/login_prologue_background_circle_size"
+        android:layout_height="@dimen/login_prologue_background_circle_size"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
         android:tint="@color/yellow_10"
@@ -32,8 +32,8 @@
 
     <ImageView
         android:id="@+id/blue_circle"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="@dimen/login_prologue_background_circle_size"
+        android:layout_height="@dimen/login_prologue_background_circle_size"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
         android:tint="@color/blue_5"
@@ -57,8 +57,8 @@
 
     <ImageView
         android:id="@+id/green_circle"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="@dimen/login_prologue_background_circle_size_large"
+        android:layout_height="@dimen/login_prologue_background_circle_size_large"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
         android:tint="@color/green_5"
