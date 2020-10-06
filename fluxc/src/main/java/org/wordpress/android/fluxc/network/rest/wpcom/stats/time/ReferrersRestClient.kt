@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.stats.referrers
+package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import android.content.Context
 import com.android.volley.RequestQueue
@@ -10,13 +10,13 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
@@ -45,7 +45,7 @@ class ReferrersRestClient
         date: Date,
         pageSize: Int,
         forced: Boolean
-    ): FetchStatsPayload<FetchReferrersResponse> {
+    ): FetchStatsPayload<ReferrersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.referrers.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
@@ -56,7 +56,7 @@ class ReferrersRestClient
                 this,
                 url,
                 params,
-                FetchReferrersResponse::class.java,
+                ReferrersResponse::class.java,
                 enableCaching = false,
                 forced = forced
         )
@@ -113,7 +113,7 @@ class ReferrersRestClient
         }
     }
 
-    data class FetchReferrersResponse(
+    data class ReferrersResponse(
         @SerializedName("period") val statsGranularity: String?,
         @SerializedName("days") val groups: Map<String, Groups>
     ) {
@@ -165,4 +165,6 @@ class ReferrersRestClient
             @SerializedName("spam") var spam: Boolean?
         )
     }
+
+    class ReportReferrerAsSpamResponse(val success: Boolean) : Response
 }
