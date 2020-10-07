@@ -34,7 +34,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         return mediaIds
     }
 
-    fun anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles: ArrayList<Object>): Boolean {
+    fun anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles: ArrayList<Any>): Boolean {
         for (mediaFile in mediaFiles) {
             try {
                 (mediaFile as HashMap<String?, Any?>)["id"]
