@@ -1287,12 +1287,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 117 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS StockMedia")
                     db.execSQL("CREATE TABLE StockMedia (_id INTEGER PRIMARY KEY AUTOINCREMENT,ITEM_ID TEXT," +
-                                    "NAME TEXT,TITLE TEXT,URL TEXT,DATE TEXT,THUMBNAIL TEXT)"
-                    )
+                            "NAME TEXT,TITLE TEXT,URL TEXT,DATE TEXT,THUMBNAIL TEXT)")
                     db.execSQL("DROP TABLE IF EXISTS StockMediaPage")
                     db.execSQL("CREATE TABLE StockMediaPage (_id INTEGER PRIMARY KEY AUTOINCREMENT,PAGE INTEGER," +
-                                    "NEXT_PAGE INTEGER)"
-                    )
+                            "NEXT_PAGE INTEGER)")
                 }
             }
         }
