@@ -38,10 +38,8 @@
 
     <color name="post_history_underlying_background">@color/neutral_0</color>
 
-    <!-- LOGIN -->
-    <color name="color_primary">@color/primary</color>
+    <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/black_translucent_20</color>
-    <color name="login_promo_footer_background_color">#eff3f7</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
