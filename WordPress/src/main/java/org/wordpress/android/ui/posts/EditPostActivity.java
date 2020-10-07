@@ -3073,7 +3073,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     this, mSite, result.getStoryIndex(), result.getAllStorySlidesAreEditable(), true
             );
         } else {
-            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBLock so we can't allow
+            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
             // editing at this time :(
             AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
