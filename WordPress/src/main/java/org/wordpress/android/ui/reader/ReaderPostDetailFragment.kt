@@ -43,7 +43,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -343,7 +342,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (isRelatedPost) {
                 toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
                 toolBar.setNavigationOnClickListener { requireActivity().finish() }
-                toolBar.setTitle(string.reader_title_related_post_detail)
+                toolBar.setTitle(R.string.reader_title_related_post_detail)
             } else {
                 toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
                 toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -1301,7 +1300,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             )
             WPSnackbar.make(
                     requireView(),
-                    string.media_accessing_failed,
+                    R.string.media_accessing_failed,
                     Snackbar.LENGTH_LONG
             ).show()
         } else {
@@ -1323,7 +1322,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         WPSnackbar.make(
                 requireView(),
-                string.media_accessing_failed,
+                R.string.media_accessing_failed,
                 Snackbar.LENGTH_LONG
         ).show()
         if (renderer != null) {
@@ -1562,9 +1561,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     post.isFollowedByCurrentUser = isAskingToFollow
                 } else {
                     val errResId = if (isAskingToFollow) {
-                        string.reader_toast_err_follow_blog
+                        R.string.reader_toast_err_follow_blog
                     } else {
-                        string.reader_toast_err_unfollow_blog
+                        R.string.reader_toast_err_unfollow_blog
                     }
                     ToastUtils.showToast(context, errResId)
                     followButton.setIsFollowed(!isAskingToFollow)

@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         style="@style/ReaderTextView.Site.Title"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:text="@string/reader_post_details_header_by"
+        android:text="@string/reader_post_details_header_by_author_name"
         android:includeFontPadding="false"
         android:fontFamily="sans-serif"
         app:layout_constraintStart_toStartOf="parent"
