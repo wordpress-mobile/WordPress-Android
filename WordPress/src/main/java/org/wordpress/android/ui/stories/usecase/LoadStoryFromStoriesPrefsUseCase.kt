@@ -5,12 +5,12 @@ import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.compose.story.StoryRepository
 import dagger.Reusable
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
 import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
 
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
         for (mediaId in mediaIds) {
-            if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteMediaId(mediaId.toLong()))) {
+            if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong()))) {
                 return false
             }
         }
@@ -54,7 +54,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         for (mediaId in mediaIds) {
             var storyFrameItem = storiesPrefs.getSlideWithRemoteId(
                     site.getId().toLong(),
-                    RemoteMediaId(mediaId.toLong())
+                    RemoteId(mediaId.toLong())
             )
             if (storyFrameItem != null) {
                 storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)

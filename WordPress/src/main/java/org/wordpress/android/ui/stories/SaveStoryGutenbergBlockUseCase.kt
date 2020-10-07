@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.stories
 
 import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -64,23 +64,23 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
             url = mediaFile.fileURL
 
             // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
-            val localIdKey = mediaFile.id.toLong()
+            val localIdKey = mediaFile.id.toInt()
             val remoteIdKey = mediaFile.mediaId.toLong()
             val localSiteId = post.localSiteId.toLong()
             storiesPrefs.getSlideWithLocalId(
                     localSiteId,
-                    LocalMediaId(localIdKey)
+                    LocalId(localIdKey)
             )?.let {
                 it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
                 storiesPrefs.saveSlideWithRemoteId(
                         localSiteId,
-                        RemoteMediaId(remoteIdKey), // use the new mediaId as key
+                        RemoteId(remoteIdKey), // use the new mediaId as key
                         it
                 )
                 // now delete the old entry
                 storiesPrefs.deleteSlideWithLocalId(
                         localSiteId,
-                        LocalMediaId(localIdKey)
+                        LocalId(localIdKey)
                 )
             }
         }

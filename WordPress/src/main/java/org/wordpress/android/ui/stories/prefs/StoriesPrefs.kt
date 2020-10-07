@@ -7,6 +7,8 @@ import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.UriBackgroundSource
 import com.wordpress.stories.compose.story.StorySerializerUtils
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,22 +22,22 @@ class StoriesPrefs @Inject constructor(
         private val KEY_PREFIX_REMOTE_MEDIA_ID = "r-"
     }
 
-    private fun buildSlideKey(siteId: Long, mediaId: RemoteMediaId): String {
+    private fun buildSlideKey(siteId: Long, mediaId: RemoteId): String {
         return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" +
-                KEY_PREFIX_REMOTE_MEDIA_ID + mediaId.mediaId.toString()
+                KEY_PREFIX_REMOTE_MEDIA_ID + mediaId.value.toString()
     }
 
-    private fun buildSlideKey(siteId: Long, mediaId: LocalMediaId): String {
+    private fun buildSlideKey(siteId: Long, mediaId: LocalId): String {
         return KEY_PREFIX_STORIES_SLIDE_ID + siteId.toString() + "-" +
-                KEY_PREFIX_LOCAL_MEDIA_ID + mediaId.id.toString()
+                KEY_PREFIX_LOCAL_MEDIA_ID + mediaId.value.toString()
     }
 
-    fun checkSlideIdExists(siteId: Long, mediaId: RemoteMediaId): Boolean {
+    fun checkSlideIdExists(siteId: Long, mediaId: RemoteId): Boolean {
         val slideIdKey = buildSlideKey(siteId, mediaId)
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: RemoteMediaId): Boolean {
+    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: RemoteId): Boolean {
         val storyFrameItem: StoryFrameItem? = getSlideWithRemoteId(siteId, mediaId)
         storyFrameItem?.let { frame ->
             // now check the background media exists or is accessible on this device
@@ -77,7 +79,7 @@ class StoriesPrefs @Inject constructor(
         editor.apply()
     }
 
-    fun isValidSlide(siteId: Long, mediaId: RemoteMediaId): Boolean {
+    fun isValidSlide(siteId: Long, mediaId: RemoteId): Boolean {
         return checkSlideIdExists(siteId, mediaId) &&
                 checkSlideOriginalBackgroundMediaExists(siteId, mediaId)
     }
@@ -86,45 +88,42 @@ class StoriesPrefs @Inject constructor(
         return PreferenceManager.getDefaultSharedPreferences(context).getString(slideIdKey, null)
     }
 
-    fun getSlideWithRemoteId(siteId: Long, mediaId: RemoteMediaId): StoryFrameItem? {
+    fun getSlideWithRemoteId(siteId: Long, mediaId: RemoteId): StoryFrameItem? {
         val jsonSlide = getSlideJson(buildSlideKey(siteId, mediaId))
         jsonSlide?.let {
             return StorySerializerUtils.deserializeStoryFrameItem(jsonSlide)
         } ?: return null
     }
 
-    fun getSlideWithLocalId(siteId: Long, mediaId: LocalMediaId): StoryFrameItem? {
+    fun getSlideWithLocalId(siteId: Long, mediaId: LocalId): StoryFrameItem? {
         val jsonSlide = getSlideJson(buildSlideKey(siteId, mediaId))
         jsonSlide?.let {
             return StorySerializerUtils.deserializeStoryFrameItem(jsonSlide)
         } ?: return null
     }
 
-    fun saveSlideWithLocalId(siteId: Long, mediaId: LocalMediaId, storyFrameItem: StoryFrameItem) {
+    fun saveSlideWithLocalId(siteId: Long, mediaId: LocalId, storyFrameItem: StoryFrameItem) {
         val slideIdKey = buildSlideKey(siteId, mediaId)
         saveSlide(slideIdKey, StorySerializerUtils.serializeStoryFrameItem(storyFrameItem))
     }
 
-    fun saveSlideWithRemoteId(siteId: Long, mediaId: RemoteMediaId, storyFrameItem: StoryFrameItem) {
+    fun saveSlideWithRemoteId(siteId: Long, mediaId: RemoteId, storyFrameItem: StoryFrameItem) {
         val slideIdKey = buildSlideKey(siteId, mediaId)
         saveSlide(slideIdKey, StorySerializerUtils.serializeStoryFrameItem(storyFrameItem))
     }
 
-    fun deleteSlideWithLocalId(siteId: Long, mediaId: LocalMediaId) {
+    fun deleteSlideWithLocalId(siteId: Long, mediaId: LocalId) {
         val slideIdKey = buildSlideKey(siteId, mediaId)
         val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
         editor.remove(slideIdKey)
         editor.apply()
     }
 
-    fun deleteSlideWithRemoteId(siteId: Long, mediaId: RemoteMediaId) {
+    fun deleteSlideWithRemoteId(siteId: Long, mediaId: RemoteId) {
         val slideIdKey = buildSlideKey(siteId, mediaId)
-        PreferenceManager.getDefaultSharedPreferences(context).edit().apply { 
+        PreferenceManager.getDefaultSharedPreferences(context).edit().apply {
             remove(slideIdKey)
             apply()
         }
     }
-
-    data class RemoteMediaId(val mediaId: Long)
-    data class LocalMediaId(val id: Long)
 }
