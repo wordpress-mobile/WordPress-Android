@@ -55,6 +55,7 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -497,7 +498,7 @@ class ReaderDiscoverViewModelTest {
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),
                 dateLine = "",
                 avatarOrBlavatarUrl = "",
-                blogName = "",
+                blogName = mock(),
                 excerpt = "",
                 title = mock(),
                 photoFrameVisibility = false,
