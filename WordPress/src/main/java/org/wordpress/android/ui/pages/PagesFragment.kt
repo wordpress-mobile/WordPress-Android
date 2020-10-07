@@ -349,7 +349,10 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
         viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
             if (modalLayoutPickerFeatureConfig.isEnabled()) {
-                mlpViewModel.show(SupportedBlocks.fromAssets(requireContext()))
+                mlpViewModel.show(
+                        SupportedBlocks.fromAssets(requireContext()),
+                        resources.getDimensionPixelSize(R.dimen.mlp_layout_card_width)
+                )
             } else {
                 createNewPage()
             }

@@ -43,6 +43,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var layouts: GutenbergPageLayouts
     private lateinit var supportedBlocks: SupportedBlocks
+    private var previewWidth: Int = 136
+    private var scale: Double = 1.0
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -88,7 +90,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            val payload = FetchBlockLayoutsPayload(site, supportedBlocks.supported)
+            val payload = FetchBlockLayoutsPayload(
+                    site,
+                    supportedBlocks.supported,
+                    previewWidth.toFloat(),
+                    scale.toFloat()
+            )
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
@@ -161,9 +168,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Shows the MLP
      * @param supportedBlocks the supported blocks to filter fetched layouts (by default no filtering occurs)
+     * @param previewWidth the layout preview card width
+     * @param scale the screen density scale
      */
-    fun show(supportedBlocks: SupportedBlocks = SupportedBlocks()) {
+    @JvmOverloads
+    fun show(supportedBlocks: SupportedBlocks = SupportedBlocks(), previewWidth: Int = 136, scale: Double = 1.0) {
         this.supportedBlocks = supportedBlocks
+        this.previewWidth = previewWidth
+        this.scale = scale
         init()
         _isModalLayoutPickerShowing.value = Event(true)
     }
