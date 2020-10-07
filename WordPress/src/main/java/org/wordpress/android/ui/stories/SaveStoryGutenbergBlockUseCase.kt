@@ -9,7 +9,9 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
-class SaveStoryGutenbergBlockUseCase @Inject constructor() {
+class SaveStoryGutenbergBlockUseCase @Inject constructor(
+    private val storiesPrefs: StoriesPrefs
+) {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
         mediaFiles: ArrayList<MediaFile>
@@ -154,9 +156,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
 
                                     // look for the slide saved with the local id key (mediaFile.id), and re-convert to
                                     // mediaId.
-                                    StoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                                            context,
-                                            mediaFile.id.toLong(),
+                                    storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                                            mediaFile.id.toInt(),
                                             mediaFile.mediaId.toLong(),
                                             postModel.localSiteId.toLong()
                                     )

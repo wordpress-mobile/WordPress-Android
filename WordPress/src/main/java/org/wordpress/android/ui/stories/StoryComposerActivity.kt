@@ -37,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTO
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_UPDATED_CONTENT
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -65,8 +66,6 @@ import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMedi
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -110,6 +109,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var mediaStore: MediaStore
     @Inject lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
     @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+    @Inject lateinit var storiesPrefs: StoriesPrefs
 
     private lateinit var viewModel: StoryComposerViewModel
 
@@ -463,12 +463,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             site?.let {
                 val siteLocalId = it.id.toLong()
                 for (frameId in frameIdsToRemove) {
-                    if (StoriesPrefs.checkSlideIdExists(this, siteLocalId, RemoteMediaId(frameId.toLong()))) {
-                        StoriesPrefs.deleteSlideWithRemoteId(this, siteLocalId, RemoteMediaId(frameId.toLong()))
+                    if (storiesPrefs.checkSlideIdExists(siteLocalId, RemoteId(frameId.toLong()))) {
+                        storiesPrefs.deleteSlideWithRemoteId(siteLocalId, RemoteId(frameId.toLong()))
                     } else {
                         // shouldn't happen but just in case the story frame has just been created but not yet uploaded
                         // let's delete the local slide pref.
-                        StoriesPrefs.deleteSlideWithLocalId(this, siteLocalId, LocalMediaId(frameId.toLong()))
+                        storiesPrefs.deleteSlideWithLocalId(siteLocalId, LocalId(frameId.toInt()))
                     }
                 }
             }

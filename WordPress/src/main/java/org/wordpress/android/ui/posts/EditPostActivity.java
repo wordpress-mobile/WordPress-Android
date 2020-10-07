@@ -48,7 +48,6 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart;
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
 import com.wordpress.stories.compose.story.Story;
 import com.wordpress.stories.compose.story.StoryFrameItem;
-import com.wordpress.stories.compose.story.StoryRepository;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -406,6 +405,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject StoryRepositoryWrapper mStoryRepositoryWrapper;
+    @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
+    @Inject StoriesPrefs mStoriesPrefs;
+
 
     private StorePostViewModel mViewModel;
 
@@ -1617,8 +1619,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
                     // within a story block in this post: we will only replace items for which a local-keyed frame has
                     // been created before, which can only happen when using the Story Creator.
-                    StoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                            this,
+                    mStoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
                             media.getId(),
                             media.getMediaId(),
                             mSite.getId()
@@ -3113,14 +3114,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        LoadStoryFromStoriesPrefsUseCase loadStoryFromStoriesPrefsUseCase = new LoadStoryFromStoriesPrefsUseCase(
-                mStoryRepositoryWrapper,
-                mSite,
-                mMediaStore,
-                this
-        );
-
-        if (loadStoryFromStoriesPrefsUseCase.anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles)) {
+        if (mLoadStoryFromStoriesPrefsUseCase.anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles)) {
             // unfortunately the medaiIds seem corrupt so, show a dialog and bail
             AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
@@ -3133,40 +3127,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
-        ArrayList<String> mediaIds =
-                loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles);
-        boolean allStorySlidesAreEditable = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(mSite, mediaIds);
-        boolean failedLoadingOrReCreatingStory = false;
-
-        // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
-        // just build the Story object ourselves to keep these files arrangement
-        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(mediaIds);
-        if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
-            // the StoryRepository didn't have it but we have editable serialized slides so,
-            // create a new Story from scratch with these deserialized StoryFrameItems
-            ReCreateStoryResult result =
-                    loadStoryFromStoriesPrefsUseCase.loadOrReCreateStoryFromStoriesPrefs(mediaIds);
-            failedLoadingOrReCreatingStory = result.getNoSlidesLoaded();
-            if (allStorySlidesAreEditable) {
-                // double check and override if we found at least one couldn't be inflated
-                allStorySlidesAreEditable = result.getAllStorySlidesAreEditable();
-            }
-            storyIndex = result.getStoryIndex();
-        }
-
-        if (!failedLoadingOrReCreatingStory) {
+        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
+                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
+        if (!result.getNoSlidesLoaded()) {
             // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
             ActivityLauncher.editStoryForResult(
                     this,
                     mSite,
                     new LocalId(mEditPostRepository.getId()),
-                    storyIndex,
-                    allStorySlidesAreEditable,
+                    result.getStoryIndex(),
+                    result.getAllStorySlidesAreEditable(),
                     true,
                     blockId
             );
         } else {
-            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBLock so we can't allow
+            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
             // editing at this time :(
             AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));

@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -31,7 +32,6 @@ import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.LocalMediaId
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -51,6 +51,7 @@ import kotlin.coroutines.CoroutineContext
 class StoryMediaSaveUploadBridge @Inject constructor(
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val savePostToDbUseCase: SavePostToDbUseCase,
+    private val storiesPrefs: StoriesPrefs,
     private val uploadService: UploadServiceFacade,
     private val networkUtils: NetworkUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
@@ -142,12 +143,11 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             mediaModel?.let {
                                 val oldTemporaryId = frame.id ?: ""
                                 frame.id = it.id.toString()
-                                StoriesPrefs.saveSlideWithLocalId(
-                                        appContext,
+                                storiesPrefs.saveSlideWithLocalId(
                                         it.localSiteId.toLong(),
                                         // use the local id to save the original, will be replaced later
                                         // with mediaModel.mediaId after uploading to the remote site
-                                        LocalMediaId(it.id.toLong()),
+                                        LocalId(it.id.toInt()),
                                         frame
                                 )
 

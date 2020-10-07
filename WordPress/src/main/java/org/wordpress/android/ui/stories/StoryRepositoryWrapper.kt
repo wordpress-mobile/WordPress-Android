@@ -17,4 +17,6 @@ class StoryRepositoryWrapper @Inject constructor() {
     fun getImmutableStories() = StoryRepository.getImmutableStories()
     fun getCurrentStorySaveProgress(storyIndex: StoryIndex, oneItemActualProgress: Float = 0.0F) =
             StoryRepository.getCurrentStorySaveProgress(storyIndex, oneItemActualProgress)
+    fun findStoryContainingStoryFrameItemsByIds(ids: ArrayList<String>) =
+            StoryRepository.findStoryContainingStoryFrameItemsByIds(ids)
 }

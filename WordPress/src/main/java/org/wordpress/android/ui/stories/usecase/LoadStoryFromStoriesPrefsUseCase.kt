@@ -1,18 +1,16 @@
 package org.wordpress.android.ui.stories.usecase
 
-import android.content.Context
 import android.net.Uri
 import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.compose.story.StoryRepository
 import dagger.Reusable
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.getSlideWithRemoteId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.isValidSlide
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
@@ -20,11 +18,10 @@ import javax.inject.Inject
 @Reusable
 class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
-    private val site: SiteModel,
-    private val mediaStore: MediaStore,
-    private val context: Context
+    private val storiesPrefs: StoriesPrefs,
+    private val mediaStore: MediaStore
 ) {
-    fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Object>): ArrayList<String> {
+    fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Any>): ArrayList<String> {
         val mediaIds = ArrayList<String>()
         for (mediaFile in mediaFiles) {
             val mediaIdLong = (mediaFile as HashMap<String?, Any?>)["id"]
@@ -53,14 +50,14 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
 
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
         for (mediaId in mediaIds) {
-            if (!isValidSlide(context, site.getId().toLong(), RemoteMediaId(mediaId.toLong()))) {
+            if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong()))) {
                 return false
             }
         }
         return true
     }
 
-    fun loadOrReCreateStoryFromStoriesPrefs(mediaIds: ArrayList<String>): ReCreateStoryResult {
+    private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList<String>): ReCreateStoryResult {
         // the StoryRepository didn't have it but we have editable serialized slides so,
         // create a new Story from scratch with these deserialized StoryFrameItems
         var allStorySlidesAreEditable: Boolean = true
@@ -69,10 +66,9 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         storyRepositoryWrapper.loadStory(storyIndex)
         storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
         for (mediaId in mediaIds) {
-            var storyFrameItem = getSlideWithRemoteId(
-                    context,
+            var storyFrameItem = storiesPrefs.getSlideWithRemoteId(
                     site.getId().toLong(),
-                    RemoteMediaId(mediaId.toLong())
+                    RemoteId(mediaId.toLong())
             )
             if (storyFrameItem != null) {
                 storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
@@ -86,7 +82,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                         site,
                         tmpMediaIdsLong
                 )
-                if (mediaModelList.size == 0) {
+                if (mediaModelList.isEmpty()) {
                     noSlidesLoaded = true
                 } else {
                     for (mediaModel in mediaModelList) {
@@ -102,6 +98,30 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         }
 
         return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
+    }
+
+    fun loadStoryFromMemoryOrRecreateFromPrefs(site: SiteModel, mediaFiles: ArrayList<Any>): ReCreateStoryResult {
+        val mediaIds = getMediaIdsFromStoryBlockBridgeMediaFiles(
+                mediaFiles
+        )
+        var allStorySlidesAreEditable = areAllStorySlidesEditable(
+                site,
+                mediaIds
+        )
+
+        // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
+        // just build the Story object ourselves to keep these files arrangement
+        var storyIndex = storyRepositoryWrapper.findStoryContainingStoryFrameItemsByIds(mediaIds)
+        if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
+            // the StoryRepository didn't have it but we have editable serialized slides so,
+            // create a new Story from scratch with these deserialized StoryFrameItems
+            return loadOrReCreateStoryFromStoriesPrefs(
+                    site,
+                    mediaIds
+            )
+        } else {
+            return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, false)
+        }
     }
 
     data class ReCreateStoryResult(
