@@ -1118,13 +1118,11 @@ Language: gl_ES
     <string name="notifications_screen_title">Notificacións</string>
     <string name="reader_screen_title">Lector</string>
     <string name="me_section_screen_title">Eu</string>
-    <string name="my_site_section_screen_title">O meu sitio</string>
     <string name="notif_settings_screen_title">Axustes de avisos</string>
     <string name="help_screen_title">Axuda e soporte</string>
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Notas da versión</string>
     <string name="signup_epilogue_error_avatar_view">O teu avatar subiuse e estará dispoñible en breve.</string>
-    <string name="email_not_registered_wpcom">Umm, non encontramos unha conta WordPress.com conectada a este enderezo de correo electrónico. Proba co enlace de abaixo para acceder usando o enderezo do teu sitio.</string>
     <string name="permissions_denied_message">Parece que desactivaches os permisos necesarios para esta característica.&lt;br/>&lt;br/>Para cambialo, edita os teus permisos e asegúrate de que &lt;strong>%s&lt;/strong> estea activado.</string>
     <string name="permissions_denied_title">Permisos</string>
     <string name="plugin_caption_featured">Destacados</string>
@@ -1190,7 +1188,6 @@ Language: gl_ES
     <string name="signup_magic_link_error_button_negative">Cerrar</string>
     <string name="signup_magic_link_error">Houbo algún problema ao enviar o correo electrónico. Podes reintentalo agora ou pechar e intentalo máis tarde.</string>
     <string name="signup_epilogue_hint_username">Nome do usuario</string>
-    <string name="signup_epilogue_hint_password_detail">Sempre podes acceder cun enlace máxico coma o que acabas de usar, pero tamén podes configurar un contrasinal se o prefires.</string>
     <string name="signup_epilogue_hint_password">Contrasinal (opcional)</string>
     <string name="signup_epilogue_hint_display">Nome a amosar</string>
     <string name="signup_epilogue_error_button_positive">Reintentar</string>

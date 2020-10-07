@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-11 06:05:25+0000
+Translation-Revision-Date: 2020-09-25 06:52:31+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Gras</string>
+    <string name="typeface_label_space_mono">Moderne</string>
+    <string name="typeface_label_pacifico">Ludique</string>
+    <string name="typeface_label_oswald">Forte</string>
+    <string name="typeface_label_libre_baskerville">Classique</string>
+    <string name="typeface_label_nunito">Décontractée</string>
+    <string name="toast_capture_operation_permission_needed">Vous devez accorder l’autorisation d’enregistrement audio de l’application afin d’enregistrer des vidéos.</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s sélectionné </string>
+    <string name="login_get_link_by_email">Obtenir un lien de connexion par e-mail.</string>
+    <string name="email_not_registered_wpcom">Hum, nous ne trouvons pas de compte WordPress.com connecté à cet adresse e-mail.</string>
+    <string name="permission_microphone">Microphone</string>
+    <string name="comment_unable_to_show_error">Impossible d’afficher ce commentaire</string>
+    <string name="media_browse_for_items">Parcourir les éléments.</string>
+    <string name="reader_menu_report_post">Signaler cet article</string>
     <string name="gutenberg_native_angle">Angle</string>
-    <string name="mlp_layout_selected">%s sélectionné</string>
     <string name="reader_welcome_banner">Bienvenue sur le Lecteur. Découvrez des millions de blogs à portée de main.</string>
     <string name="error_media_xmlrcp_server_error">Une erreur interne du serveur s’est produite</string>
     <string name="error_media_xmlrpc_not_allowed">Votre action n’est pas autorisée</string>
@@ -111,9 +125,9 @@ Language: fr
     <string name="signup_confirmation_title">Confirmation de l’inscription</string>
     <string name="continue_with_google_terms_of_service_text">Si vous continuez avec Google sans disposer au préalable d’un compte WordPress.com, vous créez un compte et acceptez nos %1$sconditions d’utilisation%2$s.</string>
     <string name="continue_terms_of_service_text">En poursuivant, vous acceptez nos %1$sConditions d’utilisation%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Nous vous enverrons un lien magique par e-mail pour créer votre nouveau compte WordPress.com.</string>
+    <string name="signup_confirmation_magic_link_message">Nous vous enverrons un lien par e-mail pour créer votre nouveau compte WordPress.com.</string>
     <string name="signup_confirmation_message">Nous utiliserons cette adresse e-mail pour créer votre nouveau compte WordPress.com.</string>
-    <string name="signup_magic_link_message">Nous vous avons envoyé un lien magique par e-mail pour créer votre nouveau compte WordPress.com. Consultez vos e-mails sur cet appareil et appuyez sur le lien dans l’e-mail que vous avez reçu de WordPress.com.</string>
+    <string name="signup_magic_link_message">Nous vous avons envoyé un lien par e-mail pour créer votre nouveau compte WordPress.com. Consultez vos e-mails sur cet appareil et appuyez sur le lien dans l’e-mail que vous avez reçu de WordPress.com.</string>
     <string name="enter_account_info_for_site">Saisissez vos informations de compte pour %1$s.</string>
     <string name="login_or">ou</string>
     <string name="continue_google_button_suffix">Continuer avec Google</string>
@@ -121,7 +135,7 @@ Language: fr
     <string name="login_done">Terminé</string>
     <string name="magic_link_not_seeing_email_message">Vous ne voyez pas l’e-mail ? Vérifiez votre dossier de courrier indésirable.</string>
     <string name="login_magic_links_sent_label">Consultez vos e-mails sur cet appareil et appuyez sur le lien dans l’e-mail que vous avez reçu de WordPress.com.</string>
-    <string name="login_magic_links_label">Nous allons vous envoyer par e-mail un lien magique qui vous connectera instantanément, sans mot de passe.</string>
+    <string name="login_magic_links_label">Nous vous enverrons par e-mail un lien qui vous connectera instantanément, sans mot de passe.</string>
     <string name="check_email">Vérifier les e-mails</string>
     <string name="get_started">Commencer</string>
     <string name="enter_email_to_continue_wordpress_com">Entrez votre adresse e-mail pour vous connecter ou créez un compte WordPress.com.</string>
@@ -194,7 +208,7 @@ Language: fr
     <string name="post_status_post_scheduled">Planifié</string>
     <string name="publish_date">Date de publication</string>
     <string name="ccpa_privacy_notice_read">Lisez l’avis de confidentialité CCPA</string>
-    <string name="ccpa_privacy_notice_caption">Loi sur la protection du consommateur de Californie (« CCPA ») nous oblige à fournir aux résidents de Californie certaines informations supplémentaires sur les catégories d\'informations personnelles que nous recueillons et partageons, où nous obtenons ces informations personnelles, et comment et pourquoi nous les utilisons.</string>
+    <string name="ccpa_privacy_notice_caption">Loi sur la protection du consommateur de Californie (« CCPA ») nous oblige à fournir aux résidents de Californie certaines informations supplémentaires sur les catégories d’informations personnelles que nous recueillons et partageons, où nous obtenons ces informations personnelles, et comment et pourquoi nous les utilisons.</string>
     <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
@@ -396,7 +410,7 @@ Language: fr
     <string name="gutenberg_native_add_block_before">Ajouter le bloc avant</string>
     <string name="gutenberg_native_add_block_after">Ajouter le bloc après</string>
     <string name="reader_filter_empty_tags_action">Ajouter une étiquette</string>
-    <string name="reader_filter_empty_sites_action">S\'abonner au site</string>
+    <string name="reader_filter_empty_sites_action">S’abonner au site</string>
     <string name="reader_filter_empty_tags_list">Vous pouvez suivre les articles relatifs à un sujet particulier en ajoutant une étiquette</string>
     <string name="reader_filter_empty_sites_list">Découvrir les derniers articles des sites que vous suivez</string>
     <string name="reader_filter_main_title">Abonné</string>
@@ -418,12 +432,12 @@ Language: fr
     <string name="stats_box_type_low">faible</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
-    <string name="gutenberg_native_move_image_forward">Déplacer l\'image vers l\'avant</string>
-    <string name="gutenberg_native_move_image_backward">Déplacer l\'image vers l\'arrière</string>
+    <string name="gutenberg_native_move_image_forward">Déplacer l’image vers l’avant</string>
+    <string name="gutenberg_native_move_image_backward">Déplacer l’image vers l’arrière</string>
     <string name="gutenberg_native_gallery_caption_s">Légende de la galerie. %s</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. La valeur actuelle est %2$s</string>
     <string name="create_post_page_fab_tooltip">Créer un article ou une page</string>
-    <string name="content_description_person_building_website">Personne en pleine création d\'un site Web</string>
+    <string name="content_description_person_building_website">Personne en pleine création d’un site Web</string>
     <string name="post_signup_interstitial_not_right_now">Pas maintenant</string>
     <string name="post_signup_interstitial_subtitle">Quoi que vous vouliez créer ou partager, nous vous y aiderons.</string>
     <string name="post_signup_interstitial_title">Bienvenue dans WordPress</string>
@@ -431,7 +445,7 @@ Language: fr
     <string name="photo_picker_image_thumbnail_unselected">Image désélectionnée</string>
     <string name="photo_picker_image_selected">,sélectionnée</string>
     <string name="photo_picker_image_thumbnail_selected">Image sélectionnée</string>
-    <string name="photo_picker_image_thumbnail_content_description">Miniature de l\'image</string>
+    <string name="photo_picker_image_thumbnail_content_description">Miniature de l’image</string>
     <string name="my_site_bottom_sheet_add_post">Article de blog</string>
     <string name="my_site_bottom_sheet_title">Ajouter</string>
     <string name="post_settings_publish">Publier</string>
@@ -439,20 +453,20 @@ Language: fr
     <string name="dialog_confirm_scheduled_post_sync_yes">Synchroniser maintenant</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Cet article sera synchronisé immédiatement.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Prêt à synchroniser ?</string>
-    <string name="new_site_creation_unavailable_domain">Ce domaine n\'est pas disponible</string>
+    <string name="new_site_creation_unavailable_domain">Ce domaine n’est pas disponible</string>
     <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_discovery_error_generic">Nous n\'avons pas pu accéder à votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
-    <string name="login_discovery_error_ssl">Nous n\'avons pas pu accéder à votre site à cause d\'un problème avec le &lt;b>certificat SSL&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
-    <string name="login_discovery_error_http_auth">Nous n\'avons pas pu accéder à votre site car il requiert une &lt;b>authentification HTTP&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
-    <string name="login_discovery_error_xmlrpc">Nous n\'avons pas pu accéder au &lt;b>fichier XMLRPC&lt;/b> sur votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
+    <string name="login_discovery_error_generic">Nous n’avons pas pu accéder à votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
+    <string name="login_discovery_error_ssl">Nous n’avons pas pu accéder à votre site à cause d’un problème avec le &lt;b>certificat SSL&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
+    <string name="login_discovery_error_http_auth">Nous n’avons pas pu accéder à votre site car il requiert une &lt;b>authentification HTTP&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
+    <string name="login_discovery_error_xmlrpc">Nous n’avons pas pu accéder au &lt;b>fichier XMLRPC&lt;/b> sur votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
     <string name="login_site_credentials_magic_link_label">Vous y êtes presque ! Nous devons juste vérifier votre adresse e-mail connectée à Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Connectez-vous avec vos identifiants au site.</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
-    <string name="send_verification_email">Envoyer l\'e-mail de vérification</string>
+    <string name="send_verification_email">Envoyer l’e-mail de vérification</string>
     <string name="my_site_bottom_sheet_add_page">Page du site</string>
     <string name="reader_following_display_name">Abonné</string>
-    <string name="reader_my_likes_display_name">J\'aime</string>
+    <string name="reader_my_likes_display_name">J’aime</string>
     <string name="reader_discover_display_name">Découvrez</string>
     <string name="reader_save_for_later_display_name">Enregistré</string>
     <string name="reader_filter_tags_title">Étiquettes</string>
@@ -471,7 +485,7 @@ Language: fr
     <string name="gutenberg_native_translate">Traduire</string>
     <string name="gutenberg_native_title">Titre :</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Appuyer pour cacher le clavier</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Appuyer ici pour afficher l\'aide</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Appuyer ici pour afficher l’aide</string>
     <string name="gutenberg_native_take_a_video">Prendre une vidéo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Prendre une photo ou une vidéo</string>
     <string name="gutenberg_native_take_a_photo">Prendre une photo</string>
@@ -479,24 +493,24 @@ Language: fr
     <string name="gutenberg_native_size">Taille</string>
     <string name="gutenberg_native_sidebar_title_plugin">Extension du titre de la colonne latérale</string>
     <string name="gutenberg_native_show_section">Afficher la section</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">« %s » n\'est pas encore compatible avec WordPress pour iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">« %s » n\'est pas encore compatible avec WordPress pour Android</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Le contenu de ce bloc n\'est pas valide</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">« %s » n’est pas encore compatible avec WordPress pour iOS</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">« %s » n’est pas encore compatible avec WordPress pour Android</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Le contenu de ce bloc n’est pas valide</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Vide</string>
     <string name="gutenberg_native_cut_block">Couper le bloc</string>
     <string name="gutenberg_native_reset_block">Réinitialiser le bloc</string>
     <string name="gutenberg_native_remove_annotations">Retirer les annotations</string>
-    <string name="gutenberg_native_problem_opening_the_video">Un problème est survenu lors de l\'ouverture de la vidéo</string>
-    <string name="gutenberg_native_problem_displaying_block">Un problème est survenu lors de l\'affichage du bloc</string>
-    <string name="gutenberg_native_post_title_s">Titre de l\'article. %s</string>
-    <string name="gutenberg_native_post_title_empty">Titre de l\'article. Vide</string>
-    <string name="gutenberg_native_paste_url">Coller l\'URL</string>
+    <string name="gutenberg_native_problem_opening_the_video">Un problème est survenu lors de l’ouverture de la vidéo</string>
+    <string name="gutenberg_native_problem_displaying_block">Un problème est survenu lors de l’affichage du bloc</string>
+    <string name="gutenberg_native_post_title_s">Titre de la publication. %s</string>
+    <string name="gutenberg_native_post_title_empty">Titre de la publication. Vide</string>
+    <string name="gutenberg_native_paste_url">Coller l’URL</string>
     <string name="gutenberg_native_page_break_block_s">Bloc de saut de page. %s</string>
     <string name="gutenberg_native_open_settings">Ouvrir les paramètres</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Aucune application ne peut traiter cette requête. Veuillez installer un navigateur Internet.</string>
     <string name="gutenberg_native_navigate_up">Faire défiler vers le haut</string>
     <string name="gutenberg_native_my_pre_publish_panel">Mon panneau pré-publication</string>
-    <string name="gutenberg_native_my_post_status_info">Informations sur l\'état de ma publication</string>
+    <string name="gutenberg_native_my_post_status_info">Informations sur l’état de ma publication</string>
     <string name="gutenberg_native_my_post_publish_panel">Mon panneau post-publication</string>
     <string name="gutenberg_native_my_document_setting_panel">Panneau des paramètres de mon document</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Faire monter le bloc de la ligne %1$s à la ligne %2$s</string>
@@ -505,11 +519,11 @@ Language: fr
     <string name="gutenberg_native_move_block_down">Faire descendre le bloc</string>
     <string name="gutenberg_native_link_text">Texte du lien</string>
     <string name="gutenberg_native_link_inserted">Lien inséré</string>
-    <string name="gutenberg_native_image_caption_s">Légende de l\'image. %s</string>
+    <string name="gutenberg_native_image_caption_s">Légende de l’image. %s</string>
     <string name="gutenberg_native_hide_keyboard">Masquer le clavier</string>
     <string name="gutenberg_native_here_is_the_panel_content">Voici le contenu du panneau !</string>
-    <string name="gutenberg_native_help_icon">Icône d\'aide</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Échec de l\'insertion du média.\nVeuillez appuyer pour accéder aux options.</string>
+    <string name="gutenberg_native_help_icon">Icône d’aide</string>
+    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Échec de l’insertion du média.\nVeuillez appuyer pour accéder aux options.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Appuyer deux fois pour annuler la dernière modification</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Appuyer deux fois pour activer/désactiver le paramètre</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Appuyer deux fois pour sélectionner une image</string>
@@ -519,11 +533,11 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Appuyer deux fois pour faire monter le bloc</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Appuyer deux fois pour faire descendre le bloc</string>
     <string name="gutenberg_native_double_tap_to_edit_this_value">Appuyer deux fois pour modifier cette valeur</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Appuyer deux fois pour modifier la valeur à l\'aide du curseur</string>
+    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Appuyer deux fois pour modifier la valeur à l’aide du curseur</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Appuyer deux fois pour ajouter un bloc</string>
     <string name="gutenberg_native_current_value_is_s">La valeur actuelle est %s</string>
     <string name="gutenberg_native_content">Contenu…</string>
-    <string name="gutenberg_native_choose_from_device">Choisir depuis l\'appareil</string>
+    <string name="gutenberg_native_choose_from_device">Choisir depuis l’appareil</string>
     <string name="gutenberg_native_annotations_sidebar">Colonne latérale des annotations</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Une erreur inconnue est survenue. Veuillez réessayer.</string>
     <string name="gutenberg_native_alt_text">Texte alternatif</string>
@@ -1286,7 +1300,6 @@ Language: fr
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Notes de version</string>
     <string name="signup_epilogue_error_avatar_view">Votre avatar a été chargé et sera bientôt disponible.</string>
-    <string name="email_not_registered_wpcom">Hmm, nous ne trouvons pas de compte WordPress.com associé à cette adresse e-mail. Essayez de vous connecter avec le lien ci-après à l\'aide de votre adresse e-mail.</string>
     <string name="permissions_denied_message">Il semblerait que vous ayez désactivé les autorisations obligatoires pour cette fonctionnalité.&lt;br/>&lt;br/>Pour modifier cela, changez vos autorisations et veillez à ce que &lt;strong>%s&lt;/strong> soit activé.</string>
     <string name="permissions_denied_title">Droits</string>
     <string name="plugin_caption_featured">À la Une</string>
@@ -1352,7 +1365,7 @@ Language: fr
     <string name="signup_magic_link_error_button_negative">Fermer</string>
     <string name="signup_magic_link_error">Une erreur s\'est produite lors de l’envoi de l\'e-mail. Vous pouvez recommencer maintenant ou fermer et réessayer ultérieurement.</string>
     <string name="signup_epilogue_hint_username">Identifiant</string>
-    <string name="signup_epilogue_hint_password_detail">Vous pouvez toujours vous connecter avec un lien de connexion sans mot de passe comme celui que vous venez d\'utiliser. Vous pouvez également définir un mot de passe si vous le préférez.</string>
+    <string name="signup_epilogue_hint_password_detail">Vous pouvez toujours vous connecter avec un lien de connexion comme celui que vous venez d\'utiliser. Vous pouvez également définir un mot de passe si vous le préférez.</string>
     <string name="signup_epilogue_hint_password">Mot de passe (facultatif)</string>
     <string name="signup_epilogue_hint_display">Nom affiché</string>
     <string name="signup_epilogue_error_button_positive">Réessayer</string>
@@ -2268,7 +2281,7 @@ Language: fr
     <string name="reader_toast_err_unfollow_blog">Impossible de se désabonner de ce site</string>
     <string name="reader_toast_err_follow_blog">Impossible de suivre ce site</string>
     <string name="reader_toast_err_already_follow_blog">Vous suivez déjà ce site</string>
-    <string name="reader_toast_err_get_blog_info">Impossible d\'afficher ce site</string>
+    <string name="reader_toast_err_get_blog_info">Impossible d’afficher ce site</string>
     <string name="reader_label_followed_blog">Site suivi</string>
     <string name="reader_hint_add_tag_or_url">Saisissez une étiquette ou une adresse web à suivre</string>
     <string name="reader_page_followed_blogs">Sites suivis</string>
