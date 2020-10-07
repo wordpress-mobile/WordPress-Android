@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:background="@drawable/media_settings_gradient_scrim"
+                    app:srcCompat="@drawable/collapsing_toolbar_gradient_scrim"
                     android:contentDescription="@null"
                     tools:layout_height="74dp" />
 
