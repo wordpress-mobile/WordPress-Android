@@ -107,7 +107,21 @@ class MediaPickerTracker
         analyticsTrackerWrapper.track(MEDIA_PICKER_SHOW_PERMISSIONS_SCREEN, properties)
     }
 
-    private fun MutableMap<String, Any?>.addMediaPickerProperties(mediaPickerSetup: MediaPickerSetup): MutableMap<String, Any?> {
+    fun trackItemSelected(mediaPickerSetup: MediaPickerSetup) {
+        analyticsTrackerWrapper.track(MEDIA_PICKER_ITEM_SELECTED, mediaPickerSetup.toProperties())
+    }
+
+    fun trackItemUnselected(mediaPickerSetup: MediaPickerSetup) {
+        analyticsTrackerWrapper.track(MEDIA_PICKER_ITEM_UNSELECTED, mediaPickerSetup.toProperties())
+    }
+
+    fun trackMediaPickerOpened(mediaPickerSetup: MediaPickerSetup) {
+        analyticsTrackerWrapper.track(MEDIA_PICKER_OPENED, mediaPickerSetup.toProperties())
+    }
+
+    private fun MutableMap<String, Any?>.addMediaPickerProperties(
+        mediaPickerSetup: MediaPickerSetup
+    ): MutableMap<String, Any?> {
         this["source"] = when (mediaPickerSetup.dataSource) {
             DEVICE -> "device_media_library"
             WP_LIBRARY -> "wordpress_media_library"
@@ -121,17 +135,5 @@ class MediaPickerTracker
 
     private fun MediaPickerSetup.toProperties(): MutableMap<String, Any?> {
         return mutableMapOf<String, Any?>().addMediaPickerProperties(this)
-    }
-
-    fun trackItemSelected(mediaPickerSetup: MediaPickerSetup) {
-        analyticsTrackerWrapper.track(MEDIA_PICKER_ITEM_SELECTED, mediaPickerSetup.toProperties())
-    }
-
-    fun trackItemUnselected(mediaPickerSetup: MediaPickerSetup) {
-        analyticsTrackerWrapper.track(MEDIA_PICKER_ITEM_UNSELECTED, mediaPickerSetup.toProperties())
-    }
-
-    fun trackMediaPickerOpened(mediaPickerSetup: MediaPickerSetup) {
-        analyticsTrackerWrapper.track(MEDIA_PICKER_OPENED, mediaPickerSetup.toProperties())
     }
 }

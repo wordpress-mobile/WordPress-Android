@@ -28,8 +28,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -243,7 +241,10 @@ class MediaPickerFragment : Fragment() {
                                 null,
                                 navigationEvent.url
                         )
-                        AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
+                        AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                                activity,
+                                getString(R.string.cancel)
+                        )
                     }
                     is PreviewMedia -> MediaPreviewActivity.showPreview(
                             requireContext(),
@@ -453,10 +454,10 @@ class MediaPickerFragment : Fragment() {
                     is Visible -> {
                         if (progressDialog == null || progressDialog?.isShowing == false) {
                             val builder: Builder = MaterialAlertDialogBuilder(requireContext())
-                            builder.setTitle(string.media_uploading_stock_library_photo)
-                            builder.setView(layout.media_picker_progress_dialog)
+                            builder.setTitle(R.string.media_uploading_stock_library_photo)
+                            builder.setView(R.layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
-                                    string.cancel
+                                    R.string.cancel
                             ) { _, _ -> this.cancelAction() }
                             builder.setOnCancelListener { this.cancelAction() }
                             builder.setCancelable(true)
