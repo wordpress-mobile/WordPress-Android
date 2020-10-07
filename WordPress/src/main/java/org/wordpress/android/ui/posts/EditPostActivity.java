@@ -445,8 +445,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mIsPreview) {
             findViewById(R.id.createPageButton).setOnClickListener(view -> {
-                Intent i = getIntent();
-                setResult(RESULT_OK, i);
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+                mViewModel.finish(ActivityFinishState.CANCELLED);
+                setResult(RESULT_OK, getIntent());
                 finish();
             });
         }
@@ -2021,6 +2023,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mIsPreview) {
             if (doFinish) {
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
                 mViewModel.finish(ActivityFinishState.CANCELLED);
             }
             return;
