@@ -1,98 +1,71 @@
 <en-US>
-15.7:
-Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.
+15.8:
+- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.
+- Reader update: Preview images are now displayed on posts when no featured image is set.
 
-Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.
 
 </en-US>
 <es-ES>
-15.7:
-Mejoras en el lector: Una nueva pestaña «Descubrir» que puedes adaptar a tus intereses y un botón «(No) Seguir» a las pantallas de detalles del sitio y del tema.
+15.8:
+- Mejoras en el editor de bloques: Añadida compatibilidad con alineación de ancho amplio y ancho completo para los bloques de grupo, fondo e imagen; añadida compatibilidad con el estilo redondeado en el bloque de imagen; y solucionado un problema por el que la barra de herramientas se comportaba de modo inesperado al añadir un bloque.
+- Actualización del lector: La vista previa de imágenes ahora se muestra en las entradas cuando no se ha configurado una imagen destacada.
 
-Mejoras en el editor de bloques: Un nuevo bloque de «Cita» que te permite añadir énfasis a una pieza de texto elegida. Ahora, cualquier cambio realizado en los carruseles del menú también se refleja inmediatamente en los ajustes del bloque.
 
 </es-ES>
 <fr-CA>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
+15.8 :
+- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
+- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
 </fr-CA>
 <fr-FR>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
+15.8 :
+- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
+- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
 </fr-FR>
 <iw-IL>
-15.7:
-שיפורים ב-Reader: לשונית חדשה של 'לגלות' שניתנת להתאמה לפי תחומי העניין וכפתורי מעקב או ביטול מעקב במסכי הפרטים של האתרים והנושאים.
+15.8:
+- שיפורים בעורך הבלוקים: הוספנו תמיכה ברוחב מלא וביישור לרוחב בבלוקים של קבוצות, כיסוי ותמונות; הוספנו תמיכה בסגנון 'מעוגל' בבלוק התמונה; פתרנו בעיה שגרמה לפעולה לא תקינה של סרגל הכלים במהלך הוספה של בלוק.
+- עדכונים ל-Reader: תמונות בתצוגה מקדימה מוצגות כעת בפוסטים כאשר לא מוגדרת תמונה מרכזית.
 
-שיפורים בעורך הבלוקים: בלוק ציטוט חדש מאפשר לך להוסיף הדגשות לחלק מסוים מהטקסט. כל שינוי שמבוצע בסליידר של התפריט יחול כעת באופן מיידי בהגדרות הבלוק.
 
 </iw-IL>
-<in>
-15.7:
-Peningkatan pada Pembaca: Tab Jelajah baru yang dapat disesuaikan dengan minat Anda dan tombol “(berhenti) mengikuti” pada layar detail situs dan topik.
-
-Peningkatan Penyunting Blok: Blok Kutipan Besar baru yang memungkinkan Anda menambahkan penekanan pada bagian teks yang dipilih. Semua perubahan pada slider menu kini juga langsung ditampilkan di pengaturan blok.
-
-</in>
-<it-IT>
-15.7:
-Miglioramenti nel Reader: una nuova scheda Discover può essere adattata ai tuoi interessi e un pulsante per seguire/non seguire i un sito e le schermate dei dettagli dell'argomento.
-
-Miglioramenti all'editor a blocchi: un nuovo blocco Citazione evidenziata che ti aiuta ad aggiungere enfasi a una parte del testo scelta. Qualsiasi modifica effettuata negli slider del menu ora viene anche immediatamente riflessa nelle impostazioni del blocco.
-
-</it-IT>
 <ja-JP>
-15.7:
- Reader の改善 : 新しいディスカバータブで、サイトやトピックの詳細画面における、興味や「フォロー (解除)」ボタンをカスタマイズできます。
-
-ブロックエディターの改善 : 新しいプルクオートブロックで選択したテキストを強調できるようになりました。 メニューのスライダーの変更もすぐにブロック設定に反映されるようになりました。
+15.8:
+- ブロックエディターの機能強化。グループブロック、カバーブロック、画像ブロックの全幅および幅広整列サポートを追加。
+- Reader の更新: アイキャッチ画像が設定されていない場合、プレビュー画像が投稿に表示されるようになりました。
 
 </ja-JP>
 <ko-KR>
-15.7:
-리더의 개선: 관심에 따라 재단할 수 있는 새 발견 탭과 사이트와 주제 세부 화면에서 “(언)팔로우” 가 있습니다.
+15.8:
+- 블록 편집기 개선: 그룹, 표지, 그리고 이미지 블록에 대한 전체너비와 넓은 정렬  지원을 추가했습니다. 이미지 블록에 대한 둥굴린 스타일에 대한 지원을 추가했습니다. 그리고 도구모음이 블록을 추가할 때 예기치 않게 동작하는 문제를 해결했습니다.
+- 리더 업데이트: 미리보기 이미지가 이제 대표 이미지를 설정하지 않았을 때 보이게 됩니다.
 
-블록 편집기 개선: 본문의 일부를 선택하여 강조할 수 있게 하는 새 내부인용이 있습니다. 또한 메뉴 슬라이더에서 만든 어떤 변경사항이든 이제 블록 설정에 즉각 볬영합니다.
 
 </ko-KR>
 <nl-NL>
-15.7:
-Verbeteringen in de Reader: een nieuw tabblad Ontdekken dat je kan afstemmen op je interesses en een knop "(ont) volgen" voor de detailschermen van de site en het onderwerp.
+15.8:
+- Verbeteringen in de blok-editor: Ondersteuning voor uitlijning over de volledige breedte en breedte toegevoegd voor groeps-, cover- en afbeelding blokken; ondersteuning toegevoegd voor de stijl Afgerond in het afbeelding blok; en loste een probleem op waarbij de toolbar zich onverwacht gedroeg bij het toevoegen van een blok.
+-Reader update: voorbeeld afbeeldingen worden nu getoond in berichten als er geen uitgelichte afbeelding is ingesteld.
 
-Verbeteringen in blok-editor:een nieuw Pullquote-blok waarmee je de nadruk kunt leggen op een gekozen stuk tekst. Eventuele wijzigingen in menu sliders worden nu ook onmiddellijk weerspiegeld in de blok instellingen.
 
 </nl-NL>
-<pt-BR>
-15.7:
-Melhorias no Leitor: Uma nova aba Explorar que você pode personalizar com seus interesses e botão Seguir (ou parar de seguir) sites e assuntos na tela de informações.
-
-Melhorias no editor de blocos: Um novo bloco de Citação que permite adicionar ênfase em uma parte do texto. Qualquer alteração feita no menu deslizante agora é refletida nas configurações do bloco imediatamente.
-
-
-</pt-BR>
 <ru-RU>
-15.7:
-Улучшения "Чтива": Новая вкладка поиска позволяет вам найти и подписаться (или отписаться) на сайты по интересам (на экране подробностей).
-
-Улучшения редактора блоков: Новый блок выдержки, позволяет акцентировать выделенный фрагмент текста. Изменения внесенные слайдерами в меню будут применены немедленно к настройкам блоков.
-
+15.8:
+- Улучшения редактора блоков: добавлена поддержка полноразмерного и широкого выравнивания для блоков группы, обложки и изображения; добавлена поддержка скруглённого стиля в блоке изображения; решена проблема, из-за которой панель инструментов вела себя неожиданно при добавлении блока.
+- Обновление для Чтива: изображения предварительного просмотра теперь отображаются в сообщениях, если не задано ни одного избранного изображения.
 
 </ru-RU>
 <sv-SE>
-15.7:
-Förbättringar i läsaren: Ny flik Upptäck du kan anpassa till dina intressen och knapp för att följa/sluta följa webbplatsen och sidor med ämnesinformation.
+15.8:
+– Förbättringar i blockredigeraren: Stöd för fullbredd och brett innehåll i blocken grupp, omslag och bild. Stöd för avrundad stil i bildblock. Rättat fel där verktygslisten betedde sig konstigt när man lade till ett block.
+– Uppdatering av läsaren: Nu visas förhandsvisningsbilder för inlägg som saknar utvald bild.
 
-Förbättringar i blockredigeraren: Ett nytt block för utdragscitat låter dig framhäva ett valt textstycke. Eventuella ändringar i menyreglagen återspeglas nu direkt i blockinställningarna.
 
 </sv-SE>
 <zh-TW>
-15.7：
-閱讀器改善功能：你可以依自己的興趣量身打造全新「探索」分頁，並在網站和主題詳細資料畫面點選「關注/取消關注」按鈕。
+15.8：
+- 區塊編輯器增強功能：為「群組」、「封面」和「圖片」區塊新增全寬和寬幅對齊方式支援；在「圖片」區塊中新增「圓角」樣式支援；並解決新增區塊時，工具列異常運作的問題。
+- 讀取器更新：現在未設定精選圖片的文章會顯示預覽圖片。
 
-區塊編輯器增強功能：推出可突顯所選文字段落的全新「重要引述」區塊。 選單投影片中的任何變更現在也會隨即反映在區塊設定中。
 
 </zh-TW>
