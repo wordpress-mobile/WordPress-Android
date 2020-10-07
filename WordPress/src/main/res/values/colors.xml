@@ -336,6 +336,6 @@
     <color name="reader_welcome_card_text">@color/blue_70</color>
 
     <!-- Collapsing Toolbar Custom Scrim Color -->
-    <color name="collapsing_toolbar_custom_scrim_color">@color/white_translucent_60</color>
+    <color name="collapsing_toolbar_custom_scrim_color">@color/white_translucent_50</color>
 
 </resources>
