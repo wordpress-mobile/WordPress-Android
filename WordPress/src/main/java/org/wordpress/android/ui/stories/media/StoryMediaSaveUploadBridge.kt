@@ -50,6 +50,7 @@ import kotlin.coroutines.CoroutineContext
 class StoryMediaSaveUploadBridge @Inject constructor(
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val savePostToDbUseCase: SavePostToDbUseCase,
+    private val storiesPrefs: StoriesPrefs,
     private val uploadService: UploadServiceFacade,
     private val networkUtils: NetworkUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
@@ -188,8 +189,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
                 mediaModel?.let {
                     frame.id = it.id.toString()
-                    StoriesPrefs.saveSlideWithLocalId(
-                            appContext,
+                    storiesPrefs.saveSlideWithLocalId(
                             it.localSiteId.toLong(),
                             // use the local id to save the original, will be replaced later
                             // with mediaModel.mediaId after uploading to the remote site

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase;
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.util.helpers.MediaFile;
 
 
@@ -21,7 +22,9 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();
 
             if (PostUtils.contentContainsWPStoryGutenbergBlocks(post.getContent())) {
-                SaveStoryGutenbergBlockUseCase saveStoryGutenbergBlockUseCase = new SaveStoryGutenbergBlockUseCase();
+                SaveStoryGutenbergBlockUseCase saveStoryGutenbergBlockUseCase = new SaveStoryGutenbergBlockUseCase(
+                        new StoriesPrefs(WordPress.getContext())
+                );
                 saveStoryGutenbergBlockUseCase
                         .replaceLocalMediaIdsWithRemoteMediaIdsInPost(post, mediaFile);
             } else if (showGutenbergEditor && PostUtils.contentContainsGutenbergBlocks(post.getContent())) {

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stories
 
 import com.google.gson.Gson
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
@@ -11,7 +10,9 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
-class SaveStoryGutenbergBlockUseCase @Inject constructor() {
+class SaveStoryGutenbergBlockUseCase @Inject constructor(
+    private val storiesPrefs: StoriesPrefs
+) {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
         mediaFiles: Map<String, MediaFile>
@@ -66,21 +67,18 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
             val localIdKey = mediaFile.id.toLong()
             val remoteIdKey = mediaFile.mediaId.toLong()
             val localSiteId = post.localSiteId.toLong()
-            StoriesPrefs.getSlideWithLocalId(
-                    WordPress.getContext(),
+            storiesPrefs.getSlideWithLocalId(
                     localSiteId,
                     LocalMediaId(localIdKey)
             )?.let {
                 it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
-                StoriesPrefs.saveSlideWithRemoteId(
-                        WordPress.getContext(),
+                storiesPrefs.saveSlideWithRemoteId(
                         localSiteId,
                         RemoteMediaId(remoteIdKey), // use the new mediaId as key
                         it
                 )
                 // now delete the old entry
-                StoriesPrefs.deleteSlideWithLocalId(
-                        WordPress.getContext(),
+                storiesPrefs.deleteSlideWithLocalId(
                         localSiteId,
                         LocalMediaId(localIdKey)
                 )

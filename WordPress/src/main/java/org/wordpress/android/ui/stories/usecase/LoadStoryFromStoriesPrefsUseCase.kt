@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stories.usecase
 
-import android.content.Context
 import android.net.Uri
 import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryIndex
@@ -10,9 +9,8 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.RemoteMediaId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.getSlideWithRemoteId
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.isValidSlide
 import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
@@ -20,8 +18,8 @@ import javax.inject.Inject
 @Reusable
 class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
-    private val mediaStore: MediaStore,
-    private val context: Context
+    private val storiesPrefs: StoriesPrefs,
+    private val mediaStore: MediaStore
 ) {
     fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Object>): ArrayList<String> {
         val mediaIds = ArrayList<String>()
@@ -38,7 +36,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
 
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
         for (mediaId in mediaIds) {
-            if (!isValidSlide(context, site.getId().toLong(), RemoteMediaId(mediaId.toLong()))) {
+            if (!storiesPrefs.isValidSlide(site.getId().toLong(), RemoteMediaId(mediaId.toLong()))) {
                 return false
             }
         }
@@ -54,8 +52,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         storyRepositoryWrapper.loadStory(storyIndex)
         storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
         for (mediaId in mediaIds) {
-            var storyFrameItem = getSlideWithRemoteId(
-                    context,
+            var storyFrameItem = storiesPrefs.getSlideWithRemoteId(
                     site.getId().toLong(),
                     RemoteMediaId(mediaId.toLong())
             )
