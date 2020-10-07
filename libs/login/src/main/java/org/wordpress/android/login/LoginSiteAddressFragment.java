@@ -28,8 +28,8 @@ import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.OnConnectSiteInfoChecked;
-import org.wordpress.android.fluxc.store.SiteStore.OnWPComSiteFetched;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -41,6 +41,7 @@ import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,16 @@ import dagger.android.support.AndroidSupportInjection;
 public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment implements TextWatcher,
         OnEditorCommitListener, LoginBaseDiscoveryFragment.LoginBaseDiscoveryListener {
     private static final String KEY_REQUESTED_SITE_ADDRESS = "KEY_REQUESTED_SITE_ADDRESS";
+
+    private static final String KEY_SITE_INFO_URL = "url";
+    private static final String KEY_SITE_INFO_URL_AFTER_REDIRECTS = "url_after_redirects";
+    private static final String KEY_SITE_INFO_EXISTS = "exists";
+    private static final String KEY_SITE_INFO_HAS_JETPACK = "has_jetpack";
+    private static final String KEY_SITE_INFO_IS_JETPACK_ACTIVE = "is_jetpack_active";
+    private static final String KEY_SITE_INFO_IS_JETPACK_CONNECTED = "is_jetpack_connected";
+    private static final String KEY_SITE_INFO_IS_WORDPRESS = "is_wordpress";
+    private static final String KEY_SITE_INFO_IS_WPCOM = "is_wp_com";
+    private static final String KEY_SITE_INFO_CALCULATED_HAS_JETPACK = "login_calculated_has_jetpack";
 
     public static final String TAG = "login_site_address_fragment_tag";
 
@@ -198,12 +209,8 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         String cleanedXmlrpcSuffix = UrlUtils.removeXmlrpcSuffix(mRequestedSiteAddress);
 
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
-        } else {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchWpcomSiteByUrlAction(cleanedXmlrpcSuffix));
-        }
+        mAnalyticsListener.trackConnectedSiteInfoRequested(cleanedXmlrpcSuffix);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchConnectSiteInfoAction(cleanedXmlrpcSuffix));
 
         startProgress();
     }
@@ -275,6 +282,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             case MISSING_XMLRPC_METHOD:
                 showError(R.string.xmlrpc_missing_method_error);
                 break;
+            case WORDPRESS_COM_SITE:
+                // This is handled by handleWpComDiscoveryError
+                break;
             case XMLRPC_BLOCKED:
                 showError(R.string.xmlrpc_post_blocked_error);
                 break;
@@ -299,7 +309,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, true);
             mLoginListener.alreadyLoggedInWpcom(oldSitesIDs);
         } else {
-            mLoginListener.gotWpcomSiteInfo(failedEndpoint, null, null);
+            mLoginListener.gotWpcomSiteInfo(failedEndpoint);
         }
     }
 
@@ -340,46 +350,6 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWPComSiteFetched(OnWPComSiteFetched event) {
-        if (mRequestedSiteAddress == null) {
-            // bail if user canceled
-            return;
-        }
-
-        if (!isAdded()) {
-            return;
-        }
-
-        if (event.isError()) {
-            // Not a WordPress.com or Jetpack site
-            if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
-                showError(R.string.enter_wpcom_or_jetpack_site);
-                endProgress();
-            } else {
-                // Start the discovery process
-                initiateDiscovery();
-            }
-        } else {
-            if (event.site.isJetpackInstalled() && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
-                // If Jetpack site, treat it as self-hosted and start the discovery process
-                // An exception is WPCOM_LOGIN_ONLY mode - in that case we're only interested in adding sites
-                // through WordPress.com login, and should proceed along that login path
-                initiateDiscovery();
-                return;
-            }
-
-            endProgress();
-
-            // it's a wp.com site so, treat it as such.
-            mLoginListener.gotWpcomSiteInfo(
-                    UrlUtils.removeScheme(event.site.getUrl()),
-                    event.site.getName(),
-                    event.site.getIconUrl());
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFetchedConnectSiteInfo(OnConnectSiteInfoChecked event) {
         if (mRequestedSiteAddress == null) {
             // bail if user canceled
@@ -390,16 +360,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             return;
         }
 
-        // hold the URL in a variable to use below otherwise it gets cleared up by endProgress
-        final String requestedSiteAddress = mRequestedSiteAddress;
-
-        if (isInProgress()) {
-            endProgress();
-        }
-
         if (event.isError()) {
             mAnalyticsListener.trackConnectedSiteInfoFailed(
-                    requestedSiteAddress,
+                    mRequestedSiteAddress,
                     event.getClass().getSimpleName(),
                     event.error.type.name(),
                     event.error.message);
@@ -407,42 +370,91 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             AppLog.e(T.API, "onFetchedConnectSiteInfo has error: " + event.error.message);
 
             showError(R.string.invalid_site_url_message);
+
+            endProgressIfNeeded();
         } else {
-            // TODO: If we plan to keep this logic we should convert these labels to constants
-            HashMap<String, String> properties = new HashMap<>();
-            properties.put("url", event.info.url);
-            properties.put("url_after_redirects", event.info.urlAfterRedirects);
-            properties.put("exists", Boolean.toString(event.info.exists));
-            properties.put("has_jetpack", Boolean.toString(event.info.hasJetpack));
-            properties.put("is_jetpack_active", Boolean.toString(event.info.isJetpackActive));
-            properties.put("is_jetpack_connected", Boolean.toString(event.info.isJetpackConnected));
-            properties.put("is_wordpress", Boolean.toString(event.info.isWordPress));
-            properties.put("is_wp_com", Boolean.toString(event.info.isWPCom));
+            boolean hasJetpack = calculateHasJetpack(event.info);
 
-            // Determining if jetpack is actually installed takes additional logic. This final
-            // calculated event property will make querying this event more straight-forward:
-            boolean hasJetpack = false;
-            if (event.info.isWPCom && event.info.hasJetpack) {
-                // This is likely an atomic site.
-                hasJetpack = true;
-            } else if (event.info.isJetpackConnected) {
-                hasJetpack = true;
-            }
-            properties.put("login_calculated_has_jetpack", Boolean.toString(hasJetpack));
-            mAnalyticsListener.trackConnectedSiteInfoSucceeded(properties);
+            mAnalyticsListener.trackConnectedSiteInfoSucceeded(createConnectSiteInfoProperties(event.info, hasJetpack));
 
-            if (!event.info.exists) {
-                // Site does not exist
-                showError(R.string.invalid_site_url_message);
-            } else if (!event.info.isWordPress) {
-                // Not a WordPress site
-                showError(R.string.enter_wordpress_site);
+            if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+                handleConnectSiteInfoForWoo(event.info, hasJetpack);
             } else {
-                mLoginListener.gotConnectedSiteInfo(
-                        event.info.url,
-                        event.info.urlAfterRedirects,
-                        hasJetpack);
+                handleConnectSiteInfoForWordPress(event.info, hasJetpack);
             }
         }
+    }
+
+    private void handleConnectSiteInfoForWoo(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
+        endProgressIfNeeded();
+
+        if (!siteInfo.exists) {
+            // Site does not exist
+            showError(R.string.invalid_site_url_message);
+        } else if (!siteInfo.isWordPress) {
+            // Not a WordPress site
+            showError(R.string.enter_wordpress_site);
+        } else {
+            mLoginListener.gotConnectedSiteInfo(
+                    siteInfo.url,
+                    siteInfo.urlAfterRedirects,
+                    hasJetpack);
+        }
+    }
+
+    private void handleConnectSiteInfoForWordPress(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
+        if (siteInfo.isWPCom || hasJetpack) {
+            // It's a WordPress.com or a connected Jetpack site
+            if (mLoginListener.getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
+                // We're only interested in self-hosted sites
+                if (hasJetpack) {
+                    // If Jetpack site, treat it as self-hosted and start the discovery process
+                    // Note: This also includes Atomic sites
+                    initiateDiscovery();
+                    return;
+                }
+            }
+            // It's a WordPress.com or a connected Jetpack site, so treat it as such
+            endProgressIfNeeded();
+            mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(siteInfo.url));
+        } else {
+            // Not a WordPress.com or a connected Jetpack site
+            if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
+                // We're only interested in WordPress.com accounts
+                showError(R.string.enter_wpcom_or_jetpack_site);
+                endProgressIfNeeded();
+            } else {
+                // Start the discovery process
+                initiateDiscovery();
+            }
+        }
+    }
+
+    private boolean calculateHasJetpack(ConnectSiteInfoPayload siteInfo) {
+        // Determining if jetpack is actually installed takes additional logic. This final
+        // calculated event property will make querying this event more straight-forward.
+        // Internal reference: p99K0U-1vO-p2#comment-3574
+        boolean hasJetpack = false;
+        if (siteInfo.isWPCom && siteInfo.hasJetpack) {
+            // This is likely an atomic site.
+            hasJetpack = true;
+        } else if (siteInfo.isJetpackConnected) {
+            hasJetpack = true;
+        }
+        return hasJetpack;
+    }
+
+    private Map<String, String> createConnectSiteInfoProperties(ConnectSiteInfoPayload siteInfo, boolean hasJetpack) {
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put(KEY_SITE_INFO_URL, siteInfo.url);
+        properties.put(KEY_SITE_INFO_URL_AFTER_REDIRECTS, siteInfo.urlAfterRedirects);
+        properties.put(KEY_SITE_INFO_EXISTS, Boolean.toString(siteInfo.exists));
+        properties.put(KEY_SITE_INFO_HAS_JETPACK, Boolean.toString(siteInfo.hasJetpack));
+        properties.put(KEY_SITE_INFO_IS_JETPACK_ACTIVE, Boolean.toString(siteInfo.isJetpackActive));
+        properties.put(KEY_SITE_INFO_IS_JETPACK_CONNECTED, Boolean.toString(siteInfo.isJetpackConnected));
+        properties.put(KEY_SITE_INFO_IS_WORDPRESS, Boolean.toString(siteInfo.isWordPress));
+        properties.put(KEY_SITE_INFO_IS_WPCOM, Boolean.toString(siteInfo.isWPCom));
+        properties.put(KEY_SITE_INFO_CALCULATED_HAS_JETPACK, Boolean.toString(hasJetpack));
+        return properties;
     }
 }

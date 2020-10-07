@@ -61,8 +61,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     private static final String ARG_INPUT_SITE_ADDRESS = "ARG_INPUT_SITE_ADDRESS";
     private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
-    private static final String ARG_SITE_NAME = "ARG_SITE_NAME";
-    private static final String ARG_SITE_ICON_URL = "ARG_SITE_ICON_URL";
     private static final String ARG_INPUT_USERNAME = "ARG_INPUT_USERNAME";
     private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
@@ -87,22 +85,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private String mInputSiteAddress;
     private String mInputSiteAddressWithoutSuffix;
     private String mEndpointAddress;
-    private String mSiteName;
-    private String mSiteIconUrl;
     private String mInputUsername;
     private String mInputPassword;
     private boolean mIsWpcom;
 
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-                                                            String siteName, String siteIconUrl,
                                                             String inputUsername, String inputPassword,
                                                             boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
         args.putString(ARG_ENDPOINT_ADDRESS, endpointAddress);
-        args.putString(ARG_SITE_NAME, siteName);
-        args.putString(ARG_SITE_ICON_URL, siteIconUrl);
         args.putString(ARG_INPUT_USERNAME, inputUsername);
         args.putString(ARG_INPUT_PASSWORD, inputPassword);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
@@ -231,8 +224,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
         mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS, null);
-        mSiteName = getArguments().getString(ARG_SITE_NAME);
-        mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
         mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
         mInputPassword = getArguments().getString(ARG_INPUT_PASSWORD);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
@@ -425,7 +416,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @Override
     public void handleWpComDiscoveryError(String failedEndpoint) {
         AppLog.e(T.API, "Inputted a wpcom address in site address screen. Redirecting to Email screen");
-        mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(failedEndpoint), null, null);
+        mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(failedEndpoint));
     }
 
     @Override
@@ -652,7 +643,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                                 lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl(),
                                 false);
                     } else {
-                        mLoginListener.gotWpcomEmail(userEmail, true);
+                        mLoginListener.gotWpcomEmail(userEmail, true, null);
                     }
                 } else {
                     // Initiate the wp.getOptions endpoint to fetch the jetpack user email

@@ -380,7 +380,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void show2FaError(@Nullable String message) {
-        if (message != null) {
+        if (!TextUtils.isEmpty(message)) {
             mAnalyticsListener.trackFailure(message);
         }
         m2FaInput.setError(message);
