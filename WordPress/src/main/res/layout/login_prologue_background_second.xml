@@ -11,7 +11,7 @@
         android:layout_height="@dimen/login_prologue_background_circle_size"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
-        android:tint="@color/yellow_10"
+        android:tint="@color/login_prologue_background_circle_yellow"
         app:layout_constraintBottom_toBottomOf="@id/guideline_yellow_circle_bottom"
         app:layout_constraintStart_toStartOf="@+id/guideline_yellow_circle_start"
         tools:ignore="ContentDescription" />
@@ -36,7 +36,7 @@
         android:layout_height="@dimen/login_prologue_background_circle_size"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
-        android:tint="@color/blue_5"
+        android:tint="@color/login_prologue_background_circle_light_blue"
         app:layout_constraintBottom_toBottomOf="@id/guideline_blue_circle_bottom"
         app:layout_constraintStart_toStartOf="@+id/guideline_blue_circle_start"
         tools:ignore="ContentDescription" />
@@ -61,7 +61,7 @@
         android:layout_height="@dimen/login_prologue_background_circle_size_large"
         android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
-        android:tint="@color/green_5"
+        android:tint="@color/login_prologue_background_circle_green"
         app:layout_constraintEnd_toEndOf="@+id/guideline_green_circle_end"
         app:layout_constraintTop_toTopOf="@id/guideline_green_circle_top"
         tools:ignore="ContentDescription" />
