@@ -305,7 +305,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // FIXME rollback to "$gradle.ext.fluxCBinaryPath:fluxc:$fluxCVersion" after the FluxC PR[https://github.com/wordpress-mobile/WordPress-FluxC-Android/pull/1704] is merged
-    implementation("com.github.marco-altran.WordPress-FluxC-Android:fluxc:433748ff4c32e7e28298ba32dba859f2856f13e4") {
+    implementation("com.github.marco-altran.WordPress-FluxC-Android:fluxc:9b4893e13db6571a9116d5748d910d5e51ea9874") {
         exclude group: "com.android.volley"
     }
 

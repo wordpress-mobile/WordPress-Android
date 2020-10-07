@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import android.view.View
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
+import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Group
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
@@ -38,7 +40,9 @@ import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.widgets.WPSnackbar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -117,9 +121,9 @@ class ReferrersUseCase(
                                 group.name ?: "",
                                 group.total ?: 0
                         )
+                val spam = group.markedAsSpam != null && group.markedAsSpam!!
+                val icon = buildIcon(group.icon, spam)
                 if (group.referrers.isEmpty()) {
-                    val spam = group.markedAsSpam != null && group.markedAsSpam!!
-                    val icon = buildIcon(group.icon, spam)
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
@@ -130,19 +134,20 @@ class ReferrersUseCase(
                             navigationAction = group.url?.let {
                                 create(it, this::onItemClick)
                             },
-                            longClickAction = { view -> this.onMenuClick(view, group.url, spam) },
+                            longClickAction = { view -> this.onMenuClick(view, group, spam) },
                             contentDescription = contentDescription
                     )
                     items.add(headerItem)
                 } else {
-                    val icon = buildIcon(group.icon, false)
                     val headerItem = ListItemWithIcon(
                             icon = icon,
                             iconUrl = if (icon == null) group.icon else null,
+                            textStyle = buildTextStyle(spam),
                             text = group.name,
                             value = group.total?.let { statsUtils.toFormattedString(it) },
                             showDivider = index < domainModel.groups.size - 1,
-                            contentDescription = contentDescription
+                            contentDescription = contentDescription,
+                            longClickAction = { view -> this.onMenuClick(view, group, spam) }
                     )
                     val isExpanded = group.groupId == uiState.groupId
                     items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
@@ -150,8 +155,8 @@ class ReferrersUseCase(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
-                            val spam = referrer.markedAsSpam != null && referrer.markedAsSpam!!
-                            val referrerIcon = buildIcon(referrer.icon, spam)
+                            val referrerSpam = referrer.markedAsSpam != null && referrer.markedAsSpam!!
+                            val referrerIcon = buildIcon(referrer.icon, referrerSpam)
                             val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
                                 EMPTY_SPACE
                             } else {
@@ -161,15 +166,12 @@ class ReferrersUseCase(
                                     icon = referrerIcon,
                                     iconUrl = if (referrerIcon == null) referrer.icon else null,
                                     iconStyle = iconStyle,
-                                    textStyle = buildTextStyle(spam),
+                                    textStyle = buildTextStyle(referrerSpam),
                                     text = referrer.name,
                                     value = statsUtils.toFormattedString(referrer.views),
                                     showDivider = false,
                                     navigationAction = referrer.url?.let {
                                         create(it, this::onItemClick)
-                                    },
-                                    longClickAction = {
-                                        view -> this.onMenuClick(view, referrer.url, referrer.markedAsSpam)
                                     },
                                     contentDescription = contentDescriptionHelper.buildContentDescription(
                                             header,
@@ -225,13 +227,25 @@ class ReferrersUseCase(
         navigateTo(ViewUrl(url))
     }
 
-    private fun onMenuClick(view: View, url: String?, spam: Boolean?): Boolean {
+    private fun onMenuClick(view: View, group: Group, spam: Boolean?): Boolean {
+        val url = when {
+            group.url != null -> group.url
+            UrlUtils.isValidUrlAndHostNotNull("https://${group.name}") -> group.name
+            else -> null
+        }
         if (url != null) {
             analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_ITEM_LONG_PRESSED, statsGranularity)
             popupMenuHandler.onMenuClick(view, statsGranularity, url, spam, this)
-            return true
+        } else {
+            // Show snackbar with error message
+            WPSnackbar.make(
+                    view,
+                    R.string.stats_referrer_snackbar_cant_mark_as_spam,
+                    Snackbar.LENGTH_LONG
+            ).show()
         }
-        return false
+
+        return true
     }
 
     suspend fun markReferrerAsSpam(urlDomain: String) {

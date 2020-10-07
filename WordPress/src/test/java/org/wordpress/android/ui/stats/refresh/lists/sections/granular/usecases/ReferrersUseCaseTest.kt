@@ -153,7 +153,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 singleReferrer.icon,
                 singleReferrer.markedAsSpam
         )
-        return assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
+        return assertExpandableItem(this[3], group.name!!, group.total!!, group.icon, group.markedAsSpam)
     }
 
     private fun List<BlockListItem>.assertExpandedList(): ExpandableItem {
@@ -167,7 +167,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 singleReferrer.icon,
                 singleReferrer.markedAsSpam
         )
-        val expandableItem = assertExpandableItem(this[3], group.name!!, group.total!!, group.icon)
+        val expandableItem = assertExpandableItem(this[3], group.name!!, group.total!!, group.icon, group.markedAsSpam)
         assertSingleItem(this[4], referrer1.name, referrer1.views, referrer1.icon, referrer1.markedAsSpam)
         assertSingleItem(this[5], referrer2.name, referrer2.views, referrer2.icon, referrer2.markedAsSpam)
         assertThat(this[6]).isEqualTo(Divider)
@@ -279,12 +279,21 @@ class ReferrersUseCaseTest : BaseUnitTest() {
         item: BlockListItem,
         label: String,
         views: Int,
-        icon: String?
+        icon: String?,
+        spam: Boolean?
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
         assertThat((item as ExpandableItem).header.text).isEqualTo(label)
-        assertThat(item.header.value).isEqualTo(views.toString())
-        assertThat(item.header.iconUrl).isEqualTo(icon)
+
+        if (spam != null && spam) {
+            assertThat(item.header.icon).isEqualTo(R.drawable.ic_spam_white_24dp)
+            assertThat(item.header.textStyle).isEqualTo(TextStyle.LIGHT)
+            assertThat(item.header.iconUrl).isNull()
+        } else {
+            assertThat(item.header.icon).isNull()
+            assertThat(item.header.textStyle).isEqualTo(TextStyle.NORMAL)
+            assertThat(item.header.iconUrl).isEqualTo(icon)
+        }
         assertThat(item.header.contentDescription).isEqualTo(contentDescription)
         return item
     }
