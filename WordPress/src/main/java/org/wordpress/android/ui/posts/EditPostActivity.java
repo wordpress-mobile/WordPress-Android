@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -26,6 +27,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
@@ -439,25 +441,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.register(this);
         mViewModel =
                 ViewModelProviders.of(this, mViewModelFactory).get(StorePostViewModel.class);
-
-        mIsPreview = getIntent().getExtras().getBoolean(EXTRA_IS_PREVIEW);
-        setContentView(mIsPreview ? R.layout.mlp_preview_post_activity : R.layout.new_edit_post_activity);
-
-        if (mIsPreview) {
-            findViewById(R.id.createPageButton).setOnClickListener(view -> {
-                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
-                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
-                mViewModel.finish(ActivityFinishState.CANCELLED);
-                setResult(RESULT_OK, getIntent());
-                finish();
-            });
-        }
+        setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
+
+        mIsPreview = getIntent().getExtras().getBoolean(EXTRA_IS_PREVIEW);
 
         // FIXME: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
@@ -633,11 +625,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued();
         }
 
-        if (mIsPreview) {
-            setTitle(R.string.mlp_preview_title);
-        } else {
-            setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
-        }
+        setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+
+        setupPreviewUI();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
@@ -652,6 +642,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+    }
+
+    @SuppressLint("RtlSetMargins")
+    private void setupPreviewUI() {
+        if (!mIsPreview) {
+            return;
+        }
+        setTitle(R.string.mlp_preview_title);
+        // Set bottom editor margin
+        int bottomMargin = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
+        View container = findViewById(R.id.editorContainer);
+        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) container.getLayoutParams();
+        lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, bottomMargin);
+        container.setLayoutParams(lp);
+        // Set button visibility
+        findViewById(R.id.createPageButtonContainer).setVisibility(View.VISIBLE);
+        // Set button action
+        findViewById(R.id.createPageButton).setOnClickListener(view -> {
+            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+            mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+            mViewModel.finish(ActivityFinishState.CANCELLED);
+            setResult(RESULT_OK, getIntent());
+            finish();
+        });
     }
 
     private void fetchSiteSettings() {
