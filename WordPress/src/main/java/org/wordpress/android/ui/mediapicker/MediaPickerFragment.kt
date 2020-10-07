@@ -508,7 +508,7 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun requestStoragePermission() {
-        val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
+        val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
         requestPermissions(
                 permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
         )
