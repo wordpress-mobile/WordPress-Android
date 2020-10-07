@@ -1,5 +1,9 @@
 15.9
 -----
+
+15.8.1
+-----
+* [***] Login: Fixed an issue where some users would be prevented to login with a Jetpack site address.
  
 15.8
 -----
