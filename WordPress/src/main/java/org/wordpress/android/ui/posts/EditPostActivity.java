@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -27,7 +26,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
@@ -644,18 +642,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPrepublishingBottomSheetRunnable();
     }
 
-    @SuppressLint("RtlSetMargins")
     private void setupPreviewUI() {
         if (!mIsPreview) {
             return;
         }
         setTitle(R.string.mlp_preview_title);
         // Set bottom editor margin
-        int bottomMargin = getResources().getDimensionPixelSize(R.dimen.toolbar_content_offset);
-        View container = findViewById(R.id.editorContainer);
-        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) container.getLayoutParams();
-        lp.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, bottomMargin);
-        container.setLayoutParams(lp);
+        View container = findViewById(R.id.pager);
+        container.setPaddingRelative(container.getPaddingStart(), container.getPaddingTop(), container.getPaddingEnd(),
+                getResources().getDimensionPixelSize(R.dimen.mlp_preview_toolbar_offset));
         // Set button visibility
         findViewById(R.id.createPageButtonContainer).setVisibility(View.VISIBLE);
         // Set button action
