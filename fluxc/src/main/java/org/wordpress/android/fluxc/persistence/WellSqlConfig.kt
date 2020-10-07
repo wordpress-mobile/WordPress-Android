@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 117
+        return 118
     }
 
     override fun getDbName(): String {
@@ -1283,6 +1283,16 @@ open class WellSqlConfig : DefaultWellConfig {
                             "QUANTITY INTEGER, " +
                             "UNIT TEXT," +
                             "TOTAL REAL)")
+                }
+                117 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS StockMedia")
+                    db.execSQL("CREATE TABLE StockMedia (_id INTEGER PRIMARY KEY AUTOINCREMENT,ITEM_ID TEXT," +
+                                    "NAME TEXT,TITLE TEXT,URL TEXT,DATE TEXT,THUMBNAIL TEXT)"
+                    )
+                    db.execSQL("DROP TABLE IF EXISTS StockMediaPage")
+                    db.execSQL("CREATE TABLE StockMediaPage (_id INTEGER PRIMARY KEY AUTOINCREMENT,PAGE INTEGER," +
+                                    "NEXT_PAGE INTEGER)"
+                    )
                 }
             }
         }

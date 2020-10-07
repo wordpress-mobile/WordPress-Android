@@ -143,14 +143,6 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public StockMediaRestClient provideStockMediaRestClient(Context appContext, Dispatcher dispatcher,
-                                                            @Named("regular") RequestQueue requestQueue,
-                                                            AccessToken token, UserAgent userAgent) {
-        return new StockMediaRestClient(appContext, dispatcher, requestQueue, token, userAgent);
-    }
-
-    @Singleton
-    @Provides
     public AccountRestClient provideAccountRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AppSecrets appSecrets,
@@ -446,6 +438,16 @@ public class ReleaseNetworkModule {
     public EncryptedLogRestClient provideEncryptedLogRestClient(@Named("regular") RequestQueue requestQueue,
                                                                 AppSecrets appSecrets) {
         return new EncryptedLogRestClient(requestQueue, appSecrets);
+    }
+
+    @Singleton
+    @Provides
+    public StockMediaRestClient provideStockMediaRestClient(Context appContext, Dispatcher dispatcher,
+                                                            @Named("regular") RequestQueue requestQueue,
+                                                            AccessToken token, UserAgent userAgent,
+                                                            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new StockMediaRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
+                userAgent);
     }
 
     @Singleton
