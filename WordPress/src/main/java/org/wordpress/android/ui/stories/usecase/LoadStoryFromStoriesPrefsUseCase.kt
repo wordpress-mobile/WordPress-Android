@@ -36,7 +36,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
 
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
         for (mediaId in mediaIds) {
-            if (!storiesPrefs.isValidSlide(site.getId().toLong(), RemoteMediaId(mediaId.toLong()))) {
+            if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteMediaId(mediaId.toLong()))) {
                 return false
             }
         }
