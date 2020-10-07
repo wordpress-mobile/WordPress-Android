@@ -5,21 +5,25 @@ import org.greenrobot.eventbus.ThreadMode.ASYNC
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.StockMediaAction
-import org.wordpress.android.fluxc.action.StockMediaAction.FETCHED_STOCK_MEDIA
 import org.wordpress.android.fluxc.action.StockMediaAction.FETCH_STOCK_MEDIA
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.StockMediaModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient
+import org.wordpress.android.fluxc.persistence.StockMediaSqlUtils
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StockMediaStore @Inject constructor(
+class StockMediaStore
+@Inject constructor(
     dispatcher: Dispatcher?,
-    private val stockMediaRestClient: StockMediaRestClient
+    private val restClient: StockMediaRestClient,
+    private val coroutineEngine: CoroutineEngine,
+    private val sqlUtils: StockMediaSqlUtils
 ) : Store(dispatcher) {
     /**
      * Actions: FETCH_MEDIA_LIST
@@ -55,7 +59,7 @@ class StockMediaStore @Inject constructor(
         GENERIC_ERROR;
 
         companion object {
-            @JvmStatic fun fromBaseNetworkError(baseError: BaseNetworkError?): StockMediaErrorType {
+            fun fromBaseNetworkError(baseError: BaseNetworkError?): StockMediaErrorType {
                 // endpoint returns an empty media list for any type of error, including timeouts, server error, etc.
                 return GENERIC_ERROR
             }
@@ -69,7 +73,6 @@ class StockMediaStore @Inject constructor(
         val actionType = action.type as? StockMediaAction ?: return
         when (actionType) {
             FETCH_STOCK_MEDIA -> performFetchStockMediaList(action.payload as FetchStockMediaListPayload)
-            FETCHED_STOCK_MEDIA -> handleStockMediaListFetched(action.payload as FetchedStockMediaListPayload)
         }
     }
 
@@ -78,7 +81,46 @@ class StockMediaStore @Inject constructor(
     }
 
     private fun performFetchStockMediaList(payload: FetchStockMediaListPayload) {
-        stockMediaRestClient.searchStockMedia(payload.searchTerm, payload.page)
+        coroutineEngine.launch(MEDIA, this, "Fetching stock media") {
+            val mediaListPayload = restClient.searchStockMedia(
+                    payload.searchTerm,
+                    payload.page,
+                    PAGE_SIZE
+            )
+            handleStockMediaListFetched(mediaListPayload)
+        }
+    }
+
+    suspend fun fetchStockMedia(filter: String, loadMore: Boolean): OnStockMediaListFetched {
+        return coroutineEngine.withDefaultContext(MEDIA, this, "Fetching stock media") {
+            val loadedPage = if (loadMore) {
+                sqlUtils.getNextPage() ?: 0
+            } else {
+                0
+            }
+            if (loadedPage == 0) {
+                sqlUtils.clear()
+            }
+
+            val payload = restClient.searchStockMedia(filter, loadedPage, PAGE_SIZE)
+            if (payload.isError) {
+                OnStockMediaListFetched(requireNotNull(payload.error), filter)
+            } else {
+                sqlUtils.insert(
+                        loadedPage,
+                        if (payload.canLoadMore) payload.nextPage else null,
+                        payload.mediaList.map {
+                            StockMediaItem(it.id, it.name, it.title, it.url, it.date, it.thumbnail)
+                        })
+                OnStockMediaListFetched(payload.mediaList, filter, payload.nextPage, payload.canLoadMore)
+            }
+        }
+    }
+
+    suspend fun getStockMedia(): List<StockMediaItem> {
+        return coroutineEngine.withDefaultContext(MEDIA, this, "Getting stock media") {
+            sqlUtils.selectAll()
+        }
     }
 
     private fun handleStockMediaListFetched(payload: FetchedStockMediaListPayload) {
@@ -93,5 +135,10 @@ class StockMediaStore @Inject constructor(
             )
         }
         emitChange(onStockMediaListFetched)
+    }
+
+    companion object {
+        // this should be a multiple of both 3 and 4 since WPAndroid shows either 3 or 4 pics per row
+        const val PAGE_SIZE = 36
     }
 }
