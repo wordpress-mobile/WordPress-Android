@@ -65,7 +65,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@null"
                 android:elevation="0dp"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:theme="@style/WordPress.ActionBar" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
