@@ -41,13 +41,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted;
-import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed;
-import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress;
-import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart;
-import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
-import com.wordpress.stories.compose.story.Story;
-import com.wordpress.stories.compose.story.StoryFrameItem;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -159,6 +152,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields;
+import org.wordpress.android.ui.posts.editor.StoriesEventListener;
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
@@ -172,7 +166,6 @@ import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
-import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
@@ -243,7 +236,6 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
-import static org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.TEMPORARY_ID_PREFIX;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -343,7 +335,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditorMediaUploadListener mEditorMediaUploadListener;
-    private StorySaveMediaListener mStorySaveMediaListener;
     private EditorPhotoPicker mEditorPhotoPicker;
 
     private ProgressDialog mProgressDialog;
@@ -407,7 +398,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoryRepositoryWrapper mStoryRepositoryWrapper;
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
     @Inject StoriesPrefs mStoriesPrefs;
-
+    @Inject StoriesEventListener mStoriesEventListener;
 
     private StorePostViewModel mViewModel;
 
@@ -590,7 +581,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
 
             if (mEditorFragment instanceof StorySaveMediaListener) {
-                mStorySaveMediaListener = (StorySaveMediaListener) mEditorFragment;
+                mStoriesEventListener.setSaveMediaListener((StorySaveMediaListener) mEditorFragment);
             }
         }
 
@@ -668,6 +659,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+
+        mStoriesEventListener.start(this.getLifecycle(), mSite);
     }
 
     private void fetchSiteSettings() {
@@ -2200,7 +2193,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
 
                     if (mEditorFragment instanceof StorySaveMediaListener) {
-                        mStorySaveMediaListener = (StorySaveMediaListener) mEditorFragment;
+                        mStoriesEventListener.setSaveMediaListener((StorySaveMediaListener) mEditorFragment);
                     }
                     break;
                 case PAGE_SETTINGS:
@@ -3151,121 +3144,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             });
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
-    }
-
-    // Story Frame Save Service events
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStoryFrameSaveStart(FrameSaveStart event) {
-        if (isFinishing()) {
-            return;
-        }
-        String localMediaId = String.valueOf(event.getFrameId());
-        if (mStorySaveMediaListener != null) {
-            float progress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(event.getStoryIndex(), 0.0f);
-            mStorySaveMediaListener.onMediaSaveReattached(localMediaId, progress);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStoryFrameSaveProgress(FrameSaveProgress event) {
-        if (isFinishing()) {
-            return;
-        }
-        String localMediaId = String.valueOf(event.getFrameId());
-        if (mStorySaveMediaListener != null) {
-            float progress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(
-                    event.getStoryIndex(),
-                    event.getProgress()
-            );
-            mStorySaveMediaListener.onMediaSaveProgress(localMediaId, progress);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStoryFrameSaveCompleted(FrameSaveCompleted event) {
-        if (isFinishing()) {
-            return;
-        }
-        String localMediaId = event.getFrameId();
-        if (mStorySaveMediaListener != null) {
-            // check whether this is a temporary file being just saved (so we don't have a proper local MediaModel yet)
-            // catch ( NumberFormatException e)
-            if (localMediaId.startsWith(TEMPORARY_ID_PREFIX)) {
-                Story story = mStoryRepositoryWrapper.getStoryAtIndex(event.getStoryIndex());
-
-                // first, update the media's url
-                StoryFrameItem frame = story.getFrames().get(event.getFrameIndex());
-                mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId,
-                        Uri.fromFile(frame.getComposedFrameFile()).toString());
-
-                // now update progress
-                float totalProgress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(event.getStoryIndex(), 0.0f);
-                mStorySaveMediaListener.onMediaSaveProgress(localMediaId, totalProgress);
-            } else {
-                MediaModel mediaModel = mMediaStore.getSiteMediaWithId(mSite, Long.parseLong(localMediaId));
-                if (mediaModel != null) {
-                    MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-                    mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaFile.getFileURL());
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStoryFrameMediaModelCreated(StoryFrameMediaModelCreatedEvent event) {
-        if (isFinishing()) {
-            return;
-        }
-
-        if (mStorySaveMediaListener != null) {
-            mStorySaveMediaListener.onMediaModelCreatedForFile(event.getOldId(), event.getNewId(), event.getOldUrl());
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStoryFrameSaveFailed(FrameSaveFailed event) {
-        if (isFinishing()) {
-            return;
-        }
-        String localMediaId = String.valueOf(event.getFrameId());
-//        if (mStorySaveMediaListener != null) {
-//            mStorySaveMediaListener.onMediaSaveFailed(localMediaId);
-//        }
-        // just update progress, we may have still some other frames in this story that need be saved.
-        // we will send the Failed signal once all the Story frames have been processed
-        if (mStorySaveMediaListener != null) {
-            float progress = mStoryRepositoryWrapper.getCurrentStorySaveProgress(event.getStoryIndex(), 0.0f);
-            mStorySaveMediaListener.onMediaSaveReattached(localMediaId, progress);
-        }
-    }
-
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onStorySaveProcessFinished(StorySaveResult event) {
-        if (isFinishing()) {
-            return;
-        }
-
-        Story story = mStoryRepositoryWrapper.getStoryAtIndex(event.getStoryIndex());
-        if (event.isSuccess() && event.getFrameSaveResult().size() == story.getFrames().size()) {
-            // take the first frame IDs and mediaUri
-            String localMediaId = String.valueOf(story.getFrames().get(0).getId());
-            String mediaUrl = Uri.fromFile(story.getFrames().get(0).getComposedFrameFile()).toString();
-            if (mStorySaveMediaListener != null) {
-                mStorySaveMediaListener.onMediaSaveSucceeded(localMediaId, mediaUrl);
-            }
-        } else {
-            String localMediaId = String.valueOf(story.getFrames().get(0).getId());
-            if (mStorySaveMediaListener != null) {
-                mStorySaveMediaListener.onMediaSaveFailed(localMediaId);
-            }
         }
     }
 
