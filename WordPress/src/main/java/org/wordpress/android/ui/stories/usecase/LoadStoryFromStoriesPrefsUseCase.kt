@@ -21,7 +21,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     private val storiesPrefs: StoriesPrefs,
     private val mediaStore: MediaStore
 ) {
-    fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Object>): ArrayList<String> {
+    fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Any>): ArrayList<String> {
         val mediaIds = ArrayList<String>()
         for (mediaFile in mediaFiles) {
             val mediaIdLong = (mediaFile as HashMap<String?, Any?>)["id"]
