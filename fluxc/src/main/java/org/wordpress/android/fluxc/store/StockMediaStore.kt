@@ -7,10 +7,12 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.StockMediaAction
 import org.wordpress.android.fluxc.action.StockMediaAction.FETCH_STOCK_MEDIA
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.StockMediaModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient
 import org.wordpress.android.fluxc.persistence.StockMediaSqlUtils
+import org.wordpress.android.fluxc.store.MediaStore.OnStockMediaUploaded
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
@@ -23,7 +25,8 @@ class StockMediaStore
     dispatcher: Dispatcher?,
     private val restClient: StockMediaRestClient,
     private val coroutineEngine: CoroutineEngine,
-    private val sqlUtils: StockMediaSqlUtils
+    private val sqlUtils: StockMediaSqlUtils,
+    private val mediaStore: MediaStore
 ) : Store(dispatcher) {
     /**
      * Actions: FETCH_MEDIA_LIST
@@ -34,10 +37,10 @@ class StockMediaStore
      * Actions: FETCHED_MEDIA_LIST
      */
     class FetchedStockMediaListPayload(
-        val mediaList: List<StockMediaModel>,
-        val searchTerm: String,
-        val nextPage: Int,
-        val canLoadMore: Boolean
+        @JvmField val mediaList: List<StockMediaModel>,
+        @JvmField val searchTerm: String,
+        @JvmField val nextPage: Int,
+        @JvmField val canLoadMore: Boolean
     ) : Payload<StockMediaError?>() {
         constructor(error: StockMediaError, searchTerm: String) : this(listOf(), searchTerm, 0, false) {
             this.error = error
@@ -45,10 +48,10 @@ class StockMediaStore
     }
 
     class OnStockMediaListFetched(
-        val mediaList: List<StockMediaModel>,
-        val searchTerm: String,
-        val nextPage: Int,
-        val canLoadMore: Boolean
+        @JvmField val mediaList: List<StockMediaModel>,
+        @JvmField val searchTerm: String,
+        @JvmField val nextPage: Int,
+        @JvmField val canLoadMore: Boolean
     ) : OnChanged<StockMediaError?>() {
         constructor(error: StockMediaError, searchTerm: String) : this(listOf(), searchTerm, 0, false) {
             this.error = error
@@ -135,6 +138,21 @@ class StockMediaStore
             )
         }
         emitChange(onStockMediaListFetched)
+    }
+
+    suspend fun performUploadStockMedia(site: SiteModel, stockMedia: List<StockMediaUploadItem>): OnStockMediaUploaded {
+        return coroutineEngine.withDefaultContext(MEDIA, this, "Upload stock media") {
+            val payload = restClient.uploadStockMedia(site, stockMedia)
+            if (payload.isError) {
+                OnStockMediaUploaded(payload.site, payload.error!!)
+            } else {
+                // add uploaded media to the store
+                for (media in payload.mediaList) {
+                    mediaStore.updateMedia(media, false)
+                }
+                OnStockMediaUploaded(payload.site, payload.mediaList)
+            }
+        }
     }
 
     companion object {
