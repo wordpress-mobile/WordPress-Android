@@ -61,9 +61,8 @@ class StoriesPrefs @Inject constructor(
             return true
         }
         try {
-            val inputStream = context.contentResolver.openInputStream(uri)
-            if (inputStream != null) {
-                inputStream.close()
+            context.contentResolver.openInputStream(uri)?.let {
+                it.close()
                 return true
             }
         } catch (e: java.lang.Exception) {
