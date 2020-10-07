@@ -14,12 +14,21 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
@@ -76,30 +85,23 @@ class MediaPickerViewModel @Inject constructor(
     private val permissionsHandler: PermissionsHandler,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
+    private val mediaStore: MediaStore,
     private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var mediaLoader: MediaLoader
     private lateinit var mediaInsertHandler: MediaInsertHandler
     private val loadActions = Channel<LoadAction>()
-    private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
-    private val _navigateToEdit = MutableLiveData<Event<List<UriWrapper>>>()
-    private val _onInsert = MutableLiveData<Event<List<Identifier>>>()
     private val _domainModel = MutableLiveData<DomainModel>()
     private val _selectedIds = MutableLiveData<List<Identifier>>()
-    private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
     private val _searchExpanded = MutableLiveData<Boolean>()
     private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
-    private val _onExit = MutableLiveData<Event<Unit>>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val _onNavigate = MutableLiveData<Event<MediaNavigationEvent>>()
 
-    val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
-    val onNavigateToEdit: LiveData<Event<List<UriWrapper>>> = _navigateToEdit
-    val onInsert: LiveData<Event<List<Identifier>>> = _onInsert
-    val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
-    val onExit: LiveData<Event<Unit>> = _onExit
     val onSnackbarMessage: LiveData<Event<SnackbarMessageHolder>> = _onSnackbarMessage
+    val onNavigate = _onNavigate as LiveData<Event<MediaNavigationEvent>>
 
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
@@ -330,25 +332,43 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     private fun clickItem(identifier: Identifier, isVideo: Boolean) {
-        trackOpenPreviewScreenEvent(identifier, isVideo)
-        if (identifier is LocalUri) {
-            _navigateToPreview.postValue(Event(identifier.value))
+        when (identifier) {
+            is LocalUri -> {
+                trackPreview(identifier.value, isVideo)
+                _onNavigate.postValue(Event(PreviewUrl(identifier.value.toString())))
+            }
+            is StockMediaIdentifier -> {
+                if (identifier.url != null) {
+                    trackPreview(isVideo = isVideo)
+                    _onNavigate.postValue(Event(PreviewUrl(identifier.url)))
+                }
+            }
+            is RemoteId -> {
+                site?.let {
+                    launch {
+                        trackPreview(isVideo = isVideo)
+                        val media: MediaModel = mediaStore.getSiteMediaWithId(it, identifier.value)
+                        _onNavigate.postValue(Event(PreviewMedia(media)))
+                    }
+                }
+            }
         }
     }
 
-    private fun trackOpenPreviewScreenEvent(identifier: Identifier, isVideo: Boolean) {
+    private fun trackPreview(uri: UriWrapper? = null, isVideo: Boolean) {
         launch(bgDispatcher) {
-            if (identifier is LocalUri) {
-                val properties = analyticsUtilsWrapper.getMediaProperties(
+            val properties = if (uri != null) {
+                analyticsUtilsWrapper.getMediaProperties(
                         isVideo,
-                        identifier.value,
+                        uri,
                         null
                 )
-                properties["is_video"] = isVideo
-                analyticsTrackerWrapper.track(MEDIA_PICKER_PREVIEW_OPENED, properties)
             } else {
-                TODO()
+                mutableMapOf()
             }
+            properties["source"] = mediaPickerSetup.dataSource.name
+            properties["is_video"] = isVideo
+            analyticsTrackerWrapper.track(MEDIA_PICKER_PREVIEW_OPENED, properties)
         }
     }
 
@@ -390,7 +410,7 @@ class MediaPickerViewModel @Inject constructor(
                         progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
-                        _onInsert.value = Event(it.identifiers)
+                        _onNavigate.value = Event(MediaNavigationEvent.InsertMedia(it.identifiers))
                     }
                 }
             }
@@ -399,7 +419,7 @@ class MediaPickerViewModel @Inject constructor(
 
     fun performEditAction() {
         val uriList = selectedIdentifiers().mapNotNull { (it as? Identifier.LocalUri)?.value }
-        _navigateToEdit.value = Event(uriList)
+        _onNavigate.value = Event(EditMedia(uriList))
     }
 
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
@@ -416,7 +436,7 @@ class MediaPickerViewModel @Inject constructor(
 
         // Do we need tracking here?; review tracking need.
 
-        _onIconClicked.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
+        _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
     }
 
     private fun populateIconClickEvent(icon: MediaPickerIcon, canMultiselect: Boolean): IconClickEvent {
@@ -511,7 +531,7 @@ class MediaPickerViewModel @Inject constructor(
                 loadActions.send(LoadAction.ClearFilter)
             }
         } else {
-            _onExit.postValue(Event(Unit))
+            _onNavigate.postValue(Event(Exit))
         }
     }
 
@@ -565,8 +585,6 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     data class BrowseMenuUiModel(val isVisible: Boolean)
-
-    data class IconClickEvent(val action: MediaPickerAction)
 
     enum class PermissionsRequested {
         CAMERA, STORAGE
