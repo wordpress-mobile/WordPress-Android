@@ -11,9 +11,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
@@ -63,7 +60,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
-import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
@@ -82,6 +78,7 @@ class MediaPickerViewModel @Inject constructor(
     private val mediaInsertHandlerFactory: MediaInsertHandlerFactory,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val mediaPickerTracker: MediaPickerTracker,
     private val permissionsHandler: PermissionsHandler,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
@@ -292,6 +289,7 @@ class MediaPickerViewModel @Inject constructor(
         this.lastTappedIcon = lastTappedIcon
         this.site = site
         if (_domainModel.value == null) {
+            mediaPickerTracker.trackMediaPickerOpened(mediaPickerSetup)
             this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
             this.mediaInsertHandler = mediaInsertHandlerFactory.build(mediaPickerSetup, site)
             launch(bgDispatcher) {
@@ -321,8 +319,10 @@ class MediaPickerViewModel @Inject constructor(
     private fun toggleItem(identifier: Identifier, canMultiselect: Boolean) {
         val updatedUris = _selectedIds.value?.toMutableList() ?: mutableListOf()
         if (updatedUris.contains(identifier)) {
+            mediaPickerTracker.trackItemUnselected(mediaPickerSetup)
             updatedUris.remove(identifier)
         } else {
+            mediaPickerTracker.trackItemSelected(mediaPickerSetup)
             if (updatedUris.isNotEmpty() && !canMultiselect) {
                 updatedUris.clear()
             }
@@ -332,43 +332,26 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     private fun clickItem(identifier: Identifier, isVideo: Boolean) {
+        launch {
+            mediaPickerTracker.trackPreview(isVideo, identifier, mediaPickerSetup)
+        }
         when (identifier) {
             is LocalUri -> {
-                trackPreview(identifier.value, isVideo)
                 _onNavigate.postValue(Event(PreviewUrl(identifier.value.toString())))
             }
             is StockMediaIdentifier -> {
                 if (identifier.url != null) {
-                    trackPreview(isVideo = isVideo)
                     _onNavigate.postValue(Event(PreviewUrl(identifier.url)))
                 }
             }
             is RemoteId -> {
                 site?.let {
                     launch {
-                        trackPreview(isVideo = isVideo)
                         val media: MediaModel = mediaStore.getSiteMediaWithId(it, identifier.value)
                         _onNavigate.postValue(Event(PreviewMedia(media)))
                     }
                 }
             }
-        }
-    }
-
-    private fun trackPreview(uri: UriWrapper? = null, isVideo: Boolean) {
-        launch(bgDispatcher) {
-            val properties = if (uri != null) {
-                analyticsUtilsWrapper.getMediaProperties(
-                        isVideo,
-                        uri,
-                        null
-                )
-            } else {
-                mutableMapOf()
-            }
-            properties["source"] = mediaPickerSetup.dataSource.name
-            properties["is_video"] = isVideo
-            analyticsTrackerWrapper.track(MEDIA_PICKER_PREVIEW_OPENED, properties)
         }
     }
 
@@ -407,6 +390,9 @@ class MediaPickerViewModel @Inject constructor(
                         _showProgressDialog.value = Hidden
                     }
                     is InsertModel.Success -> {
+                        launch {
+                            mediaPickerTracker.trackItemsPicked(it.identifiers, mediaPickerSetup)
+                        }
                         progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
@@ -425,15 +411,14 @@ class MediaPickerViewModel @Inject constructor(
     fun clickOnLastTappedIcon() = clickIcon(lastTappedIcon!!)
 
     private fun clickIcon(icon: MediaPickerIcon) {
+        mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
         if (icon is WpStoriesCapture) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
                 _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
                 lastTappedIcon = icon
                 return
             }
-            AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
         }
-
         // Do we need tracking here?; review tracking need.
 
         _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
@@ -485,6 +470,7 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun buildSoftAskView(softAskRequest: SoftAskRequest?): SoftAskViewUiModel {
         if (softAskRequest != null && softAskRequest.show) {
+            mediaPickerTracker.trackShowPermissionsScreen(mediaPickerSetup, softAskRequest.isAlwaysDenied)
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
                 val permissionName = ("<strong>${
@@ -516,16 +502,19 @@ class MediaPickerViewModel @Inject constructor(
 
     fun onSearch(query: String) {
         launch(bgDispatcher) {
+            mediaPickerTracker.trackSearch(mediaPickerSetup)
             loadActions.send(LoadAction.Filter(query))
         }
     }
 
     fun onSearchExpanded() {
+        mediaPickerTracker.trackSearchExpanded(mediaPickerSetup)
         _searchExpanded.value = true
     }
 
     fun onSearchCollapsed() {
         if (!mediaPickerSetup.defaultSearchView) {
+            mediaPickerTracker.trackSearchCollapsed(mediaPickerSetup)
             _searchExpanded.value = false
             launch(bgDispatcher) {
                 loadActions.send(LoadAction.ClearFilter)
