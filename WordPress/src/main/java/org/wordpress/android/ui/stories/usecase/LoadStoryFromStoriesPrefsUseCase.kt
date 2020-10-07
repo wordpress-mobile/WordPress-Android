@@ -86,7 +86,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
     }
 
-    fun loadStoryFromMemoryOrRecreateFromPrefs(site: SiteModel, mediaFiles: ArrayList<Object>): ReCreateStoryResult {
+    fun loadStoryFromMemoryOrRecreateFromPrefs(site: SiteModel, mediaFiles: ArrayList<Any>): ReCreateStoryResult {
         val mediaIds = getMediaIdsFromStoryBlockBridgeMediaFiles(
                 mediaFiles
         )
