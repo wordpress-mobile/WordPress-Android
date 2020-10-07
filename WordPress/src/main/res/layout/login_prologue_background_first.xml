@@ -9,7 +9,6 @@
         android:id="@+id/purple_circle"
         android:layout_width="@dimen/login_prologue_background_circle_size"
         android:layout_height="@dimen/login_prologue_background_circle_size"
-        android:adjustViewBounds="true"
         android:src="@drawable/bg_oval_translucent_stroke_3dp"
         android:tint="@color/login_prologue_background_circle_light_purple"
         app:layout_constraintBottom_toBottomOf="@id/guideline_purple_circle_bottom"
