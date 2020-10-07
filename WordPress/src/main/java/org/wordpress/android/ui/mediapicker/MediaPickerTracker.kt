@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_SEARCH_COLLAPSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_SEARCH_EXPANDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_SEARCH_TRIGGERED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_SELECTION_CLEARED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_SHOW_PERMISSIONS_SCREEN
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
@@ -113,6 +114,10 @@ class MediaPickerTracker
 
     fun trackItemUnselected(mediaPickerSetup: MediaPickerSetup) {
         analyticsTrackerWrapper.track(MEDIA_PICKER_ITEM_UNSELECTED, mediaPickerSetup.toProperties())
+    }
+
+    fun trackSelectionCleared(mediaPickerSetup: MediaPickerSetup) {
+        analyticsTrackerWrapper.track(MEDIA_PICKER_SELECTION_CLEARED, mediaPickerSetup.toProperties())
     }
 
     fun trackMediaPickerOpened(mediaPickerSetup: MediaPickerSetup) {

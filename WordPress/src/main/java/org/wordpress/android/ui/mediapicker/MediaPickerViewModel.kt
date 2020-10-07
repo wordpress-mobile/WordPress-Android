@@ -61,8 +61,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.WPPermissionUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -76,8 +74,6 @@ class MediaPickerViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val mediaLoaderFactory: MediaLoaderFactory,
     private val mediaInsertHandlerFactory: MediaInsertHandlerFactory,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val mediaPickerTracker: MediaPickerTracker,
     private val permissionsHandler: PermissionsHandler,
     private val localeManagerWrapper: LocaleManagerWrapper,
@@ -274,6 +270,7 @@ class MediaPickerViewModel @Inject constructor(
 
     fun clearSelection() {
         if (!_selectedIds.value.isNullOrEmpty()) {
+            mediaPickerTracker.trackSelectionCleared(mediaPickerSetup)
             _selectedIds.postValue(listOf())
         }
     }

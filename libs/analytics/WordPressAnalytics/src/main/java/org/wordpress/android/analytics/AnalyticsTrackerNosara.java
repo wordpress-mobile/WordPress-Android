@@ -1535,6 +1535,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_item_selected";
             case MEDIA_PICKER_ITEM_UNSELECTED:
                 return "media_picker_item_unselected";
+            case MEDIA_PICKER_SELECTION_CLEARED:
+                return "media_picker_selection_cleared";
             case MEDIA_PICKER_OPENED:
                 return "media_picker_opened";
             case APP_PERMISSION_GRANTED:
