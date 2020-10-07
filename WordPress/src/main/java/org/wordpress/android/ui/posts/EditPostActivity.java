@@ -41,7 +41,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.wordpress.stories.compose.story.StoryRepository;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -163,7 +162,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
-import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -392,6 +390,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
 
     private StorePostViewModel mViewModel;
 
@@ -3066,36 +3065,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        LoadStoryFromStoriesPrefsUseCase loadStoryFromStoriesPrefsUseCase = new LoadStoryFromStoriesPrefsUseCase(
-                new StoryRepositoryWrapper(),
-                mSite,
-                mMediaStore,
-                this
-        );
-        ArrayList<String> mediaIds =
-                loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles);
-        boolean allStorySlidesAreEditable = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(mSite, mediaIds);
-        boolean failedLoadingOrReCreatingStory = false;
-
-        // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
-        // just build the Story object ourselves to keep these files arrangement
-        int storyIndex = StoryRepository.findStoryContainingStoryFrameItemsByIds(mediaIds);
-        if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
-            // the StoryRepository didn't have it but we have editable serialized slides so,
-            // create a new Story from scratch with these deserialized StoryFrameItems
-            ReCreateStoryResult result =
-                    loadStoryFromStoriesPrefsUseCase.loadOrReCreateStoryFromStoriesPrefs(mediaIds);
-            failedLoadingOrReCreatingStory = result.getNoSlidesLoaded();
-            if (allStorySlidesAreEditable) {
-                // double check and override if we found at least one couldn't be inflated
-                allStorySlidesAreEditable = result.getAllStorySlidesAreEditable();
-            }
-            storyIndex = result.getStoryIndex();
-        }
-
-        if (!failedLoadingOrReCreatingStory) {
+        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
+                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
+        if (!result.getNoSlidesLoaded()) {
             // Story instance loaded or re-created! Load it
-            ActivityLauncher.editStoryForResult(this, mSite, storyIndex, allStorySlidesAreEditable, true);
+            ActivityLauncher.editStoryForResult(
+                    this, mSite, result.getStoryIndex(), result.getAllStorySlidesAreEditable(), true
+            );
         } else {
             // unfortunately we couldn't even load the remote media Ids indicated by the StoryBLock so we can't allow
             // editing at this time :(

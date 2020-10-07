@@ -12,4 +12,6 @@ class StoryRepositoryWrapper @Inject constructor() {
     fun getCurrentStoryIndex(): StoryIndex = StoryRepository.currentStoryIndex
     fun loadStory(storyIndex: StoryIndex) = StoryRepository.loadStory(storyIndex)
     fun addStoryFrameItemToCurrentStory(item: StoryFrameItem) = StoryRepository.addStoryFrameItemToCurrentStory(item)
-}
+    fun findStoryContainingStoryFrameItemsByIds(ids: ArrayList<String>) =
+            StoryRepository.findStoryContainingStoryFrameItemsByIds(ids)
+    }

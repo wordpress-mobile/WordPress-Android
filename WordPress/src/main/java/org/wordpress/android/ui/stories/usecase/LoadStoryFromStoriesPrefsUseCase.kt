@@ -20,7 +20,6 @@ import javax.inject.Inject
 @Reusable
 class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
-    private val site: SiteModel,
     private val mediaStore: MediaStore,
     private val context: Context
 ) {
@@ -46,7 +45,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         return true
     }
 
-    fun loadOrReCreateStoryFromStoriesPrefs(mediaIds: ArrayList<String>): ReCreateStoryResult {
+    private fun loadOrReCreateStoryFromStoriesPrefs(site: SiteModel, mediaIds: ArrayList<String>): ReCreateStoryResult {
         // the StoryRepository didn't have it but we have editable serialized slides so,
         // create a new Story from scratch with these deserialized StoryFrameItems
         var allStorySlidesAreEditable: Boolean = true
@@ -88,6 +87,30 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         }
 
         return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
+    }
+
+    fun loadStoryFromMemoryOrRecreateFromPrefs(site: SiteModel, mediaFiles: ArrayList<Object>): ReCreateStoryResult {
+        val mediaIds = getMediaIdsFromStoryBlockBridgeMediaFiles(
+                mediaFiles
+        )
+        var allStorySlidesAreEditable = areAllStorySlidesEditable(
+                site,
+                mediaIds
+        )
+
+        // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
+        // just build the Story object ourselves to keep these files arrangement
+        var storyIndex = storyRepositoryWrapper.findStoryContainingStoryFrameItemsByIds(mediaIds)
+        if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
+            // the StoryRepository didn't have it but we have editable serialized slides so,
+            // create a new Story from scratch with these deserialized StoryFrameItems
+            return loadOrReCreateStoryFromStoriesPrefs(
+                    site,
+                    mediaIds
+            )
+        } else {
+            return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, false)
+        }
     }
 
     data class ReCreateStoryResult(

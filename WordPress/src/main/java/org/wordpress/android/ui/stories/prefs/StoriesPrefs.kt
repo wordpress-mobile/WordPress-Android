@@ -23,13 +23,11 @@ object StoriesPrefs {
                 KEY_PREFIX_LOCAL_MEDIA_ID + mediaId.id.toString()
     }
 
-    @JvmStatic
     fun checkSlideIdExists(context: Context, siteId: Long, mediaId: RemoteMediaId): Boolean {
         val slideIdKey = buildSlideKey(siteId, mediaId)
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    @JvmStatic
     fun checkSlideOriginalBackgroundMediaExists(context: Context, siteId: Long, mediaId: RemoteMediaId): Boolean {
         val storyFrameItem: StoryFrameItem? = getSlideWithRemoteId(context, siteId, mediaId)
         storyFrameItem?.let { frame ->
@@ -73,7 +71,6 @@ object StoriesPrefs {
         editor.apply()
     }
 
-    @JvmStatic
     fun isValidSlide(context: Context, siteId: Long, mediaId: RemoteMediaId): Boolean {
         return checkSlideIdExists(context, siteId, mediaId) &&
                 checkSlideOriginalBackgroundMediaExists(context, siteId, mediaId)
@@ -83,7 +80,6 @@ object StoriesPrefs {
         return PreferenceManager.getDefaultSharedPreferences(context).getString(slideIdKey, null)
     }
 
-    @JvmStatic
     fun getSlideWithRemoteId(context: Context, siteId: Long, mediaId: RemoteMediaId): StoryFrameItem? {
         val jsonSlide = getSlideJson(context, buildSlideKey(siteId, mediaId))
         jsonSlide?.let {
@@ -91,7 +87,6 @@ object StoriesPrefs {
         } ?: return null
     }
 
-    @JvmStatic
     fun getSlideWithLocalId(context: Context, siteId: Long, mediaId: LocalMediaId): StoryFrameItem? {
         val jsonSlide = getSlideJson(context, buildSlideKey(siteId, mediaId))
         jsonSlide?.let {
