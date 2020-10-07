@@ -68,7 +68,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                         site,
                         tmpMediaIdsLong
                 )
-                if (mediaModelList.size == 0) {
+                if (mediaModelList.isEmpty()) {
                     noSlidesLoaded = true
                 } else {
                     for (mediaModel in mediaModelList) {
