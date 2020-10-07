@@ -119,9 +119,10 @@ class StoriesPrefs @Inject constructor(
 
     fun deleteSlideWithRemoteId(siteId: Long, mediaId: RemoteMediaId) {
         val slideIdKey = buildSlideKey(siteId, mediaId)
-        val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
-        editor.remove(slideIdKey)
-        editor.apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit().apply { 
+            remove(slideIdKey)
+            apply()
+        }
     }
 
     data class RemoteMediaId(val mediaId: Long)
