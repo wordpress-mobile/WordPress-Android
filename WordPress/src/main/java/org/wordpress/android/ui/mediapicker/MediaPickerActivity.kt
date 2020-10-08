@@ -36,7 +36,12 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newIns
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED
@@ -190,7 +195,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             } catch (e: RuntimeException) {
                 AppLog.e(MEDIA, e)
             }
-            MULTI_SELECT_MEDIA_PICKER, SINGLE_SELECT_MEDIA_PICKER -> if (data!!.hasExtra(
+            MULTI_SELECT_MEDIA_PICKER -> if (data!!.hasExtra(
                             MediaBrowserActivity.RESULT_IDS
                     )) {
                 val ids = ListUtils.fromLongArray(
@@ -199,6 +204,10 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                         )
                 )
                 doMediaIdsSelected(ids, WP_MEDIA_PICKER)
+            }
+            SINGLE_SELECT_MEDIA_PICKER -> if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
+                val id = data.getLongExtra(EXTRA_MEDIA_ID, 0)
+                doMediaIdsSelected(listOf(id), WP_MEDIA_PICKER)
             }
             STOCK_MEDIA_PICKER_SINGLE_SELECT -> if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
                 val mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0)
@@ -291,6 +300,20 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 launchChooserWithContext(action, uiHelpers)
             }
             is OpenCameraForWPStories -> launchWPStoriesCamera()
+            is SwitchMediaPicker -> {
+                val intent = buildIntent(this, action.mediaPickerSetup, site, localPostId)
+                val requestCode = when (action.mediaPickerSetup.primaryDataSource) {
+                    WP_LIBRARY -> if (action.mediaPickerSetup.canMultiselect) {
+                        MULTI_SELECT_MEDIA_PICKER
+                    } else {
+                        SINGLE_SELECT_MEDIA_PICKER
+                    }
+                    DEVICE -> MEDIA_LIBRARY
+                    STOCK_LIBRARY -> STOCK_MEDIA_PICKER_SINGLE_SELECT
+                    GIF_LIBRARY -> TODO()
+                }
+                startActivityForResult(intent, requestCode)
+            }
         }
     }
 
