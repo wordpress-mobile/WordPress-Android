@@ -27,7 +27,6 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
         return withContext(mainDispatcher) {
             uriList
                     .map { mediaUri -> copyToAppStorage(mediaUri) }
-                    .toList()
                     .let {
                         CopyMediaResult(
                                 permanentlyAccessibleUris = it.filterNotNull(),
