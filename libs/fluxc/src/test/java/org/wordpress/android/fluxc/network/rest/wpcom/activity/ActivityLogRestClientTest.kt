@@ -316,8 +316,10 @@ class ActivityLogRestClientTest {
         whenever(wpComGsonRequestBuilder.syncPostRequest(
                 eq(activityRestClient),
                 urlCaptor.capture(),
+                eq(null),
                 eq(mapOf()),
-                eq(RewindResponse::class.java))).thenReturn(response)
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
     }

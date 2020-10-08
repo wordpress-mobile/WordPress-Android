@@ -162,6 +162,7 @@ class SiteHomepageRestClientTest {
                 wpComGsonRequestBuilder.syncPostRequest(
                         eq(restClient),
                         urlCaptor.capture(),
+                        eq(null),
                         paramsCaptor.capture(),
                         eq(kclass)
                 )

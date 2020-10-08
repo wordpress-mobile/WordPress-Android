@@ -220,9 +220,7 @@ class ReferrersRestClientTest {
         assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo(
-                        "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/new/?domain=$domain"
-                )
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/new/")
     }
 
     @Test
@@ -258,8 +256,7 @@ class ReferrersRestClientTest {
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo(
-                        "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/delete/" +
-                                "?domain=$domain"
+                        "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/spam/delete/"
                 )
     }
 
@@ -331,6 +328,7 @@ class ReferrersRestClientTest {
                         eq(restClient),
                         urlCaptor.capture(),
                         paramsCaptor.capture(),
+                        eq(null),
                         eq(kclass)
                 )
         ).thenReturn(response)
