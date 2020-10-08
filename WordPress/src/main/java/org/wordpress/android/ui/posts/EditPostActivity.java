@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
@@ -625,8 +626,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
 
-        setupPreviewUI();
-
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
@@ -640,6 +639,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+
+        setupPreviewUI();
     }
 
     private void setupPreviewUI() {
@@ -653,6 +654,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 getResources().getDimensionPixelSize(R.dimen.mlp_preview_toolbar_offset));
         // Set button visibility
         findViewById(R.id.createPageButtonContainer).setVisibility(View.VISIBLE);
+        // Prevent keyboard from showing
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Set button action
         findViewById(R.id.createPageButton).setOnClickListener(view -> {
             mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
