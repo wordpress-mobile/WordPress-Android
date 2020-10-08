@@ -272,7 +272,9 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
         float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
+        int elevatedColor = elevationOverlayProvider
+                .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
+                        appbarElevation);
         collapsingToolbar.setContentScrimColor(elevatedColor);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
