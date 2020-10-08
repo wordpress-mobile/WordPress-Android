@@ -7,7 +7,14 @@ data class ReferrersModel(val otherViews: Int, val totalViews: Int, val groups: 
         val icon: String?,
         val url: String?,
         val total: Int?,
-        val referrers: List<Referrer>
+        val referrers: List<Referrer>,
+        var markedAsSpam: Boolean? = false
     )
-    data class Referrer(val name: String, val views: Int, val icon: String?, val url: String?)
+    data class Referrer(
+        val name: String,
+        val views: Int,
+        val icon: String?,
+        val url: String?,
+        var markedAsSpam: Boolean? = false
+    )
 }
