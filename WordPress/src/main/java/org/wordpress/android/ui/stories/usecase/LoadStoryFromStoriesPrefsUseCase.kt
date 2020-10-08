@@ -110,7 +110,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         )
 
         // now look for a Story in the StoryRepository that has all these frames and, if not found, let's
-        // just build the Story object ourselves to keep these files arrangement
+        // just build the Story object ourselves to match the order in which the media files were passed. 
         var storyIndex = storyRepositoryWrapper.findStoryContainingStoryFrameItemsByIds(mediaIds)
         if (storyIndex == StoryRepository.DEFAULT_NONE_SELECTED) {
             // the StoryRepository didn't have it but we have editable serialized slides so,
