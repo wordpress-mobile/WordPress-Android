@@ -214,7 +214,7 @@ class ReaderDiscoverLogic(
     }
 
     private fun clearCache() {
-        ReaderDiscoverCardsTable.reset()
+        ReaderDiscoverCardsTable.clear()
         ReaderPostTable.deletePostsWithTag(ReaderTag.createDiscoverPostCardsTag())
     }
 }
