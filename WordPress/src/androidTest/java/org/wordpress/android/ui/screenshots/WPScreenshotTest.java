@@ -62,27 +62,16 @@ public class WPScreenshotTest extends BaseTest {
 
         wpLogin();
 
-        idleFor(1000);
-        takeScreenshot("1-build-and-manage-your-website");
-
-        navigateMySite();
         editBlogPost();
-        manageMedia();
-        navigateNotifications();
+        navigateDiscover();
         navigateStats();
+        navigateMySite();
+        navigateNotifications();
+        manageMedia();
 
         // Turn Demo Mode off on the emulator when we're done
         mDemoModeEnabler.disable();
         logoutIfNecessary();
-    }
-
-    private void navigateMySite() {
-        // Click on the "Sites" tab and take a screenshot
-        clickOn(R.id.nav_sites);
-
-        waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
-
-        takeScreenshot("4-keep-tabs-on-your-site");
     }
 
     private void editBlogPost() {
@@ -100,18 +89,11 @@ public class WPScreenshotTest extends BaseTest {
         // Choose "Drafts"
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
 
-        // Get a screenshot of the writing feature (without image)
-        String name = "2-create-beautiful-posts-and-pages";
-        screenshotPostWithName("Time to Book Summer Sessions", name, false);
+        // TODO: Tap the + in the editor toolbar to open the block library
 
-        // Get a screenshot of the drafts feature
-        screenshotPostWithName("Ideas", "6-capture-ideas-on-the-go", false);
-
-        // Get a screenshot of the drafts feature
-        screenshotPostWithName("Summer Band Jam", "7-create-beautiful-posts-and-pages", true);
-
-        // Get a screenshot for "write without compromises"
-        screenshotPostWithName("Now Booking Summer Sessions", "8-write-without-compromises", true);
+        // Get a screenshot of the editor with the block library expanded
+        String name = "1-create-a-site-or-start-a-blog";
+        screenshotPostWithName("Summer Band Jam", name, false);
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -141,16 +123,43 @@ public class WPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.tabLayout);
     }
 
-    private void manageMedia() {
-        // Click on the "Sites" tab in the nav, then choose "Media"
+    private void navigateDiscover() {
+        // Click on the "Reader" tab and take a screenshot
+        clickOn(R.id.nav_reader);
+
+        // TODO: add this back after mocked data for Discover has been fixed
+        // waitForElementToBeDisplayedWithoutFailure(R.id.interests_fragment_container);
+
+        takeScreenshot("2-discover-new-reads");
+
+        // Exit back to the main activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void navigateStats() {
+        // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
-        clickOn(R.id.quick_action_media_button);
+        clickOn(R.id.row_stats);
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
+        // Show the months view
+        selectItemWithTitleInTabLayout(getTranslatedString(R.string.stats_timeframe_months), R.id.tabLayout);
 
-        takeScreenshot("5-share-from-anywhere");
+        // Wait for the stats to load
+        idleFor(5000);
 
-        pressBackUntilElementIsDisplayed(R.id.quick_action_media_button);
+        takeScreenshot("3-build-an-audience");
+
+        // Exit the Stats Activity
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+    }
+
+    private void navigateMySite() {
+        // Click on the "Sites" tab and take a screenshot
+        clickOn(R.id.nav_sites);
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
+
+        takeScreenshot("4-keep-tabs-on-your-site");
     }
 
     private void navigateNotifications() {
@@ -161,27 +170,22 @@ public class WPScreenshotTest extends BaseTest {
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
 
 
-        takeScreenshot("4-check-whats-happening-in-real-time");
+        takeScreenshot("5-reply-in-real-time");
 
         // Exit the notifications activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateStats() {
-        // Click on the "Sites" tab in the nav, then choose "Stats"
+    private void manageMedia() {
+        // Click on the "Sites" tab in the nav, then choose "Media"
         clickOn(R.id.nav_sites);
-        clickOn(R.id.row_stats);
+        clickOn(R.id.quick_action_media_button);
 
-        // Show the year view – it'll have the best layout
-        selectItemWithTitleInTabLayout(getTranslatedString(R.string.stats_timeframe_years), R.id.tabLayout);
+        waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
-        // Wait for the stats to load
-        idleFor(5000);
+        takeScreenshot("6-upload-on-the-go");
 
-        takeScreenshot("3-track-what-your-visitors-love");
-
-        // Exit the Stats Activity
-        pressBackUntilElementIsDisplayed(R.id.nav_sites);
+        pressBackUntilElementIsDisplayed(R.id.quick_action_media_button);
     }
 
     private void takeScreenshot(String screenshotName) {
