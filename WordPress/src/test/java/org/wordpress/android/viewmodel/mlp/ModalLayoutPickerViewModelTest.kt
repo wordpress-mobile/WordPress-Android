@@ -27,6 +27,8 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
+import org.wordpress.android.ui.mlp.SupportedBlocks
+import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
@@ -46,6 +48,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
 
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
@@ -72,6 +75,7 @@ class ModalLayoutPickerViewModelTest {
                 dispatcher,
                 siteStore,
                 appPrefsWrapper,
+                supportedBlocksProvider,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
@@ -88,6 +92,7 @@ class ModalLayoutPickerViewModelTest {
             whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+            whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
             setupFetchLayoutsDispatcher(isError)
             block()
         }
