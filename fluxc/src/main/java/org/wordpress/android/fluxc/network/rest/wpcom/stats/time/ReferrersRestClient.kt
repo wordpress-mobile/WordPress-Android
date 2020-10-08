@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.StatsStore.ReportReferrerAsSpamPayload
 import org.wordpress.android.fluxc.store.toStatsError
 import java.util.Date
 import javax.inject.Inject
@@ -69,6 +71,56 @@ class ReferrersRestClient
         }
     }
 
+    suspend fun reportReferrerAsSpam(
+        site: SiteModel,
+        domain: String
+    ): ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.new_.urlV1_1
+        val params = mapOf(
+                "domain" to domain
+        )
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                params,
+                null,
+                ReportReferrerAsSpamResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                ReportReferrerAsSpamPayload(response.data)
+            }
+            is Error -> {
+                ReportReferrerAsSpamPayload(response.error.toStatsError())
+            }
+        }
+    }
+
+    suspend fun unreportReferrerAsSpam(
+        site: SiteModel,
+        domain: String
+    ): ReportReferrerAsSpamPayload<ReportReferrerAsSpamResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.referrers.spam.delete.urlV1_1
+        val params = mapOf(
+                "domain" to domain
+        )
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                params,
+                null,
+                ReportReferrerAsSpamResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                ReportReferrerAsSpamPayload(response.data)
+            }
+            is Error -> {
+                ReportReferrerAsSpamPayload(response.error.toStatsError())
+            }
+        }
+    }
+
     data class ReferrersResponse(
         @SerializedName("period") val statsGranularity: String?,
         @SerializedName("days") val groups: Map<String, Groups>
@@ -87,7 +139,8 @@ class ReferrersRestClient
             @SerializedName("total") val total: Int?,
             @SerializedName("results") val results: JsonElement?,
             @SerializedName("referrers") var referrers: List<Referrer>? = null,
-            @SerializedName("views") var views: Int? = null
+            @SerializedName("views") var views: Int? = null,
+            @SerializedName("markedAsSpam") var markedAsSpam: Boolean?
         ) {
             fun build(gson: Gson) {
                 when (this.results) {
@@ -108,14 +161,18 @@ class ReferrersRestClient
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("views") val views: Int?,
-            @SerializedName("children") val children: List<Child>?
+            @SerializedName("children") val children: List<Child>?,
+            @SerializedName("markedAsSpam") var markedAsSpam: Boolean?
         )
 
         data class Child(
             @SerializedName("name") val name: String?,
             @SerializedName("views") val totals: Int?,
             @SerializedName("icon") val icon: String?,
-            @SerializedName("url") val url: String?
+            @SerializedName("url") val url: String?,
+            @SerializedName("markedAsSpam") var markedAsSpam: Boolean?
         )
     }
+
+    class ReportReferrerAsSpamResponse(val success: Boolean) : Response
 }

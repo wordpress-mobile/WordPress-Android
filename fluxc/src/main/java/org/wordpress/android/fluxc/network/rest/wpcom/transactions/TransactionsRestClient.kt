@@ -67,7 +67,7 @@ constructor(
                 "extra" to PrivacyExtra(isPrivacyProtectionEnabled)
         )
 
-        val params = mapOf(
+        val body = mapOf(
                 "temporary" to true,
                 "products" to arrayOf(domainProduct)
         )
@@ -75,7 +75,8 @@ constructor(
         return when (val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
-                params,
+                null,
+                body,
                 CreateShoppingCartResponse::class.java
         )) {
             is Success -> {
@@ -99,7 +100,7 @@ constructor(
                 "payment_method" to domainCreditPaymentMethod
         )
 
-        val params = mapOf(
+        val body = mapOf(
                 "domain_details" to domainContactInformation,
                 "cart" to cartResponse,
                 "payment" to paymentMethod
@@ -108,7 +109,8 @@ constructor(
         return when (val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
-                params,
+                null,
+                body,
                 CreateShoppingCartResponse::class.java
         )) {
             is Success -> {
