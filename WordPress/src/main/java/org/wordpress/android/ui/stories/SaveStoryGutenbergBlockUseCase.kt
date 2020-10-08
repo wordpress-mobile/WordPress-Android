@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stories
 
-import android.content.Context
 import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
@@ -135,7 +134,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         postModel.setContent(content)
     }
 
-    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(context: Context, postModel: PostModel, mediaFile: MediaFile) {
+    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
         val gson = Gson()
         findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
                 postModel,
