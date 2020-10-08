@@ -398,6 +398,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private SiteSettingsInterface mSiteSettings;
     private boolean mIsJetpackSsoEnabled;
 
+    private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
+
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
                && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
@@ -3075,14 +3077,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else {
             // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
             // editing at this time :(
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
-            builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
-            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                dialog.dismiss();
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+            if (mNetworkErrorOnLastMediaFetchAttempt) {
+                // there was an error fetching media when we were loading the editor,
+                // we *may* still have a possibility, tell the user they may try refreshing the media again
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
+                builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
+                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+                    // try another fetchMedia request
+                    fetchMediaList();
+                    dialog.dismiss();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                // unrecoverable error, nothing we can do, inform the user :(.
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                builder.setTitle(getString(R.string.dialog_edit_story_unrecoverable_title));
+                builder.setMessage(getString(R.string.dialog_edit_story_unrecoverable_message));
+                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+                    dialog.dismiss();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
         }
     }
 
@@ -3123,6 +3141,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onMediaListFetched(OnMediaListFetched event) {
         // no op - we don't need to check anything just now, but declaring the method so it's
         // clear we make a request to FetchMedia in this class.
+        if (event != null) {
+            mNetworkErrorOnLastMediaFetchAttempt = event.isError();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -3253,6 +3274,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void fetchMediaList() {
         // do not refresh if there is no network
         if (!NetworkUtils.isNetworkAvailable(this)) {
+            mNetworkErrorOnLastMediaFetchAttempt = true;
             return;
         }
         FetchMediaListPayload payload =
