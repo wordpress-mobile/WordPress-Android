@@ -9,7 +9,8 @@ private const val defaultAssetFilename = "supported-blocks.json"
 
 class SupportedBlocksProvider @Inject constructor(private val contextProvider: ContextProvider) {
     fun fromAssets(assetFileName: String = defaultAssetFilename): SupportedBlocks {
-        return contextProvider.getContext().parseJsonFromAsset(assetFileName, SupportedBlocks::class.java) ?: SupportedBlocks()
+        return contextProvider.getContext().parseJsonFromAsset(assetFileName, SupportedBlocks::class.java)
+                ?: SupportedBlocks()
     }
 }
 
