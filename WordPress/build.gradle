@@ -94,7 +94,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "15.9-rc-1"
             }
-            versionCode 930
+            versionCode 932
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
