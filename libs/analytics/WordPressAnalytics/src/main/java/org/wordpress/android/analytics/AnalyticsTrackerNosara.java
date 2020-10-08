@@ -1511,10 +1511,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_service_upload_canceled";
             case MEDIA_PICKER_OPEN_CAPTURE_MEDIA:
                 return "media_picker_capture_media_opened";
+            case MEDIA_PICKER_OPEN_SYSTEM_PICKER:
+                return "media_picker_open_system_picker";
             case MEDIA_PICKER_OPEN_DEVICE_LIBRARY:
                 return "media_picker_device_library_opened";
             case MEDIA_PICKER_OPEN_WP_MEDIA:
                 return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_OPEN_STOCK_LIBRARY:
+                return "media_picker_open_stock_library";
+            case MEDIA_PICKER_OPEN_GIF_LIBRARY:
+                return "media_picker_open_gif_library";
             case MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE:
                 return "media_picker_stories_capture_opened";
             case MEDIA_PICKER_OPEN_FOR_STORIES:
