@@ -1062,7 +1062,7 @@ public class EditPostSettingsFragment extends Fragment {
             mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId);
 
             mMediaPickerLauncher
-                    .showPhotoPickerForResult(requireActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
+                    .showFeaturedImagePicker(requireActivity(), getSite(),
                             postId);
         }
     }

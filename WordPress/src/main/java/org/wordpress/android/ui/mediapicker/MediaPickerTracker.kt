@@ -127,7 +127,7 @@ class MediaPickerTracker
     private fun MutableMap<String, Any?>.addMediaPickerProperties(
         mediaPickerSetup: MediaPickerSetup
     ): MutableMap<String, Any?> {
-        this["source"] = when (mediaPickerSetup.dataSource) {
+        this["source"] = when (mediaPickerSetup.primaryDataSource) {
             DEVICE -> "device_media_library"
             WP_LIBRARY -> "wordpress_media_library"
             STOCK_LIBRARY -> "pexel_image_library"

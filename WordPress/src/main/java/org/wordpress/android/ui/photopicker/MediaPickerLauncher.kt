@@ -14,6 +14,7 @@ import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -27,6 +28,35 @@ import javax.inject.Inject
 
 class MediaPickerLauncher
 @Inject constructor(private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig) {
+    fun showFeaturedImagePicker(
+        activity: Activity,
+        site: SiteModel?,
+        localPostId: Int) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY),
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraEnabled = true,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = true,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site,
+                    localPostId
+            )
+            activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(activity, FEATURED_IMAGE_PICKER, site, localPostId)
+        }
+    }
     fun showPhotoPickerForResult(
         activity: Activity,
         browserType: MediaBrowserType,
@@ -100,7 +130,8 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
-                    dataSource = DEVICE,
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
                     canMultiselect = true,
                     requiresStoragePermissions = true,
                     allowedTypes = allowedTypes,
@@ -150,7 +181,8 @@ class MediaPickerLauncher
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
-                    dataSource = STOCK_LIBRARY,
+                    primaryDataSource = STOCK_LIBRARY,
+                    availableDataSources = setOf(),
                     canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),
@@ -188,7 +220,8 @@ class MediaPickerLauncher
             R.string.photo_picker_title
         }
         return MediaPickerSetup(
-                dataSource = DEVICE,
+                primaryDataSource = DEVICE,
+                availableDataSources = setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,
@@ -210,7 +243,8 @@ class MediaPickerLauncher
             allowedTypes.add(VIDEO)
         }
         return MediaPickerSetup(
-                dataSource = WP_LIBRARY,
+                primaryDataSource = WP_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = false,
                 allowedTypes = allowedTypes,

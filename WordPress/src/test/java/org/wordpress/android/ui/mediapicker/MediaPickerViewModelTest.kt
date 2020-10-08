@@ -736,7 +736,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         cameraAllowed: Boolean = false,
         editingEnabled: Boolean = true
     ) = MediaPickerSetup(
-            dataSource = DEVICE,
+            primaryDataSource = DEVICE,
             canMultiselect = canMultiselect,
             requiresStoragePermissions = true,
             allowedTypes = allowedTypes,
