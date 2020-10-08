@@ -44,6 +44,7 @@ class MediaLoaderFactoryTest {
     fun `returns device list builder on DEVICE source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 DEVICE,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = true,
                 allowedTypes = setOf(),
@@ -69,6 +70,7 @@ class MediaLoaderFactoryTest {
     fun `returns WP media source on WP_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 WP_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
@@ -95,6 +97,7 @@ class MediaLoaderFactoryTest {
     fun `returns stock media source on STOCK_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 STOCK_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
@@ -122,6 +125,7 @@ class MediaLoaderFactoryTest {
             mediaLoaderFactory.build(
                     MediaPickerSetup(
                             GIF_LIBRARY,
+                            availableDataSources = setOf(),
                             canMultiselect = true,
                             requiresStoragePermissions = true,
                             allowedTypes = setOf(),
