@@ -1661,7 +1661,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
                 if (BuildConfig.DEBUG) {
                     throw new RuntimeException(
-                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
+                            "Debug build crash (it's expected if you closed editor < 500ms after you made changes): "
+                            + exception.getMessage() + " This only crashes on debug builds."
                     );
                 } else {
                     mCrashLogging.reportException(exception, T.EDITOR.toString());
