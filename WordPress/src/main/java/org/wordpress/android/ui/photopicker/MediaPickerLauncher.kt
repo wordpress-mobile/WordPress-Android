@@ -32,7 +32,8 @@ class MediaPickerLauncher
     fun showFeaturedImagePicker(
         activity: Activity,
         site: SiteModel?,
-        localPostId: Int) {
+        localPostId: Int
+    ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
@@ -61,7 +62,8 @@ class MediaPickerLauncher
 
     fun showSiteIconPicker(
         activity: Activity,
-        site: SiteModel?) {
+        site: SiteModel?
+    ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,

@@ -96,7 +96,8 @@ data class MediaPickerSetup(
 
         fun fromIntent(intent: Intent): MediaPickerSetup {
             val dataSource = DataSource.values()[intent.getIntExtra(KEY_PRIMARY_DATA_SOURCE, -1)]
-            val availableDataSources = (intent.getIntegerArrayListExtra(KEY_AVAILABLE_DATA_SOURCES) ?: listOf<Int>()).map {
+            val availableDataSources = (intent.getIntegerArrayListExtra(KEY_AVAILABLE_DATA_SOURCES)
+                    ?: listOf<Int>()).map {
                 DataSource.values()[it]
             }.toSet()
             val allowedTypes = (intent.getIntegerArrayListExtra(KEY_ALLOWED_TYPES) ?: listOf<Int>()).map {

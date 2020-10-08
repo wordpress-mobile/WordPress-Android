@@ -103,7 +103,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource

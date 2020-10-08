@@ -497,12 +497,12 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun onMenuItemClicked(action: BrowseAction) {
-        val icon = when(action) {
-           BrowseAction.DEVICE -> SwitchSource(DEVICE)
-           BrowseAction.WP_MEDIA_LIBRARY -> SwitchSource(WP_LIBRARY)
-           BrowseAction.STOCK_LIBRARY -> SwitchSource(STOCK_LIBRARY)
-           BrowseAction.GIF_LIBRARY -> SwitchSource(GIF_LIBRARY)
-           BrowseAction.SYSTEM_PICKER -> ChooseFromAndroidDevice(mediaPickerSetup.allowedTypes)
+        val icon = when (action) {
+            BrowseAction.DEVICE -> SwitchSource(DEVICE)
+            BrowseAction.WP_MEDIA_LIBRARY -> SwitchSource(WP_LIBRARY)
+            BrowseAction.STOCK_LIBRARY -> SwitchSource(STOCK_LIBRARY)
+            BrowseAction.GIF_LIBRARY -> SwitchSource(GIF_LIBRARY)
+            BrowseAction.SYSTEM_PICKER -> ChooseFromAndroidDevice(mediaPickerSetup.allowedTypes)
         }
         clickIcon(icon)
     }

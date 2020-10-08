@@ -130,7 +130,10 @@ class MediaPickerFragment : Fragment() {
             bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
             when (this) {
                 is ChooseFromAndroidDevice -> {
-                    bundle.putStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES, ArrayList(allowedTypes.map { it.name }))
+                    bundle.putStringArrayList(
+                            KEY_LAST_TAPPED_ICON_ALLOWED_TYPES,
+                            ArrayList(allowedTypes.map { it.name })
+                    )
                 }
                 is SwitchSource -> {
                     bundle.putInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, this.dataSource.ordinal)
