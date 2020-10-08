@@ -150,10 +150,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
-     * Shows the MLP
-     * @param supportedBlocks the supported blocks to filter fetched layouts (by default no filtering occurs)
+     * Triggers the create page flow and shows the MLP
      */
-    fun show() {
+    fun createPageFlowTriggered() {
         init()
         _isModalLayoutPickerShowing.value = Event(true)
     }
