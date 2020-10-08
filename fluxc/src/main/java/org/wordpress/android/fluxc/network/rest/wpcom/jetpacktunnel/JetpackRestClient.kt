@@ -33,12 +33,14 @@ constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun installJetpack(site: SiteModel): JetpackInstalledPayload {
         val url = WPCOMREST.jetpack_install.site(URLEncoder.encode(site.url, "UTF-8")).urlV1
-        val params = mapOf("user" to site.username, "password" to site.password)
+        val body = mapOf("user" to site.username, "password" to site.password)
         val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
-                params,
-                JetpackInstallResponse::class.java)
+                null,
+                body,
+                JetpackInstallResponse::class.java
+        )
         return when (response) {
             is Success -> JetpackInstalledPayload(site, response.data.status)
             is WPComGsonRequestBuilder.Response.Error -> {
