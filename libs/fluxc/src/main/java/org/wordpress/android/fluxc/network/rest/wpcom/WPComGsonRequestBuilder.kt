@@ -89,10 +89,11 @@ class WPComGsonRequestBuilder
     suspend fun <T> syncPostRequest(
         restClient: BaseWPComRestClient,
         url: String,
-        body: Map<String, Any>,
+        params: Map<String, String>?,
+        body: Map<String, Any>?,
         clazz: Class<T>
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
-        val request = WPComGsonRequest.buildPostRequest(url, body, clazz, {
+        val request = WPComGsonRequest.buildPostRequest(url, params, body, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))

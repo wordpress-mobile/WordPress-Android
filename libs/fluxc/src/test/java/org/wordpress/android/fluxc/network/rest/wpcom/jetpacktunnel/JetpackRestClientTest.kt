@@ -90,6 +90,7 @@ class JetpackRestClientTest {
         whenever(wpComGsonRequestBuilder.syncPostRequest(
                 eq(jetpackRestClient),
                 urlCaptor.capture(),
+                eq(null),
                 paramsCaptor.capture(),
                 eq(JetpackInstallResponse::class.java)
         )).thenReturn(response)
