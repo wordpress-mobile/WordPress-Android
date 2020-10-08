@@ -21,6 +21,7 @@ fun Context.getDrawableFromAttribute(attributeId: Int): Drawable? {
 fun Context.getStringFromAsset(assetFilename: String): String? = try {
     assets.open(assetFilename).bufferedReader().use { it.readText() }
 } catch (ioException: IOException) {
+    AppLog.e(AppLog.T.UTILS, "Error reading string from asset file: $assetFilename")
     null
 }
 
@@ -35,6 +36,7 @@ inline fun <reified T : Any> Context.parseJsonFromAsset(assetFilename: String, m
             try {
                 Gson().fromJson(it, modelClass)
             } catch (e: JsonSyntaxException) {
+                AppLog.e(AppLog.T.UTILS, "Error parsing Json from asset file: $assetFilename")
                 null
             }
         }
