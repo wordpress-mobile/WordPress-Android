@@ -2882,6 +2882,8 @@
     <string name="mlp_preview_title">Layout Preview</string>
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_notice_page_created">Page created</string>
+    <string name="mlp_notice_blank_page_created">Blank page created</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
