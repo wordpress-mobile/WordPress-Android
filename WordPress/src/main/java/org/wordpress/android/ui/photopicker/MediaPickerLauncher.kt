@@ -11,6 +11,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
+import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
@@ -57,6 +58,36 @@ class MediaPickerLauncher
             ActivityLauncher.showPhotoPickerForResult(activity, FEATURED_IMAGE_PICKER, site, localPostId)
         }
     }
+
+    fun showSiteIconPicker(
+        activity: Activity,
+        site: SiteModel?) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(WP_LIBRARY),
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraEnabled = true,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = true,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site,
+                    null
+            )
+            activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(activity, SITE_ICON_PICKER, site, null)
+        }
+    }
+
     fun showPhotoPickerForResult(
         activity: Activity,
         browserType: MediaBrowserType,

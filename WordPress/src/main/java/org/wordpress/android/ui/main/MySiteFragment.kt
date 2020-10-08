@@ -1227,9 +1227,9 @@ class MySiteFragment : Fragment(),
 
     override fun onPositiveClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showPhotoPickerForResult(
+            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showSiteIconPicker(
                     requireActivity(),
-                    SITE_ICON_PICKER, selectedSite, null
+                    selectedSite
             )
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG -> {
             }
