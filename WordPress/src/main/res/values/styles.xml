@@ -1025,16 +1025,7 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="android:gravity">center</item>
         <item name="fixWidowWords">true</item>
-    </style>
-
-    <style name="Widget.LoginFlow.TextView.PromoSubtitle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="android:textSize">@dimen/prologue_promo_text_size</item>
-        <item name="fixWidowWords">true</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
     </style>
 
     <style name="Widget.LoginFlow.Prologue.Card" parent="Widget.MaterialComponents.CardView">
