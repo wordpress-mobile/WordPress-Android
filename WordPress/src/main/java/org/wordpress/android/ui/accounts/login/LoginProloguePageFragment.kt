@@ -10,6 +10,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.login_intro_template_view.*
 import org.wordpress.android.R
+import kotlin.math.min
 
 class LoginProloguePageFragment : Fragment() {
     @StringRes private var promoTitle: Int? = null
@@ -48,15 +49,35 @@ class LoginProloguePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         promoTitle?.let { promo_title.setText(it) }
-        promoLayoutId?.let {
-            val inflater = LayoutInflater.from(view.context)
-            inflater.inflate(promoLayoutId!!, promo_layout_container, true)
 
-            if (promoLayoutId == R.layout.login_prologue_second) {
-                val editText = view.findViewById<EditText>(R.id.edit_text)
-                editText.post {
-                    editText.isPressed = true
-                    editText.setSelection(editText.length())
+        promo_layout_container.post {
+            promoLayoutId?.let {
+                val inflater = LayoutInflater.from(view.context)
+                val content = inflater.inflate(promoLayoutId!!, promo_layout_container, false)
+
+                val widthOfContainer = promo_layout_container.width
+                val heightOfContainer = promo_layout_container.height
+
+                val smallestDimensions = min(widthOfContainer, heightOfContainer).toFloat()
+                val sizeOfContent = resources.getDimensionPixelOffset(R.dimen.login_prologue_content_area).toFloat()
+
+                val scaleFactor = if (smallestDimensions > sizeOfContent) {
+                    smallestDimensions / sizeOfContent
+                } else {
+                    sizeOfContent / smallestDimensions
+                }
+
+                content.scaleX = scaleFactor
+                content.scaleY = scaleFactor
+
+                promo_layout_container.addView(content)
+
+                if (promoLayoutId == R.layout.login_prologue_second) {
+                    val editText = view.findViewById<EditText>(R.id.edit_text)
+                    editText.post {
+                        editText.isPressed = true
+                        editText.setSelection(editText.length())
+                    }
                 }
             }
         }

@@ -22,14 +22,15 @@
         tools:text="@string/login_prologue_title_fifth" />
 
     <FrameLayout
+        android:background="@color/red"
         android:id="@+id/promo_layout_container"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/promo_title"
-        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
         tools:ignore="ContentDescription"
         tools:src="@drawable/img_illustration_promo" />
 </androidx.constraintlayout.widget.ConstraintLayout>
