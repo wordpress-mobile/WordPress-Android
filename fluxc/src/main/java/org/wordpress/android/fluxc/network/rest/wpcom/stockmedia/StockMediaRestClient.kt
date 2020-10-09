@@ -103,6 +103,7 @@ class StockMediaRestClient
         val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
+                null,
                 body,
                 MultipleMediaResponse::class.java
         )
