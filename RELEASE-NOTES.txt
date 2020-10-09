@@ -12,6 +12,10 @@
 * [***] Block Editor: Added expected double tap for focus behavior for text fields in accessibility mode [https://github.com/WordPress/gutenberg/pull/25384]
 * [*] Improved My Site layout on devices with big screens. [https://github.com/wordpress-mobile/WordPress-Android/pull/13026]
 
+15.8.1
+-----
+* [***] Login: Fixed an issue where some users would be prevented to login with a Jetpack site address.
+
 15.8
 -----
 * [**] Reader: Now displaying preview images for more posts when no feature image is set.

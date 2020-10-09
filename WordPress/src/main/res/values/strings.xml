@@ -162,6 +162,8 @@
     <string name="media_accessing_progress">Accessing content of a private site</string>
     <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
 
+    <string name="media_uploading_stock_library_photo">Uploading stock media</string>
+
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
     <string name="media_upload_state_deleting">Deleting</string>
@@ -2355,6 +2357,9 @@
     <string name="stock_media_picker_list_content_description">Photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+    <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
+    <string name="media_insert_failed">Media insert failed.</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
     <string name="gif_picker_search_hint">Search Tenor</string>
