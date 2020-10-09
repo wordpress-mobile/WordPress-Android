@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -39,6 +41,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val supportedBlocksProvider: SupportedBlocksProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -268,10 +271,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
             val selection = state.selectedLayoutSlug != null
+            val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
             val content = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+                selectedLayout?.content ?: ""
             } else ""
             _onPreviewPageRequested.value = PreviewPageRequest(site, content)
+            selectedLayout?.slug?.let {
+                analyticsTracker.track(
+                        Stat.EDITOR_SESSION_TEMPLATE_PREVIEW,
+                        mapOf("template" to it)
+                )
+            }
         }
     }
 
@@ -291,9 +301,16 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun createPage() {
         (uiState.value as? ContentUiState)?.let { state ->
             val selection = state.selectedLayoutSlug != null
+            val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
             _onCreateNewPageRequested.value = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+                selectedLayout?.content ?: ""
             } else ""
+            selectedLayout?.slug?.let {
+                analyticsTracker.track(
+                        Stat.EDITOR_SESSION_TEMPLATE_APPLY,
+                        mapOf("template" to it)
+                )
+            }
         }
     }
 
