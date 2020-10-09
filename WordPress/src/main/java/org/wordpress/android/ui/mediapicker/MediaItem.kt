@@ -4,7 +4,6 @@ import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.util.UriWrapper
-import java.lang.IllegalArgumentException
 
 data class MediaItem(
     val identifier: Identifier,
@@ -17,6 +16,7 @@ data class MediaItem(
     sealed class Identifier {
         data class LocalUri(val value: UriWrapper) : Identifier()
         data class RemoteId(val value: Long) : Identifier()
+        data class StockMediaIdentifier(val url: String?, val name: String?, val title: String?) : Identifier()
 
         fun toParcel() = Parcel((this as? LocalUri)?.value?.uri, (this as? RemoteId)?.value)
 

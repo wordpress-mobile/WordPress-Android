@@ -489,13 +489,13 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `blogName is not displayed the post doesn't have a blog name`() = test {
+    fun `default blog name is displayed when the post doesn't have a blog name`() = test {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNull()
+        assertThat((uiState.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
     // endregion
 
