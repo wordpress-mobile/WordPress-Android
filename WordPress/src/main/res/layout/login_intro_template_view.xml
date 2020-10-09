@@ -22,7 +22,6 @@
         tools:text="@string/login_prologue_title_fifth" />
 
     <FrameLayout
-        android:background="@color/red"
         android:id="@+id/promo_layout_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
