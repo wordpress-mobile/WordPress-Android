@@ -17,7 +17,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.DeviceListBuilder}")
+        "{@link org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder}")
 class DeviceMediaListBuilder
 @Inject constructor(
     val context: Context,
