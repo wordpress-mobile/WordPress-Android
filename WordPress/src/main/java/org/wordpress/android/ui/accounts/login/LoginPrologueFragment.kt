@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager.widget.ViewPager.PageTransformer
 import kotlinx.android.synthetic.main.login_intro_template_view.view.*
 import kotlinx.android.synthetic.main.login_prologue_bottom_buttons_container_default.*
 import kotlinx.android.synthetic.main.login_signup_screen.*
@@ -80,15 +82,24 @@ class LoginPrologueFragment : Fragment() {
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
-        intros_pager.setPageTransformer(false) { page, position ->
-            // If position is between -1 and 1, it means at least a part of the page is visible.
-            if (position >= -1 && position <= 1) {
+        intros_pager.setPageTransformer(false, object : PageTransformer {
+            override fun transformPage(page: View, position: Float) {
                 page.apply {
-                    promo_title.translationX = position * (width / 4f) // 1.25x normal speed
-                    promo_layout_container.translationX = position * (width / 2f) // 1.5x normal speed
+                    applyParallaxEffect(promo_title, position, width, 0.25f) // 1.25x normal speed
+                    applyParallaxEffect(promo_layout_container, position, width, 0.5f) // 1.5x normal speed
                 }
             }
-        }
+
+            private fun applyParallaxEffect(
+                view: View,
+                pagePosition: Float,
+                pageWidth: Int,
+                @FloatRange(from = 0.0, to = 1.0) speedFactor: Float
+            ) {
+                // If position is between -1 and 1, it means at least a part of the page is visible.
+                if (pagePosition in -1.0..1.0) view.translationX = pagePosition * pageWidth * speedFactor
+            }
+        })
 
         if (adapter.count > 1) {
             // Using a TabLayout for simulating a page indicator strip
