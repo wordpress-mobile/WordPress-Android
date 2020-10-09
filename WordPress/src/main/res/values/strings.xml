@@ -2889,7 +2889,7 @@
     <string name="dialog_edit_story_corrupt_message">There was a problem saving this story and can\'t be edited at this moment.</string>
     <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
     <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
-    <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for your story on this site.</string>
+    <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>
