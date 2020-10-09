@@ -82,6 +82,7 @@ import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.MediaUtilsWrapper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -115,6 +116,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
+    private static final String BUNDLE_MEDIA_URI = "mediaUri";
     private static final String SHOW_AUDIO_TAB = "showAudioTab";
 
     @Inject Dispatcher mDispatcher;
@@ -126,6 +128,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject AnyFileUploadFeatureConfig mAnyFileUploadFeatureConfig;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
+    @Inject MediaUtilsWrapper mMediaUtilsWrapper;
 
     private SiteModel mSite;
 
@@ -142,6 +145,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private String mQuery;
     private String mMediaCapturePath;
+    private Uri mMediaUri;
     private MediaBrowserType mBrowserType;
     private AddMenuItem mLastAddMediaItemClicked;
 
@@ -454,6 +458,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
+        if (mMediaUri != null) {
+            outState.putParcelable(BUNDLE_MEDIA_URI, mMediaUri);
+        }
     }
 
     private void getMediaFromDeviceAndTrack(Uri imageUri, int requestCode) {
@@ -499,18 +506,26 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case RequestCodes.TAKE_PHOTO:
                 if (resultCode == Activity.RESULT_OK) {
-                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                    Uri uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
-                    mMediaCapturePath = null;
-                    queueFileForUpload(uri, getContentResolver().getType(uri));
-                    trackAddMediaFromDeviceEvents(true, false, uri);
+                    Uri uri;
+                    if (!TextUtils.isEmpty(mMediaCapturePath)) {
+                        WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                        uri = getOptimizedPictureIfNecessary(Uri.parse(mMediaCapturePath));
+                        mMediaCapturePath = null;
+                    } else {
+                        uri = mMediaUtilsWrapper.copyFileToAppStorage(mMediaUri);
+                    }
+                    if (uri != null) {
+                        queueFileForUpload(uri, getContentResolver().getType(uri));
+                        trackAddMediaFromDeviceEvents(true, false, uri);
+                    }
                 }
                 break;
             case RequestCodes.TAKE_VIDEO:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri uri = MediaUtils.getLastRecordedVideoUri(this);
-                    queueFileForUpload(uri, getContentResolver().getType(uri));
-                    trackAddMediaFromDeviceEvents(true, true, uri);
+                    Uri copiedUri = mMediaUtilsWrapper.copyFileToAppStorage(uri);
+                    queueFileForUpload(copiedUri, getContentResolver().getType(copiedUri));
+                    trackAddMediaFromDeviceEvents(true, true, copiedUri);
                 }
                 break;
             case RequestCodes.MEDIA_SETTINGS:
@@ -749,6 +764,10 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     public void onMediaCapturePathReady(String mediaCapturePath) {
         mMediaCapturePath = mediaCapturePath;
+    }
+
+    @Override public void onMediaUriReady(Uri mediaUri) {
+        mMediaUri = mediaUri;
     }
 
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {

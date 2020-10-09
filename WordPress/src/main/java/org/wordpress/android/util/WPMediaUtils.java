@@ -3,12 +3,14 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ViewConfiguration;
@@ -45,6 +47,7 @@ import java.util.List;
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
         void onMediaCapturePathReady(String mediaCapturePath);
+        void onMediaUriReady(Uri mediaUri);
     }
 
     // Max picture size will be 3000px wide. That's the maximum resolution you can set in the current picker.
@@ -355,41 +358,59 @@ public class WPMediaUtils {
 
     private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback)
             throws IOException {
-        File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        String mediaCapturePath =
-                externalStoragePublicDirectory + File.separator + "Camera" + File.separator + "wp-" + System
-                        .currentTimeMillis() + ".jpg";
+        Uri fileUri;
+        String mediaCapturePath = "";
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentValues values = new ContentValues(3);
+            String displayName = "wp-" + System.currentTimeMillis() + ".jpg";
 
-        // make sure the directory we plan to store the recording in exists
-        File directory = new File(mediaCapturePath).getParentFile();
-        if (directory == null || (!directory.exists() && !directory.mkdirs())) {
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, displayName);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/Camera");
+            //values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/playground");
+
+            fileUri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            if (callback != null) {
+                callback.onMediaUriReady(fileUri);
+            }
+        } else {
+            File externalStoragePublicDirectory =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+            mediaCapturePath =
+                    externalStoragePublicDirectory + File.separator + "Camera" + File.separator + "wp-" + System
+                            .currentTimeMillis() + ".jpg";
+
+            // make sure the directory we plan to store the recording in exists
+            File directory = new File(mediaCapturePath).getParentFile();
+            if (directory == null || (!directory.exists() && !directory.mkdirs())) {
+                try {
+                    throw new IOException("Path to file could not be created: " + mediaCapturePath);
+                } catch (IOException e) {
+                    AppLog.e(T.MEDIA, e);
+                    throw e;
+                }
+            }
+
             try {
-                throw new IOException("Path to file could not be created: " + mediaCapturePath);
-            } catch (IOException e) {
-                AppLog.e(T.MEDIA, e);
-                throw e;
+                fileUri = FileProvider.getUriForFile(context, applicationId + ".provider", new File(mediaCapturePath));
+            } catch (IllegalArgumentException e) {
+                AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
+                throw new IOException("Cannot access the file planned to store the new media");
+            } catch (NullPointerException e) {
+                AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media - "
+                                  + "FileProvider.getUriForFile cannot find a valid provider for the authority: "
+                                  + applicationId + ".provider", e);
+                throw new IOException("Cannot access the file planned to store the new media");
+            }
+            if (callback != null) {
+                callback.onMediaCapturePathReady(mediaCapturePath);
             }
         }
-
-        Uri fileUri;
-        try {
-            fileUri = FileProvider.getUriForFile(context, applicationId + ".provider", new File(mediaCapturePath));
-        } catch (IllegalArgumentException e) {
-            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
-            throw new IOException("Cannot access the file planned to store the new media");
-        } catch (NullPointerException e) {
-            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media - "
-                              + "FileProvider.getUriForFile cannot find a valid provider for the authority: "
-                              + applicationId + ".provider", e);
-            throw new IOException("Cannot access the file planned to store the new media");
-        }
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, fileUri);
 
-        if (callback != null) {
-            callback.onMediaCapturePathReady(mediaCapturePath);
-        }
         return intent;
     }
 
@@ -505,10 +526,6 @@ public class WPMediaUtils {
      * @return A local {@link Uri} or null if the download failed
      */
     public static @Nullable Uri fetchMedia(@NonNull Context context, @NonNull Uri mediaUri) {
-        if (MediaUtils.isInMediaStore(mediaUri)) {
-            return mediaUri;
-        }
-
         try {
             // Do not download the file in async task. See
             // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
