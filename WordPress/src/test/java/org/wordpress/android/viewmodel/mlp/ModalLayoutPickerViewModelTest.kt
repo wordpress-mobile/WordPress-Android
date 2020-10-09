@@ -120,6 +120,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user scroll beyond a threshold the title becomes visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onAppBarOffsetChanged(9, 10)
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
     }
@@ -128,6 +129,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user scroll bellow a threshold the title remains hidden`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onAppBarOffsetChanged(11, 10)
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
     }
@@ -136,6 +138,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts the categories are loaded`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).categories.size).isGreaterThan(0)
     }
 
@@ -143,6 +146,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts the layouts are loaded`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).layoutCategories.size).isGreaterThan(0)
     }
 
@@ -150,6 +154,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts fetch errors are handled`() = mockFetchingSelectedSite(true) {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(viewModel.uiState.value is ErrorUiState).isEqualTo(true)
     }
 
@@ -157,6 +162,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `modal layout picker is shown when triggered`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(viewModel.isModalLayoutPickerShowing.value!!.peekContent()).isEqualTo(true)
     }
 
@@ -164,6 +170,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `modal layout picker is dismissed when the user hits the back button`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.dismiss()
         assertThat(viewModel.isModalLayoutPickerShowing.value!!.peekContent()).isEqualTo(false)
     }
@@ -172,6 +179,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the create page is triggered the page creation flow starts`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onCreatePageClicked()
         verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
     }
@@ -180,6 +188,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the preview page is clicked the preview flow starts`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onPreviewPageClicked()
         verify(onPreviewPageRequestedObserver).onChanged(anyOrNull())
     }
@@ -188,6 +197,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts no layout is selected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
     }
 
@@ -196,6 +206,7 @@ class ModalLayoutPickerViewModelTest {
     fun `when the user taps on a layout the layout is selected if the thumbnail has loaded`() =
             mockFetchingSelectedSite {
                 viewModel.createPageFlowTriggered()
+                viewModel.start()
                 viewModel.onThumbnailReady("about-1")
                 viewModel.onLayoutTapped("about-1")
                 assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug)
@@ -207,6 +218,7 @@ class ModalLayoutPickerViewModelTest {
     fun `when the user taps on a layout the layout is selected if the thumbnail has not loaded`() =
             mockFetchingSelectedSite {
                 viewModel.createPageFlowTriggered()
+                viewModel.start()
                 viewModel.onLayoutTapped("about-1")
                 assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug)
                         .isNotEqualTo("about-1")
@@ -216,6 +228,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user taps on a selected layout the layout is deselected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onLayoutTapped("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
@@ -225,6 +238,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the modal layout picker is dismissed the layout is deselected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onLayoutTapped("about-1")
         viewModel.dismiss()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
@@ -234,6 +248,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts no category is selected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
     }
 
@@ -241,6 +256,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user taps on a category the category is selected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onCategoryTapped("about")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
                 .contains("about")
@@ -250,6 +266,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the user taps on a selected category the category is deselected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onCategoryTapped("about")
         viewModel.onCategoryTapped("about")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
@@ -260,6 +277,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the modal layout picker is dismissed the category is deselected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onCategoryTapped("about")
         viewModel.dismiss()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
@@ -269,6 +287,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when no layout is selected the create blank page button is visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
                 .isEqualTo(true)
     }
@@ -277,6 +296,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the create blank page button is not visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
@@ -287,6 +307,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when no layout is selected the create page button is not visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
                 .isEqualTo(false)
     }
@@ -295,6 +316,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the create page button is visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
@@ -305,6 +327,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when no layout is selected the preview button is not visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
                 .isEqualTo(false)
     }
@@ -313,6 +336,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when a layout is selected the preview button is visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
+        viewModel.start()
         viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
         assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
