@@ -14,6 +14,7 @@ import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
@@ -107,6 +108,7 @@ class MediaPickerLauncher
                     systemPickerEnabled = true,
                     editingEnabled = true,
                     queueResults = false,
+                    defaultSearchView = false,
                     title = R.string.photo_picker_choose_file
             )
             val intent = MediaPickerActivity.buildIntent(
@@ -140,6 +142,36 @@ class MediaPickerLauncher
         }
     }
 
+    fun showStockMediaPickerForResult(
+        activity: Activity,
+        site: SiteModel,
+        requestCode: Int,
+        allowMultipleSelection: Boolean
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    dataSource = STOCK_LIBRARY,
+                    canMultiselect = allowMultipleSelection,
+                    requiresStoragePermissions = false,
+                    allowedTypes = setOf(IMAGE),
+                    cameraEnabled = false,
+                    systemPickerEnabled = false,
+                    editingEnabled = false,
+                    queueResults = false,
+                    defaultSearchView = true,
+                    title = R.string.photo_picker_stock_media
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site
+            )
+            activity.startActivityForResult(intent, requestCode)
+        } else {
+            ActivityLauncher.showStockMediaPickerForResult(activity, site, requestCode)
+        }
+    }
+
     private fun buildLocalMediaPickerSetup(browserType: MediaBrowserType): MediaPickerSetup {
         val allowedTypes = mutableSetOf<MediaType>()
         if (browserType.isImagePicker) {
@@ -164,6 +196,7 @@ class MediaPickerLauncher
                 systemPickerEnabled = true,
                 editingEnabled = browserType.isImagePicker,
                 queueResults = browserType == FEATURED_IMAGE_PICKER,
+                defaultSearchView = false,
                 title = title
         )
     }
@@ -185,6 +218,7 @@ class MediaPickerLauncher
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
+                defaultSearchView = false,
                 title = R.string.wp_media_title
         )
     }
