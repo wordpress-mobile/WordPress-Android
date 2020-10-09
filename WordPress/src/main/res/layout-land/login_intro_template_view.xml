@@ -4,15 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/wpColorLoginPrologueBg"
-    android:paddingEnd="24dp"
-    android:paddingStart="24dp">
+    android:background="?attr/wpColorLoginPrologueBg">
+
+    <FrameLayout
+        android:id="@+id/promo_background_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/promo_layout_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/promo_title"
@@ -26,6 +31,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:minHeight="126dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/promo_layout_container"
