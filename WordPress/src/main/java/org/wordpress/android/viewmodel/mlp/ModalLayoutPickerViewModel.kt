@@ -7,7 +7,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -41,7 +39,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val supportedBlocksProvider: SupportedBlocksProvider,
-    private val analyticsTracker: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -62,16 +59,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Create new page event
      */
-    private val _onCreateNewPageRequested = SingleLiveEvent<String>()
-    val onCreateNewPageRequested: LiveData<String> = _onCreateNewPageRequested
+    private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
+    val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
     /**
      * Preview page event
      */
-    private val _onPreviewPageRequested = SingleLiveEvent<PreviewPageRequest>()
-    val onPreviewPageRequested: LiveData<PreviewPageRequest> = _onPreviewPageRequested
+    private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
+    val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
-    data class PreviewPageRequest(val site: SiteModel, val content: String)
+    sealed class PageRequest(val template: String?, val content: String) {
+        class Create(template: String?, content: String) : PageRequest(template, content)
+        class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
+    }
 
     init {
         dispatcher.register(this)
@@ -275,13 +275,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val content = if (selection) {
                 selectedLayout?.content ?: ""
             } else ""
-            _onPreviewPageRequested.value = PreviewPageRequest(site, content)
-            selectedLayout?.slug?.let {
-                analyticsTracker.track(
-                        Stat.EDITOR_SESSION_TEMPLATE_PREVIEW,
-                        mapOf("template" to it)
-                )
-            }
+            _onPreviewPageRequested.value = PageRequest.Preview(selectedLayout?.slug, content, site)
         }
     }
 
@@ -302,15 +296,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
         (uiState.value as? ContentUiState)?.let { state ->
             val selection = state.selectedLayoutSlug != null
             val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
-            _onCreateNewPageRequested.value = if (selection) {
+            val content = if (selection) {
                 selectedLayout?.content ?: ""
             } else ""
-            selectedLayout?.slug?.let {
-                analyticsTracker.track(
-                        Stat.EDITOR_SESSION_TEMPLATE_APPLY,
-                        mapOf("template" to it)
-                )
-            }
+            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content)
         }
     }
 

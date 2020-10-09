@@ -32,7 +32,8 @@ import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PreviewPageRequest
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Preview
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
 
@@ -51,8 +52,8 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
-    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
-    @Mock lateinit var onPreviewPageRequestedObserver: Observer<PreviewPageRequest>
+    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Create>
+    @Mock lateinit var onPreviewPageRequestedObserver: Observer<Preview>
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
 
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
@@ -80,7 +81,6 @@ class ModalLayoutPickerViewModelTest {
                 siteStore,
                 appPrefsWrapper,
                 supportedBlocksProvider,
-                analyticsTracker,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )

@@ -272,6 +272,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
+    public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -610,6 +611,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mEditPostRepository.getPost(), mSite, mIsNewPost);
+
+        logTemplateSelection();
 
         // Bump post created analytics only once, first time the editor is opened
         if (mIsNewPost && savedInstanceState == null && !isRestarting) {
@@ -3097,6 +3100,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
         presentNewPageNoticeIfNeeded();
+    }
+
+    private void logTemplateSelection() {
+        final String template = getIntent().getStringExtra(EXTRA_PAGE_TEMPLATE);
+        if (template == null) {
+            return;
+        }
+        if (mIsPreview) {
+            mPostEditorAnalyticsSession.previewTemplate(template);
+        } else {
+            mPostEditorAnalyticsSession.applyTemplate(template);
+        }
     }
 
     @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {

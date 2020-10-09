@@ -774,6 +774,7 @@ public class ActivityLauncher {
             @NonNull Activity activity,
             @NonNull SiteModel site,
             @NonNull String content,
+            @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
@@ -782,6 +783,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -790,6 +792,7 @@ public class ActivityLauncher {
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
             @NonNull String content,
+            @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -797,6 +800,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -804,13 +808,15 @@ public class ActivityLauncher {
     public static void previewPageForResult(
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
-            @NonNull String content) {
+            @NonNull String content,
+            @Nullable String template) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         fragment.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
