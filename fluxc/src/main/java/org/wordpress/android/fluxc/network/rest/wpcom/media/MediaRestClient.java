@@ -12,7 +12,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +47,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,14 +81,17 @@ import okhttp3.ResponseBody;
 @Singleton
 public class MediaRestClient extends BaseWPComRestClient implements ProgressListener {
     private OkHttpClient mOkHttpClient;
+    private MediaResponseUtils mMediaResponseUtils;
     // this will hold which media is being uploaded by which call, in order to be able
     // to monitor multiple uploads
     private ConcurrentHashMap<Integer, Call> mCurrentUploadCalls = new ConcurrentHashMap<>();
 
     public MediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                           OkHttpClient okHttpClient, AccessToken accessToken, UserAgent userAgent) {
+                           OkHttpClient okHttpClient, AccessToken accessToken, UserAgent userAgent,
+                           MediaResponseUtils mediaResponseUtils) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
         mOkHttpClient = okHttpClient;
+        mMediaResponseUtils = mediaResponseUtils;
     }
 
     @Override
@@ -114,7 +115,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MediaWPComRestResponse>() {
                     @Override
                     public void onResponse(MediaWPComRestResponse response) {
-                        MediaModel responseMedia = getMediaFromRestResponse(response);
+                        MediaModel responseMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
                         if (responseMedia != null) {
                             AppLog.v(T.MEDIA, "media changes pushed for " + responseMedia.getTitle());
                             responseMedia.setLocalSiteId(site.getId());
@@ -226,7 +227,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     reader.setLenient(true);
                     MultipleMediaResponse mediaResponse = gson.fromJson(reader, MultipleMediaResponse.class);
 
-                    List<MediaModel> responseMedia = getMediaListFromRestResponse(mediaResponse, site.getId());
+                    List<MediaModel> responseMedia =
+                            mMediaResponseUtils.getMediaListFromRestResponse(mediaResponse, site.getId());
                     if (responseMedia != null && !responseMedia.isEmpty()) {
                         MediaModel uploadedMedia = responseMedia.get(0);
                         uploadedMedia.setId(media.getId());
@@ -286,7 +288,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
-                        List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
+                        List<MediaModel> mediaList =
+                                mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
                         if (mediaList != null) {
                             AppLog.v(T.MEDIA, "Fetched media list for site with size: " + mediaList.size());
                             boolean canLoadMore = mediaList.size() == number;
@@ -324,7 +327,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MediaWPComRestResponse>() {
                     @Override
                     public void onResponse(MediaWPComRestResponse response) {
-                        MediaModel responseMedia = getMediaFromRestResponse(response);
+                        MediaModel responseMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
                         if (responseMedia != null) {
                             responseMedia.setLocalSiteId(site.getId());
                             AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
@@ -362,7 +365,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 new Listener<MediaWPComRestResponse>() {
                     @Override
                     public void onResponse(MediaWPComRestResponse response) {
-                        MediaModel deletedMedia = getMediaFromRestResponse(response);
+                        MediaModel deletedMedia = mMediaResponseUtils.getMediaFromRestResponse(response);
                         if (deletedMedia != null) {
                             AppLog.v(T.MEDIA, "deleted media: " + media.getTitle());
                             notifyMediaDeleted(site, media, null);
@@ -433,7 +436,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
                         // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
-                        List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
+                        List<MediaModel> mediaList =
+                                mMediaResponseUtils.getMediaListFromRestResponse(response, site.getId());
                         UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
                         mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
@@ -557,62 +561,6 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     // Utility methods
     //
-
-    /**
-     * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
-     */
-    private List<MediaModel> getMediaListFromRestResponse(final MultipleMediaResponse from, int localSiteId) {
-        if (from == null || from.media == null) return null;
-
-        final List<MediaModel> mediaList = new ArrayList<>();
-        for (MediaWPComRestResponse mediaItem : from.media) {
-            MediaModel mediaModel = getMediaFromRestResponse(mediaItem);
-            mediaModel.setLocalSiteId(localSiteId);
-            mediaList.add(mediaModel);
-        }
-        return mediaList;
-    }
-
-    /**
-     * Creates a {@link MediaModel} from a WP.com REST response to a fetch request.
-     */
-    private MediaModel getMediaFromRestResponse(final MediaWPComRestResponse from) {
-        if (from == null) return null;
-
-        final MediaModel media = new MediaModel();
-        media.setMediaId(from.ID);
-        media.setUploadDate(from.date);
-        media.setPostId(from.post_ID);
-        media.setAuthorId(from.author_ID);
-        media.setUrl(from.URL);
-        media.setGuid(from.guid);
-        media.setFileName(from.file);
-        media.setFileExtension(from.extension);
-        media.setMimeType(from.mime_type);
-        media.setTitle(StringEscapeUtils.unescapeHtml4(from.title));
-        media.setCaption(StringEscapeUtils.unescapeHtml4(from.caption));
-        media.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
-        media.setAlt(StringEscapeUtils.unescapeHtml4(from.alt));
-        if (from.thumbnails != null) {
-            if (!TextUtils.isEmpty(from.thumbnails.fmt_std)) {
-                media.setThumbnailUrl(from.thumbnails.fmt_std);
-            } else {
-                media.setThumbnailUrl(from.thumbnails.thumbnail);
-            }
-        }
-        media.setHeight(from.height);
-        media.setWidth(from.width);
-        media.setLength(from.length);
-        media.setVideoPressGuid(from.videopress_guid);
-        media.setVideoPressProcessingDone(from.videopress_processing_done);
-        media.setDeleted(MediaWPComRestResponse.DELETED_STATUS.equals(from.status));
-        if (!media.getDeleted()) {
-            media.setUploadState(MediaUploadState.UPLOADED);
-        } else {
-            media.setUploadState(MediaUploadState.DELETED);
-        }
-        return media;
-    }
 
     /**
      * The current REST API call (v1.1) accepts 'title', 'description', 'caption', 'alt',

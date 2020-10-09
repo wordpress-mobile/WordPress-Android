@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaResponseUtils;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient;
@@ -128,8 +129,10 @@ public class ReleaseNetworkModule {
     public MediaRestClient provideMediaRestClient(Context appContext, Dispatcher dispatcher,
                                                   @Named("regular") RequestQueue requestQueue,
                                                   @Named("regular") OkHttpClient okHttpClient,
-                                                  AccessToken token, UserAgent userAgent) {
-        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClient, token, userAgent);
+                                                  AccessToken token, UserAgent userAgent,
+                                                  MediaResponseUtils mediaResponseUtils) {
+        return new MediaRestClient(appContext, dispatcher, requestQueue, okHttpClient, token, userAgent,
+                mediaResponseUtils);
     }
 
     @Singleton
@@ -139,14 +142,6 @@ public class ReleaseNetworkModule {
                                                       @Named("custom-ssl") OkHttpClient okHttpClient,
                                                       UserAgent userAgent, HTTPAuthManager httpAuthManager) {
         return new MediaXMLRPCClient(dispatcher, requestQueue, okHttpClient, userAgent, httpAuthManager);
-    }
-
-    @Singleton
-    @Provides
-    public StockMediaRestClient provideStockMediaRestClient(Context appContext, Dispatcher dispatcher,
-                                                            @Named("regular") RequestQueue requestQueue,
-                                                            AccessToken token, UserAgent userAgent) {
-        return new StockMediaRestClient(appContext, dispatcher, requestQueue, token, userAgent);
     }
 
     @Singleton
@@ -446,6 +441,17 @@ public class ReleaseNetworkModule {
     public EncryptedLogRestClient provideEncryptedLogRestClient(@Named("regular") RequestQueue requestQueue,
                                                                 AppSecrets appSecrets) {
         return new EncryptedLogRestClient(requestQueue, appSecrets);
+    }
+
+    @Singleton
+    @Provides
+    public StockMediaRestClient provideStockMediaRestClient(Context appContext, MediaResponseUtils mediaResponseUtils,
+                                                            Dispatcher dispatcher,
+                                                            @Named("regular") RequestQueue requestQueue,
+                                                            AccessToken token, UserAgent userAgent,
+                                                            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new StockMediaRestClient(wpComGsonRequestBuilder, mediaResponseUtils, dispatcher, appContext,
+                requestQueue, token, userAgent);
     }
 
     @Singleton
