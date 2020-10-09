@@ -9,8 +9,5 @@ import org.wordpress.android.fluxc.store.StockMediaStore;
 public enum StockMediaAction implements IAction {
     // Remote actions
     @Action(payloadType = StockMediaStore.FetchStockMediaListPayload.class)
-    FETCH_STOCK_MEDIA,
-
-    @Action(payloadType = StockMediaStore.FetchedStockMediaListPayload.class)
-    FETCHED_STOCK_MEDIA
+    FETCH_STOCK_MEDIA
 }
