@@ -3139,8 +3139,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaListFetched(OnMediaListFetched event) {
-        // no op - we don't need to check anything just now, but declaring the method so it's
-        // clear we make a request to FetchMedia in this class.
         if (event != null) {
             mNetworkErrorOnLastMediaFetchAttempt = event.isError();
         }
