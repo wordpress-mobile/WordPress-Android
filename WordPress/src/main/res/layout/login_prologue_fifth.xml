@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/login_prologue_content_area"
-    android:layout_height="@dimen/login_prologue_content_area">
+    android:layout_height="@dimen/login_prologue_content_area"
+    android:layout_gravity="center">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_one"
@@ -214,7 +215,7 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="8dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/login_prologue_fifth_asset_five"
+                android:src="@drawable/login_prologue_fifth_asset_six"
                 app:layout_constraintStart_toEndOf="@+id/image_two"
                 app:layout_constraintTop_toTopOf="parent" />
 

@@ -2,48 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/login_prologue_content_area"
-    android:layout_height="@dimen/login_prologue_content_area">
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_one"
-        style="@style/Widget.LoginFlow.Prologue.Card"
-        android:layout_width="0dp"
-        android:layout_height="128dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="56dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/login_prologue_fourth_asset_one" />
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_two"
-        style="@style/Widget.LoginFlow.Prologue.Card"
-        android:layout_width="0dp"
-        android:layout_height="105dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_one">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:importantForAccessibility="no"
-            android:src="@drawable/login_prologue_fourth_asset_two" />
-
-    </com.google.android.material.card.MaterialCardView>
+    android:layout_height="@dimen/login_prologue_content_area"
+    android:layout_gravity="center">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_one"
@@ -58,8 +18,8 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_two"
         style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
-        android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
+        android:layout_marginEnd="24dp"
         android:backgroundTint="@color/blue_50"
         app:icon="@drawable/ic_multiple_users_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,11 +28,90 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/fab_three"
         style="@style/Widget.LoginFlow.Prologue.CircularButton.Large"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@color/celadon_30"
         app:icon="@drawable/ic_globe_white_24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/card_one" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_two"
+        style="@style/Widget.LoginFlow.Prologue.Card"
+        android:layout_width="0dp"
+        android:layout_height="105dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_one">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:id="@+id/first_line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="23dp"
+                android:background="#19000000"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <View
+                android:id="@+id/second_line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="55dp"
+                android:background="#19000000"
+                app:layout_constraintEnd_toEndOf="@+id/first_line"
+                app:layout_constraintStart_toStartOf="@+id/first_line"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <View
+                android:id="@+id/third_line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="87dp"
+                android:background="#19000000"
+                app:layout_constraintStart_toEndOf="@+id/first_line"
+                app:layout_constraintStart_toStartOf="@+id/first_line"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_one"
+        style="@style/Widget.LoginFlow.Prologue.Card"
+        android:layout_width="0dp"
+        android:layout_height="128dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/login_prologue_fourth_asset_one" />
+
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
