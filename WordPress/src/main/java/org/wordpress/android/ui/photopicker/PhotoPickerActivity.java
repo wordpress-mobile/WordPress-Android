@@ -34,6 +34,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPMediaUtils.LaunchCameraCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,8 +56,10 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         implements PhotoPickerFragment.PhotoPickerListener {
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
+    private static final String KEY_MEDIA_URI = "media_uri";
 
     private String mMediaCapturePath;
+    private Uri mMediaUri;
     private MediaBrowserType mBrowserType;
 
     // note that the site isn't required and may be null
@@ -156,12 +159,16 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         if (!TextUtils.isEmpty(mMediaCapturePath)) {
             outState.putString(KEY_MEDIA_CAPTURE_PATH, mMediaCapturePath);
         }
+        if (mMediaUri != null) {
+            outState.putParcelable(KEY_MEDIA_URI, mMediaUri);
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mMediaCapturePath = savedInstanceState.getString(KEY_MEDIA_CAPTURE_PATH);
+        mMediaUri = savedInstanceState.getParcelable(KEY_MEDIA_URI);
     }
 
     @Override
@@ -192,9 +199,14 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case RequestCodes.TAKE_PHOTO:
                 try {
-                    WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
-                    File f = new File(mMediaCapturePath);
-                    List<Uri> capturedImageUri = Collections.singletonList(Uri.fromFile(f));
+                    List<Uri> capturedImageUri;
+                    if (!TextUtils.isEmpty(mMediaCapturePath)) {
+                        WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                        File f = new File(mMediaCapturePath);
+                        capturedImageUri = Collections.singletonList(Uri.fromFile(f));
+                    } else {
+                        capturedImageUri = Collections.singletonList(mMediaUri);
+                    }
                     doMediaUrisSelected(capturedImageUri, PhotoPickerMediaSource.ANDROID_CAMERA);
                 } catch (RuntimeException e) {
                     AppLog.e(AppLog.T.MEDIA, e);
@@ -229,7 +241,15 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     private void launchCameraForImage() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
+                new LaunchCameraCallback() {
+                    @Override public void onMediaCapturePathReady(String mediaCapturePath) {
+                        mMediaCapturePath = mediaCapturePath;
+                    }
+
+                    @Override public void onMediaUriReady(Uri mediaUri) {
+                        mMediaUri = mediaUri;
+                    }
+                });
     }
 
     private void launchCameraForVideo() {

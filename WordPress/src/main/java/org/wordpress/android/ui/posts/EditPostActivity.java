@@ -191,6 +191,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPMediaUtils.LaunchCameraCallback;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
@@ -2195,6 +2196,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA_IDS = "NEW_MEDIA_POST_EXTRA_IDS";
     private String mMediaCapturePath = "";
+    private Uri mMediaUri;
 
     private String getUploadErrorHtml(String mediaId, String path) {
         return String.format(Locale.US,
@@ -2294,7 +2296,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void launchCamera() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
+                new LaunchCameraCallback() {
+                    @Override public void onMediaCapturePathReady(String mediaCapturePath) {
+                        mMediaCapturePath = mediaCapturePath;
+                    }
+
+                    @Override public void onMediaUriReady(Uri mediaUri) {
+                        mMediaUri = mediaUri;
+                    }
+                });
     }
 
     protected void setPostContentFromShareAction() {
@@ -2587,17 +2597,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void addLastTakenPicture() {
         try {
-            // TODO why do we scan the file twice? Also how come it can result in OOM?
-            WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
-            File f = new File(mMediaCapturePath);
-            Uri capturedImageUri = Uri.fromFile(f);
-            if (capturedImageUri != null) {
-                mEditorMedia.addNewMediaToEditorAsync(capturedImageUri, true);
-                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                scanIntent.setData(capturedImageUri);
-                sendBroadcast(scanIntent);
+            if (mMediaCapturePath != null && !mMediaCapturePath.isEmpty()) {
+                // TODO why do we scan the file twice? Also how come it can result in OOM?
+                WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
+                File f = new File(mMediaCapturePath);
+                Uri capturedImageUri = Uri.fromFile(f);
+                if (capturedImageUri != null) {
+                    mEditorMedia.addNewMediaToEditorAsync(capturedImageUri, true);
+                    final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    scanIntent.setData(capturedImageUri);
+                    sendBroadcast(scanIntent);
+                } else {
+                    ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                }
             } else {
-                ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
+                mEditorMedia.addNewMediaToEditorAsync(mMediaUri, true);
             }
         } catch (RuntimeException | OutOfMemoryError e) {
             AppLog.e(T.EDITOR, e);
