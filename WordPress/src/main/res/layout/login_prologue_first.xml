@@ -119,7 +119,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:importantForAccessibility="no" />
+            android:importantForAccessibility="no"
+            android:src="@drawable/login_prologue_first_asset_five" />
 
     </com.google.android.material.card.MaterialCardView>
 
