@@ -204,6 +204,10 @@ public class ActivityLauncher {
         return intent;
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showStockMediaPickerForResult}  instead
+     */
+    @Deprecated
     public static void showStockMediaPickerForResult(Activity activity,
                                                      @NonNull SiteModel site,
                                                      int requestCode) {

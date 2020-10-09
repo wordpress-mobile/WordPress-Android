@@ -20,7 +20,7 @@ import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
-import org.wordpress.android.ui.mlp.SupportedBlocks
+import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -38,13 +38,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val supportedBlocksProvider: SupportedBlocksProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var layouts: GutenbergPageLayouts
-    private lateinit var supportedBlocks: SupportedBlocks
-    private var previewWidth: Int = 136
-    private var scale: Double = 1.0
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -81,18 +79,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun init() {
-        fetchLayouts()
-    }
-
-    private fun fetchLayouts() {
+    private fun fetchLayouts(previewWidth: Int, scale: Double) {
         updateUiState(LoadingUiState)
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
             val payload = FetchBlockLayoutsPayload(
                     site,
-                    supportedBlocks.supported,
+                    supportedBlocksProvider.fromAssets().supported,
                     previewWidth.toFloat(),
                     scale.toFloat()
             )
@@ -166,17 +160,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
-     * Shows the MLP
-     * @param supportedBlocks the supported blocks to filter fetched layouts (by default no filtering occurs)
-     * @param previewWidth the layout preview card width
-     * @param scale the screen density scale
+     * Triggers the create page flow and shows the MLP
      */
-    @JvmOverloads
-    fun show(supportedBlocks: SupportedBlocks = SupportedBlocks(), previewWidth: Int = 136, scale: Double = 1.0) {
-        this.supportedBlocks = supportedBlocks
-        this.previewWidth = previewWidth
-        this.scale = scale
-        init()
+    fun createPageFlowTriggered() {
         _isModalLayoutPickerShowing.value = Event(true)
     }
 
@@ -190,10 +176,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     /**
      * Notifies the VM to start passing the orientation
-     * @param landscapeMode app operates in landscape mode
+     * @param previewWidth the layout preview card width
+     * @param scale the screen density scale (mainly used in iOS https://developer.apple.com/documentation/uikit/uiscreen/1617836-scale)
      */
-    fun start(landscapeMode: Boolean) {
-        setHeaderTitleVisibility(landscapeMode)
+    fun start(previewWidth: Int = 136, scale: Double = 1.0) {
+        fetchLayouts(previewWidth, scale)
     }
 
     /**
@@ -289,7 +276,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
-     * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
+     * Updates the buttons UiState
      */
     private fun updateButtonsUiState() {
         (uiState.value as? ContentUiState)?.let { state ->

@@ -46,7 +46,6 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
-import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
@@ -349,10 +348,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
         viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
             if (modalLayoutPickerFeatureConfig.isEnabled()) {
-                mlpViewModel.show(
-                        SupportedBlocks.fromAssets(requireContext()),
-                        resources.getDimensionPixelSize(R.dimen.mlp_layout_card_width)
-                )
+                mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()
             }

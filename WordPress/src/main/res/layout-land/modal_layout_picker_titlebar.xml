@@ -14,9 +14,8 @@
         android:tint="?attr/colorControlNormal" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleLandscape"
         style="@style/ModalLayoutPickerHeader"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:text="@string/mlp_choose_layout_title"
-        android:visibility="gone" />
+        android:text="@string/mlp_choose_layout_title" />
 </FrameLayout>
