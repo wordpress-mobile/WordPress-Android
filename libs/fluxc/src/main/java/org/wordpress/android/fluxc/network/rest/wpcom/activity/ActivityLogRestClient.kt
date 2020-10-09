@@ -89,7 +89,7 @@ constructor(
 
     suspend fun rewind(site: SiteModel, rewindId: String): RewindResultPayload {
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
-        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, mapOf(), RewindResponse::class.java)
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, null, mapOf(), RewindResponse::class.java)
         return when (response) {
             is Success -> {
                 if (response.data.ok != true && (response.data.error != null && response.data.error.isNotEmpty())) {

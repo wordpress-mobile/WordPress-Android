@@ -209,12 +209,27 @@ class StatsStore
         }
     }
 
+    data class OnReportReferrerAsSpam<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
+        constructor(error: StatsError) : this() {
+            this.error = error
+        }
+    }
+
+    data class ReportReferrerAsSpamPayload<T>(
+        val response: T? = null
+    ) : Payload<StatsError>() {
+        constructor(error: StatsError) : this() {
+            this.error = error
+        }
+    }
+
     enum class StatsErrorType {
         GENERIC_ERROR,
         TIMEOUT,
         API_ERROR,
         AUTHORIZATION_REQUIRED,
-        INVALID_RESPONSE
+        INVALID_RESPONSE,
+        ALREADY_SPAMMED
     }
 
     class StatsError(var type: StatsErrorType, var message: String? = null) : OnChangedError
@@ -234,7 +249,7 @@ fun WPComGsonNetworkError.toStatsError(): StatsError {
         HTTP_AUTH_ERROR,
         AUTHORIZATION_REQUIRED,
         NOT_AUTHENTICATED -> StatsErrorType.AUTHORIZATION_REQUIRED
-        UNKNOWN,
+        UNKNOWN -> if (message == "Already spammed.") StatsErrorType.ALREADY_SPAMMED else GENERIC_ERROR
         null -> GENERIC_ERROR
     }
     return StatsError(type, message)
