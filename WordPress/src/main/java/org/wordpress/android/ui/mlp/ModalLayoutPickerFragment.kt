@@ -112,7 +112,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      * @param visible if true the title is shown and the header is hidden
      */
     private fun setTitleVisibility(visible: Boolean) {
-        if (visible == (title.visibility == View.VISIBLE)) return // No change
+        if (visible == (title?.visibility == View.VISIBLE)) return // No change
         title?.let { uiHelper.setInvisible(it, !visible) }
         header?.let { uiHelper.setInvisible(it, visible) }
     }
@@ -140,7 +140,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        viewModel.start(DisplayUtils.isLandscape(requireContext()))
+        viewModel.start(
+                previewWidth = resources.getDimensionPixelSize(R.dimen.mlp_layout_card_width),
+                scale = 1.0 // Passing 1.0 and the rendered pixels per device in previewWidth
+        )
 
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
