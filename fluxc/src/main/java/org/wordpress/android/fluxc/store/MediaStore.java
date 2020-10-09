@@ -690,7 +690,7 @@ public class MediaStore extends Store {
     // Action implementations
     //
 
-    private void updateMedia(MediaModel media, boolean emit) {
+    void updateMedia(MediaModel media, boolean emit) {
         OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
 
         if (media == null) {

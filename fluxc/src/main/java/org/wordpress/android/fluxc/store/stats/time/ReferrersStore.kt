@@ -4,10 +4,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils.ReferrersSqlUtils
+import org.wordpress.android.fluxc.store.StatsStore.OnReportReferrerAsSpam
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T.STATS
@@ -48,4 +51,82 @@ class ReferrersStore
             coroutineEngine.run(STATS, this, "getReferrers") {
                 sqlUtils.select(site, granularity, date)?.let { timeStatsMapper.map(it, limitMode) }
             }
+
+    suspend fun reportReferrerAsSpam(
+        site: SiteModel,
+        domain: String,
+        granularity: StatsGranularity,
+        limitMode: Top,
+        date: Date
+    ) = coroutineEngine.withDefaultContext(STATS, this, "reportReferrerAsSpam") {
+        val payload = restClient.reportReferrerAsSpam(site, domain)
+
+        if (payload.response != null || payload.error.type == StatsErrorType.ALREADY_SPAMMED) {
+            updateCacheWithMarkedSpam(site, granularity, date, domain, limitMode, true)
+        }
+        return@withDefaultContext when {
+            payload.isError -> OnReportReferrerAsSpam(payload.error)
+            payload.response != null -> OnReportReferrerAsSpam(payload.response)
+            else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    suspend fun unreportReferrerAsSpam(
+        site: SiteModel,
+        domain: String,
+        granularity: StatsGranularity,
+        limitMode: Top,
+        date: Date
+    ) = coroutineEngine.withDefaultContext(STATS, this, "unreportReferrerAsSpam") {
+        val payload = restClient.unreportReferrerAsSpam(site, domain)
+
+        if (payload.response != null || payload.error.type == StatsErrorType.ALREADY_SPAMMED) {
+            updateCacheWithMarkedSpam(site, granularity, date, domain, limitMode, false)
+        }
+        return@withDefaultContext when {
+            payload.isError -> OnReportReferrerAsSpam(payload.error)
+            payload.response != null -> OnReportReferrerAsSpam(payload.response)
+            else -> OnReportReferrerAsSpam(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    private fun updateCacheWithMarkedSpam(
+        site: SiteModel,
+        granularity: StatsGranularity,
+        date: Date,
+        domain: String,
+        limitMode: Top,
+        spam: Boolean
+    ) {
+        val select = sqlUtils.select(site, granularity, date)
+        if (select != null) {
+            val selectMarked = setSelectForSpam(select, domain, spam)
+            sqlUtils.insert(site, selectMarked, granularity, date, limitMode.limit)
+        }
+    }
+
+    fun setSelectForSpam(select: ReferrersResponse, domain: String, spam: Boolean): ReferrersResponse {
+        select.groups.entries.forEach {
+            it.value.groups.forEach {
+                if (it.url == domain || it.name == domain) {
+                    // Many groups has url as null, but they can still be spammed using their names as url
+                    // Setting group.spam as true
+                    it.markedAsSpam = spam
+                }
+                it.referrers?.forEach {
+                    if (it.url == domain) {
+                        // Setting referrer.spam as true
+                        it.markedAsSpam = spam
+                    }
+                    it.children?.forEach {
+                        if (it.url == domain) {
+                            // Setting child.spam as true
+                            it.markedAsSpam = spam
+                        }
+                    }
+                }
+            }
+        }
+        return select
+    }
 }
