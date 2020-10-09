@@ -4208,7 +4208,7 @@
         errorLine1="                            .query(curStream, new String[]{MediaStore.Images.Media.ORIENTATION}, null, null, null);"
         errorLine2="                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="/home/circleci/project/libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/ImageUtils.java"
+            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/ImageUtils.java"
             line="101"
             column="60"/>
        </issue>
@@ -4224,7 +4224,7 @@
         errorLine1="                    orientation = cur.getInt(cur.getColumnIndex(MediaStore.Images.Media.ORIENTATION));"
         errorLine2="                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="/home/circleci/project/libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/ImageUtils.java"
+            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/ImageUtils.java"
             line="104"
             column="65"/>
     </issue>
@@ -4240,7 +4240,7 @@
         errorLine1="        String sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + &quot; DESC&quot;;"
         errorLine2="                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="/home/circleci/project/libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/MediaUtils.java"
+            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/MediaUtils.java"
             line="111"
             column="28"/>
     </issue>
