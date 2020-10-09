@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,7 +10,8 @@
         android:id="@+id/layout_post_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants">
+        android:descendantFocusability="blocksDescendants"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/swipe_to_refresh"
@@ -141,4 +144,8 @@
         android:background="#80000000"
         android:visibility="gone" />
 
-</RelativeLayout>
+    <include
+        android:id="@+id/appbar_with_collapsing_toolbar_layout"
+        layout="@layout/appbar_with_collapsing_toolbar_layout" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

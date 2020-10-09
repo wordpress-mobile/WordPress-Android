@@ -23,11 +23,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import org.greenrobot.eventbus.EventBus
@@ -74,12 +82,12 @@ import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE
-import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_LIKE
@@ -109,6 +117,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
@@ -119,7 +128,12 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.PHOTO
+import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
@@ -136,7 +150,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener,
+        ReaderInterfaces.AutoHideToolbarListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -158,6 +173,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var likingUsersLabel: View
     private lateinit var signInButton: WPTextView
     private lateinit var readerBookmarkButton: ReaderBookmarkButton
+    private lateinit var featuredImageView: ImageView
+
+    private lateinit var appBar: AppBarLayout
 
     private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
     private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
@@ -175,7 +193,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var errorMessage: String? = null
 
     private var isToolbarShowing = true
-    private var autoHideToolbarListener: AutoHideToolbarListener? = null
 
     private var fileForDownload: String? = null
 
@@ -186,6 +203,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
+    @Inject internal lateinit var imageManager: ImageManager
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -200,15 +218,38 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val actionBar: ActionBar?
-        get() {
-            return if (isAdded && activity is AppCompatActivity) {
-                (activity as AppCompatActivity).supportActionBar
+    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
+        appBarLayout, verticalOffset ->
+        val collapsingToolbarLayout = appBarLayout
+                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+        val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+
+        context?.let { context ->
+            val menu: Menu = toolbar.menu
+            val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+            val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+
+            val collapsingToolbarHeight = collapsingToolbarLayout.height
+            val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                    collapsingToolbarLayout.scrimVisibleHeightTrigger
+            val isDarkTheme = context.resources.configuration.isDarkTheme()
+
+            val colorAttr = if (isCollapsed || isDarkTheme) {
+                R.attr.colorOnSurface
             } else {
-                AppLog.w(T.READER, "reader post detail > getActionBar returned null")
-                null
+                R.attr.colorSurface
             }
+            val color = context.getColorFromAttribute(colorAttr)
+            val colorFilter = BlendModeColorFilterCompat
+                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+
+            toolbar.setTitleTextColor(color)
+            toolbar.navigationIcon?.colorFilter = colorFilter
+
+            menuBrowse?.icon?.colorFilter = colorFilter
+            menuShare?.icon?.colorFilter = colorFilter
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -241,9 +282,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is AutoHideToolbarListener) {
-            autoHideToolbarListener = context
-        }
         toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.toolbar_height)
     }
 
@@ -271,6 +309,44 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         scrollView = view.findViewById(R.id.scroll_view_reader)
         scrollView.setScrollDirectionListener(this)
+
+        appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
+        val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
+
+        if (activity is ReaderPostPagerActivity) {
+            toolBar.setVisible(true)
+            appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
+
+            (activity as AppCompatActivity).setSupportActionBar(toolBar)
+            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+
+            // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
+            ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+                val insetTop = insets.systemWindowInsetTop
+                if (insetTop > 0) {
+                    toolBar.setPadding(0, insetTop, 0, 0)
+                }
+                insets.consumeSystemWindowInsets()
+            }
+
+            // Fixes viewpager not displaying menu items for first fragment
+            toolBar.inflateMenu(R.menu.reader_detail)
+
+            // for related posts, show an X in the toolbar which closes the activity
+            if (isRelatedPost) {
+                toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
+                toolBar.setNavigationOnClickListener { requireActivity().finish() }
+                toolBar.setTitle(string.reader_title_related_post_detail)
+            } else {
+                toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+                toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+            }
+
+            featuredImageView = appBar.findViewById(R.id.featured_image)
+            featuredImageView.setOnClickListener { showFullScreen() }
+        } else {
+            toolBar.setVisible(false)
+        }
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
@@ -1350,14 +1426,37 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 layoutFooter.visibility = View.GONE
             }
 
-            // add padding to the scrollView to make room for the top and bottom toolbars - this also
+            // add padding to the scrollView to make room for the bottom toolbar - this also
             // ensures the scrollbar matches the content so it doesn't disappear behind the toolbars
-            val topPadding = if (autoHideToolbarListener != null) toolbarHeight else 0
             val bottomPadding = if (canShowFooter()) layoutFooter.height else 0
-            scrollView.setPadding(0, topPadding, 0, bottomPadding)
+            scrollView.setPadding(0, 0, 0, bottomPadding)
 
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
+
+            post?.let {
+                if (featuredImageUtils.shouldAddFeaturedImage(it)) {
+                    val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+                    val imageUrl = ReaderUtils.getResizedImageUrl(
+                            it.featuredImage,
+                            displayWidth,
+                            0,
+                            it.isPrivate,
+                            it.isPrivateAtomic
+                    )
+
+                    val displayHeight = DisplayUtils.getDisplayPixelHeight(requireContext())
+                    val imageHeight = (displayHeight * FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
+                    featuredImageView.layoutParams.height = imageHeight
+
+                    imageManager.load(
+                            featuredImageView,
+                            PHOTO,
+                            imageUrl,
+                            CENTER_CROP
+                    )
+                }
+            }
 
             // render the post in the webView
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils, readerCssProvider)
@@ -1475,15 +1574,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onCustomViewShown() {
-        // full screen video has just been shown so hide the ActionBar
-        val actionBar = actionBar
-        actionBar?.hide()
+        // full screen video has just been shown so hide the AppBar
+        onShowHideToolbar(false)
     }
 
     override fun onCustomViewHidden() {
-        // user returned from full screen video so re-display the ActionBar
-        val actionBar = actionBar
-        actionBar?.show()
+        // user returned from full screen video so re-display the AppBar
+        onShowHideToolbar(true)
     }
 
     fun hideCustomView() {
@@ -1643,9 +1740,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun showToolbar(show: Boolean) {
         isToolbarShowing = show
-        if (autoHideToolbarListener != null) {
-            autoHideToolbarListener!!.onShowHideToolbar(show)
-        }
     }
 
     private fun showFooter(show: Boolean) {
@@ -1705,6 +1799,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // min scroll distance before toggling toolbar
         private const val MIN_SCROLL_DISTANCE_Y = 10f
 
+        private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
+
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
@@ -1742,6 +1838,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             fragment.arguments = args
 
             return fragment
+        }
+    }
+
+    override fun onShowHideToolbar(show: Boolean) {
+        if (isAdded) {
+            AniUtils.animateTopBar(appBar, show)
+        }
+    }
+
+    private fun showFullScreen() {
+        post?.let {
+            val site = siteStore.getSiteBySiteId(it.blogId)
+            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
         }
     }
 }
