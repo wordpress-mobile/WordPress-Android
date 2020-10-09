@@ -369,7 +369,6 @@ public class WPMediaUtils {
             values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
 
             values.put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/Camera");
-            //values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/playground");
 
             fileUri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
