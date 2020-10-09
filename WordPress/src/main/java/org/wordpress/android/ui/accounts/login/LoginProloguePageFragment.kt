@@ -62,9 +62,9 @@ class LoginProloguePageFragment : Fragment() {
                 val sizeOfContent = resources.getDimensionPixelOffset(R.dimen.login_prologue_content_area).toFloat()
 
                 val scaleFactor = if (smallestDimensions > sizeOfContent) {
-                    smallestDimensions / sizeOfContent
+                    sizeOfContent / smallestDimensions + 1
                 } else {
-                    sizeOfContent / smallestDimensions
+                    smallestDimensions / sizeOfContent
                 }
 
                 content.scaleX = scaleFactor

@@ -15,7 +15,6 @@
         android:layout_height="wrap_content"
         android:minHeight="126dp"
         android:layout_marginTop="32dp"
-        android:layout_marginBottom="@dimen/prologue_promo_title_margin_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
