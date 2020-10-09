@@ -129,24 +129,34 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                                                  boolean isSiteLoginEnabled,
                                                  boolean shouldUseNewLayout) {
         return newInstance(
-                isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, false);
+                isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, null);
     }
 
     public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
                                                  boolean isSiteLoginEnabled,
                                                  boolean shouldUseNewLayout,
                                                  boolean hideTos) {
-        return newInstance(isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, null);
-    }
-
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
-                                                 boolean shouldUseNewLayout, String url) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
         args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
         args.putBoolean(ARG_HIDE_TOS, hideTos);
+        args.putString(ARG_LOGIN_SITE_URL, null);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
+                                                 boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout,
+                                                 String url) {
+        LoginEmailFragment fragment = new LoginEmailFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
+        args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
+        args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
+        args.putBoolean(ARG_HIDE_TOS, false);
         args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
         return fragment;
