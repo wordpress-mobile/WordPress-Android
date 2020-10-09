@@ -51,7 +51,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         doUploadAfterAdding: Boolean = true
     ): Boolean {
         // Copy files to apps storage to make sure they are permanently accessible.
-        val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
+        val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorage(uriList)
 
         // Optimize and rotate the media
         val optimizeMediaResult: OptimizeMediaResult = optimizeMediaUseCase
