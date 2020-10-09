@@ -13,5 +13,4 @@
     <dimen name="prologue_intro_content_max_width">600dp</dimen>
 
     <dimen name="prologue_promo_title_size">38sp</dimen>
-    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
 </resources>

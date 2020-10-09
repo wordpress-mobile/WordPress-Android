@@ -3,6 +3,5 @@
 
     <!-- login -->
     <dimen name="prologue_promo_title_size">24sp</dimen>
-    <dimen name="prologue_promo_title_margin_vertical">8dp</dimen>
 
 </resources>

@@ -2863,6 +2863,8 @@
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
 
+    <string name="content_description_logo">WordPress Logo</string>
+
     <!-- Modal Layout Picker -->
     <string name="mlp_choose_layout_title">Choose a Layout</string>
     <string name="mlp_choose_layout_subtitle">Get started by choosing from a wide variety of pre-made page layouts. Or just start with a blank page.</string>
