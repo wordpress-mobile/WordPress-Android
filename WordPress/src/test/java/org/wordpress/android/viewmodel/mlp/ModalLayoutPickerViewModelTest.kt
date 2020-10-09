@@ -118,22 +118,6 @@ class ModalLayoutPickerViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `when modal layout picker starts in landscape mode the title is visible`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.start(true)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `when modal layout picker starts in portrait mode the title is not visible`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.start(false)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
     fun `when the user scroll beyond a threshold the title becomes visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
         viewModel.onAppBarOffsetChanged(9, 10)
