@@ -220,7 +220,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         ).addNewMediaToEditorAsync(localUris, siteModel, FRESHLY_TAKEN, mock())
 
         // Assert
-        inOrder.verify(copyMediaToAppStorageUseCase).copyFilesToAppStorageIfNecessary(localUris)
+        inOrder.verify(copyMediaToAppStorageUseCase).copyFilesToAppStorage(localUris)
         inOrder.verify(optimizeMediaUseCase).optimizeMediaIfSupportedAsync(any(), any(), any())
         inOrder.verify(getMediaModelUseCase)
                 .createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
@@ -284,7 +284,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         fun createCopyMediaToAppStorageUseCase(copyMediaResult: CopyMediaResult = createCopyMediaResult()) =
                 mock<CopyMediaToAppStorageUseCase> {
-                    onBlocking { copyFilesToAppStorageIfNecessary(any()) }.thenReturn(
+                    onBlocking { copyFilesToAppStorage(any()) }.thenReturn(
                             copyMediaResult
                     )
                 }

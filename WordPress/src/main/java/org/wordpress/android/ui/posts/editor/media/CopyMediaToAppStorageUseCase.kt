@@ -23,7 +23,7 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
    *
    * From API 29 we need to download also the files from the media store
    */
-    suspend fun copyFilesToAppStorageIfNecessary(uriList: List<Uri>): CopyMediaResult {
+    suspend fun copyFilesToAppStorage(uriList: List<Uri>): CopyMediaResult {
         return withContext(mainDispatcher) {
             uriList
                     .map { mediaUri -> copyToAppStorage(mediaUri) }

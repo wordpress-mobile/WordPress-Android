@@ -27,7 +27,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         )
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+                .copyFilesToAppStorage(uris)
 
         // Assert
         verify(mediaUtilsWrapper).copyFileToAppStorage(uris[0])
@@ -41,7 +41,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForCopiedFileUri = (uris[0] to null))
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+                .copyFilesToAppStorage(uris)
 
         // Assert
         assertThat(result.permanentlyAccessibleUris.size).isEqualTo(uris.size - 1)
@@ -54,7 +54,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val mediaUtilsWrapper = createMediaUtilsWrapper(resultForCopiedFileUri = (uris[1] to null))
         // Act
         val result = createCopyMediaToAppStorageUseCase(mediaUtilsWrapper = mediaUtilsWrapper)
-                .copyFilesToAppStorageIfNecessary(uris)
+                .copyFilesToAppStorage(uris)
 
         // Assert
         assertThat(result.copyingSomeMediaFailed).isTrue()
@@ -66,7 +66,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         val uris = listOf<Uri>(mock(), mock(), mock())
         // Act
         val result = createCopyMediaToAppStorageUseCase()
-                .copyFilesToAppStorageIfNecessary(uris)
+                .copyFilesToAppStorage(uris)
         // Assert
         assertThat(result.copyingSomeMediaFailed).isFalse()
     }

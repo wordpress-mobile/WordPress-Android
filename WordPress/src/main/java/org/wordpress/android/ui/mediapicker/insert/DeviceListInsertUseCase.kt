@@ -14,7 +14,7 @@ class DeviceListInsertUseCase
 ) : MediaInsertUseCase {
     override suspend fun insert(identifiers: List<Identifier>) = flow {
         val localUris = identifiers.mapNotNull { it as? LocalUri }.map { it.value.uri }
-        val copyResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(localUris)
+        val copyResult = copyMediaToAppStorageUseCase.copyFilesToAppStorage(localUris)
 
         val result = if (copyResult.copyingSomeMediaFailed) {
             InsertModel.Error("Failed to fetch local media")
