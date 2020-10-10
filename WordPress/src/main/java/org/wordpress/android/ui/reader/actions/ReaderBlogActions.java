@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
@@ -242,7 +243,7 @@ public class ReaderBlogActions {
                                      final Long feedId,
                                      boolean isAskingToFollow,
                                      ActionListener actionListener) {
-        if (feedId != 0) {
+        if (ReaderUtils.isExternalFeed(blogId, feedId)) {
             return followFeedById(feedId, isAskingToFollow, actionListener);
         } else {
             return followBlogById(blogId, isAskingToFollow, actionListener);
