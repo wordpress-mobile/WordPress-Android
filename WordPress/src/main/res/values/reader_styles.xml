@@ -257,8 +257,8 @@
 
     <style name="Reader.Follow.Button.Icon" parent="Reader.Follow.Button">
         <item name="iconTint">@color/secondary_gray_20_selector</item>
-        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
         <item name="android:minHeight">@dimen/min_touch_target_sz</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="wpShowFollowButtonCaption">false</item>
     </style>
 
