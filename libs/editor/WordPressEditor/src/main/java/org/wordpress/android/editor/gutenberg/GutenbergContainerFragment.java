@@ -23,12 +23,12 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidReques
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStorySavingReattachQueryListener;
 
 import java.util.ArrayList;
 
@@ -54,8 +54,8 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
-                                  OnReattachQueryListener onReattachQueryListener,
-                                  OnStorySavingReattachQueryListener onStorySavingReattachQueryListener,
+                                  OnReattachMediaUploadQueryListener onReattachQueryListener,
+                                  OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
@@ -214,7 +214,7 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void replaceStoryEditedBlock(String mediaFiles, String blockId) {
-        mWPAndroidGlueCode.replaceStoryEditedBlock(mediaFiles, blockId);
+        mWPAndroidGlueCode.replaceMediaFilesEditedBlock(mediaFiles, blockId);
     }
 
     public void updateTheme(Bundle editorTheme) {
@@ -243,7 +243,7 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void onStorySaveResult(final String storyFirstMediaId, final boolean success) {
-        mWPAndroidGlueCode.storySaveResult(storyFirstMediaId, success);
+        mWPAndroidGlueCode.mediaCollectionFinalSaveResult(storyFirstMediaId, success);
     }
 
     public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
