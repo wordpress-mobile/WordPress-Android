@@ -45,6 +45,9 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         uiHelpers.setTextOrHide(text_author, uiState.authorName)
         text_by.setVisible(uiState.authorName != null)
+
+        uiHelpers.updateVisibility(post_detail_dot_separator, uiState.dotSeparatorVisibility)
+        uiHelpers.setTextOrHide(post_detail_text_dateline, uiState.dateLine)
     }
 
     private fun updateBlogSection(
@@ -54,10 +57,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         uiHelpers.setTextOrHide(text_author_and_blog_name, blogSectionUiState.blogName)
         uiHelpers.setTextOrHide(text_blog_url, blogSectionUiState.blogUrl)
-        uiHelpers.updateVisibility(dot_separator, blogSectionUiState.dotSeparatorVisibility)
-        uiHelpers.setTextOrHide(text_dateline, blogSectionUiState.dateLine)
-
-        dot_separator.setVisible(blogSectionUiState.dotSeparatorVisibility)
 
         layout_blog_section.setBackgroundResource(
                 layout_blog_section.context.getDrawableResIdFromAttribute(
