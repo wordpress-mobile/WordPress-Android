@@ -417,7 +417,7 @@ class MediaPickerFragment : Fragment() {
                     is Visible -> {
                         if (progressDialog == null || progressDialog?.isShowing == false) {
                             val builder: Builder = MaterialAlertDialogBuilder(requireContext())
-                            builder.setTitle(string.media_uploading_stock_library_photo)
+                            builder.setTitle(this.title)
                             builder.setView(layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
                                     string.cancel

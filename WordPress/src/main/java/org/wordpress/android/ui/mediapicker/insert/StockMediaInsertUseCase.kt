@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mediapicker.insert
 
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED
 import org.wordpress.android.fluxc.model.MediaModel
@@ -18,6 +19,9 @@ class StockMediaInsertUseCase(
     private val site: SiteModel,
     private val stockMediaStore: StockMediaStore
 ) : MediaInsertUseCase {
+    override val actionTitle: Int
+        get() = R.string.media_uploading_stock_library_photo
+
     override suspend fun insert(identifiers: List<Identifier>): MediaInsertResult {
         val result = stockMediaStore.performUploadStockMedia(site, identifiers.mapNotNull { identifier ->
             (identifier as? StockMediaIdentifier)?.let {

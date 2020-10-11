@@ -346,7 +346,7 @@ class MediaPickerViewModel @Inject constructor(
             mediaInsertHandler.insertMedia(ids).collect {
                 when (it) {
                     is InsertModel.Progress -> {
-                        _showProgressDialog.postValue(Visible(string.media_uploading_stock_library_photo) {
+                        _showProgressDialog.postValue(Visible(it.actionTitle) {
                             job?.cancel()
                             _showProgressDialog.value = Hidden
                         })
