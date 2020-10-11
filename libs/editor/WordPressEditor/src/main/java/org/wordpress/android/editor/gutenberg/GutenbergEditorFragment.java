@@ -506,7 +506,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void updateFailedMediaState() {
         for (String mediaId : mFailedMediaIds) {
-            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+            // upload progress should work on numeric mediaIds only
+            if (!TextUtils.isEmpty(mediaId) && TextUtils.isDigitsOnly(mediaId)) {
+                getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+            } else {
+                getGutenbergContainerFragment().mediaFileSaveFailed(mediaId);
+            }
         }
     }
 
@@ -515,6 +520,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             // upload progress should work on numeric mediaIds only
             if (!TextUtils.isEmpty(mediaId) && TextUtils.isDigitsOnly(mediaId)) {
                 getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
+                        mUploadingMediaProgressMax.get(mediaId));
+            } else {
+                getGutenbergContainerFragment().mediaFileSaveProgress(mediaId,
                         mUploadingMediaProgressMax.get(mediaId));
             }
         }
