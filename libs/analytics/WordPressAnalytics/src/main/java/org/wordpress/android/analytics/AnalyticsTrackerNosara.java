@@ -1205,6 +1205,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
+            case LOGIN_PROLOGUE_PAGED_JETPACK:
+                return "login_prologue_paged_jetpack";
+            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
+                return "login_prologue_paged_notifications";
+            case LOGIN_PROLOGUE_PAGED_POST:
+                return "login_prologue_paged_post";
+            case LOGIN_PROLOGUE_PAGED_READER:
+                return "login_prologue_paged_reader";
+            case LOGIN_PROLOGUE_PAGED_STATS:
+                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -1777,6 +1787,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_error_snackbar_manage_tapped";
             case STORY_POST_PUBLISH_TAPPED:
                 return "story_post_publish_tapped";
+            case STORY_TEXT_CHANGED:
+                return "story_text_changed";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";

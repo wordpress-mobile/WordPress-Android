@@ -220,7 +220,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun refreshData(forceReload: Boolean) {
-        if (!permissionsHandler.hasStoragePermission()) {
+        if (!permissionsHandler.hasWriteStoragePermission()) {
             return
         }
         launch(bgDispatcher) {
@@ -426,7 +426,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {
-        if (permissionsHandler.hasStoragePermission()) {
+        if (permissionsHandler.hasWriteStoragePermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
             if (_photoPickerItems.value.isNullOrEmpty()) {
                 refreshData(false)

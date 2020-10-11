@@ -2353,6 +2353,9 @@
     <string name="stock_media_picker_list_content_description">Photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+    <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
+    <string name="media_insert_failed">Media insert failed.</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
     <string name="gif_picker_search_hint">Search Tenor</string>
