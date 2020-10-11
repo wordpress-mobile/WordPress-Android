@@ -26,6 +26,7 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
     @Mock lateinit var mediaLibraryDataSource: MediaLibraryDataSource
     @Mock lateinit var stockMediaDataSource: StockMediaDataSource
+    @Mock lateinit var gifMediaDataSource: GifMediaDataSource
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
@@ -36,6 +37,7 @@ class MediaLoaderFactoryTest {
                 deviceListBuilderFactory,
                 mediaLibraryDataSourceFactory,
                 stockMediaDataSource,
+                gifMediaDataSource,
                 localeManagerWrapper
         )
     }
@@ -114,26 +116,5 @@ class MediaLoaderFactoryTest {
                         localeManagerWrapper
                 )
         )
-    }
-
-    @Test
-    fun `throws exception on not implemented sources`() {
-        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
-            mediaLoaderFactory.build(
-                    MediaPickerSetup(
-                            GIF_LIBRARY,
-                            canMultiselect = true,
-                            requiresStoragePermissions = true,
-                            allowedTypes = setOf(),
-                            cameraEnabled = false,
-                            systemPickerEnabled = true,
-                            editingEnabled = true,
-                            queueResults = false,
-                            defaultSearchView = false,
-                            title = string.wp_media_title
-                    ),
-                    site
-            )
-        }
     }
 }
