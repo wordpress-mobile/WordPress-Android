@@ -16,6 +16,7 @@ class MediaLoaderFactory
     private val deviceListBuilderFactory: DeviceListBuilderFactory,
     private val mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory,
     private val stockMediaDataSource: StockMediaDataSource,
+    private val gifMediaDataSource: GifMediaDataSource,
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
     fun build(mediaPickerSetup: MediaPickerSetup, siteModel: SiteModel?): MediaLoader {
@@ -25,7 +26,7 @@ class MediaLoaderFactory
                 "Site is necessary when loading WP media library "
             }, mediaPickerSetup.allowedTypes)
             STOCK_LIBRARY -> stockMediaDataSource
-            GIF_LIBRARY -> throw NotImplementedError("Source not implemented yet")
+            GIF_LIBRARY -> gifMediaDataSource
         }.toMediaLoader()
     }
 
