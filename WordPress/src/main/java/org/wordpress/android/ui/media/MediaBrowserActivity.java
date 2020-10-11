@@ -1017,7 +1017,12 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT, true);
                 break;
             case ITEM_CHOOSE_GIF:
-                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_MULTI_SELECT);
+                mMediaPickerLauncher.showGifPickerForResult(
+                        this,
+                        mSite,
+                        RequestCodes.GIF_PICKER_MULTI_SELECT,
+                        true
+                );
                 break;
         }
     }
