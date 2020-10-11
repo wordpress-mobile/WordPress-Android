@@ -20,7 +20,7 @@ class DeviceListInsertUseCase(
     override suspend fun insert(identifiers: List<Identifier>) = flow {
         val localUris = identifiers.mapNotNull { it as? LocalUri }
         val result = if (queueResults) {
-            emit(InsertModel.Progress)
+            emit(InsertModel.Progress(actionTitle))
             var failed = false
             val fetchedUris = localUris.mapNotNull { localUri ->
                 val fetchedUri = wpMediaUtilsWrapper.fetchMedia(localUri.value.uri)

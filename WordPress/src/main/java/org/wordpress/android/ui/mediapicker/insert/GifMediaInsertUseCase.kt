@@ -8,6 +8,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.yield
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
@@ -17,7 +18,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
-import org.wordpress.android.ui.mediapicker.insert.MediaInsertUseCase.MediaInsertResult
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.WPMediaUtils
 import javax.inject.Inject
@@ -31,22 +32,26 @@ class GifMediaInsertUseCase(
     override val actionTitle: Int
         get() = R.string.media_uploading_gif_library_photo
 
-    override suspend fun insert(identifiers: List<Identifier>): MediaInsertResult = coroutineScope {
-        return@coroutineScope try {
-            val mediaIdentifiers = identifiers.mapNotNull { identifier ->
-                (identifier as? GifMediaIdentifier)?.let {
-                    fetchAndSaveAsync(this, it, site).await().let { mediaModel ->
-                            identifier.copy(mediaModel = mediaModel)
+    override suspend fun insert(identifiers: List<Identifier>) = flow {
+        emit(InsertModel.Progress(actionTitle))
+        emit(coroutineScope {
+                return@coroutineScope try {
+                    val mediaIdentifiers = identifiers.mapNotNull { identifier ->
+                        (identifier as? GifMediaIdentifier)?.let {
+                            fetchAndSaveAsync(this, it, site).await().let { mediaModel ->
+                                    identifier.copy(mediaModel = mediaModel)
+                            }
+                        }
                     }
+
+                    InsertModel.Success(mediaIdentifiers)
+                } catch (e: CancellationException) {
+                    InsertModel.Success(listOf<GifMediaIdentifier>())
+                } catch (e: Exception) {
+                    InsertModel.Error(context.getString(R.string.error_downloading_image))
                 }
             }
-
-            MediaInsertResult.Success(mediaIdentifiers)
-        } catch (e: CancellationException) {
-            MediaInsertResult.Success(listOf())
-        } catch (e: Exception) {
-            MediaInsertResult.Failure(context.getString(R.string.error_downloading_image))
-        }
+        )
     }
 
     private fun fetchAndSaveAsync(
