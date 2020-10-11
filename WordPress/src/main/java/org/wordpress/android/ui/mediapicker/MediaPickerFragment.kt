@@ -395,7 +395,9 @@ class MediaPickerFragment : Fragment() {
                         1
                     }
                 }
+        val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
+        recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     private fun setupFab(fabUiModel: FabUiModel) {
