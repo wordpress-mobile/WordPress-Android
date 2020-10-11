@@ -137,6 +137,7 @@ class StoriesEventListener @Inject constructor(
         // we will send the Failed signal once all the Story frames have been processed
         val progress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
         storySaveMediaListener?.onMediaSaveReattached(localMediaId, progress)
+        // storySaveMediaListener?.onMediaSaveFailed(localMediaId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -145,14 +146,10 @@ class StoriesEventListener @Inject constructor(
             return
         }
         val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
-        if (event.isSuccess() && event.frameSaveResult.size == story.frames.size) {
+        if (event.frameSaveResult.size == story.frames.size) {
             // take the first frame IDs and mediaUri
             val localMediaId = story.frames[0].id.toString()
-            val mediaUrl: String = Uri.fromFile(story.frames[0].composedFrameFile).toString()
-            storySaveMediaListener?.onMediaSaveSucceeded(localMediaId, mediaUrl)
-        } else {
-            val localMediaId = story.frames[0].id.toString()
-            storySaveMediaListener?.onMediaSaveFailed(localMediaId)
+            storySaveMediaListener?.onStorySaveResult(localMediaId, event.isSuccess())
         }
     }
 }
