@@ -26,7 +26,6 @@ import org.wordpress.android.ui.RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT
 import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
 import org.wordpress.android.ui.RequestCodes.VIDEO_LIBRARY
 import org.wordpress.android.ui.gif.GifPickerActivity
-import org.wordpress.android.ui.gif.GifPickerActivity.Companion
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA

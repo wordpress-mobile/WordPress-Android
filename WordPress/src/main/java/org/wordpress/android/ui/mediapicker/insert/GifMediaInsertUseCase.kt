@@ -62,7 +62,8 @@ class GifMediaInsertUseCase(
         return@async gifIdentifier.largeImageUri?.let { mediaUri ->
             // No need to log the Exception here. The underlying method that is used, [MediaUtils.downloadExternalMedia]
             // already logs any errors.
-            val downloadedUri = WPMediaUtils.fetchMedia(context, mediaUri) ?: throw Exception("Failed to download the image.")
+            val downloadedUri = WPMediaUtils.fetchMedia(context, mediaUri)
+                    ?: throw Exception("Failed to download the image.")
 
             // Exit if the parent coroutine has already been cancelled
             yield()
