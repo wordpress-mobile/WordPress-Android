@@ -25,6 +25,8 @@ import org.wordpress.android.ui.RequestCodes.SINGLE_SELECT_MEDIA_PICKER
 import org.wordpress.android.ui.RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT
 import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
 import org.wordpress.android.ui.RequestCodes.VIDEO_LIBRARY
+import org.wordpress.android.ui.gif.GifPickerActivity
+import org.wordpress.android.ui.gif.GifPickerActivity.Companion
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
@@ -274,14 +276,37 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         }
     }
 
+    private fun doMediaLocalIdsSelected(
+        mediaLocalIds: List<Int>?,
+        source: MediaPickerMediaSource
+    ) {
+        if (mediaLocalIds != null && mediaLocalIds.isNotEmpty()) {
+            val data = Intent()
+                    .putExtra(
+                            GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS,
+                            ListUtils.toIntArray(mediaLocalIds)
+                    )
+                    .putExtra(EXTRA_MEDIA_SOURCE, source.name)
+            setResult(Activity.RESULT_OK, data)
+            finish()
+        } else {
+            throw IllegalArgumentException("call to doMediaLocalIdsSelected with null or empty mediaIds array")
+        }
+    }
+
     override fun onItemsChosen(identifiers: List<Identifier>) {
         val chosenUris = identifiers.mapNotNull { (it as? Identifier.LocalUri)?.value?.uri }
         val chosenIds = identifiers.mapNotNull { (it as? Identifier.RemoteId)?.value }
+        val chosenLocalIds = identifiers.mapNotNull { (it as? Identifier.GifMediaIdentifier)?.mediaModel?.id }
+
         if (chosenUris.isNotEmpty()) {
             doMediaUrisSelected(chosenUris, APP_PICKER)
         }
         if (chosenIds.isNotEmpty()) {
             doMediaIdsSelected(chosenIds, APP_PICKER)
+        }
+        if (chosenLocalIds.isNotEmpty()) {
+            doMediaLocalIdsSelected(chosenLocalIds, APP_PICKER)
         }
     }
 
