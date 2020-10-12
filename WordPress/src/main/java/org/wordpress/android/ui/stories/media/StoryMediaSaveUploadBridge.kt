@@ -147,7 +147,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                                         it.localSiteId.toLong(),
                                         // use the local id to save the original, will be replaced later
                                         // with mediaModel.mediaId after uploading to the remote site
-                                        LocalId(it.id.toInt()),
+                                        LocalId(it.id),
                                         frame
                                 )
 
