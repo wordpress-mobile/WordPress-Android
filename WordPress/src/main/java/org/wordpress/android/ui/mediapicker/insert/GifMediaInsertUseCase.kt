@@ -41,11 +41,9 @@ class GifMediaInsertUseCase(
                 return@coroutineScope try {
                     val mediaIdentifiers = identifiers.mapNotNull { identifier ->
                         (identifier as? GifMediaIdentifier)?.let {
-                            fetchAndSaveAsync(this, it, site).await().let { mediaModel ->
-                                    identifier.copy(mediaModel = mediaModel)
-                            }
+                            fetchAndSaveAsync(this, it, site)
                         }
-                    }
+                    }.map { it.await() }
 
                     InsertModel.Success(mediaIdentifiers)
                 } catch (e: CancellationException) {
@@ -61,7 +59,7 @@ class GifMediaInsertUseCase(
         scope: CoroutineScope,
         gifIdentifier: GifMediaIdentifier,
         site: SiteModel
-    ): Deferred<MediaModel?> = scope.async(ioDispatcher) {
+    ): Deferred<GifMediaIdentifier> = scope.async(ioDispatcher) {
         return@async gifIdentifier.largeImageUri.let { mediaUri ->
             // No need to log the Exception here. The underlying method that is used, [MediaUtils.downloadExternalMedia]
             // already logs any errors.
@@ -78,7 +76,7 @@ class GifMediaInsertUseCase(
             mediaModel.title = gifIdentifier.title
             dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
 
-            mediaModel
+            gifIdentifier.copy(mediaModel = mediaModel)
         }
     }
 
