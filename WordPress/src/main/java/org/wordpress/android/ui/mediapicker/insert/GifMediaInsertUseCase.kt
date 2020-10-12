@@ -59,10 +59,10 @@ class GifMediaInsertUseCase(
         gifIdentifier: GifMediaIdentifier,
         site: SiteModel
     ): Deferred<MediaModel?> = scope.async(Dispatchers.IO) {
-        return@async gifIdentifier.largeImageUri?.let { mediaUri ->
+        return@async gifIdentifier.largeImageUri.let { mediaUri ->
             // No need to log the Exception here. The underlying method that is used, [MediaUtils.downloadExternalMedia]
             // already logs any errors.
-            val downloadedUri = WPMediaUtils.fetchMedia(context, mediaUri)
+            val downloadedUri = WPMediaUtils.fetchMedia(context, mediaUri.uri)
                     ?: throw Exception("Failed to download the image.")
 
             // Exit if the parent coroutine has already been cancelled

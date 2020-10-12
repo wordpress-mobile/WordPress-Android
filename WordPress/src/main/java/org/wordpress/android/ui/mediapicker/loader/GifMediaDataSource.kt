@@ -17,6 +17,7 @@ import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
 import retrofit2.Call
 import retrofit2.Callback
@@ -96,11 +97,8 @@ class GifMediaDataSource
 
     private fun Result.toMediaItem() = MediaItem(
             identifier = GifMediaIdentifier(
-            id,
             null,
-            Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)),
-            Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_TINY)),
-            Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
+            UriWrapper(Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF))),
             title),
             url = Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
             type = IMAGE,
