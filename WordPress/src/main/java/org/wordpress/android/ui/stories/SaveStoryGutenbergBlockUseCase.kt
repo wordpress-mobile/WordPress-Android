@@ -1,13 +1,18 @@
 package org.wordpress.android.ui.stories
 
 import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
-class SaveStoryGutenbergBlockUseCase @Inject constructor() {
+class SaveStoryGutenbergBlockUseCase @Inject constructor(
+    private val storiesPrefs: StoriesPrefs
+) {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
         mediaFiles: Map<String, MediaFile>
@@ -57,6 +62,27 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
             id = mediaFile.mediaId.toInt()
             link = mediaFile.fileURL
             url = mediaFile.fileURL
+
+            // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
+            val localIdKey = mediaFile.id.toInt()
+            val remoteIdKey = mediaFile.mediaId.toLong()
+            val localSiteId = post.localSiteId.toLong()
+            storiesPrefs.getSlideWithLocalId(
+                    localSiteId,
+                    LocalId(localIdKey)
+            )?.let {
+                it.id = mediaFile.mediaId // update the StoryFrameItem id to hold the same value as the remote mediaID
+                storiesPrefs.saveSlideWithRemoteId(
+                        localSiteId,
+                        RemoteId(remoteIdKey), // use the new mediaId as key
+                        it
+                )
+                // now delete the old entry
+                storiesPrefs.deleteSlideWithLocalId(
+                        localSiteId,
+                        LocalId(localIdKey)
+                )
+            }
         }
         post.setContent(createGBStoryBlockStringFromJson(requireNotNull(storyBlockData)))
     }

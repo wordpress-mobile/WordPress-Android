@@ -16,6 +16,8 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -47,6 +50,7 @@ import kotlin.coroutines.CoroutineContext
 class StoryMediaSaveUploadBridge @Inject constructor(
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val savePostToDbUseCase: SavePostToDbUseCase,
+    private val storiesPrefs: StoriesPrefs,
     private val uploadService: UploadServiceFacade,
     private val networkUtils: NetworkUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
@@ -169,5 +173,31 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
         // no op
+    }
+
+    override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
+        // in order to support Story editing capabilities, we save a serialized version of the Story slides
+        // after their composedFrameFiles have been processed.
+
+        // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image
+        // urls with the new URLs which may have been replaced after image optimization
+        for (story in StoryRepository.getImmutableStories()) {
+            // find the MediaModel for a given Uri from composedFrameFile
+            for (frame in story.frames) {
+                // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
+                // value with the new (probably optimized) URL and also keep track of the new id.
+                val mediaModel = oldUriToMediaFiles.get(Uri.fromFile(frame.composedFrameFile))
+                mediaModel?.let {
+                    frame.id = it.id.toString()
+                    storiesPrefs.saveSlideWithLocalId(
+                            it.localSiteId.toLong(),
+                            // use the local id to save the original, will be replaced later
+                            // with mediaModel.mediaId after uploading to the remote site
+                            LocalId(it.id.toInt()),
+                            frame
+                    )
+                }
+            }
+        }
     }
 }

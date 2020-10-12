@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.app.Activity
 import android.app.PendingIntent
 import android.app.ProgressDialog
 import android.content.Intent
@@ -11,6 +12,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
+import com.wordpress.stories.compose.FrameSaveErrorDialog
+import com.wordpress.stories.compose.GenericAnnouncementDialogProvider
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
@@ -20,13 +23,15 @@ import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
+import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
-import org.wordpress.android.R.id
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
@@ -75,7 +80,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         EditPostActivityHook,
         PrepublishingEventProvider,
         PrepublishingBottomSheetListener,
-        PermanentPermissionDenialDialogProvider {
+        PermanentPermissionDenialDialogProvider,
+        GenericAnnouncementDialogProvider {
     private var site: SiteModel? = null
 
     @Inject lateinit var storyEditorMedia: StoryEditorMedia
@@ -96,18 +102,23 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun getEditPostRepository() = editPostRepository
 
     companion object {
+        protected const val FRAGMENT_ANNOUNCEMENT_DIALOG = "story_announcement_dialog"
         const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
+        const val KEY_LAUNCHED_FROM_GUTENBERG = "key_launched_from_gutenberg"
+        const val KEY_ALL_UNFLATTENED_LOADED_SLIDES = "key_all_unflattened_laoded_slides"
         const val UNUSED_KEY = "unused_key"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // convert our WPAndroid KEY_LAUNCHED_FROM_GUTENBERG flag into Stories general purpose EDIT_MODE flag
+        intent.putExtra(KEY_STORY_EDIT_MODE, intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false))
+        setMediaPickerProvider(this)
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setSnackbarProvider(this)
-        setMediaPickerProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
         setMetadataProvider(this)
@@ -115,6 +126,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
+        setGenericAnnouncementDialogProvider(this)
+        setUseTempCaptureFile(false) // we need to keep the captured files for later Story editing
 
         initViewModel(savedInstanceState)
     }
@@ -314,7 +327,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     if (messageHolder != null) {
                         WPSnackbar
                                 .make(
-                                        findViewById(id.editor_activity),
+                                        findViewById(org.wordpress.android.R.id.editor_activity),
                                         uiHelpers.getTextOfUiString(this, messageHolder.message),
                                         Snackbar.LENGTH_SHORT
                                 )
@@ -342,6 +355,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
         WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
+    }
+
+    override fun onMediaModelsCreatedFromOptimizedUris(oldUriToMediaFiles: Map<Uri, MediaModel>) {
+        // no op - we're not doing any special handling while composing, only when saving in the UploadBridge
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
@@ -388,7 +405,17 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStoryDiscarded() {
-        viewModel.onStoryDiscarded()
+        val launchedFromGutenberg = intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)
+        viewModel.onStoryDiscarded(!launchedFromGutenberg)
+
+        if (launchedFromGutenberg) {
+            setResult(Activity.RESULT_CANCELED)
+            finish()
+        }
+    }
+
+    override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
+        // TODO will implement later
     }
 
     private fun openPrepublishingBottomSheet() {
@@ -413,5 +440,17 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun showPermissionPermanentlyDeniedDialog(permission: String) {
         WPPermissionUtils.showPermissionAlwaysDeniedDialog(this, permission)
+    }
+
+    override fun showGenericAnnouncementDialog() {
+        if (intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)) {
+            if (!intent.getBooleanExtra(KEY_ALL_UNFLATTENED_LOADED_SLIDES, false)) {
+                // not all slides in this Story could be unflattened so, show the warning informative dialog
+                FrameSaveErrorDialog.newInstance(
+                        title = getString(R.string.dialog_edit_story_limited_title),
+                        message = getString(R.string.dialog_edit_story_limited_message)
+                ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
+            }
+        }
     }
 }

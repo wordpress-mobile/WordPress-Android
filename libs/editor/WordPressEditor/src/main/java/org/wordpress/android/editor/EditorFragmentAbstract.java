@@ -206,6 +206,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown);
         boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
         String getErrorMessageFromMedia(int mediaId);
+        void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId);
         void showJetpackSettings();
     }
 

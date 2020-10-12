@@ -92,6 +92,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_INDEX;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -101,6 +102,8 @@ import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
+import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
+import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
@@ -717,6 +720,41 @@ public class ActivityLauncher {
         intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, mediaUris);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
+    public static void editStoryWithMediaIdsForResult(
+            Activity activity,
+            SiteModel site,
+            long[] mediaIds,
+            boolean launchingFromGutenberg
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
+    }
+
+    public static void editStoryForResult(
+            Activity activity,
+            SiteModel site,
+            int storyIndex,
+            boolean allStorySlidesAreEditable,
+            boolean launchedFromGutenberg
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(KEY_STORY_INDEX, storyIndex);
+        intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, launchedFromGutenberg);
+        intent.putExtra(KEY_ALL_UNFLATTENED_LOADED_SLIDES, allStorySlidesAreEditable);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {

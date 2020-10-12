@@ -64,4 +64,5 @@ public class RequestCodes {
 
     // Story creator
     public static final int CREATE_STORY = 8000;
+    public static final int EDIT_STORY = 8001;
 }

@@ -74,6 +74,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -94,9 +95,11 @@ import org.wordpress.android.fluxc.store.EditorThemeStore;
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload;
 import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -159,6 +162,8 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
+import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -180,6 +185,7 @@ import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
@@ -384,12 +390,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
 
     private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
     private boolean mIsJetpackSsoEnabled;
+
+    private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -613,6 +622,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (!mIsNewPost) {
+            // if we are opening an existing Post, and it contains a Story block, pre-fetch the media in case
+            // the user wants to edit the block (we'll need to download it first if the slides images weren't
+            // created on this device)
+            if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getPost().getContent())) {
+                fetchMediaList();
+            }
+
             // if we are opening a Post for which an error notification exists, we need to remove it from the dashboard
             // to prevent the user from tapping RETRY on a Post that is being currently edited
             UploadService.cancelFinalNotification(this, mEditPostRepository.getPost());
@@ -2108,7 +2124,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mIsNewPost,
                                 gutenbergWebViewAuthorizationData,
                                 mTenorFeatureConfig.isEnabled(),
-                                gutenbergPropsBuilder
+                                gutenbergPropsBuilder,
+                                RequestCodes.EDIT_STORY
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
@@ -3049,6 +3066,44 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
+    @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
+        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
+                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
+        if (!result.getNoSlidesLoaded()) {
+            // Story instance loaded or re-created! Load it
+            ActivityLauncher.editStoryForResult(
+                    this, mSite, result.getStoryIndex(), result.getAllStorySlidesAreEditable(), true
+            );
+        } else {
+            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
+            // editing at this time :(
+            if (mNetworkErrorOnLastMediaFetchAttempt) {
+                // there was an error fetching media when we were loading the editor,
+                // we *may* still have a possibility, tell the user they may try refreshing the media again
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
+                builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
+                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+                    // try another fetchMedia request
+                    fetchMediaList();
+                    dialog.dismiss();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                // unrecoverable error, nothing we can do, inform the user :(.
+                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                builder.setTitle(getString(R.string.dialog_edit_story_unrecoverable_title));
+                builder.setMessage(getString(R.string.dialog_edit_story_unrecoverable_message));
+                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+                    dialog.dismiss();
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")
@@ -3080,6 +3135,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaListFetched(OnMediaListFetched event) {
+        if (event != null) {
+            mNetworkErrorOnLastMediaFetchAttempt = event.isError();
+        }
+    }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -3206,6 +3269,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
     }
 
+    private void fetchMediaList() {
+        // do not refresh if there is no network
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mNetworkErrorOnLastMediaFetchAttempt = true;
+            return;
+        }
+        FetchMediaListPayload payload =
+                new FetchMediaListPayload(mSite, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
+    }
+
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     public void onEditorThemeChanged(OnEditorThemeChanged event) {
@@ -3273,6 +3348,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
+    }
+
+    @Override
+    public void onMediaModelsCreatedFromOptimizedUris(@NotNull Map<Uri, ? extends MediaModel> oldUriToMediaModels) {
+        // no op - we're not doing any special handling on MediaModels in EditPostActivity
     }
 
     @Override
