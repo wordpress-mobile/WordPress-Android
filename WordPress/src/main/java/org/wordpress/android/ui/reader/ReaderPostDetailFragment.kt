@@ -193,10 +193,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var hasTrackedGlobalRelatedPosts: Boolean = false
     private var hasTrackedLocalRelatedPosts: Boolean = false
 
-    private var toolbarHeight: Int = 0
     private var errorMessage: String? = null
-
-    private var isToolbarShowing = true
 
     private var fileForDownload: String? = null
 
@@ -284,11 +281,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return scrollView
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.toolbar_height)
     }
 
     override fun onCreateView(
@@ -789,10 +781,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         readerWebView.clearContent()
-
-        // make sure the toolbar and footer are showing
-        showToolbar(true)
-        showFooter(true)
 
         // now show the passed post
         showPost()
@@ -1771,40 +1759,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onScrollUp(distanceY: Float) {
-        if (!isToolbarShowing && -distanceY >= MIN_SCROLL_DISTANCE_Y) {
-            showToolbar(true)
-            showFooter(true)
-        }
     }
 
     override fun onScrollDown(distanceY: Float) {
-        if (isToolbarShowing &&
-                distanceY >= MIN_SCROLL_DISTANCE_Y &&
-                scrollView.canScrollDown() &&
-                scrollView.canScrollUp() &&
-                scrollView.scrollY > toolbarHeight) {
-            showToolbar(false)
-            showFooter(false)
-        }
     }
 
     override fun onScrollCompleted() {
-        if (!isToolbarShowing && (!scrollView.canScrollDown() || !scrollView.canScrollUp())) {
-            showToolbar(true)
-            showFooter(true)
-        }
-
         trackRelatedPostsIfShowing()
-    }
-
-    private fun showToolbar(show: Boolean) {
-        isToolbarShowing = show
-    }
-
-    private fun showFooter(show: Boolean) {
-        if (isAdded && canShowFooter()) {
-            AniUtils.animateBottomBar(layoutFooter, show)
-        }
     }
 
     /*
