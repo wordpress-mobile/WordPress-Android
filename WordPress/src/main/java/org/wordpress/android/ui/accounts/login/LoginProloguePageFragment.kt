@@ -15,19 +15,23 @@ import kotlin.math.min
 class LoginProloguePageFragment : Fragment() {
     @StringRes private var promoTitle: Int? = null
     @LayoutRes private var promoLayoutId: Int? = null
+    @LayoutRes private var promoBackgroundId: Int? = null
 
     companion object {
         private const val KEY_PROMO_TITLE = "KEY_PROMO_TITLE"
         private const val KEY_PROMO_LAYOUT = "KEY_PROMO_LAYOUT"
+        private const val KEY_PROMO_BACKGROUND = "KEY_PROMO_BACKGROUND"
 
         @JvmStatic
         fun newInstance(
             @StringRes promoTitle: Int,
-            @LayoutRes promoLayoutId: Int
+            @LayoutRes promoLayoutId: Int,
+            @LayoutRes promoBackgroundId: Int
         ) = LoginProloguePageFragment().apply {
             arguments = Bundle().apply {
                 putInt(KEY_PROMO_TITLE, promoTitle)
                 putInt(KEY_PROMO_LAYOUT, promoLayoutId)
+                putInt(KEY_PROMO_BACKGROUND, promoBackgroundId)
             }
         }
     }
@@ -37,6 +41,7 @@ class LoginProloguePageFragment : Fragment() {
         arguments?.let {
             promoTitle = it.getInt(KEY_PROMO_TITLE)
             promoLayoutId = it.getInt(KEY_PROMO_LAYOUT)
+            promoBackgroundId = it.getInt(KEY_PROMO_BACKGROUND)
         }
     }
 
@@ -48,11 +53,13 @@ class LoginProloguePageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val inflater = LayoutInflater.from(view.context)
+
         promoTitle?.let { promo_title.setText(it) }
 
         promo_layout_container.post {
             promoLayoutId?.let {
-                val inflater = LayoutInflater.from(view.context)
                 val content = inflater.inflate(promoLayoutId!!, promo_layout_container, false)
 
                 val widthOfContainer = promo_layout_container.width
@@ -76,6 +83,9 @@ class LoginProloguePageFragment : Fragment() {
                     }
                 }
             }
+        }
+        promoBackgroundId?.let {
+            inflater.inflate(it, promo_background_container, true)
         }
     }
 }

@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import androidx.viewpager.widget.ViewPager.PageTransformer
+import kotlinx.android.synthetic.main.login_intro_template_view.view.*
 import kotlinx.android.synthetic.main.login_prologue_bottom_buttons_container_default.*
 import kotlinx.android.synthetic.main.login_signup_screen.*
 import org.wordpress.android.BuildConfig
@@ -78,6 +81,39 @@ class LoginPrologueFragment : Fragment() {
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
+        })
+        intros_pager.setPageTransformer(false, object : PageTransformer {
+            override fun transformPage(page: View, position: Float) {
+                // Since we want to achieve the illusion of having a single continuous background, we apply a
+                // parallax effect to the foreground views of each page, making them enter and exit the screen
+                // at a different speed than the background, which just follows the speed of the swipe gesture.
+                page.apply {
+                    applyParallaxEffect(promo_title, position, width, 0.25f)
+                    applyParallaxEffect(promo_layout_container, position, width, 0.5f)
+                }
+            }
+
+            /**
+             * Apply a parallax effect to a given view.
+             *
+             * @param view The view to which the effect should be applied.
+             * @param pagePosition Position of page relative to the current front-and-center position of the pager.
+             *                     0 is front and center. 1 is one full page position to the right, and -1 is one
+             *                     page position to the left.
+             * @param pageWidth Total width of the page containing the view to which the effect should be applied.
+             * @param speedFactor The factor by which the speed of the view is altered while the page is scrolled.
+             *                    For example, a value of 0.25 would cause the view speed to increase by 25% when
+             *                    moving out of the screen and to decrease by 25% when moving in.
+             */
+            private fun applyParallaxEffect(
+                view: View,
+                pagePosition: Float,
+                pageWidth: Int,
+                @FloatRange(from = 0.0, to = 1.0) speedFactor: Float
+            ) {
+                // If pagePosition is between -1 and 1, then at least a portion of the page is visible.
+                if (pagePosition in -1.0..1.0) view.translationX = pagePosition * pageWidth * speedFactor
+            }
         })
 
         if (adapter.count > 1) {
