@@ -36,7 +36,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.LoadingUiState
