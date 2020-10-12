@@ -104,7 +104,6 @@ import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.views.ReaderBookmarkButton
 import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView
@@ -176,7 +175,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var likingUsersDivider: View
     private lateinit var likingUsersLabel: View
     private lateinit var signInButton: WPTextView
-    private lateinit var readerBookmarkButton: ReaderBookmarkButton
+    private lateinit var readerBookmarkButton: ImageView
     private lateinit var featuredImageView: ImageView
 
     private lateinit var appBar: AppBarLayout
@@ -378,7 +377,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         signInButton = view.findViewById(R.id.nux_sign_in_button)
         signInButton.setOnClickListener(mSignInClickListener)
 
-        readerBookmarkButton = view.findViewById(R.id.bookmark_button)
+        readerBookmarkButton = view.findViewById(R.id.bookmark)
 
         val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
@@ -616,12 +615,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        if (!canShowBookmarkButton()) {
-            readerBookmarkButton.visibility = View.GONE
-        } else {
-            readerBookmarkButton.visibility = View.VISIBLE
-            readerBookmarkButton.updateIsBookmarkedState(post!!.isBookmarked)
-        }
+        readerBookmarkButton.isEnabled = canShowBookmarkButton()
+        readerBookmarkButton.isSelected = canShowBookmarkButton() && post!!.isBookmarked
     }
 
     /*
@@ -962,6 +957,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         if (canBeReblogged()) {
             reblogButton.setCount(0)
+            reblogButton.isEnabled = true
             reblogButton.visibility = View.VISIBLE
             reblogButton.setOnClickListener {
                 val sites = siteStore.visibleSitesAccessedViaWPCom
@@ -985,11 +981,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
         } else {
-            reblogButton.visibility = View.GONE
+            reblogButton.isEnabled = false
             reblogButton.setOnClickListener(null)
         }
 
         if (canShowCommentCount()) {
+            countLikes.isEnabled = true
             countComments.setCount(post.numReplies)
             countComments.visibility = View.VISIBLE
             countComments.setOnClickListener {
@@ -1000,7 +997,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 )
             }
         } else {
-            countComments.visibility = View.GONE
+            countComments.isEnabled = false
             countComments.setOnClickListener(null)
         }
 
@@ -1011,6 +1008,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     post.numLikes,
                     post.isLikedByCurrentUser
             )
+            countLikes.isEnabled = true
             countLikes.visibility = View.VISIBLE
             countLikes.isSelected = post.isLikedByCurrentUser
             if (!accountStore.hasAccessToken()) {
@@ -1026,7 +1024,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 likingUsersLabel.visibility = View.INVISIBLE
             }
         } else {
-            countLikes.visibility = View.GONE
+            countLikes.isEnabled = false
             countLikes.setOnClickListener(null)
         }
     }
@@ -1414,11 +1412,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (!canShowFooter()) {
                 layoutFooter.visibility = View.GONE
             }
-
-            // add padding to the scrollView to make room for the bottom toolbar - this also
-            // ensures the scrollbar matches the content so it doesn't disappear behind the toolbars
-            val bottomPadding = if (canShowFooter()) layoutFooter.height else 0
-            scrollView.setPadding(0, 0, 0, bottomPadding)
 
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
