@@ -134,7 +134,7 @@ class StoriesEventListener @Inject constructor(
         }
         val localMediaId = event.frameId.toString()
         // just update progress, we may have still some other frames in this story that need be saved.
-        // we will send the Failed signal once all the Story frames have been processed
+        // we will send the Failed signal once all the Story frames have been processed (see onStorySaveProcessFinished)
         val progress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
         storySaveMediaListener?.onMediaSaveReattached(localMediaId, progress)
         // storySaveMediaListener?.onMediaSaveFailed(localMediaId)
