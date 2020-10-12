@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
+import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -101,6 +102,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.views.ReaderBookmarkButton
 import org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -110,7 +112,6 @@ import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView
-import org.wordpress.android.ui.reader.views.ReaderTagStrip
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
@@ -208,6 +209,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
     @Inject internal lateinit var imageManager: ImageManager
     @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1420,7 +1422,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            val tagStrip = view!!.findViewById<ReaderTagStrip>(R.id.tag_strip)
             val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
             if (!canShowFooter()) {
                 layoutFooter.visibility = View.GONE
@@ -1507,8 +1508,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val postDetailsHeaderUiState = createPostDetailsHeaderUiState(post!!, headerView)
             headerView.updatePost(postDetailsHeaderUiState)
 
-            tagStrip.setPost(post!!)
-
             if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
                 AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
             }
@@ -1525,10 +1524,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderActivityLauncher.showReaderBlogPreview(context, post)
             }
             val onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) }
+
+            val onTagItemClicked = { tagSlug: String ->
+                val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
+                ReaderActivityLauncher.showReaderTagPreview(context, readerTag)
+            }
+
             return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
                     post,
                     onBlogSectionClicked,
-                    onFollowButtonClicked
+                    onFollowButtonClicked,
+                    onTagItemClicked
             )
         }
     }
