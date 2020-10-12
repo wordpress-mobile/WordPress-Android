@@ -37,7 +37,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Unit>
+    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
 
     @Before
     fun setUp() {
@@ -130,7 +130,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when the create page is triggered the page creation flow starts`() = mockFetchingSelectedSite {
         viewModel.init()
-        viewModel.createPage()
+        viewModel.onCreatePageClicked()
         verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
     }
 

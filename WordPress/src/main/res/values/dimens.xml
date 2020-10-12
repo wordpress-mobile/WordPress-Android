@@ -9,6 +9,7 @@
 
     <dimen name="tab_height">48dp</dimen>
     <dimen name="me_menu_width">64dp</dimen>
+    <dimen name="me_menu_avatar_end_offset">11dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="prominent_toolbar_height">112dp</dimen>
     <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
@@ -78,11 +79,7 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
     <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_end_tablet">@dimen/content_margin_tablet</dimen>
-    <dimen name="content_margin_site_row_end_tablet_big">@dimen/content_margin_tablet_big</dimen>
     <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
-    <dimen name="content_margin_site_row_start_tablet">60dp</dimen>
-    <dimen name="content_margin_site_row_start_tablet_big">108dp</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
@@ -295,6 +292,8 @@
     <dimen name="my_site_bottom_spacing">64dp</dimen>
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
+    <dimen name="my_site_content_area">500dp</dimen>
+    <dimen name="my_site_quick_action_button_container_width">64dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -555,14 +554,13 @@
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
     <!-- Modal Layout Picker Styles -->
-    <dimen name="mlp_header_scroll_snap_threshold">-24dp</dimen>
-    <dimen name="mlp_layouts_handle_margin_bottom">@dimen/margin_medium</dimen>
+    <dimen name="mlp_header_scroll_snap_threshold">-36dp</dimen>
     <dimen name="mlp_layouts_row_height">281dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
     <dimen name="mlp_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
     <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
-    <dimen name="mlp_categories_bar_height">52dp</dimen>
+    <dimen name="mlp_categories_bar_height">44dp</dimen>
     <dimen name="mlp_layout_card_height">204dp</dimen>
     <dimen name="mlp_layout_card_width">136dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
@@ -572,11 +570,12 @@
     <dimen name="mlp_category_horizontal_central_margin">@dimen/margin_medium</dimen>
     <dimen name="mlp_categories_margin">@dimen/margin_medium</dimen>
     <dimen name="mlp_categories_emoji_size">18dp</dimen>
+    <dimen name="mlp_titles_top_margin">14dp</dimen>
+    <dimen name="mlp_titles_bottom_margin">28dp</dimen>
     <dimen name="mlp_layout_card_margin_end">@dimen/margin_medium</dimen>
     <dimen name="mlp_layout_card_margin_top">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_layout_card_elevation">@dimen/margin_small</dimen>
     <dimen name="mlp_layout_card_radius">@dimen/margin_small</dimen>
-    <dimen name="mlp_layouts_margin_bottom">84dp</dimen>
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>

@@ -266,6 +266,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_CONTENT = "pageContent";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -454,7 +455,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
             mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
             // initialize settings with locally cached values, fetch remote on first pass
-            mSiteSettings.init(true);
+            fetchSiteSettings();
         }
 
         // Check whether to show the visual editor
@@ -632,6 +633,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+    }
+
+    private void fetchSiteSettings() {
+        mSiteSettings.init(true);
     }
 
     @SuppressWarnings("unused")
@@ -1571,11 +1576,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     FluxCUtils.mediaFileFromMediaModel(media));
         } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
                 .getId()) {
-            setFeaturedImageId(media.getMediaId());
+            setFeaturedImageId(media.getMediaId(), false);
         }
     }
-
-
 
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
@@ -2170,9 +2173,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean isUnsupportedBlockEditorEnabled =
                 mSite.isWPCom() || (mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor()));
 
+        boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
+
         return new GutenbergPropsBuilder(
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
+                unsupportedBlockEditorSwitch,
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
@@ -2250,6 +2256,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (ACTION_REBLOG.equals(action)) {
                 setPostContentFromReblogAction();
             }
+        }
+
+        if (mIsPage) {
+            setPageContent();
         }
 
         // Set post title and content
@@ -2341,9 +2351,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void setFeaturedImageId(final long mediaId) {
+    private void setFeaturedImageId(final long mediaId, final boolean imagePicked) {
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+            mEditPostSettingsFragment.updateFeaturedImage(mediaId, imagePicked);
         }
     }
 
@@ -2374,6 +2384,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    /**
+     * Sets the page content
+     */
+    private void setPageContent() {
+        Intent intent = getIntent();
+        final String content = intent.getStringExtra(EXTRA_PAGE_CONTENT);
+        if (content != null && !content.isEmpty()) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2391,6 +2422,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
                 case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                 case RequestCodes.PHOTO_PICKER:
+                case RequestCodes.STORIES_PHOTO_PICKER:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                 case RequestCodes.MEDIA_LIBRARY:
                 case RequestCodes.PICTURE_LIBRARY:
@@ -2421,7 +2453,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // user chose a featured image
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
-                        setFeaturedImageId(mediaId);
+                        setFeaturedImageId(mediaId, true);
                     } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
                         if (mEditPostSettingsFragment != null) {
                             mEditPostSettingsFragment.refreshViews();
@@ -2501,6 +2533,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
             }
+        }
+
+        if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
+            fetchSiteSettings();
         }
     }
 
@@ -3263,5 +3299,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         return "";
+    }
+
+    @Override
+    public void showJetpackSettings() {
+        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, mSite);
+        startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 }

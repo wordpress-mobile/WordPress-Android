@@ -495,7 +495,7 @@ class ReaderDiscoverViewModelTest {
                 postId = post.postId,
                 blogId = post.blogId,
                 blogSection = ReaderBlogSectionUiState(
-                        post.postId, post.blogId, "", "", "", "", ReaderBlogSectionClickData(postHeaderClicked, 0)
+                        post.postId, post.blogId, "", mock(), "", "", ReaderBlogSectionClickData(postHeaderClicked, 0)
                 ),
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),
                 excerpt = "",

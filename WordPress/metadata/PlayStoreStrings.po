@@ -141,6 +141,18 @@ msgctxt "play_store_screenshot_5"
 msgid "Keep tabs on your site"
 msgstr ""
 
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_6"
+msgid "Reply in real time"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_7"
+msgid "Upload on the go"
+msgstr ""
+
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
 #. No specified character limit here, but try to keep it as short as the source one. Please leave emphasis and line break tags in place, unless they don't make sense in the target language.
 msgctxt "enhanced_app_store_screenshot_1"
