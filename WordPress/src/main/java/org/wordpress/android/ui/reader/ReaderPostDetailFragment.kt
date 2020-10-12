@@ -105,7 +105,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
-import org.wordpress.android.ui.reader.views.ReaderLikingUsersView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
@@ -170,9 +169,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
-    private lateinit var likingUsersView: ReaderLikingUsersView
-    private lateinit var likingUsersDivider: View
-    private lateinit var likingUsersLabel: View
+
     private lateinit var signInButton: WPTextView
     private lateinit var readerBookmarkButton: ImageView
     private lateinit var featuredImageView: ImageView
@@ -352,10 +349,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 appbarElevation
         )
         layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-
-        likingUsersView = view.findViewById(R.id.layout_liking_users_view)
-        likingUsersDivider = view.findViewById(R.id.layout_liking_users_divider)
-        likingUsersLabel = view.findViewById(R.id.text_liking_users_label)
 
         // setup the ReaderWebView
         readerWebView = view.findViewById(R.id.reader_webview)
@@ -707,7 +700,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             // get the post again since it has changed, then refresh to show changes
             this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-            refreshLikes()
             refreshIconCounts()
         }
 
@@ -768,10 +760,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // with the correct info once the new post loads
         globalRelatedPostsView.visibility = View.GONE
         localRelatedPostsView.visibility = View.GONE
-
-        likingUsersView.visibility = View.GONE
-        likingUsersDivider.visibility = View.GONE
-        likingUsersLabel.visibility = View.GONE
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         readerWebView.clearContent()
@@ -926,13 +914,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
                     refreshIconCounts()
                 }
-                // refresh likes if necessary - done regardless of whether the post has changed
-                // since it's possible likes weren't stored until the post was updated
-                if (result != ReaderActions.UpdateResult.FAILED && numLikesBefore != ReaderLikeTable.getNumLikesForPost(
-                                post
-                        )) {
-                    refreshLikes()
-                }
 
                 setRefreshing(false)
 
@@ -1015,13 +996,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             } else if (post.canLikePost()) {
                 countLikes.setOnClickListener { togglePostLike() }
             }
-            // if we know refreshLikes() is going to show the liking users, force liking user
-            // views to take up space right now
-            if (post.numLikes > 0 && likingUsersView.visibility == View.GONE) {
-                likingUsersView.visibility = View.INVISIBLE
-                likingUsersDivider.visibility = View.INVISIBLE
-                likingUsersLabel.visibility = View.INVISIBLE
-            }
         } else {
             countLikes.isEnabled = false
             countLikes.setOnClickListener(null)
@@ -1065,38 +1039,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
         }
-    }
-
-    /*
-     * show latest likes for this post
-     */
-    private fun refreshLikes() {
-        val post = this.post
-        if (!isAdded || post == null || !post.canLikePost()) {
-            return
-        }
-
-        // nothing more to do if no likes
-        if (post.numLikes == 0) {
-            likingUsersView.visibility = View.GONE
-            likingUsersDivider.visibility = View.GONE
-            likingUsersLabel.visibility = View.GONE
-            return
-        }
-
-        // clicking likes view shows activity displaying all liking users
-        likingUsersView.setOnClickListener {
-            ReaderActivityLauncher.showReaderLikingUsers(
-                    activity,
-                    post.blogId,
-                    post.postId
-            )
-        }
-
-        likingUsersDivider.visibility = View.VISIBLE
-        likingUsersLabel.visibility = View.VISIBLE
-        likingUsersView.visibility = View.VISIBLE
-        likingUsersView.showLikingUsers(post, accountStore.account.userId)
     }
 
     private fun showPhotoViewer(
@@ -1578,7 +1520,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (!isAdded) {
                     return@Runnable
                 }
-                refreshLikes()
                 if (!hasAlreadyUpdatedPost) {
                     hasAlreadyUpdatedPost = true
                     updatePost()
