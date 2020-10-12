@@ -15,8 +15,6 @@ import org.wordpress.android.ui.mediapicker.MediaType
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SqlUtils
 import org.wordpress.android.util.UriWrapper
@@ -41,28 +39,24 @@ class DeviceMediaLoader
         val result = mutableListOf<DeviceMediaItem>()
         val projection = arrayOf(ID_COL, ID_DATE_MODIFIED, ID_TITLE)
         var cursor: Cursor? = null
-        try {
-            val dateCondition = if (limitDate != null && limitDate != 0L) {
-                "$ID_DATE_MODIFIED <= \'$limitDate\'"
-            } else {
-                null
-            }
-            val filterCondition = filter?.let { "$ID_TITLE LIKE \'%$filter%\'" }
-            val condition = if (dateCondition != null && filterCondition != null) {
-                "$dateCondition AND $filterCondition"
-            } else {
-                dateCondition ?: filterCondition
-            }
-            cursor = context.contentResolver.query(
-                    baseUri,
-                    projection,
-                    condition,
-                    null,
-                    "$ID_DATE_MODIFIED DESC LIMIT ${(pageSize + 1)}"
-            )
-        } catch (e: SecurityException) {
-            AppLog.e(MEDIA, e)
+        val dateCondition = if (limitDate != null && limitDate != 0L) {
+            "$ID_DATE_MODIFIED <= \'$limitDate\'"
+        } else {
+            null
         }
+        val filterCondition = filter?.let { "$ID_TITLE LIKE \'%$filter%\'" }
+        val condition = if (dateCondition != null && filterCondition != null) {
+            "$dateCondition AND $filterCondition"
+        } else {
+            dateCondition ?: filterCondition
+        }
+        cursor = context.contentResolver.query(
+                baseUri,
+                projection,
+                condition,
+                null,
+                "$ID_DATE_MODIFIED DESC LIMIT ${(pageSize + 1)}"
+        )
         if (cursor == null) {
             return DeviceMediaList(listOf(), null)
         }
@@ -96,7 +90,7 @@ class DeviceMediaLoader
 
     fun loadDocuments(filter: String?, pageSize: Int, limitDate: Long? = null): DeviceMediaList {
         val storagePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val nextPage = storagePublicDirectory.listFiles().filter {
+        val nextPage = (storagePublicDirectory?.listFiles() ?: arrayOf()).filter {
             (limitDate == null || it.lastModifiedInSecs() <= limitDate) && (filter == null || it.name?.toLowerCase(
                     localeManagerWrapper.getLocale()
             )?.contains(filter) == true)
