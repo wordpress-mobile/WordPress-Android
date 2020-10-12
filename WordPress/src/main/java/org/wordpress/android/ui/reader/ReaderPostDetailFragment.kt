@@ -1613,7 +1613,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
-            return newInstance(false, blogId, postId, null, 0, false, null, null, false)
+            return newInstance(false, blogId, postId, null, 0, null, null, false)
         }
 
         fun newInstance(
@@ -1622,7 +1622,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postId: Long,
             directOperation: DirectOperation?,
             commentId: Int,
-            isRelatedPost: Boolean,
             interceptedUri: String?,
             postListType: ReaderPostListType?,
             postSlugsResolutionUnderway: Boolean
