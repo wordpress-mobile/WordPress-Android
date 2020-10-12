@@ -1808,9 +1808,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     companion object {
         private const val BOOKMARKS_SAVED_LOCALLY_DIALOG = "bookmarks_saved_locally_dialog"
 
-        // min scroll distance before toggling toolbar
-        private const val MIN_SCROLL_DISTANCE_Y = 10f
-
         private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
