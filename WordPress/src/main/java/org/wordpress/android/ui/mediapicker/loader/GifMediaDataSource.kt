@@ -31,13 +31,13 @@ class GifMediaDataSource
     private val tenorClient: IApiClient
 ) : MediaSource {
     private var nextPosition: Int = 0
-    private var items = mutableListOf<MediaItem>()
+    private val items = mutableListOf<MediaItem>()
     private var lastFilter: String? = null
 
     override suspend fun load(forced: Boolean, loadMore: Boolean, filter: String?): MediaLoadingResult {
         if (lastFilter != filter) {
             lastFilter = filter
-            items = mutableListOf()
+            items.clear()
             nextPosition = 0
         }
 
