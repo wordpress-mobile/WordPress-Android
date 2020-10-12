@@ -1695,7 +1695,6 @@
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
-    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Manage Tags &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
@@ -1781,7 +1780,6 @@
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
-    <string name="reader_label_liked_by">Liked By</string>
 
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_short_like_count_one">1 Like</string>
