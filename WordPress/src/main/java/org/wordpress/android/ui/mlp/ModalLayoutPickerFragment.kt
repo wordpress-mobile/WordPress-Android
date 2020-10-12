@@ -140,11 +140,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        viewModel.start(
-                previewWidth = resources.getDimensionPixelSize(R.dimen.mlp_layout_card_width),
-                scale = 1.0 // Passing 1.0 and the rendered pixels per device in previewWidth
-        )
-
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
                 is LoadingUiState -> {
