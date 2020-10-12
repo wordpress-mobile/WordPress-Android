@@ -210,6 +210,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId);
         void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles);
         void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles);
+        void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
     }
 
     /**

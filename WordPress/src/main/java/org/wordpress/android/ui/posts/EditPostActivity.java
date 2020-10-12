@@ -3222,6 +3222,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
+        // just cancel upload for each media
+        for (Object mediaFile : mediaFiles) {
+            int localMediaId
+                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
+            if (localMediaId != 0) {
+            }
+        }
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")

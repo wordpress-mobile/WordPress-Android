@@ -356,6 +356,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
                         showRetryMediaCollectionUploadDialog(mediaFiles);
                     }
+
+                    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
+                        showCancelMediaCollectionSaveDialog(mediaFiles);
+                    }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
 
@@ -668,6 +672,22 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 dialog.dismiss();
             }
         });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showCancelMediaCollectionSaveDialog(ArrayList<Object> mediaFiles) {
+        // Display 'cancel upload' dialog
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+        builder.setTitle(getString(R.string.stop_save_dialog_title));
+        builder.setMessage(getString(R.string.stop_save_dialog_message));
+        builder.setPositiveButton(R.string.stop_save_dialog_ok_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
 
         AlertDialog dialog = builder.create();
         dialog.show();
