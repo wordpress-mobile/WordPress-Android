@@ -44,6 +44,12 @@ class StorePostViewModel
     private var saveJob: Job? = null
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
+
+    private val _isSaveInProgress = MutableLiveData<Boolean>()?.apply {
+        postValue(false)
+    }
+    val isSaveInProgress: LiveData<Boolean> = _isSaveInProgress
+
     private val _onFinish = MutableLiveData<Event<ActivityFinishState>>()
     val onFinish: LiveData<Event<ActivityFinishState>> = _onFinish
 
@@ -92,13 +98,17 @@ class StorePostViewModel
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
         onCompleted: ((PostImmutableModel, UpdatePostResult) -> Unit)? = null
     ) {
+        _isSaveInProgress.postValue(true)
         postRepository.updateAsync({ postModel ->
             updatePostObjectWithUI(
                     getUpdatedTitleAndContent,
                     postModel,
                     postRepository
             )
-        }, onCompleted)
+        }, { model, result ->
+            _isSaveInProgress.postValue(false)
+            onCompleted?.invoke(model, result)
+        })
     }
 
     private fun updatePostObjectWithUI(

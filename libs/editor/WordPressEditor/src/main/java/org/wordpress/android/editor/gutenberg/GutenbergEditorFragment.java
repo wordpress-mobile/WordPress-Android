@@ -176,6 +176,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
+        initializeSavingProgressDialog();
 
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
@@ -355,6 +356,23 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    private void initializeSavingProgressDialog() {
+        if (getActivity() instanceof PostSaveStatusTracker) {
+            LiveData<Boolean> isSaveInProgressData = ((PostSaveStatusTracker) getActivity()).getGetSaveInProgressData();
+            Boolean isSaveInProgress = isSaveInProgressData.getValue();
+            if (isSaveInProgress != null && isSaveInProgress) {
+                showSavingProgressDialogIfNeeded();
+            }
+            isSaveInProgressData.observe(getViewLifecycleOwner(), isInProgress -> {
+                // ignoring when isInProgress is true because we do not want the save progress dialog to
+                // appear for every autosave
+                if (!isInProgress) {
+                    hideSavingProgressDialog();
+                }
+            });
+        }
     }
 
     private void openGutenbergWebViewActivity(String content, String blockId, String blockName) {
@@ -931,6 +949,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        hideSavingProgressDialog();
+        super.onDestroy();
     }
 
     @Override public void mediaSelectionCancelled() {

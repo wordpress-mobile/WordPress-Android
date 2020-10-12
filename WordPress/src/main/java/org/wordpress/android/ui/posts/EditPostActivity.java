@@ -34,6 +34,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
@@ -69,6 +70,7 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
+import org.wordpress.android.editor.gutenberg.PostSaveStatusTracker;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -250,7 +252,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         PrepublishingBottomSheetListener,
         PrivateAtCookieProgressDialogOnDismissListener,
         ExceptionLogger,
-        SiteSettingsInterface.SiteSettingsListener {
+        SiteSettingsInterface.SiteSettingsListener,
+        PostSaveStatusTracker {
     public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
@@ -1661,7 +1664,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         mEditorFragment.showSavingProgressDialogIfNeeded();
         updateAndSavePostAsync((result) -> {
-            if (mEditorFragment != null) {
+            if (mEditorFragment != null && !isFinishing()) {
                 mEditorFragment.hideSavingProgressDialog();
             }
 
@@ -3348,5 +3351,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
         startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
+    }
+
+    @Override
+    public LiveData<Boolean> getGetSaveInProgressData() {
+        return mViewModel.isSaveInProgress();
     }
 }
