@@ -35,7 +35,7 @@ class GifMediaDataSource
     private var lastFilter: String? = null
 
     override suspend fun load(forced: Boolean, loadMore: Boolean, filter: String?): MediaLoadingResult {
-        if (lastFilter != filter) {
+        if (!loadMore) {
             lastFilter = filter
             items.clear()
             nextPosition = 0
