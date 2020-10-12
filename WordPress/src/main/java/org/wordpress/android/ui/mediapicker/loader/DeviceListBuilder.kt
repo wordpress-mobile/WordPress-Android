@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mediapicker
+package org.wordpress.android.ui.mediapicker.loader
 
 import android.content.ContentResolver
 import android.content.Context
@@ -14,11 +14,12 @@ import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaItem
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -31,19 +32,18 @@ import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-class DeviceListBuilder
-@Inject constructor(
-    val context: Context,
+class DeviceListBuilder(
+    private val context: Context,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val mediaTypes: Set<MediaType>
 ) : MediaSource {
     private val mimeTypes = MimeTypes()
-    private val cachedData = mutableListOf<MediaItem>()
 
     override suspend fun load(
-        mediaTypes: Set<MediaType>,
         forced: Boolean,
-        loadMore: Boolean
+        loadMore: Boolean,
+        filter: String?
     ): MediaLoadingResult {
         return withContext(bgDispatcher) {
             val result = mutableListOf<MediaItem>()
@@ -57,21 +57,14 @@ class DeviceListBuilder
             }
             deferredJobs.forEach { result.addAll(it.await()) }
             result.sortByDescending { it.dataModified }
-            cachedData.clear()
-            cachedData.addAll(result)
-            MediaLoadingResult.Success(false)
-        }
-    }
-
-    override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
-        return if (filter == null) {
-            cachedData
-        } else {
-            val lowerCaseFilter = filter.toLowerCase(localeManagerWrapper.getLocale())
-            cachedData.filter {
-                it.name?.toLowerCase(localeManagerWrapper.getLocale())
-                        ?.contains(lowerCaseFilter) == true
-            }
+            val lowerCaseFilter = filter?.toLowerCase(localeManagerWrapper.getLocale())
+            val filteredResult = lowerCaseFilter?.let {
+                result.filter {
+                    it.name?.toLowerCase(localeManagerWrapper.getLocale())
+                            ?.contains(lowerCaseFilter) == true
+                }
+            } ?: result
+            MediaLoadingResult.Success(filteredResult, false)
         }
     }
 
@@ -103,16 +96,14 @@ class DeviceListBuilder
                 val title = cursor.getString(titleIndex)
                 val uri = Uri.withAppendedPath(baseUri, "" + id)
                 val item = MediaItem(
-                        Identifier.LocalUri(UriWrapper(uri)),
+                        LocalUri(UriWrapper(uri)),
                         uri.toString(),
                         title,
                         mediaType,
                         getMimeType(uri),
                         dateModified
                 )
-                if (MediaUtils.isSupportedMimeType(context.contentResolver.getType(uri))) {
-                    result.add(item)
-                }
+                result.add(item)
             }
         } finally {
             SqlUtils.closeCursor(cursor)
@@ -128,7 +119,7 @@ class DeviceListBuilder
                     val mimeType = getMimeType(uri)
                     if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)) {
                         MediaItem(
-                                Identifier.LocalUri(UriWrapper(uri)),
+                                LocalUri(UriWrapper(uri)),
                                 uri.toString(),
                                 file.name,
                                 DOCUMENT,
@@ -154,5 +145,21 @@ class DeviceListBuilder
         private const val ID_COL = Media._ID
         private const val ID_DATE_MODIFIED = MediaColumns.DATE_MODIFIED
         private const val ID_TITLE = MediaColumns.TITLE
+    }
+
+    class DeviceListBuilderFactory
+    @Inject constructor(
+        private val context: Context,
+        private val localeManagerWrapper: LocaleManagerWrapper,
+        @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    ) {
+        fun build(mediaTypes: Set<MediaType>): DeviceListBuilder {
+            return DeviceListBuilder(
+                    context,
+                    localeManagerWrapper,
+                    bgDispatcher,
+                    mediaTypes
+            )
+        }
     }
 }

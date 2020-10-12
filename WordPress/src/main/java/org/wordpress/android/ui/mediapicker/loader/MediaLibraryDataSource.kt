@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mediapicker
+package org.wordpress.android.ui.mediapicker.loader
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -14,8 +14,10 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched
 import org.wordpress.android.fluxc.utils.MimeType
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
-import org.wordpress.android.ui.mediapicker.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.MediaType
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
@@ -30,7 +32,8 @@ class MediaLibraryDataSource(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val siteModel: SiteModel
+    private val siteModel: SiteModel,
+    private val mediaTypes: Set<MediaType>
 ) : MediaSource {
     init {
         dispatcher.register(this)
@@ -39,9 +42,9 @@ class MediaLibraryDataSource(
     private var loadContinuations = mutableMapOf<MimeType.Type, Continuation<OnMediaListFetched>>()
 
     override suspend fun load(
-        mediaTypes: Set<MediaType>,
         forced: Boolean,
-        loadMore: Boolean
+        loadMore: Boolean,
+        filter: String?
     ): MediaLoadingResult {
         return withContext(bgDispatcher) {
             val loadingResults = mediaTypes.map { mediaType ->
@@ -67,12 +70,12 @@ class MediaLibraryDataSource(
             if (error != null) {
                 MediaLoadingResult.Failure(error)
             } else {
-                MediaLoadingResult.Success(hasMore)
+                MediaLoadingResult.Success(get(mediaTypes, filter), hasMore)
             }
         }
     }
 
-    override suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
+    private suspend fun get(mediaTypes: Set<MediaType>, filter: String?): List<MediaItem> {
         return withContext(bgDispatcher) {
             mediaTypes.map { mediaType ->
                 async {
@@ -157,6 +160,7 @@ class MediaLibraryDataSource(
         private val dispatcher: Dispatcher,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
-        fun build(siteModel: SiteModel) = MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel)
+        fun build(siteModel: SiteModel, mediaTypes: Set<MediaType>) =
+                MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel, mediaTypes)
     }
 }

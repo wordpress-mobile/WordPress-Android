@@ -30,6 +30,7 @@ class ReaderResourceVars {
     final String mGreyLightStr;
     final String mGreyExtraLightStr;
     final String mTextColor;
+    final String mGreyDisabledStr;
 
     ReaderResourceVars(Context context) {
         Resources resources = context.getResources();
@@ -66,6 +67,11 @@ class ReaderResourceVars {
                              + Color.green(onSurfaceColor) + ", " + Color
                                      .blue(onSurfaceColor) + ", " + ResourcesCompat
                                      .getFloat(resources, R.dimen.emphasis_low) + ")";
+
+        mGreyDisabledStr = "rgba(" + Color.red(onSurfaceColor) + ", "
+                             + Color.green(onSurfaceColor) + ", " + Color
+                                     .blue(onSurfaceColor) + ", " + ResourcesCompat
+                                     .getFloat(resources, R.dimen.material_emphasis_disabled) + ")";
 
         mTextColor = onSurfaceHighType;
         mLinkColorStr = HtmlUtils.colorResToHtmlColor(context,

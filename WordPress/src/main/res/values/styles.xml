@@ -154,7 +154,12 @@
 
     <style name="WordPress.NoActionBar.DarkNavbar" parent="WordPress.NoActionBar">
         <item name="android:windowLightNavigationBar">false</item>
-        <item name="android:navigationBarColor">?attr/wpColorAppBar</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">?attr/colorPrimarySurface</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/Widget.AppCompat.Toolbar.Button.Navigation
+        </item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -386,11 +391,8 @@
     </style>
 
     <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">25</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -400,14 +402,18 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteListRowLayout">
@@ -633,8 +639,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:minHeight">?attr/listPreferredItemHeight</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_large</item>
-        <item name="android:paddingStart">@dimen/margin_large</item>
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
@@ -1255,6 +1259,8 @@
 
     <style name="ModalLayoutPickerHeader" parent="ModalLayoutPickerText">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ModalLayoutPickerTitle" parent="ModalLayoutPickerText">
@@ -1262,16 +1268,22 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerSubtitle" parent="ModalLayoutPickerTitle">
-        <item name="android:layout_margin">@dimen/margin_extra_extra_medium_large</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_extra_medium_large</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/mlp_titles_bottom_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">normal</item>
         <item name="android:alpha">0.6</item>
         <item name="android:maxLines">5</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
     <style name="Widget.ModalLayoutPicker.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
@@ -1291,6 +1303,7 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="ModalLayoutPickerLayoutsSeparatorLine">

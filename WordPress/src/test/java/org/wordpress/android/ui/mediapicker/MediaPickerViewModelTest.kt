@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
-import org.wordpress.android.ui.mediapicker.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
@@ -30,7 +29,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.EditActionUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
@@ -42,6 +40,11 @@ import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler
+import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandlerFactory
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
+import org.wordpress.android.ui.mediapicker.loader.MediaLoaderFactory
 import org.wordpress.android.ui.photopicker.PermissionsHandler
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -58,6 +61,8 @@ import java.util.Locale
 class MediaPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaLoaderFactory: MediaLoaderFactory
     @Mock lateinit var mediaLoader: MediaLoader
+    @Mock lateinit var mediaInsertHandlerFactory: MediaInsertHandlerFactory
+    @Mock lateinit var mediaInsertHandler: MediaInsertHandler
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var uriWrapper1: UriWrapper
@@ -88,6 +93,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 mediaLoaderFactory,
+                mediaInsertHandlerFactory,
                 analyticsUtilsWrapper,
                 analyticsTrackerWrapper,
                 permissionsHandler,
@@ -633,6 +639,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 )
             }
         })
+        whenever(mediaInsertHandlerFactory.build(mediaPickerSetup, site)).thenReturn(mediaInsertHandler)
 
         viewModel.start(listOf(), mediaPickerSetup, null, site)
         viewModel.uiState.observeForever {
@@ -722,20 +729,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             cameraEnabled = cameraAllowed,
             systemPickerEnabled = true,
             editingEnabled = editingEnabled,
+            queueResults = false,
+            defaultSearchView = false,
             title = R.string.wp_media_title
     )
 
     private fun assertStoriesFabIsVisible() {
         uiStates.last().fabUiModel.let { model ->
-            assertThat(model is FabUiModel).isTrue()
-            assertThat((model as FabUiModel).show).isEqualTo(true)
+            assertThat(model.show).isEqualTo(true)
         }
     }
 
     private fun assertStoriesFabIsHidden() {
         uiStates.last().fabUiModel.let { model ->
-            assertThat(model is FabUiModel).isTrue()
-            assertThat((model as FabUiModel).show).isEqualTo(false)
+            assertThat(model.show).isEqualTo(false)
         }
     }
 }
