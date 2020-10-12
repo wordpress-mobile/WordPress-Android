@@ -404,7 +404,7 @@ class MediaPickerFragment : Fragment() {
                 } else {
                     actionable_empty_view.image.visibility = View.GONE
                 }
-
+                actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
                 recycler.visibility = View.INVISIBLE
                 setupAdapter(listOf())
             }
