@@ -9,6 +9,7 @@ import android.text.TextUtils
 import android.view.MenuItem
 import androidx.fragment.app.FragmentTransaction
 import kotlinx.android.synthetic.main.toolbar_main.*
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMedia
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.WP_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
@@ -184,14 +186,16 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), ANDROID_PICKER)
             }
             TAKE_PHOTO -> try {
-                WPMediaUtils.scanMediaFile(this, mediaCapturePath!!)
-                val f = File(mediaCapturePath)
-                val capturedImageUri = listOf(
-                        Uri.fromFile(
-                                f
-                        )
-                )
-                doMediaUrisSelected(capturedImageUri, ANDROID_CAMERA)
+                mediaCapturePath!!.let {
+                    WPMediaUtils.scanMediaFile(this, it)
+                    val f = File(it)
+                    val capturedImageUri = listOf(
+                            Uri.fromFile(
+                                    f
+                            )
+                    )
+                    doMediaUrisSelected(capturedImageUri, ANDROID_CAMERA)
+                }
             } catch (e: RuntimeException) {
                 AppLog.e(MEDIA, e)
             }
@@ -313,6 +317,9 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                     GIF_LIBRARY -> TODO()
                 }
                 startActivityForResult(intent, requestCode)
+            }
+            OpenCameraForPhotos -> {
+                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID) { mediaCapturePath = it }
             }
         }
     }

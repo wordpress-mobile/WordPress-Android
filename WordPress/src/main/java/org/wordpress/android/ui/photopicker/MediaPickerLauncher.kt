@@ -14,6 +14,9 @@ import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
@@ -41,7 +44,7 @@ class MediaPickerLauncher
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
-                    cameraEnabled = true,
+                    cameraSetup = ENABLED,
                     systemPickerEnabled = true,
                     editingEnabled = true,
                     queueResults = true,
@@ -71,7 +74,7 @@ class MediaPickerLauncher
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
-                    cameraEnabled = true,
+                    cameraSetup = ENABLED,
                     systemPickerEnabled = true,
                     editingEnabled = true,
                     queueResults = true,
@@ -168,7 +171,7 @@ class MediaPickerLauncher
                     canMultiselect = true,
                     requiresStoragePermissions = true,
                     allowedTypes = allowedTypes,
-                    cameraEnabled = false,
+                    cameraSetup = HIDDEN,
                     systemPickerEnabled = true,
                     editingEnabled = true,
                     queueResults = false,
@@ -219,7 +222,7 @@ class MediaPickerLauncher
                     canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),
-                    cameraEnabled = false,
+                    cameraSetup = HIDDEN,
                     systemPickerEnabled = false,
                     editingEnabled = false,
                     queueResults = false,
@@ -258,7 +261,7 @@ class MediaPickerLauncher
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,
-                cameraEnabled = browserType.isWPStoriesPicker,
+                cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
                 systemPickerEnabled = true,
                 editingEnabled = browserType.isImagePicker,
                 queueResults = browserType == FEATURED_IMAGE_PICKER,
@@ -281,7 +284,7 @@ class MediaPickerLauncher
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = false,
                 allowedTypes = allowedTypes,
-                cameraEnabled = browserType.isWPStoriesPicker,
+                cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
