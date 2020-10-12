@@ -83,7 +83,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String ARG_HIDE_TOS = "ARG_HIDE_TOS";
 
     public static final String TAG = "login_email_fragment_tag";
-    public static final String TAG_ALT_LAYOUT = "login_email_fragment_alternate_layout_tag";
+    public static final String TAG_SITE_CREDS_LAYOUT = "login_email_fragment_site_creds_layout_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
     private ArrayList<Integer> mOldSitesIDs = new ArrayList<>();
