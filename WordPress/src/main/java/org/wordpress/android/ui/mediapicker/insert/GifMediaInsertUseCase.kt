@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
-import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
