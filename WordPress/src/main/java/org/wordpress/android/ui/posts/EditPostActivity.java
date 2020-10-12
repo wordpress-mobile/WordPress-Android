@@ -3191,8 +3191,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
 
                 if (media.getUrl() != null && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
-                    // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
-                    // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
+                    // Note: we should actually do this when the editor fragment starts instead of waiting for user
+                    // input.
+                    // Notify the editor fragment upload was successful and it should replace the local url by the
+                    // remote url.
                     if (mEditorMediaUploadListener != null) {
                         mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                                 FluxCUtils.mediaFileFromMediaModel(media));
