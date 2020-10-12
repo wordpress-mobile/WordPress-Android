@@ -71,7 +71,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
     sealed class PageRequest(val template: String?, val content: String) {
-        class Create(template: String?, content: String) : PageRequest(template, content)
+        class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
     }
 
@@ -290,10 +290,13 @@ class ModalLayoutPickerViewModel @Inject constructor(
         (uiState.value as? ContentUiState)?.let { state ->
             val selection = state.selectedLayoutSlug != null
             val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
+            val title = if (selection) {
+                selectedLayout?.title ?: ""
+            } else ""
             val content = if (selection) {
                 selectedLayout?.content ?: ""
             } else ""
-            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content)
+            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content, title)
         }
     }
 
