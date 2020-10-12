@@ -71,7 +71,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
     sealed class PageRequest(val template: String?, val content: String) {
-        class Create(template: String?, content: String) : PageRequest(template, content)
+        class Create(template: String? = null, content: String = "") : PageRequest(template, content)
         class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
     }
 
@@ -294,6 +294,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 selectedLayout?.content ?: ""
             } else ""
             _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content)
+        } ?: run {
+            // Allow creation of blank page in offline / loading mode
+            _onCreateNewPageRequested.value = PageRequest.Create()
         }
     }
 
