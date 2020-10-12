@@ -69,7 +69,8 @@ public class GutenbergContainerFragment extends Fragment {
                                           onGutenbergDidSendButtonPressedActionListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
-                                  OnMediaFilesCollectionBasedBlockEditorListener onMediaFilesCollectionBasedBlockEditorListener,
+                                  OnMediaFilesCollectionBasedBlockEditorListener
+                                          onMediaFilesCollectionBasedBlockEditorListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
