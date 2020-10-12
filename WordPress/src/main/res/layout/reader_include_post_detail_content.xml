@@ -12,33 +12,11 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/margin_medium">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_title"
-        style="@style/ReaderTextView.Post.Title.Detail"
-        tools:text="text_title" />
-
-    <LinearLayout
-        android:id="@+id/layout_dateline"
+    <org.wordpress.android.ui.reader.views.ReaderTagStrip
+        android:id="@+id/tag_strip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_dateline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
-            tools:text="text_dateline" />
-
-        <org.wordpress.android.ui.reader.views.ReaderTagStrip
-            android:id="@+id/tag_strip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical" />
-    </LinearLayout>
+        android:layout_gravity="center_vertical" />
 
     <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"

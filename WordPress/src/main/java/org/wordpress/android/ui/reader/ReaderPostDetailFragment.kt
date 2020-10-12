@@ -38,11 +38,11 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.reader_post_detail_header_view.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -95,6 +95,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.C
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.POST_LIKE
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
@@ -102,9 +103,11 @@ import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.views.ReaderBookmarkButton
+import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
+import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderTagStrip
@@ -112,11 +115,11 @@ import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
+import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -204,6 +207,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
     @Inject internal lateinit var imageManager: ImageManager
+    @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -336,7 +340,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (isRelatedPost) {
                 toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
                 toolBar.setNavigationOnClickListener { requireActivity().finish() }
-                toolBar.setTitle(string.reader_title_related_post_detail)
+                toolBar.setTitle(R.string.reader_title_related_post_detail)
             } else {
                 toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
                 toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
@@ -1294,7 +1298,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             )
             WPSnackbar.make(
                     requireView(),
-                    string.media_accessing_failed,
+                    R.string.media_accessing_failed,
                     Snackbar.LENGTH_LONG
             ).show()
         } else {
@@ -1316,7 +1320,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         WPSnackbar.make(
                 requireView(),
-                string.media_accessing_failed,
+                R.string.media_accessing_failed,
                 Snackbar.LENGTH_LONG
         ).show()
         if (renderer != null) {
@@ -1416,12 +1420,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            val txtTitle = view!!.findViewById<TextView>(R.id.text_title)
-            val txtDateline = view!!.findViewById<TextView>(R.id.text_dateline)
-
             val tagStrip = view!!.findViewById<ReaderTagStrip>(R.id.tag_strip)
             val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
-            headerView.setOnFollowListener(this@ReaderPostDetailFragment)
             if (!canShowFooter()) {
                 layoutFooter.visibility = View.GONE
             }
@@ -1504,15 +1504,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
 
-            txtTitle.text = if (post!!.hasTitle()) post!!.title else getString(R.string.reader_untitled_post)
+            val postDetailsHeaderUiState = createPostDetailsHeaderUiState(post!!, headerView)
+            headerView.updatePost(postDetailsHeaderUiState)
 
-            val timestamp = DateTimeUtils.javaDateToTimeSpan(
-                    post!!.displayDate,
-                    WordPress.getContext()
-            )
-            txtDateline.text = timestamp
-
-            headerView.setPost(post!!, accountStore.hasAccessToken())
             tagStrip.setPost(post!!)
 
             if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
@@ -1521,6 +1515,65 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             refreshIconCounts()
             initBookmarkButton()
+        }
+
+        private fun createPostDetailsHeaderUiState(
+            post: ReaderPost,
+            headerView: ReaderPostDetailHeaderView
+        ): ReaderPostDetailsHeaderUiState {
+            val onBlogSectionClicked = { postId: Long?, blogId: Long? ->
+                ReaderActivityLauncher.showReaderBlogPreview(context, post)
+            }
+            val onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) }
+            return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
+                    post,
+                    onBlogSectionClicked,
+                    onFollowButtonClicked
+            )
+        }
+    }
+
+    // TODO: Refactor it
+    private fun toggleFollowStatus(followButton: ReaderFollowButton) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return
+        }
+        post?.let { post ->
+            val isAskingToFollow = !post.isFollowedByCurrentUser
+            if (isAskingToFollow) {
+                onFollowTapped(followButton, post.blogName, post.blogId)
+            } else {
+                onFollowingTapped()
+            }
+
+            val listener = ReaderActions.ActionListener { succeeded ->
+                if (context == null) {
+                    return@ActionListener
+                }
+                followButton.isEnabled = true
+                if (succeeded) {
+                    post.isFollowedByCurrentUser = isAskingToFollow
+                } else {
+                    val errResId = if (isAskingToFollow) {
+                        R.string.reader_toast_err_follow_blog
+                    } else {
+                        R.string.reader_toast_err_unfollow_blog
+                    }
+                    ToastUtils.showToast(context, errResId)
+                    followButton.setIsFollowed(!isAskingToFollow)
+                }
+            }
+
+            // disable follow button until API call returns
+            followButton.isEnabled = false
+            val result = if (post.isExternal) {
+                ReaderBlogActions.followFeedById(post.feedId, isAskingToFollow, listener)
+            } else {
+                ReaderBlogActions.followBlogById(post.blogId, isAskingToFollow, listener)
+            }
+            if (result) {
+                followButton.setIsFollowedAnimated(isAskingToFollow)
+            }
         }
     }
 
