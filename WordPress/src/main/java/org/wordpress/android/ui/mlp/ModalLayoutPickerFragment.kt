@@ -36,6 +36,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.LoadingUiState
@@ -51,6 +52,9 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+        const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
+        const val SELECTED_CATEGORIES = "SELECTED_CATEGORIES"
+        const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
     }
 
     override fun onCreateView(
@@ -96,7 +100,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
         setScrollListener()
 
-        setupViewModel()
+        setupViewModel(savedInstanceState)
     }
 
     private fun setScrollListener() {
@@ -136,9 +140,35 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel.dismiss()
     }
 
-    private fun setupViewModel() {
+    override fun onSaveInstanceState(outState: Bundle) {
+        (viewModel.uiState.value as? ContentUiState)?.let {
+            outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
+            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+        }
+        outState.putParcelable(FETCHED_LAYOUTS, viewModel.layouts)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun loadSavedState(savedInstanceState: Bundle?) {
+        (savedInstanceState?.getSerializable(SELECTED_CATEGORIES) as? ArrayList<*>)?.let {
+            viewModel.loadSavedSelectedCategories(ArrayList(it.filterIsInstance<String>()))
+        }
+        (savedInstanceState?.getString(SELECTED_LAYOUT))?.let {
+            viewModel.loadSavedSelectedLayout(it)
+        }
+        savedInstanceState?.getParcelable<GutenbergPageLayouts>(FETCHED_LAYOUTS)?.let {
+            if (it.isNotEmpty) {
+                viewModel.handleBlockLayoutsResponse(it)
+            }
+        }
+    }
+
+    private fun setupViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
+
+        loadSavedState(savedInstanceState)
 
         viewModel.start(DisplayUtils.isLandscape(requireContext()))
 
