@@ -3165,6 +3165,63 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+        ArrayList<Integer> mediaIdsToRetry = new ArrayList<>();
+        for (Object mediaFile : mediaFiles) {
+            int localMediaId
+                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).toString(), 0);
+            if (localMediaId != 0) {
+                MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
+                // if we find at least one item in the mediaFiles collection passed
+                // for which we don't have a local MediaModel, just tell the user and bail
+                if (media == null) {
+                    AppLog.e(T.MEDIA, "Can't find media with local id: " + localMediaId);
+                    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+                    builder.setTitle(getString(R.string.cannot_retry_deleted_media_item_fatal));
+                    builder.setPositiveButton(R.string.yes, (dialog, id) -> {
+                        dialog.dismiss();
+                    });
+
+                    builder.setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.dismiss());
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    return;
+                }
+
+                if (media.getUrl() != null && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
+                    // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
+                    // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
+                    if (mEditorMediaUploadListener != null) {
+                        mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                                FluxCUtils.mediaFileFromMediaModel(media));
+                    }
+                } else {
+                    UploadService.cancelFinalNotification(this, mEditPostRepository.getPost());
+                    UploadService.cancelFinalNotificationForMedia(this, mSite);
+                    mediaIdsToRetry.add(localMediaId);
+                }
+            }
+        }
+
+        if (!mediaIdsToRetry.isEmpty()) {
+            mEditorMedia.retryFailedMediaAsync(mediaIdsToRetry);
+        }
+        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+    }
+
+    @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+        // just cancel upload for each media
+        for (Object mediaFile : mediaFiles) {
+            int localMediaId
+                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
+            if (localMediaId != 0) {
+                mEditorMedia.cancelMediaUploadAsync(localMediaId, false);
+            }
+        }
+    }
+
     // FluxC events
 
     @SuppressWarnings("unused")
