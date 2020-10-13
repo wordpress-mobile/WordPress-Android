@@ -58,12 +58,13 @@ class LoginProloguePageFragment : Fragment() {
 
         promoTitle?.let { promo_title.setText(it) }
 
-        promo_layout_container.post {
+        val container = view.findViewById<ViewGroup>(R.id.promo_layout_container)
+        container.post {
             promoLayoutId?.let {
-                val content = inflater.inflate(promoLayoutId!!, promo_layout_container, false)
+                val content = inflater.inflate(promoLayoutId!!, container, false)
 
-                val widthOfContainer = promo_layout_container.width
-                val heightOfContainer = promo_layout_container.height
+                val widthOfContainer = container.width
+                val heightOfContainer = container.height
 
                 val smallestDimensions = min(widthOfContainer, heightOfContainer).toFloat()
                 val sizeOfContent = resources.getDimensionPixelOffset(R.dimen.login_prologue_content_area).toFloat()
@@ -73,7 +74,7 @@ class LoginProloguePageFragment : Fragment() {
                 content.scaleX = scaleFactor
                 content.scaleY = scaleFactor
 
-                promo_layout_container.addView(content)
+                container.addView(content)
 
                 if (promoLayoutId == R.layout.login_prologue_second) {
                     val editText = view.findViewById<EditText>(R.id.edit_text)
