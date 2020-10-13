@@ -44,7 +44,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private lateinit var layouts: GutenbergPageLayouts
+    lateinit var layouts: GutenbergPageLayouts
+        private set
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -302,6 +303,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun updateUiState(uiState: UiState) {
         _uiState.value = uiState
+    }
+
+    fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
+        if (layouts == null) {
+            return
+        }
+        val categories = ArrayList(selectedCategories ?: listOf())
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
+        updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
+        updateButtonsUiState()
+        handleBlockLayoutsResponse(layouts)
     }
 
     sealed class UiState(
