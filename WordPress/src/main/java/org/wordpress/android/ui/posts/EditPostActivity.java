@@ -3109,18 +3109,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        if (mLoadStoryFromStoriesPrefsUseCase.anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles)) {
-            // unfortunately the medaiIds seem corrupt so, show a dialog and bail
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
-            builder.setMessage(getString(R.string.dialog_edit_story_corrupt_message));
-            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                dialog.dismiss();
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return;
-        }
+//        if (mLoadStoryFromStoriesPrefsUseCase.anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles)) {
+//            // unfortunately the medaiIds seem corrupt so, show a dialog and bail
+//            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+//            builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
+//            builder.setMessage(getString(R.string.dialog_edit_story_corrupt_message));
+//            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+//                dialog.dismiss();
+//            });
+//            AlertDialog dialog = builder.create();
+//            dialog.show();
+//            return;
+//        }
 
         ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
                 .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);

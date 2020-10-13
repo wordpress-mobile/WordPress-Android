@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
@@ -27,12 +28,17 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Any>): ArrayList<String> {
         val mediaIds = ArrayList<String>()
         for (mediaFile in mediaFiles) {
-            val mediaIdLong = (mediaFile as HashMap<String?, Any?>)["id"]
-                    .toString()
-                    .toDouble() // this conversion is needed to strip off decimals that can come from RN
-                    .toLong()
-            val mediaIdString = mediaIdLong.toString()
-            mediaIds.add(mediaIdString)
+            val rawIdField = (mediaFile as HashMap<String?, Any?>)["id"] as String
+            if (rawIdField.startsWith(TEMPORARY_ID_PREFIX)) {
+                mediaIds.add(rawIdField)
+            } else {
+                val mediaIdLong = (mediaFile as HashMap<String?, Any?>)["id"]
+                        .toString()
+                        .toDouble() // this conversion is needed to strip off decimals that can come from RN
+                        .toLong()
+                val mediaIdString = mediaIdLong.toString()
+                mediaIds.add(mediaIdString)
+            }
         }
         return mediaIds
     }
@@ -54,10 +60,15 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
         for (mediaId in mediaIds) {
             // if this is not a remote nor a local / temporary slide, return false
-            if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong()))
-                    && !storiesPrefs.isValidSlide(site.id.toLong(), LocalId(StringUtils.stringToInt(mediaId)))
-                    && !storiesPrefs.isValidSlide(site.id.toLong(), TempId(mediaId))) {
-                return false
+            if (mediaId.startsWith(TEMPORARY_ID_PREFIX)) {
+                if (!storiesPrefs.isValidSlide(site.id.toLong(), TempId(mediaId))) {
+                    return false
+                }
+            } else {
+                if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong()))
+                        && !storiesPrefs.isValidSlide(site.id.toLong(), LocalId(StringUtils.stringToInt(mediaId)))) {
+                    return false
+                }
             }
         }
         return true
@@ -71,37 +82,52 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         var storyIndex = StoryRepository.DEFAULT_NONE_SELECTED
         storyRepositoryWrapper.loadStory(storyIndex)
         storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
+        var tempSlidesLoadedCount: Int = 0
         for (mediaId in mediaIds) {
-            var storyFrameItem = storiesPrefs.getSlideWithRemoteId(
-                    site.getId().toLong(),
-                    RemoteId(mediaId.toLong())
-            )
-            if (storyFrameItem != null) {
-                storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
-            } else {
-                allStorySlidesAreEditable = false
-
-                // for this missing frame we'll create a new frame using the actual uploaded flattened media
-                val tmpMediaIdsLong = ArrayList<Long>()
-                tmpMediaIdsLong.add(mediaId.toLong())
-                val mediaModelList: List<MediaModel> = mediaStore.getSiteMediaWithIds(
-                        site,
-                        tmpMediaIdsLong
+            // let's check if this is a temporary id
+            if (mediaId.startsWith(TEMPORARY_ID_PREFIX)) {
+                var storyFrameItem = storiesPrefs.getSlideWithTempId(
+                        site.getId().toLong(),
+                        TempId(mediaId)
                 )
-                if (mediaModelList.isEmpty()) {
-                    noSlidesLoaded = true
+                if (storyFrameItem != null) {
+                    tempSlidesLoadedCount++
+                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+                }
+            } else {
+                var storyFrameItem = storiesPrefs.getSlideWithRemoteId(
+                        site.getId().toLong(),
+                        RemoteId(mediaId.toLong())
+                )
+                if (storyFrameItem != null) {
+                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
                 } else {
-                    for (mediaModel in mediaModelList) {
-                        storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
-                                Uri.parse(mediaModel.url),
-                                mediaModel.isVideo
-                        )
-                        storyFrameItem.id = mediaModel.mediaId.toString()
-                        storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+                    allStorySlidesAreEditable = false
+
+                    // for this missing frame we'll create a new frame using the actual uploaded flattened media
+                    val tmpMediaIdsLong = ArrayList<Long>()
+                    tmpMediaIdsLong.add(mediaId.toLong())
+                    val mediaModelList: List<MediaModel> = mediaStore.getSiteMediaWithIds(
+                            site,
+                            tmpMediaIdsLong
+                    )
+                    if (mediaModelList.isEmpty()) {
+                        noSlidesLoaded = true
+                    } else {
+                        for (mediaModel in mediaModelList) {
+                            storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
+                                    Uri.parse(mediaModel.url),
+                                    mediaModel.isVideo
+                            )
+                            storyFrameItem.id = mediaModel.mediaId.toString()
+                            storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+                        }
                     }
                 }
             }
         }
+
+        noSlidesLoaded = (!noSlidesLoaded && tempSlidesLoadedCount == 0)
 
         return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
     }
