@@ -72,7 +72,6 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -507,7 +506,7 @@ class MediaPickerFragment : Fragment() {
         if (fabUiModel.show) {
             fab_take_picture.show()
             fab_take_picture.setOnClickListener {
-                fabUiModel.action(ViewWrapper(it))
+                fabUiModel.action()
             }
         } else {
             fab_take_picture.hide()
