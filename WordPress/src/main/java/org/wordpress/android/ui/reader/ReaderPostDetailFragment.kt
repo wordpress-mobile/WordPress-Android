@@ -14,6 +14,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -27,6 +28,7 @@ import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -92,8 +94,10 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.P
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -165,6 +169,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var featuredImageView: ImageView
 
     private lateinit var appBar: AppBarLayout
+    private lateinit var toolBar: Toolbar
 
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
@@ -291,7 +296,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         scrollView = view.findViewById(R.id.scroll_view_reader)
 
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
-        val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
+        toolBar = appBar.findViewById(R.id.toolbar_main)
 
         if (activity is ReaderPostPagerActivity) {
             toolBar.setVisible(true)
@@ -367,6 +372,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewLifecycleOwner,
                 Observer<ReaderPostDetailsUiState> { state ->
                     header_view.updatePost(state.headerUiState)
+                    updateMoreMenu(state)
                 }
         )
 
@@ -402,6 +408,35 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         })
         viewModel.start()
+    }
+
+    private fun updateMoreMenu(
+        state: ReaderPostDetailsUiState
+    ) {
+        val moreMenu: View? = toolBar.findViewById(R.id.menu_more)
+        moreMenu?.let {
+            it.setOnClickListener { state.onMoreButtonClicked.invoke(state) }
+            state.moreMenuItems?.let {
+                renderMoreMenu(state, state.moreMenuItems, moreMenu)
+            }
+        }
+    }
+
+    private fun renderMoreMenu(uiState: ReaderPostDetailsUiState, actions: List<SecondaryAction>, v: View) {
+        // TODO: Add Tracks
+        val listPopup = ListPopupWindow(v.context)
+        listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+        listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
+        listPopup.setDropDownGravity(Gravity.END)
+        listPopup.anchorView = v
+        listPopup.isModal = true
+        listPopup.setOnItemClickListener { _, _, position, _ ->
+            listPopup.dismiss()
+            val item = actions[position]
+            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+        }
+        listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
+        listPopup.show()
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
@@ -468,11 +503,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
                 sharePage()
-                return true
-            }
-            R.id.menu_more -> {
-                // TODO: Handle more menu
-
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

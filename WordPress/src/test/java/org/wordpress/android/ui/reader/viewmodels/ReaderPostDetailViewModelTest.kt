@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 
@@ -27,6 +28,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock private lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
 
     @Before
     fun setUp() {
@@ -35,6 +37,7 @@ class ReaderPostDetailViewModelTest {
                 postDetailsHeaderViewUiStateBuilder,
                 readerUtilsWrapper,
                 readerPostTableWrapper,
+                menuUiStateBuilder,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
