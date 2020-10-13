@@ -14,6 +14,7 @@ import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaType
@@ -169,6 +170,36 @@ class MediaPickerLauncher
             activity.startActivityForResult(intent, requestCode)
         } else {
             ActivityLauncher.showStockMediaPickerForResult(activity, site, requestCode)
+        }
+    }
+
+    fun showGifPickerForResult(
+        activity: Activity,
+        site: SiteModel,
+        requestCode: Int,
+        allowMultipleSelection: Boolean
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    dataSource = GIF_LIBRARY,
+                    canMultiselect = allowMultipleSelection,
+                    requiresStoragePermissions = false,
+                    allowedTypes = setOf(IMAGE),
+                    cameraEnabled = false,
+                    systemPickerEnabled = false,
+                    editingEnabled = false,
+                    queueResults = false,
+                    defaultSearchView = true,
+                    title = R.string.photo_picker_gif
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site
+            )
+            activity.startActivityForResult(intent, requestCode)
+        } else {
+            ActivityLauncher.showGifPickerForResult(activity, site, requestCode)
         }
     }
 

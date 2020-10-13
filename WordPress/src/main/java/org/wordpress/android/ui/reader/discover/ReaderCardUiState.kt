@@ -20,7 +20,7 @@ sealed class ReaderCardUiState {
         val blogId: Long,
         val dateLine: String,
         val title: UiString?,
-        val blogName: String?,
+        val blogName: UiString,
         val excerpt: String?, // mTxtText
         val blogUrl: String?,
         val tagItems: List<TagUiState>,

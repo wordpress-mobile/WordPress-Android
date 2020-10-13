@@ -98,7 +98,13 @@ data class MediaLoader(
                     error = null,
                     hasMore = false,
                     domainItems = listOf(),
-                    emptyState = EmptyState(partialResult.title, partialResult.htmlSubtitle, partialResult.image)
+                    emptyState = EmptyState(
+                            partialResult.title,
+                            partialResult.htmlSubtitle,
+                            partialResult.image,
+                            partialResult.bottomImage,
+                            partialResult.bottomImageContentDescription
+                    )
             )
             is Failure -> state.copy(isLoading = false, error = partialResult.message)
         }
@@ -121,6 +127,12 @@ data class MediaLoader(
         val isLoading: Boolean = false,
         val emptyState: EmptyState? = null
     ) {
-        data class EmptyState(val title: UiString, val htmlSubtitle: UiString? = null, val image: Int? = null)
+        data class EmptyState(
+            val title: UiString,
+            val htmlSubtitle: UiString? = null,
+            val image: Int? = null,
+            val bottomImage: Int? = null,
+            val bottomImageDescription: UiString? = null
+        )
     }
 }
