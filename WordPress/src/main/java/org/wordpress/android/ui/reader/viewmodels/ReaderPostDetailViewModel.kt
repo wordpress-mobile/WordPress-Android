@@ -31,8 +31,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private val _headerUiState = MediatorLiveData<ReaderPostDetailsHeaderUiState>()
-    val headerUiState: LiveData<ReaderPostDetailsHeaderUiState> = _headerUiState
+    private val _uiState = MediatorLiveData<ReaderPostDetailsUiState>()
+    val uiState: LiveData<ReaderPostDetailsUiState> = _uiState
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -52,15 +52,14 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun init() {
-        _headerUiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
-            val post = readerPostTableWrapper.getBlogPost(
-                    data.blogId,
-                    (_headerUiState.value as ReaderPostDetailsHeaderUiState).blogSectionUiState.postId,
-                    true
-            )
-            post?.let {
-                it.isFollowedByCurrentUser = data.following
-                _headerUiState.value = createPostDetailsHeaderUiState(it)
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
+            val currentUiState: ReaderPostDetailsUiState? = _uiState.value
+
+            currentUiState?.let {
+                findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+                    post.isFollowedByCurrentUser = data.following
+                    _uiState.value = currentUiState.copy(headerUiState = createPostDetailsHeaderUiState(post))
+                }
             }
         }
 
@@ -80,7 +79,17 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(post: ReaderPost) {
-        _headerUiState.value = createPostDetailsHeaderUiState(post)
+        _uiState.value = createPostDetailsUiState(post)
+    }
+
+    private fun createPostDetailsUiState(
+        post: ReaderPost
+    ): ReaderPostDetailsUiState {
+        return ReaderPostDetailsUiState(
+                postId = post.postId,
+                blogId = post.blogId,
+                headerUiState = createPostDetailsHeaderUiState(post)
+        )
     }
 
     private fun createPostDetailsHeaderUiState(
@@ -106,6 +115,20 @@ class ReaderPostDetailViewModel @Inject constructor(
             readerPostCardActionsHandler.handleHeaderClicked(blogId, postId)
         }
     }
+
+    private fun findPost(postId: Long, blogId: Long): ReaderPost? {
+        return readerPostTableWrapper.getBlogPost(
+                blogId,
+                postId,
+                true
+        )
+    }
+
+    data class ReaderPostDetailsUiState(
+        val postId: Long,
+        val blogId: Long,
+        val headerUiState: ReaderPostDetailsHeaderUiState
+    )
 
     override fun onCleared() {
         super.onCleared()

@@ -99,14 +99,13 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
-import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
-import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
@@ -361,11 +360,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
-        viewModel.headerUiState.observe(
-            viewLifecycleOwner,
-            Observer<ReaderPostDetailsHeaderUiState> { state ->
-                header_view.updatePost(state)
-            }
+        viewModel.uiState.observe(
+                viewLifecycleOwner,
+                Observer<ReaderPostDetailsUiState> { state ->
+                    header_view.updatePost(state.headerUiState)
+                }
         )
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
@@ -1230,7 +1229,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
             if (!canShowFooter()) {
                 layoutFooter.visibility = View.GONE
             }
