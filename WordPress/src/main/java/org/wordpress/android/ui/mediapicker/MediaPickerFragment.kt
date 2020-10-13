@@ -383,6 +383,7 @@ class MediaPickerFragment : Fragment() {
                 setupAdapter(uiModel.items)
             }
             is Empty -> {
+                actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
                 actionable_empty_view.visibility = View.VISIBLE
                 actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
                 if (uiModel.htmlSubtitle != null) {
@@ -404,7 +405,6 @@ class MediaPickerFragment : Fragment() {
                 } else {
                     actionable_empty_view.image.visibility = View.GONE
                 }
-                actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
                 recycler.visibility = View.INVISIBLE
                 setupAdapter(listOf())
             }
