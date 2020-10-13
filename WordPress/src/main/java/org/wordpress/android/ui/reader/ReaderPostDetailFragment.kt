@@ -214,6 +214,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val menu: Menu = toolbar.menu
             val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
             val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+            val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
             val collapsingToolbarHeight = collapsingToolbarLayout.height
             val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
@@ -234,6 +235,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             menuBrowse?.icon?.colorFilter = colorFilter
             menuShare?.icon?.colorFilter = colorFilter
+            menuMore?.icon?.colorFilter = colorFilter
         }
     }
 
@@ -362,10 +364,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
         viewModel.headerUiState.observe(
-            viewLifecycleOwner,
-            Observer<ReaderPostDetailsHeaderUiState> { state ->
-                header_view.updatePost(state)
-            }
+                viewLifecycleOwner,
+                Observer<ReaderPostDetailsHeaderUiState> { state ->
+                    header_view.updatePost(state)
+                }
         )
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
@@ -466,6 +468,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
                 sharePage()
+                return true
+            }
+            R.id.menu_more -> {
+                // TODO: Handle more menu
+
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
