@@ -39,6 +39,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
@@ -109,6 +110,10 @@ public class WPSupportUtils {
         idleFor(2000); // allow for transitions
         viewInteraction.perform(click(closeSoftKeyboard())); // attempt to close the soft keyboard as the rollback
         idleFor(500); // allow for transitions
+    }
+
+    public static void clickOnViewWithContentDescription(String contentDescription) {
+        clickOn(onView(withContentDescription(contentDescription)));
     }
 
     /**

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageType;
 
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithContentDescription;
 import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
@@ -93,13 +94,17 @@ public class WPScreenshotTest extends BaseTest {
 
         // Get a screenshot of the editor with the block library expanded
         String name = "1-create-a-site-or-start-a-blog";
-        screenshotPostWithName("Summer Band Jam", name, false);
+        screenshotPostWithName("Summer Band Jam", name, false, true);
+
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void screenshotPostWithName(String name, String screenshotName, boolean hideKeyboard) {
+    @SuppressWarnings("checkstyle:WhitespaceAround") private void screenshotPostWithName(String name,
+                                                                                         String screenshotName,
+                                                                                         boolean hideKeyboard,
+                                                                                         boolean openBlockList) {
         idleFor(2000);
 
         PostsListPage.scrollToTop();
@@ -117,6 +122,10 @@ public class WPScreenshotTest extends BaseTest {
 
         if (hideKeyboard) {
             Espresso.closeSoftKeyboard();
+        }
+
+        if(openBlockList) {
+            clickOnViewWithContentDescription("Add block, Double tap to add a block");
         }
 
         takeScreenshot(screenshotName);
