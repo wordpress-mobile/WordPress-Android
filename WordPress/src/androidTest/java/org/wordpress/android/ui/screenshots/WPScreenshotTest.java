@@ -65,9 +65,9 @@ public class WPScreenshotTest extends BaseTest {
 
         wpLogin();
 
-        editBlogPost();
-        navigateDiscover();
-        navigateStats();
+//        editBlogPost();
+//        navigateDiscover();
+//        navigateStats();
         navigateMySite();
         navigateNotifications();
         manageMedia();
@@ -168,6 +168,11 @@ public class WPScreenshotTest extends BaseTest {
     private void navigateMySite() {
         // Click on the "Sites" tab and take a screenshot
         clickOn(R.id.nav_sites);
+
+        // Choose "Switch Site"
+        clickOn(R.id.switch_site);
+
+        (new SitePickerPage()).chooseSiteWithURL("tricountyrealestate.wordpress.com");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
 
