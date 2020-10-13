@@ -157,6 +157,8 @@ public class WPScreenshotTest extends BaseTest {
         // Wait for the stats to load
         idleFor(5000);
 
+        clickOn(R.id.previousDateButton);
+
         takeScreenshot("3-build-an-audience");
 
         // Exit the Stats Activity
