@@ -47,10 +47,10 @@ class StockMediaDataSource
                     }
                 }
             }
-        } ?: buildEmptyResult()
+        } ?: buildDefaultScreen()
     }
 
-    private fun buildEmptyResult(): MediaLoadingResult {
+    private fun buildDefaultScreen(): MediaLoadingResult {
         val title = UiStringRes(R.string.stock_media_picker_initial_empty_text)
         val link = "<a href='https://pexels.com/'>Pexels</a>"
         val subtitle = UiStringResWithParams(

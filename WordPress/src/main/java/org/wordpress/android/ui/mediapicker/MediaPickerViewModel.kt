@@ -214,6 +214,8 @@ class MediaPickerViewModel @Inject constructor(
                     domainModel.emptyState.title,
                     domainModel.emptyState.htmlSubtitle,
                     domainModel.emptyState.image,
+                    domainModel.emptyState.bottomImage,
+                    domainModel.emptyState.bottomImageDescription,
                     isSearching == true
             )
         } else {
@@ -549,9 +551,10 @@ class MediaPickerViewModel @Inject constructor(
             val title: UiString,
             val htmlSubtitle: UiString? = null,
             val image: Int? = null,
+            val bottomImage: Int? = null,
+            val bottomImageDescription: UiString? = null,
             val isSearching: Boolean = false
-        ) :
-                PhotoListUiModel()
+        ) : PhotoListUiModel()
 
         object Hidden : PhotoListUiModel()
     }

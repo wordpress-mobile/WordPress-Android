@@ -10,13 +10,14 @@ import com.tenor.android.core.network.ApiClient
 import com.tenor.android.core.network.IApiClient
 import com.tenor.android.core.response.impl.GifsResponse
 import org.wordpress.android.R
-
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
 import retrofit2.Call
@@ -43,7 +44,7 @@ class GifMediaDataSource
         }
 
         return if (!filter.isNullOrBlank()) {
-            suspendCoroutine<MediaLoadingResult> { cont ->
+            suspendCoroutine { cont ->
                 search(filter,
                         nextPosition,
                         PAGE_SIZE,
@@ -54,8 +55,12 @@ class GifMediaDataSource
                             val newPosition = response.next.toIntOrNull() ?: 0
                             val hasMore = newPosition > nextPosition
                             nextPosition = newPosition
-
-                            cont.resume(Success(items.toList(), hasMore))
+                            val result = if (items.isNotEmpty()) {
+                                Success(items.toList(), hasMore)
+                            } else {
+                                Empty(UiStringRes(R.string.gif_picker_empty_search_list))
+                            }
+                            cont.resume(result)
                         },
                         onFailure = {
                             val errorMessage = it?.message
@@ -65,8 +70,19 @@ class GifMediaDataSource
                 )
             }
         } else {
-            Success(listOf(), false)
+            buildDefaultScreen()
         }
+    }
+
+    private fun buildDefaultScreen(): MediaLoadingResult {
+        val title = UiStringRes(R.string.gif_picker_initial_empty_text)
+        return Empty(
+                title,
+                null,
+                R.drawable.img_illustration_media_105dp,
+                R.drawable.img_tenor_100dp,
+                UiStringRes(R.string.gif_powered_by_tenor)
+        )
     }
 
     private inline fun search(
@@ -76,12 +92,14 @@ class GifMediaDataSource
         crossinline onSuccess: (GifsResponse) -> Unit,
         crossinline onFailure: (Throwable?) -> Unit
     ) {
-        tenorClient.search(ApiClient.getServiceIds(context),
+        tenorClient.search(
+                ApiClient.getServiceIds(context),
                 query,
                 loadSize.fittedToMaximumAllowed,
                 position.toString(),
                 MediaFilter.BASIC,
-                AspectRatioRange.ALL).apply {
+                AspectRatioRange.ALL
+        ).apply {
             enqueue(object : Callback<GifsResponse> {
                 override fun onResponse(call: Call<GifsResponse>, response: Response<GifsResponse>) {
                     val errorMessage = context.getString(R.string.gif_picker_empty_search_list)
@@ -97,9 +115,10 @@ class GifMediaDataSource
 
     private fun Result.toMediaItem() = MediaItem(
             identifier = GifMediaIdentifier(
-            null,
-            UriWrapper(Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF))),
-            title),
+                    null,
+                    UriWrapper(Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF))),
+                    title
+            ),
             url = Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
             type = IMAGE,
             dataModified = 0

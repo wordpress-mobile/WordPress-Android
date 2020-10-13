@@ -404,6 +404,18 @@ class MediaPickerFragment : Fragment() {
                 } else {
                     actionable_empty_view.image.visibility = View.GONE
                 }
+                if (uiModel.bottomImage != null) {
+                    actionable_empty_view.bottomImage.setImageResource(uiModel.bottomImage)
+                    actionable_empty_view.bottomImage.visibility = View.VISIBLE
+                    if (uiModel.bottomImageDescription != null) {
+                        actionable_empty_view.bottomImage.contentDescription = uiHelpers.getTextOfUiString(
+                                requireContext(),
+                                uiModel.bottomImageDescription
+                        ).toString()
+                    }
+                } else {
+                    actionable_empty_view.bottomImage.visibility = View.GONE
+                }
                 recycler.visibility = View.INVISIBLE
                 setupAdapter(listOf())
             }
