@@ -65,9 +65,9 @@ public class WPScreenshotTest extends BaseTest {
 
         wpLogin();
 
-//        editBlogPost();
-//        navigateDiscover();
-//        navigateStats();
+        editBlogPost();
+        navigateDiscover();
+        navigateStats();
         navigateMySite();
         navigateNotifications();
         manageMedia();
