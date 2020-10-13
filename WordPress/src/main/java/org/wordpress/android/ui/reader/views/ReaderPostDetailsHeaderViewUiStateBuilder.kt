@@ -23,7 +23,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 ) {
     fun mapPostToUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long?, Long?) -> Unit,
+        onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit
     ): ReaderPostDetailsHeaderUiState {
@@ -45,7 +45,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
-        onBlogSectionClicked: (Long?, Long?) -> Unit
+        onBlogSectionClicked: (Long, Long) -> Unit
     ): ReaderBlogSectionUiState {
         return postUiStateBuilder.mapPostToBlogSectionUiState(
             post,
