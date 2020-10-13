@@ -271,6 +271,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_TITLE = "pageTitle";
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
@@ -2347,7 +2348,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorFragment.setTitle(mEditPostRepository.getTitle());
             } else if (mEditorFragment instanceof GutenbergEditorFragment) {
                 // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
-                mEditorFragment.setTitle("");
+                final String title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
+                if (title != null) {
+                    mEditorFragment.setTitle(title);
+                } else {
+                    mEditorFragment.setTitle("");
+                }
             }
 
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);

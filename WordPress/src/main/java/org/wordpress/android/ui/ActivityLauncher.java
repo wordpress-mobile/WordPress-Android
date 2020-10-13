@@ -773,6 +773,7 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Activity activity,
             @NonNull SiteModel site,
+            @NonNull String title,
             @NonNull String content,
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source
@@ -782,6 +783,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
@@ -791,6 +793,7 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
+            @NonNull String title,
             @NonNull String content,
             @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source) {
@@ -799,6 +802,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);

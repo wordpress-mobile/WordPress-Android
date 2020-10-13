@@ -44,7 +44,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private lateinit var layouts: GutenbergPageLayouts
+    lateinit var layouts: GutenbergPageLayouts
+        private set
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -71,7 +72,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
     sealed class PageRequest(val template: String?, val content: String) {
-        class Create(template: String? = null, content: String = "") : PageRequest(template, content)
+        open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
+        object Blank : Create(null, "", "")
         class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
     }
 
@@ -290,18 +292,32 @@ class ModalLayoutPickerViewModel @Inject constructor(
         (uiState.value as? ContentUiState)?.let { state ->
             val selection = state.selectedLayoutSlug != null
             val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
+            val title = if (selection) {
+                selectedLayout?.title ?: ""
+            } else ""
             val content = if (selection) {
                 selectedLayout?.content ?: ""
             } else ""
-            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content)
+            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content, title)
         } ?: run {
             // Allow creation of blank page in offline / loading mode
-            _onCreateNewPageRequested.value = PageRequest.Create()
+            _onCreateNewPageRequested.value = PageRequest.Blank
         }
     }
 
     private fun updateUiState(uiState: UiState) {
         _uiState.value = uiState
+    }
+
+    fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
+        if (layouts == null) {
+            return
+        }
+        val categories = ArrayList(selectedCategories ?: listOf())
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
+        updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
+        updateButtonsUiState()
+        handleBlockLayoutsResponse(layouts)
     }
 
     sealed class UiState(

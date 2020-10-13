@@ -440,7 +440,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (mModalLayoutPickerFeatureConfig.isEnabled()) {
                         mMLPViewModel.createPageFlowTriggered();
                     } else {
-                        handleNewPageAction(""/*empty page*/, null,
+                        handleNewPageAction("", "", null,
                                 PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     }
                     break;
@@ -465,7 +465,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
-            handleNewPageAction(request.getContent(), request.getTemplate(),
+            handleNewPageAction(request.getTitle(), request.getContent(), request.getTemplate(),
                     PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
@@ -881,7 +881,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
     }
 
-    private void handleNewPageAction(String content, String template, PagePostCreationSourcesDetail source) {
+    private void handleNewPageAction(String title, String content, String template,
+                                     PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -891,7 +892,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewPageForResult(this, site, content, template, source);
+            ActivityLauncher.addNewPageForResult(this, site, title, content, template, source);
         }
     }
 
