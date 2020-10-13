@@ -47,7 +47,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
@@ -58,18 +57,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_S
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
-import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderLikeTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.AccountActionBuilder
-import org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
-import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
@@ -98,7 +91,6 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.C
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.POST_LIKE
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -107,7 +99,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
-import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
@@ -148,7 +139,6 @@ import javax.inject.Inject
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
         ReaderCustomViewListener,
-        ReaderInterfaces.OnFollowListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
@@ -561,59 +551,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      */
     override fun onActivityBackPressed(): Boolean {
         return goBackInPostHistory()
-    }
-
-    override fun onFollowTapped(view: View, blogName: String, blogId: Long) {
-        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-
-        if (isAdded) {
-            val blog = if (TextUtils.isEmpty(blogName))
-                getString(R.string.reader_followed_blog_notifications_this)
-            else
-                blogName
-
-            if (blogId > 0) {
-                WPSnackbar.make(
-                        view, Html.fromHtml(
-                        getString(
-                                R.string.reader_followed_blog_notifications,
-                                "<b>", blog, "</b>"
-                        )
-                ), Snackbar.LENGTH_LONG
-                )
-                        .setAction(
-                                getString(R.string.reader_followed_blog_notifications_action)
-                        ) {
-                            AnalyticsUtils.trackWithSiteId(
-                                    Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                                    blogId
-                            )
-                            val payload = AddOrDeleteSubscriptionPayload(
-                                    blogId.toString(), SubscriptionAction.NEW
-                            )
-                            dispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload))
-                            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
-                        }
-                        .show()
-            }
-        }
-    }
-
-    override fun onFollowingTapped() {
-        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
-        if (event.isError) {
-            AppLog.e(
-                    T.API,
-                    "${ReaderPostDetailFragment::class.java.simpleName}.onSubscriptionUpdated: " +
-                            "${event.error.type} - ${event.error.message}"
-            )
-        } else {
-            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-        }
     }
 
     /*
@@ -1381,50 +1318,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             refreshIconCounts()
             initBookmarkButton()
-        }
-    }
-
-    // TODO: Refactor it
-    private fun toggleFollowStatus(followButton: ReaderFollowButton) {
-        if (!NetworkUtils.checkConnection(context)) {
-            return
-        }
-        post?.let { post ->
-            val isAskingToFollow = !post.isFollowedByCurrentUser
-            if (isAskingToFollow) {
-                onFollowTapped(followButton, post.blogName, post.blogId)
-            } else {
-                onFollowingTapped()
-            }
-
-            val listener = ReaderActions.ActionListener { succeeded ->
-                if (context == null) {
-                    return@ActionListener
-                }
-                followButton.isEnabled = true
-                if (succeeded) {
-                    post.isFollowedByCurrentUser = isAskingToFollow
-                } else {
-                    val errResId = if (isAskingToFollow) {
-                        R.string.reader_toast_err_follow_blog
-                    } else {
-                        R.string.reader_toast_err_unfollow_blog
-                    }
-                    ToastUtils.showToast(context, errResId)
-                    followButton.setIsFollowed(!isAskingToFollow)
-                }
-            }
-
-            // disable follow button until API call returns
-            followButton.isEnabled = false
-            val result = if (post.isExternal) {
-                ReaderBlogActions.followFeedById(post.feedId, isAskingToFollow, listener)
-            } else {
-                ReaderBlogActions.followBlogById(post.blogId, isAskingToFollow, listener)
-            }
-            if (result) {
-                followButton.setIsFollowed(isAskingToFollow)
-            }
         }
     }
 
