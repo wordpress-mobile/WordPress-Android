@@ -106,4 +106,9 @@ class ReaderPostDetailViewModel @Inject constructor(
             readerPostCardActionsHandler.handleHeaderClicked(blogId, postId)
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        readerPostCardActionsHandler.onCleared()
+    }
 }
