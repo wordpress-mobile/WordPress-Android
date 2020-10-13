@@ -8,6 +8,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryFrameItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -143,7 +145,14 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             mediaModel?.let {
                                 val oldTemporaryId = frame.id ?: ""
                                 frame.id = it.id.toString()
-                                storiesPrefs.saveSlideWithLocalId(
+
+                                // if prefs has this Slide with the temporary key, replace it
+                                // if not, let's now save the new slide with the local key
+                                storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide_Phase1(
+                                        TempId(oldTemporaryId),
+                                        LocalId(it.id),
+                                        it.localSiteId.toLong()
+                                ) ?: storiesPrefs.saveSlideWithLocalId(
                                         it.localSiteId.toLong(),
                                         // use the local id to save the original, will be replaced later
                                         // with mediaModel.mediaId after uploading to the remote site
@@ -158,8 +167,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                                     EventBus.getDefault().post(
                                             StoryFrameMediaModelCreatedEvent(
                                                     oldTemporaryId,
-                                                    it.id.toString(),
-                                                    oldUri.toString()
+                                                    it.id,
+                                                    oldUri.toString(),
+                                                    frame
                                             )
                                     )
                                 }
@@ -211,15 +221,22 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         // track event
         storiesTrackerHelper.trackStorySaveResultEvent(event)
 
-        // only trigger the bridge preparation and the UploadService if the Story is now complete
-        // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
-        // yet.
-        if (isStorySavingComplete(event)) {
-            // only remove it if it was successful - we want to keep it and show a snackbar once when the user
-            // comes back to the app if it wasn't, see MySiteFrament for details.
-            eventBusWrapper.removeStickyEvent(event)
-            event.metadata?.let {
-                val site = it.getSerializable(WordPress.SITE) as SiteModel
+        event.metadata?.let {
+            val site = it.getSerializable(WordPress.SITE) as SiteModel
+            val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
+            saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
+                    site,
+                    event.storyIndex,
+                    story.frames
+            )
+
+            // only trigger the bridge preparation and the UploadService if the Story is now complete
+            // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
+            // yet.
+            if (isStorySavingComplete(event)) {
+                // only remove it if it was successful - we want to keep it and show a snackbar once when the user
+                // comes back to the app if it wasn't, see MySiteFrament for details.
+                eventBusWrapper.removeStickyEvent(event)
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
                 if (event.isEditMode) {
                     // we're done using the temporary ids, let's clean mediaFiles attribute from the blocks that have
@@ -239,5 +256,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 event.frameSaveResult.size == storyRepositoryWrapper.getStoryAtIndex(event.storyIndex).frames.size)
     }
 
-    data class StoryFrameMediaModelCreatedEvent(val oldId: String, val newId: String, val oldUrl: String)
+    data class StoryFrameMediaModelCreatedEvent(
+        val oldId: String,
+        val newId: Int,
+        val oldUrl: String,
+        val frame: StoryFrameItem
+    )
 }

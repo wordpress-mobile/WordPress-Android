@@ -509,6 +509,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         val storyMediaFileDataList = ArrayList<StoryMediaFileData>() // holds media files
         val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
         for ((frameIndex, frame) in story.frames.withIndex()) {
+            val newTempId = storiesPrefs.getNewIncrementalTempId()
+            val assignedTempId = saveStoryGutenbergBlockUseCase.getTempIdForStoryFrame(
+                    newTempId, storyIndex, frameIndex
+            )
             when (frame.id) {
                 // if the frame.id is null, this is a new frame that has been added to an edited Story
                 // so, we don't have much information yet. We do have the background source (not the flattened
@@ -517,7 +521,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 null -> {
                     val storyMediaFileData =
                             saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
-                                    temporaryId = "$storyIndex-$frameIndex",
+                                    temporaryId = assignedTempId,
                                     url = if (frame.source is FileBackgroundSource) {
                                         (frame.source as FileBackgroundSource).file.toString()
                                     } else {
@@ -538,7 +542,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             val storyMediaFileData =
                                     saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
                                             mediaFile = it,
-                                            temporaryId = "$storyIndex-$frameIndex"
+                                            temporaryId = assignedTempId
                                     )
                             frame.id = storyMediaFileData.id
                             storyMediaFileDataList.add(storyMediaFileData)

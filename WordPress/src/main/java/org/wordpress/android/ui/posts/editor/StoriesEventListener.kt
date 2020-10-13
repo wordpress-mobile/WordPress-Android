@@ -15,12 +15,15 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -33,6 +36,7 @@ class StoriesEventListener @Inject constructor(
     private lateinit var lifecycle: Lifecycle
     private lateinit var site: SiteModel
     private var storySaveMediaListener: StorySaveMediaListener? = null
+    @Inject lateinit var storiesPrefs: StoriesPrefs
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun onCreate() {
@@ -124,7 +128,7 @@ class StoriesEventListener @Inject constructor(
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
-        storySaveMediaListener?.onMediaModelCreatedForFile(event.oldId, event.newId, event.oldUrl)
+        storySaveMediaListener?.onMediaModelCreatedForFile(event.oldId, event.newId.toString(), event.oldUrl)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
