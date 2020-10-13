@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * A mutable implementation of [GifMediaViewModel]
  *

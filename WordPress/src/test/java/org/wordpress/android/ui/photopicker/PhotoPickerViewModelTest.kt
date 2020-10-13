@@ -350,7 +350,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         browserType: MediaBrowserType,
         hasStoragePermissions: Boolean = true
     ) {
-        whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
+        whenever(permissionsHandler.hasWriteStoragePermission()).thenReturn(hasStoragePermissions)
         viewModel.start(listOf(), browserType, null, site)
         whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
         viewModel.uiState.observeForever {

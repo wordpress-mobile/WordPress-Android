@@ -237,6 +237,36 @@ class MediaPickerLauncher
         }
     }
 
+    fun showGifPickerForResult(
+        activity: Activity,
+        site: SiteModel,
+        requestCode: Int,
+        allowMultipleSelection: Boolean
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    dataSource = GIF_LIBRARY,
+                    canMultiselect = allowMultipleSelection,
+                    requiresStoragePermissions = false,
+                    allowedTypes = setOf(IMAGE),
+                    cameraEnabled = false,
+                    systemPickerEnabled = false,
+                    editingEnabled = false,
+                    queueResults = false,
+                    defaultSearchView = true,
+                    title = R.string.photo_picker_gif
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site
+            )
+            activity.startActivityForResult(intent, requestCode)
+        } else {
+            ActivityLauncher.showGifPickerForResult(activity, site, requestCode)
+        }
+    }
+
     private fun buildLocalMediaPickerSetup(browserType: MediaBrowserType): MediaPickerSetup {
         val allowedTypes = mutableSetOf<MediaType>()
         if (browserType.isImagePicker) {
