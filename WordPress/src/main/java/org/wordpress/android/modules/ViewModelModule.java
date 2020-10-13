@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -113,6 +114,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderPostDetailViewModel.class)
+    abstract ViewModel readerPostDetailViewModel(ReaderPostDetailViewModel viewModel);
 
     @Binds
     @IntoMap

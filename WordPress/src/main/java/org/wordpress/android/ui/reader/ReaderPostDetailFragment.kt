@@ -33,6 +33,8 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
@@ -101,6 +103,7 @@ import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
@@ -179,6 +182,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private var fileForDownload: String? = null
 
+    private lateinit var viewModel: ReaderPostDetailViewModel
+
     @Inject internal lateinit var accountStore: AccountStore
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var dispatcher: Dispatcher
@@ -189,6 +194,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var imageManager: ImageManager
     @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject lateinit var viewModelFactory: Factory
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -351,6 +357,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         showPost()
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
+        viewModel.start()
     }
 
     override fun onDestroy() {
