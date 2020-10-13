@@ -394,15 +394,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                             this.siteId,
                             this.feedId
                     )
+                    is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+                    is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+                    is ReaderNavigationEvents.ShowReportPost -> {
+                        ReaderActivityLauncher.openUrl(
+                                context,
+                                readerUtilsWrapper.getReportPostUrl(url),
+                                OpenUrlType.INTERNAL
+                        )
+                    }
                     is ReaderNavigationEvents.ShowReaderComments,
                     is ReaderNavigationEvents.ShowNoSitesToReblog,
                     is ReaderNavigationEvents.ShowSitePickerForResult,
                     is ReaderNavigationEvents.OpenEditorForReblog,
                     is ReaderNavigationEvents.ShowBookmarkedTab,
-                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog,
-                    is ReaderNavigationEvents.SharePost,
-                    is ReaderNavigationEvents.OpenPost,
-                    is ReaderNavigationEvents.ShowReportPost -> { // TODO: Handle nav events
+                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> { // TODO: Handle nav events
                     }
                 }
             }
