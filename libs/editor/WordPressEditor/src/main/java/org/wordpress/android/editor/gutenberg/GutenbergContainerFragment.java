@@ -248,6 +248,6 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
-        mWPAndroidGlueCode.mediaModelCreatedForFile(oldId, newId, oldUrl);
+        mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
     }
 }

@@ -156,7 +156,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                                 if (isEditMode) {
                                     // finally send the event that this frameId has changed
                                     EventBus.getDefault().post(
-                                            StoryFrameMediaModelCreatedEvent(
+                                            StoryFrameMediaIdChangeEvent(
                                                     oldTemporaryId,
                                                     it.id.toString(),
                                                     oldUri.toString()
@@ -239,5 +239,5 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 event.frameSaveResult.size == storyRepositoryWrapper.getStoryAtIndex(event.storyIndex).frames.size)
     }
 
-    data class StoryFrameMediaModelCreatedEvent(val oldId: String, val newId: String, val oldUrl: String)
+    data class StoryFrameMediaIdChangeEvent(val oldId: String, val newId: String, val oldUrl: String)
 }

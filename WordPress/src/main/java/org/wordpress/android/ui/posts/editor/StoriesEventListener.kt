@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
-import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
+import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaIdChangeEvent
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -120,7 +120,7 @@ class StoriesEventListener @Inject constructor(
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onStoryFrameMediaModelCreated(event: StoryFrameMediaModelCreatedEvent) {
+    fun onStoryFrameMediaIdChanged(event: StoryFrameMediaIdChangeEvent) {
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
