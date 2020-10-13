@@ -495,7 +495,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (hasPost()) {
-                    ReaderActivityLauncher.openUrl(activity, post!!.url, OpenUrlType.EXTERNAL)
+                    ReaderActivityLauncher.openPost(context, post)
                 } else if (interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(
                             DEEP_LINKED_FALLBACK,
@@ -508,7 +508,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
-                sharePage()
+                ReaderActivityLauncher.sharePost(context, post)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -725,28 +725,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     READER_ARTICLE_DETAIL_UNLIKED,
                     post
             )
-        }
-    }
-
-    /**
-     * display the standard Android share chooser to share this post
-     */
-    private fun sharePage() {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        val url = if (post.hasShortUrl()) post.shortUrl else post.url
-
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, url)
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.title)
-        try {
-            startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
-        } catch (ex: android.content.ActivityNotFoundException) {
-            ToastUtils.showToast(activity, R.string.reader_toast_err_share_intent)
         }
     }
 
