@@ -110,6 +110,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
     private Set<String> mFailedMediaIds = new HashSet<>();
+    private Set<String> mCancelledMediaIds = new HashSet<>();
 
     private boolean mIsNewPost;
     private boolean mIsJetpackSsoEnabled;
@@ -521,6 +522,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // remove from editor
                             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
                             getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
+                            mCancelledMediaIds.add(String.valueOf(localMediaId));
                             mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
@@ -963,8 +965,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        mUploadingMediaProgressMax.put(localMediaId, progress);
-        getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
+        if(!mCancelledMediaIds.contains(localMediaId)) {
+            mUploadingMediaProgressMax.put(localMediaId, progress);
+            getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
+        }
+        else {
+            mCancelledMediaIds.remove(localMediaId);
+        }
     }
 
     @Override
