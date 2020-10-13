@@ -162,7 +162,9 @@
     <string name="media_accessing_progress">Accessing content of a private site</string>
     <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
 
+    <string name="media_uploading_default">Uploading media</string>
     <string name="media_uploading_stock_library_photo">Uploading stock media</string>
+    <string name="media_uploading_gif_library_photo">Uploading gif media</string>
 
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>

@@ -222,6 +222,9 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showGifPickerForResult}  instead
+     */
     public static void showGifPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
         Map<String, String> properties = new HashMap<>();
         properties.put("from", activity.getClass().getSimpleName());
