@@ -77,7 +77,7 @@ class LoginPrologueFragment : Fragment() {
         intros_pager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                AnalyticsUtils.trackLoginProloguePages(position);
+                AnalyticsUtils.trackLoginProloguePages(position)
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -125,7 +125,7 @@ class LoginPrologueFragment : Fragment() {
             AnalyticsTracker.track(LOGIN_PROLOGUE_VIEWED)
             // track first slide as viewed by default, since OnPageChangeListener
             // will not be called until the actual swipe
-            AnalyticsUtils.trackLoginProloguePages(0);
+            AnalyticsUtils.trackLoginProloguePages(0)
             unifiedLoginTracker.track(Flow.PROLOGUE, PROLOGUE)
         }
     }
