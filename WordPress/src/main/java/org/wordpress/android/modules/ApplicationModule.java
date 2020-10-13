@@ -119,4 +119,12 @@ public abstract class ApplicationModule {
         ApiClient.init(context, builder);
         return new TenorProvider(context, ApiClient.getInstance(context));
     }
+
+    @Provides
+    static IApiClient provideTenorClient(Context context) {
+        ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
+        builder.apiKey(BuildConfig.TENOR_API_KEY);
+        ApiClient.init(context, builder);
+        return ApiClient.getInstance(context);
+    }
 }

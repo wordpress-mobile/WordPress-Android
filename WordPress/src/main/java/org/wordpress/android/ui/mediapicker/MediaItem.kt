@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.mediapicker
 
-import android.net.Uri
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.util.UriWrapper
 
 data class MediaItem(
@@ -13,24 +14,21 @@ data class MediaItem(
     val mimeType: String? = null,
     val dataModified: Long
 ) {
-    sealed class Identifier {
-        data class LocalUri(val value: UriWrapper) : Identifier()
-        data class RemoteId(val value: Long) : Identifier()
-        data class StockMediaIdentifier(val url: String?, val name: String?, val title: String?) : Identifier()
-
-        fun toParcel() = Parcel((this as? LocalUri)?.value?.uri, (this as? RemoteId)?.value)
-
-        companion object {
-            fun fromParcel(parcel: Parcel): Identifier {
-                return when {
-                    parcel.remoteId != null -> RemoteId(parcel.remoteId)
-                    parcel.uri != null -> LocalUri(UriWrapper(parcel.uri))
-                    else -> throw IllegalArgumentException("Parcel doesn't have URI or remote ID")
-                }
-            }
-        }
+    sealed class Identifier : Parcelable {
+        @Parcelize
+        data class LocalUri(val value: @RawValue UriWrapper) : Identifier()
 
         @Parcelize
-        data class Parcel(val uri: Uri? = null, val remoteId: Long? = null) : Parcelable
+        data class RemoteId(val value: Long) : Identifier()
+
+        @Parcelize
+        data class StockMediaIdentifier(val url: String?, val name: String?, val title: String?) : Identifier()
+
+        @Parcelize
+        data class GifMediaIdentifier(
+            val mediaModel: MediaModel?,
+            val largeImageUri: @RawValue UriWrapper,
+            val title: String?
+        ) : Identifier()
     }
 }

@@ -1077,7 +1077,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                             .showStockMediaPickerForResult(this, mSite, requestCode, allowMultipleSelection);
                     break;
                 case GIF:
-                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_SINGLE_SELECT);
+                    mMediaPickerLauncher.showGifPickerForResult(
+                            this,
+                            mSite,
+                            RequestCodes.GIF_PICKER_SINGLE_SELECT,
+                            allowMultipleSelection
+                    );
                     break;
             }
         } else {

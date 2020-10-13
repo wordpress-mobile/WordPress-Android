@@ -182,8 +182,7 @@ class MediaPickerFragment : Fragment() {
         if (savedInstanceState != null) {
             lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
             if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
-                selectedIds = savedInstanceState.getParcelableArrayList<Identifier.Parcel>(KEY_SELECTED_IDS)
-                        ?.map { Identifier.fromParcel(it) }
+                selectedIds = savedInstanceState.getParcelableArrayList<Identifier>(KEY_SELECTED_IDS)?.map { it }
             }
         }
 
@@ -407,7 +406,9 @@ class MediaPickerFragment : Fragment() {
                         1
                     }
                 }
+        val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
+        recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     private fun setupFab(fabUiModel: FabUiModel) {
@@ -429,7 +430,7 @@ class MediaPickerFragment : Fragment() {
                     is Visible -> {
                         if (progressDialog == null || progressDialog?.isShowing == false) {
                             val builder: Builder = MaterialAlertDialogBuilder(requireContext())
-                            builder.setTitle(string.media_uploading_stock_library_photo)
+                            builder.setTitle(this.title)
                             builder.setView(layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
                                     string.cancel
@@ -473,9 +474,9 @@ class MediaPickerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.lastTappedIcon?.toBundle(outState)
-        val selectedIds = viewModel.selectedIdentifiers().map { it.toParcel() }
+        val selectedIds = viewModel.selectedIdentifiers()
         if (selectedIds.isNotEmpty()) {
-            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList(selectedIds))
+            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList<Identifier>(selectedIds))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
