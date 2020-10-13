@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
@@ -353,6 +354,9 @@ class MediaPickerViewModel @Inject constructor(
                         _onNavigate.postValue(Event(PreviewMedia(media)))
                     }
                 }
+            }
+            is GifMediaIdentifier -> {
+                _onNavigate.postValue(Event(PreviewUrl(identifier.largeImageUri.toString())))
             }
         }
     }
