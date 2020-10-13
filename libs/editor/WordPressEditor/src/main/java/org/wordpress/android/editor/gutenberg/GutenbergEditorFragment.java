@@ -360,19 +360,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void initializeSavingProgressDialog() {
-        if (getActivity() instanceof PostSaveStatusTracker) {
-            LiveData<SaveState> isSaveInProgressData = ((PostSaveStatusTracker) getActivity()).getSaveInProgressData();
-
-            // Show saving progress dialog if save is already in progress. Once that save is
-            // complete, hide the dialog and stop listening
-            isSaveInProgressData.observe(getViewLifecycleOwner(), saveState -> {
-                if (saveState == SaveState.SaveInProgress) {
-                    showSavingProgressDialogIfNeeded();
-                } else {
-                    hideSavingProgressDialog();
-                    isSaveInProgressData.removeObservers(getViewLifecycleOwner());
-                }
-            });
+        if (mEditorFragmentListener != null) {
+            mEditorFragmentListener.getSavingInProgressDialogVisibility()
+                                   .observe(getViewLifecycleOwner(), visibility -> {
+                                       if (DialogVisibility.Showing == visibility) {
+                                           showSavingProgressDialogIfNeeded();
+                                       } else {
+                                           hideSavingProgressDialog();
+                                       }
+                                   });
         }
     }
 
@@ -920,10 +916,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void removeMedia(String mediaId) {
     }
 
-    // Getting the content from the editor can take time and the UI seems to be unresponsive.
-    // Show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
-    @Override
-    public boolean showSavingProgressDialogIfNeeded() {
+    private boolean showSavingProgressDialogIfNeeded() {
         if (!isAdded()) {
             return false;
         }
@@ -943,8 +936,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
        return true;
     }
 
-    @Override
-    public boolean hideSavingProgressDialog() {
+    private boolean hideSavingProgressDialog() {
         if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
             mSavingContentProgressDialog.dismiss();
             return true;

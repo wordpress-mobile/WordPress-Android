@@ -1202,16 +1202,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
     }
 
-    @Override
-    public boolean showSavingProgressDialogIfNeeded() {
-        return false;
-    }
-
-    @Override
-    public boolean hideSavingProgressDialog() {
-        return false;
-    }
-
     @Override public void mediaSelectionCancelled() {
         // noop implementation for shared interface with block editor
     }

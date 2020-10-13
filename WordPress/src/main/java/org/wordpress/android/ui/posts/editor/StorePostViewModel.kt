@@ -7,7 +7,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.wordpress.android.editor.gutenberg.PostSaveStatusTracker
+import org.wordpress.android.editor.gutenberg.DialogVisibility
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
+import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -39,9 +42,8 @@ class StorePostViewModel
     private val postUtils: PostUtilsWrapper,
     private val uploadService: UploadServiceFacade,
     private val savePostToDbUseCase: SavePostToDbUseCase,
-    private val networkUtils: NetworkUtilsWrapper,
-    private val saveInProgressWIthUITracker: SaveInProgressWIthUITracker
-) : ScopedViewModel(mainDispatcher), PostSaveStatusTracker by saveInProgressWIthUITracker {
+    private val networkUtils: NetworkUtilsWrapper
+) : ScopedViewModel(mainDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
@@ -49,6 +51,11 @@ class StorePostViewModel
 
     private val _onFinish = MutableLiveData<Event<ActivityFinishState>>()
     val onFinish: LiveData<Event<ActivityFinishState>> = _onFinish
+
+    private val _savingProgressDialogVisibility = MutableLiveData<DialogVisibility>().apply {
+        postValue(Hidden)
+    }
+    override val savingInProgressDialogVisibility: LiveData<DialogVisibility> = _savingProgressDialogVisibility
 
     fun savePostOnline(
         isFirstTimePublish: Boolean,
@@ -95,17 +102,13 @@ class StorePostViewModel
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
         onCompleted: ((PostImmutableModel, UpdatePostResult) -> Unit)? = null
     ) {
-        saveInProgressWIthUITracker.startingSave()
         postRepository.updateAsync({ postModel ->
             updatePostObjectWithUI(
                     getUpdatedTitleAndContent,
                     postModel,
                     postRepository
             )
-        }, { model, result ->
-            onCompleted?.invoke(model, result)
-            saveInProgressWIthUITracker.endingSave()
-        })
+        }, onCompleted)
     }
 
     private fun updatePostObjectWithUI(
@@ -157,7 +160,12 @@ class StorePostViewModel
         return titleChanged || contentChanged
     }
 
+    fun showSaveProgressDialog() {
+        _savingProgressDialogVisibility.postValue(Showing)
+    }
+
     fun finish(state: ActivityFinishState) {
+        _savingProgressDialogVisibility.postValue(Hidden)
         _onFinish.postValue(Event(state))
     }
 
