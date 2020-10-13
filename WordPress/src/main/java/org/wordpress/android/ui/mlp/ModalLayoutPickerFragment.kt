@@ -51,6 +51,9 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+        const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
+        const val SELECTED_CATEGORIES = "SELECTED_CATEGORIES"
+        const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
     }
 
     override fun onCreateView(
@@ -96,7 +99,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
         setScrollListener()
 
-        setupViewModel()
+        setupViewModel(savedInstanceState)
     }
 
     private fun setScrollListener() {
@@ -136,9 +139,30 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel.dismiss()
     }
 
-    private fun setupViewModel() {
+    override fun onSaveInstanceState(outState: Bundle) {
+        (viewModel.uiState.value as? ContentUiState)?.let {
+            outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
+            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+        }
+        outState.putParcelable(FETCHED_LAYOUTS, viewModel.layouts)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun loadSavedState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            val layouts = it.getParcelable<GutenbergPageLayouts>(FETCHED_LAYOUTS)
+            val selected = it.getString(SELECTED_LAYOUT)
+            val categories = (it.getSerializable(SELECTED_CATEGORIES) as? List<*>)?.filterIsInstance<String>()
+            viewModel.loadSavedState(layouts, selected, categories)
+        }
+    }
+
+    private fun setupViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
+
+        loadSavedState(savedInstanceState)
 
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
