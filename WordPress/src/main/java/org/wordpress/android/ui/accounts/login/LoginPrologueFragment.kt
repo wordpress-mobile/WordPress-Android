@@ -16,7 +16,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
