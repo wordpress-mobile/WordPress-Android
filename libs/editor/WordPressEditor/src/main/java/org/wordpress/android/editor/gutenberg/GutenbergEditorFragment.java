@@ -176,6 +176,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
+
         initializeSavingProgressDialog();
 
         if (getArguments() != null) {
@@ -360,16 +361,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void initializeSavingProgressDialog() {
         if (getActivity() instanceof PostSaveStatusTracker) {
-            LiveData<Boolean> isSaveInProgressData = ((PostSaveStatusTracker) getActivity()).getGetSaveInProgressData();
-            Boolean isSaveInProgress = isSaveInProgressData.getValue();
-            if (isSaveInProgress != null && isSaveInProgress) {
-                showSavingProgressDialogIfNeeded();
-            }
-            isSaveInProgressData.observe(getViewLifecycleOwner(), isInProgress -> {
-                // ignoring when isInProgress is true because we do not want the save progress dialog to
-                // appear for every autosave
-                if (!isInProgress) {
+            LiveData<SaveState> isSaveInProgressData = ((PostSaveStatusTracker) getActivity()).getSaveInProgressData();
+
+            // Show saving progress dialog if save is already in progress. Once that save is
+            // complete, hide the dialog and stop listening
+            isSaveInProgressData.observe(getViewLifecycleOwner(), saveState -> {
+                if (saveState == SaveState.SaveInProgress) {
+                    showSavingProgressDialogIfNeeded();
+                } else {
                     hideSavingProgressDialog();
+                    isSaveInProgressData.removeObservers(getViewLifecycleOwner());
                 }
             });
         }

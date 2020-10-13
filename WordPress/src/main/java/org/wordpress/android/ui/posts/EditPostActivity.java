@@ -70,9 +70,10 @@ import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
-import org.wordpress.android.editor.gutenberg.PostSaveStatusTracker;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
+import org.wordpress.android.editor.gutenberg.PostSaveStatusTracker;
+import org.wordpress.android.editor.gutenberg.SaveState;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -3353,8 +3354,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 
-    @Override
-    public LiveData<Boolean> getGetSaveInProgressData() {
-        return mViewModel.isSaveInProgress();
+    public LiveData<SaveState> getSaveInProgressData() {
+        return mViewModel.getSaveInProgressData();
     }
 }
