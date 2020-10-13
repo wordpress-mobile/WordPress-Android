@@ -150,16 +150,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun loadSavedState(savedInstanceState: Bundle?) {
-        (savedInstanceState?.getSerializable(SELECTED_CATEGORIES) as? ArrayList<*>)?.let {
-            viewModel.loadSavedSelectedCategories(ArrayList(it.filterIsInstance<String>()))
-        }
-        (savedInstanceState?.getString(SELECTED_LAYOUT))?.let {
-            viewModel.loadSavedSelectedLayout(it)
-        }
-        savedInstanceState?.getParcelable<GutenbergPageLayouts>(FETCHED_LAYOUTS)?.let {
-            if (it.isNotEmpty) {
-                viewModel.handleBlockLayoutsResponse(it)
-            }
+        savedInstanceState?.let {
+            val layouts = it.getParcelable<GutenbergPageLayouts>(FETCHED_LAYOUTS)
+            val selected = it.getString(SELECTED_LAYOUT)
+            val categories = (it.getSerializable(SELECTED_CATEGORIES) as? List<*>)?.filterIsInstance<String>()
+            viewModel.loadSavedState(layouts, selected, categories)
         }
     }
 
