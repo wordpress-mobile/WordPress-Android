@@ -82,7 +82,7 @@ public class WPScreenshotTest extends BaseTest {
         // Choose "Switch Site"
         clickOn(R.id.switch_site);
 
-        (new SitePickerPage()).chooseSiteWithURL("infocusphotographers.com");
+        (new SitePickerPage()).chooseSiteWithURL("fourpawsdoggrooming.wordpress.com");
 
         // Choose "Blog Posts"
         scrollToThenClickOn(R.id.quick_action_posts_button);
@@ -90,21 +90,19 @@ public class WPScreenshotTest extends BaseTest {
         // Choose "Drafts"
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.post_list_tab_drafts), R.id.tabLayout);
 
-        // TODO: Tap the + in the editor toolbar to open the block library
-
         // Get a screenshot of the editor with the block library expanded
         String name = "1-create-a-site-or-start-a-blog";
-        screenshotPostWithName("Summer Band Jam", name, false, true);
 
+        screenshotPostWithName("Our Services", name, false, true);
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    @SuppressWarnings("checkstyle:WhitespaceAround") private void screenshotPostWithName(String name,
-                                                                                         String screenshotName,
-                                                                                         boolean hideKeyboard,
-                                                                                         boolean openBlockList) {
+    private void screenshotPostWithName(String name,
+                                        String screenshotName,
+                                        boolean hideKeyboard,
+                                        boolean openBlockList) {
         idleFor(2000);
 
         PostsListPage.scrollToTop();
@@ -124,7 +122,7 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        if(openBlockList) {
+        if (openBlockList) {
             clickOnViewWithContentDescription("Add block, Double tap to add a block");
         }
 
