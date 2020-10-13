@@ -33,13 +33,14 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.reader_post_detail_header_view.view.*
+import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -74,7 +75,6 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
-import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -85,6 +85,7 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
@@ -99,6 +100,8 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -113,6 +116,7 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListe
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -195,6 +199,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Inject lateinit var viewModelFactory: Factory
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -366,7 +371,59 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
+        viewModel.headerUiState.observe(
+            viewLifecycleOwner,
+            Observer<ReaderPostDetailsHeaderUiState> { state ->
+                header_view.updatePost(state)
+            }
+        )
+
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+                it?.applyIfNotHandled {
+                    showSnackbar()
+                }
+            }
+        )
+
+        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ReaderNavigationEvents.ShowPostsByTag -> {
+                            ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+                    }
+                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                            context,
+                            this.siteId,
+                            this.feedId
+                    )
+                    is ReaderNavigationEvents.ShowReaderComments,
+                    is ReaderNavigationEvents.ShowNoSitesToReblog,
+                    is ReaderNavigationEvents.ShowSitePickerForResult,
+                    is ReaderNavigationEvents.OpenEditorForReblog,
+                    is ReaderNavigationEvents.ShowBookmarkedTab,
+                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog,
+                    is ReaderNavigationEvents.SharePost,
+                    is ReaderNavigationEvents.OpenPost,
+                    is ReaderNavigationEvents.ShowReportPost -> { // TODO: Handle nav events
+                    }
+                }
+            }
+        })
         viewModel.start()
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(
+                layout_post_detail_container,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
+        )
+        if (this.buttonTitle != null) {
+            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
+                this.buttonAction.invoke()
+            }
+        }
+        snackbar.show()
     }
 
     override fun onDestroy() {
@@ -1314,8 +1371,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
 
-            val postDetailsHeaderUiState = createPostDetailsHeaderUiState(post!!, headerView)
-            headerView.updatePost(postDetailsHeaderUiState)
+            post?.let {
+                viewModel.onShowPost(it)
+            }
 
             if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
                 AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
@@ -1323,28 +1381,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             refreshIconCounts()
             initBookmarkButton()
-        }
-
-        private fun createPostDetailsHeaderUiState(
-            post: ReaderPost,
-            headerView: ReaderPostDetailHeaderView
-        ): ReaderPostDetailsHeaderUiState {
-            val onBlogSectionClicked = { postId: Long?, blogId: Long? ->
-                ReaderActivityLauncher.showReaderBlogPreview(context, post)
-            }
-            val onFollowButtonClicked = { toggleFollowStatus(headerView.header_follow_button) }
-
-            val onTagItemClicked = { tagSlug: String ->
-                val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
-                ReaderActivityLauncher.showReaderTagPreview(context, readerTag)
-            }
-
-            return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
-                    post,
-                    onBlogSectionClicked,
-                    onFollowButtonClicked,
-                    onTagItemClicked
-            )
         }
     }
 

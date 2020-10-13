@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -36,6 +37,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
     private var isStarted = false
 
     fun start() {
@@ -59,12 +63,24 @@ class ReaderPostDetailViewModel @Inject constructor(
                 _headerUiState.value = createPostDetailsHeaderUiState(it)
             }
         }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            _navigationEvents.value = event
+        }
     }
 
     fun onButtonClicked(post: ReaderPost, type: ReaderPostCardActionType) {
         launch {
             readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
         }
+    }
+
+    fun onShowPost(post: ReaderPost) {
+        _headerUiState.value = createPostDetailsHeaderUiState(post)
     }
 
     private fun createPostDetailsHeaderUiState(
