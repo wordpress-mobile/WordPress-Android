@@ -22,6 +22,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
 
 class LoginPrologueFragment : Fragment() {
@@ -77,7 +78,7 @@ class LoginPrologueFragment : Fragment() {
         intros_pager.addOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                AnalyticsTracker.track(LOGIN_PROLOGUE_PAGED)
+                AnalyticsUtils.trackLoginProloguePages(position);
             }
 
             override fun onPageScrollStateChanged(state: Int) {}
@@ -123,6 +124,9 @@ class LoginPrologueFragment : Fragment() {
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(LOGIN_PROLOGUE_VIEWED)
+            // track first slide as viewed by default, since OnPageChangeListener
+            // will not be called until the actual swipe
+            AnalyticsUtils.trackLoginProloguePages(0);
             unifiedLoginTracker.track(Flow.PROLOGUE, PROLOGUE)
         }
     }
