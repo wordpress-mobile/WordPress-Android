@@ -413,6 +413,19 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on search searches for results`() = test {
+        val query = "dog"
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, filter = query)
+
+        assertThat(uiStates).hasSize(2)
+
+        viewModel.onSearch(query)
+
+        verify(mediaPickerTracker).trackSearch(singleSelectMediaPickerSetup)
+        assertThat(uiStates).hasSize(2)
+    }
+
+    @Test
     fun `system picker opened for photo when allowed types is IMAGE only`() = test {
         setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
 
