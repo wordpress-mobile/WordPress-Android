@@ -67,8 +67,8 @@ public class WPScreenshotTest extends BaseTest {
 
         editBlogPost();
         navigateDiscover();
-        navigateStats();
         navigateMySite();
+        navigateStats();
         navigateNotifications();
         manageMedia();
 
