@@ -31,6 +31,8 @@ import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
+import static org.wordpress.android.support.WPSupportUtils.swipeDownOnView;
+import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
 import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
@@ -134,9 +136,10 @@ public class WPScreenshotTest extends BaseTest {
         // Click on the "Reader" tab and take a screenshot
         clickOn(R.id.nav_reader);
 
-        // TODO: add this back after mocked data for Discover has been fixed
-        // waitForElementToBeDisplayedWithoutFailure(R.id.interests_fragment_container);
+        waitForElementToBeDisplayedWithoutFailure(R.id.interests_fragment_container);
 
+        swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
+        swipeUpOnView(R.id.fragment_container, (float) 0.5);
         takeScreenshot("2-discover-new-reads");
 
         // Exit back to the main activity

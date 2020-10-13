@@ -14,9 +14,12 @@ import androidx.test.espresso.Espresso;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.CoordinatesProvider;
 import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
 import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
 import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -39,6 +42,8 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
@@ -362,6 +367,23 @@ public class WPSupportUtils {
         }
 
         clickOn(tabItemInTabLayoutWithTitle(elementID, string));
+    }
+
+    private static ViewAction swipeFromBottomToTop(float yFactor) {
+        return new GeneralSwipeAction(Swipe.SLOW,
+                view -> {
+                    float[] coordinates = GeneralLocation.CENTER.calculateCoordinates(view);
+                    coordinates[1] *= yFactor;
+                    return coordinates;
+                }, GeneralLocation.TOP_CENTER, Press.FINGER);
+    }
+
+    public static void swipeUpOnView(Integer elementID, float yFactor) {
+        onView(withId(elementID)).perform(swipeFromBottomToTop(yFactor));
+    }
+
+    public static void swipeDownOnView(Integer elementID) {
+        onView(withId(elementID)).perform(swipeDown());
     }
 
     private static Boolean tabLayoutHasTextDisplayed(Integer elementID, String text) {
