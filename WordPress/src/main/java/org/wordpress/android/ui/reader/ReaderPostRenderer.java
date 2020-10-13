@@ -396,9 +396,9 @@ public class ReaderPostRenderer {
               .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
               .append(" p:first-child { margin-top: 0px; }")
-              // add background color, fontsize and padding to pre blocks, and add overflow scrolling
-              // so user can scroll the block if it's wider than the display
-              .append(" pre { overflow-x: scroll;")
+              // add background color, fontsize and padding to pre blocks, and wrap the text
+              // so the user can see full block.
+              .append(" pre { word-wrap: break-word; white-space: pre-wrap; ")
               .append(" background-color: var(--color-neutral-20);")
               .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
               .append(" line-height: 1.2em; font-size: 14px; }")
@@ -545,6 +545,7 @@ public class ReaderPostRenderer {
           .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
           .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
           .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("--color-neutral-10: ").append(mResourceVars.mGreyDisabledStr).append("; ")
           .append("} ");
     }
 

@@ -81,10 +81,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         }
 
         createBlankPageButton.setOnClickListener {
-            closeModal()
-            viewModel.createPage()
+            viewModel.onCreatePageClicked()
         }
-        createPageButton.setOnClickListener { /* TODO */ }
+        createPageButton.setOnClickListener {
+            viewModel.onCreatePageClicked()
+        }
         previewButton.setOnClickListener { /* TODO */ }
 
         setScrollListener()
@@ -112,6 +113,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onAttach(context: Context) {
@@ -176,11 +178,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val parentLayout =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            parentLayout?.let { it ->
+        dialog.setOnShowListener {
+            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let {
                 val behaviour = BottomSheetBehavior.from(it)
                 setupFullHeight(it)
                 behaviour.skipCollapsed = true

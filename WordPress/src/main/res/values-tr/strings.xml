@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-16 13:11:21+0000
+Translation-Revision-Date: 2020-09-23 21:41:49+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="mlp_selected_description">%s seçildi</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="typeface_label_nunito">Gelişigüzel</string>
+    <string name="typeface_label_libre_baskerville">Klasik</string>
+    <string name="typeface_label_oswald">Güçlü</string>
+    <string name="typeface_label_pacifico">Eğlenceli</string>
+    <string name="typeface_label_space_mono">Modern</string>
+    <string name="typeface_label_shrikhand">Gözüpek</string>
+    <string name="comment_unable_to_show_error">Bu yorum gösterilemiyor</string>
+    <string name="permission_microphone">Mikrofon</string>
+    <string name="login_get_link_by_email">E-posta ile bir oturum açma bağlantısı alın</string>
+    <string name="reader_menu_report_post">Bu yazıyı bildir</string>
     <string name="reader_welcome_banner">Okuyucuya hoş geldiniz. Parmaklarınızın ucunda milyonlarca blogu keşfedin.</string>
-    <string name="mlp_layout_selected">%s seçildi</string>
     <string name="gutenberg_native_angle">Açı</string>
     <string name="error_media_xmlrcp_server_error">Dahili sunucu hatası oluştu</string>
+    <string name="error_media_xmlrpc_not_allowed">Eyleminize izin verilmiyor</string>
+    <string name="show_n_hidden_items_desc">%1$s daha fazla öğe</string>
     <string name="gutenberg_native_select_a_layout">Düzen seç</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Not: Sütun düzeni, temalar ve ekran boyutları arasında değişiklik gösterebilir</string>
     <string name="create_post_fab_tooltip">Bir yazı oluştur</string>
@@ -109,17 +122,17 @@ Language: tr
     <string name="continue_with_google_terms_of_service_text">Google ile devam ederseniz ve WordPress.com hesabınız yoksa, bir hesap oluşturup %1$shizmet şartlarımızı%2$s kabul etmiş olursunuz.</string>
     <string name="signup_confirmation_title">Kayıt onayı</string>
     <string name="continue_terms_of_service_text">Devam etmekle, %1$shizmet koşullarını%2$s kabul etmiş olursunuz.</string>
-    <string name="signup_confirmation_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size sihirli bir bağlantı göndereceğiz.</string>
+    <string name="signup_confirmation_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size e-postayla bir kayıt bağlantısı göndereceğiz.</string>
     <string name="signup_confirmation_message">Bu e-posta adresini, yeni WordPress.com hesabınızı oluşturmak için kullanacağız.</string>
-    <string name="signup_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size sihirli bir bağlantı gönderdik. Bu cihazdaki e-postanızı kontrol edin ve WordPress.com\'dan aldığınız e-postadaki bağlantıya dokunun.</string>
+    <string name="signup_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size kayıdolma bağlantısı gönderdik. Bu cihazdaki e-postanızı kontrol edin ve WordPress.com\'dan aldığınız e-postadaki bağlantıya dokunun.</string>
     <string name="enter_account_info_for_site">%1$s için hesap bilgilerinizi girin.</string>
     <string name="login_done">Bitti</string>
     <string name="login_find_your_site_adress">Site adresinizi bulun</string>
     <string name="continue_google_button_suffix">Google ile devam et</string>
     <string name="login_or">veya</string>
     <string name="login_magic_links_sent_label">E-postanızı bu cihazda kontrol edin ve WordPress.com’dan gelen e-postadaki bağlantıya dokunun</string>
-    <string name="login_magic_links_label">Size anında giriş yapacağınız bir sihirli bağlantıyı e-posta ile göndereceğiz, hiç bir parolaya gerek yok.</string>
     <string name="magic_link_not_seeing_email_message">E-postayı görmüyor musunuz? İstenmeyen posta klasörünüzü kontrol edin.</string>
+    <string name="login_magic_links_label">Size anında giriş yapacağınız bir bağlantıyı e-posta ile göndereceğiz, hiç bir parolaya gerek yok.</string>
     <string name="reset_your_password">Parolanızı sıfırlayın</string>
     <string name="login_promo_text_unlock_the_power">En esnek web sitesi oluşturma platformunun gücünü açığa çıkarın.</string>
     <string name="create_account">Hesap oluştur</string>
@@ -1278,15 +1291,14 @@ Language: tr
     <string name="notifications_screen_title">Bildirimler</string>
     <string name="reader_screen_title">Okuyucu</string>
     <string name="me_section_screen_title">Ben</string>
-    <string name="my_site_section_screen_title">Sitem</string>
     <string name="notif_settings_screen_title">Bildirim ayarları</string>
     <string name="license_screen_title">Lisans</string>
     <string name="release_notes_screen_title">Sürüm notları</string>
     <string name="help_screen_title">Yardım ve destek</string>
+    <string name="my_site_section_screen_title">Sitem</string>
     <string name="signup_epilogue_error_avatar_view">Avatarınız yüklendi ve kısa süre içinde kullanılabilir olacak.</string>
     <string name="permissions_denied_title">İzinler</string>
     <string name="version_with_name_param">Sürüm %s</string>
-    <string name="email_not_registered_wpcom">Bu e-posta hesabına bağlı bir WordPress.com hesabı bulamıyoruz. Site adresinizi kullanarak oturum açmak için aşağıdaki bağlantıyı deneyin.</string>
     <string name="permissions_denied_message">Görünen o ki bu özellik için gerekli izinleri kapatmışsınız.&lt;br/>&lt;br/>Bunu değiştirmek için izinlerinizi düzenleyin ve &lt;strong>%s&lt;/strong> izninin etkin olduğundan emin olun.</string>
     <string name="plugin_caption_featured">Öne çıkan</string>
     <string name="sharing_disabled_description">Jetpack Paylaşım modülünüz devre dışı olduğundan paylaşım ayarlarınıza erişemiyorsunuz.</string>
@@ -1353,12 +1365,12 @@ Language: tr
     <string name="signup_epilogue_error_button_positive">Tekrar dene</string>
     <string name="signup_epilogue_error_button_negative">Eski haline getir</string>
     <string name="signup_magic_link_error">E-posta gönderirken bir sorunla karşılaştık. Şimdi yeniden deneyebilir veya kapatıp daha sonra tekrar deneyebilirsiniz.</string>
-    <string name="signup_epilogue_hint_password_detail">Her zaman az önce kullandığınız gibi bir sihirli bağlantıyla oturum açabilirsiniz, ancak isterseniz bir parola da oluşturabilirsiniz.</string>
     <string name="signup_epilogue_hint_password">Parola (seçime bağlı)</string>
     <string name="signup_epilogue_error_generic">Hesabınız güncellenirken bir sorunla karşılaştık. Yeniden deneyebilir veya devam etmek için değişikliklerinizi geri alabilirsiniz.</string>
     <string name="signup_epilogue_error_avatar">Avatarınız güncellenirken bir sorunla karşılaştık.</string>
     <string name="signup_email_header">Yeni WordPress.com hesabınızı oluşturmak için lütfen e-posta adresinizi girin.</string>
     <string name="signup_email_error_generic">E-posta adresinizi kontrol ederken bir sorunla karşılaştık.</string>
+    <string name="signup_epilogue_hint_password_detail">Her zaman az önce kullandığınız gibi bir bağlantıyla oturum açabilirsiniz, ancak isterseniz bir parola da oluşturabilirsiniz.</string>
     <string name="sign_up">WordPress.com\'a Kaydolun</string>
     <string name="enter_username_instead">Kullanıcı adınızla oturum açın.</string>
     <string name="enter_site_address_instead">Site adresinizi girerek oturum açın.</string>

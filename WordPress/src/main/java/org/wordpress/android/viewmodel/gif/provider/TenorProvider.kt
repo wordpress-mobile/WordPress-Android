@@ -17,6 +17,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * Implementation of a GifProvider using the Tenor GIF API as provider
  *

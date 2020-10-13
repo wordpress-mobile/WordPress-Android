@@ -59,6 +59,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceive
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -114,7 +115,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mIsJetpackSsoEnabled;
 
     private boolean mEditorDidMount;
-    private GutenbergPropsBuilder mLatestGutenbergPropsBuilder;
+    private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
 
     private ProgressDialog mSavingContentProgressDialog;
 
@@ -154,6 +155,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (getGutenbergContainerFragment() == null) {
             GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
+            mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -307,13 +309,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         );
                     }
                 },
+                new OnGutenbergDidSendButtonPressedActionListener() {
+                    @Override
+                    public void gutenbergDidSendButtonPressedAction(String buttonType) {
+                        mEditorFragmentListener.showJetpackSettings();
+                    }
+                },
                 mEditorFragmentListener::getMention,
                 new OnStarterPageTemplatesTooltipShownEventListener() {
                     @Override
                     public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
                         mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
                     }
-                    
+
                     @Override
                     public boolean onRequestStarterPageTemplatesTooltipShown() {
                         return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
@@ -391,7 +399,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
                 // We need to send latest capabilities as JS side clears them
-                getGutenbergContainerFragment().updateCapabilities(mLatestGutenbergPropsBuilder);
+                getGutenbergContainerFragment().updateCapabilities(mCurrentGutenbergPropsBuilder);
                 trackWebViewClosed("save");
             } else {
                 trackWebViewClosed("dismiss");
@@ -684,7 +692,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public void updateCapabilities(boolean isJetpackSsoEnabled, GutenbergPropsBuilder gutenbergPropsBuilder) {
         mIsJetpackSsoEnabled = isJetpackSsoEnabled;
-        mLatestGutenbergPropsBuilder = gutenbergPropsBuilder;
+        mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
         getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
     }
 
