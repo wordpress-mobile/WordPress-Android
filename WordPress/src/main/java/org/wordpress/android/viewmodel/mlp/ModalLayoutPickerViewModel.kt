@@ -89,7 +89,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            val payload = FetchBlockLayoutsPayload(site, supportedBlocksProvider.fromAssets().supported)
+            val payload = FetchBlockLayoutsPayload(site, supportedBlocksProvider.fromAssets().supported, null, null)
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
