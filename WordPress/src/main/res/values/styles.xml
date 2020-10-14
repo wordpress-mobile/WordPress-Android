@@ -391,11 +391,8 @@
     </style>
 
     <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">25</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -405,14 +402,18 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteListRowLayout">
@@ -638,8 +639,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:minHeight">?attr/listPreferredItemHeight</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_large</item>
-        <item name="android:paddingStart">@dimen/margin_large</item>
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 

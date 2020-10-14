@@ -1,7 +1,12 @@
 {
     "request": {
-        "urlPath": "/rest/v1.3/sites/106707880/plans",
-        "method": "GET"
+        "urlPath": "/rest/v1.3/sites/106707880/plans/",
+        "method": "GET",
+        "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
     },
     "response": {
         "status": 200,

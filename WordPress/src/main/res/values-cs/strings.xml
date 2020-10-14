@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-28 18:36:11+0000
+Translation-Revision-Date: 2020-10-02 07:22:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -433,7 +433,6 @@ Language: cs_CZ
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Poznámky k vydání</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar byl nahrán a bude brzy k dispozici.</string>
-    <string name="email_not_registered_wpcom">Hmm, nemůžeme najít WordPress.com účet spojený s tímto emailem. Vyzkoušejte níže uvedený odkaz a přihlaste se pomocí adresy vašeho webu.</string>
     <string name="permissions_denied_message">Vypadá to že jste si deaktivoval práva pro tuto funkci. &lt;br/>&lt;br/>Pokud to chcete změnit, ověřte si že máte povolená práva na funkci &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">Oprávnění</string>
     <string name="plugin_caption_featured">Doporučené</string>
@@ -499,7 +498,7 @@ Language: cs_CZ
     <string name="signup_magic_link_error_button_negative">Zavřít</string>
     <string name="signup_magic_link_error">Při odesílání emailu došlo k určitým potížím. Můžete zkusit znovu nebo zavřít a zkusit to později.</string>
     <string name="signup_epilogue_hint_username">Uživatelské jméno</string>
-    <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí magického odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
+    <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (volitelné)</string>
     <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
     <string name="signup_epilogue_error_button_positive">Opakovat</string>

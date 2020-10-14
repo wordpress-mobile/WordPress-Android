@@ -1031,11 +1031,7 @@ class MySiteFragment : Fragment(),
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
         row_pages.visibility = pageVisibility
         quick_action_pages_container.visibility = pageVisibility
-        if (pageVisibility == View.VISIBLE) {
-            quick_action_buttons_container.weightSum = 100f
-        } else {
-            quick_action_buttons_container.weightSum = 75f
-        }
+        middle_quick_action_spacing.visibility = pageVisibility
     }
 
     private fun toggleAdminVisibility(site: SiteModel?) {
