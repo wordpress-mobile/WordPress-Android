@@ -31,7 +31,6 @@ import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
-import static org.wordpress.android.support.WPSupportUtils.swipeDownOnView;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
 import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
@@ -156,8 +155,6 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the stats to load
         idleFor(5000);
-
-        clickOn(R.id.previousDateButton);
 
         takeScreenshot("3-build-an-audience");
 
