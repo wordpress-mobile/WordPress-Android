@@ -2887,7 +2887,6 @@
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
     <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
     <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
-    <string name="dialog_edit_story_corrupt_message">There was a problem saving this story and can\'t be edited at this moment.</string>
     <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
     <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
     <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
