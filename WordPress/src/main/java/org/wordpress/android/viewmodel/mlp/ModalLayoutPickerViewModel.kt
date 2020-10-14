@@ -264,14 +264,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun onPreviewPageClicked() {
         (uiState.value as? ContentUiState)?.let { state ->
-            val siteId = appPrefsWrapper.getSelectedSite()
-            val site = siteStore.getSiteByLocalId(siteId)
-            val selection = state.selectedLayoutSlug != null
-            val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
-            val content = if (selection) {
-                selectedLayout?.content ?: ""
-            } else ""
-            _onPreviewPageRequested.value = PageRequest.Preview(selectedLayout?.slug, content, site)
+            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val site = siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite())
+                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site)
+            }
         }
     }
 
@@ -290,19 +286,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun createPage() {
         (uiState.value as? ContentUiState)?.let { state ->
-            val selection = state.selectedLayoutSlug != null
-            val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
-            val title = if (selection) {
-                selectedLayout?.title ?: ""
-            } else ""
-            val content = if (selection) {
-                selectedLayout?.content ?: ""
-            } else ""
-            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content, title)
-        } ?: run {
-            // Allow creation of blank page in offline / loading mode
-            _onCreateNewPageRequested.value = PageRequest.Blank
+            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.content, layout.title)
+                return
+            }
         }
+        _onCreateNewPageRequested.value = PageRequest.Blank
     }
 
     private fun updateUiState(uiState: UiState) {
