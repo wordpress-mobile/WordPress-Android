@@ -1130,6 +1130,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
+        if (!success) {
+            mFailedMediaIds.add(storyFirstMediaId);
+            mUploadingMediaProgressMax.remove(storyFirstMediaId);
+        }
         getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
     }
 
