@@ -240,12 +240,17 @@ class MediaPickerLauncher
     fun showGifPickerForResult(
         activity: Activity,
         site: SiteModel,
-        requestCode: Int,
         allowMultipleSelection: Boolean
     ) {
+        val requestCode = if (allowMultipleSelection) {
+            RequestCodes.GIF_PICKER_MULTI_SELECT
+        } else {
+            RequestCodes.GIF_PICKER_SINGLE_SELECT
+        }
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
-                    dataSource = GIF_LIBRARY,
+                    primaryDataSource = GIF_LIBRARY,
+                    availableDataSources = setOf(),
                     canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),

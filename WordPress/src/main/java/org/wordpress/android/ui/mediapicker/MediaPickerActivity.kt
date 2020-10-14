@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes.FILE_LIBRARY
+import org.wordpress.android.ui.RequestCodes.GIF_PICKER
 import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
 import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.MULTI_SELECT_MEDIA_PICKER
@@ -216,6 +217,10 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 ids.add(mediaId)
                 doMediaIdsSelected(ids, STOCK_MEDIA_PICKER)
             }
+            GIF_PICKER -> if (data != null && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                val localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)
+                doMediaLocalIdsSelected(localIds?.toList(), APP_PICKER)
+            }
             IMAGE_EDITOR_EDIT_IMAGE -> if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
                 val uris = WPMediaUtils.retrieveImageEditorResult(data)
                 doMediaUrisSelected(uris, APP_PICKER)
@@ -334,7 +339,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                     }
                     DEVICE -> MEDIA_LIBRARY
                     STOCK_LIBRARY -> STOCK_MEDIA_PICKER_SINGLE_SELECT
-                    GIF_LIBRARY -> TODO()
+                    GIF_LIBRARY -> GIF_PICKER
                 }
                 startActivityForResult(intent, requestCode)
             }
