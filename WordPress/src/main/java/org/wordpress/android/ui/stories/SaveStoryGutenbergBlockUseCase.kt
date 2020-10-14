@@ -21,7 +21,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         }
     }
 
-    fun buildJetpackStoryBlockString(
+    private fun buildJetpackStoryBlockString(
         mediaFiles: List<MediaFile>
     ): String {
         val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
