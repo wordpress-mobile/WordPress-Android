@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
@@ -56,13 +55,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBAC
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
-import org.wordpress.android.datasets.ReaderLikeTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -80,12 +75,9 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCo
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE
@@ -151,7 +143,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface,
         PrivateAtCookieProgressDialogOnDismissListener,
         ReaderInterfaces.AutoHideToolbarListener {
     private var postId: Long = 0
@@ -488,7 +479,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun renderMoreMenu(uiState: ReaderPostDetailsUiState, actions: List<SecondaryAction>, v: View) {
-        // TODO: Add Tracks
+        // TODO: ashiagr Add Tracks
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
         listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
@@ -659,97 +650,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     /*
      * changes the like on the passed post
      */
-    private fun togglePostLike() {
-        if (hasPost()) {
-            setPostLike(post?.isLikedByCurrentUser == false)
-        }
-    }
-
-    private fun initBookmarkButton() {
-        if (!canShowFooter()) {
-            return
-        }
-
-        updateBookmarkView()
-        readerBookmarkButton.setOnClickListener { toggleBookmark() }
-    }
-
-    private fun updateBookmarkView() {
-        if (!isAdded || !hasPost()) {
-            return
-        }
-
-        readerBookmarkButton.isEnabled = canShowBookmarkButton()
-        readerBookmarkButton.isSelected = canShowBookmarkButton() && post!!.isBookmarked
-    }
-
-    /*
-     * triggered when user taps the bookmark post button
-     */
-    private fun toggleBookmark() {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        if (post.isBookmarked) {
-            ReaderPostActions.removeFromBookmarked(post)
-            AnalyticsTracker.track(READER_POST_UNSAVED_FROM_DETAILS)
-        } else {
-            ReaderPostActions.addToBookmarked(post)
-            AnalyticsTracker.track(READER_POST_SAVED_FROM_DETAILS)
-            if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
-                AppPrefs.setBookmarksSavedLocallyDialogShown()
-                showBookmarksSavedLocallyDialog()
-            } else {
-                // show snackbar when not in saved posts list
-                showBookmarkSnackbar()
-            }
-        }
-
-        this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-
-        updateBookmarkView()
-    }
-
-    private fun showBookmarksSavedLocallyDialog() {
-        val basicFragmentDialog = BasicFragmentDialog()
-        basicFragmentDialog.initialize(
-                BOOKMARKS_SAVED_LOCALLY_DIALOG,
-                getString(R.string.reader_save_posts_locally_dialog_title),
-                getString(R.string.reader_save_posts_locally_dialog_message),
-                getString(R.string.dialog_button_ok), null, null
-        )
-        fragmentManager?.let {
-            basicFragmentDialog.show(it, BOOKMARKS_SAVED_LOCALLY_DIALOG)
-        }
-    }
-
-    override fun onPositiveClicked(instanceTag: String) {
-        when (instanceTag) {
-            BOOKMARKS_SAVED_LOCALLY_DIALOG -> showBookmarkSnackbar()
-        }
-    }
-
-    private fun showBookmarkSnackbar() {
-        if (!isAdded) {
-            return
-        }
-
-        WPSnackbar.make(requireView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                .setAction(
-                        R.string.reader_bookmark_snack_btn
-                ) {
-                    AnalyticsTracker
-                            .track(READER_SAVED_LIST_SHOWN, mapOf("source" to "post_details_saved_post_notice"))
-                    ActivityLauncher.viewSavedPostsListInReader(activity)
-                }
-                .show()
-    }
-
-    /*
-     * changes the like on the passed post
-     */
     private fun setPostLike(isAskingToLike: Boolean) {
         val post = this.post
         if (!isAdded || post == null || !NetworkUtils.checkConnection(activity)) {
@@ -811,39 +711,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /*
-     * request posts related to the current one - only available for wp.com
-     */
-    private fun requestRelatedPosts() {
-        if (hasPost() && post?.isWP == true) {
-            ReaderPostActions.requestRelatedPosts(post)
-        }
-    }
-
-    /*
-     * related posts were retrieved
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.RelatedPostsUpdated) {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-    }
-
-    /*
-     * returns True if the passed view is visible and has been scrolled into view - assumes
-     * that the view is a child of mScrollView
-     */
-    private fun isVisibleAndScrolledIntoView(view: View?): Boolean {
-        if (view != null && view.visibility == View.VISIBLE) {
-            val scrollBounds = Rect()
-            scrollView.getHitRect(scrollBounds)
-            return view.getLocalVisibleRect(scrollBounds)
-        }
-        return false
-    }
-
-    /*
      * if the fragment is maintaining a backstack of posts, navigate to the previous one
      */
     fun goBackInPostHistory(): Boolean {
@@ -865,8 +732,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        val numLikesBefore = ReaderLikeTable.getNumLikesForPost(post)
-
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = this.post
             if (isAdded && post != null) {
@@ -884,83 +749,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
         ReaderPostActions.updatePost(post!!, resultListener)
-    }
-
-    private fun refreshIconCounts() {
-        val post = this.post
-        if (!isAdded || post == null || !canShowFooter()) {
-            return
-        }
-
-        val countLikes = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
-        val countComments = requireView().findViewById<ReaderIconCountView>(R.id.count_comments)
-        val reblogButton = requireView().findViewById<ReaderIconCountView>(R.id.reblog)
-
-        if (canBeReblogged()) {
-            reblogButton.setCount(0)
-            reblogButton.isEnabled = true
-            reblogButton.visibility = View.VISIBLE
-            reblogButton.setOnClickListener {
-                val sites = siteStore.visibleSitesAccessedViaWPCom
-                when (sites.count()) {
-                    0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    1 -> {
-                        sites.firstOrNull()?.let {
-                            ActivityLauncher.openEditorForReblog(
-                                    activity,
-                                    it,
-                                    this.post,
-                                    PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
-                            )
-                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
-                    }
-                    else -> {
-                        sites.firstOrNull()?.let {
-                            ActivityLauncher.showSitePickerForResult(this, it, REBLOG_SELECT_MODE)
-                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
-                    }
-                }
-            }
-        } else {
-            reblogButton.isEnabled = false
-            reblogButton.setOnClickListener(null)
-        }
-
-        if (canShowCommentCount()) {
-            countLikes.isEnabled = true
-            countComments.setCount(post.numReplies)
-            countComments.visibility = View.VISIBLE
-            countComments.setOnClickListener {
-                ReaderActivityLauncher.showReaderComments(
-                        activity,
-                        post.blogId,
-                        post.postId
-                )
-            }
-        } else {
-            countComments.isEnabled = false
-            countComments.setOnClickListener(null)
-        }
-
-        if (canShowLikeCount()) {
-            countLikes.setCount(post.numLikes)
-            countLikes.contentDescription = ReaderUtils.getLongLikeLabelText(
-                    activity,
-                    post.numLikes,
-                    post.isLikedByCurrentUser
-            )
-            countLikes.isEnabled = true
-            countLikes.visibility = View.VISIBLE
-            countLikes.isSelected = post.isLikedByCurrentUser
-            if (!accountStore.hasAccessToken()) {
-                countLikes.isEnabled = false
-            } else if (post.canLikePost()) {
-                countLikes.setOnClickListener { togglePostLike() }
-            }
-        } else {
-            countLikes.isEnabled = false
-            countLikes.setOnClickListener(null)
-        }
     }
 
     private fun doLikePost() {
@@ -1416,7 +1204,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     hasAlreadyUpdatedPost = true
                     updatePost()
                 }
-                requestRelatedPosts()
             }, 300)
         } else {
             AppLog.w(T.READER, "reader post detail > page finished - " + url!!)
@@ -1587,7 +1374,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * can we show the footer bar which contains the like & comment counts?
      */
     private fun canShowFooter(): Boolean {
-        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
+        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton() || canBeReblogged()
     }
 
     /**
@@ -1629,8 +1416,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     companion object {
-        private const val BOOKMARKS_SAVED_LOCALLY_DIALOG = "bookmarks_saved_locally_dialog"
-
         private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
