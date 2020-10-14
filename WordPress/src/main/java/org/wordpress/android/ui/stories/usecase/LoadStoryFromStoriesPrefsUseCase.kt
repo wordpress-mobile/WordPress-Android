@@ -65,8 +65,8 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                     return false
                 }
             } else {
-                if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong()))
-                        && !storiesPrefs.isValidSlide(site.id.toLong(), LocalId(StringUtils.stringToInt(mediaId)))) {
+                if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong())) &&
+                        !storiesPrefs.isValidSlide(site.id.toLong(), LocalId(StringUtils.stringToInt(mediaId)))) {
                     return false
                 }
             }

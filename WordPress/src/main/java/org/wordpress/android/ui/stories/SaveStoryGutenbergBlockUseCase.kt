@@ -148,7 +148,11 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         )
     }
 
-    fun saveNewLocalFilesToStoriesPrefsTempSlides(site: SiteModel, storyIndex: StoryIndex, frames: ArrayList<StoryFrameItem>) {
+    fun saveNewLocalFilesToStoriesPrefsTempSlides(
+        site: SiteModel,
+        storyIndex: StoryIndex,
+        frames: ArrayList<StoryFrameItem>
+    ) {
         for ((frameIndex, frame) in frames.withIndex()) {
             if (frame.id == null) {
                 val assignedTempId = getTempIdForStoryFrame(

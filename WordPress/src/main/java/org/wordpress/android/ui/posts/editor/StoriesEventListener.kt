@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
