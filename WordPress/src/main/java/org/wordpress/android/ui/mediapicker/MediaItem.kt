@@ -4,8 +4,8 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
-import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.GifMediaIdentifier
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LocalId
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.RemoteId
 import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.StockMediaIdentifier
@@ -22,6 +22,7 @@ data class MediaItem(
     enum class IdentifierType {
         LocalUri,
         RemoteId,
+        LocalId,
         StockMediaIdentifier,
         GifMediaIdentifier
     }
@@ -31,10 +32,11 @@ data class MediaItem(
 
         data class RemoteId(val value: Long) : Identifier(RemoteId)
 
+        data class LocalId(val value: Int) : Identifier(LocalId)
+
         data class StockMediaIdentifier(val url: String?, val name: String?, val title: String?) : Identifier(StockMediaIdentifier)
 
         data class GifMediaIdentifier(
-            val mediaModel: MediaModel?,
             val largeImageUri: UriWrapper,
             val title: String?
         ) : Identifier(GifMediaIdentifier)
@@ -48,13 +50,15 @@ data class MediaItem(
                 is RemoteId -> {
                     parcel.writeLong(this.value)
                 }
+                is LocalId -> {
+                    parcel.writeInt(this.value)
+                }
                 is StockMediaIdentifier -> {
                     parcel.writeString(this.url)
                     parcel.writeString(this.name)
                     parcel.writeString(this.title)
                 }
                 is GifMediaIdentifier -> {
-                    parcel.writeSerializable(this.mediaModel)
                     parcel.writeParcelable(this.largeImageUri.uri, flags)
                     parcel.writeString(this.title)
                 }
@@ -75,13 +79,14 @@ data class MediaItem(
                     RemoteId -> {
                         RemoteId(parcel.readLong())
                     }
+                    LocalId -> {
+                        LocalId(parcel.readInt())
+                    }
                     StockMediaIdentifier -> {
                         StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
                     }
                     GifMediaIdentifier -> {
-                        val model = parcel.readSerializable()
                         GifMediaIdentifier(
-                                model?.let { it as MediaModel },
                                 UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
                                 parcel.readString())
                     }
