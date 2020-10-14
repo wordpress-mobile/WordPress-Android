@@ -1,6 +1,5 @@
 package org.wordpress.android.util
 
-import android.net.Uri
 import android.webkit.MimeTypeMap
 import dagger.Reusable
 import javax.inject.Inject
