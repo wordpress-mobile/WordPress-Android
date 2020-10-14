@@ -435,7 +435,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
         // keep record of the frames users deleted.
         // But we'll only actually do cleanup once they tap on the DONE/SAVE button, because they could
-        // still bail out of the StoryComposer by tapping back or the cross and then admiting they want to lose
+        // still bail out of the StoryComposer by tapping back or the cross and then admitting they want to lose
         // the changes they made (this means, they'd want to keep the stories).
         val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
         if (storyFrameIndex < story.frames.size) {
