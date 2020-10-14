@@ -24,7 +24,10 @@ import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -36,7 +39,8 @@ class MediaLibraryDataSource(
     private val dispatcher: Dispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val siteModel: SiteModel,
-    private val mediaTypes: Set<MediaType>
+    private val mediaTypes: Set<MediaType>,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : MediaSource {
     init {
         dispatcher.register(this)
@@ -49,6 +53,14 @@ class MediaLibraryDataSource(
         loadMore: Boolean,
         filter: String?
     ): MediaLoadingResult {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return Failure(
+                    UiStringRes(R.string.no_network_title),
+                    htmlSubtitle = UiStringRes(R.string.no_network_message),
+                    image = R.drawable.img_illustration_cloud_off_152dp,
+                    data = if (loadMore) get(mediaTypes, filter) else listOf()
+            )
+        }
         return withContext(bgDispatcher) {
             val loadingResults = mediaTypes.map { mediaType ->
                 async {
@@ -71,7 +83,12 @@ class MediaLibraryDataSource(
                 }
             }
             if (error != null) {
-                MediaLoadingResult.Failure(error)
+                Failure(
+                        UiStringRes(R.string.media_loading_failed),
+                        htmlSubtitle = UiStringText(error),
+                        image = R.drawable.img_illustration_cloud_off_152dp,
+                        data = get(mediaTypes, filter)
+                )
             } else {
                 val data = get(mediaTypes, filter)
                 if (filter.isNullOrEmpty() || data.isNotEmpty()) {
@@ -169,9 +186,10 @@ class MediaLibraryDataSource(
     @Inject constructor(
         private val mediaStore: MediaStore,
         private val dispatcher: Dispatcher,
-        @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+        @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        private val networkUtilsWrapper: NetworkUtilsWrapper
     ) {
         fun build(siteModel: SiteModel, mediaTypes: Set<MediaType>) =
-                MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel, mediaTypes)
+                MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel, mediaTypes, networkUtilsWrapper)
     }
 }

@@ -18,6 +18,8 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.viewmodel.gif.provider.GifProvider.GifRequestFailedException
 import retrofit2.Call
@@ -30,7 +32,8 @@ import kotlin.coroutines.suspendCoroutine
 class GifMediaDataSource
 @Inject constructor(
     private val context: Context,
-    private val tenorClient: IApiClient
+    private val tenorClient: IApiClient,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : MediaSource {
     private var nextPosition: Int = 0
     private val items = mutableListOf<MediaItem>()
@@ -41,6 +44,15 @@ class GifMediaDataSource
             lastFilter = filter
             items.clear()
             nextPosition = 0
+        }
+
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return Failure(
+                    UiStringRes(R.string.no_network_title),
+                    htmlSubtitle = UiStringRes(R.string.no_network_message),
+                    image = R.drawable.img_illustration_cloud_off_152dp,
+                    data = items
+            )
         }
 
         return if (!filter.isNullOrBlank()) {
@@ -65,7 +77,14 @@ class GifMediaDataSource
                         onFailure = {
                             val errorMessage = it?.message
                                     ?: context.getString(R.string.gif_list_search_returned_unknown_error)
-                            cont.resume(Failure(errorMessage))
+                            cont.resume(
+                                    Failure(
+                                            UiStringRes(R.string.media_loading_failed),
+                                            htmlSubtitle = UiStringText(errorMessage),
+                                            image = R.drawable.img_illustration_cloud_off_152dp,
+                                            data = items
+                                    )
+                            )
                         }
                 )
             }
