@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import androidx.viewpager.widget.ViewPager.PageTransformer
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.login_intro_template_view.view.*
 import kotlinx.android.synthetic.main.login_prologue_bottom_buttons_container_default.*
 import kotlinx.android.synthetic.main.login_signup_screen.*
@@ -71,18 +71,16 @@ class LoginPrologueFragment : Fragment() {
             }
         }
 
-        val adapter = LoginProloguePagerAdapter(childFragmentManager)
+        val adapter = LoginProloguePagerAdapter(this)
 
         intros_pager.adapter = adapter
-        intros_pager.addOnPageChangeListener(object : OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        intros_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
                 AnalyticsUtils.trackLoginProloguePages(position)
             }
-
-            override fun onPageScrollStateChanged(state: Int) {}
         })
-        intros_pager.setPageTransformer(false, object : PageTransformer {
+        intros_pager.setPageTransformer(object : ViewPager2.PageTransformer {
             override fun transformPage(page: View, position: Float) {
                 // Since we want to achieve the illusion of having a single continuous background, we apply a
                 // parallax effect to the foreground views of each page, making them enter and exit the screen
@@ -116,9 +114,11 @@ class LoginPrologueFragment : Fragment() {
             }
         })
 
-        if (adapter.count > 1) {
-            // Using a TabLayout for simulating a page indicator strip
-            tab_layout_indicator.setupWithViewPager(intros_pager, true)
+        if (adapter.itemCount > 1) {
+            TabLayoutMediator(
+                    tab_layout_indicator,
+                    intros_pager,
+                    TabLayoutMediator.TabConfigurationStrategy { _, _ -> }).attach()
         }
 
         if (savedInstanceState == null) {
