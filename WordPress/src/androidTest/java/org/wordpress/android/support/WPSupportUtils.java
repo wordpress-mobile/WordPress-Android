@@ -1,6 +1,7 @@
 package org.wordpress.android.support;
 
 import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -706,5 +707,14 @@ public class WPSupportUtils {
 
     public static String getTranslatedString(Integer resourceID) {
         return getCurrentActivity().getResources().getString(resourceID);
+    }
+
+    public static boolean isTabletScreen() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float widthDp = displayMetrics.widthPixels / displayMetrics.density;
+        float heightDp = displayMetrics.heightPixels / displayMetrics.density;
+        float screenDimension = Math.min(widthDp, heightDp);
+        return screenDimension >= 600;
     }
 }

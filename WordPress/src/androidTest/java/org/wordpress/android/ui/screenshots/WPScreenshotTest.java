@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.screenshots;
 
+import android.content.pm.ActivityInfo;
 import android.provider.Settings;
 
 import androidx.test.espresso.Espresso;
@@ -28,6 +29,7 @@ import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
+import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
@@ -61,6 +63,10 @@ public class WPScreenshotTest extends BaseTest {
 
         // Enable Demo Mode
         mDemoModeEnabler.enable();
+
+        if (isTabletScreen()) {
+            getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
 
         wpLogin();
 
