@@ -709,14 +709,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mHtmlModeEnabled = !mHtmlModeEnabled;
 
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
-        mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
-
+        
+        mEditorFragmentListener.onHtmlModeToggledInToolbar();
         getGutenbergContainerFragment().toggleHtmlMode();
     }
 
