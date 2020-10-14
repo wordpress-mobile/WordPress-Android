@@ -60,11 +60,11 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStorySavingReattachQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesEditorLoadRequestListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,15 +265,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         }
                     }
                 },
-                new OnReattachQueryListener() {
+                new OnReattachMediaUploadQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
                         updateFailedMediaState();
                         updateMediaProgress();
                     }
                 },
-                new OnStorySavingReattachQueryListener() {
-                    @Override public void onQueryCurrentProgressForStoryMediaSaving() {
+                new OnReattachMediaSavingQueryListener() {
+                    @Override public void onQueryCurrentProgressForSavingMedia() {
                         // TODO: probably go through mFailedMediaIds, and see if any block in the post content
                         // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
@@ -343,8 +343,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
                     }
                 },
-                new OnStoryCreatorLoadRequestListener() {
-                    @Override public void onRequestStoryCreatorLoad(ArrayList<Object> mediaFiles, String blockId) {
+                new OnMediaFilesEditorLoadRequestListener() {
+                    @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
                     }
                 },
@@ -512,8 +512,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void updateMediaProgress() {
         for (String mediaId : mUploadingMediaProgressMax.keySet()) {
-            getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
-                    mUploadingMediaProgressMax.get(mediaId));
+            // upload progress should work on numeric mediaIds only
+            if (!TextUtils.isEmpty(mediaId) && TextUtils.isDigitsOnly(mediaId)) {
+                getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
+                        mUploadingMediaProgressMax.get(mediaId));
+            }
         }
     }
 
