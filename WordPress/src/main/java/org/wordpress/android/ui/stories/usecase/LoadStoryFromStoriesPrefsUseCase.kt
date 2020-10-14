@@ -82,26 +82,22 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         var storyIndex = StoryRepository.DEFAULT_NONE_SELECTED
         storyRepositoryWrapper.loadStory(storyIndex)
         storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
-        var tempSlidesLoadedCount: Int = 0
         for (mediaId in mediaIds) {
             // let's check if this is a temporary id
             if (mediaId.startsWith(TEMPORARY_ID_PREFIX)) {
-                var storyFrameItem = storiesPrefs.getSlideWithTempId(
+                storiesPrefs.getSlideWithTempId(
                         site.getId().toLong(),
                         TempId(mediaId)
-                )
-                if (storyFrameItem != null) {
-                    tempSlidesLoadedCount++
-                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
+                )?.let {
+                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(it)
                 }
             } else {
-                var storyFrameItem = storiesPrefs.getSlideWithRemoteId(
+                storiesPrefs.getSlideWithRemoteId(
                         site.getId().toLong(),
                         RemoteId(mediaId.toLong())
-                )
-                if (storyFrameItem != null) {
-                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(storyFrameItem)
-                } else {
+                )?.let {
+                    storyRepositoryWrapper.addStoryFrameItemToCurrentStory(it)
+                } ?: run {
                     allStorySlidesAreEditable = false
 
                     // for this missing frame we'll create a new frame using the actual uploaded flattened media
@@ -115,7 +111,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
                         noSlidesLoaded = true
                     } else {
                         for (mediaModel in mediaModelList) {
-                            storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
+                            val storyFrameItem = StoryFrameItem.getNewStoryFrameItemFromUri(
                                     Uri.parse(mediaModel.url),
                                     mediaModel.isVideo
                             )
@@ -127,7 +123,7 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
             }
         }
 
-        noSlidesLoaded = (!noSlidesLoaded && tempSlidesLoadedCount == 0)
+        noSlidesLoaded = storyRepositoryWrapper.getStoryAtIndex(storyIndex).frames.size == 0
 
         return ReCreateStoryResult(storyIndex, allStorySlidesAreEditable, noSlidesLoaded)
     }
