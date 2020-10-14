@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.yield
@@ -47,9 +48,9 @@ class GifMediaInsertUseCase(
                         (identifier as? GifMediaIdentifier)?.let {
                             fetchAndSaveAsync(this, it, site)
                         }
-                    }.map { it.await() }
+                    }
 
-                    InsertModel.Success(mediaIdentifiers)
+                    InsertModel.Success(mediaIdentifiers.awaitAll())
                 } catch (e: CancellationException) {
                     InsertModel.Success(listOf<GifMediaIdentifier>())
                 } catch (e: Exception) {
