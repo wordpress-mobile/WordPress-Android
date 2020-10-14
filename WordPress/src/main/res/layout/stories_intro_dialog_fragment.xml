@@ -143,6 +143,19 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <ImageButton
+        android:id="@+id/stories_intro_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/transparent"
+        android:tint="?attr/colorOnSurface"
+        android:src="@drawable/ic_arrow_left_white_24dp"
+        android:contentDescription="@string/label_close_button"/>
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/create_story_intro_button_container"
         android:layout_width="match_parent"

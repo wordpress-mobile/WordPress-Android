@@ -74,6 +74,7 @@ class StoriesIntroDialogFragment : DialogFragment() {
         val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
 
         create_story_intro_button.setOnClickListener { viewModel.onCreateStoryButtonPressed() }
+        stories_intro_back_button.setOnClickListener { viewModel.onBackButtonPressed() }
 
         story_image_first.setOnClickListener { viewModel.onStoryPreviewTapped1() }
         story_image_second.setOnClickListener { viewModel.onStoryPreviewTapped2() }
@@ -82,6 +83,10 @@ class StoriesIntroDialogFragment : DialogFragment() {
             activity?.let {
                 mediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(it, site)
             }
+            dismiss()
+        })
+
+        viewModel.onDialogClosed.observe(this, Observer {
             dismiss()
         })
 

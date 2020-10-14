@@ -15,6 +15,9 @@ class StoriesIntroViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
+    private val _onDialogClosed = SingleLiveEvent<Unit>()
+    val onDialogClosed: LiveData<Unit> = _onDialogClosed
+
     private val _onCreateButtonClicked = SingleLiveEvent<Unit>()
     val onCreateButtonClicked: LiveData<Unit> = _onCreateButtonClicked
 
@@ -28,6 +31,11 @@ class StoriesIntroViewModel @Inject constructor(
         isStarted = true
 
         // TODO Track
+    }
+
+    fun onBackButtonPressed() {
+        // TODO Track
+        _onDialogClosed.call()
     }
 
     fun onCreateStoryButtonPressed() {
