@@ -73,32 +73,36 @@ data class MediaItem(
             return 0
         }
 
-        companion object CREATOR : Creator<Identifier> {
-            override fun createFromParcel(parcel: Parcel): Identifier {
-                val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
-                return when (type) {
-                    LocalUri -> {
-                        LocalUri(UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))))
-                    }
-                    RemoteId -> {
-                        RemoteId(parcel.readLong())
-                    }
-                    LocalId -> {
-                        LocalId(parcel.readInt())
-                    }
-                    StockMediaIdentifier -> {
-                        StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
-                    }
-                    GifMediaIdentifier -> {
-                        GifMediaIdentifier(
-                                UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
-                                parcel.readString())
+        companion object {
+            @JvmField
+            val CREATOR : Creator<Identifier> = object : Creator<Identifier> {
+                override fun createFromParcel(parcel: Parcel): Identifier {
+                    val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
+                    return when (type) {
+                        LocalUri -> {
+                            LocalUri(UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))))
+                        }
+                        RemoteId -> {
+                            RemoteId(parcel.readLong())
+                        }
+                        LocalId -> {
+                            LocalId(parcel.readInt())
+                        }
+                        StockMediaIdentifier -> {
+                            StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
+                        }
+                        GifMediaIdentifier -> {
+                            GifMediaIdentifier(
+                                    UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
+                                    parcel.readString()
+                            )
+                        }
                     }
                 }
-            }
 
-            override fun newArray(size: Int): Array<Identifier?> {
-                return arrayOfNulls(size)
+                override fun newArray(size: Int): Array<Identifier?> {
+                    return arrayOfNulls(size)
+                }
             }
         }
     }
