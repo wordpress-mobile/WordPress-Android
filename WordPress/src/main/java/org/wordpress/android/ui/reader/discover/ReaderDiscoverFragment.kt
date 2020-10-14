@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
+import kotlinx.android.synthetic.main.reader_fullscreen_empty_with_action.*
 import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
@@ -42,6 +44,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSiteP
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -58,6 +61,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     private lateinit var viewModel: ReaderDiscoverViewModel
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    private lateinit var parentViewModel: ReaderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,10 +88,15 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         error_retry.setOnClickListener {
             viewModel.onRetryButtonClick()
         }
+        // todo: annmarie added
+        empty_action.setOnClickListener{
+            parentViewModel.onShowReaderInterests()
+        }
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
+        parentViewModel = ViewModelProviders.of(requireParentFragment()).get(ReaderViewModel::class.java)
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ContentUiState -> {
@@ -95,6 +104,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 }
                 is ErrorUiState -> {
                     uiHelpers.setTextOrHide(error_title, it.titleResId)
+                }
+                is EmptyUiState -> {
+                    uiHelpers.setTextOrHide(empty_title, it.titleResId)
                 }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)

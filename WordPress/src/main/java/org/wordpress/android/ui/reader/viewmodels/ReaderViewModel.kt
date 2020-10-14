@@ -18,7 +18,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
-import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
@@ -42,8 +41,8 @@ class ReaderViewModel @Inject constructor(
     private val dateProvider: DateProvider,
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
     private val readerTracker: ReaderTracker,
-    private val accountStore: AccountStore,
-    private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    private val accountStore: AccountStore
+        // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var isReaderInterestsShown: Boolean = false
@@ -73,10 +72,11 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (isReaderInterestsShown) return
-        isReaderInterestsShown = true
+//        if (isReaderInterestsShown) return
+//        isReaderInterestsShown = true
         _uiState.value = InitialUiState
-        _showReaderInterests.value = Event(Unit)
+//        _showReaderInterests.value = Event(Unit)
+        loadTabs()
     }
 
     private fun loadTabs() {
@@ -120,17 +120,18 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.setReaderTag(selectedTag)
 
         // Show interests picker if tag changed to discover and no followed tags found for user
-        if (selectedTag?.isDiscover == true) {
-            launch {
-                val userTags = getFollowedTagsUseCase.get()
-                if (userTags.isEmpty()) {
-                    isReaderInterestsShown = true
-                    initialized = false
-                    _uiState.value = InitialUiState
-                    _showReaderInterests.value = Event(Unit)
-                }
-            }
-        }
+        // todo: annmarie = Removed this
+//        if (selectedTag?.isDiscover == true) {
+//            launch {
+//                val userTags = getFollowedTagsUseCase.get()
+//                if (userTags.isEmpty()) {
+//                    isReaderInterestsShown = true
+//                    initialized = false
+//                    _uiState.value = InitialUiState
+//                    _showReaderInterests.value = Event(Unit)
+//                }
+//            }
+//        }
     }
 
     fun onCloseReaderInterests() {
@@ -138,6 +139,12 @@ class ReaderViewModel @Inject constructor(
         _closeReaderInterests.value = Event(Unit)
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         loadTabs()
+    }
+
+    // todo: annmarie added this
+    fun onShowReaderInterests() {
+        isReaderInterestsShown = true
+        _showReaderInterests.value = Event(Unit)
     }
 
     sealed class ReaderUiState(

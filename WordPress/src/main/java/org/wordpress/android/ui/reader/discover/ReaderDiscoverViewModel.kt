@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Er
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
@@ -61,7 +63,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     displayUtilsWrapper: DisplayUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -113,19 +116,28 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
-                if (posts != null && posts.cards.isNotEmpty()) {
-                    val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
-                            posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
-                    if (!discoverFeedContainsOnlyWelcomeCard) {
-                        _uiState.value = ContentUiState(
-                                convertCardsToUiStates(posts),
-                                reloadProgressVisibility = false,
-                                loadMoreProgressVisibility = false
-                        )
+                // todo: annmarie added this - always check if the user has any tags
+                val userTags = getFollowedTagsUseCase.get()
+                if (userTags.isEmpty()) {
+                    _uiState.value = ShowFollowInterestsEmptyUiState
+                } else {
+                    if (posts != null && posts.cards.isNotEmpty()) {
+                        val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
+                                posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
+                        if (!discoverFeedContainsOnlyWelcomeCard) {
+                            _uiState.value = ContentUiState(
+                                    convertCardsToUiStates(posts),
+                                    reloadProgressVisibility = false,
+                                    loadMoreProgressVisibility = false
+                            )
+                        }
+                    } else {
+                        _uiState.value = ShowFollowInterestsEmptyUiState
                     }
                 }
             }
         }
+
 
         // TODO reader improvements: Consider using Channel/Flow
         readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
@@ -385,7 +397,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         val contentVisiblity: Boolean = false,
         val fullscreenProgressVisibility: Boolean = false,
         open val fullscreenErrorVisibility: Boolean = false,
-        val swipeToRefreshEnabled: Boolean = false
+        val swipeToRefreshEnabled: Boolean = false,
+        open val fullscreenEmptyVisibility: Boolean = false
     ) {
         open val reloadProgressVisibility: Boolean = false
         open val loadMoreProgressVisibility: Boolean = false
@@ -400,6 +413,11 @@ class ReaderDiscoverViewModel @Inject constructor(
         sealed class ErrorUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenErrorVisibility = true) {
             object RequestFailedErrorUiState : ErrorUiState(
                     titleResId = R.string.reader_error_request_failed_title
+            )
+        }
+        sealed class EmptyUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenEmptyVisibility = true) {
+            object ShowFollowInterestsEmptyUiState : EmptyUiState(
+                    titleResId = R.string.reader_discover_empty_title
             )
         }
     }

@@ -38,6 +38,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         super.onViewCreated(view, savedInstanceState)
         initDoneButton()
         initRetryButton()
+        initBackButton()
         initViewModel()
     }
 
@@ -50,6 +51,13 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun initRetryButton() {
         error_retry.setOnClickListener {
             viewModel.onRetryButtonClick()
+        }
+    }
+
+    // todo: annmarie changes
+    private fun initBackButton() {
+        back_button.setOnClickListener {
+            parentViewModel.onCloseReaderInterests()
         }
     }
 
@@ -75,7 +83,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             with(uiHelpers) {
                 updateVisibility(progress_bar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
-                updateVisibility(subtitle, uiState.subtitleVisible)
+             // todo: annmarie removed subtitle   updateVisibility(subtitle, uiState.subtitleVisible)
                 updateVisibility(error_layout, uiState.errorLayoutVisible)
             }
         })
