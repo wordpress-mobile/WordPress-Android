@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -23,11 +24,15 @@ import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 
 class MediaPickerLauncher
-@Inject constructor(private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig) {
+@Inject constructor(
+    private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+) {
     fun showPhotoPickerForResult(
         activity: Activity,
         browserType: MediaBrowserType,
@@ -45,6 +50,11 @@ class MediaPickerLauncher
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, browserType, site, localPostId)
         }
+    }
+
+    fun showStoriesPhotoPickerForResultAndTrack(activity: Activity, site: SiteModel?) {
+        analyticsTrackerWrapper.track(Stat.MEDIA_PICKER_OPEN_FOR_STORIES)
+        showStoriesPhotoPickerForResult(activity, site)
     }
 
     fun showStoriesPhotoPickerForResult(

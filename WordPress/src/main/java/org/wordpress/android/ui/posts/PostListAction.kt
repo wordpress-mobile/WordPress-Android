@@ -52,7 +52,7 @@ fun handlePostListAction(
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
         }
         is PostListAction.NewStoryPost -> {
-            mediaPickerLauncher.showStoriesPhotoPickerForResult(
+            mediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(
                     activity,
                     action.site
             )
