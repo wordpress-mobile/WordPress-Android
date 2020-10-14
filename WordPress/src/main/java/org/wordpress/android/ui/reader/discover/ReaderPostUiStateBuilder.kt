@@ -151,6 +151,18 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return buildBlogSection(post, onBlogSectionClicked)
     }
 
+    fun mapPostToActions(
+        post: ReaderPost,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ): ReaderPostActions {
+        return ReaderPostActions(
+                bookmarkAction = buildBookmarkSection(post, onButtonClicked),
+                likeAction = buildLikeSection(post, onButtonClicked),
+                reblogAction = buildReblogSection(post, onButtonClicked),
+                commentsAction = buildCommentsSection(post, onButtonClicked)
+        )
+    }
+
     suspend fun mapTagListToReaderInterestUiState(
         interests: ReaderTagList,
         onClicked: ((String) -> Unit)
