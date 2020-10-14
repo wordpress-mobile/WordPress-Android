@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mediapicker.insert
 
 import android.content.Context
-import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +11,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.yield
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -20,10 +18,8 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
-import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MimeTypeMapUtilsWrapper
-import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
