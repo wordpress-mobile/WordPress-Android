@@ -257,7 +257,7 @@ class MediaPickerLauncher
                     canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),
-                    cameraEnabled = false,
+                    cameraSetup = HIDDEN,
                     systemPickerEnabled = false,
                     editingEnabled = false,
                     queueResults = false,
