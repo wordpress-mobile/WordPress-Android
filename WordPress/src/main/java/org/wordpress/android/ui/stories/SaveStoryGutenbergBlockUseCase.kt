@@ -83,7 +83,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
             findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
                     postModel,
                     object : DoWithMediaFilesListener {
-                        override fun doWithMediaFilesJsonString(content: String, mediaFilesJsonString: String): String {
+                        override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
                             var processedContent = content
                             val storyBlockData: StoryBlockData? =
                                     gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
@@ -126,7 +126,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                 val jsonString: String = content.substring(
                         storyBlockStartIndex + HEADING_START.length,
                         content.indexOf(HEADING_END))
-                content = listener.doWithMediaFilesJsonString(content, jsonString)
+                content = listener.doWithMediaFilesJson(content, jsonString)
                 storyBlockStartIndex += HEADING_START.length
             }
         }
@@ -139,7 +139,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
                 postModel,
                 object : DoWithMediaFilesListener {
-                    override fun doWithMediaFilesJsonString(content: String, mediaFilesJsonString: String): String {
+                    override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
                         var processedContent = content
                         val storyBlockData: StoryBlockData? =
                                 gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
@@ -176,7 +176,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     }
 
     interface DoWithMediaFilesListener {
-        fun doWithMediaFilesJsonString(content: String, mediaFilesJsonString: String): String
+        fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String
     }
 
     data class StoryBlockData(
