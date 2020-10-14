@@ -11,6 +11,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
@@ -111,6 +112,31 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         stockMediaDataSource,
+                        localeManagerWrapper
+                )
+        )
+    }
+
+    @Test
+    fun `returns gif media source on GIF_LIBRARY source`() {
+        val mediaPickerSetup = MediaPickerSetup(
+                GIF_LIBRARY,
+                canMultiselect = true,
+                requiresStoragePermissions = false,
+                allowedTypes = setOf(),
+                cameraEnabled = false,
+                systemPickerEnabled = false,
+                editingEnabled = false,
+                queueResults = false,
+                defaultSearchView = true,
+                title = string.photo_picker_gif
+        )
+
+        val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
+
+        assertThat(mediaLoader).isEqualTo(
+                MediaLoader(
+                        gifMediaDataSource,
                         localeManagerWrapper
                 )
         )
