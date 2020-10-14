@@ -34,7 +34,11 @@ data class MediaItem(
 
         data class LocalId(val value: Int) : Identifier(LocalId)
 
-        data class StockMediaIdentifier(val url: String?, val name: String?, val title: String?) : Identifier(StockMediaIdentifier)
+        data class StockMediaIdentifier(
+            val url: String?,
+            val name: String?,
+            val title: String?
+        ) : Identifier(StockMediaIdentifier)
 
         data class GifMediaIdentifier(
             val largeImageUri: UriWrapper,
@@ -72,7 +76,7 @@ data class MediaItem(
         companion object CREATOR : Creator<Identifier> {
             override fun createFromParcel(parcel: Parcel): Identifier {
                 val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
-                return when(type) {
+                return when (type) {
                     LocalUri -> {
                         LocalUri(UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))))
                     }
