@@ -150,7 +150,7 @@ class StoriesEventListener @Inject constructor(
             return
         }
         val story = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
-        if (event.frameSaveResult.size == story.frames.size) {
+        if (!event.isRetry && event.frameSaveResult.size == story.frames.size) {
             // take the first frame IDs and mediaUri
             val localMediaId = story.frames[0].id.toString()
             storySaveMediaListener?.onStorySaveResult(localMediaId, event.isSuccess())

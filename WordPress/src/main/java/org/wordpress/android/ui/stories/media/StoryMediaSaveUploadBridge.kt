@@ -233,18 +233,18 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             // only trigger the bridge preparation and the UploadService if the Story is now complete
             // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
             // yet.
-            if (isStorySavingComplete(event)) {
+            if (isStorySavingComplete(event) && !event.isRetry) {
                 // only remove it if it was successful - we want to keep it and show a snackbar once when the user
                 // comes back to the app if it wasn't, see MySiteFrament for details.
                 eventBusWrapper.removeStickyEvent(event)
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
-                if (event.isEditMode) {
-                    // we're done using the temporary ids, let's clean mediaFiles attribute from the blocks that have
-                    // those
-                    saveStoryGutenbergBlockUseCase.cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(
-                            editPostRepository
-                    )
-                }
+//                if (event.isEditMode) {
+//                    // we're done using the temporary ids, let's clean mediaFiles attribute from the blocks that have
+//                    // those
+//                    saveStoryGutenbergBlockUseCase.cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(
+//                            editPostRepository
+//                    )
+//                }
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
             }
