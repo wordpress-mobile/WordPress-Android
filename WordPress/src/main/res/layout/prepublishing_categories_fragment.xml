@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/include_prepublishing_toolbar"
+        layout="@layout/prepublishing_toolbar" />
+
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_new_category"
+        android:layout_below="@+id/include_prepublishing_toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:divider="?android:attr/listDivider"
+            android:dividerHeight="@dimen/divider_size" />
+
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/add_new_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/margin_large"
+        android:text="@string/prepublishing_nudges_toolbar_title_add_categories"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:padding="@dimen/margin_large"
+        android:textColor="?colorPrimary" />
+
+</RelativeLayout>

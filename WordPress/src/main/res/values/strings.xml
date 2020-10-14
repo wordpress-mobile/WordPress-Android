@@ -2858,6 +2858,8 @@
     <!-- Prepublishing Nudges -->
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
+    <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="prepublishing_nudges_add_category_action">Add New Category</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
@@ -2865,11 +2867,15 @@
     <string name="prepublishing_nudges_home_save_button">Save Now</string>
     <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
+    <string name="prepublishing_nudges_close_button">Close</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
 
     <string name="content_description_logo">WordPress Logo</string>
 

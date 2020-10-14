@@ -47,7 +47,6 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
-import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -59,6 +58,9 @@ import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.media.MediaPreviewFragment;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
+import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -80,8 +82,6 @@ import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
-import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.plans.PlanDetailsFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plans.PlansListAdapter;
@@ -101,7 +101,9 @@ import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PrepublishingAddCategoryFragment;
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
+import org.wordpress.android.ui.posts.PrepublishingCategoriesFragment;
 import org.wordpress.android.ui.posts.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.PrepublishingHomeFragment;
 import org.wordpress.android.ui.posts.PrepublishingTagsFragment;
@@ -583,6 +585,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaPickerActivity object);
 
     void inject(MediaPickerFragment object);
+
+    void inject(PrepublishingCategoriesFragment object);
+
+    void inject(PrepublishingAddCategoryFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
