@@ -985,7 +985,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         if (canShowCommentCount()) {
-            countLikes.isEnabled = true
+            countComments.isEnabled = true
             countComments.setCount(post.numReplies)
             countComments.visibility = View.VISIBLE
             countComments.setOnClickListener {
