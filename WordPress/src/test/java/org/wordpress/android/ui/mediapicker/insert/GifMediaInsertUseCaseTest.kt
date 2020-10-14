@@ -58,10 +58,7 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
 
         val itemToInsert = GifMediaIdentifier(null, uriWrapper, null)
         val insertedMediaModel = MediaModel()
-        val mediaId: Long = 10
-        insertedMediaModel.mediaId = mediaId
 
-        whenever(context.getString(any())).thenReturn("Error downloading image")
         whenever(wpMediaUtilsWrapper.fetchMediaToUriWrapper(any())).thenReturn(mock())
         whenever(mimeTypeMapUtilsWrapper.getFileExtensionFromUrl(any())).thenReturn("png")
         val mimeTypeMap: MimeTypeMap = mock()
