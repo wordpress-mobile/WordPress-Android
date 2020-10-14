@@ -86,37 +86,6 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         return TEMPORARY_ID_PREFIX + "$tempIdBase-$storyIndex-$frameIndex"
     }
 
-    fun cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(editPostRepository: EditPostRepository) {
-        editPostRepository.update { postModel: PostModel ->
-            val gson = Gson()
-            findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
-                    postModel,
-                    object : DoWithMediaFilesListener {
-                        override fun doWithMediaFilesJsonString(content: String, mediaFilesJsonString: String): String {
-                            var processedContent = content
-                            val storyBlockData: StoryBlockData? =
-                                    gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
-                            storyBlockData?.let {
-                                if (hasTemporaryIdsInStoryData(it)) {
-                                    // here remove the whole mediaFiles attribute
-                                    processedContent = content.replace(mediaFilesJsonString, "")
-                                }
-                            }
-                            return processedContent
-                        }
-                    }
-            )
-            true
-        }
-    }
-
-    private fun hasTemporaryIdsInStoryData(storyBlockData: StoryBlockData): Boolean {
-        val temporaryIds = storyBlockData.mediaFiles.filter {
-            it.id.startsWith(TEMPORARY_ID_PREFIX)
-        }
-        return temporaryIds.size > 0
-    }
-
     fun findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
         postModel: PostModel,
         listener: DoWithMediaFilesListener

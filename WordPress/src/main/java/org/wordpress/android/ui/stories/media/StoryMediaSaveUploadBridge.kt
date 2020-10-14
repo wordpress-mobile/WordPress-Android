@@ -238,13 +238,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // comes back to the app if it wasn't, see MySiteFrament for details.
                 eventBusWrapper.removeStickyEvent(event)
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
-//                if (event.isEditMode) {
-//                    // we're done using the temporary ids, let's clean mediaFiles attribute from the blocks that have
-//                    // those
-//                    saveStoryGutenbergBlockUseCase.cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(
-//                            editPostRepository
-//                    )
-//                }
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
             }
