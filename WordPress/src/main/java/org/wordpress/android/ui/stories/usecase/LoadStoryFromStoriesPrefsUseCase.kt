@@ -28,11 +28,11 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
     fun getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles: ArrayList<Any>): ArrayList<String> {
         val mediaIds = ArrayList<String>()
         for (mediaFile in mediaFiles) {
-            val rawIdField = (mediaFile as HashMap<String?, Any?>)["id"] as String
-            if (rawIdField.startsWith(TEMPORARY_ID_PREFIX)) {
+            val rawIdField = (mediaFile as HashMap<String?, Any?>)["id"]
+            if (rawIdField is String && rawIdField.startsWith(TEMPORARY_ID_PREFIX)) {
                 mediaIds.add(rawIdField)
             } else {
-                val mediaIdLong = (mediaFile as HashMap<String?, Any?>)["id"]
+                val mediaIdLong = rawIdField
                         .toString()
                         .toDouble() // this conversion is needed to strip off decimals that can come from RN
                         .toLong()
