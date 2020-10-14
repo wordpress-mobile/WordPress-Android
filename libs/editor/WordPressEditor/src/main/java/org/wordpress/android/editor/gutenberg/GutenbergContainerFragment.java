@@ -23,11 +23,12 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidReques
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesEditorLoadRequestListener;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,8 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
-                                  OnReattachQueryListener onReattachQueryListener,
+                                  OnReattachMediaUploadQueryListener onReattachQueryListener,
+                                  OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
                                   OnAuthHeaderRequestedListener onAuthHeaderRequestedListener,
@@ -67,12 +69,13 @@ public class GutenbergContainerFragment extends Fragment {
                                           onGutenbergDidSendButtonPressedActionListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
-                                  OnStoryCreatorLoadRequestListener onStoryCreatorRequestListener,
+                                  OnMediaFilesEditorLoadRequestListener onMediaFilesEditorLoadRequestListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
+                    onStorySavingReattachQueryListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
                     onAuthHeaderRequestedListener,
@@ -84,7 +87,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidSendButtonPressedActionListener,
                     addMentionUtil,
                     onSPTTooltipShownEventListener,
-                    onStoryCreatorRequestListener,
+                    onMediaFilesEditorLoadRequestListener,
                     isDarkMode);
     }
 
@@ -211,7 +214,7 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void replaceStoryEditedBlock(String mediaFiles, String blockId) {
-        mWPAndroidGlueCode.replaceStoryEditedBlock(mediaFiles, blockId);
+        mWPAndroidGlueCode.replaceMediaFilesEditedBlock(mediaFiles, blockId);
     }
 
     public void updateTheme(Bundle editorTheme) {
@@ -221,5 +224,29 @@ public class GutenbergContainerFragment extends Fragment {
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
         mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+    }
+
+    public void clearFileSaveStatus(final String mediaId) {
+        mWPAndroidGlueCode.clearFileSaveStatus(mediaId);
+    }
+
+    public void mediaFileSaveProgress(final String mediaId, final float progress) {
+        mWPAndroidGlueCode.mediaFileSaveProgress(mediaId, progress);
+    }
+
+    public void mediaFileSaveFailed(final String mediaId) {
+        mWPAndroidGlueCode.mediaFileSaveFailed(mediaId);
+    }
+
+    public void mediaFileSaveSucceeded(final String mediaId, final String mediaUrl) {
+        mWPAndroidGlueCode.mediaFileSaveSucceeded(mediaId, mediaUrl);
+    }
+
+    public void onStorySaveResult(final String storyFirstMediaId, final boolean success) {
+        mWPAndroidGlueCode.mediaCollectionFinalSaveResult(storyFirstMediaId, success);
+    }
+
+    public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
+        mWPAndroidGlueCode.mediaModelCreatedForFile(oldId, newId, oldUrl);
     }
 }

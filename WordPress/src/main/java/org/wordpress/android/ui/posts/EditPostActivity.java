@@ -70,6 +70,7 @@ import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
+import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -82,6 +83,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.EditorTheme;
 import org.wordpress.android.fluxc.model.EditorThemeSupport;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -150,6 +152,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields;
+import org.wordpress.android.ui.posts.editor.StoriesEventListener;
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
@@ -162,6 +165,8 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -390,7 +395,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject StoryRepositoryWrapper mStoryRepositoryWrapper;
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
+    @Inject StoriesPrefs mStoriesPrefs;
+    @Inject StoriesEventListener mStoriesEventListener;
 
     private StorePostViewModel mViewModel;
 
@@ -573,6 +581,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (mEditorFragment instanceof EditorMediaUploadListener) {
                 mEditorMediaUploadListener = (EditorMediaUploadListener) mEditorFragment;
             }
+
+            if (mEditorFragment instanceof StorySaveMediaListener) {
+                mStoriesEventListener.setSaveMediaListener((StorySaveMediaListener) mEditorFragment);
+            }
         }
 
         if (mSite == null) {
@@ -649,6 +661,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+
+        mStoriesEventListener.start(this.getLifecycle(), mSite);
     }
 
     private void fetchSiteSettings() {
@@ -1586,13 +1600,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void onUploadSuccess(MediaModel media) {
-        // TODO Should this statement check media.getLocalPostId() == mEditPostRepository.getId()?
-        if (media != null && !media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media));
-        } else if (media != null && media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
-                .getId()) {
-            setFeaturedImageId(media.getMediaId(), false);
+        if (media != null) {
+            // TODO Should this statement check media.getLocalPostId() == mEditPostRepository.getId()?
+            if (!media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
+                mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
+                        FluxCUtils.mediaFileFromMediaModel(media));
+                if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
+                    // make sure to sync the local post object with the UI and save
+                    updateAndSavePostAsync();
+                    // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
+                    // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
+                    // mediaId.
+                    // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
+                    // within a story block in this post: we will only replace items for which a local-keyed frame has
+                    // been created before, which can only happen when using the Story Creator.
+                    mStoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                            media.getId(),
+                            media.getMediaId(),
+                            mSite.getId()
+                    );
+                }
+            } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
+                    .getId()) {
+                setFeaturedImageId(media.getMediaId(), false);
+            }
         }
     }
 
@@ -2162,6 +2193,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
                         reattachUploadingMediaForAztec();
                     }
+
+                    if (mEditorFragment instanceof StorySaveMediaListener) {
+                        mStoriesEventListener.setSaveMediaListener((StorySaveMediaListener) mEditorFragment);
+                    }
                     break;
                 case PAGE_SETTINGS:
                     mEditPostSettingsFragment = (EditPostSettingsFragment) fragment;
@@ -2453,6 +2488,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 default:
                     // noop
                     return;
+            }
+        }
+
+        if (requestCode == RequestCodes.EDIT_STORY) {
+            if (mEditorFragment instanceof GutenbergEditorFragment) {
+                mEditorFragment.onActivityResult(requestCode, resultCode, data);
+                return;
             }
         }
 
@@ -3067,12 +3109,31 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
+        if (mLoadStoryFromStoriesPrefsUseCase.anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles)) {
+            // unfortunately the medaiIds seem corrupt so, show a dialog and bail
+            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+            builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
+            builder.setMessage(getString(R.string.dialog_edit_story_corrupt_message));
+            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+                dialog.dismiss();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return;
+        }
+
         ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
                 .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
         if (!result.getNoSlidesLoaded()) {
-            // Story instance loaded or re-created! Load it
+            // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
             ActivityLauncher.editStoryForResult(
-                    this, mSite, result.getStoryIndex(), result.getAllStorySlidesAreEditable(), true
+                    this,
+                    mSite,
+                    new LocalId(mEditPostRepository.getId()),
+                    result.getStoryIndex(),
+                    result.getAllStorySlidesAreEditable(),
+                    true,
+                    blockId
             );
         } else {
             // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow

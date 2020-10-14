@@ -60,10 +60,11 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStoryCreatorLoadRequestListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesEditorLoadRequestListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +78,8 @@ import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeTyp
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener,
-        EditorThemeUpdateListener {
+        EditorThemeUpdateListener,
+        StorySaveMediaListener {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -86,6 +88,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
+    public static final String ARG_STORY_BLOCK_ID = "story_block_id";
+    public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -261,9 +265,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         }
                     }
                 },
-                new OnReattachQueryListener() {
+                new OnReattachMediaUploadQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
+                        updateFailedMediaState();
+                        updateMediaProgress();
+                    }
+                },
+                new OnReattachMediaSavingQueryListener() {
+                    @Override public void onQueryCurrentProgressForSavingMedia() {
+                        // TODO: probably go through mFailedMediaIds, and see if any block in the post content
+                        // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
                         updateMediaProgress();
                     }
@@ -331,8 +343,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
                     }
                 },
-                new OnStoryCreatorLoadRequestListener() {
-                    @Override public void onRequestStoryCreatorLoad(ArrayList<Object> mediaFiles, String blockId) {
+                new OnMediaFilesEditorLoadRequestListener() {
+                    @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
                     }
                 },
@@ -414,10 +426,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 trackWebViewClosed("dismiss");
             }
         } else if (requestCode == mStoryBlockEditRequestCode) {
-            // handle edited block content
-            String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
-            String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
-            getGutenbergContainerFragment().replaceStoryEditedBlock(content, blockId);
+            if (resultCode == Activity.RESULT_OK) {
+                // handle edited block content
+                String blockId = data.getStringExtra(ARG_STORY_BLOCK_ID);
+                String updatedBlockContent = data.getStringExtra(ARG_STORY_BLOCK_UPDATED_CONTENT);
+                getGutenbergContainerFragment().replaceStoryEditedBlock(updatedBlockContent, blockId);
+                // TODO maybe we need to track something here?
+            } else {
+                // TODO maybe we need to track something here?
+            }
         }
     }
 
@@ -495,8 +512,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void updateMediaProgress() {
         for (String mediaId : mUploadingMediaProgressMax.keySet()) {
-            getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
-                    mUploadingMediaProgressMax.get(mediaId));
+            // upload progress should work on numeric mediaIds only
+            if (!TextUtils.isEmpty(mediaId) && TextUtils.isDigitsOnly(mediaId)) {
+                getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(mediaId),
+                        mUploadingMediaProgressMax.get(mediaId));
+            }
         }
     }
 
@@ -995,5 +1015,34 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
+    }
+
+    @Override public void onMediaSaveReattached(String localId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localId, currentProgress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(localId, currentProgress);
+    }
+
+    @Override public void onMediaSaveSucceeded(String localId, String mediaUrl) {
+        mUploadingMediaProgressMax.remove(localId);
+        getGutenbergContainerFragment().mediaFileSaveSucceeded(localId, mediaUrl);
+    }
+
+    @Override public void onMediaSaveProgress(String localId, float progress) {
+        mUploadingMediaProgressMax.put(localId, progress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
+    }
+
+    @Override public void onMediaSaveFailed(String localId) {
+        getGutenbergContainerFragment().mediaFileSaveFailed(localId);
+        mFailedMediaIds.add(localId);
+        mUploadingMediaProgressMax.remove(localId);
+    }
+
+    @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
+        getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
+    }
+
+    @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
+        getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
     }
 }

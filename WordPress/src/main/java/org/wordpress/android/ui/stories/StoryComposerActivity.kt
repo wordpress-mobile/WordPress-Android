@@ -22,7 +22,11 @@ import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
+import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.UriBackgroundSource
+import com.wordpress.stories.compose.story.StoryFrameItemType.VIDEO
 import com.wordpress.stories.compose.story.StoryIndex
+import com.wordpress.stories.compose.story.StoryRepository.DEFAULT_NONE_SELECTED
 import com.wordpress.stories.util.KEY_STORY_EDIT_MODE
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
@@ -30,10 +34,14 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_UPDATED_CONTENT
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -54,10 +62,13 @@ import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -94,9 +105,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
+    @Inject lateinit var mediaStore: MediaStore
+    @Inject lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+    @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+    @Inject lateinit var storiesPrefs: StoriesPrefs
+
     private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+    private val frameIdsToRemove = ArrayList<String>()
 
     override fun getSite() = site
     override fun getEditPostRepository() = editPostRepository
@@ -415,7 +433,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
-        // TODO will implement later
+        // keep record of the frames users deleted.
+        // But we'll only actually do cleanup once they tap on the DONE/SAVE button, because they could
+        // still bail out of the StoryComposer by tapping back or the cross and then admitting they want to lose
+        // the changes they made (this means, they'd want to keep the stories).
+        val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
+        if (storyFrameIndex < story.frames.size) {
+            story.frames[storyFrameIndex].id?.let {
+                frameIdsToRemove.add(it)
+            }
+        }
     }
 
     private fun openPrepublishingBottomSheet() {
@@ -431,7 +458,96 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
-        viewModel.onStorySaveButtonPressed()
+        if (intent.getBooleanExtra(KEY_LAUNCHED_FROM_GUTENBERG, false)) {
+            // first of all, remove any StoriesPref for removed slides
+            site?.let {
+                val siteLocalId = it.id.toLong()
+                for (frameId in frameIdsToRemove) {
+                    if (storiesPrefs.checkSlideIdExists(siteLocalId, RemoteId(frameId.toLong()))) {
+                        storiesPrefs.deleteSlideWithRemoteId(siteLocalId, RemoteId(frameId.toLong()))
+                    } else {
+                        // shouldn't happen but just in case the story frame has just been created but not yet uploaded
+                        // let's delete the local slide pref.
+                        storiesPrefs.deleteSlideWithLocalId(siteLocalId, LocalId(frameId.toInt()))
+                    }
+                }
+            }
+
+            val savedContentIntent = Intent()
+            val blockId = intent.extras?.getString(ARG_STORY_BLOCK_ID)
+            savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
+
+            val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
+            // if we are editing this Story Block, then the id is assured to be a remote media file id, but
+            // the frame no longer points to such media Id on the site given we are just about to save a
+            // new flattened media. Hence, we need to set a new temporary Id we can use to identify
+            // this frame within the Gutenberg Story block inside a Post, and match it to an existing Story frame in
+            // our StoryRepository.
+            // All of this while still keeping a valid "old" remote URl and mediaId so the block is still
+            // rendered as non-empty on mobile gutenberg while the actual flattening happens on the service.
+            val updatedStoryBlock =
+                    saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
+                            buildStoryMediaFileDataListFromStoryFrameIndexes(storyIndex)
+                    )
+
+            savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
+            setResult(Activity.RESULT_OK, savedContentIntent)
+
+            // TODO add tracks
+            processStorySaving()
+
+            finish()
+        } else {
+            // assume this is a new Post, and proceed to PrePublish bottom sheet
+            viewModel.onStorySaveButtonPressed()
+        }
+    }
+
+    private fun buildStoryMediaFileDataListFromStoryFrameIndexes(
+        storyIndex: StoryIndex
+    ): ArrayList<StoryMediaFileData> {
+        val storyMediaFileDataList = ArrayList<StoryMediaFileData>() // holds media files
+        val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
+        for ((frameIndex, frame) in story.frames.withIndex()) {
+            when (frame.id) {
+                // if the frame.id is null, this is a new frame that has been added to an edited Story
+                // so, we don't have much information yet. We do have the background source (not the flattened
+                // image yet) so, let's use that for now, and assign the temporaryID we'll use to send
+                // save progress events to Gutenberg.
+                null -> {
+                    val storyMediaFileData =
+                            saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
+                                    temporaryId = "$storyIndex-$frameIndex",
+                                    url = if (frame.source is FileBackgroundSource) {
+                                        (frame.source as FileBackgroundSource).file.toString()
+                                    } else {
+                                        (frame.source as UriBackgroundSource).contentUri.toString()
+                                    },
+                                    isVideo = (frame.frameItemType is VIDEO)
+                            )
+                    frame.id = storyMediaFileData.id
+                    storyMediaFileDataList.add(storyMediaFileData)
+                }
+                // if the frame.id is populated, this should be an actual MediaModel mediaId so,
+                // let's use that to obtain the mediaFile and then replace it with the temporary frame.id
+                else -> {
+                    frame.id?.let {
+                        val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
+                        val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
+                        mediaFile?.let {
+                            val storyMediaFileData =
+                                    saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                            mediaFile = it,
+                                            temporaryId = "$storyIndex-$frameIndex"
+                                    )
+                            frame.id = storyMediaFileData.id
+                            storyMediaFileDataList.add(storyMediaFileData)
+                        }
+                    }
+                }
+            }
+        }
+        return storyMediaFileDataList
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

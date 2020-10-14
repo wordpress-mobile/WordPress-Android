@@ -34,6 +34,20 @@ class LoadStoryFromStoriesPrefsUseCase @Inject constructor(
         return mediaIds
     }
 
+    fun anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles: ArrayList<Any>): Boolean {
+        for (mediaFile in mediaFiles) {
+            try {
+                (mediaFile as HashMap<String?, Any?>)["id"]
+                        .toString()
+                        .toDouble() // this conversion is needed to strip off decimals that can come from RN
+                        .toLong()
+            } catch (exception: NumberFormatException) {
+                return true
+            }
+        }
+        return false
+    }
+
     fun areAllStorySlidesEditable(site: SiteModel, mediaIds: ArrayList<String>): Boolean {
         for (mediaId in mediaIds) {
             if (!storiesPrefs.isValidSlide(site.id.toLong(), RemoteId(mediaId.toLong()))) {

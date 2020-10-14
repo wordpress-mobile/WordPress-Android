@@ -126,4 +126,28 @@ class StoriesPrefs @Inject constructor(
             apply()
         }
     }
+
+    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+        localIdKey: Int,
+        remoteIdKey: Long,
+        localSiteId: Long
+    ) {
+        // look for the slide saved with the local id key (mediaFile.id), and re-convert to mediaId.
+        getSlideWithLocalId(
+                localSiteId,
+                LocalId(localIdKey)
+        )?.let {
+            it.id = remoteIdKey.toString() // update the StoryFrameItem id to hold the same value as the remote mediaID
+            saveSlideWithRemoteId(
+                    localSiteId,
+                    RemoteId(remoteIdKey), // use the new mediaId as key
+                    it
+            )
+            // now delete the old entry
+            deleteSlideWithLocalId(
+                    localSiteId,
+                    LocalId(localIdKey)
+            )
+        }
+    }
 }
