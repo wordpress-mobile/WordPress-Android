@@ -75,7 +75,7 @@ data class MediaItem(
 
         companion object {
             @JvmField
-            val CREATOR : Creator<Identifier> = object : Creator<Identifier> {
+            val CREATOR: Creator<Identifier> = object : Creator<Identifier> {
                 override fun createFromParcel(parcel: Parcel): Identifier {
                     val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
                     return when (type) {
