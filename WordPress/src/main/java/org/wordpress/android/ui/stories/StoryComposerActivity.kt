@@ -22,6 +22,7 @@ import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.FileBackgroundSource
 import com.wordpress.stories.compose.story.StoryFrameItem.BackgroundSource.UriBackgroundSource
 import com.wordpress.stories.compose.story.StoryFrameItemType.VIDEO
@@ -62,6 +63,7 @@ import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.media.StoryEditorMedia
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
@@ -519,39 +521,56 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 // image yet) so, let's use that for now, and assign the temporaryID we'll use to send
                 // save progress events to Gutenberg.
                 null -> {
-                    val storyMediaFileData =
-                            saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
-                                    temporaryId = assignedTempId,
-                                    url = if (frame.source is FileBackgroundSource) {
-                                        (frame.source as FileBackgroundSource).file.toString()
-                                    } else {
-                                        (frame.source as UriBackgroundSource).contentUri.toString()
-                                    },
-                                    isVideo = (frame.frameItemType is VIDEO)
-                            )
+                    val storyMediaFileData = buildStoryMediaFileDataForTemporarySlide(
+                            frame,
+                            assignedTempId
+                    )
                     frame.id = storyMediaFileData.id
                     storyMediaFileDataList.add(storyMediaFileData)
                 }
-                // if the frame.id is populated, this should be an actual MediaModel mediaId so,
+                // if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId so,
                 // let's use that to obtain the mediaFile and then replace it with the temporary frame.id
                 else -> {
                     frame.id?.let {
-                        val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
-                        val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
-                        mediaFile?.let {
-                            val storyMediaFileData =
-                                    saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                            mediaFile = it,
-                                            temporaryId = assignedTempId
-                                    )
-                            frame.id = storyMediaFileData.id
+                        if (it.startsWith(TEMPORARY_ID_PREFIX)) {
+                            val storyMediaFileData = buildStoryMediaFileDataForTemporarySlide(
+                                    frame,
+                                    it
+                            )
+                            // frame.id = storyMediaFileData.id
                             storyMediaFileDataList.add(storyMediaFileData)
+                        } else {
+                            val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
+                            val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
+                            mediaFile?.let {
+                                val storyMediaFileData =
+                                        saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                                                mediaFile = it,
+                                                temporaryId = assignedTempId
+                                        )
+                                frame.id = storyMediaFileData.id
+                                storyMediaFileDataList.add(storyMediaFileData)
+                            }
                         }
                     }
                 }
             }
         }
         return storyMediaFileDataList
+    }
+
+    private fun buildStoryMediaFileDataForTemporarySlide(frame: StoryFrameItem, tempId: String): StoryMediaFileData {
+        val storyMediaFileData =
+                saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
+                        temporaryId = tempId,
+                        url = if (frame.source is FileBackgroundSource) {
+                            (frame.source as FileBackgroundSource).file.toString()
+                        } else {
+                            (frame.source as UriBackgroundSource).contentUri.toString()
+                        },
+                        isVideo = (frame.frameItemType is VIDEO)
+                )
+        return storyMediaFileData
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
