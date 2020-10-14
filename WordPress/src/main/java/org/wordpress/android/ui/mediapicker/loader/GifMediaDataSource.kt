@@ -115,7 +115,6 @@ class GifMediaDataSource
 
     private fun Result.toMediaItem() = MediaItem(
             identifier = GifMediaIdentifier(
-                    null,
                     UriWrapper(Uri.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF))),
                     title
             ),
