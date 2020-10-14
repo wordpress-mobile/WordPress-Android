@@ -3156,7 +3156,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ArrayList<Integer> mediaIdsToRetry = new ArrayList<>();
         for (Object mediaFile : mediaFiles) {
             int localMediaId
-                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).toString(), 0);
+                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
             if (localMediaId != 0) {
                 MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
                 // if we find at least one item in the mediaFiles collection passed
