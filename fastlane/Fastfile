@@ -41,6 +41,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-Android"]
 ENV["PROJECT_ROOT_FOLDER"]="./"
 ENV["PROJECT_NAME"]="WordPress"
 ENV["HAS_ALPHA_VERSION"]="true"
+ENV["validate_translations"]="lintVanillaRelease"
 
 ########################################################################
 # Release Lanes
@@ -681,7 +682,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   private_lane :create_gh_release do | options |
-    set_prerelease_flag = options["prerelease"].nil? ? false : options["prerelease"]
+    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
     version = options[:version]
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(version)

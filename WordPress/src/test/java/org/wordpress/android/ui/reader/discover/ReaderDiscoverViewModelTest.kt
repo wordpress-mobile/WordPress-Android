@@ -497,7 +497,7 @@ class ReaderDiscoverViewModelTest {
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),
                 dateLine = "",
                 avatarOrBlavatarUrl = "",
-                blogName = "",
+                blogName = mock(),
                 excerpt = "",
                 title = mock(),
                 photoFrameVisibility = false,

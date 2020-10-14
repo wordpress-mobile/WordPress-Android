@@ -121,7 +121,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mIsJetpackSsoEnabled;
 
     private boolean mEditorDidMount;
-    private GutenbergPropsBuilder mLatestGutenbergPropsBuilder;
+    private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
 
     private ProgressDialog mSavingContentProgressDialog;
 
@@ -163,6 +163,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (getGutenbergContainerFragment() == null) {
             GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
+            mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -420,7 +421,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
                 // We need to send latest capabilities as JS side clears them
-                getGutenbergContainerFragment().updateCapabilities(mLatestGutenbergPropsBuilder);
+                getGutenbergContainerFragment().updateCapabilities(mCurrentGutenbergPropsBuilder);
                 trackWebViewClosed("save");
             } else {
                 trackWebViewClosed("dismiss");
@@ -726,7 +727,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public void updateCapabilities(boolean isJetpackSsoEnabled, GutenbergPropsBuilder gutenbergPropsBuilder) {
         mIsJetpackSsoEnabled = isJetpackSsoEnabled;
-        mLatestGutenbergPropsBuilder = gutenbergPropsBuilder;
+        mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
         getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
     }
 
