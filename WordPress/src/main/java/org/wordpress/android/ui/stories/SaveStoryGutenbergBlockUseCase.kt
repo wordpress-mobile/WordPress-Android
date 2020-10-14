@@ -80,7 +80,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     fun cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(editPostRepository: EditPostRepository) {
         editPostRepository.update { postModel: PostModel ->
             val gson = Gson()
-            findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
+            findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
                     postModel,
                     object : DoWithMediaFilesListener {
                         override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
@@ -108,7 +108,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         return temporaryIds.size > 0
     }
 
-    fun findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
+    fun findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
         postModel: PostModel,
         listener: DoWithMediaFilesListener
     ) {
@@ -136,7 +136,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
         val gson = Gson()
-        findAllStoryBlocksInPostContentAndPerformOnEachMediaFilesJsonString(
+        findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
                 postModel,
                 object : DoWithMediaFilesListener {
                     override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
