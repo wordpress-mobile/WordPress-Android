@@ -636,7 +636,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mInvalidateOptionsHandler.removeCallbacks(mInvalidateOptionsRunnable);
         mInvalidateOptionsHandler.postDelayed(mInvalidateOptionsRunnable,
-                                              getResources().getInteger(android.R.integer.config_mediumAnimTime));
+                getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
@@ -647,7 +647,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mInvalidateOptionsHandler.removeCallbacks(mInvalidateOptionsRunnable);
         mInvalidateOptionsHandler.postDelayed(mInvalidateOptionsRunnable,
-                                              getResources().getInteger(android.R.integer.config_mediumAnimTime));
+                getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
@@ -715,13 +715,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
             return;
         }
-        
+
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
         getGutenbergContainerFragment().toggleHtmlMode();
     }
 
     /*
-    * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
+     * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
      */
     private String removeVisualEditorProgressTag(String originalText) {
         // this regex picks any <progress> tags and any opening <span> tags for image containers
@@ -923,7 +923,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
         }
         mSavingContentProgressDialog.show();
-       return true;
+        return true;
     }
 
     @Override
@@ -964,11 +964,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        if(!mCancelledMediaIds.contains(localMediaId)) {
+        if (!mCancelledMediaIds.contains(localMediaId)) {
             mUploadingMediaProgressMax.put(localMediaId, progress);
             getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
-        }
-        else {
+        } else {
             mCancelledMediaIds.remove(localMediaId);
         }
     }
