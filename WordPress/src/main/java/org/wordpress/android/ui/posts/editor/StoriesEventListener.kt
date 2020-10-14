@@ -69,7 +69,7 @@ class StoriesEventListener @Inject constructor(
             return
         }
         val localMediaId = event.frameId.toString()
-        val progress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
+        val progress = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
         storySaveMediaListener?.onMediaSaveReattached(localMediaId, progress)
     }
 
