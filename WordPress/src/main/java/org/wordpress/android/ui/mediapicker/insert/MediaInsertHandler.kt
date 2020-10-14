@@ -11,6 +11,6 @@ class MediaInsertHandler(private val mediaInsertUseCase: MediaInsertUseCase) {
     sealed class InsertModel {
         data class Success(val identifiers: List<Identifier>) : InsertModel()
         data class Error(val error: String) : InsertModel()
-        object Progress : InsertModel()
+        data class Progress(val title: Int) : InsertModel()
     }
 }

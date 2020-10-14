@@ -222,8 +222,7 @@ class MediaPickerFragment : Fragment() {
         if (savedInstanceState != null) {
             lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
             if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
-                selectedIds = savedInstanceState.getParcelableArrayList<Identifier.Parcel>(KEY_SELECTED_IDS)
-                        ?.map { Identifier.fromParcel(it) }
+                selectedIds = savedInstanceState.getParcelableArrayList<Identifier>(KEY_SELECTED_IDS)?.map { it }
             }
         }
 
@@ -451,6 +450,7 @@ class MediaPickerFragment : Fragment() {
                 setupAdapter(uiModel.items)
             }
             is Empty -> {
+                actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
                 actionable_empty_view.visibility = View.VISIBLE
                 actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
                 if (uiModel.htmlSubtitle != null) {
@@ -472,7 +472,18 @@ class MediaPickerFragment : Fragment() {
                 } else {
                     actionable_empty_view.image.visibility = View.GONE
                 }
-
+                if (uiModel.bottomImage != null) {
+                    actionable_empty_view.bottomImage.setImageResource(uiModel.bottomImage)
+                    actionable_empty_view.bottomImage.visibility = View.VISIBLE
+                    if (uiModel.bottomImageDescription != null) {
+                        actionable_empty_view.bottomImage.contentDescription = uiHelpers.getTextOfUiString(
+                                requireContext(),
+                                uiModel.bottomImageDescription
+                        ).toString()
+                    }
+                } else {
+                    actionable_empty_view.bottomImage.visibility = View.GONE
+                }
                 recycler.visibility = View.INVISIBLE
                 setupAdapter(listOf())
             }
@@ -499,7 +510,9 @@ class MediaPickerFragment : Fragment() {
                         1
                     }
                 }
+        val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
+        recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     private fun setupFab(fabUiModel: FabUiModel) {
@@ -521,7 +534,7 @@ class MediaPickerFragment : Fragment() {
                     is Visible -> {
                         if (progressDialog == null || progressDialog?.isShowing == false) {
                             val builder: Builder = MaterialAlertDialogBuilder(requireContext())
-                            builder.setTitle(R.string.media_uploading_stock_library_photo)
+                            builder.setTitle(this.title)
                             builder.setView(R.layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
                                     R.string.cancel
@@ -565,9 +578,9 @@ class MediaPickerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.lastTappedIcon?.toBundle(outState)
-        val selectedIds = viewModel.selectedIdentifiers().map { it.toParcel() }
+        val selectedIds = viewModel.selectedIdentifiers()
         if (selectedIds.isNotEmpty()) {
-            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList(selectedIds))
+            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList<Identifier>(selectedIds))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
@@ -600,7 +613,7 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun requestStoragePermission() {
-        val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE)
+        val permissions = arrayOf(permission.WRITE_EXTERNAL_STORAGE, permission.READ_EXTERNAL_STORAGE)
         requestPermissions(
                 permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE
         )

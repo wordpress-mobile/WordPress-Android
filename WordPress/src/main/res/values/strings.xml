@@ -162,7 +162,9 @@
     <string name="media_accessing_progress">Accessing content of a private site</string>
     <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
 
+    <string name="media_uploading_default">Uploading media</string>
     <string name="media_uploading_stock_library_photo">Uploading stock media</string>
+    <string name="media_uploading_gif_library_photo">Uploading gif media</string>
 
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
@@ -1157,6 +1159,12 @@
 
     <string name="stats_loading_error">Data not loaded</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
+
+    <!-- stats referrer popup menu actions   -->
+    <string name="stats_referrer_popup_menu_open_website">Open Website</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Mark as Spam</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Unmark as Spam</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">This referrer can\'t be marked as spam</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
@@ -2354,6 +2362,7 @@
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
     <string name="media_insert_failed">Media insert failed.</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
     <string name="gif_picker_search_hint">Search Tenor</string>

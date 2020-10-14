@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker.loader
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,7 +12,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
@@ -27,6 +25,7 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
     @Mock lateinit var mediaLibraryDataSource: MediaLibraryDataSource
     @Mock lateinit var stockMediaDataSource: StockMediaDataSource
+    @Mock lateinit var gifMediaDataSource: GifMediaDataSource
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
@@ -37,6 +36,7 @@ class MediaLoaderFactoryTest {
                 deviceListBuilderFactory,
                 mediaLibraryDataSourceFactory,
                 stockMediaDataSource,
+                gifMediaDataSource,
                 localeManagerWrapper
         )
     }
@@ -118,27 +118,5 @@ class MediaLoaderFactoryTest {
                         localeManagerWrapper
                 )
         )
-    }
-
-    @Test
-    fun `throws exception on not implemented sources`() {
-        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
-            mediaLoaderFactory.build(
-                    MediaPickerSetup(
-                            GIF_LIBRARY,
-                            availableDataSources = setOf(),
-                            canMultiselect = true,
-                            requiresStoragePermissions = true,
-                            allowedTypes = setOf(),
-                            cameraSetup = HIDDEN,
-                            systemPickerEnabled = true,
-                            editingEnabled = true,
-                            queueResults = false,
-                            defaultSearchView = false,
-                            title = string.wp_media_title
-                    ),
-                    site
-            )
-        }
     }
 }

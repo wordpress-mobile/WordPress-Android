@@ -282,7 +282,6 @@ Language: el_GR
     <string name="notifications_screen_title">Ειδοποιήσεις</string>
     <string name="reader_screen_title">Αναγνώστης</string>
     <string name="media_settings_screen_title">Λεπτομέρειες αρχείου</string>
-    <string name="my_site_section_screen_title">Ο ιστότοπος μου</string>
     <string name="release_notes_screen_title">Σημειώσεις έκδοσης</string>
     <string name="permissions_denied_title">Δικαιώματα</string>
     <string name="plugin_caption_featured">Προτεινόμενα</string>
