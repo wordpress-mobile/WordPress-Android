@@ -98,7 +98,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val _followStatusUpdated = MediatorLiveData<PostFollowStatusChanged>()
     val followStatusUpdated: LiveData<PostFollowStatusChanged> = _followStatusUpdated
 
-    // Used only in legacy ReaderPostListFragment. The discover tab observes reactive ReaderDiscoverDataProvider.
+    // Used only in legacy ReaderPostListFragment and ReaderPostDetailFragment.
+    // The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
@@ -280,7 +281,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
                 is Success -> {
-                    // Content needs to be manually refreshed in the legacy ReaderPostListAdapter
+                    // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
+                    // ReaderPostDetailFragment
                     _refreshPosts.postValue(Event(Unit))
 
                     val showSnackbarAction = {

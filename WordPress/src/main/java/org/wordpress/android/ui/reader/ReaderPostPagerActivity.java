@@ -21,7 +21,6 @@ import androidx.viewpager.widget.ViewPager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -38,7 +37,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
-import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -85,8 +83,7 @@ import javax.inject.Inject;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
-public class ReaderPostPagerActivity extends LocaleAwareActivity
-        implements BasicFragmentDialog.BasicDialogPositiveClickInterface {
+public class ReaderPostPagerActivity extends LocaleAwareActivity {
     /**
      * Type of URL intercepted
      */
@@ -951,14 +948,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     finish(); // Finish activity to make My Site page visible
                 }
                 break;
-        }
-    }
-
-    @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
-        ReaderPostDetailFragment fragment = getActiveDetailFragment();
-        if (fragment != null) {
-            fragment.onPositiveClicked(instanceTag);
         }
     }
 

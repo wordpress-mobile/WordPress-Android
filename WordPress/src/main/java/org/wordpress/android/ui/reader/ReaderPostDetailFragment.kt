@@ -27,6 +27,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
@@ -40,9 +41,11 @@ import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
+import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -96,7 +99,11 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -159,6 +166,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val postHistory = ReaderPostHistory()
 
+    private var bookmarksSavedLocallyDialog: AlertDialog? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
@@ -373,7 +381,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 Observer<ReaderPostDetailsUiState> { state ->
                     header_view.updatePost(state.headerUiState)
                     updateMoreMenu(state)
+
+                    updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
+                    updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+                    updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
+                    updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
                 }
+        )
+
+        viewModel.refreshPost.observe(viewLifecycleOwner, Observer { // Do nothing
+            }
         )
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
@@ -403,17 +420,59 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                                 OpenUrlType.INTERNAL
                         )
                     }
-                    is ReaderNavigationEvents.ShowReaderComments,
-                    is ReaderNavigationEvents.ShowNoSitesToReblog,
-                    is ReaderNavigationEvents.ShowSitePickerForResult,
-                    is ReaderNavigationEvents.OpenEditorForReblog,
-                    is ReaderNavigationEvents.ShowBookmarkedTab,
-                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> { // TODO: Handle nav events
+                    is ReaderNavigationEvents.ShowReaderComments -> {
+                        ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+                    }
+                    is ReaderNavigationEvents.ShowNoSitesToReblog -> {
+                        ReaderActivityLauncher.showNoSiteToReblog(activity)
+                    }
+                    is ReaderNavigationEvents.ShowSitePickerForResult -> {
+                        ActivityLauncher
+                                .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
+                    }
+                    is OpenEditorForReblog -> {
+                        ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
+                    }
+                    is ShowBookmarkedTab -> {
+                        ActivityLauncher.viewSavedPostsListInReader(activity)
+                    }
+                    is ShowBookmarkedSavedOnlyLocallyDialog -> {
+                        showBookmarkSavedLocallyDialog(this)
                     }
                 }
             }
         })
         viewModel.start()
+    }
+
+    private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
+        if (view is ReaderIconCountView) {
+            view.setCount(state.count)
+        }
+        view.isEnabled = state.isEnabled
+        view.isSelected = state.isSelected
+        view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
+        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
+    }
+
+    private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
+        if (bookmarksSavedLocallyDialog == null) {
+            MaterialAlertDialogBuilder(requireActivity())
+                    .setTitle(getString(bookmarkDialog.title))
+                    .setMessage(getString(bookmarkDialog.message))
+                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                        bookmarkDialog.okButtonAction.invoke()
+                    }
+                    .setOnDismissListener {
+                        bookmarksSavedLocallyDialog = null
+                    }
+                    .setCancelable(false)
+                    .create()
+                    .let {
+                        bookmarksSavedLocallyDialog = it
+                        it.show()
+                    }
+        }
     }
 
     private fun updateMoreMenu(
@@ -464,6 +523,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (view != null) {
             readerWebView.destroy()
         }
+        bookmarksSavedLocallyDialog?.dismiss()
     }
 
     private fun hasPost(): Boolean {
@@ -712,7 +772,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             // get the post again since it has changed, then refresh to show changes
             this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-            refreshIconCounts()
         }
 
         if (isAskingToLike) {
@@ -814,7 +873,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
                     this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-                    refreshIconCounts()
+//                    refreshIconCounts()  // TODO: ashiagr - revisit this logic
                 }
 
                 setRefreshing(false)
@@ -1335,9 +1394,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
                 AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
             }
-
-            refreshIconCounts()
-            initBookmarkButton()
         }
     }
 

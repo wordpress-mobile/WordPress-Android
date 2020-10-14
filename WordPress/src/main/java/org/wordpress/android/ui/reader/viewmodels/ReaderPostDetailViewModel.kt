@@ -38,6 +38,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _uiState = MediatorLiveData<ReaderPostDetailsUiState>()
     val uiState: LiveData<ReaderPostDetailsUiState> = _uiState
 
+    private val _refreshPost = MediatorLiveData<Event<Unit>>()
+    val refreshPost: LiveData<Event<Unit>> = _refreshPost
+
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
@@ -62,6 +65,15 @@ class ReaderPostDetailViewModel @Inject constructor(
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     post.isFollowedByCurrentUser = data.following
+                    _uiState.value = convertPostToUiState(post)
+                }
+            }
+        }
+
+        _refreshPost.addSource(readerPostCardActionsHandler.refreshPosts) {
+            val currentUiState: ReaderPostDetailsUiState? = _uiState.value
+            currentUiState?.let {
+                findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     _uiState.value = convertPostToUiState(post)
                 }
             }
