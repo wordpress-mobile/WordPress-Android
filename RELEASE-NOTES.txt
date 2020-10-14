@@ -1,3 +1,7 @@
+16.0
+-----
+* [*] Stats: Added the possibility to report and unreport a referrer as spam. [https://github.com/wordpress-mobile/WordPress-Android/pull/13047]
+
 15.9
 -----
 * [*] Block Editor: Add message that mentions are unavailable when device is offline. [https://github.com/wordpress-mobile/WordPress-Android/pull/12968]
@@ -7,6 +11,10 @@
 * [**] Block Editor: Fix for a crash that can occur when long pressing selected images [https://github.com/wordpress-mobile/AztecEditor-Android/pull/924]
 * [***] Block Editor: Added expected double tap for focus behavior for text fields in accessibility mode [https://github.com/WordPress/gutenberg/pull/25384]
 * [*] Improved My Site layout on devices with big screens. [https://github.com/wordpress-mobile/WordPress-Android/pull/13026]
+
+15.8.1
+-----
+* [***] Login: Fixed an issue where some users would be prevented to login with a Jetpack site address.
 
 15.8
 -----

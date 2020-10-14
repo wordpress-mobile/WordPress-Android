@@ -105,9 +105,7 @@ Language: en_CA
     <string name="signup_confirmation_title">Signup confirmation</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">We’ll email you a magic link to create your new WordPress.com account.</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="signup_magic_link_message">We’ve emailed you a magic link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
     <string name="login_or">or</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
@@ -115,7 +113,6 @@ Language: en_CA
     <string name="login_done">Done</string>
     <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed.</string>
     <string name="check_email">Check email</string>
     <string name="get_started">Get Started</string>
     <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
@@ -1274,13 +1271,11 @@ Language: en_CA
     <string name="notifications_screen_title">Notifications</string>
     <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">Me</string>
-    <string name="my_site_section_screen_title">My site</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Release notes</string>
     <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
-    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/>&lt;br/>To change this, edit your permissions and make sure &lt;strong>%s&lt;/strong> is enabled.</string>
     <string name="permissions_denied_title">Permissions</string>
     <string name="plugin_caption_featured">Featured</string>
@@ -1346,7 +1341,6 @@ Language: en_CA
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_epilogue_hint_username">Username</string>
-    <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>

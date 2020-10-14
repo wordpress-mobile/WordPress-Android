@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
@@ -119,7 +120,7 @@ class MediaPickerViewModel @Inject constructor(
             _showProgressDialog.distinct()
     ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel ->
         MediaPickerUiState(
-                buildUiModel(domainModel, selectedIds, softAskRequest),
+                buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
                 buildActionModeUiModel(selectedIds, domainModel?.domainItems),
@@ -168,7 +169,8 @@ class MediaPickerViewModel @Inject constructor(
     private fun buildUiModel(
         domainModel: DomainModel?,
         selectedIds: List<Identifier>?,
-        softAskRequest: SoftAskRequest?
+        softAskRequest: SoftAskRequest?,
+        isSearching: Boolean?
     ): PhotoListUiModel {
         val data = domainModel?.domainItems
         return if (null != softAskRequest && softAskRequest.show) {
@@ -235,12 +237,16 @@ class MediaPickerViewModel @Inject constructor(
             PhotoListUiModel.Empty(
                     domainModel.emptyState.title,
                     domainModel.emptyState.htmlSubtitle,
-                    domainModel.emptyState.image
+                    domainModel.emptyState.image,
+                    domainModel.emptyState.bottomImage,
+                    domainModel.emptyState.bottomImageDescription,
+                    isSearching == true
             )
         } else {
             PhotoListUiModel.Empty(
                     UiStringRes(R.string.media_empty_list),
-                    image = R.drawable.img_illustration_media_105dp
+                    image = R.drawable.img_illustration_media_105dp,
+                    isSearching = isSearching == true
             )
         }
     }
@@ -377,6 +383,9 @@ class MediaPickerViewModel @Inject constructor(
                     }
                 }
             }
+            is GifMediaIdentifier -> {
+                _onNavigate.postValue(Event(PreviewUrl(identifier.largeImageUri.toString())))
+            }
         }
     }
 
@@ -390,7 +399,7 @@ class MediaPickerViewModel @Inject constructor(
                     is InsertModel.Progress -> {
                         progressDialogJob = launch {
                             delay(100)
-                            _showProgressDialog.value = Visible(R.string.media_uploading_stock_library_photo) {
+                            _showProgressDialog.value = Visible(it.title) {
                                 job?.cancel()
                                 _showProgressDialog.value = Hidden
                             }
@@ -487,7 +496,7 @@ class MediaPickerViewModel @Inject constructor(
                                 primaryDataSource = icon.dataSource,
                                 availableDataSources = setOf(),
                                 systemPickerEnabled = icon.dataSource == DEVICE,
-                                defaultSearchView = icon.dataSource == STOCK_LIBRARY
+                                defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY
                         )
                 )
             }
@@ -526,15 +535,23 @@ class MediaPickerViewModel @Inject constructor(
             mediaPickerTracker.trackShowPermissionsScreen(mediaPickerSetup, softAskRequest.isAlwaysDenied)
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val permissionName = ("<strong>${
+                val writePermission = ("<strong>${
                     WPPermissionUtils.getPermissionName(
                             resourceProvider,
                             permission.WRITE_EXTERNAL_STORAGE
                     )
                 }</strong>")
+                val readPermission = ("<strong>${
+                    WPPermissionUtils.getPermissionName(
+                            resourceProvider,
+                            permission.READ_EXTERNAL_STORAGE
+                    )
+                }</strong>")
                 String.format(
-                        resourceProvider.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
-                        permissionName
+                        resourceProvider.getString(R.string.media_picker_soft_ask_permissions_denied),
+                        appName,
+                        writePermission,
+                        readPermission
                 )
             } else {
                 String.format(
@@ -596,8 +613,14 @@ class MediaPickerViewModel @Inject constructor(
         data class Data(val items: List<MediaPickerUiItem>) :
                 PhotoListUiModel()
 
-        data class Empty(val title: UiString, val htmlSubtitle: UiString? = null, val image: Int? = null) :
-                PhotoListUiModel()
+        data class Empty(
+            val title: UiString,
+            val htmlSubtitle: UiString? = null,
+            val image: Int? = null,
+            val bottomImage: Int? = null,
+            val bottomImageDescription: UiString? = null,
+            val isSearching: Boolean = false
+        ) : PhotoListUiModel()
 
         object Hidden : PhotoListUiModel()
     }

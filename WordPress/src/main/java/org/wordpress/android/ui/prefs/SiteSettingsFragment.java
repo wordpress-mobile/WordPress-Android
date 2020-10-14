@@ -1966,7 +1966,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
-        if (!event.isError()) {
+        if (!event.isError() && mSite != null) {
             mSite = mSiteStore.getSiteByLocalId(mSite.getId());
             updateHomepageSummary();
         }
