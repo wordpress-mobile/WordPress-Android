@@ -52,8 +52,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
@@ -97,6 +95,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -648,46 +647,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /*
-     * changes the like on the passed post
-     */
-    private fun setPostLike(isAskingToLike: Boolean) {
-        val post = this.post
-        if (!isAdded || post == null || !NetworkUtils.checkConnection(activity)) {
-            return
-        }
-
-        if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(post)) {
-            val likeCount = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
-            likeCount.isSelected = isAskingToLike
-            ReaderAnim.animateLikeButton(likeCount.imageView, isAskingToLike)
-
-            val success = ReaderPostActions.performLikeAction(
-                    post, isAskingToLike,
-                    accountStore.account.userId
-            )
-            if (!success) {
-                likeCount.isSelected = !isAskingToLike
-                return
-            }
-
-            // get the post again since it has changed, then refresh to show changes
-            this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-        }
-
-        if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(
-                    READER_ARTICLE_DETAIL_LIKED,
-                    post
-            )
-        } else {
-            AnalyticsUtils.trackWithReaderPostDetails(
-                    READER_ARTICLE_DETAIL_UNLIKED,
-                    post
-            )
-        }
-    }
-
-    /*
      * replace the current post with the passed one
      */
     private fun replacePost(blogId: Long, postId: Long, clearCommentOperation: Boolean) {
@@ -738,12 +697,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
                     this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-//                    refreshIconCounts()  // TODO: ashiagr - revisit this logic
+                    this.post?.let {
+                        viewModel.onUpdatePost(it)
+                    }
                 }
 
                 setRefreshing(false)
 
-                if (directOperation != null && directOperation == DirectOperation.POST_LIKE) {
+                if (directOperation != null && directOperation == POST_LIKE) {
                     doLikePost()
                 }
             }
@@ -764,12 +725,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        if (post?.canLikePost() == false) {
-            ToastUtils.showToast(activity, R.string.reader_toast_err_cannot_like_post)
-            return
-        }
+        post?.let {
+            if (!it.canLikePost()) {
+                ToastUtils.showToast(activity, R.string.reader_toast_err_cannot_like_post)
+                return
+            }
 
-        setPostLike(true)
+            if (!it.isLikedByCurrentUser) {
+                viewModel.onButtonClicked(it.postId, it.blogId, ReaderPostCardActionType.LIKE)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

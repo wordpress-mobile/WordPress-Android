@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
@@ -21,6 +23,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -32,6 +35,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -115,12 +119,34 @@ class ReaderPostDetailViewModel @Inject constructor(
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             findPost(postId, blogId)?.let {
+                trackAction(it, type)
                 readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false)
             }
         }
     }
 
+    private fun trackAction(post: ReaderPost, type: ReaderPostCardActionType) {
+        if (type == ReaderPostCardActionType.LIKE) {
+            val askingToLike = !post.isLikedByCurrentUser
+            if (askingToLike) {
+                analyticsUtilsWrapper.trackWithReaderPostDetails(
+                        READER_ARTICLE_DETAIL_LIKED,
+                        post
+                )
+            } else {
+                analyticsUtilsWrapper.trackWithReaderPostDetails(
+                        READER_ARTICLE_DETAIL_UNLIKED,
+                        post
+                )
+            }
+        }
+    }
+
     fun onShowPost(post: ReaderPost) {
+        _uiState.value = convertPostToUiState(post)
+    }
+
+    fun onUpdatePost(post: ReaderPost) {
         _uiState.value = convertPostToUiState(post)
     }
 
