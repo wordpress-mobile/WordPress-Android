@@ -87,13 +87,6 @@
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
-        <include
-            android:id="@+id/layout_post_detail_footer"
-            layout="@layout/reader_include_post_detail_footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-
         <ProgressBar
             android:id="@+id/progress_loading"
             style="@style/ReaderProgressBar"
@@ -104,35 +97,48 @@
             tools:visibility="visible" />
     </RelativeLayout>
 
-    <!-- error message when requesting post fails -->
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawablePadding="@dimen/margin_small"
-        android:gravity="center"
-        android:textColor="@color/neutral_30"
-        android:textSize="@dimen/text_sz_extra_large"
-        android:visibility="gone"
-        tools:text="Error message"
-        tools:visibility="visible"
-        android:layout_marginStart="@dimen/reader_detail_margin"
-        android:layout_marginEnd="@dimen/reader_detail_margin"/>
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/nux_sign_in_button"
-        style="@style/WordPress.NUXPrimaryButton"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_below="@+id/text_error"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="@string/sign_in_wpcom"
-        android:visibility="gone"
-        android:layout_marginEnd="@dimen/reader_detail_margin"
-        android:layout_marginStart="@dimen/reader_detail_margin"/>
+        android:layout_height="match_parent">
+
+        <!-- error message when requesting post fails -->
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/margin_small"
+            android:gravity="center"
+            android:textColor="@color/neutral_30"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:visibility="gone"
+            tools:text="Error message"
+            tools:visibility="visible"
+            android:layout_marginStart="@dimen/reader_detail_margin"
+            android:layout_marginEnd="@dimen/reader_detail_margin"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/nux_sign_in_button"
+            style="@style/WordPress.NUXPrimaryButton"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_below="@+id/text_error"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/sign_in_wpcom"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/reader_detail_margin"
+            android:layout_marginStart="@dimen/reader_detail_margin"/>
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/layout_post_detail_footer"
+        layout="@layout/reader_include_post_detail_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout
