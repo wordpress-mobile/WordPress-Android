@@ -1160,6 +1160,12 @@
     <string name="stats_loading_error">Data not loaded</string>
     <string name="stats_loading_block_error">There was a problem loading your data, refresh your page to try again.</string>
 
+    <!-- stats referrer popup menu actions   -->
+    <string name="stats_referrer_popup_menu_open_website">Open Website</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Mark as Spam</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Unmark as Spam</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">This referrer can\'t be marked as spam</string>
+
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 
@@ -2337,6 +2343,7 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>

@@ -4,15 +4,15 @@ import android.content.Context
 import com.tenor.android.core.constant.MediaCollectionFormat
 import com.tenor.android.core.model.impl.Result
 import org.wordpress.android.R
-
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.UriUtilsWrapper
-
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -35,7 +35,7 @@ class GifMediaDataSource
         }
 
         return if (!filter.isNullOrBlank()) {
-            suspendCoroutine<MediaLoadingResult> { cont ->
+            suspendCoroutine { cont ->
                 tenorClient.search(filter,
                         nextPosition,
                         PAGE_SIZE,
@@ -46,8 +46,12 @@ class GifMediaDataSource
                             val newPosition = response.next.toIntOrNull() ?: 0
                             val hasMore = newPosition > nextPosition
                             nextPosition = newPosition
-
-                            cont.resume(Success(items.toList(), hasMore))
+                            val result = if (items.isNotEmpty()) {
+                                Success(items.toList(), hasMore)
+                            } else {
+                                Empty(UiStringRes(R.string.gif_picker_empty_search_list))
+                            }
+                            cont.resume(result)
                         },
                         onFailure = {
                             val errorMessage = it?.message
@@ -57,15 +61,26 @@ class GifMediaDataSource
                 )
             }
         } else {
-            Success(listOf(), false)
+            buildDefaultScreen()
         }
+    }
+
+    private fun buildDefaultScreen(): MediaLoadingResult {
+        val title = UiStringRes(R.string.gif_picker_initial_empty_text)
+        return Empty(
+                title,
+                null,
+                R.drawable.img_illustration_media_105dp,
+                R.drawable.img_tenor_100dp,
+                UiStringRes(R.string.gif_powered_by_tenor)
+        )
     }
 
     private fun Result.toMediaItem() = MediaItem(
             identifier = GifMediaIdentifier(
-            null,
-            uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
-            title),
+                    uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
+                    title
+            ),
             url = uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
             type = IMAGE,
             dataModified = 0

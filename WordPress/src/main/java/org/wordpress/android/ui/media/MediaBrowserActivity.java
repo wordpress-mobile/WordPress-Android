@@ -523,6 +523,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     reloadMediaGrid();
                 }
                 break;
+            case RequestCodes.GIF_PICKER_SINGLE_SELECT:
             case RequestCodes.GIF_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK
                     && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
@@ -1019,7 +1020,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 mMediaPickerLauncher.showGifPickerForResult(
                         this,
                         mSite,
-                        RequestCodes.GIF_PICKER_MULTI_SELECT,
                         true
                 );
                 break;
