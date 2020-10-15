@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebView;
 
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
@@ -11,7 +12,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergWebViewActivity;
 
-import java.io.UnsupportedEncodingException;
+import java.io.UnsupportedEncodingException;;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
@@ -144,7 +145,8 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
         return Arrays.asList(file);
     }
 
-    @Override protected List<String> getOnPageLoadExternalSources() {
+    @Override
+    protected List<String> getOnPageLoadExternalSources() {
         long userId = getIntent().getExtras().getLong(ARG_USER_ID, 0);
         String file = getFileContentFromAssets("unsupported-block-editor/extra-localstorage-entries.js")
                 .replace("%@", Long.toString(userId));
@@ -173,7 +175,15 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
         }
     }
 
-    @Override public long getUserId() {
+    @Override
+    public long getUserId() {
         return mUserId;
+    }
+
+    @Override
+    protected void onDestroy() {
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookies((success) -> AppLog.e(AppLog.T.EDITOR, "Cookies removed " + success));
+        super.onDestroy();
     }
 }
