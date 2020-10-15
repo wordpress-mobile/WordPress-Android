@@ -158,6 +158,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private val postHistory = ReaderPostHistory()
 
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
+    private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
@@ -371,7 +372,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewLifecycleOwner,
                 Observer<ReaderPostDetailsUiState> { state ->
                     header_view.updatePost(state.headerUiState)
-                    updateMoreMenu(state)
+                    showOrHideMoreMenu(state)
 
                     updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
                     updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
@@ -383,21 +384,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
 
         viewModel.refreshPost.observe(viewLifecycleOwner, Observer { // Do nothing
-            }
+        }
         )
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
-                it?.applyIfNotHandled {
-                    showSnackbar()
-                }
+            it?.applyIfNotHandled {
+                showSnackbar()
             }
+        }
         )
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {
                     is ReaderNavigationEvents.ShowPostsByTag -> {
-                            ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+                        ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
                     }
                     is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             context,
@@ -475,33 +476,37 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateMoreMenu(
+    private fun showOrHideMoreMenu(
         state: ReaderPostDetailsUiState
     ) {
         val moreMenu: View? = toolBar.findViewById(R.id.menu_more)
         moreMenu?.let {
-            it.setOnClickListener { state.onMoreButtonClicked.invoke(state) }
             state.moreMenuItems?.let {
-                renderMoreMenu(state, state.moreMenuItems, moreMenu)
-            }
+                if (moreMenuPopup == null) {
+                    createAndShowMoreMenu(it, moreMenu)
+                }
+                moreMenuPopup?.show()
+            } ?: moreMenuPopup?.dismiss()
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostDetailsUiState, actions: List<SecondaryAction>, v: View) {
+    private fun createAndShowMoreMenu(actions: List<SecondaryAction>, v: View) {
         // TODO: ashiagr Add Tracks
-        val listPopup = ListPopupWindow(v.context)
-        listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
-        listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
-        listPopup.setDropDownGravity(Gravity.END)
-        listPopup.anchorView = v
-        listPopup.isModal = true
-        listPopup.setOnItemClickListener { _, _, position, _ ->
-            listPopup.dismiss()
-            val item = actions[position]
-            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+        moreMenuPopup = ListPopupWindow(v.context)
+        moreMenuPopup?.let {
+            it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+            it.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
+            it.setDropDownGravity(Gravity.END)
+            it.anchorView = v
+            it.isModal = true
+            it.setOnItemClickListener { _, _, position, _ ->
+                viewModel.onMoreMenuItemClicked(actions[position].type)
+            }
+            it.setOnDismissListener {
+                viewModel.onMoreMenuDismissed()
+                moreMenuPopup = null
+            }
         }
-        listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
-        listPopup.show()
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
@@ -524,6 +529,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.destroy()
         }
         bookmarksSavedLocallyDialog?.dismiss()
+        moreMenuPopup?.dismiss()
     }
 
     private fun hasPost(): Boolean {
@@ -569,6 +575,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
                 ReaderActivityLauncher.sharePost(context, post)
+                return true
+            }
+            R.id.menu_more -> {
+                viewModel.onMoreButtonClicked()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -1067,10 +1077,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            if (!canShowFooter()) {
-                layoutFooter.visibility = View.GONE
-            }
-
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
 
@@ -1148,9 +1154,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewModel.onShowPost(it)
             }
 
-            if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
-                AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
-            }
+            layoutFooter.visibility = View.VISIBLE
         }
     }
 
@@ -1339,49 +1343,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    /*
-     * can we show the footer bar which contains the like & comment counts?
-     */
-    private fun canShowFooter(): Boolean {
-        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton() || canBeReblogged()
-    }
-
-    /**
-     * Returns true if the blog post can be reblogged
-     */
-    private fun canBeReblogged(): Boolean {
-        this.post?.let {
-            if (!it.isPrivate && accountStore.hasAccessToken()) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun canShowCommentCount(): Boolean {
-        val post = this.post ?: return false
-        return if (!accountStore.hasAccessToken()) {
-            post.numReplies > 0
-        } else post.isWP &&
-                !post.isDiscoverPost &&
-                (post.isCommentsOpen || post.numReplies > 0)
-    }
-
-    private fun canShowBookmarkButton(): Boolean {
-        return hasPost() && !post!!.isDiscoverPost
-    }
-
-    private fun canShowLikeCount(): Boolean {
-        if (post == null) {
-            return false
-        }
-        return if (!accountStore.hasAccessToken()) {
-            post!!.numLikes > 0
-        } else post!!.canLikePost() || post!!.numLikes > 0
-    }
-
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper.isRefreshing = refreshing
+    }
+
+    override fun onShowHideToolbar(show: Boolean) {
+        if (isAdded) {
+            AniUtils.animateTopBar(appBar, show)
+        }
+    }
+
+    private fun showFullScreen() {
+        post?.let {
+            val site = siteStore.getSiteBySiteId(it.blogId)
+            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
+        }
     }
 
     companion object {
@@ -1422,19 +1398,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             fragment.arguments = args
 
             return fragment
-        }
-    }
-
-    override fun onShowHideToolbar(show: Boolean) {
-        if (isAdded) {
-            AniUtils.animateTopBar(appBar, show)
-        }
-    }
-
-    private fun showFullScreen() {
-        post?.let {
-            val site = siteStore.getSiteBySiteId(it.blogId)
-            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
         }
     }
 }

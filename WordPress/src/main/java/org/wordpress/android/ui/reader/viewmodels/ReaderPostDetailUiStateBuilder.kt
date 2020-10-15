@@ -27,13 +27,11 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onMoreButtonClicked: (ReaderPostDetailsUiState) -> Unit,
-        onMoreDismissed: (ReaderPostDetailsUiState) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit
     ): ReaderPostDetailsUiState {
-            return ReaderPostDetailsUiState(
+        return ReaderPostDetailsUiState(
                 postId = post.postId,
                 blogId = post.blogId,
                 headerUiState = buildPostDetailsHeaderUiState(
@@ -44,9 +42,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 ),
                 moreMenuItems = moreMenuItems,
                 actions = buildPostActions(post, onButtonClicked),
-                commentsEntrySection = buildCommentsEntryUiState(post, onButtonClicked),
-                onMoreButtonClicked = onMoreButtonClicked,
-                onMoreDismissed = onMoreDismissed
+                commentsEntrySection = buildCommentsEntryUiState(post, onButtonClicked)
         )
     }
 
@@ -88,10 +84,10 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         val actionText = UiStringRes(string.reader_add_comments)
 
         return CommentsEntryUiState(
-            isVisible = showCommentsEntry,
-            labelText = labelText,
-            actionText = actionText,
-            onClicked = onAddCommentsClicked
+                isVisible = showCommentsEntry,
+                labelText = labelText,
+                actionText = actionText,
+                onClicked = onAddCommentsClicked
         )
     }
 }
