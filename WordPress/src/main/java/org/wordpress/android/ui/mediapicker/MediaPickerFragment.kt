@@ -41,8 +41,15 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.InsertMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.SWITCH_SOURCE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.GIF_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.STOCK_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
@@ -75,6 +82,7 @@ import javax.inject.Inject
 class MediaPickerFragment : Fragment() {
     enum class MediaPickerIconType {
         ANDROID_CHOOSE_FROM_DEVICE,
+        SWITCH_SOURCE,
         WP_STORIES_CAPTURE;
 
         companion object {
@@ -106,6 +114,7 @@ class MediaPickerFragment : Fragment() {
         ) : MediaPickerAction()
 
         data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
+        data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
     }
 
     sealed class MediaPickerIcon(val type: MediaPickerIconType) {
@@ -113,12 +122,22 @@ class MediaPickerFragment : Fragment() {
             val allowedTypes: Set<MediaType>
         ) : MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
 
+        data class SwitchSource(val dataSource: DataSource) : MediaPickerIcon(SWITCH_SOURCE)
+
         object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
 
         fun toBundle(bundle: Bundle) {
             bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
-            if (this is ChooseFromAndroidDevice) {
-                bundle.putStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES, ArrayList(allowedTypes.map { it.name }))
+            when (this) {
+                is ChooseFromAndroidDevice -> {
+                    bundle.putStringArrayList(
+                            KEY_LAST_TAPPED_ICON_ALLOWED_TYPES,
+                            ArrayList(allowedTypes.map { it.name })
+                    )
+                }
+                is SwitchSource -> {
+                    bundle.putInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, this.dataSource.ordinal)
+                }
             }
         }
 
@@ -138,6 +157,15 @@ class MediaPickerFragment : Fragment() {
                         ChooseFromAndroidDevice(allowedTypes)
                     }
                     WP_STORIES_CAPTURE -> WpStoriesCapture
+                    SWITCH_SOURCE -> {
+                        val ordinal = bundle.getInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, -1)
+                        if (ordinal != -1) {
+                            val dataSource = DataSource.values()[ordinal]
+                            SwitchSource(dataSource)
+                        } else {
+                            null
+                        }
+                    }
                 }
             }
         }
@@ -297,6 +325,19 @@ class MediaPickerFragment : Fragment() {
         val browseMenuItem = checkNotNull(menu.findItem(R.id.mnu_browse_item)) {
             "Menu does not contain mandatory browse item"
         }
+        val mediaLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_media_library)) {
+            "Menu does not contain mandatory media library item"
+        }
+        val deviceMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_device)) {
+            "Menu does not contain device library item"
+        }
+        val stockLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_stock_library)) {
+            "Menu does not contain mandatory stock library item"
+        }
+        val tenorLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_tenor_library)) {
+            "Menu does not contain mandatory tenor library item"
+        }
+
         initializeSearchView(searchMenuItem)
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             val searchView = searchMenuItem.actionView as SearchView
@@ -310,13 +351,33 @@ class MediaPickerFragment : Fragment() {
             }
 
             searchMenuItem.isVisible = uiState.searchUiModel !is SearchUiModel.Hidden
-            browseMenuItem.isVisible = uiState.browseMenuUiModel.isVisible
+
+            val shownActions = uiState.browseMenuUiModel.shownActions
+            browseMenuItem.isVisible = shownActions.contains(SYSTEM_PICKER)
+            mediaLibraryMenuItem.isVisible = shownActions.contains(WP_MEDIA_LIBRARY)
+            deviceMenuItem.isVisible = shownActions.contains(DEVICE)
+            stockLibraryMenuItem.isVisible = shownActions.contains(STOCK_LIBRARY)
+            tenorLibraryMenuItem.isVisible = shownActions.contains(GIF_LIBRARY)
         })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mnu_browse_item) {
-            viewModel.onBrowseForItems()
+        when (item.itemId) {
+            R.id.mnu_browse_item -> {
+                viewModel.onMenuItemClicked(SYSTEM_PICKER)
+            }
+            R.id.mnu_choose_from_media_library -> {
+                viewModel.onMenuItemClicked(WP_MEDIA_LIBRARY)
+            }
+            R.id.mnu_choose_from_device -> {
+                viewModel.onMenuItemClicked(DEVICE)
+            }
+            R.id.mnu_choose_from_stock_library -> {
+                viewModel.onMenuItemClicked(STOCK_LIBRARY)
+            }
+            R.id.mnu_choose_from_tenor_library -> {
+                viewModel.onMenuItemClicked(GIF_LIBRARY)
+            }
         }
         return true
     }
@@ -581,6 +642,7 @@ class MediaPickerFragment : Fragment() {
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
         private const val KEY_LAST_TAPPED_ICON_ALLOWED_TYPES = "last_tapped_icon_allowed_types"
+        private const val KEY_LAST_TAPPED_ICON_DATA_SOURCE = "last_tapped_icon_data_source"
         private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3

@@ -7,6 +7,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_ITEM_S
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_ITEM_UNSELECTED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_DEVICE_LIBRARY
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_GIF_LIBRARY
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_STOCK_LIBRARY
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
@@ -20,6 +23,7 @@ import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WpStoriesCapture
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
@@ -87,6 +91,15 @@ class MediaPickerTracker
                     MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                     mediaPickerSetup.toProperties()
             )
+            is SwitchSource -> {
+                val event = when (icon.dataSource) {
+                    DEVICE -> MEDIA_PICKER_OPEN_DEVICE_LIBRARY
+                    WP_LIBRARY -> MEDIA_PICKER_OPEN_WP_MEDIA
+                    STOCK_LIBRARY -> MEDIA_PICKER_OPEN_STOCK_LIBRARY
+                    GIF_LIBRARY -> MEDIA_PICKER_OPEN_GIF_LIBRARY
+                }
+                analyticsTrackerWrapper.track(event, mediaPickerSetup.toProperties())
+            }
         }
     }
 
@@ -127,7 +140,7 @@ class MediaPickerTracker
     private fun MutableMap<String, Any?>.addMediaPickerProperties(
         mediaPickerSetup: MediaPickerSetup
     ): MutableMap<String, Any?> {
-        this["source"] = when (mediaPickerSetup.dataSource) {
+        this["source"] = when (mediaPickerSetup.primaryDataSource) {
             DEVICE -> "device_media_library"
             WP_LIBRARY -> "wordpress_media_library"
             STOCK_LIBRARY -> "pexel_image_library"

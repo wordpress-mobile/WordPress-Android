@@ -22,13 +22,20 @@ import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.FileItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.NextPageLoader
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.PhotoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.VideoItem
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.EditActionUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.MediaPickerUiState
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
@@ -416,7 +423,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             }
         }
 
-        viewModel.onBrowseForItems()
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
 
         verify(mediaPickerTracker).trackIconClick(
                 ChooseFromAndroidDevice(singleSelectMediaPickerSetup.allowedTypes),
@@ -441,7 +448,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             }
         }
 
-        viewModel.onBrowseForItems()
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
 
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
@@ -462,7 +469,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             }
         }
 
-        viewModel.onBrowseForItems()
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
 
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
@@ -484,11 +491,78 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             }
         }
 
-        viewModel.onBrowseForItems()
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
 
         assertThat(iconClickEvents).hasSize(1)
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
         assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.MEDIA_FILE)
+    }
+
+    @Test
+    fun `switch media source from DEVICE to WP_MEDIA_LIBRARY`() = test {
+        val mediaPickerSetup = singleSelectMediaPickerSetup.copy(
+                availableDataSources = setOf(WP_LIBRARY),
+                cameraEnabled = true
+        )
+        setupViewModel(listOf(), mediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        viewModel.onMenuItemClicked(WP_MEDIA_LIBRARY)
+
+        verify(mediaPickerTracker).trackIconClick(
+                SwitchSource(WP_LIBRARY),
+                mediaPickerSetup
+        )
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is SwitchMediaPicker).isTrue()
+        val updatedMediaPickerSetup = (iconClickEvents[0].action as SwitchMediaPicker).mediaPickerSetup
+        assertThat(updatedMediaPickerSetup).isEqualTo(mediaPickerSetup.copy(
+                primaryDataSource = WP_LIBRARY,
+                availableDataSources = setOf(),
+                systemPickerEnabled = false,
+                cameraEnabled = false
+        ))
+    }
+
+    @Test
+    fun `switch media source from DEVICE to STOCK_LIBRARY`() = test {
+        val mediaPickerSetup = singleSelectMediaPickerSetup.copy(availableDataSources = setOf(STOCK_LIBRARY))
+        setupViewModel(listOf(), mediaPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        viewModel.onMenuItemClicked(BrowseAction.STOCK_LIBRARY)
+
+        verify(mediaPickerTracker).trackIconClick(
+                SwitchSource(STOCK_LIBRARY),
+                mediaPickerSetup
+        )
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is SwitchMediaPicker).isTrue()
+        val updatedMediaPickerSetup = (iconClickEvents[0].action as SwitchMediaPicker).mediaPickerSetup
+        assertThat(updatedMediaPickerSetup).isEqualTo(mediaPickerSetup.copy(
+                primaryDataSource = STOCK_LIBRARY,
+                availableDataSources = setOf(),
+                defaultSearchView = true,
+                systemPickerEnabled = false
+        ))
     }
 
     @Test
@@ -736,7 +810,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         cameraAllowed: Boolean = false,
         editingEnabled: Boolean = true
     ) = MediaPickerSetup(
-            dataSource = DEVICE,
+            primaryDataSource = DEVICE,
+            availableDataSources = setOf(),
             canMultiselect = canMultiselect,
             requiresStoragePermissions = true,
             allowedTypes = allowedTypes,
