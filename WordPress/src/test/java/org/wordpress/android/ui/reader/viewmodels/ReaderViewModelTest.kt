@@ -298,8 +298,6 @@ class ReaderViewModelTest {
 
     @Test
     fun `Choose interests screen closed when onCloseReaderInterests is invoked`() = testWithNonEmptyTags {
-        // Arrange
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
         // Act
         viewModel.onCloseReaderInterests()
         // Assert
