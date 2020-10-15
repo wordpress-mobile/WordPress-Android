@@ -70,7 +70,7 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY),
+                    availableDataSources = setOf(WP_LIBRARY, GIF_LIBRARY),
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
