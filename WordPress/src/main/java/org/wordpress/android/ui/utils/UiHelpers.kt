@@ -44,10 +44,6 @@ class UiHelpers @Inject constructor() {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    fun setInvisible(view: View, invisible: Boolean) {
-        view.visibility = if (invisible) View.INVISIBLE else View.VISIBLE
-    }
-
     fun setTextOrHide(view: TextView, uiString: UiString?) {
         val text = uiString?.let { getTextOfUiString(view.context, uiString) }
         setTextOrHide(view, text)

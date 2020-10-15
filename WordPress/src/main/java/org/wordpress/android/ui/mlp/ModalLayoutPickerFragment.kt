@@ -25,12 +25,13 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -115,9 +116,14 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      * @param visible if true the title is shown and the header is hidden
      */
     private fun setTitleVisibility(visible: Boolean) {
-        if (visible == (title?.visibility == View.VISIBLE)) return // No change
-        title?.let { uiHelper.setInvisible(it, !visible) }
-        header?.let { uiHelper.setInvisible(it, visible) }
+        if (title == null || header == null || visible == (title.visibility == View.VISIBLE)) return // No change
+        if (visible) {
+            AniUtils.fadeIn(title, Duration.SHORT)
+            AniUtils.fadeOut(header, Duration.SHORT, View.INVISIBLE)
+        } else {
+            AniUtils.fadeIn(header, Duration.SHORT)
+            AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
