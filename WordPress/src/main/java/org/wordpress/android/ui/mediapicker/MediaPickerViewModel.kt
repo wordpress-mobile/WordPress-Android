@@ -111,7 +111,7 @@ class MediaPickerViewModel @Inject constructor(
             _showProgressDialog.distinct()
     ) { domainModel, selectedIds, softAskRequest, searchExpanded, progressDialogUiModel ->
         MediaPickerUiState(
-                buildUiModel(domainModel, selectedIds, softAskRequest),
+                buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
                 buildSoftAskView(softAskRequest),
                 FabUiModel(mediaPickerSetup.cameraEnabled && selectedIds.isNullOrEmpty()) {
                     clickIcon(WpStoriesCapture)
@@ -145,7 +145,8 @@ class MediaPickerViewModel @Inject constructor(
     private fun buildUiModel(
         domainModel: DomainModel?,
         selectedIds: List<Identifier>?,
-        softAskRequest: SoftAskRequest?
+        softAskRequest: SoftAskRequest?,
+        isSearching: Boolean?
     ): PhotoListUiModel {
         val data = domainModel?.domainItems
         return if (null != softAskRequest && softAskRequest.show) {
@@ -208,8 +209,21 @@ class MediaPickerViewModel @Inject constructor(
             } else {
                 PhotoListUiModel.Data(uiItems)
             }
+        } else if (domainModel?.emptyState != null) {
+            PhotoListUiModel.Empty(
+                    domainModel.emptyState.title,
+                    domainModel.emptyState.htmlSubtitle,
+                    domainModel.emptyState.image,
+                    domainModel.emptyState.bottomImage,
+                    domainModel.emptyState.bottomImageDescription,
+                    isSearching == true
+            )
         } else {
-            PhotoListUiModel.Empty
+            PhotoListUiModel.Empty(
+                    UiStringRes(R.string.media_empty_list),
+                    image = R.drawable.img_illustration_media_105dp,
+                    isSearching = isSearching == true
+            )
         }
     }
 
@@ -533,7 +547,15 @@ class MediaPickerViewModel @Inject constructor(
         data class Data(val items: List<MediaPickerUiItem>) :
                 PhotoListUiModel()
 
-        object Empty : PhotoListUiModel()
+        data class Empty(
+            val title: UiString,
+            val htmlSubtitle: UiString? = null,
+            val image: Int? = null,
+            val bottomImage: Int? = null,
+            val bottomImageDescription: UiString? = null,
+            val isSearching: Boolean = false
+        ) : PhotoListUiModel()
+
         object Hidden : PhotoListUiModel()
     }
 

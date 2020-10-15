@@ -10,15 +10,16 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
-import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
+import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -36,6 +37,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val supportedBlocksProvider: SupportedBlocksProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -77,11 +79,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            if (site.isWPCom) {
-                dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(site))
-            } else {
-                handleBlockLayoutsResponse(GutenbergPageLayoutFactory.makeDefaultPageLayouts())
-            }
+            val payload = FetchBlockLayoutsPayload(site, supportedBlocksProvider.fromAssets().supported)
+            dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
 
@@ -151,9 +150,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
-     * Shows the MLP
+     * Triggers the create page flow and shows the MLP
      */
-    fun show() {
+    fun createPageFlowTriggered() {
         init()
         _isModalLayoutPickerShowing.value = Event(true)
     }

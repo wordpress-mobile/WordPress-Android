@@ -1,3 +1,3 @@
-- Block editor: Edit unsupported blocks by enabling Jetpack SSO from the missing block alert. Use the link picker to add URLs to posts. Double-tap text fields in accessibility mode as expected.
+- Block editor: Edit unsupported blocks by enabling Jetpack SSO from the missing block alert. Use the link picker to add URLs to posts. Double-tap text fields in accessibility mode now works as expected.
 - Improved My Site layout for large-screen devices.
 

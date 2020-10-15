@@ -6,9 +6,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle.LIGHT
+import org.wordpress.android.util.getColorResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 
@@ -30,6 +34,10 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         val header = expandableItem.header
         iconContainer.setIconOrAvatar(header, imageManager)
         text.setTextOrHide(header.textResource, header.text)
+        val textColor = when (expandableItem.header.textStyle) {
+            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
+        }
         text.contentDescription = header.contentDescription
         expandButton.visibility = View.VISIBLE
         val expandButtonDescription = when (expandableItem.isExpanded) {
@@ -39,6 +47,7 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
         expandButton.contentDescription = itemView.resources.getString(expandButtonDescription)
         value.setTextOrHide(header.valueResource, header.value)
         divider.setVisible(header.showDivider && !expandableItem.isExpanded)
+        text.setTextColor(AppCompatResources.getColorStateList(text.context, textColor))
         if (header.barWidth != null) {
             bar.visibility = View.VISIBLE
             bar.progress = header.barWidth
@@ -61,6 +70,13 @@ class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager
             }
             itemView.announceForAccessibility(announcement)
             expandableItem.onExpandClicked(!expandableItem.isExpanded)
+        }
+        val longClickAction = expandableItem.header.longClickAction
+
+        if (longClickAction != null) {
+            itemView.setOnLongClickListener {
+                longClickAction.invoke(itemView)
+            }
         }
     }
 }
