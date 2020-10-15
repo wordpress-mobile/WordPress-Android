@@ -375,7 +375,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showPhotoPickerForGravatar() {
-        mediaPickerLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
+        mediaPickerLauncher.showGravatarPicker(this)
     }
 
     private fun startCropActivity(uri: Uri) {

@@ -129,30 +129,24 @@ class MediaPickerLauncher
         }
     }
 
-    fun showPhotoPickerForResult(
-        fragment: Fragment,
-        browserType: MediaBrowserType,
-        site: SiteModel?,
-        localPostId: Int?
-    ) {
-        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val intent = MediaPickerActivity.buildIntent(
-                    fragment.requireContext(),
-                    buildLocalMediaPickerSetup(browserType),
-                    site,
-                    localPostId
-            )
-            fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
-        } else {
-            ActivityLauncher.showPhotoPickerForResult(fragment, browserType, site, localPostId)
-        }
-    }
-
     fun showGravatarPicker(fragment: Fragment) {
         val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraSetup = ENABLED,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
             MediaPickerActivity.buildIntent(
                     fragment.requireContext(),
-                    buildLocalMediaPickerSetup(GRAVATAR_IMAGE_PICKER)
+                    mediaPickerSetup
             )
         } else {
             Intent(fragment.requireContext(), PhotoPickerActivity::class.java).apply {
