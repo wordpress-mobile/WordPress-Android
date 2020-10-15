@@ -519,7 +519,8 @@ class MediaPickerViewModel @Inject constructor(
                                 primaryDataSource = icon.dataSource,
                                 availableDataSources = setOf(),
                                 systemPickerEnabled = icon.dataSource == DEVICE,
-                                defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY
+                                defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY,
+                                cameraEnabled = false
                         )
                 )
             }
