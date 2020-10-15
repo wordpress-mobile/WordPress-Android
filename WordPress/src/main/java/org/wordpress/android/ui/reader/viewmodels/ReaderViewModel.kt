@@ -24,7 +24,6 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -130,12 +129,6 @@ class ReaderViewModel @Inject constructor(
         val appBarExpanded: Boolean = false,
         val tabLayoutVisible: Boolean = false
     ) {
-        object InitialUiState : ReaderUiState(
-                searchIconVisible = false,
-                appBarExpanded = false,
-                tabLayoutVisible = false
-        )
-
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
@@ -184,11 +177,7 @@ class ReaderViewModel @Inject constructor(
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
-        if (_uiState.value == InitialUiState) {
-            return
-        } else {
-            loadTabs()
-        }
+        loadTabs()
     }
 
     fun onScreenInForeground() {

@@ -63,9 +63,9 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     displayUtilsWrapper: DisplayUtilsWrapper,
+    private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 

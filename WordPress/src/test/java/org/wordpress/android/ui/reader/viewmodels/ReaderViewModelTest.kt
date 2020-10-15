@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,7 +31,6 @@ import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -69,8 +69,7 @@ class ReaderViewModelTest {
                 dateProvider,
                 loadReaderTabsUseCase,
                 readerTracker,
-                accountStore,
-                getFollowedTagsUseCase
+                accountStore
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -118,7 +117,7 @@ class ReaderViewModelTest {
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(state).isNotInstanceOf(ContentUiState::class.java)
+        assertThat(state).isNull()
     }
 
     @Test
@@ -269,48 +268,6 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `Search is disabled on first start`() = testWithEmptyTags {
-        // Arrange
-        val uiStates = mutableListOf<ReaderUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        // Act
-        viewModel.start()
-        // Assert
-        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
-        assertThat((uiStates[0] as InitialUiState).searchIconVisible).isFalse()
-    }
-
-    @Test
-    fun `Tab layout is not visible on first start`() = testWithEmptyTags {
-        // Arrange
-        val uiStates = mutableListOf<ReaderUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        // Act
-        viewModel.start()
-        // Assert
-        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
-        assertThat((uiStates[0] as InitialUiState).tabLayoutVisible).isFalse()
-    }
-
-    @Test
-    fun `App bar is not expanded on first start`() = testWithEmptyTags {
-        // Arrange
-        val uiStates = mutableListOf<ReaderUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
-        }
-        // Act
-        viewModel.start()
-        // Assert
-        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
-        assertThat((uiStates[0] as InitialUiState).appBarExpanded).isFalse()
-    }
-
-    @Test
     fun `Tab layout is visible when loaded tags are NOT empty`() = testWithNonEmptyTags {
         // Arrange
         val uiStates = mutableListOf<ReaderUiState>()
@@ -320,9 +277,9 @@ class ReaderViewModelTest {
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[1] as ContentUiState).tabLayoutVisible).isTrue()
+        assertThat(uiStates.size).isEqualTo(1)
+        assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[0] as ContentUiState).tabLayoutVisible).isTrue()
     }
 
     @Test
@@ -335,17 +292,9 @@ class ReaderViewModelTest {
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[1] as ContentUiState).appBarExpanded).isTrue()
-    }
-
-    @Test
-    fun `Choose interests screen shown on first start`() = testWithEmptyTags {
-        // Act
-        viewModel.start()
-        // Assert
-        assertThat(viewModel.showReaderInterests.value).isNotNull
+        assertThat(uiStates.size).isEqualTo(1)
+        assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[0] as ContentUiState).appBarExpanded).isTrue()
     }
 
     @Test
@@ -357,30 +306,6 @@ class ReaderViewModelTest {
         // Assert
         assertThat(viewModel.closeReaderInterests.value).isNotNull
     }
-
-    @Test
-    fun `Choose interests screen shown if tag changed to discover and followed tags not found for user`() =
-            testWithEmptyUserTags {
-                // Arrange
-                val selectedTag: ReaderTag = mock()
-                whenever(selectedTag.isDiscover).thenReturn(true)
-                // Act
-                viewModel.onTagChanged(selectedTag)
-                // Assert
-                assertThat(viewModel.showReaderInterests.value).isNotNull
-            }
-
-    @Test
-    fun `Choose interests screen not shown if tag changed to discover and followed tags found for user`() =
-            testWithNonEmptyUserTags {
-                // Arrange
-                val selectedTag: ReaderTag = mock()
-                whenever(selectedTag.isDiscover).thenReturn(true)
-                // Act
-                viewModel.onTagChanged(selectedTag)
-                // Assert
-                assertThat(viewModel.showReaderInterests.value).isNull()
-            }
 
     @Test
     fun `Bookmark tab is selected when bookmarkTabRequested is invoked`() = testWithNonMockedNonEmptyTags {
@@ -399,7 +324,6 @@ class ReaderViewModelTest {
 
     private fun triggerReaderTabContentDisplay() {
         viewModel.start()
-        viewModel.onCloseReaderInterests()
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
