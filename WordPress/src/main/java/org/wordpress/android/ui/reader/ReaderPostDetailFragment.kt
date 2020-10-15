@@ -159,6 +159,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val postHistory = ReaderPostHistory()
 
+    private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
@@ -372,7 +373,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewLifecycleOwner,
                 Observer<ReaderPostDetailsUiState> { state ->
                     header_view.updatePost(state.headerUiState)
-                    updateMoreMenu(state)
+                    showOrHideMoreMenu(state)
                 }
         )
 
@@ -416,33 +417,37 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         viewModel.start()
     }
 
-    private fun updateMoreMenu(
+    private fun showOrHideMoreMenu(
         state: ReaderPostDetailsUiState
     ) {
         val moreMenu: View? = toolBar.findViewById(R.id.menu_more)
         moreMenu?.let {
-            it.setOnClickListener { state.onMoreButtonClicked.invoke(state) }
             state.moreMenuItems?.let {
-                renderMoreMenu(state, state.moreMenuItems, moreMenu)
-            }
+                if (moreMenuPopup == null) {
+                    createAndShowMoreMenu(it, moreMenu)
+                }
+                moreMenuPopup?.show()
+            } ?: moreMenuPopup?.dismiss()
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostDetailsUiState, actions: List<SecondaryAction>, v: View) {
-        // TODO: Add Tracks
-        val listPopup = ListPopupWindow(v.context)
-        listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
-        listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
-        listPopup.setDropDownGravity(Gravity.END)
-        listPopup.anchorView = v
-        listPopup.isModal = true
-        listPopup.setOnItemClickListener { _, _, position, _ ->
-            listPopup.dismiss()
-            val item = actions[position]
-            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+    private fun createAndShowMoreMenu(actions: List<SecondaryAction>, v: View) {
+        // TODO: ashiagr Add Tracks
+        moreMenuPopup = ListPopupWindow(v.context)
+        moreMenuPopup?.let {
+            it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+            it.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
+            it.setDropDownGravity(Gravity.END)
+            it.anchorView = v
+            it.isModal = true
+            it.setOnItemClickListener { _, _, position, _ ->
+                viewModel.onMoreMenuItemClicked(actions[position].type)
+            }
+            it.setOnDismissListener {
+                viewModel.onMoreMenuDismissed()
+                moreMenuPopup = null
+            }
         }
-        listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
-        listPopup.show()
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
@@ -464,6 +469,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (view != null) {
             readerWebView.destroy()
         }
+        moreMenuPopup?.dismiss()
     }
 
     private fun hasPost(): Boolean {
@@ -509,6 +515,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
                 ReaderActivityLauncher.sharePost(context, post)
+                return true
+            }
+            R.id.menu_more -> {
+                viewModel.onMoreButtonClicked()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

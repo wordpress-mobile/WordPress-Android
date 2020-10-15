@@ -79,26 +79,35 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onMoreButtonClicked(uiState: ReaderPostDetailsUiState) {
-        changeMoreMenuVisibility(uiState, true)
+    fun onMoreButtonClicked() {
+        changeMoreMenuVisibility(true)
     }
 
-    private fun onMoreMenuDismissed(uiState: ReaderPostDetailsUiState) {
-        changeMoreMenuVisibility(uiState, false)
+    fun onMoreMenuDismissed() {
+        changeMoreMenuVisibility(false)
     }
 
-    private fun changeMoreMenuVisibility(currentUiState: ReaderPostDetailsUiState, show: Boolean) {
-        launch {
-            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
+    fun onMoreMenuItemClicked(type: ReaderPostCardActionType) {
+        val currentUiState = uiState.value
+        currentUiState?.let {
+            onButtonClicked(currentUiState.postId, currentUiState.blogId, type)
+        }
+        changeMoreMenuVisibility(false)
+    }
+
+    private fun changeMoreMenuVisibility(show: Boolean) {
+        val currentUiState = uiState.value
+        currentUiState?.let {
+            findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
-                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
+                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
                             post, TAG_FOLLOWED, this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null
                 }
 
-                _uiState.value = currentUiState.copy(moreMenuItems = moreMenuItems)
+                _uiState.value = it.copy(moreMenuItems = moreMenuItems)
             }
         }
     }
@@ -121,9 +130,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return ReaderPostDetailsUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                headerUiState = createPostDetailsHeaderUiState(post),
-                onMoreButtonClicked = this@ReaderPostDetailViewModel::onMoreButtonClicked,
-                onMoreDismissed = this@ReaderPostDetailViewModel::onMoreMenuDismissed
+                headerUiState = createPostDetailsHeaderUiState(post)
         )
     }
 
@@ -163,9 +170,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         val postId: Long,
         val blogId: Long,
         val headerUiState: ReaderPostDetailsHeaderUiState,
-        val moreMenuItems: List<SecondaryAction>? = null,
-        val onMoreButtonClicked: (ReaderPostDetailsUiState) -> Unit,
-        val onMoreDismissed: (ReaderPostDetailsUiState) -> Unit
+        val moreMenuItems: List<SecondaryAction>? = null
     )
 
     override fun onCleared() {
