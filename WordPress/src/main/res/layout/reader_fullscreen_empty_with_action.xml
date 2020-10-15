@@ -24,9 +24,10 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/empty_title"
-            style="@style/ReaderTextView.Post.Welcome.Title"
+            style="@style/Reader.TextView.Error"
             app:layout_constraintBottom_toTopOf="@+id/empty_action"
             app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="serif"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed"

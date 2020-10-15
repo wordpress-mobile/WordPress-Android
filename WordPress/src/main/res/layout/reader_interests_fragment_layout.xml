@@ -23,7 +23,7 @@
             android:layout_centerInParent="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_left_white_24dp"
-            android:tint="@color/gray_100"
+            android:tint="?attr/colorOnSurface"
             android:contentDescription="@string/reader_label_toolbar_back"/>
     </RelativeLayout>
 
