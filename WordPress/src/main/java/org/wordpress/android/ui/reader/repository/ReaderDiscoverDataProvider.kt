@@ -13,6 +13,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
@@ -187,6 +188,13 @@ class ReaderDiscoverDataProvider @Inject constructor(
                 UNCHANGED -> onUnchanged(event.task)
                 FAILED -> onFailed(event.task)
             }
+        }
+    }
+
+    @Subscribe(threadMode = BACKGROUND)
+    fun onFollowedTagsChanged(event: FollowedTagsChanged) {
+        launch {
+            loadCards()
         }
     }
 }

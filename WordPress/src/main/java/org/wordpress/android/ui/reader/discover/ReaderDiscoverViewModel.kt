@@ -116,7 +116,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             launch {
-                // todo: annmarie added this - always check if the user has any tags
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
                     _uiState.value = ShowFollowInterestsEmptyUiState

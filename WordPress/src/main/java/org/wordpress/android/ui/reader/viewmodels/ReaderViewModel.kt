@@ -45,7 +45,6 @@ class ReaderViewModel @Inject constructor(
         // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
-    private var isReaderInterestsShown: Boolean = false
     private var wasPaused: Boolean = false
     private var trackReaderTabJob: Job? = null
 
@@ -72,10 +71,8 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-//        if (isReaderInterestsShown) return
-//        isReaderInterestsShown = true
-        _uiState.value = InitialUiState
-//        _showReaderInterests.value = Event(Unit)
+        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
+        if (initialized) return
         loadTabs()
     }
 
@@ -118,32 +115,13 @@ class ReaderViewModel @Inject constructor(
         }
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
-
-        // Show interests picker if tag changed to discover and no followed tags found for user
-        // todo: annmarie = Removed this
-//        if (selectedTag?.isDiscover == true) {
-//            launch {
-//                val userTags = getFollowedTagsUseCase.get()
-//                if (userTags.isEmpty()) {
-//                    isReaderInterestsShown = true
-//                    initialized = false
-//                    _uiState.value = InitialUiState
-//                    _showReaderInterests.value = Event(Unit)
-//                }
-//            }
-//        }
     }
 
     fun onCloseReaderInterests() {
-        isReaderInterestsShown = false
         _closeReaderInterests.value = Event(Unit)
-        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
-        loadTabs()
     }
 
-    // todo: annmarie added this
     fun onShowReaderInterests() {
-        isReaderInterestsShown = true
         _showReaderInterests.value = Event(Unit)
     }
 
@@ -206,7 +184,7 @@ class ReaderViewModel @Inject constructor(
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
-        if (_uiState.value == InitialUiState && isReaderInterestsShown) {
+        if (_uiState.value == InitialUiState) {
             return
         } else {
             loadTabs()

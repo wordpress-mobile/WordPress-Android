@@ -88,7 +88,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         error_retry.setOnClickListener {
             viewModel.onRetryButtonClick()
         }
-        // todo: annmarie added
         empty_action.setOnClickListener{
             parentViewModel.onShowReaderInterests()
         }
