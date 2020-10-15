@@ -114,6 +114,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
             uiHelpers.updateVisibility(error_layout, it.fullscreenErrorVisibility)
             uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
+            uiHelpers.updateVisibility(empty_layout, it.fullscreenEmptyVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
             ptr_layout.isRefreshing = it.reloadProgressVisibility
         })
