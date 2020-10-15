@@ -156,6 +156,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private val postHistory = ReaderPostHistory()
 
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
+    private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
@@ -369,7 +370,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewLifecycleOwner,
                 Observer<ReaderPostDetailsUiState> { state ->
                     header_view.updatePost(state.headerUiState)
-                    updateMoreMenu(state)
+                    showOrHideMoreMenu(state)
 
                     updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
                     updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
@@ -379,21 +380,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
 
         viewModel.refreshPost.observe(viewLifecycleOwner, Observer { // Do nothing
-            }
+        }
         )
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
-                it?.applyIfNotHandled {
-                    showSnackbar()
-                }
+            it?.applyIfNotHandled {
+                showSnackbar()
             }
+        }
         )
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {
                     is ReaderNavigationEvents.ShowPostsByTag -> {
-                            ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+                        ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
                     }
                     is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             context,
@@ -464,33 +465,37 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun updateMoreMenu(
+    private fun showOrHideMoreMenu(
         state: ReaderPostDetailsUiState
     ) {
         val moreMenu: View? = toolBar.findViewById(R.id.menu_more)
         moreMenu?.let {
-            it.setOnClickListener { state.onMoreButtonClicked.invoke(state) }
             state.moreMenuItems?.let {
-                renderMoreMenu(state, state.moreMenuItems, moreMenu)
-            }
+                if (moreMenuPopup == null) {
+                    createAndShowMoreMenu(it, moreMenu)
+                }
+                moreMenuPopup?.show()
+            } ?: moreMenuPopup?.dismiss()
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostDetailsUiState, actions: List<SecondaryAction>, v: View) {
+    private fun createAndShowMoreMenu(actions: List<SecondaryAction>, v: View) {
         // TODO: ashiagr Add Tracks
-        val listPopup = ListPopupWindow(v.context)
-        listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
-        listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
-        listPopup.setDropDownGravity(Gravity.END)
-        listPopup.anchorView = v
-        listPopup.isModal = true
-        listPopup.setOnItemClickListener { _, _, position, _ ->
-            listPopup.dismiss()
-            val item = actions[position]
-            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+        moreMenuPopup = ListPopupWindow(v.context)
+        moreMenuPopup?.let {
+            it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+            it.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
+            it.setDropDownGravity(Gravity.END)
+            it.anchorView = v
+            it.isModal = true
+            it.setOnItemClickListener { _, _, position, _ ->
+                viewModel.onMoreMenuItemClicked(actions[position].type)
+            }
+            it.setOnDismissListener {
+                viewModel.onMoreMenuDismissed()
+                moreMenuPopup = null
+            }
         }
-        listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
-        listPopup.show()
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
@@ -513,6 +518,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.destroy()
         }
         bookmarksSavedLocallyDialog?.dismiss()
+        moreMenuPopup?.dismiss()
     }
 
     private fun hasPost(): Boolean {
@@ -558,6 +564,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
                 ReaderActivityLauncher.sharePost(context, post)
+                return true
+            }
+            R.id.menu_more -> {
+                viewModel.onMoreButtonClicked()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
