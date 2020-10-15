@@ -11,6 +11,7 @@
             style="@style/MainBottomSheetRowTextView"
             android:gravity="start"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/prepublishing_category_check"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,19 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/placeholder_spacer"
-            app:layout_constraintStart_toEndOf="@+id/prepublishing_category_text"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/placeholder_spacer"
-            android:layout_width="@dimen/margin_dialog"
-            android:layout_height="@dimen/margin_dialog"
-            android:contentDescription="@string/unknown"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/prepublishing_category_check"
+            app:layout_constraintStart_toEndOf="@+id/prepublishing_category_text"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="gone"/>
+            app:layout_goneMarginEnd="@dimen/margin_dialog"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
