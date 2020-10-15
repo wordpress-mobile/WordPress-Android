@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -170,6 +171,18 @@ class ReaderDiscoverViewModelTest {
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
         assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
+    }
+
+    @Test
+    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags `() = test {
+        // Arrange
+        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
+        val uiStates = init().uiStates
+        // Act
+        viewModel.start(parentViewModel)
+        // Assert
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates[1]).isInstanceOf(ShowFollowInterestsEmptyUiState::class.java)
     }
 
     @Test
@@ -446,6 +459,15 @@ class ReaderDiscoverViewModelTest {
         verify(readerDiscoverDataProvider).refreshCards()
     }
 
+    @Test
+    fun `OnEmptyActionClicked shows select interests screen`() = test {
+        // Arrange
+        init()
+        // Act
+        viewModel.onEmptyActionClick()
+        // Assert
+        verify(parentViewModel).onShowReaderInterests()
+    }
     private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {

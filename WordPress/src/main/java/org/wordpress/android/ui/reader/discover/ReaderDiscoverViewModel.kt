@@ -134,8 +134,6 @@ class ReaderDiscoverViewModel @Inject constructor(
                                     loadMoreProgressVisibility = false
                             )
                         }
-                    } else if(_uiState.value is ShowFollowInterestsEmptyUiState){
-                        _uiState.value = LoadingUiState
                     }
                 }
             }
