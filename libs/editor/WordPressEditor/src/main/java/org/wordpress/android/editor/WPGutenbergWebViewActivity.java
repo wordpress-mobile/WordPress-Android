@@ -12,7 +12,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergWebViewActivity;
 
-import java.io.UnsupportedEncodingException;;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
