@@ -33,7 +33,6 @@ import static java.lang.String.format;
  * views the activity log (see utils/AppLog.java)
  */
 public class AppLogViewerActivity extends LocaleAwareActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
