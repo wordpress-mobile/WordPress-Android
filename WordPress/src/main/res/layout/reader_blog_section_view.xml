@@ -19,7 +19,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_author_and_blog_name"
-        style="@style/ReaderTextView.Site.Title"
+        style="@style/ReaderTextView.Label.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"
@@ -59,6 +59,7 @@
         android:includeFontPadding="false"
         android:text="@string/reader_dot_separator"
         android:textAlignment="viewStart"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/text_blog_url"
         app:layout_constraintEnd_toStartOf="@id/text_dateline"
         app:layout_constraintTop_toBottomOf="@id/text_author_and_blog_name"

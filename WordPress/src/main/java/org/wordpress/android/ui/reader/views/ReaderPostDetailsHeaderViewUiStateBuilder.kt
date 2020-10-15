@@ -11,13 +11,15 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import javax.inject.Inject
 
 @Reusable
 class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
-    private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
+    private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
     fun mapPostToUiState(
         post: ReaderPost,
@@ -36,7 +38,8 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
                 tagItems = buildTagItems(post, onTagItemClicked),
                 tagItemsVisibility = buildTagItemsVisibility(post),
                 blogSectionUiState = buildBlogSectionUiState(post, onBlogSectionClicked),
-                followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken)
+                followButtonUiState = buildFollowButtonUiState(onFollowClicked, post, hasAccessToken),
+                dateLine = buildDateLine(post)
         )
     }
 
@@ -67,4 +70,7 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
             readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
 
     private fun buildTagItemsVisibility(post: ReaderPost) = post.tags.isNotEmpty()
+
+    private fun buildDateLine(post: ReaderPost) =
+            dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
 }

@@ -1578,7 +1578,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderBlogActions.followBlogById(post.blogId, isAskingToFollow, listener)
             }
             if (result) {
-                followButton.setIsFollowedAnimated(isAskingToFollow)
+                followButton.setIsFollowed(isAskingToFollow)
             }
         }
     }
