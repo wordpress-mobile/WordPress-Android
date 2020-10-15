@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.add_category.*
-import kotlinx.android.synthetic.main.prepublishing_add_category_fragment.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
@@ -18,12 +16,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.UiState.ContentUiState
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.UiState.InitialLoadUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
-import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class PrepublishingAddCategoryFragment : Fragment(layout.prepublishing_add_category_fragment) {
@@ -131,8 +127,6 @@ class PrepublishingAddCategoryFragment : Fragment(layout.prepublishing_add_categ
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
                 when (uiState) {
-                    is InitialLoadUiState -> {
-                    }
                     is ContentUiState -> {
                         loadCategories(uiState.categories)
                     }
@@ -167,14 +161,5 @@ class PrepublishingAddCategoryFragment : Fragment(layout.prepublishing_add_categ
                 requireContext(), message,
                 LONG
         )
-    }
-
-    private fun SnackbarMessageHolder.showSnackBar() {
-        val snackBar = WPSnackbar.make(
-                add_category_content,
-                uiHelpers.getTextOfUiString(requireContext(), this.message),
-                Snackbar.LENGTH_LONG
-        )
-        snackBar.show()
     }
 }

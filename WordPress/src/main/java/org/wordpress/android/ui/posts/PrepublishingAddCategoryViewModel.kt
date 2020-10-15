@@ -13,7 +13,6 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.UiState.ContentUiState
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.UiState.InitialLoadUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -81,7 +80,6 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
-        updateUiState(InitialLoadUiState)
         val newUiState = ContentUiState(categories = getCategoryLevels())
         updateUiState(newUiState)
     }
@@ -106,7 +104,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     }
 
     private fun getCategoryLevels(): ArrayList<CategoryNode> =
-            getCategoriesUseCase.getCategoryLevels(siteModel)
+            getCategoriesUseCase.getSiteCategories(siteModel)
 
     private fun trackCategoryAddedEvent() {
         analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_CATEGORIES_ADDED)
@@ -119,8 +117,6 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     sealed class UiState(
         val closeButtonVisible: Boolean = true
     ) {
-        object InitialLoadUiState : UiState()
-
         data class ContentUiState(
             val categories: ArrayList<CategoryNode>
         ) : UiState()

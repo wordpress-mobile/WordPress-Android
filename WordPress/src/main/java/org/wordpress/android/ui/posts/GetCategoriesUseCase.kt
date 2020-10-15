@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.IO_THREAD
+import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -20,14 +21,32 @@ class GetCategoriesUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    // todo: annmarie should these all be in suspendable functions?
-    fun getPostCategories(editPostRepository: EditPostRepository, siteModel: SiteModel): String? {
+    fun getPostCategoriesString(
+        editPostRepository: EditPostRepository,
+        siteModel: SiteModel
+    ): String? {
         val post = editPostRepository.getPost() ?: return null
         val categories: List<TermModel> = taxonomyStore.getCategoriesForPost(
                 post,
                 siteModel
         )
         return formatCategories(categories)
+    }
+
+    fun getPostCategories(editPostRepository: EditPostRepository, siteModel: SiteModel) =
+            editPostRepository.getPost()?.categoryIdList ?: listOf()
+
+    fun getSiteCategories(siteModel: SiteModel): ArrayList<CategoryNode> {
+        val rootCategory = CategoryNode.createCategoryTreeFromList(
+                getCategoriesForSite(siteModel)
+        )
+        return CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory) ?: arrayListOf()
+    }
+
+    suspend fun fetchSiteCategories(siteModel: SiteModel) {
+        withContext(ioDispatcher) {
+            dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel))
+        }
     }
 
     private fun formatCategories(categoryList: List<TermModel>): String? {
@@ -37,20 +56,7 @@ class GetCategoriesUseCase @Inject constructor(
         return StringEscapeUtils.unescapeHtml4(formattedCategories)
     }
 
-    fun getCategoryLevels(siteModel: SiteModel): ArrayList<CategoryNode> {
-        val rootCategory = CategoryNode.createCategoryTreeFromList(
-                getCategoriesForSite(siteModel)
-        )
-        return CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory) ?: arrayListOf()
-    }
-
     private fun getCategoriesForSite(siteModel: SiteModel): List<TermModel> {
         return taxonomyStore.getCategoriesForSite(siteModel)
-    }
-
-    suspend fun fetchNewCategories(siteModel: SiteModel) {
-        withContext(ioDispatcher) {
-            dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel))
-        }
     }
 }
