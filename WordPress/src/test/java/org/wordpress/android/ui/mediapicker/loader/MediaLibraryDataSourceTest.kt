@@ -103,7 +103,6 @@ class MediaLibraryDataSourceTest : BaseUnitTest() {
         val loadMore = false
         val dataSource = setupDataSource(loadMore, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
 
-
         dataSource.load(forced = false, loadMore = loadMore, filter = null)
 
         verify(dispatcher, times(4)).dispatch(any())
