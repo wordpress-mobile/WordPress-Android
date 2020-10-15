@@ -1056,10 +1056,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            if (!canShowFooter()) {
-                layoutFooter.visibility = View.GONE
-            }
-
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
 
@@ -1137,9 +1133,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 viewModel.onShowPost(it)
             }
 
-            if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
-                AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
-            }
+            layoutFooter.visibility = View.VISIBLE
         }
     }
 
@@ -1328,49 +1322,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    /*
-     * can we show the footer bar which contains the like & comment counts?
-     */
-    private fun canShowFooter(): Boolean {
-        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton() || canBeReblogged()
-    }
-
-    /**
-     * Returns true if the blog post can be reblogged
-     */
-    private fun canBeReblogged(): Boolean {
-        this.post?.let {
-            if (!it.isPrivate && accountStore.hasAccessToken()) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun canShowCommentCount(): Boolean {
-        val post = this.post ?: return false
-        return if (!accountStore.hasAccessToken()) {
-            post.numReplies > 0
-        } else post.isWP &&
-                !post.isDiscoverPost &&
-                (post.isCommentsOpen || post.numReplies > 0)
-    }
-
-    private fun canShowBookmarkButton(): Boolean {
-        return hasPost() && !post!!.isDiscoverPost
-    }
-
-    private fun canShowLikeCount(): Boolean {
-        if (post == null) {
-            return false
-        }
-        return if (!accountStore.hasAccessToken()) {
-            post!!.numLikes > 0
-        } else post!!.canLikePost() || post!!.numLikes > 0
-    }
-
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper.isRefreshing = refreshing
+    }
+
+    override fun onShowHideToolbar(show: Boolean) {
+        if (isAdded) {
+            AniUtils.animateTopBar(appBar, show)
+        }
+    }
+
+    private fun showFullScreen() {
+        post?.let {
+            val site = siteStore.getSiteBySiteId(it.blogId)
+            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
+        }
     }
 
     companion object {
@@ -1411,19 +1377,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             fragment.arguments = args
 
             return fragment
-        }
-    }
-
-    override fun onShowHideToolbar(show: Boolean) {
-        if (isAdded) {
-            AniUtils.animateTopBar(appBar, show)
-        }
-    }
-
-    private fun showFullScreen() {
-        post?.let {
-            val site = siteStore.getSiteBySiteId(it.blogId)
-            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
         }
     }
 }
