@@ -58,7 +58,7 @@
 					"position": [0, 465]
 				},
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_7.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_1.txt",
 					"size": [810,480],
 					"position": [127,0 ],
 					"alignment": "center",
@@ -73,7 +73,7 @@
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-2.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_2.txt",
 					"size": [750,350],
 					"position": [157,0 ],
 					"alignment": "center",
@@ -88,7 +88,7 @@
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-3.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_3.txt",
 					"size": [750,350],
 					"position": [157,0 ],
 					"alignment": "center",
@@ -103,7 +103,7 @@
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-4.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_4.txt",
 					"size": [750,350],
 					"position": [157,0 ],
 					"alignment": "center",
@@ -118,7 +118,7 @@
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-5.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_5.txt",
 					"size": [750,350],
 					"position": [157,0 ],
 					"alignment": "center",
@@ -133,7 +133,7 @@
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-6.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_5.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_6.txt",
 					"size": [750,350],
 					"position": [157,0 ],
 					"alignment": "center",
@@ -148,7 +148,7 @@
 			"background": "playstoreres/assets/attachments/phone-backgrounds/Circles-7.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_6.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_7.txt",
 					"size": [750,350],
 					"position": [157,0 ],
 					"alignment": "center",
@@ -172,7 +172,7 @@
 					"position": [0, 424]
 				},
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_7.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_1.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -187,7 +187,7 @@
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-2.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_1.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_2.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -202,7 +202,7 @@
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-3.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_2.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_3.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -217,7 +217,7 @@
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-4.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_3.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_4.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -232,7 +232,7 @@
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-5.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_4.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_5.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -247,7 +247,7 @@
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-6.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_5.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_6.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
@@ -262,7 +262,7 @@
 			"background": "playstoreres/assets/attachments/tablet-backgrounds/Circles-7.png",
 			"attachments": [
 				{
-					"text": "playstoreres/metadata/%s/play_store_screenshot_6.html",
+					"text": "playstoreres/metadata/%s/play_store_screenshot_7.txt",
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",

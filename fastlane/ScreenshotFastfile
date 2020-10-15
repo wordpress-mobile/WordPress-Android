@@ -121,11 +121,13 @@ platform :android do
   desc "Downloads translated promo strings from the translation system"
   lane :download_promo_strings do |options|
     files = {
-      "play_store_screenshot_1" => {desc: "play_store_screenshot_2.txt"},
-      "play_store_screenshot_2" => {desc: "play_store_screenshot_1.txt"},
+      "play_store_screenshot_1" => {desc: "play_store_screenshot_1.txt"},
+      "play_store_screenshot_2" => {desc: "play_store_screenshot_2.txt"},
       "play_store_screenshot_3" => {desc: "play_store_screenshot_3.txt"},
-      "play_store_screenshot_4" => {desc: "play_store_screenshot_5.txt"},
-      "play_store_screenshot_5" => {desc: "play_store_screenshot_4.txt"},
+      "play_store_screenshot_4" => {desc: "play_store_screenshot_4.txt"},
+      "play_store_screenshot_5" => {desc: "play_store_screenshot_5.txt"},
+      "play_store_screenshot_6" => {desc: "play_store_screenshot_6.txt"},
+      "play_store_screenshot_7" => {desc: "play_store_screenshot_7.txt"},
 
       "enhanced_app_store_screenshot_1" => {desc: "play_store_screenshot_1.html"},
       "enhanced_app_store_screenshot_2" => {desc: "play_store_screenshot_2.html"},
