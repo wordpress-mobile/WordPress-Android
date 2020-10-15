@@ -16,7 +16,7 @@ class PrepublishingCategoriesAdapter(
     private val context: Context,
     private val onCheckChangeListener: ((Long, Boolean) -> Unit)
 ) : RecyclerView.Adapter<CategoriesViewHolder>() {
-    var categoryNodeList: List<CategoryNode> = ArrayList()
+    var categoryNodeList: List<CategoryNode> = arrayListOf()
         set(value) {
             if (!isSameCategoryList(value)) {
                 field = value
@@ -24,12 +24,11 @@ class PrepublishingCategoriesAdapter(
             }
         }
 
-    // todo: annmarie - may not need this at all
     private var selectedCategoryIds: HashSet<Long> = hashSetOf()
 
-    interface OnCategoryClickedListener {
-        fun onCategorySelected(categoryId: Long)
-        fun onCategoryUnselected(categoryId: Long)
+    fun set(categoryLevels: List<CategoryNode>, categoriesSelected: HashSet<Long>) {
+        selectedCategoryIds = categoriesSelected
+        categoryNodeList = categoryLevels
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
@@ -39,15 +38,11 @@ class PrepublishingCategoriesAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: CategoriesViewHolder, position: Int) {
-       viewHolder.bind(categoryNodeList[position])
+        viewHolder.bind(categoryNodeList[position], selectedCategoryIds)
     }
 
     init {
         setHasStableIds(true)
-    }
-
-    fun setItemChecked(categoryId: Long) {
-        // todo: annmarie implement this
     }
 
     override fun getItemId(position: Int): Long {
@@ -71,6 +66,10 @@ class PrepublishingCategoriesAdapter(
         return true
     }
 
+    private fun isSameSelectedList(selectedCategoryIdList: HashSet<Long>): Boolean {
+        return selectedCategoryIdList == selectedCategoryIds
+    }
+
     private fun containsNode(categoryNode: CategoryNode): Boolean {
         categoryNodeList.forEach {
             if (it.categoryId == categoryNode.categoryId) {
@@ -80,12 +79,17 @@ class PrepublishingCategoriesAdapter(
         return false
     }
 
-    class CategoriesViewHolder(private val onCheckedChangeClickListener: ((Long, Boolean) -> Unit),
-        itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(row: CategoryNode) = with(itemView) {
-
-            val verticalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(R.dimen.margin_large)
-            val horizontalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
+    class CategoriesViewHolder(
+        private val onCheckedChangeClickListener: ((Long, Boolean) -> Unit),
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
+        fun bind(row: CategoryNode, selectedCategoryIds: HashSet<Long>) = with(itemView) {
+            val verticalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(
+                    R.dimen.margin_large
+            )
+            val horizontalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(
+                    R.dimen.margin_extra_large
+            )
 
             ViewCompat.setPaddingRelative(
                     prepublishing_category_text,
@@ -99,8 +103,12 @@ class PrepublishingCategoriesAdapter(
                     row.name
             )
 
-            prepublishing_category_check.isChecked = true
-            prepublishing_category_check.setOnCheckedChangeListener { buttonView, isChecked ->
+            prepublishing_category_check.isChecked = false
+            if (selectedCategoryIds.contains(row.categoryId)) {
+                prepublishing_category_check.isChecked = true
+            }
+
+            prepublishing_category_check.setOnCheckedChangeListener { _, isChecked ->
                 onCheckedChangeClickListener.invoke(row.categoryId, isChecked)
             }
         }
