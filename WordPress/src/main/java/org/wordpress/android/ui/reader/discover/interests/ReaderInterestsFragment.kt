@@ -56,7 +56,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun initBackButton() {
         back_button.setOnClickListener {
-            parentViewModel.onCloseReaderInterests()
+            viewModel.onBackButtonClick()
         }
     }
 

@@ -149,7 +149,7 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
-        viewModel.start()
+        viewModel.start(parentViewModel)
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isEqualTo(LoadingUiState)
@@ -254,7 +254,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Discover data provider is started when the vm is started`() = test {
         // Act
-        viewModel.start()
+        viewModel.start(parentViewModel)
         // Assert
         verify(readerDiscoverDataProvider).start()
     }
@@ -293,7 +293,7 @@ class ReaderDiscoverViewModelTest {
     fun `Fullscreen error is shown on error event when there is no content`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
-        viewModel.start()
+        viewModel.start(parentViewModel)
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
@@ -453,7 +453,7 @@ class ReaderDiscoverViewModelTest {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        viewModel.start()
+        viewModel.start(parentViewModel)
         if (autoUpdateFeed) {
             fakeDiscoverFeed.value = createDummyReaderCardsList()
         }

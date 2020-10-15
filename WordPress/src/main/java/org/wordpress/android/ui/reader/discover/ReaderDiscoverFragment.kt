@@ -89,7 +89,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             viewModel.onRetryButtonClick()
         }
         empty_action.setOnClickListener{
-            parentViewModel.onShowReaderInterests()
+            viewModel.onEmptyActionClick()
         }
     }
 
@@ -160,7 +160,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 addWebViewCachingFragment()
             }
         })
-        viewModel.start()
+        viewModel.start(parentViewModel)
     }
 
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {

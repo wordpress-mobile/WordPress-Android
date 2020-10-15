@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -67,6 +68,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
+
+    private lateinit var parentViewModel: ReaderViewModel
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
@@ -100,9 +103,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    fun start() {
+    fun start(parentViewModel: ReaderViewModel) {
         if (isStarted) return
         isStarted = true
+        this.parentViewModel = parentViewModel
         init()
     }
 
@@ -136,7 +140,6 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
             }
         }
-
 
         // TODO reader improvements: Consider using Channel/Flow
         readerDiscoverDataProvider.communicationChannel.observeForever(communicationChannelObserver)
@@ -390,6 +393,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
+    }
+
+    fun onEmptyActionClick() {
+        parentViewModel.onShowReaderInterests()
     }
 
     sealed class DiscoverUiState(

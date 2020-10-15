@@ -201,6 +201,10 @@ class ReaderInterestsViewModel @Inject constructor(
         trackerWrapper.track(SELECT_INTERESTS_PICKED, mapOf("quantity" to tags.size))
     }
 
+    fun onBackButtonClick() {
+        parentViewModel.onCloseReaderInterests()
+    }
+
     sealed class UiState(
         open val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
         open val progressBarVisible: Boolean = false,
