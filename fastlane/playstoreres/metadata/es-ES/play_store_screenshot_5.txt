@@ -1,2 +1,1 @@
-Recibe notificaciones
-en tiempo real
+Crea una audiencia
