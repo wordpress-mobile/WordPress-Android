@@ -8,6 +8,8 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
@@ -52,10 +54,12 @@ fun handlePostListAction(
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
         }
         is PostListAction.NewStoryPost -> {
-            mediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(
-                    activity,
-                    action.site
-            )
+            if (AppPrefs.shouldShowStoriesIntro()) {
+                StoriesIntroDialogFragment.newInstance(action.site)
+                        .show(activity.supportFragmentManager, StoriesIntroDialogFragment.TAG)
+            } else {
+                mediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(activity, action.site)
+            }
         }
         is PostListAction.PreviewPost -> {
             val helperFunctions = previewStateHelper.getUploadStrategyFunctions(activity, action)

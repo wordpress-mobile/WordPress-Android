@@ -104,6 +104,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -913,10 +914,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            mMediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(
-                    this,
-                    site
-            );
+            if (AppPrefs.shouldShowStoriesIntro()) {
+                StoriesIntroDialogFragment.newInstance(site)
+                        .show(getSupportFragmentManager(), StoriesIntroDialogFragment.TAG);
+            } else {
+                mMediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(this, site);
+            }
         }
     }
 
