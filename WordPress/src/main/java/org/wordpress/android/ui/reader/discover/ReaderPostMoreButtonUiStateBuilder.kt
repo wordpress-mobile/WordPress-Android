@@ -50,7 +50,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = FOLLOW,
                             label = UiStringRes(R.string.reader_btn_unfollow),
-                            labelColor = R.attr.wpColorSuccess,
+                            labelColor = R.attr.wpColorOnSurfaceMedium,
                             iconRes = R.drawable.ic_reader_following_white_24dp,
                             isSelected = true,
                             onClicked = onButtonClicked
@@ -64,7 +64,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                             SecondaryAction(
                                     type = SITE_NOTIFICATIONS,
                                     label = UiStringRes(R.string.reader_btn_notifications_off),
-                                    labelColor = R.attr.wpColorSuccess,
+                                    labelColor = R.attr.wpColorOnSurfaceMedium,
                                     iconRes = R.drawable.ic_bell_white_24dp,
                                     isSelected = true,
                                     onClicked = onButtonClicked
@@ -89,7 +89,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = FOLLOW,
                             label = UiStringRes(R.string.reader_btn_follow),
-                            labelColor = R.attr.colorPrimary,
+                            labelColor = R.attr.colorSecondary,
                             iconRes = R.drawable.ic_reader_follow_white_24dp,
                             isSelected = false,
                             onClicked = onButtonClicked
@@ -112,7 +112,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                         type = VISIT_SITE,
                         label = UiStringRes(R.string.reader_label_visit),
                         labelColor = R.attr.colorOnSurface,
-                        iconRes = R.drawable.ic_external_white_24dp,
+                        iconRes = R.drawable.ic_globe_white_24dp,
                         iconColor = R.attr.wpColorOnSurfaceMedium,
                         onClicked = onButtonClicked
                 )
