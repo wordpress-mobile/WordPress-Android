@@ -88,7 +88,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         error_retry.setOnClickListener {
             viewModel.onRetryButtonClick()
         }
-        empty_action.setOnClickListener{
+        empty_action.setOnClickListener {
             viewModel.onEmptyActionClick()
         }
     }
