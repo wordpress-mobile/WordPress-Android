@@ -42,36 +42,4 @@
             tools:text="text_excerpt_footer" />
     </RelativeLayout>
 
-    <View
-        android:id="@+id/layout_liking_users_divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:background="?android:attr/listDivider"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_liking_users_label"
-        style="@style/ReaderTextView.MetaHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:labelFor="@+id/layout_liking_users_view"
-        android:text="@string/reader_label_liked_by"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <!-- liking avatars are inserted into this view at runtime -->
-    <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
-        android:id="@+id/layout_liking_users_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/avatar_sz_small"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:background="?android:selectableItemBackground"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
 </LinearLayout>
