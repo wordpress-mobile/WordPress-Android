@@ -33,8 +33,6 @@ import static java.lang.String.format;
  * views the activity log (see utils/AppLog.java)
  */
 public class AppLogViewerActivity extends LocaleAwareActivity {
-    private static final int ID_SHARE = 1;
-    private static final int ID_COPY_TO_CLIPBOARD = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
