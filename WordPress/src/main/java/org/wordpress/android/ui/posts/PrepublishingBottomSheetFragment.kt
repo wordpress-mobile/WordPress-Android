@@ -207,16 +207,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         fadeInFragment(fragment, tag)
     }
 
-    // todo: annmarie - remove note enter, exit, enter, exit
     private fun fadeInFragment(fragment: Fragment, tag: String) {
         childFragmentManager.let { fragmentManager ->
             val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
-                fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.prepublishing_fragment_slide_in, R.anim.prepublishing_fragment_fade_out,
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_slide_out
-                )
-            }
+            fragmentTransaction.addToBackStack(null).setCustomAnimations(
+                    R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out,
+                    R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out
+            )
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
             fragmentTransaction.commit()
         }

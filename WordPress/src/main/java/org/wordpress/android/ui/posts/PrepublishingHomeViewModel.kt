@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -105,8 +104,6 @@ class PrepublishingHomeViewModel @Inject constructor(
             }
 
             if (!editPostRepository.isPage) {
-                // todo: annmarie remove the log line
-                Log.i(javaClass.simpleName, "***=> Going to reset the homeUIState and get dets")
                 add(HomeUiState(
                         actionType = TAGS,
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
@@ -118,7 +115,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 add(HomeUiState(
                         actionType = CATEGORIES,
                         actionResult =
-                        getCategoriesUseCase.getPostCategories(editPostRepository, site)?.let { UiStringText(it) }
+                        getCategoriesUseCase.getPostCategoriesString(editPostRepository, site)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) },
                         actionClickable = true,
                         onActionClicked = ::onActionClicked
