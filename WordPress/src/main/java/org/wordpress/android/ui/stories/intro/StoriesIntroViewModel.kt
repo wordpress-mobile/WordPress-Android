@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stories.intro
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -30,17 +31,18 @@ class StoriesIntroViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        // TODO Track
+        analyticsTrackerWrapper.track(Stat.STORY_INTRO_SHOWN)
     }
 
     fun onBackButtonPressed() {
-        // TODO Track
+        analyticsTrackerWrapper.track(Stat.STORY_INTRO_DISMISSED)
         _onDialogClosed.call()
     }
 
     fun onCreateStoryButtonPressed() {
-        // TODO Track
         // TODO Disable intro in app prefs
+        analyticsTrackerWrapper.track(Stat.STORY_INTRO_CREATE_STORY_BUTTON_TAPPED)
+
         _onCreateButtonClicked.call()
     }
 
