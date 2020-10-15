@@ -503,7 +503,10 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `switch media source from DEVICE to WP_MEDIA_LIBRARY`() = test {
-        val mediaPickerSetup = singleSelectMediaPickerSetup.copy(availableDataSources = setOf(WP_LIBRARY))
+        val mediaPickerSetup = singleSelectMediaPickerSetup.copy(
+                availableDataSources = setOf(WP_LIBRARY),
+                cameraEnabled = true
+        )
         setupViewModel(listOf(), mediaPickerSetup, true)
 
         val iconClickEvents = mutableListOf<IconClickEvent>()
@@ -528,7 +531,8 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(updatedMediaPickerSetup).isEqualTo(mediaPickerSetup.copy(
                 primaryDataSource = WP_LIBRARY,
                 availableDataSources = setOf(),
-                systemPickerEnabled = false
+                systemPickerEnabled = false,
+                cameraEnabled = false
         ))
     }
 
