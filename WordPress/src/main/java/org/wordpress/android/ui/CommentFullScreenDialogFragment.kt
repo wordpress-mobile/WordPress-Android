@@ -86,12 +86,10 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
                 site.siteId
         )
         val suggestionAdapter = SuggestionUtils.setupSuggestions(
-                site, activity,
+                site, requireActivity(),
                 suggestionServiceConnectionManager
         )
-        if (suggestionAdapter != null) {
-            this.reply.setAdapter(suggestionAdapter)
-        }
+        this.reply.setAdapter(suggestionAdapter)
     }
 
     override fun onCollapseClicked(controller: CollapseFullScreenDialogController): Boolean {

@@ -125,7 +125,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.SuggestUsersActivity;
+import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -2714,7 +2714,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.SELECTED_USER_MENTION:
                     if (mOnGetMentionResult != null) {
-                        String selectedMention = data.getStringExtra(SuggestUsersActivity.SELECTED_USER_ID);
+                        String selectedMention = data.getStringExtra(SuggestionActivity.SELECTED_USER_ID);
                         mOnGetMentionResult.accept(selectedMention);
                         // Clear the callback once we have gotten a result
                         mOnGetMentionResult = null;

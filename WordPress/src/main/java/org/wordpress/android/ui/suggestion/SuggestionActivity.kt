@@ -1,4 +1,4 @@
-package org.wordpress.android.ui
+package org.wordpress.android.ui.suggestion
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,38 +10,40 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.datasets.SuggestionTable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
-import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
+import javax.inject.Inject
 
-class SuggestUsersActivity : LocaleAwareActivity() {
-    private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
+class SuggestionActivity : LocaleAwareActivity() {
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
+    @Inject lateinit var viewModel: SuggestionViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as WordPress).component().inject(this)
         setContentView(R.layout.suggest_users_activity)
 
         val siteModel = intent.getSerializableExtra(WordPress.SITE) as? SiteModel
         if (siteModel == null) {
             val message = "${this.javaClass.simpleName} started without ${WordPress.SITE}. Finishing Activity."
-            AppLog.e(AppLog.T.EDITOR, message)
+            AppLog.e(T.EDITOR, message)
             finish()
         } else {
             initializeActivity(siteModel)
@@ -96,6 +98,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     singleAtChar = s?.let { "@".contentEquals(it) }
                 }
+
                 override fun afterTextChanged(s: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     if (s?.isEmpty() == true && singleAtChar == true) {
@@ -134,7 +137,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         } else {
             // If there is not exactly 1 suggestion, notify that entered text is not a valid user
             val message = getString(R.string.suggestion_invalid_user, autocompleteText.text)
-            ToastUtils.showToast(this@SuggestUsersActivity, message)
+            ToastUtils.showToast(this@SuggestionActivity, message)
         }
 
         return onlySuggestedUser != null
@@ -165,8 +168,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     private fun initializeSuggestionAdapter(site: SiteModel) {
         if (SiteUtils.isAccessedViaWPComRest(site)) {
-            val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
-            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)?.apply {
+            suggestionAdapter = SuggestionAdapter(this).apply {
                 setBackgroundColorAttr(R.attr.colorGutenbergBackground)
 
                 registerDataSetObserver(object : DataSetObserver() {
@@ -180,10 +182,14 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 })
             }
 
-            autocompleteText.setAdapter(adapter)
+            viewModel.init(this, site)?.observe(this, Observer {
+                suggestionAdapter?.suggestionList = it
+                updateEmptyView()
+                autocompleteText.forceFiltering(autocompleteText.text)
+                autocompleteText.showDropDown()
+            }) ?: AppLog.e(T.EDITOR, "Error observing suggestion data")
 
-            suggestionServiceConnectionManager = connectionManager
-            suggestionAdapter = adapter
+            autocompleteText.setAdapter(suggestionAdapter)
         }
     }
 
@@ -218,38 +224,18 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     }
 
     override fun onDestroy() {
-        suggestionServiceConnectionManager?.unbindFromService()
+        viewModel.onDestroy()
         super.onDestroy()
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: SuggestionNameListUpdated) {
-        // check if the updated suggestions are for the current blog and update the suggestions
-        if (siteId != 0L && siteId == event.mRemoteBlogId) {
-            val suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId)
-            suggestionAdapter?.setSuggestionList(suggestions)
-
-            // Calling forceFiltering is the only way I was able to force the suggestions list to immediately refresh
-            // with the new data
-            autocompleteText.forceFiltering(autocompleteText.text)
-
-            // Ensure that the suggestions list is displayed wth the new data. This is particularly needed when
-            // suggestion list was empty before the new data was received, otherwise the no-longer-empty suggestion
-            // list will not display when it is updated.
-            autocompleteText.showDropDown()
-        }
+        viewModel.onSuggestionsUpdated(event.mRemoteBlogId)
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: ConnectionChangeEvent) {
-        val hasNoSuggestions = suggestionAdapter?.suggestionList?.isEmpty() == true
-        if (hasNoSuggestions && event.isConnected) {
-            suggestionServiceConnectionManager?.apply {
-                unbindFromService()
-                bindToService()
-            }
-        }
-        updateEmptyView()
+        viewModel.onConnectionChanged(event)
     }
 
     companion object {

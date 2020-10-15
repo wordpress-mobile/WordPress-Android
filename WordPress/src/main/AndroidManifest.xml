@@ -548,7 +548,7 @@
 
         <!-- Gutenberg activities -->
         <activity
-            android:name=".ui.SuggestUsersActivity"
+            android:name=".ui.suggestion.SuggestionActivity"
             android:theme="@style/WordPressNoDisplay"
             android:windowSoftInputMode="adjustResize"
             />

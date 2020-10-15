@@ -80,6 +80,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
+import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -1167,7 +1168,7 @@ public class ActivityLauncher {
     }
 
     public static void viewSuggestUsersForResult(@NonNull Activity activity, @NonNull SiteModel site) {
-        Intent intent = new Intent(activity, SuggestUsersActivity.class);
+        Intent intent = new Intent(activity, SuggestionActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.SELECTED_USER_MENTION);
     }
