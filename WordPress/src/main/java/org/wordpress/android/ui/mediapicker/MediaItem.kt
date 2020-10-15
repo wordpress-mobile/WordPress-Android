@@ -4,11 +4,11 @@ import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.Creator
-import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.GifMediaIdentifier
-import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LocalId
-import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LocalUri
-import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.RemoteId
-import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.StockMediaIdentifier
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.GIF_MEDIA_IDENTIFIER
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_ID
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_URI
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.REMOTE_ID
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.STOCK_MEDIA_IDENTIFIER
 import org.wordpress.android.util.UriWrapper
 
 data class MediaItem(
@@ -20,30 +20,30 @@ data class MediaItem(
     val dataModified: Long
 ) {
     enum class IdentifierType {
-        LocalUri,
-        RemoteId,
-        LocalId,
-        StockMediaIdentifier,
-        GifMediaIdentifier
+        LOCAL_URI,
+        REMOTE_ID,
+        LOCAL_ID,
+        STOCK_MEDIA_IDENTIFIER,
+        GIF_MEDIA_IDENTIFIER
     }
 
     sealed class Identifier(val type: IdentifierType) : Parcelable {
-        data class LocalUri(val value: UriWrapper) : Identifier(LocalUri)
+        data class LocalUri(val value: UriWrapper) : Identifier(LOCAL_URI)
 
-        data class RemoteId(val value: Long) : Identifier(RemoteId)
+        data class RemoteId(val value: Long) : Identifier(REMOTE_ID)
 
-        data class LocalId(val value: Int) : Identifier(LocalId)
+        data class LocalId(val value: Int) : Identifier(LOCAL_ID)
 
         data class StockMediaIdentifier(
             val url: String?,
             val name: String?,
             val title: String?
-        ) : Identifier(StockMediaIdentifier)
+        ) : Identifier(STOCK_MEDIA_IDENTIFIER)
 
         data class GifMediaIdentifier(
             val largeImageUri: UriWrapper,
             val title: String?
-        ) : Identifier(GifMediaIdentifier)
+        ) : Identifier(GIF_MEDIA_IDENTIFIER)
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeString(this.type.name)
@@ -79,19 +79,19 @@ data class MediaItem(
                 override fun createFromParcel(parcel: Parcel): Identifier {
                     val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
                     return when (type) {
-                        LocalUri -> {
+                        LOCAL_URI -> {
                             LocalUri(UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))))
                         }
-                        RemoteId -> {
+                        REMOTE_ID -> {
                             RemoteId(parcel.readLong())
                         }
-                        LocalId -> {
+                        LOCAL_ID -> {
                             LocalId(parcel.readInt())
                         }
-                        StockMediaIdentifier -> {
+                        STOCK_MEDIA_IDENTIFIER -> {
                             StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
                         }
-                        GifMediaIdentifier -> {
+                        GIF_MEDIA_IDENTIFIER -> {
                             GifMediaIdentifier(
                                     UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
                                     parcel.readString()
