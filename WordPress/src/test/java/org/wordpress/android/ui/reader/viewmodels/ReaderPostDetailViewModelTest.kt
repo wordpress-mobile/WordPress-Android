@@ -13,6 +13,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
@@ -30,6 +31,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var reblogUseCase: ReblogUseCase
 
     @Before
     fun setUp() {
@@ -40,6 +42,7 @@ class ReaderPostDetailViewModelTest {
                 menuUiStateBuilder,
                 postDetailsUiStateBuilder,
                 analyticsUtilsWrapper,
+                reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )

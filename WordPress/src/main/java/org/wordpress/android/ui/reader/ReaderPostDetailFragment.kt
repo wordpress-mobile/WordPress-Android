@@ -67,7 +67,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
@@ -743,13 +742,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
-                    val site = siteStore.getSiteByLocalId(siteLocalId)
-                    ActivityLauncher.openEditorForReblog(
-                            activity,
-                            site,
-                            this.post,
-                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
-                    )
+                    viewModel.onReblogSiteSelected(siteLocalId)
                 }
             }
         }
