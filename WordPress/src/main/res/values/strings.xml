@@ -1331,6 +1331,8 @@
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
+    <string name="reader_discover_empty_title">Follow topics to discover new blogs</string>
+    <string name="reader_discover_empty_button_text">Get Started</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1770,11 +1772,10 @@
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
-
+    <string name="reader_label_toolbar_back">Back</string>
     <string name="reader_excerpt_link">Visit %s for more</string>
 
     <!-- reblog -->
