@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/stories_intro_cover_1"
-                        android:background="@color/white"
+                        android:background="@color/transparent"
                         android:layout_gravity="center"
                         android:scaleType="fitCenter"
                         android:contentDescription="@string/stories_intro_image_caption_first" />
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/stories_intro_cover_2"
                         android:layout_gravity="center"
-                        android:background="@color/white"
+                        android:background="@color/transparent"
                         android:scaleType="fitCenter"
                         android:contentDescription="@string/stories_intro_image_caption_second"/>
 
