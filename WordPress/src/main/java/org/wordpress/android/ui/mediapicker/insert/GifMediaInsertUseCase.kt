@@ -10,13 +10,14 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.yield
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalId
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MimeTypeMapUtilsWrapper
@@ -46,7 +47,7 @@ class GifMediaInsertUseCase(
                         }
                     }
 
-                    InsertModel.Success(mediaIdentifiers.awaitAll())
+                    InsertModel.Success(mediaIdentifiers.awaitAll().filterNotNull())
                 } catch (e: CancellationException) {
                     InsertModel.Success(listOf<GifMediaIdentifier>())
                 } catch (e: Exception) {
@@ -60,7 +61,7 @@ class GifMediaInsertUseCase(
         scope: CoroutineScope,
         gifIdentifier: GifMediaIdentifier,
         site: SiteModel
-    ): Deferred<GifMediaIdentifier> = scope.async(ioDispatcher) {
+    ): Deferred<LocalId?> = scope.async(ioDispatcher) {
         return@async gifIdentifier.largeImageUri.let { mediaUri ->
             // No need to log the Exception here. The underlying method that is used, [MediaUtils.downloadExternalMedia]
             // already logs any errors.
@@ -77,7 +78,7 @@ class GifMediaInsertUseCase(
             mediaModel?.title = gifIdentifier.title
             dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel))
 
-            gifIdentifier.copy(mediaModel = mediaModel)
+            mediaModel?.id?.let { LocalId(it) }
         }
     }
 

@@ -1539,6 +1539,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
                 return "media_picker_preview_opened";
+            case MEDIA_PICKER_SEARCH_EXPANDED:
+                return "media_picker_search_expanded";
+            case MEDIA_PICKER_SEARCH_COLLAPSED:
+                return "media_picker_search_collapsed";
+            case MEDIA_PICKER_SEARCH_TRIGGERED:
+                return "media_picker_search_triggered";
+            case MEDIA_PICKER_SHOW_PERMISSIONS_SCREEN:
+                return "media_picker_show_permissions_screen";
+            case MEDIA_PICKER_ITEM_SELECTED:
+                return "media_picker_item_selected";
+            case MEDIA_PICKER_ITEM_UNSELECTED:
+                return "media_picker_item_unselected";
+            case MEDIA_PICKER_SELECTION_CLEARED:
+                return "media_picker_selection_cleared";
+            case MEDIA_PICKER_OPENED:
+                return "media_picker_opened";
             case APP_PERMISSION_GRANTED:
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:

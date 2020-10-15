@@ -28,14 +28,18 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.InsertMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
@@ -226,38 +230,42 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.onNavigateToPreview.observe(viewLifecycleOwner, Observer
+        viewModel.onNavigate.observe(viewLifecycleOwner, Observer
         {
-            it.getContentIfNotHandled()?.let { uri ->
-                MediaPreviewActivity.showPreview(
-                        requireContext(),
-                        null,
-                        uri.toString()
-                )
-                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
-            }
-        })
-
-        viewModel.onNavigateToEdit.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { uris ->
-                val inputData = WPMediaUtils.createListOfEditImageInputData(
-                        requireContext(),
-                        uris.map { wrapper -> wrapper.uri }
-                )
-                ActivityLauncher.openImageEditor(activity, inputData)
-            }
-        })
-
-        viewModel.onInsert.observe(viewLifecycleOwner, Observer
-        { event ->
-            event.getContentIfNotHandled()?.let { selectedIds ->
-                listener?.onItemsChosen(selectedIds)
-            }
-        })
-
-        viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { (action) ->
-                listener?.onIconClicked(action)
+            it.getContentIfNotHandled()?.let { navigationEvent ->
+                when (navigationEvent) {
+                    is PreviewUrl -> {
+                        MediaPreviewActivity.showPreview(
+                                requireContext(),
+                                null,
+                                navigationEvent.url
+                        )
+                        AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                                activity,
+                                getString(R.string.cancel)
+                        )
+                    }
+                    is PreviewMedia -> MediaPreviewActivity.showPreview(
+                            requireContext(),
+                            null,
+                            navigationEvent.media,
+                            null
+                    )
+                    is EditMedia -> {
+                        val inputData = WPMediaUtils.createListOfEditImageInputData(
+                                requireContext(),
+                                navigationEvent.uris.map { wrapper -> wrapper.uri }
+                        )
+                        ActivityLauncher.openImageEditor(activity, inputData)
+                    }
+                    is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+                    is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+                    Exit -> {
+                        val activity = requireActivity()
+                        activity.setResult(Activity.RESULT_CANCELED)
+                        activity.finish()
+                    }
+                }
             }
         })
 
@@ -267,13 +275,6 @@ class MediaPickerFragment : Fragment() {
                     CAMERA -> requestCameraPermission()
                     STORAGE -> requestStoragePermission()
                 }
-            }
-        })
-        viewModel.onExit.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                val activity = requireActivity()
-                activity.setResult(Activity.RESULT_CANCELED)
-                activity.finish()
             }
         })
         viewModel.onSnackbarMessage.observe(viewLifecycleOwner, Observer {
@@ -467,9 +468,9 @@ class MediaPickerFragment : Fragment() {
                         if (progressDialog == null || progressDialog?.isShowing == false) {
                             val builder: Builder = MaterialAlertDialogBuilder(requireContext())
                             builder.setTitle(this.title)
-                            builder.setView(layout.media_picker_progress_dialog)
+                            builder.setView(R.layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
-                                    string.cancel
+                                    R.string.cancel
                             ) { _, _ -> this.cancelAction() }
                             builder.setOnCancelListener { this.cancelAction() }
                             builder.setCancelable(true)

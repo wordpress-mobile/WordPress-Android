@@ -78,9 +78,9 @@ class GifMediaDataSource
 
     private fun Result.toMediaItem() = MediaItem(
             identifier = GifMediaIdentifier(
-            null,
-            uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
-            title),
+                    uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF)),
+                    title
+            ),
             url = uriUtilsWrapper.parse(urlFromCollectionFormat(MediaCollectionFormat.GIF_NANO)).toString(),
             type = IMAGE,
             dataModified = 0

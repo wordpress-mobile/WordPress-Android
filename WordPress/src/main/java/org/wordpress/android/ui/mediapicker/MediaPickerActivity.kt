@@ -296,7 +296,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     override fun onItemsChosen(identifiers: List<Identifier>) {
         val chosenUris = identifiers.mapNotNull { (it as? Identifier.LocalUri)?.value?.uri }
         val chosenIds = identifiers.mapNotNull { (it as? Identifier.RemoteId)?.value }
-        val chosenLocalIds = identifiers.mapNotNull { (it as? Identifier.GifMediaIdentifier)?.mediaModel?.id }
+        val chosenLocalIds = identifiers.mapNotNull { (it as? Identifier.LocalId)?.value }
 
         if (chosenUris.isNotEmpty()) {
             doMediaUrisSelected(chosenUris, APP_PICKER)
