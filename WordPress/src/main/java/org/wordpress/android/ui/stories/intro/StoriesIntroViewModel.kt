@@ -40,8 +40,9 @@ class StoriesIntroViewModel @Inject constructor(
     }
 
     fun onCreateStoryButtonPressed() {
-        // TODO Disable intro in app prefs
         analyticsTrackerWrapper.track(Stat.STORY_INTRO_CREATE_STORY_BUTTON_TAPPED)
+
+        appPrefsWrapper.shouldShowStoriesIntro = false
 
         _onCreateButtonClicked.call()
     }
