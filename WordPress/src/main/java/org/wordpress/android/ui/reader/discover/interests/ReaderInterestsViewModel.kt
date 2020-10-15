@@ -205,7 +205,6 @@ class ReaderInterestsViewModel @Inject constructor(
         open val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
         open val progressBarVisible: Boolean = false,
         val titleVisible: Boolean = false,
-        val subtitleVisible: Boolean = false,
         val errorLayoutVisible: Boolean = false
     ) {
         object InitialLoadingUiState : UiState(
@@ -220,7 +219,6 @@ class ReaderInterestsViewModel @Inject constructor(
         ) : UiState(
                 progressBarVisible = false,
                 titleVisible = true,
-                subtitleVisible = true,
                 errorLayoutVisible = false
         )
 

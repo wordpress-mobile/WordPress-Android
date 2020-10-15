@@ -70,21 +70,9 @@
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/subtitle"
+                app:layout_constraintBottom_toTopOf="@+id/interests_chip_group"
                 app:layout_constraintVertical_chainStyle="packed"
                 tools:text="Discover and follow tags you love" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/subtitle"
-                style="@style/ReaderTextView.Interests.SubTitle"
-                android:text="@string/reader_label_choose_your_interests"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-                app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintTop_toBottomOf="@+id/title"
-                app:layout_constraintBottom_toTopOf="@+id/interests_chip_group"
-                tools:text="Choose your interests"
-                android:visibility="gone"/>
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/interests_chip_group"
@@ -96,7 +84,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintTop_toBottomOf="@+id/subtitle"
+                app:layout_constraintTop_toBottomOf="@+id/title"
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

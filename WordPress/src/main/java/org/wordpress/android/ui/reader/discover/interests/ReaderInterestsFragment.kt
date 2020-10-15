@@ -83,7 +83,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             with(uiHelpers) {
                 updateVisibility(progress_bar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
-             // todo: annmarie removed subtitle   updateVisibility(subtitle, uiState.subtitleVisible)
                 updateVisibility(error_layout, uiState.errorLayoutVisible)
             }
         })
