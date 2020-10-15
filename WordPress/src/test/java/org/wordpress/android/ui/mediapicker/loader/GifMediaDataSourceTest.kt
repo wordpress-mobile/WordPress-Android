@@ -21,8 +21,10 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import com.tenor.android.core.model.impl.Result
+import org.wordpress.android.R
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.EmptyList
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.PopulatedList
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.UriUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
@@ -44,14 +46,15 @@ class GifMediaDataSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns success with empty list when filter is empty`() = test {
+    fun `returns empty result when filter is empty`() = test {
         val filter = ""
 
         val result = gifMediaDataSource.load(forced = false, loadMore = false, filter = filter)
 
-        (result as MediaLoadingResult.Success).apply {
-            Assertions.assertThat(this.data).isEmpty()
-            Assertions.assertThat(this.hasMore).isFalse()
+        (result as MediaLoadingResult.Empty).apply {
+            Assertions.assertThat(
+                    (this.title as UiStringRes).stringRes
+            ).isEqualTo(R.string.gif_picker_initial_empty_text)
         }
     }
 
@@ -74,7 +77,7 @@ class GifMediaDataSourceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns success with empty list when not matching filter`() = test {
+    fun `returns empty result when not matching filter`() = test {
         val filter = "not matching filter"
 
         doAnswer { invocation: InvocationOnMock ->
@@ -85,9 +88,10 @@ class GifMediaDataSourceTest : BaseUnitTest() {
 
         val result = gifMediaDataSource.load(forced = false, loadMore = false, filter = filter)
 
-        (result as MediaLoadingResult.Success).apply {
-            Assertions.assertThat(this.data).isEmpty()
-            Assertions.assertThat(this.hasMore).isFalse()
+        (result as MediaLoadingResult.Empty).apply {
+            Assertions.assertThat(
+                    (this.title as UiStringRes).stringRes
+            ).isEqualTo(R.string.gif_picker_empty_search_list)
         }
     }
 
