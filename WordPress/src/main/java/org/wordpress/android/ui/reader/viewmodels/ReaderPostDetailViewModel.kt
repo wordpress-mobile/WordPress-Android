@@ -121,27 +121,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         _uiState.value = convertPostToUiState(post)
     }
 
-    private fun createPostDetailsUiState(
-        post: ReaderPost
-    ): ReaderPostDetailsUiState {
-        return ReaderPostDetailsUiState(
-                postId = post.postId,
-                blogId = post.blogId,
-                headerUiState = createPostDetailsHeaderUiState(post)
-        )
-    }
-
-    private fun createPostDetailsHeaderUiState(
-        post: ReaderPost
-    ): ReaderPostDetailsHeaderUiState {
-        return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
-                post,
-                this@ReaderPostDetailViewModel::onBlogSectionClicked,
-                { onButtonClicked(post.postId, post.blogId, FOLLOW) },
-                this@ReaderPostDetailViewModel::onTagItemClicked
-        )
-    }
-
     private fun onTagItemClicked(tagSlug: String) {
         launch(ioDispatcher) {
             val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)

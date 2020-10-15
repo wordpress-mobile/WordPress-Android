@@ -20,8 +20,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onMoreButtonClicked: (ReaderPostDetailsUiState) -> Unit,
-        onMoreDismissed: (ReaderPostDetailsUiState) -> Unit,
         onBlogSectionClicked: (Long, Long) -> Unit,
         onFollowClicked: () -> Unit,
         onTagItemClicked: (String) -> Unit
@@ -36,9 +34,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                         onTagItemClicked
                 ),
                 moreMenuItems = moreMenuItems,
-                actions = buildPostActions(post, onButtonClicked),
-                onMoreButtonClicked = onMoreButtonClicked,
-                onMoreDismissed = onMoreDismissed
+                actions = buildPostActions(post, onButtonClicked)
         )
     }
 
