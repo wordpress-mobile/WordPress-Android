@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.GifMediaIdentifier
+import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalId
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel.Progress
 import org.wordpress.android.ui.mediapicker.insert.MediaInsertHandler.InsertModel.Success
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -56,8 +57,8 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
     fun `uploads media on insert`() = test {
         whenever(uriWrapper.toString()).thenReturn("https://sampleutl.org")
 
-        val itemToInsert = GifMediaIdentifier(null, uriWrapper, null)
-        val insertedMediaModel = MediaModel()
+        val itemToInsert = GifMediaIdentifier(uriWrapper, null)
+        val insertedMediaModel = MediaModel().apply { id = 100 }
 
         whenever(wpMediaUtilsWrapper.fetchMediaToUriWrapper(any())).thenReturn(mock())
         whenever(mimeTypeMapUtilsWrapper.getFileExtensionFromUrl(any())).thenReturn("png")
@@ -75,8 +76,8 @@ class GifMediaInsertUseCaseTest : BaseUnitTest() {
         Assertions.assertThat(result[0] is Progress).isTrue()
         (result[1] as Success).apply {
             Assertions.assertThat(this.identifiers).hasSize(1)
-            (this.identifiers[0] as GifMediaIdentifier).apply {
-                Assertions.assertThat(this.mediaModel).isEqualTo(insertedMediaModel)
+            (this.identifiers[0] as LocalId).apply {
+                Assertions.assertThat(this.value).isEqualTo(insertedMediaModel.id)
             }
         }
     }

@@ -124,6 +124,7 @@ class MediaLoaderFactoryTest {
     fun `returns gif media source on GIF_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 GIF_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
