@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerActio
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
@@ -518,7 +519,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `switch media source from DEVICE to WP_MEDIA_LIBRARY`() = test {
         val mediaPickerSetup = singleSelectMediaPickerSetup.copy(
                 availableDataSources = setOf(WP_LIBRARY),
-                cameraEnabled = true
+                cameraSetup = ENABLED
         )
         setupViewModel(listOf(), mediaPickerSetup, true)
 
@@ -545,7 +546,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 primaryDataSource = WP_LIBRARY,
                 availableDataSources = setOf(),
                 systemPickerEnabled = false,
-                cameraEnabled = false
+                cameraSetup = HIDDEN
         ))
     }
 
