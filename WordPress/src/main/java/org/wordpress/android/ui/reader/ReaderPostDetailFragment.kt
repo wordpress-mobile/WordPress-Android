@@ -472,14 +472,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenu?.let {
             state.moreMenuItems?.let {
                 if (moreMenuPopup == null) {
-                    createAndShowMoreMenu(it, moreMenu)
+                    createMoreMenuPopup(it, moreMenu)
                 }
                 moreMenuPopup?.show()
             } ?: moreMenuPopup?.dismiss()
         }
     }
 
-    private fun createAndShowMoreMenu(actions: List<SecondaryAction>, v: View) {
+    private fun createMoreMenuPopup(actions: List<SecondaryAction>, v: View) {
         // TODO: ashiagr Add Tracks
         moreMenuPopup = ListPopupWindow(v.context)
         moreMenuPopup?.let {
