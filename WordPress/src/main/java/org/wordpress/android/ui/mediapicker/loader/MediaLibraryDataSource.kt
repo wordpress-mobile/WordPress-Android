@@ -5,6 +5,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -17,11 +18,13 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.RemoteId
 import org.wordpress.android.ui.mediapicker.MediaType
-import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -70,7 +73,15 @@ class MediaLibraryDataSource(
             if (error != null) {
                 MediaLoadingResult.Failure(error)
             } else {
-                MediaLoadingResult.Success(get(mediaTypes, filter), hasMore)
+                val data = get(mediaTypes, filter)
+                if (filter.isNullOrEmpty() || data.isNotEmpty()) {
+                    MediaLoadingResult.Success(data, hasMore)
+                } else {
+                    Empty(
+                            UiStringRes(R.string.media_empty_search_list),
+                            image = R.drawable.img_illustration_empty_results_216dp
+                    )
+                }
             }
         }
     }
