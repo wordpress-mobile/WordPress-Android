@@ -17,20 +17,15 @@ import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_CATEGORIES
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.ADD_CATEGORY
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
-import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
 class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
@@ -41,8 +36,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     private lateinit var viewModel: PrepublishingCategoriesViewModel
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var dispatcher: Dispatcher
-
-    private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +77,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         initBackButton()
         initAddCategoryButton()
         initRecyclerView()
-        initSwipeToRefreshHelper()
         initViewModel()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -127,17 +119,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         startObserving()
     }
 
-    private fun initSwipeToRefreshHelper() {
-        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout,
-                SwipeToRefreshHelper.RefreshListener {
-                    if (!NetworkUtils.checkConnection(requireContext())) {
-                        swipeToRefreshHelper.isRefreshing = false
-                        return@RefreshListener
-                    }
-                    viewModel.refreshSiteCategories()
-                })
-    }
-
     private fun startObserving() {
         viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
@@ -159,11 +140,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
             event?.applyIfNotHandled {
                 actionListener?.onActionClicked(ADD_CATEGORY)
             }
-        })
-
-        viewModel.refreshingUiState.observe(viewLifecycleOwner, Observer { event ->
-            swipeToRefreshHelper.isRefreshing = event.swipeToRefreshVisibility
-            swipeToRefreshHelper.setEnabled(event.swipeToRefreshEnabled)
         })
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
@@ -209,18 +185,8 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = MAIN)
-    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
-        when (event.causeOfChange) {
-            FETCH_CATEGORIES -> {
-                viewModel.onFetchSiteCategoriesComplete(event.isError)
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = MAIN)
     fun onTermUploaded(event: OnTermUploaded) {
-        viewModel.onNewSiteCategoryAddComplete(event)
+        viewModel.onTermUploadedComplete(event)
     }
 
     companion object {

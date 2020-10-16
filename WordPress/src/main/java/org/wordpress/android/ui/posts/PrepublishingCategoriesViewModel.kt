@@ -13,8 +13,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.SwipeToRefreshUiState.NotRefreshingUiState
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.SwipeToRefreshUiState.RefreshingUiState
 import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -51,9 +49,6 @@ class PrepublishingCategoriesViewModel @Inject constructor(
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
-
-    private val _refreshingUiState = MutableLiveData<SwipeToRefreshUiState>()
-    val refreshingUiState: LiveData<SwipeToRefreshUiState> = _refreshingUiState
 
     fun start(editPostRepository: EditPostRepository, siteModel: SiteModel) {
         this.editPostRepository = editPostRepository
@@ -129,7 +124,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         }
     }
 
-    fun onNewSiteCategoryAddComplete(event: OnTermUploaded) {
+    fun onTermUploadedComplete(event: OnTermUploaded) {
         val message = if (event.isError) {
             string.adding_cat_failed
         } else {
@@ -149,33 +144,8 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         }
     }
 
-    fun onFetchSiteCategoriesComplete(isError: Boolean) {
-        _refreshingUiState.postValue(NotRefreshingUiState)
-        if (isError) {
-            _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder(UiStringRes(string.category_refresh_error)))
-            )
-        } else {
-            val siteCategories = getSiteCategories()
-            val selectedCategoryIds = (uiState.value as? ContentUiState)?.selectedCategoryIds
-                    ?: hashSetOf()
-            _uiState.value = ContentUiState(
-                    siteCategories = siteCategories,
-                    selectedCategoryIds = selectedCategoryIds
-            )
-        }
-    }
-
-    fun refreshSiteCategories() {
-        _refreshingUiState.postValue(RefreshingUiState)
-        fetchSiteCategories()
-    }
-
     private fun getSiteCategories() =
             getCategoriesUseCase.getSiteCategories(siteModel)
-
-    private fun fetchSiteCategories() =
-        getCategoriesUseCase.fetchSiteCategories(siteModel)
 
     private fun getPostCategories() =
             getCategoriesUseCase.getPostCategories(editPostRepository, siteModel)
@@ -203,20 +173,5 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             val siteCategories: List<CategoryNode>,
             val selectedCategoryIds: HashSet<Long>
         ) : UiState()
-    }
-
-    sealed class SwipeToRefreshUiState(
-        open val swipeToRefreshVisibility: Boolean = false,
-        open val swipeToRefreshEnabled: Boolean = true
-    ) {
-        object RefreshingUiState : SwipeToRefreshUiState(
-                swipeToRefreshEnabled = false,
-                swipeToRefreshVisibility = true
-        )
-
-        object NotRefreshingUiState : SwipeToRefreshUiState(
-                swipeToRefreshEnabled = true,
-                swipeToRefreshVisibility = false
-        )
     }
 }
