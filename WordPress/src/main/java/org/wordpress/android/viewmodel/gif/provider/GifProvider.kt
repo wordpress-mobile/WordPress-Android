@@ -2,6 +2,8 @@ package org.wordpress.android.viewmodel.gif.provider
 
 import org.wordpress.android.viewmodel.gif.GifMediaViewModel
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * Interface to interact with a GIF provider API avoiding coupling with the concrete implementation
  */

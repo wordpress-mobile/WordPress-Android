@@ -278,7 +278,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildExcerpt(post: ReaderPost) =
             post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
 
-    private fun buildBlogName(post: ReaderPost) = post.takeIf { it.hasBlogName() }?.blogName
+    private fun buildBlogName(post: ReaderPost) = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
+            ?: UiStringRes(R.string.untitled_in_parentheses)
 
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
             post.takeIf { it.hasBlogImageUrl() }
