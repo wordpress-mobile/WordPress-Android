@@ -362,6 +362,7 @@ class ReaderDiscoverViewModelTest {
         verify(readerPostCardActionsHandler).onAction(
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
                 eq(LIKE),
+                eq(false),
                 eq(false)
         )
     }

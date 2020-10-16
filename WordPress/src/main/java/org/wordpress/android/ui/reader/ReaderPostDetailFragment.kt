@@ -51,6 +51,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
@@ -480,7 +481,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun createMoreMenuPopup(actions: List<SecondaryAction>, v: View) {
-        // TODO: ashiagr Add Tracks
+        AnalyticsTracker.track(Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
         moreMenuPopup = ListPopupWindow(v.context)
         moreMenuPopup?.let {
             it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
@@ -550,6 +551,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (hasPost()) {
+                    AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, post)
                 } else if (interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(

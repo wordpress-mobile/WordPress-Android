@@ -15,7 +15,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -30,7 +29,6 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var postDetailsUiStateBuilder: ReaderPostDetailUiStateBuilder
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
-    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock private lateinit var reblogUseCase: ReblogUseCase
 
     @Before
@@ -41,7 +39,6 @@ class ReaderPostDetailViewModelTest {
                 readerPostTableWrapper,
                 menuUiStateBuilder,
                 postDetailsUiStateBuilder,
-                analyticsUtilsWrapper,
                 reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
