@@ -27,7 +27,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
@@ -113,8 +112,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
                 when (it) {
-                    is InitialUiState -> {
-                    }
                     is ContentUiState -> {
                         updateTabs(it)
                     }
