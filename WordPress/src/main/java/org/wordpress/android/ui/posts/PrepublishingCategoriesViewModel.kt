@@ -118,7 +118,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     fun removeSelectedCategory(categoryId: Long) {
         uiState.value.let { state ->
             if (state is ContentUiState) {
-                state.selectedCategoryIds.add(categoryId)
+                state.selectedCategoryIds.remove(categoryId)
                 _uiState.value = state.copy()
             }
         }

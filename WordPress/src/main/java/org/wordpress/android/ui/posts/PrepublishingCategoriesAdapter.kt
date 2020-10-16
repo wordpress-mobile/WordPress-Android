@@ -84,6 +84,11 @@ class PrepublishingCategoriesAdapter(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
         fun bind(row: CategoryNode, selectedCategoryIds: HashSet<Long>) = with(itemView) {
+            itemView.isClickable = true
+
+            setOnClickListener {
+                prepublishing_category_check.isChecked = !prepublishing_category_check.isChecked
+            }
             val verticalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(
                     R.dimen.margin_large
             )

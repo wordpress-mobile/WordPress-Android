@@ -69,6 +69,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(site.name).thenReturn("")
         whenever(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()).thenReturn("")
+        whenever(getCategoriesUseCase.getPostCategoriesString(any(), any())).thenReturn("")
     }
 
     @Test
@@ -88,7 +89,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that page home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 1
+        val expectedActionsAmount = 2
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
