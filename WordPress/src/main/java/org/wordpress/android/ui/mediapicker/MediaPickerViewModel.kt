@@ -29,13 +29,18 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.ChooserContext
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.CapturePhoto
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.WpStoriesCapture
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
@@ -117,9 +122,7 @@ class MediaPickerViewModel @Inject constructor(
         MediaPickerUiState(
                 buildUiModel(domainModel, selectedIds, softAskRequest, searchExpanded),
                 buildSoftAskView(softAskRequest),
-                FabUiModel(mediaPickerSetup.cameraEnabled && selectedIds.isNullOrEmpty()) {
-                    clickIcon(WpStoriesCapture)
-                },
+                FabUiModel(mediaPickerSetup.cameraSetup != HIDDEN && selectedIds.isNullOrEmpty(), this::clickOnCamera),
                 buildActionModeUiModel(selectedIds, domainModel?.domainItems),
                 buildSearchUiModel(softAskRequest?.let { !it.show } ?: true, domainModel?.filter, searchExpanded),
                 !domainModel?.domainItems.isNullOrEmpty() && domainModel?.isLoading == true,
@@ -443,7 +446,7 @@ class MediaPickerViewModel @Inject constructor(
 
     private fun clickIcon(icon: MediaPickerIcon) {
         mediaPickerTracker.trackIconClick(icon, mediaPickerSetup)
-        if (icon is WpStoriesCapture) {
+        if (icon is WpStoriesCapture || icon is CapturePhoto) {
             if (!permissionsHandler.hasPermissionsToAccessPhotos()) {
                 _onPermissionsRequested.value = Event(PermissionsRequested.CAMERA)
                 lastTappedIcon = icon
@@ -453,6 +456,16 @@ class MediaPickerViewModel @Inject constructor(
         // Do we need tracking here?; review tracking need.
 
         _onNavigate.postValue(Event(populateIconClickEvent(icon, mediaPickerSetup.canMultiselect)))
+    }
+
+    private fun clickOnCamera() {
+        when (mediaPickerSetup.cameraSetup) {
+            STORIES -> clickIcon(WpStoriesCapture)
+            ENABLED -> clickIcon(CapturePhoto)
+            HIDDEN -> {
+                // Do nothing
+            }
+        }
     }
 
     private fun populateIconClickEvent(icon: MediaPickerIcon, canMultiselect: Boolean): IconClickEvent {
@@ -476,6 +489,7 @@ class MediaPickerViewModel @Inject constructor(
                 OpenSystemPicker(context, types.toList(), canMultiselect)
             }
             is WpStoriesCapture -> OpenCameraForWPStories(canMultiselect)
+            is CapturePhoto -> OpenCameraForPhotos
             is SwitchSource -> {
                 SwitchMediaPicker(
                         mediaPickerSetup.copy(
@@ -483,7 +497,7 @@ class MediaPickerViewModel @Inject constructor(
                                 availableDataSources = setOf(),
                                 systemPickerEnabled = icon.dataSource == DEVICE,
                                 defaultSearchView = icon.dataSource == STOCK_LIBRARY || icon.dataSource == GIF_LIBRARY,
-                                cameraEnabled = false
+                                cameraSetup = HIDDEN
                         )
                 )
             }

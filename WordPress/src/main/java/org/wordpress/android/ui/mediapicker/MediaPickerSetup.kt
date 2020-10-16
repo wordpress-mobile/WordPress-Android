@@ -11,7 +11,7 @@ data class MediaPickerSetup(
     val canMultiselect: Boolean,
     val requiresStoragePermissions: Boolean,
     val allowedTypes: Set<MediaType>,
-    val cameraEnabled: Boolean,
+    val cameraSetup: CameraSetup,
     val systemPickerEnabled: Boolean,
     val editingEnabled: Boolean,
     val queueResults: Boolean,
@@ -22,13 +22,17 @@ data class MediaPickerSetup(
         DEVICE, WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY
     }
 
+    enum class CameraSetup {
+        STORIES, ENABLED, HIDDEN
+    }
+
     fun toBundle(bundle: Bundle) {
         bundle.putInt(KEY_PRIMARY_DATA_SOURCE, primaryDataSource.ordinal)
         bundle.putIntegerArrayList(KEY_AVAILABLE_DATA_SOURCES, ArrayList(availableDataSources.map { it.ordinal }))
         bundle.putIntegerArrayList(KEY_ALLOWED_TYPES, ArrayList(allowedTypes.map { it.ordinal }))
         bundle.putBoolean(KEY_CAN_MULTISELECT, canMultiselect)
         bundle.putBoolean(KEY_REQUIRES_STORAGE_PERMISSIONS, requiresStoragePermissions)
-        bundle.putBoolean(KEY_CAMERA_ENABLED, cameraEnabled)
+        bundle.putInt(KEY_CAMERA_SETUP, cameraSetup.ordinal)
         bundle.putBoolean(KEY_SYSTEM_PICKER_ENABLED, systemPickerEnabled)
         bundle.putBoolean(KEY_EDITING_ENABLED, editingEnabled)
         bundle.putBoolean(KEY_QUEUE_RESULTS, queueResults)
@@ -42,7 +46,7 @@ data class MediaPickerSetup(
         intent.putIntegerArrayListExtra(KEY_ALLOWED_TYPES, ArrayList(allowedTypes.map { it.ordinal }))
         intent.putExtra(KEY_CAN_MULTISELECT, canMultiselect)
         intent.putExtra(KEY_REQUIRES_STORAGE_PERMISSIONS, requiresStoragePermissions)
-        intent.putExtra(KEY_CAMERA_ENABLED, cameraEnabled)
+        intent.putExtra(KEY_CAMERA_SETUP, cameraSetup.ordinal)
         intent.putExtra(KEY_SYSTEM_PICKER_ENABLED, systemPickerEnabled)
         intent.putExtra(KEY_EDITING_ENABLED, editingEnabled)
         intent.putExtra(KEY_QUEUE_RESULTS, queueResults)
@@ -56,7 +60,7 @@ data class MediaPickerSetup(
         private const val KEY_CAN_MULTISELECT = "key_can_multiselect"
         private const val KEY_REQUIRES_STORAGE_PERMISSIONS = "key_requires_storage_permissions"
         private const val KEY_ALLOWED_TYPES = "key_allowed_types"
-        private const val KEY_CAMERA_ENABLED = "key_camera_enabled"
+        private const val KEY_CAMERA_SETUP = "key_camera_setup"
         private const val KEY_SYSTEM_PICKER_ENABLED = "key_system_picker_enabled"
         private const val KEY_EDITING_ENABLED = "key_editing_enabled"
         private const val KEY_QUEUE_RESULTS = "key_queue_results"
@@ -72,7 +76,7 @@ data class MediaPickerSetup(
                 MediaType.values()[it]
             }.toSet()
             val multipleSelectionAllowed = bundle.getBoolean(KEY_CAN_MULTISELECT)
-            val cameraAllowed = bundle.getBoolean(KEY_CAMERA_ENABLED)
+            val cameraSetup = CameraSetup.values()[bundle.getInt(KEY_CAMERA_SETUP)]
             val requiresStoragePermissions = bundle.getBoolean(KEY_REQUIRES_STORAGE_PERMISSIONS)
             val systemPickerEnabled = bundle.getBoolean(KEY_SYSTEM_PICKER_ENABLED)
             val editingEnabled = bundle.getBoolean(KEY_EDITING_ENABLED)
@@ -85,7 +89,7 @@ data class MediaPickerSetup(
                     multipleSelectionAllowed,
                     requiresStoragePermissions,
                     allowedTypes,
-                    cameraAllowed,
+                    cameraSetup,
                     systemPickerEnabled,
                     editingEnabled,
                     queueResults,
@@ -104,7 +108,7 @@ data class MediaPickerSetup(
                 MediaType.values()[it]
             }.toSet()
             val multipleSelectionAllowed = intent.getBooleanExtra(KEY_CAN_MULTISELECT, false)
-            val cameraAllowed = intent.getBooleanExtra(KEY_CAMERA_ENABLED, false)
+            val cameraSetup = CameraSetup.values()[intent.getIntExtra(KEY_CAMERA_SETUP, -1)]
             val requiresStoragePermissions = intent.getBooleanExtra(KEY_REQUIRES_STORAGE_PERMISSIONS, false)
             val systemPickerEnabled = intent.getBooleanExtra(KEY_SYSTEM_PICKER_ENABLED, false)
             val editingEnabled = intent.getBooleanExtra(KEY_SYSTEM_PICKER_ENABLED, false)
@@ -117,7 +121,7 @@ data class MediaPickerSetup(
                     multipleSelectionAllowed,
                     requiresStoragePermissions,
                     allowedTypes,
-                    cameraAllowed,
+                    cameraSetup,
                     systemPickerEnabled,
                     editingEnabled,
                     queueResults,
