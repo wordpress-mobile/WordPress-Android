@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -59,6 +60,10 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
+        init()
+    }
+
+    private fun init() {
         setToolbarTitleUiState()
         loadCategories()
     }
@@ -118,7 +123,8 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
         val closeButtonVisible: Boolean = true
     ) {
         data class ContentUiState(
-            val categories: ArrayList<CategoryNode>
+            val categories: ArrayList<CategoryNode>,
+            val selectedCategoryId: Long = 2
         ) : UiState()
     }
 }

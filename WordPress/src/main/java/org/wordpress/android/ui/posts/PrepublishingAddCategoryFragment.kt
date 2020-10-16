@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -56,6 +57,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         initBackButton()
         initCloseButton()
         initInputText()
+       // initSpinner()
         initViewModel()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -80,6 +82,19 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         category_name.requestFocus()
         ActivityUtils.showKeyboard(category_name)
     }
+
+// private fun initSpinner() {
+// todo: annmarie - get back to this after Android Studio is working again
+// parent_category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+// override fun onNothingSelected(parent: AdapterView<*>?) {
+//  Log.i(javaClass.simpleName, "***=> implement nothing selected")
+//  }
+//
+// override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+// Log.i(javaClass.simpleName, "***=> implement item selected")
+// }
+// }
+// }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
