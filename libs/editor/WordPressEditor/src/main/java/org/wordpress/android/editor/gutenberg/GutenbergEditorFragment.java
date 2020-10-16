@@ -307,7 +307,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         openGutenbergWebViewActivity(
                                 unsupportedBlock.getContent(),
                                 unsupportedBlock.getId(),
-                                unsupportedBlock.getName()
+                                unsupportedBlock.getName(),
+                                unsupportedBlock.getTitle()
                         );
                     }
                 },
@@ -360,7 +361,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
-    private void openGutenbergWebViewActivity(String content, String blockId, String blockName) {
+    private void openGutenbergWebViewActivity(String content, String blockId, String blockName, String blockTitle) {
         GutenbergWebViewAuthorizationData gutenbergWebViewAuthData =
                 getArguments().getParcelable(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA);
 
@@ -370,7 +371,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
-        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_NAME, blockName);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_TITLE, blockTitle);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, gutenbergWebViewAuthData);
 
