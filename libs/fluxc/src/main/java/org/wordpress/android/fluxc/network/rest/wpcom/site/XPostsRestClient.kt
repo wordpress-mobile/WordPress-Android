@@ -25,6 +25,13 @@ class XPostsRestClient @Inject constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetch(site: SiteModel): WPComGsonRequestBuilder.Response<Array<XPostSiteModel>> {
         val url = WPCOMV2.sites.site(site.siteId).xposts.url
-        return wpComGsonRequestBuilder.syncGetRequest(this, url, emptyMap(), Array<XPostSiteModel>::class.java)
+        return wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                emptyMap(),
+                Array<XPostSiteModel>::class.java,
+                true,
+                60 * 1000
+        )
     }
 }
