@@ -1316,14 +1316,14 @@
     <string name="reader">Reader</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="reader_filter_sites_title">Sites</string>
-    <string name="reader_filter_tags_title">Tags</string>
+    <string name="reader_filter_tags_title">Topics</string>
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
-    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from topics you follow</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
-    <string name="reader_filter_empty_tags_action">Add a tag</string>
+    <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
@@ -1331,6 +1331,8 @@
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
+    <string name="reader_discover_empty_title">Follow topics to discover new blogs</string>
+    <string name="reader_discover_empty_button_text">Get Started</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1707,17 +1709,17 @@
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
-    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
+    <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
 
     <!-- view pager titles -->
-    <string name="reader_page_followed_tags">Followed tags</string>
+    <string name="reader_page_followed_tags">Followed topics</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- menu text -->
-    <string name="reader_menu_tags">Edit tags and sites</string>
+    <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_menu_report_post">Report this post</string>
 
@@ -1751,7 +1753,7 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
-    <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
+    <string name="reader_hint_add_tag_or_url">Enter a URL or topic to follow</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
@@ -1770,11 +1772,10 @@
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
-
+    <string name="reader_label_toolbar_back">Back</string>
     <string name="reader_excerpt_link">Visit %s for more</string>
 
     <!-- reblog -->
@@ -1803,10 +1804,10 @@
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-    <string name="reader_toast_err_tag_exists">You already follow this tag</string>
-    <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
-    <string name="reader_toast_err_add_tag">Unable to add this tag</string>
-    <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
+    <string name="reader_toast_err_tag_exists">You already follow this topic</string>
+    <string name="reader_toast_err_tag_invalid">That isn\'t a valid topic</string>
+    <string name="reader_toast_err_add_tag">Unable to add this topic</string>
+    <string name="reader_toast_err_remove_tag">Unable to remove this topic</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
@@ -1839,11 +1840,11 @@
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
-    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
+    <string name="reader_empty_posts_in_tag">No posts with this topic</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
-    <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
-    <string name="reader_empty_followed_tags_title">No followed tags</string>
+    <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favorite topics</string>
+    <string name="reader_empty_followed_tags_title">No followed topics</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
@@ -2893,6 +2894,7 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
+    <string name="mlp_preview_title">Layout Preview</string>
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
 
@@ -2956,6 +2958,17 @@
     <string name="toast_error_saving_video">Video could not be saved</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="toast_error_playing_video">An error occurred while playing your video</string>
+
+    <!-- Intro to Stories screen -->
+    <string name="stories_intro_main_title">Introducing Story Posts</string>
+    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_image_caption_first">How to create a story post</string>
+    <string name="stories_intro_image_caption_second">Example story title</string>
+    <string name="stories_intro_title_first">Now stories are for everyone</string>
+    <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
+    <string name="stories_intro_title_second">Story posts don\'t disappear</string>
+    <string name="stories_intro_description_second">They\’re published as a new blog post on your site so your audience never misses out on a thing.</string>
+    <string name="stories_intro_create_story_post_label">Create Story Post</string>
 
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
