@@ -68,6 +68,13 @@ sealed class ReaderCardUiState {
     }
 }
 
+data class ReaderPostActions(
+    val likeAction: PrimaryAction,
+    val reblogAction: PrimaryAction,
+    val commentsAction: PrimaryAction,
+    val bookmarkAction: PrimaryAction
+)
+
 sealed class ReaderPostCardAction {
     abstract val type: ReaderPostCardActionType
     open val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
