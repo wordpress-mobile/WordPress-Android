@@ -174,9 +174,8 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private fun getSiteCategories() =
             getCategoriesUseCase.getSiteCategories(siteModel)
 
-    private fun fetchSiteCategories() = launch {
+    private fun fetchSiteCategories() =
         getCategoriesUseCase.fetchSiteCategories(siteModel)
-    }
 
     private fun getPostCategories() =
             getCategoriesUseCase.getPostCategories(editPostRepository, siteModel)
