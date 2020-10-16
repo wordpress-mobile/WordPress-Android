@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
@@ -64,7 +64,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     }
 
     private fun setToolbarTitleUiState() {
-        _toolbarTitleUiState.postValue(UiStringRes(string.prepublishing_nudges_toolbar_title_add_categories))
+        _toolbarTitleUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_add_categories))
     }
 
     fun onBackButtonClicked() {
@@ -88,7 +88,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _dismissKeyboard.postValue(Event(Unit))
             _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                    Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             )
             return
         }

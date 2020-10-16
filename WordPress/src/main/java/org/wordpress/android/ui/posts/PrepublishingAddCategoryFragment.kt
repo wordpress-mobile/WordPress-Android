@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.add_category.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
@@ -22,7 +21,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.LONG
 import javax.inject.Inject
 
-class PrepublishingAddCategoryFragment : Fragment(layout.prepublishing_add_category_fragment) {
+class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_category_fragment) {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -149,7 +148,7 @@ class PrepublishingAddCategoryFragment : Fragment(layout.prepublishing_add_categ
         ))
         val categoryAdapter = ParentCategorySpinnerAdapter(
                 activity,
-                layout.categories_row_parent,
+                R.layout.categories_row_parent,
                 categoryLevels
         )
         parent_category.adapter = categoryAdapter

@@ -39,6 +39,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
     @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Mock lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase
+    @Mock lateinit var getCategoriesUseCase: GetCategoriesUseCase
     @Mock lateinit var site: SiteModel
 
     @InternalCoroutinesApi
@@ -51,6 +52,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 mock(),
                 storyRepositoryWrapper,
                 updateStoryTitleUseCase,
+                getCategoriesUseCase,
                 TEST_DISPATCHER
         )
         whenever(
@@ -72,7 +74,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that post home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 2
+        val expectedActionsAmount = 3
 
         // act
         viewModel.start(mock(), site, false)
