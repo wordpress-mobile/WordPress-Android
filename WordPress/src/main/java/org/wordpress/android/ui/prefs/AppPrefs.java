@@ -243,6 +243,9 @@ public class AppPrefs {
 
         // used to indicate that we do not need to show the Post List FAB tooltip
         IS_POST_LIST_FAB_TOOLTIP_DISABLED,
+
+        // Used to indicate whether or not the stories intro screen must be shown
+        SHOULD_SHOW_STORIES_INTRO,
     }
 
     private static SharedPreferences prefs() {
@@ -1192,6 +1195,14 @@ public class AppPrefs {
 
     public static void setReaderDiscoverWelcomeBannerShown(boolean shown) {
         setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
+    }
+
+    public static void setShouldShowStoriesIntro(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
+    }
+
+    public static boolean shouldShowStoriesIntro() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
     }
 
     public static QuickStartTask getLastSkippedQuickStartTask() {

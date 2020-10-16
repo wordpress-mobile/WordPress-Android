@@ -30,6 +30,8 @@
 
     <include layout="@layout/reader_fullscreen_error_with_retry"/>
 
+    <include layout="@layout/reader_fullscreen_empty_with_action"/>
+
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="0dp"

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -27,11 +28,14 @@ import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 
-class MediaPickerLauncher
-@Inject constructor(private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig) {
+class MediaPickerLauncher @Inject constructor(
+    private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+) {
     fun showFeaturedImagePicker(
         activity: Activity,
         site: SiteModel?,
@@ -70,7 +74,7 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY),
+                    availableDataSources = setOf(WP_LIBRARY, GIF_LIBRARY),
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
@@ -112,6 +116,11 @@ class MediaPickerLauncher
         }
     }
 
+    fun showStoriesPhotoPickerForResultAndTrack(activity: Activity, site: SiteModel?) {
+        analyticsTrackerWrapper.track(Stat.MEDIA_PICKER_OPEN_FOR_STORIES)
+        showStoriesPhotoPickerForResult(activity, site)
+    }
+
     fun showStoriesPhotoPickerForResult(
         activity: Activity,
         site: SiteModel?
@@ -129,30 +138,24 @@ class MediaPickerLauncher
         }
     }
 
-    fun showPhotoPickerForResult(
-        fragment: Fragment,
-        browserType: MediaBrowserType,
-        site: SiteModel?,
-        localPostId: Int?
-    ) {
-        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val intent = MediaPickerActivity.buildIntent(
-                    fragment.requireContext(),
-                    buildLocalMediaPickerSetup(browserType),
-                    site,
-                    localPostId
-            )
-            fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
-        } else {
-            ActivityLauncher.showPhotoPickerForResult(fragment, browserType, site, localPostId)
-        }
-    }
-
     fun showGravatarPicker(fragment: Fragment) {
         val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraSetup = ENABLED,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
             MediaPickerActivity.buildIntent(
                     fragment.requireContext(),
-                    buildLocalMediaPickerSetup(GRAVATAR_IMAGE_PICKER)
+                    mediaPickerSetup
             )
         } else {
             Intent(fragment.requireContext(), PhotoPickerActivity::class.java).apply {
