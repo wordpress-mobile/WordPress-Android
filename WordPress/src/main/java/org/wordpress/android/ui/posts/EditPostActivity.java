@@ -650,8 +650,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void presentNewPageNoticeIfNeeded() {
         if (mIsPreview
             || !mIsPage
-            || !mModalLayoutPickerFeatureConfig.isEnabled()
-            || !mEditPostRepository.isLocalDraft()) {
+            || !mIsNewPost
+            || !mModalLayoutPickerFeatureConfig.isEnabled()) {
             return;
         }
         String message = mEditPostRepository.getContent().isEmpty() ? getString(R.string.mlp_notice_blank_page_created)
