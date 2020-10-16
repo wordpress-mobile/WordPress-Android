@@ -438,7 +438,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case CREATE_NEW_PAGE:
                     if (mModalLayoutPickerFeatureConfig.isEnabled()) {
-                        mMLPViewModel.show();
+                        mMLPViewModel.createPageFlowTriggered();
                     } else {
                         handleNewPageAction(""/*empty page*/, PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     }
