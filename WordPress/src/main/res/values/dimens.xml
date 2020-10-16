@@ -136,10 +136,6 @@
     <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <dimen name="reader_detail_header_avatar">48dp</dimen>
-    <dimen name="reader_detail_header_blavatar">56dp</dimen>
-    <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
-
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
@@ -155,6 +151,9 @@
     <!-- padding inside the tag header view -->
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
+
+    <!-- collapsing toolbar scrim visible height trigger -->
+    <dimen name="scrim_visible_height_trigger">100dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_low
@@ -189,6 +188,7 @@
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
     <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
+    <dimen name="reader_follow_icon_padding_no_caption">@dimen/margin_none</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
