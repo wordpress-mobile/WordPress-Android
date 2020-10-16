@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
+import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PreviewPageRequest
@@ -50,6 +51,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
+    @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
     @Mock lateinit var onPreviewPageRequestedObserver: Observer<PreviewPageRequest>
 
@@ -78,6 +80,7 @@ class ModalLayoutPickerViewModelTest {
                 siteStore,
                 appPrefsWrapper,
                 supportedBlocksProvider,
+                thumbDimensionProvider,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
@@ -98,6 +101,8 @@ class ModalLayoutPickerViewModelTest {
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
+            whenever(thumbDimensionProvider.previewWidth).thenReturn(136)
+            whenever(thumbDimensionProvider.scale).thenReturn(1.0)
             setupFetchLayoutsDispatcher(isError)
             block()
         }
@@ -114,22 +119,6 @@ class ModalLayoutPickerViewModelTest {
         })).then {
             viewModel.onBlockLayoutsFetched(event)
         }
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `when modal layout picker starts in landscape mode the title is visible`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.start(true)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `when modal layout picker starts in portrait mode the title is not visible`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.start(false)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
     }
 
     @ExperimentalCoroutinesApi
