@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
@@ -41,7 +42,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private lateinit var layouts: GutenbergPageLayouts
+    lateinit var layouts: GutenbergPageLayouts
+        private set
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -61,6 +63,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<String>()
     val onCreateNewPageRequested: LiveData<String> = _onCreateNewPageRequested
 
+    /**
+     * Preview page event
+     */
+    private val _onPreviewPageRequested = SingleLiveEvent<PreviewPageRequest>()
+    val onPreviewPageRequested: LiveData<PreviewPageRequest> = _onPreviewPageRequested
+
+    data class PreviewPageRequest(val site: SiteModel, val content: String)
+
     init {
         dispatcher.register(this)
     }
@@ -79,7 +89,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            val payload = FetchBlockLayoutsPayload(site, supportedBlocksProvider.fromAssets().supported)
+            val payload = FetchBlockLayoutsPayload(site, supportedBlocksProvider.fromAssets().supported, null, null)
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
@@ -251,6 +261,21 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
+     * Preview page tapped
+     */
+    fun onPreviewPageClicked() {
+        (uiState.value as? ContentUiState)?.let { state ->
+            val siteId = appPrefsWrapper.getSelectedSite()
+            val site = siteStore.getSiteByLocalId(siteId)
+            val selection = state.selectedLayoutSlug != null
+            val content = if (selection) {
+                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+            } else ""
+            _onPreviewPageRequested.value = PreviewPageRequest(site, content)
+        }
+    }
+
+    /**
      * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
      */
     private fun updateButtonsUiState() {
@@ -274,6 +299,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun updateUiState(uiState: UiState) {
         _uiState.value = uiState
+    }
+
+    fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
+        if (layouts == null) {
+            return
+        }
+        val categories = ArrayList(selectedCategories ?: listOf())
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
+        updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
+        updateButtonsUiState()
+        handleBlockLayoutsResponse(layouts)
     }
 
     sealed class UiState(
