@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -257,6 +258,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
+    public static final String EXTRA_IS_PREVIEW = "isPreviewMode";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
     public static final String EXTRA_UPLOAD_NOT_STARTED = "savedAsLocalDraft";
@@ -335,6 +337,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mIsNewPost;
     private boolean mIsPage;
     private boolean mHasSetPostContent;
+    private boolean mIsPreview;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
 
     @Nullable Consumer<String> mOnGetMentionResult;
@@ -448,6 +451,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
+
+        mIsPreview = getIntent().getExtras().getBoolean(EXTRA_IS_PREVIEW);
 
         // FIXME: Make sure to use the latest fresh info about the site we've in the DB
         // set only the editor setting for now.
@@ -624,6 +629,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
@@ -637,6 +643,31 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
 
         setupPrepublishingBottomSheetRunnable();
+
+        setupPreviewUI();
+    }
+
+    private void setupPreviewUI() {
+        if (!mIsPreview) {
+            return;
+        }
+        setTitle(R.string.mlp_preview_title);
+        // Set bottom editor margin
+        View container = findViewById(R.id.pager);
+        container.setPaddingRelative(container.getPaddingStart(), container.getPaddingTop(), container.getPaddingEnd(),
+                getResources().getDimensionPixelSize(R.dimen.mlp_preview_toolbar_offset));
+        // Set button visibility
+        findViewById(R.id.createPageButtonContainer).setVisibility(View.VISIBLE);
+        // Prevent keyboard from showing
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        // Set button action
+        findViewById(R.id.createPageButton).setOnClickListener(view -> {
+            mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+            mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+            mViewModel.finish(ActivityFinishState.CANCELLED);
+            setResult(RESULT_OK, getIntent());
+            finish();
+        });
     }
 
     private void fetchSiteSettings() {
@@ -1092,6 +1123,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (mIsPreview) {
+            return false;
+        }
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
@@ -1100,6 +1134,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mIsPreview) {
+            return false;
+        }
         boolean showMenuItems = true;
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
@@ -1882,13 +1919,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         i.putExtra(EXTRA_UPLOAD_NOT_STARTED, uploadNotStarted);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_IS_PREVIEW, mIsPreview);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mEditPostRepository.getId());
         i.putExtra(EXTRA_POST_REMOTE_ID, mEditPostRepository.getRemotePostId());
         i.putExtra(EXTRA_RESTART_EDITOR, mRestartEditorOption.name());
         i.putExtra(STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession);
         i.putExtra(EXTRA_IS_NEW_POST, mIsNewPost);
-        setResult(RESULT_OK, i);
+        setResult(mIsPreview ? RESULT_CANCELED : RESULT_OK, i);
     }
 
     private void setupPrepublishingBottomSheetRunnable() {
@@ -2001,6 +2039,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void savePostAndOptionallyFinish(final boolean doFinish, final boolean forceSave) {
         if (mEditorFragment == null || !mEditorFragment.isAdded()) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
+
+        if (mIsPreview) {
+            if (doFinish) {
+                mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mEditPostRepository.getEditablePost()));
+                mPostEditorAnalyticsSession.setOutcome(Outcome.CANCEL);
+                mViewModel.finish(ActivityFinishState.CANCELLED);
+            }
             return;
         }
 
@@ -2188,6 +2235,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
+                mIsPreview,
                 mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
