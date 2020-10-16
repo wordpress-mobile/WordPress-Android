@@ -271,7 +271,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
+    public static final String EXTRA_PAGE_TITLE = "pageTitle";
     public static final String EXTRA_PAGE_CONTENT = "pageContent";
+    public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -434,6 +436,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
                     post, site, isNewPost);
+            mPostEditorAnalyticsSession.setPreview(mIsPreview);
         }
     }
 
@@ -611,8 +614,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mEditPostRepository.getPost(), mSite, mIsNewPost);
 
+        logTemplateSelection();
+
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting && !mIsPreview) {
             AnalyticsUtils.trackEditorCreatedPost(
                     action,
                     getIntent(),
@@ -875,8 +880,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         reattachUploadingMediaForAztec();
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
-        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
-
+        if (!mIsPreview) {
+            PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
+        }
         mIsConfigChange = false;
     }
 
@@ -895,8 +901,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+        if (!mIsPreview) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+        }
     }
 
     @Override protected void onStop() {
@@ -2355,7 +2362,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorFragment.setTitle(mEditPostRepository.getTitle());
             } else if (mEditorFragment instanceof GutenbergEditorFragment) {
                 // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
-                mEditorFragment.setTitle("");
+                final String title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
+                if (title != null) {
+                    mEditorFragment.setTitle(title);
+                } else {
+                    mEditorFragment.setTitle("");
+                }
             }
 
             // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
@@ -3119,6 +3131,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
         presentNewPageNoticeIfNeeded();
+    }
+
+    private void logTemplateSelection() {
+        final String template = getIntent().getStringExtra(EXTRA_PAGE_TEMPLATE);
+        if (template == null) {
+            return;
+        }
+        if (mIsPreview) {
+            mPostEditorAnalyticsSession.previewTemplate(template);
+        } else {
+            mPostEditorAnalyticsSession.applyTemplate(template);
+        }
     }
 
     @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {

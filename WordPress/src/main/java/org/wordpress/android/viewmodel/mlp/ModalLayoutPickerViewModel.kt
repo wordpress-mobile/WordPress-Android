@@ -62,16 +62,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Create new page event
      */
-    private val _onCreateNewPageRequested = SingleLiveEvent<String>()
-    val onCreateNewPageRequested: LiveData<String> = _onCreateNewPageRequested
+    private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
+    val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
     /**
      * Preview page event
      */
-    private val _onPreviewPageRequested = SingleLiveEvent<PreviewPageRequest>()
-    val onPreviewPageRequested: LiveData<PreviewPageRequest> = _onPreviewPageRequested
+    private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
+    val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
-    data class PreviewPageRequest(val site: SiteModel, val content: String)
+    sealed class PageRequest(val template: String?, val content: String) {
+        class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
+        class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
+    }
 
     init {
         dispatcher.register(this)
@@ -263,10 +266,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
             val selection = state.selectedLayoutSlug != null
+            val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
             val content = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+                selectedLayout?.content ?: ""
             } else ""
-            _onPreviewPageRequested.value = PreviewPageRequest(site, content)
+            _onPreviewPageRequested.value = PageRequest.Preview(selectedLayout?.slug, content, site)
         }
     }
 
@@ -286,9 +290,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun createPage() {
         (uiState.value as? ContentUiState)?.let { state ->
             val selection = state.selectedLayoutSlug != null
-            _onCreateNewPageRequested.value = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
+            val selectedLayout = layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }
+            val title = if (selection) {
+                selectedLayout?.title ?: ""
             } else ""
+            val content = if (selection) {
+                selectedLayout?.content ?: ""
+            } else ""
+            _onCreateNewPageRequested.value = PageRequest.Create(selectedLayout?.slug, content, title)
         }
     }
 

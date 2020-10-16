@@ -186,7 +186,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         })
 
         viewModel.onPreviewPageRequested.observe(this, Observer { request ->
-            ActivityLauncher.previewPageForResult(this, request.site, request.content)
+            ActivityLauncher.previewPageForResult(this, request.site, request.content, request.template)
         })
 
         viewModel.onCategorySelected.observe(this, Observer {
