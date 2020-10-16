@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.StockMediaModel
@@ -21,6 +22,9 @@ import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.StockMediaIdentifier
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @InternalCoroutinesApi
 class StockMediaDataSourceTest : BaseUnitTest() {
@@ -51,9 +55,14 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
         val result = stockMediaDataSource.load(forced = false, loadMore = false, filter = filter)
 
-        (result as MediaLoadingResult.Success).apply {
-            assertThat(this.data).isEmpty()
-            assertThat(this.hasMore).isFalse()
+        (result as MediaLoadingResult.Empty).apply {
+            assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.stock_media_picker_initial_empty_text)
+            val subtitle = UiStringResWithParams(
+                    R.string.stock_media_picker_initial_empty_subtext,
+                    listOf(UiStringText("<a href='https://pexels.com/'>Pexels</a>"))
+            )
+            assertThat(this.htmlSubtitle).isEqualTo(subtitle)
+            assertThat(this.image).isNull()
         }
         verifyZeroInteractions(stockMediaStore)
     }
@@ -83,6 +92,27 @@ class StockMediaDataSourceTest : BaseUnitTest() {
                     )
             )
             assertThat(this.hasMore).isTrue()
+        }
+        verify(stockMediaStore).fetchStockMedia(any(), any())
+        verify(stockMediaStore).getStockMedia()
+    }
+
+    @Test
+    fun `returns empty from store with filter with more than 2 chars`() = test {
+        val filter = "dog"
+        val loadMore = false
+        val hasMore = false
+        whenever(stockMediaStore.fetchStockMedia(filter, loadMore)).thenReturn(
+                OnStockMediaListFetched(listOf(), filter, 0, hasMore)
+        )
+        whenever(stockMediaStore.getStockMedia()).thenReturn(listOf())
+
+        val result = stockMediaDataSource.load(forced = false, loadMore = loadMore, filter = filter)
+
+        (result as MediaLoadingResult.Empty).apply {
+            assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.media_empty_search_list)
+            assertThat(this.htmlSubtitle).isNull()
+            assertThat(this.image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
         }
         verify(stockMediaStore).fetchStockMedia(any(), any())
         verify(stockMediaStore).getStockMedia()

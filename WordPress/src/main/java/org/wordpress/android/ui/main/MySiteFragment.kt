@@ -103,7 +103,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -1227,9 +1226,9 @@ class MySiteFragment : Fragment(),
 
     override fun onPositiveClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showPhotoPickerForResult(
+            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showSiteIconPicker(
                     requireActivity(),
-                    SITE_ICON_PICKER, selectedSite, null
+                    selectedSite
             )
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG -> {
             }

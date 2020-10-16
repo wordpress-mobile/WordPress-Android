@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -52,9 +53,11 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -84,9 +87,11 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock private lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
     @Mock private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Mock private lateinit var parentViewModel: ReaderViewModel
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
@@ -107,6 +112,7 @@ class ReaderDiscoverViewModelTest {
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
                 displayUtilsWrapper,
+                getFollowedTagsUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
@@ -142,6 +148,7 @@ class ReaderDiscoverViewModelTest {
         )
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
+        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList().apply { add(mock()) })
     }
 
     @Test
@@ -149,7 +156,7 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
-        viewModel.start()
+        viewModel.start(parentViewModel)
         // Assert
         assertThat(uiStates.size).isEqualTo(1)
         assertThat(uiStates[0]).isEqualTo(LoadingUiState)
@@ -164,6 +171,18 @@ class ReaderDiscoverViewModelTest {
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
         assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
+    }
+
+    @Test
+    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags `() = test {
+        // Arrange
+        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
+        val uiStates = init().uiStates
+        // Act
+        viewModel.start(parentViewModel)
+        // Assert
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates[1]).isInstanceOf(ShowFollowInterestsEmptyUiState::class.java)
     }
 
     @Test
@@ -254,7 +273,7 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Discover data provider is started when the vm is started`() = test {
         // Act
-        viewModel.start()
+        viewModel.start(parentViewModel)
         // Assert
         verify(readerDiscoverDataProvider).start()
     }
@@ -293,7 +312,7 @@ class ReaderDiscoverViewModelTest {
     fun `Fullscreen error is shown on error event when there is no content`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
-        viewModel.start()
+        viewModel.start(parentViewModel)
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
@@ -440,6 +459,15 @@ class ReaderDiscoverViewModelTest {
         verify(readerDiscoverDataProvider).refreshCards()
     }
 
+    @Test
+    fun `OnEmptyActionClicked shows select interests screen`() = test {
+        // Arrange
+        init()
+        // Act
+        viewModel.onEmptyActionClick()
+        // Assert
+        verify(parentViewModel).onShowReaderInterests()
+    }
     private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
@@ -453,7 +481,7 @@ class ReaderDiscoverViewModelTest {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        viewModel.start()
+        viewModel.start(parentViewModel)
         if (autoUpdateFeed) {
             fakeDiscoverFeed.value = createDummyReaderCardsList()
         }

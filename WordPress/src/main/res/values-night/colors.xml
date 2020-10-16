@@ -75,4 +75,7 @@
     <color name="prepublishing_action_type_disabled_color">@color/gray_50</color>
     <color name="prepublishing_action_result_disabled_color">@color/gray_50</color>
 
+    <!-- Collapsing Toolbar Custom Scrim Color -->
+    <color name="collapsing_toolbar_custom_scrim_color">@color/black_translucent_50</color>
+
 </resources>

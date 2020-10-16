@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PositionalDataSource
 import org.wordpress.android.viewmodel.gif.provider.GifProvider
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * The PagedListDataSource that is created and managed by [GifPickerDataSourceFactory]
  *
