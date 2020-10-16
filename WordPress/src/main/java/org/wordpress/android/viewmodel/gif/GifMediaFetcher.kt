@@ -17,6 +17,8 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.WPMediaUtils
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaInsertUseCase} and other relevant classes")
 /**
  * Downloads [GifMediaViewModel.largeImageUri] objects and saves them as [MediaModel]
  *

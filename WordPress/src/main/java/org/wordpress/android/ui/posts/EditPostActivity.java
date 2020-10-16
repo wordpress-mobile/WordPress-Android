@@ -1120,7 +1120,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                             .showStockMediaPickerForResult(this, mSite, requestCode, allowMultipleSelection);
                     break;
                 case GIF:
-                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_SINGLE_SELECT);
+                    mMediaPickerLauncher.showGifPickerForResult(
+                            this,
+                            mSite,
+                            allowMultipleSelection
+                    );
                     break;
             }
         } else {
@@ -2555,6 +2559,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                    } else if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        int postId = getImmutablePost().getId();
+                        for (int localId : localIds) {
+                            MediaModel media = mMediaStore.getMediaWithLocalId(localId);
+                            mFeaturedImageHelper.queueFeaturedImageForUpload(postId, media);
+                        }
+                        if (mEditPostSettingsFragment != null) {
+                            mEditPostSettingsFragment.refreshViews();
+                        }
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
@@ -2600,6 +2614,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.GIF_PICKER_SINGLE_SELECT:
+                case RequestCodes.GIF_PICKER_MULTI_SELECT:
                     if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
                         int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         mEditorMedia.addGifMediaToPostAsync(localIds);

@@ -147,28 +147,6 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `subtitle hidden on start become visible on successful interests data load`() =
-        testWithEmptyUserTags {
-            // Given
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-
-            // Pause dispatcher so we can verify subtitle initial state
-            coroutineScope.pauseDispatcher()
-
-            // Trigger data load
-            initViewModel()
-
-            assertThat(requireNotNull(viewModel.uiState.value).subtitleVisible).isEqualTo(false)
-
-            // Resume pending coroutines execution
-            coroutineScope.resumeDispatcher()
-
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
-        }
-
-    @ExperimentalCoroutinesApi
-    @Test
     fun `interests correctly shown on successful interests data load`() =
         testWithEmptyUserTags {
             // Given
