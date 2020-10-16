@@ -68,7 +68,6 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -205,6 +204,10 @@ public class ActivityLauncher {
         return intent;
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showStockMediaPickerForResult}  instead
+     */
+    @Deprecated
     public static void showStockMediaPickerForResult(Activity activity,
                                                      @NonNull SiteModel site,
                                                      int requestCode) {
@@ -219,6 +222,9 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showGifPickerForResult}  instead
+     */
     public static void showGifPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
         Map<String, String> properties = new HashMap<>();
         properties.put("from", activity.getClass().getSimpleName());
@@ -770,12 +776,15 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Activity activity,
             @NonNull SiteModel site,
+            @NonNull String content,
             @NonNull PagePostCreationSourcesDetail source
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -783,13 +792,29 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
+            @NonNull String content,
             @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void previewPageForResult(
+            @NonNull Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull String content) {
+        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        fragment.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {
@@ -1087,8 +1112,9 @@ public class ActivityLauncher {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            // disable deeplinking activity so to not catch WP URLs
-            WPActivityUtils.disableComponent(context, ReaderPostPagerActivity.class);
+            // Disable deeplinking activity so to not catch WP URLs.
+            // We'll re-enable them later - see callers of WPActivityUtils#enableReaderDeeplinks.
+            WPActivityUtils.disableReaderDeeplinks(context);
 
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -1106,9 +1132,6 @@ public class ActivityLauncher {
                 Intent chooser = Intent.createChooser(intent, context.getString(R.string.error_please_choose_browser));
                 context.startActivity(chooser);
             }
-        } finally {
-            // re-enable deeplinking
-            WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
 

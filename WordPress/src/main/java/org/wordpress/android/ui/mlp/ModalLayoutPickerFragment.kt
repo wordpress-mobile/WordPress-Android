@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.mlp
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +28,8 @@ import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
@@ -47,6 +51,9 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+        const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
+        const val SELECTED_CATEGORIES = "SELECTED_CATEGORIES"
+        const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
     }
 
     override fun onCreateView(
@@ -81,15 +88,18 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         }
 
         createBlankPageButton.setOnClickListener {
-            closeModal()
-            viewModel.createPage()
+            viewModel.onCreatePageClicked()
         }
-        createPageButton.setOnClickListener { /* TODO */ }
-        previewButton.setOnClickListener { /* TODO */ }
+        createPageButton.setOnClickListener {
+            viewModel.onCreatePageClicked()
+        }
+        previewButton.setOnClickListener {
+            viewModel.onPreviewPageClicked()
+        }
 
         setScrollListener()
 
-        setupViewModel()
+        setupViewModel(savedInstanceState)
     }
 
     private fun setScrollListener() {
@@ -105,13 +115,14 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
      * @param visible if true the title is shown and the header is hidden
      */
     private fun setTitleVisibility(visible: Boolean) {
-        if (visible == (title.visibility == View.VISIBLE)) return // No change
+        if (visible == (title?.visibility == View.VISIBLE)) return // No change
         title?.let { uiHelper.setInvisible(it, !visible) }
         header?.let { uiHelper.setInvisible(it, visible) }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
+        window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     }
 
     override fun onAttach(context: Context) {
@@ -128,11 +139,30 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         viewModel.dismiss()
     }
 
-    private fun setupViewModel() {
+    override fun onSaveInstanceState(outState: Bundle) {
+        (viewModel.uiState.value as? ContentUiState)?.let {
+            outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
+            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+        }
+        outState.putParcelable(FETCHED_LAYOUTS, viewModel.layouts)
+
+        super.onSaveInstanceState(outState)
+    }
+
+    private fun loadSavedState(savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            val layouts = it.getParcelable<GutenbergPageLayouts>(FETCHED_LAYOUTS)
+            val selected = it.getString(SELECTED_LAYOUT)
+            val categories = (it.getSerializable(SELECTED_CATEGORIES) as? List<*>)?.filterIsInstance<String>()
+            viewModel.loadSavedState(layouts, selected, categories)
+        }
+    }
+
+    private fun setupViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
-        viewModel.start(DisplayUtils.isLandscape(requireContext()))
+        loadSavedState(savedInstanceState)
 
         viewModel.uiState.observe(this, Observer { uiState ->
             when (uiState) {
@@ -153,6 +183,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                     ToastUtils.showToast(activity, uiState.message, SHORT)
                 }
             }
+        })
+
+        viewModel.onPreviewPageRequested.observe(this, Observer { request ->
+            ActivityLauncher.previewPageForResult(this, request.site, request.content)
         })
 
         viewModel.onCategorySelected.observe(this, Observer {
@@ -176,11 +210,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog = dialogInterface as BottomSheetDialog
-            val parentLayout =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-            parentLayout?.let { it ->
+        dialog.setOnShowListener {
+            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let {
                 val behaviour = BottomSheetBehavior.from(it)
                 setupFullHeight(it)
                 behaviour.skipCollapsed = true
@@ -193,5 +224,13 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         val layoutParams = bottomSheet.layoutParams
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
         bottomSheet.layoutParams = layoutParams
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RequestCodes.PREVIEW_POST) {
+            if (resultCode == Activity.RESULT_OK) {
+                viewModel.onCreatePageClicked()
+            }
+        }
     }
 }

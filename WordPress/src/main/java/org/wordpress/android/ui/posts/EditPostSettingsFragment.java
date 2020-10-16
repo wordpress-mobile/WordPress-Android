@@ -62,7 +62,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
@@ -82,6 +81,7 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
+import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -158,6 +158,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -990,7 +991,14 @@ public class EditPostSettingsFragment extends Fragment {
 
     // Featured Image Helpers
 
-    public void updateFeaturedImage(long featuredImageId) {
+    public void updateFeaturedImage(long featuredImageId, boolean imagePicked) {
+        if (isAdded() && imagePicked && mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+            int postId = getEditPostRepository().getId();
+            mFeaturedImageHelper.trackFeaturedImageEvent(
+                    TrackableEvent.IMAGE_PICKED,
+                    postId
+            );
+        }
         EditPostRepository postRepository = getEditPostRepository();
         if (postRepository == null) {
             return;
@@ -1007,7 +1015,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     private void clearFeaturedImage() {
-        updateFeaturedImage(0);
+        updateFeaturedImage(0, false);
     }
 
     private void updateFeaturedImageView(PostImmutableModel postModel) {
@@ -1053,7 +1061,7 @@ public class EditPostSettingsFragment extends Fragment {
             mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId);
 
             mMediaPickerLauncher
-                    .showPhotoPickerForResult(requireActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
+                    .showFeaturedImagePicker(requireActivity(), getSite(),
                             postId);
         }
     }
