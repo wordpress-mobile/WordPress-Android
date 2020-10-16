@@ -46,23 +46,15 @@
                         android:layout_below="@+id/header_view"
                         android:layout_centerHorizontal="true"
                         android:layout_marginEnd="@dimen/reader_detail_margin"
-                        android:layout_marginStart="@dimen/reader_detail_margin" />
-
-                    <include
-                        layout="@layout/reader_include_post_detail_comments_entry"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/layout_post_detail_content"
-                        android:layout_alignParentBottom="@id/layout_post_detail_content"
-                        android:layout_marginTop="@dimen/margin_small"
-                        android:layout_marginEnd="@dimen/reader_detail_margin"
-                        android:layout_marginStart="@dimen/reader_detail_margin" />
+                        android:layout_marginStart="@dimen/reader_detail_margin"
+                        android:layout_marginBottom="@dimen/margin_extra_large"
+                        />
 
                     <View
                         android:id="@+id/footer_spacer"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/toolbar_height"
-                        android:layout_below="@id/layout_post_detail_comments_entry" />
+                        android:layout_below="@id/layout_post_detail_content" />
 
                 </RelativeLayout>
 
