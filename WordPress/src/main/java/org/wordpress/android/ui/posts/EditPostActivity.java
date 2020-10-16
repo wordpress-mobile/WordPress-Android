@@ -173,6 +173,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
+import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -355,7 +356,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mIsPreview;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
 
-    @Nullable Consumer<String> mOnGetMentionResult;
+    @Nullable Consumer<String> mOnGetSuggestionResult;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -2713,11 +2714,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.SELECTED_USER_MENTION:
-                    if (mOnGetMentionResult != null) {
+                    if (mOnGetSuggestionResult != null) {
                         String selectedMention = data.getStringExtra(SuggestionActivity.SELECTED_USER_ID);
-                        mOnGetMentionResult.accept(selectedMention);
+                        mOnGetSuggestionResult.accept(selectedMention);
                         // Clear the callback once we have gotten a result
-                        mOnGetMentionResult = null;
+                        mOnGetSuggestionResult = null;
                     }
                     break;
                 case RequestCodes.FILE_LIBRARY:
@@ -3232,9 +3233,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.previewTemplate(template);
     }
 
-    @Override public void getMention(Consumer<String> onResult) {
-        mOnGetMentionResult = onResult;
-        ActivityLauncher.viewSuggestUsersForResult(this, mSite);
+    @Override public void showUserSuggestions(Consumer<String> onResult) {
+        showSuggestions(SuggestionType.Users, onResult);
+    }
+
+    @Override public void showXpostSuggestions(Consumer<String> onResult) {
+        showSuggestions(SuggestionType.XPosts, onResult);
+    }
+
+    private void showSuggestions(SuggestionType type, Consumer<String> onResult) {
+        mOnGetSuggestionResult = onResult;
+        ActivityLauncher.viewSuggestionsForResult(this, mSite, type);
     }
 
     @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {

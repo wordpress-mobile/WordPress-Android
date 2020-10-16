@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule;
 import org.wordpress.android.login.di.LoginFragmentModule;
 import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.ui.stats.refresh.StatsModule;
+import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 
 import javax.inject.Singleton;
 
@@ -30,6 +31,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         ViewModelModule.class,
         StatsModule.class,
         TrackerModule.class,
+        SuggestionSourceModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,

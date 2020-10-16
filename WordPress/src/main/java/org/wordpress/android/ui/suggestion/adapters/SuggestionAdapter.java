@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -34,12 +34,15 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private Filter mSuggestionFilter;
     private List<Suggestion> mSuggestionList;
     private List<Suggestion> mOrigSuggestionList;
-    private int mAvatarSz;
+    private final int mAvatarSz;
     private @Nullable @AttrRes Integer mBackgroundColor;
 
     @Inject protected ImageManager mImageManager;
 
-    public SuggestionAdapter(Context context) {
+    private final char mPrefix;
+
+    public SuggestionAdapter(Context context, char prefix) {
+        this.mPrefix = prefix;
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mInflater = LayoutInflater.from(context);
@@ -99,11 +102,11 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         Suggestion suggestion = getItem(position);
 
         if (suggestion != null) {
-            String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
+            String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getAvatarUrl(), mAvatarSz);
             mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
-            holder.mTxtUserLogin
-                    .setText(convertView.getResources().getString(R.string.at_username, suggestion.getUserLogin()));
-            holder.mTxtDisplayName.setText(suggestion.getDisplayName());
+            String value = mPrefix + suggestion.getValue();
+            holder.mValue.setText(value);
+            holder.mDisplayValue.setText(suggestion.getDisplayValue());
         }
 
         return convertView;
@@ -118,15 +121,15 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         return mSuggestionFilter;
     }
 
-    private class SuggestionViewHolder {
+    private static class SuggestionViewHolder {
         private final ImageView mImgAvatar;
-        private final TextView mTxtUserLogin;
-        private final TextView mTxtDisplayName;
+        private final TextView mValue;
+        private final TextView mDisplayValue;
 
         SuggestionViewHolder(View row) {
             mImgAvatar = row.findViewById(R.id.suggest_list_row_avatar);
-            mTxtUserLogin = row.findViewById(R.id.suggestion_list_row_user_login_label);
-            mTxtDisplayName = row.findViewById(R.id.suggestion_list_row_display_name_label);
+            mValue = row.findViewById(R.id.suggestion_list_row_raw_value_label);
+            mDisplayValue = row.findViewById(R.id.suggestion_list_row_display_value_label);
         }
     }
 
@@ -151,10 +154,10 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
                 for (Suggestion suggestion : mOrigSuggestionList) {
                     String lowerCaseConstraint = constraint.toString().toLowerCase(Locale.getDefault());
                     boolean suggestionMatchesConstraint =
-                            suggestion.getUserLogin().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
-                            || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
+                            suggestion.getValue().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
+                            || suggestion.getDisplayValue().toLowerCase(Locale.getDefault())
                                          .startsWith(lowerCaseConstraint)
-                            || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
+                            || suggestion.getDisplayValue().toLowerCase(Locale.getDefault())
                                          .contains(" " + lowerCaseConstraint);
                     if (suggestionMatchesConstraint) {
                         filteredSuggestions.add(suggestion);
@@ -179,7 +182,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         @Override
         public CharSequence convertResultToString(Object resultValue) {
             Suggestion suggestion = (Suggestion) resultValue;
-            return suggestion.getUserLogin();
+            return suggestion.getValue();
         }
     }
 }

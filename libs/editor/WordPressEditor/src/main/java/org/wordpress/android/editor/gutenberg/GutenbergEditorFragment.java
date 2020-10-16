@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -53,6 +54,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
+import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
@@ -355,8 +357,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.showJetpackSettings();
                     }
                 },
-                mEditorFragmentListener::getMention,
-                new OnStarterPageTemplatesTooltipShownEventListener() {
+                new ShowSuggestionsUtil() {
+                    @Override public void showUserSuggestions(Consumer<String> onResult) {
+                        mEditorFragmentListener.showUserSuggestions(onResult);
+                    }
+
+                    @Override public void showXpostSuggestions(Consumer<String> onResult) {
+                        mEditorFragmentListener.showXpostSuggestions(onResult);
+                    }
+                },
+        new OnStarterPageTemplatesTooltipShownEventListener() {
                     @Override
                     public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
                         mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);

@@ -187,6 +187,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
+import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -223,6 +224,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         SupportModule.class,
         ThreadModule.class,
         TrackerModule.class,
+        SuggestionSourceModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,

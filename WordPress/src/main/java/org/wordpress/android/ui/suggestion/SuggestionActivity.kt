@@ -25,7 +25,6 @@ import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNa
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
@@ -40,20 +39,31 @@ class SuggestionActivity : LocaleAwareActivity() {
         (application as WordPress).component().inject(this)
         setContentView(R.layout.suggest_users_activity)
 
-        val siteModel = intent.getSerializableExtra(WordPress.SITE) as? SiteModel
-        if (siteModel == null) {
-            val message = "${this.javaClass.simpleName} started without ${WordPress.SITE}. Finishing Activity."
-            AppLog.e(T.EDITOR, message)
-            finish()
-        } else {
-            initializeActivity(siteModel)
+        val siteModel = intent.getSerializableExtra(INTENT_KEY_SITE_MODEL) as? SiteModel
+        val suggestionType = intent.getSerializableExtra(INTENT_KEY_SUGGESTION_TYPE) as? SuggestionType
+        when {
+            siteModel == null -> abortDueToMissingIntentExtra(INTENT_KEY_SITE_MODEL)
+            suggestionType == null -> abortDueToMissingIntentExtra(INTENT_KEY_SUGGESTION_TYPE)
+            else -> initializeActivity(siteModel, suggestionType)
         }
     }
 
-    private fun initializeActivity(siteModel: SiteModel) {
-        siteId = siteModel.siteId
+    private fun abortDueToMissingIntentExtra(key: String) {
+        val message = "${this.javaClass.simpleName} started without $key. Finishing Activity."
+        AppLog.e(T.EDITOR, message)
+        finish()
+    }
 
-        initializeSuggestionAdapter(siteModel)
+    private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType) {
+        siteId = siteModel.siteId
+        viewModel.init(suggestionType, siteModel).let { supportsSuggestions ->
+            if (!supportsSuggestions) {
+                finish()
+                return
+            }
+        }
+
+        initializeSuggestionAdapter()
 
         rootView.setOnClickListener {
             // The previous activity is visible "behind" this Activity if the list of Suggestions does not fill
@@ -63,8 +73,9 @@ class SuggestionActivity : LocaleAwareActivity() {
         }
 
         autocompleteText.apply {
+            initializeWithPrefix(viewModel.suggestionPrefix)
             setOnItemClickListener { _, _, position, _ ->
-                val suggestionUserId = suggestionAdapter?.getItem(position)?.userLogin
+                val suggestionUserId = suggestionAdapter?.getItem(position)?.value
                 finishWithId(suggestionUserId)
             }
 
@@ -91,32 +102,38 @@ class SuggestionActivity : LocaleAwareActivity() {
                 post { showDropDown() }
             }
 
-            // Insure the text always starts with an "@"
-            addTextChangedListener(object : TextWatcher {
-                var singleAtChar: Boolean? = null
+            viewModel.suggestionPrefix.let { prefix ->
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    singleAtChar = s?.let { "@".contentEquals(it) }
-                }
+                // Insure the text always starts with appropriate prefix
+                addTextChangedListener(object : TextWatcher {
+                    var matchesPrefixBeforeChanged: Boolean? = null
 
-                override fun afterTextChanged(s: Editable?) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s?.isEmpty() == true && singleAtChar == true) {
-                        // Tapping delete when only @ is shown in the input should exit the @-mention UI
-                        finish()
-                    } else if (s?.startsWith("@") == false) {
-                        // Re-insert initial @ if it was deleted
-                        autocompleteText.setText(resources.getString(R.string.at_username, s))
-                        autocompleteText.setSelection(1)
-                        showDropDown()
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        matchesPrefixBeforeChanged = s?.let { it.length == 1 && it[0] == prefix }
                     }
-                    singleAtChar = null
-                }
-            })
 
-            if (text.isEmpty()) {
-                setText("@")
-                setSelection(1)
+                    override fun afterTextChanged(s: Editable?) {}
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        if (s == null) {
+                            return
+                        } else if (s.isEmpty() && matchesPrefixBeforeChanged == true) {
+                            // Tapping delete when only the prefix is shown exits the suggestions UI
+                            finish()
+                        } else if (!s.startsWith(prefix)) {
+                            // Re-insert prefix if it was deleted
+                            val string = "$prefix$s"
+                            autocompleteText.setText(string)
+                            autocompleteText.setSelection(1)
+                            showDropDown()
+                        }
+                        matchesPrefixBeforeChanged = null
+                    }
+                })
+
+                if (text.isEmpty()) {
+                    setText("$prefix")
+                    setSelection(1)
+                }
             }
 
             updateEmptyView()
@@ -127,7 +144,7 @@ class SuggestionActivity : LocaleAwareActivity() {
 
     private fun exitIfOnlyOneMatchingUser(): Boolean {
         val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
-            suggestionAdapter?.getItem(0)?.userLogin
+            suggestionAdapter?.getItem(0)?.value
         } else {
             null
         }
@@ -135,8 +152,9 @@ class SuggestionActivity : LocaleAwareActivity() {
         if (onlySuggestedUser != null) {
             finishWithId(onlySuggestedUser)
         } else {
-            // If there is not exactly 1 suggestion, notify that entered text is not a valid user
-            val message = getString(R.string.suggestion_invalid_user, autocompleteText.text)
+            // If there is not exactly 1 suggestion, notify that entered text is not a valid suggestion
+            val suggestionType = getString(viewModel.suggestionTypeStringRes)
+            val message = getString(R.string.suggestion_invalid, autocompleteText.text, suggestionType)
             ToastUtils.showToast(this@SuggestionActivity, message)
         }
 
@@ -166,31 +184,28 @@ class SuggestionActivity : LocaleAwareActivity() {
         finish()
     }
 
-    private fun initializeSuggestionAdapter(site: SiteModel) {
-        if (SiteUtils.isAccessedViaWPComRest(site)) {
-            suggestionAdapter = SuggestionAdapter(this).apply {
-                setBackgroundColorAttr(R.attr.colorGutenbergBackground)
+    private fun initializeSuggestionAdapter() {
+        suggestionAdapter = SuggestionAdapter(this, viewModel.suggestionPrefix).apply {
+            setBackgroundColorAttr(R.attr.colorGutenbergBackground)
 
-                registerDataSetObserver(object : DataSetObserver() {
-                    override fun onChanged() {
-                        updateEmptyView()
-                    }
+            registerDataSetObserver(object : DataSetObserver() {
+                override fun onChanged() {
+                    updateEmptyView()
+                }
 
-                    override fun onInvalidated() {
-                        updateEmptyView()
-                    }
-                })
-            }
-
-            viewModel.init(this, site)?.observe(this, Observer {
-                suggestionAdapter?.suggestionList = it
-                updateEmptyView()
-                autocompleteText.forceFiltering(autocompleteText.text)
-                autocompleteText.showDropDown()
-            }) ?: AppLog.e(T.EDITOR, "Error observing suggestion data")
-
-            autocompleteText.setAdapter(suggestionAdapter)
+                override fun onInvalidated() {
+                    updateEmptyView()
+                }
+            })
         }
+
+        viewModel.suggestions.observe(this, Observer {
+            suggestionAdapter?.suggestionList = it
+            autocompleteText.forceFiltering(autocompleteText.text)
+            updateEmptyView()
+        })
+
+        autocompleteText.setAdapter(suggestionAdapter)
     }
 
     private fun updateEmptyView() {
@@ -198,13 +213,14 @@ class SuggestionActivity : LocaleAwareActivity() {
         val showingSuggestions = suggestionAdapter?.isEmpty == false
 
         empty_view.apply {
-            text = getString(
-                    when {
-                        hasSuggestions -> R.string.suggestion_no_matching_users
-                        NetworkUtils.isNetworkAvailable(applicationContext) -> R.string.loading
-                        else -> R.string.suggestion_no_connection
-                    }
-            )
+            text = when {
+                hasSuggestions -> getString(
+                        R.string.suggestion_no_matching,
+                        getString(viewModel.suggestionTypeStringRes)
+                )
+                NetworkUtils.isNetworkAvailable(applicationContext) -> getString(R.string.loading)
+                else -> getString(R.string.suggestion_no_connection)
+            }
 
             visibility = when {
                 showingSuggestions -> View.GONE
@@ -240,5 +256,8 @@ class SuggestionActivity : LocaleAwareActivity() {
 
     companion object {
         const val SELECTED_USER_ID = "SELECTED_USER_ID"
+
+        const val INTENT_KEY_SUGGESTION_TYPE = "INTENT_KEY_SUGGESTION_TYPE"
+        const val INTENT_KEY_SITE_MODEL = "INTENT_KEY_SITE_MODEL"
     }
 }

@@ -8,7 +8,7 @@ import org.wordpress.android.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Suggestion {
+public class UserSuggestion {
     private static final String MENTION_TAXONOMY = "mention";
 
     public long siteID;
@@ -18,11 +18,11 @@ public class Suggestion {
     private String mImageUrl;
     private String mTaxonomy;
 
-    public Suggestion(long siteID,
-                      String userLogin,
-                      String displayName,
-                      String imageUrl,
-                      String taxonomy) {
+    public UserSuggestion(long siteID,
+                          String userLogin,
+                          String displayName,
+                          String imageUrl,
+                          String taxonomy) {
         this.siteID = siteID;
         mUserLogin = userLogin;
         mDisplayName = displayName;
@@ -30,7 +30,7 @@ public class Suggestion {
         mTaxonomy = taxonomy;
     }
 
-    public static Suggestion fromJSON(JSONObject json, long siteID) {
+    public static UserSuggestion fromJSON(JSONObject json, long siteID) {
         if (json == null) {
             return null;
         }
@@ -40,18 +40,18 @@ public class Suggestion {
         String imageUrl = JSONUtils.getString(json, "image_URL");
 
         // the api currently doesn't return a taxonomy field but we want to be ready for when it does
-        return new Suggestion(siteID, userLogin, displayName, imageUrl, MENTION_TAXONOMY);
+        return new UserSuggestion(siteID, userLogin, displayName, imageUrl, MENTION_TAXONOMY);
     }
 
-    public static List<Suggestion> suggestionListFromJSON(JSONArray jsonArray, long siteID) {
+    public static List<UserSuggestion> suggestionListFromJSON(JSONArray jsonArray, long siteID) {
         if (jsonArray == null) {
             return null;
         }
 
-        ArrayList<Suggestion> suggestions = new ArrayList<Suggestion>(jsonArray.length());
+        ArrayList<UserSuggestion> suggestions = new ArrayList<UserSuggestion>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Suggestion suggestion = Suggestion.fromJSON(jsonArray.optJSONObject(i), siteID);
+            UserSuggestion suggestion = UserSuggestion.fromJSON(jsonArray.optJSONObject(i), siteID);
             suggestions.add(suggestion);
         }
 
