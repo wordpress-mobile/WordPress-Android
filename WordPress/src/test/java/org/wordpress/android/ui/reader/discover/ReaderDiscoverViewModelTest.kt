@@ -33,7 +33,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -56,6 +55,8 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -383,7 +384,7 @@ class ReaderDiscoverViewModelTest {
         val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
-                .postHeaderClickData!!.onPostHeaderViewClicked!!.invoke(2, 200)
+                .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
@@ -521,11 +522,10 @@ class ReaderDiscoverViewModelTest {
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogUrl = "",
+                blogSection = ReaderBlogSectionUiState(
+                        post.postId, post.blogId, "", mock(), "", "", ReaderBlogSectionClickData(postHeaderClicked, 0)
+                ),
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),
-                dateLine = "",
-                avatarOrBlavatarUrl = "",
-                blogName = mock(),
                 excerpt = "",
                 title = mock(),
                 photoFrameVisibility = false,
@@ -547,7 +547,6 @@ class ReaderDiscoverViewModelTest {
                 onItemRendered = onItemRendered,
                 onMoreButtonClicked = onMoreMenuClicked,
                 onVideoOverlayClicked = onVideoOverlayClicked,
-                postHeaderClickData = PostHeaderClickData(postHeaderClicked, 0),
                 moreMenuItems = mock(),
                 onMoreDismissed = onMoreMenuDismissed
         )

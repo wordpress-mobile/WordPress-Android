@@ -8,6 +8,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
@@ -18,17 +19,14 @@ sealed class ReaderCardUiState {
     data class ReaderPostUiState(
         val postId: Long,
         val blogId: Long,
-        val dateLine: String,
+        val blogSection: ReaderBlogSectionUiState,
         val title: UiString?,
-        val blogName: UiString,
         val excerpt: String?, // mTxtText
-        val blogUrl: String?,
         val tagItems: List<TagUiState>,
         val photoTitle: String?,
         val featuredImageUrl: String?,
         val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,
-        val avatarOrBlavatarUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val discoverSection: DiscoverLayoutUiState?,
         val expandableTagsViewVisibility: Boolean,
@@ -41,20 +39,12 @@ sealed class ReaderCardUiState {
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
         val moreMenuItems: List<SecondaryAction>? = null,
-        val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         val onMoreDismissed: (ReaderPostUiState) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {
-        val dotSeparatorVisibility: Boolean = blogUrl != null
-
-        data class PostHeaderClickData(
-            val onPostHeaderViewClicked: ((Long, Long) -> Unit)?,
-            @AttrRes val background: Int
-        )
-
         data class GalleryThumbnailStripData(
             val images: ReaderImageList,
             val isPrivate: Boolean,
