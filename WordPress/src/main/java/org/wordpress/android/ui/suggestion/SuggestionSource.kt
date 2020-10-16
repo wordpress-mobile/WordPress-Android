@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.suggestion
 
 import androidx.lifecycle.LiveData
-import org.wordpress.android.models.Suggestion
+import org.wordpress.android.fluxc.model.SiteModel
 
-interface SuggestionProvider {
-    val siteId: Long
+interface SuggestionSource {
+    val site: SiteModel
     val suggestions: LiveData<List<Suggestion>>
     fun onSuggestionsUpdated()
     fun refreshSuggestions()

@@ -42,13 +42,13 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
@@ -65,6 +65,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -234,13 +235,14 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                 }
         );
 
-        mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
+        mCommentBox = findViewById(R.id.layout_comment_box);
+        mEditComment = mCommentBox.findViewById(R.id.edit_comment);
+        mEditComment.initializeWithPrefix('@');
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
 
         mEditComment.addTextChangedListener(new TextWatcher() {
@@ -287,7 +289,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         mUpdateOnResume = (savedInstanceState == null);
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
+        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
                                                               mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
@@ -403,7 +405,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
         if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId && mSuggestionAdapter != null) {
-            List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            List<UserSuggestion> userSuggestions = UserSuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            List<Suggestion> suggestions = Suggestion.Companion.fromUserSuggestions(userSuggestions);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }
     }

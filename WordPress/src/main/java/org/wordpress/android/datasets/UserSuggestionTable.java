@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.Tag;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
@@ -13,7 +13,7 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SuggestionTable {
+public class UserSuggestionTable {
     private static final String SUGGESTIONS_TABLE = "suggestions";
     private static final String TAXONOMY_TABLE = "taxonomy";
 
@@ -52,7 +52,7 @@ public class SuggestionTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    public static void insertSuggestionsForSite(final long siteId, final List<Suggestion> suggestions) {
+    public static void insertSuggestionsForSite(final long siteId, final List<UserSuggestion> suggestions) {
         // we want to delete the current suggestions, so that removed users will not show up as a suggestion
         deleteSuggestionsForSite(siteId);
 
@@ -60,7 +60,7 @@ public class SuggestionTable {
         // performance when there are a lot of suggestions
         getWritableDb().beginTransaction();
         if (suggestions != null) {
-            for (Suggestion suggestion : suggestions) {
+            for (UserSuggestion suggestion : suggestions) {
                 addSuggestion(suggestion);
             }
         }
@@ -68,7 +68,7 @@ public class SuggestionTable {
         getWritableDb().endTransaction();
     }
 
-    public static void addSuggestion(final Suggestion suggestion) {
+    public static void addSuggestion(final UserSuggestion suggestion) {
         if (suggestion == null) {
             return;
         }
@@ -83,8 +83,8 @@ public class SuggestionTable {
         getWritableDb().insertWithOnConflict(SUGGESTIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public static List<Suggestion> getSuggestionsForSite(long siteId) {
-        List<Suggestion> suggestions = new ArrayList<Suggestion>();
+    public static List<UserSuggestion> getSuggestionsForSite(long siteId) {
+        List<UserSuggestion> suggestions = new ArrayList<UserSuggestion>();
 
         String[] args = {Long.toString(siteId)};
         Cursor c = getReadableDb()
@@ -93,7 +93,7 @@ public class SuggestionTable {
         try {
             if (c.moveToFirst()) {
                 do {
-                    Suggestion comment = getSuggestionFromCursor(c);
+                    UserSuggestion comment = getSuggestionFromCursor(c);
                     suggestions.add(comment);
                 } while (c.moveToNext());
             }
@@ -108,7 +108,7 @@ public class SuggestionTable {
         return getWritableDb().delete(SUGGESTIONS_TABLE, "site_id=?", new String[]{Long.toString(siteId)});
     }
 
-    private static Suggestion getSuggestionFromCursor(Cursor c) {
+    private static UserSuggestion getSuggestionFromCursor(Cursor c) {
         final String userLogin = c.getString(c.getColumnIndex("user_login"));
         final String displayName = c.getString(c.getColumnIndex("display_name"));
         final String imageUrl = c.getString(c.getColumnIndex("image_url"));
@@ -116,7 +116,7 @@ public class SuggestionTable {
 
         long siteId = c.getLong(c.getColumnIndex("site_id"));
 
-        return new Suggestion(
+        return new UserSuggestion(
                 siteId,
                 userLogin,
                 displayName,
