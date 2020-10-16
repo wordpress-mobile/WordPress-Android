@@ -44,6 +44,7 @@ import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -65,6 +66,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButton
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -109,6 +111,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ConcurrentHashMap<String, Float> mUploadingMediaProgressMax = new ConcurrentHashMap<>();
     private Set<String> mFailedMediaIds = new HashSet<>();
+    private ConcurrentHashMap<String, Date> mCancelledMediaIds = new ConcurrentHashMap<>();
 
     private boolean mIsNewPost;
     private boolean mIsJetpackSsoEnabled;
@@ -503,7 +506,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
             // second also perform a media upload cancel action, through the onMediaUploadCancelClicked interface
             mEditorFragmentListener.onMediaUploadCancelClicked(String.valueOf(localMediaId));
-            mUploadingMediaProgressMax.remove(localMediaId);
+            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
         } else {
             // upload has already finished by the time the user deleted the block, so no op
         }
@@ -521,7 +524,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // remove from editor
                             mEditorFragmentListener.onMediaDeleted(String.valueOf(localMediaId));
                             getGutenbergContainerFragment().clearMediaFileURL(localMediaId);
-                            mUploadingMediaProgressMax.remove(localMediaId);
+                            mCancelledMediaIds.put(String.valueOf(localMediaId), new Date());
+                            mUploadingMediaProgressMax.remove(String.valueOf(localMediaId));
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.upload_finished_toast).show();
                         }
@@ -635,7 +639,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mInvalidateOptionsHandler.removeCallbacks(mInvalidateOptionsRunnable);
         mInvalidateOptionsHandler.postDelayed(mInvalidateOptionsRunnable,
-                                              getResources().getInteger(android.R.integer.config_mediumAnimTime));
+                getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
@@ -646,7 +650,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mInvalidateOptionsHandler.removeCallbacks(mInvalidateOptionsRunnable);
         mInvalidateOptionsHandler.postDelayed(mInvalidateOptionsRunnable,
-                                              getResources().getInteger(android.R.integer.config_mediumAnimTime));
+                getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
@@ -708,7 +712,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mHtmlModeEnabled = !mHtmlModeEnabled;
 
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
-        mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {
@@ -716,11 +719,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
+        mEditorFragmentListener.onHtmlModeToggledInToolbar();
         getGutenbergContainerFragment().toggleHtmlMode();
     }
 
     /*
-    * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
+     * TODO: REMOVE THIS ONCE AZTEC COMPLETELY REPLACES THE VISUAL EDITOR IN WPANDROID APP
      */
     private String removeVisualEditorProgressTag(String originalText) {
         // this regex picks any <progress> tags and any opening <span> tags for image containers
@@ -922,7 +926,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
         }
         mSavingContentProgressDialog.show();
-       return true;
+        return true;
     }
 
     @Override
@@ -963,8 +967,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadProgress(final String localMediaId, final float progress) {
-        mUploadingMediaProgressMax.put(localMediaId, progress);
-        getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
+        if (!mCancelledMediaIds.containsKey(localMediaId)) {
+            mUploadingMediaProgressMax.put(localMediaId, progress);
+            getGutenbergContainerFragment().mediaFileUploadProgress(Integer.valueOf(localMediaId), progress);
+        } else {
+            // checks to ensure that its been two seconds since the last progress event and if so then
+            // we treat the event as a new one and remove it from the cancelled media IDs being tracked.
+            Date startTime = mCancelledMediaIds.get(localMediaId);
+            if (DateTimeUtils.secondsBetween(startTime, new Date()) > 2) {
+                mCancelledMediaIds.remove(localMediaId);
+            }
+        }
     }
 
     @Override
@@ -981,5 +994,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
+    }
+
+    @Override
+    public void showNotice(String message) {
+        getGutenbergContainerFragment().showNotice(message);
     }
 }

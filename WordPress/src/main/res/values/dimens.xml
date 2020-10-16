@@ -553,7 +553,7 @@
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
     <!-- Modal Layout Picker Styles -->
-    <dimen name="mlp_header_scroll_snap_threshold">-36dp</dimen>
+    <dimen name="mlp_header_scroll_snap_threshold">-54dp</dimen>
     <dimen name="mlp_layouts_row_height">281dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
     <dimen name="mlp_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
@@ -578,4 +578,5 @@
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
+    <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 </resources>
