@@ -66,16 +66,17 @@ class LoginProloguePageFragment : Fragment() {
                 val widthOfContainer = container.width
                 val heightOfContainer = container.height
 
-                val smallestDimensions = min(widthOfContainer, heightOfContainer).toFloat()
+                val smallestDimension = min(widthOfContainer, heightOfContainer).toFloat()
                 val sizeOfContent = resources.getDimensionPixelOffset(R.dimen.login_prologue_content_area).toFloat()
 
-                val scaleFactor = smallestDimensions / sizeOfContent
+                val scaleFactor = smallestDimension / sizeOfContent
 
                 content.scaleX = scaleFactor
                 content.scaleY = scaleFactor
 
                 container.addView(content)
 
+                // add a cursor to the end of the EditText at second prologue screen
                 if (promoLayoutId == R.layout.login_prologue_second) {
                     val editText = view.findViewById<EditText>(R.id.edit_text)
                     editText.post {

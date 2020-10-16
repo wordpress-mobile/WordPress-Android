@@ -123,9 +123,6 @@ class LoginPrologueFragment : Fragment() {
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(LOGIN_PROLOGUE_VIEWED)
-            // track first slide as viewed by default, since OnPageChangeListener
-            // will not be called until the actual swipe
-            AnalyticsUtils.trackLoginProloguePages(0)
             unifiedLoginTracker.track(Flow.PROLOGUE, PROLOGUE)
         }
     }
