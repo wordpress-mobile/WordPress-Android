@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.reader.views.uistates
 
 import androidx.annotation.AttrRes
+import org.wordpress.android.ui.utils.UiString
 
 data class ReaderBlogSectionUiState(
     val postId: Long,
     val blogId: Long,
     val dateLine: String,
-    val blogName: String?,
+    val blogName: UiString,
     val blogUrl: String?,
     val avatarOrBlavatarUrl: String?,
     val blogSectionClickData: ReaderBlogSectionClickData?

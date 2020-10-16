@@ -267,7 +267,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         collapsingToolbar.setCollapsedTitleTextColor(
                 AppCompatResources.getColorStateList(this,
-                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnPrimarySurface)));
+                        ContextExtensionsKt.getColorResIdFromAttribute(this, R.attr.colorOnSurface)));
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
@@ -275,7 +275,6 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         int elevatedColor = elevationOverlayProvider
                 .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
                         appbarElevation);
-
         collapsingToolbar.setContentScrimColor(elevatedColor);
 
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuild
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -202,7 +203,16 @@ class ReaderPostDetailViewModel @Inject constructor(
         val blogId: Long,
         val headerUiState: ReaderPostDetailsHeaderUiState,
         val moreMenuItems: List<SecondaryAction>? = null,
-        val actions: ReaderPostActions
+        val actions: ReaderPostActions,
+        val commentsEntrySection: CommentsEntryUiState
+    )
+
+    data class CommentsEntryUiState(
+        val isVisible: Boolean,
+        val labelText: UiString,
+        val actionText: UiString,
+        val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null,
+        val type: ReaderPostCardActionType = ReaderPostCardActionType.COMMENTS
     )
 
     override fun onCleared() {

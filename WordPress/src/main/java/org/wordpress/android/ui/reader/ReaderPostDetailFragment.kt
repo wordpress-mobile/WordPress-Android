@@ -44,6 +44,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
+import kotlinx.android.synthetic.main.reader_include_post_detail_comments_entry.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -101,6 +102,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.CommentsEntryUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
@@ -377,6 +379,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
                     updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
                     updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+
+                    updateCommentsEntryView(state.postId, state.blogId, state.commentsEntrySection)
                 }
         )
 
@@ -446,6 +450,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
     }
 
+    private fun updateCommentsEntryView(postId: Long, blogId: Long, state: CommentsEntryUiState) {
+        layout_post_detail_comments_entry.setVisible(state.isVisible)
+        comments_label.text = uiHelpers.getTextOfUiString(comments_label.context, state.labelText)
+        comments_action.text = uiHelpers.getTextOfUiString(comments_action.context, state.actionText)
+        comments_action.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
+    }
+
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
         if (bookmarksSavedLocallyDialog == null) {
             MaterialAlertDialogBuilder(requireActivity())
@@ -473,14 +484,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenu?.let {
             state.moreMenuItems?.let {
                 if (moreMenuPopup == null) {
-                    createAndShowMoreMenu(it, moreMenu)
+                    createMoreMenuPopup(it, moreMenu)
                 }
                 moreMenuPopup?.show()
             } ?: moreMenuPopup?.dismiss()
         }
     }
 
-    private fun createAndShowMoreMenu(actions: List<SecondaryAction>, v: View) {
+    private fun createMoreMenuPopup(actions: List<SecondaryAction>, v: View) {
         AnalyticsTracker.track(Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
         moreMenuPopup = ListPopupWindow(v.context)
         moreMenuPopup?.let {

@@ -17,7 +17,6 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_USERNAME;
 import static org.wordpress.android.support.WPSupportUtils.atLeastOneElementWithIdIsDisplayed;
@@ -33,25 +32,18 @@ public class LoginFlow {
         return this;
     }
 
-    public LoginFlow enterEmailAddress() {
+    public LoginFlow enterEmailAddress(String emailAddress) {
         // Email Address Screen – Fill it in and click "Continue"
         // See LoginEmailFragment
-        populateTextField(R.id.input, E2E_WP_COM_USER_EMAIL);
+        populateTextField(R.id.input, emailAddress);
         clickOn(R.id.login_continue_button);
         return this;
     }
 
-    public LoginFlow choosePassword() {
-        // Magic Link Request or Magic Link Sent Screen – Choose "Or type your password"
-        // See LoginMagicLinkRequestFragment or LoginMagicLinkSentFragment
-        clickOn(R.id.login_enter_password);
-        return this;
-    }
-
-    public LoginFlow enterPassword() {
+    public LoginFlow enterPassword(String password) {
         // Password Screen – Fill it in and click "Continue"
         // See LoginEmailPasswordFragment
-        populateTextField(R.id.input, E2E_WP_COM_USER_PASSWORD);
+        populateTextField(R.id.input, password);
         clickOn(R.id.primary_button);
         return this;
     }

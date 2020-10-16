@@ -35,7 +35,6 @@ import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -113,6 +112,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setNotificationExtrasLoader(this)
         setMetadataProvider(this)
         setStoryDiscardListener(this)
+        setStoriesAnalyticsListener(StoriesAnalyticsReceiver())
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
         setPrepublishingEventProvider(this)
         setPermissionDialogProvider(this)
@@ -211,7 +211,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> {
                     handleMediaPickerIntentData(it)
                 }
-                RequestCodes.PHOTO_PICKER -> {
+                RequestCodes.PHOTO_PICKER, RequestCodes.STORIES_PHOTO_PICKER -> {
                     if (it.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
                                 it.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
@@ -260,11 +260,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showProvidedMediaPicker() {
-        mediaPickerLauncher.showPhotoPickerForResult(
+        mediaPickerLauncher.showStoriesPhotoPickerForResult(
                 this,
-                MediaBrowserType.WP_STORIES_MEDIA_PICKER,
-                site,
-                null // this is not required, only used for featured image in normal Posts
+                site
         )
     }
 

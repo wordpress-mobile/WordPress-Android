@@ -49,6 +49,7 @@ open class BlockListItemViewHolder(
                 imageManager.load(this, item.icon)
             }
             item.iconUrl != null -> {
+                this.imageTintList = null
                 this.visibility = View.VISIBLE
                 imageManager.load(this, ICON, item.iconUrl)
             }
