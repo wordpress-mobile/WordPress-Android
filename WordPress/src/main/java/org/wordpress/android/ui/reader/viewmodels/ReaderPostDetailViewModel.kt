@@ -10,11 +10,14 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
@@ -28,6 +31,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -58,7 +62,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     post.isFollowedByCurrentUser = data.following
-                    _uiState.value = currentUiState.copy(headerUiState = createPostDetailsHeaderUiState(post))
+                    _uiState.value = currentUiState.copy(
+                            moreMenuItems = null,
+                            headerUiState = createPostDetailsHeaderUiState(post)
+                    )
                 }
             }
         }
@@ -72,9 +79,44 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onButtonClicked(post: ReaderPost, type: ReaderPostCardActionType) {
+    fun onMoreButtonClicked() {
+        changeMoreMenuVisibility(true)
+    }
+
+    fun onMoreMenuDismissed() {
+        changeMoreMenuVisibility(false)
+    }
+
+    fun onMoreMenuItemClicked(type: ReaderPostCardActionType) {
+        val currentUiState = uiState.value
+        currentUiState?.let {
+            onButtonClicked(currentUiState.postId, currentUiState.blogId, type)
+        }
+        changeMoreMenuVisibility(false)
+    }
+
+    private fun changeMoreMenuVisibility(show: Boolean) {
+        val currentUiState = uiState.value
+        currentUiState?.let {
+            findPost(it.postId, it.blogId)?.let { post ->
+                val moreMenuItems = if (show) {
+                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
+                            post, TAG_FOLLOWED, this@ReaderPostDetailViewModel::onButtonClicked
+                    )
+                } else {
+                    null
+                }
+
+                _uiState.value = it.copy(moreMenuItems = moreMenuItems)
+            }
+        }
+    }
+
+    fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
-            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.onAction(it, type, isBookmarkList = false)
+            }
         }
     }
 
@@ -98,7 +140,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         return postDetailsHeaderViewUiStateBuilder.mapPostToUiState(
                 post,
                 this@ReaderPostDetailViewModel::onBlogSectionClicked,
-                { onButtonClicked(post, FOLLOW) },
+                { onButtonClicked(post.postId, post.blogId, FOLLOW) },
                 this@ReaderPostDetailViewModel::onTagItemClicked
         )
     }
@@ -127,7 +169,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     data class ReaderPostDetailsUiState(
         val postId: Long,
         val blogId: Long,
-        val headerUiState: ReaderPostDetailsHeaderUiState
+        val headerUiState: ReaderPostDetailsHeaderUiState,
+        val moreMenuItems: List<SecondaryAction>? = null
     )
 
     override fun onCleared() {

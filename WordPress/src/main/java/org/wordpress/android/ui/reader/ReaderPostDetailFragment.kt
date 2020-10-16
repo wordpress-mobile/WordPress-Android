@@ -14,6 +14,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -27,6 +28,7 @@ import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -92,8 +94,10 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.P
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -155,6 +159,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val postHistory = ReaderPostHistory()
 
+    private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
@@ -165,6 +170,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var featuredImageView: ImageView
 
     private lateinit var appBar: AppBarLayout
+    private lateinit var toolBar: Toolbar
 
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
@@ -213,6 +219,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             val menu: Menu = toolbar.menu
             val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
             val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+            val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
             val collapsingToolbarHeight = collapsingToolbarLayout.height
             val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
@@ -233,6 +240,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             menuBrowse?.icon?.colorFilter = colorFilter
             menuShare?.icon?.colorFilter = colorFilter
+            menuMore?.icon?.colorFilter = colorFilter
         }
     }
 
@@ -289,7 +297,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         scrollView = view.findViewById(R.id.scroll_view_reader)
 
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
-        val toolBar = appBar.findViewById<Toolbar>(R.id.toolbar_main)
+        toolBar = appBar.findViewById(R.id.toolbar_main)
 
         if (activity is ReaderPostPagerActivity) {
             toolBar.setVisible(true)
@@ -360,10 +368,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
+
         viewModel.uiState.observe(
                 viewLifecycleOwner,
                 Observer<ReaderPostDetailsUiState> { state ->
                     header_view.updatePost(state.headerUiState)
+                    showOrHideMoreMenu(state)
                 }
         )
 
@@ -385,20 +395,59 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                             this.siteId,
                             this.feedId
                     )
+                    is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+                    is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+                    is ReaderNavigationEvents.ShowReportPost -> {
+                        ReaderActivityLauncher.openUrl(
+                                context,
+                                readerUtilsWrapper.getReportPostUrl(url),
+                                OpenUrlType.INTERNAL
+                        )
+                    }
                     is ReaderNavigationEvents.ShowReaderComments,
                     is ReaderNavigationEvents.ShowNoSitesToReblog,
                     is ReaderNavigationEvents.ShowSitePickerForResult,
                     is ReaderNavigationEvents.OpenEditorForReblog,
                     is ReaderNavigationEvents.ShowBookmarkedTab,
-                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog,
-                    is ReaderNavigationEvents.SharePost,
-                    is ReaderNavigationEvents.OpenPost,
-                    is ReaderNavigationEvents.ShowReportPost -> { // TODO: Handle nav events
+                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> { // TODO: Handle nav events
                     }
                 }
             }
         })
         viewModel.start()
+    }
+
+    private fun showOrHideMoreMenu(
+        state: ReaderPostDetailsUiState
+    ) {
+        val moreMenu: View? = toolBar.findViewById(R.id.menu_more)
+        moreMenu?.let {
+            state.moreMenuItems?.let {
+                if (moreMenuPopup == null) {
+                    createAndShowMoreMenu(it, moreMenu)
+                }
+                moreMenuPopup?.show()
+            } ?: moreMenuPopup?.dismiss()
+        }
+    }
+
+    private fun createAndShowMoreMenu(actions: List<SecondaryAction>, v: View) {
+        // TODO: ashiagr Add Tracks
+        moreMenuPopup = ListPopupWindow(v.context)
+        moreMenuPopup?.let {
+            it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+            it.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
+            it.setDropDownGravity(Gravity.END)
+            it.anchorView = v
+            it.isModal = true
+            it.setOnItemClickListener { _, _, position, _ ->
+                viewModel.onMoreMenuItemClicked(actions[position].type)
+            }
+            it.setOnDismissListener {
+                viewModel.onMoreMenuDismissed()
+                moreMenuPopup = null
+            }
+        }
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
@@ -420,6 +469,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (view != null) {
             readerWebView.destroy()
         }
+        moreMenuPopup?.dismiss()
     }
 
     private fun hasPost(): Boolean {
@@ -451,7 +501,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (hasPost()) {
-                    ReaderActivityLauncher.openUrl(activity, post!!.url, OpenUrlType.EXTERNAL)
+                    ReaderActivityLauncher.openPost(context, post)
                 } else if (interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(
                             DEEP_LINKED_FALLBACK,
@@ -464,7 +514,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
-                sharePage()
+                ReaderActivityLauncher.sharePost(context, post)
+                return true
+            }
+            R.id.menu_more -> {
+                viewModel.onMoreButtonClicked()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -681,28 +735,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     READER_ARTICLE_DETAIL_UNLIKED,
                     post
             )
-        }
-    }
-
-    /**
-     * display the standard Android share chooser to share this post
-     */
-    private fun sharePage() {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        val url = if (post.hasShortUrl()) post.shortUrl else post.url
-
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, url)
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.title)
-        try {
-            startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
-        } catch (ex: android.content.ActivityNotFoundException) {
-            ToastUtils.showToast(activity, R.string.reader_toast_err_share_intent)
         }
     }
 
