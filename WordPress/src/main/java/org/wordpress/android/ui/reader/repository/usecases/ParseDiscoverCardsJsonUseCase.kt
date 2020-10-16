@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
-import com.google.gson.Gson
 import dagger.Reusable
 import org.json.JSONArray
 import org.json.JSONObject
-import org.wordpress.android.models.ReaderCardRecommendedBlog
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -15,8 +14,6 @@ import javax.inject.Inject
 
 @Reusable
 class ParseDiscoverCardsJsonUseCase @Inject constructor() {
-    private val gson = Gson()
-
     fun parsePostCard(postCardJson: JSONObject): ReaderPost {
         return ReaderPost.fromJson(postCardJson.getJSONObject(ReaderConstants.JSON_CARD_DATA))
     }
@@ -26,6 +23,20 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         val postId = postDataJson.optLong(ReaderConstants.POST_ID)
         val blogId = postDataJson.optLong(ReaderConstants.POST_SITE_ID)
         return Pair(blogId, postId)
+    }
+
+    fun parseSimplifiedRecommendedBlogsCard(recommendedBlogsCardJson: JSONObject): List<Pair<Long, Long>> {
+        return recommendedBlogsCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
+                ?.let { recommendedBlogsJson ->
+                    List(recommendedBlogsJson.length()) { index ->
+                        val recommendedBlog = recommendedBlogsJson.getJSONObject(index)
+                        Pair(
+                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_BLOG_ID),
+                                recommendedBlog.optLong(ReaderConstants.RECOMMENDED_FEED_ID)
+                        )
+                    }
+                }
+                ?: emptyList()
     }
 
     fun parseInterestCard(interestCardJson: JSONObject?): ReaderTagList {
@@ -40,11 +51,11 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         return interestTags
     }
 
-    fun parseRecommendedBlogsCard(cardJson: JSONObject): List<ReaderCardRecommendedBlog> {
+    fun parseRecommendedBlogsCard(cardJson: JSONObject): List<ReaderBlog> {
         return cardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA)
                 ?.let { jsonRecommendedBlogs ->
                     List(jsonRecommendedBlogs.length()) { index ->
-                        gson.fromJson(jsonRecommendedBlogs[index].toString(), ReaderCardRecommendedBlog::class.java)
+                        ReaderBlog.fromJson(jsonRecommendedBlogs.getJSONObject(index))
                     }
                 }
                 ?: emptyList()

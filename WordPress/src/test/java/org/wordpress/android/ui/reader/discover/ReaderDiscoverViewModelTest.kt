@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -20,7 +21,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.models.ReaderCardRecommendedBlog
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -35,9 +36,9 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -77,6 +78,7 @@ private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 9
 private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 10
 private const val RECOMMENDED_BLOG_PARAM_POSITION = 0
 private const val ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION = 1
+private const val ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION = 2
 private const val NUMBER_OF_ITEMS = 10L
 
 @InternalCoroutinesApi
@@ -149,14 +151,18 @@ class ReaderDiscoverViewModelTest {
         )
         whenever(
                 uiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-                        anyOrNull(),
-                        anyOrNull()
+                        any(),
+                        any(),
+                        any()
                 )
         ).thenAnswer {
             createReaderRecommendedBlogsCardUiState(
-                    recommendedBlogs = it.getArgument<List<ReaderCardRecommendedBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
-                    onItemClicked = it.getArgument<(Long, Long?) -> Unit>(
+                    recommendedBlogs = it.getArgument<List<ReaderBlog>>(RECOMMENDED_BLOG_PARAM_POSITION),
+                    onItemClicked = it.getArgument<(Long, Long) -> Unit>(
                             ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION
+                    ),
+                    onFollowClicked = it.getArgument<(ReaderRecommendedBlogUiState) -> Unit>(
+                            ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION
                     )
             )
         }
@@ -463,12 +469,29 @@ class ReaderDiscoverViewModelTest {
         // Act
         (uiStates.last() as ContentUiState).let {
             (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
-                card.blogs[0].onItemClicked.invoke(1, null)
+                card.blogs[0].onItemClicked.invoke(1, 0L)
             }
         }
 
         // Assert
         assertThat(navigationObserver.last().peekContent()).isInstanceOf(ShowBlogPreview::class.java)
+    }
+
+    @Test
+    fun `When user follows recommended blog post action handler is invoked`() = test {
+        // Arrange
+        val (uiStates) = init(autoUpdateFeed = false)
+        fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+
+        // Act
+        val blog = (uiStates.last() as ContentUiState).let {
+            (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
+                card.blogs[0].apply { onFollowClicked(this) }
+            }
+        }
+
+        // Assert
+        verify(readerPostCardActionsHandler).handleFollowRecommendedSiteClicked(blog)
     }
 
     @Test
@@ -580,8 +603,9 @@ class ReaderDiscoverViewModelTest {
             ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<ReaderCardRecommendedBlog>,
-        onItemClicked: (Long, Long?) -> Unit
+        recommendedBlogs: List<ReaderBlog>,
+        onItemClicked: (Long, Long) -> Unit,
+        onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState {
         return ReaderRecommendedBlogsCardUiState(
                 blogs = recommendedBlogs.map {
@@ -590,9 +614,11 @@ class ReaderDiscoverViewModelTest {
                             name = it.name,
                             url = it.url,
                             description = it.description,
-                            iconUrl = it.iconUrl,
+                            iconUrl = it.imageUrl,
                             feedId = it.feedId,
-                            onItemClicked = onItemClicked
+                            onItemClicked = onItemClicked,
+                            onFollowClicked = onFollowClicked,
+                            isFollowed = it.isFollowing
                     )
                 }
         )
@@ -604,7 +630,7 @@ class ReaderDiscoverViewModelTest {
         }
     }
 
-    private fun createRecommendedBlogsList(numOfBlogs: Int = 1): List<ReaderCardRecommendedBlog> {
+    private fun createRecommendedBlogsList(numOfBlogs: Int = 1): List<ReaderBlog> {
         return List(numOfBlogs) { createRecommendedBlog() }
     }
 
@@ -617,14 +643,15 @@ class ReaderDiscoverViewModelTest {
             false
     )
 
-    private fun createRecommendedBlog() = ReaderCardRecommendedBlog(
-            blogId = 1L,
-            description = "description",
-            url = "url",
-            name = "name",
-            iconUrl = null,
-            feedId = null
-    )
+    private fun createRecommendedBlog() = ReaderBlog().apply {
+        blogId = 1L
+        description = "description"
+        url = "url"
+        name = "name"
+        imageUrl = null
+        feedId = 0L
+        isFollowing = false
+    }
 
     private fun createInterestsYouMayLikeCardList() = listOf(InterestsYouMayLikeCard(createReaderTagList()))
     private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)

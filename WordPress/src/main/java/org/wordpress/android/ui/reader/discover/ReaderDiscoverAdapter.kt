@@ -34,7 +34,7 @@ class ReaderDiscoverAdapter(
                     parent
             )
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
-            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent, imageManager)
+            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent, imageManager, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
@@ -75,8 +75,11 @@ class ReaderDiscoverAdapter(
                 is ReaderPostUiState -> {
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
                 }
+                is ReaderRecommendedBlogsCardUiState -> {
+                    val newItemState = newItem as? ReaderRecommendedBlogsCardUiState
+                    oldItem.blogs.map { it.blogId to it.feedId } == newItemState?.blogs?.map { it.blogId to it.feedId }
+                }
                 is ReaderWelcomeBannerCardUiState,
-                is ReaderRecommendedBlogsCardUiState,
                 is ReaderInterestsCardUiState -> {
                     oldItem == newItem
                 }

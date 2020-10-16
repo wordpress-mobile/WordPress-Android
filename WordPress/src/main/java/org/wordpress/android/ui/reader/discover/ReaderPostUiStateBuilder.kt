@@ -3,10 +3,9 @@ package org.wordpress.android.ui.reader.discover
 import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.models.ReaderCardRecommendedBlog
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
@@ -175,18 +174,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
-        recommendedBlogs: List<ReaderCardRecommendedBlog>,
-        onItemClicked: (Long, Long?) -> Unit
+        recommendedBlogs: List<ReaderBlog>,
+        onItemClicked: (Long, Long) -> Unit,
+        onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
     ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
         recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
                 .map {
                     ReaderRecommendedBlogUiState(
-                            name = StringEscapeUtils.unescapeHtml4(it.name),
+                            name = it.name,
                             url = urlUtilsWrapper.removeScheme(it.url),
                             blogId = it.blogId,
                             feedId = it.feedId,
-                            description = StringEscapeUtils.unescapeHtml4(it.description),
-                            iconUrl = it.iconUrl,
+                            description = it.description.ifEmpty { null },
+                            iconUrl = it.imageUrl,
+                            isFollowed = it.isFollowing,
+                            onFollowClicked = onFollowClicked,
                             onItemClicked = onItemClicked
                     )
                 }.let { ReaderRecommendedBlogsCardUiState(it) }

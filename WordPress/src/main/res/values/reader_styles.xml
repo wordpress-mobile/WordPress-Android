@@ -59,13 +59,10 @@
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
-    <style name="ReaderTextView.Site.Url" parent="ReaderTextView">
+    <style name="ReaderTextView.Site.Header.Caption.Url">
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="textColor">?attr/colorOnBackground</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
@@ -266,6 +263,12 @@
         <item name="iconTint">@color/on_secondary_on_background_selector</item>
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
         <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:minHeight">@dimen/min_touch_target_sz</item>
+        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+    </style>
+
+    <style name="Reader.Follow.Button.Icon" parent="Reader.Follow.Button">
+        <item name="iconTint">@color/secondary_gray_20_selector</item>
         <item name="android:minHeight">@dimen/min_touch_target_sz</item>
         <item name="android:minWidth">@dimen/min_touch_target_sz</item>
     </style>

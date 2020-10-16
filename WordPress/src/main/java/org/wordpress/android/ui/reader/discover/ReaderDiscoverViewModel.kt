@@ -23,6 +23,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
@@ -180,7 +181,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 is ReaderRecommendedBlogsCard -> {
                     postUiStateBuilder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
                             recommendedBlogs = card.blogs,
-                            onItemClicked = this@ReaderDiscoverViewModel::onRecommendedBlogItemClicked
+                            onItemClicked = this@ReaderDiscoverViewModel::onRecommendedSiteItemClicked,
+                            onFollowClicked = this@ReaderDiscoverViewModel::onFollowSiteClicked
                     )
                 }
             }
@@ -288,8 +290,14 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onRecommendedBlogItemClicked(blogId: Long, feedId: Long?) {
-        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId ?: 0)))
+    private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long) {
+        _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId)))
+    }
+
+    private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
+        launch {
+            readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(recommendedBlogUiState)
+        }
     }
 
     private fun onItemRendered(itemUiState: ReaderCardUiState) {

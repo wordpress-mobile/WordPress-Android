@@ -20,13 +20,6 @@
         app:layout_constraintVertical_bias="1" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/margin_extra_large" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,6 +40,42 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="@dimen/margin_extra_large" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/margin_extra_large" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/site_name"
+        style="@style/ReaderTextView.Site.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:includeFontPadding="false"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintBottom_toTopOf="@+id/site_url"
+        app:layout_constraintEnd_toStartOf="@id/site_follow_icon"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/site_icon"
+        app:layout_constraintTop_toTopOf="@id/site_icon"
+        tools:text="Legal Nomads" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/site_url"
+        style="@style/ReaderTextView.Site.Header.Caption.Url"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:includeFontPadding="false"
+        app:layout_constraintBottom_toBottomOf="@id/site_icon"
+        app:layout_constraintEnd_toEndOf="@id/site_name"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/site_name"
+        app:layout_constraintTop_toBottomOf="@+id/site_name"
+        tools:text="legalnomads.com" />
+
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_description"
         style="@style/ReaderTextView.Site.Description"
@@ -60,33 +89,16 @@
         app:layout_constraintTop_toBottomOf="@+id/site_icon"
         tools:text="@tools:sample/lorem/random" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/site_name"
-        style="@style/ReaderTextView.Site.Title"
-        android:layout_width="0dp"
+    <org.wordpress.android.ui.reader.views.ReaderFollowButton
+        style="@style/Reader.Follow.Button.Icon"
+        android:id="@+id/site_follow_icon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:includeFontPadding="false"
-        android:textAppearance="?attr/textAppearanceSubtitle1"
-        app:layout_constraintBottom_toTopOf="@+id/site_url"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/site_icon"
-        app:layout_constraintTop_toTopOf="@id/site_icon"
-        tools:text="Legal Nomads" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/site_url"
-        style="@style/ReaderTextView.Site.Url"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_small"
-        android:includeFontPadding="false"
-        app:layout_constraintBottom_toBottomOf="@id/site_icon"
-        app:layout_constraintEnd_toEndOf="@id/site_name"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/site_name"
-        app:layout_constraintTop_toBottomOf="@+id/site_name"
-        tools:text="legalnomads.com" />
+        android:contentDescription="@string/reader_btn_follow"
+        android:layout_marginEnd="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="@id/site_url"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/site_name"
+        app:wpShowFollowButtonCaption="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

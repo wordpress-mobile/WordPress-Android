@@ -5,13 +5,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
 class ReaderRecommendedBlogsAdapter(
-    private val imageManager: ImageManager
+    private val imageManager: ImageManager,
+    private val uiHelpers: UiHelpers
 ) : ListAdapter<ReaderRecommendedBlogUiState, ReaderRecommendedBlogViewHolder>(RecommendedBlogsDiffUtil()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderRecommendedBlogViewHolder {
-        return ReaderRecommendedBlogViewHolder(parent, imageManager)
+        return ReaderRecommendedBlogViewHolder(parent, imageManager, uiHelpers)
     }
 
     override fun onBindViewHolder(holder: ReaderRecommendedBlogViewHolder, position: Int) {
@@ -28,5 +30,11 @@ class ReaderRecommendedBlogsAdapter(
             oldItem: ReaderRecommendedBlogUiState,
             newItem: ReaderRecommendedBlogUiState
         ): Boolean = oldItem == newItem
+
+        // Returning true suppresses the default item animation.
+        override fun getChangePayload(
+            oldItem: ReaderRecommendedBlogUiState,
+            newItem: ReaderRecommendedBlogUiState
+        ): Any? = true
     }
 }
