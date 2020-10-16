@@ -2100,7 +2100,19 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchedBlockLayouts(FetchedBlockLayoutsResponsePayload payload) {
-        emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+        if (payload.isError()) {
+            // Return cached layouts on error
+            List<GutenbergLayout> layouts = SiteSqlUtils.getBlockLayouts(payload.site);
+            List<GutenbergLayoutCategory> categories = SiteSqlUtils.getBlockLayoutCategories(payload.site);
+            if (!layouts.isEmpty() && !categories.isEmpty()) {
+                emitChange(new OnBlockLayoutsFetched(layouts, categories, null));
+            } else {
+                emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+            }
+        } else {
+            SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories, payload.layouts);
+            emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+        }
     }
 
     // Automated Transfers

@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteConstraintException;
 import androidx.annotation.NonNull;
 
 import com.wellsql.generated.AccountModelTable;
+import com.wellsql.generated.GutenbergLayoutCategoriesModelTable;
+import com.wellsql.generated.GutenbergLayoutCategoryModelTable;
+import com.wellsql.generated.GutenbergLayoutModelTable;
 import com.wellsql.generated.PostFormatModelTable;
 import com.wellsql.generated.RoleModelTable;
 import com.wellsql.generated.SiteModelTable;
@@ -17,10 +20,19 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModel;
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoriesModelKt;
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModel;
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutCategoryModelKt;
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModel;
+import org.wordpress.android.fluxc.model.layouts.GutenbergLayoutModelKt;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -276,6 +288,63 @@ public class SiteSqlUtils {
             role.setSiteId(site.getId());
         }
         WellSql.insert(roles).execute();
+    }
+
+    public static List<GutenbergLayoutCategory> getBlockLayoutCategories(@NonNull SiteModel site) {
+        List<GutenbergLayoutCategoryModel> categories =
+                WellSql.select(GutenbergLayoutCategoryModel.class)
+                       .where()
+                       .equals(GutenbergLayoutCategoryModelTable.SITE_ID, site.getId())
+                       .endWhere().getAsModel();
+        return GutenbergLayoutCategoryModelKt.transform(categories);
+    }
+
+    public static List<GutenbergLayout> getBlockLayouts(@NonNull SiteModel site) {
+        ArrayList<GutenbergLayout> blockLayouts = new ArrayList<>();
+        List<GutenbergLayoutModel> layouts =
+                WellSql.select(GutenbergLayoutModel.class)
+                       .where()
+                       .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
+                       .endWhere().getAsModel();
+        for (GutenbergLayoutModel layout : layouts) {
+            List<GutenbergLayoutCategoriesModel> connections = WellSql.select(GutenbergLayoutCategoriesModel.class)
+                   .where()
+                   .equals(GutenbergLayoutCategoriesModelTable.SITE_ID, site.getId())
+                   .equals(GutenbergLayoutCategoriesModelTable.LAYOUT_ID, layout.getId())
+                   .endWhere().getAsModel();
+            ArrayList<GutenbergLayoutCategoryModel> categories = new ArrayList<>();
+            for (GutenbergLayoutCategoriesModel connection : connections) {
+                categories.addAll(WellSql.select(GutenbergLayoutCategoryModel.class)
+                       .where()
+                       .equals(GutenbergLayoutCategoriesModelTable.ID, connection.getCategoryId())
+                       .endWhere().getAsModel());
+            }
+            blockLayouts.add(GutenbergLayoutModelKt.transform(layout, categories));
+        }
+        return blockLayouts;
+    }
+
+    public static void insertOrReplaceBlockLayouts(@NonNull SiteModel site,
+                                                   @NonNull List<GutenbergLayoutCategory> categories,
+                                                   @NonNull List<GutenbergLayout> layouts) {
+        // Update categories
+        WellSql.delete(GutenbergLayoutCategoryModel.class)
+               .where()
+               .equals(GutenbergLayoutCategoryModelTable.SITE_ID, site.getId())
+               .endWhere().execute();
+        WellSql.insert(GutenbergLayoutCategoryModelKt.transform(categories, site)).execute();
+        // Update layouts
+        WellSql.delete(GutenbergLayoutModel.class)
+               .where()
+               .equals(GutenbergLayoutModelTable.SITE_ID, site.getId())
+               .endWhere().execute();
+        WellSql.insert(GutenbergLayoutModelKt.transform(layouts, site)).execute();
+        // Update connections
+        WellSql.delete(GutenbergLayoutCategoriesModel.class)
+               .where()
+               .equals(GutenbergLayoutCategoriesModelTable.SITE_ID, site.getId())
+               .endWhere().execute();
+        WellSql.insert(GutenbergLayoutCategoriesModelKt.connections(layouts, site)).execute();
     }
 
     /**
