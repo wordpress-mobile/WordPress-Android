@@ -31,6 +31,11 @@ class XPostsStore
                     }
                 }
             }
+
+    suspend fun getXPostsFromDb(site: SiteModel): List<XPostSiteModel> =
+        coroutineEngine.withDefaultContext(AppLog.T.DB, this, "getXPostsFromDb") {
+            return@withDefaultContext xPostsSqlUtils.selectXPostsForSite(site)
+        }
 }
 
 enum class XPostsSource { REST_API, DB }
