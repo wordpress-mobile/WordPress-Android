@@ -436,6 +436,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mPostEditorAnalyticsSession = new PostEditorAnalyticsSession(
                     showGutenbergEditor ? Editor.GUTENBERG : Editor.CLASSIC,
                     post, site, isNewPost);
+            mPostEditorAnalyticsSession.setPreview(mIsPreview);
         }
     }
 
@@ -616,7 +617,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         logTemplateSelection();
 
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting && !mIsPreview) {
             AnalyticsUtils.trackEditorCreatedPost(
                     action,
                     getIntent(),
@@ -879,8 +880,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         reattachUploadingMediaForAztec();
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
-        PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
-
+        if (!mIsPreview) {
+            PostUtils.trackOpenEditorAnalytics(mEditPostRepository.getPost(), mSite);
+        }
         mIsConfigChange = false;
     }
 
@@ -899,8 +901,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onPause();
 
         EventBus.getDefault().unregister(this);
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+        if (!mIsPreview) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
+        }
     }
 
     @Override protected void onStop() {
