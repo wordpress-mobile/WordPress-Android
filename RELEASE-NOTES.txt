@@ -2,6 +2,7 @@
 -----
 * [*] Stats: Added the possibility to report and unreport a referrer as spam. [https://github.com/wordpress-mobile/WordPress-Android/pull/13047]
 * [**] Reader: Allow users to access Reader even when they do not follow any tags/topics.
+* [***] Reader: The new redesigned Reader detail shows your post as beautiful as ever. And if you add a featured image it would be twice as beautiful! [https://github.com/wordpress-mobile/WordPress-Android/pull/13151]
 
 15.9
 -----
