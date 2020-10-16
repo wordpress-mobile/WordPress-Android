@@ -1331,16 +1331,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    toggledHtmlModeSnackbar(view -> {
-                        // switch back
-                        ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    });
                 } else if (mEditorFragment instanceof GutenbergEditorFragment) {
                     ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-                    toggledHtmlModeSnackbar(view -> {
-                        // switch back
-                        ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-                    });
                 }
             } else if (itemId == R.id.menu_switch_to_aztec) {
                 // The following boolean check should be always redundant but was added to manage
@@ -1504,6 +1496,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
         trackPostSessionEditorModeSwitch();
         invalidateOptionsMenu();
+        showToggleHtmlModeSnackbar();
+    }
+
+    private void showToggleHtmlModeSnackbar() {
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            toggledHtmlModeSnackbar(view -> {
+                // switch back
+                ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+            });
+        } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+            toggledHtmlModeSnackbar(view -> {
+                // switch back
+                ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+            });
+        }
     }
 
     private void trackPostSessionEditorModeSwitch() {
