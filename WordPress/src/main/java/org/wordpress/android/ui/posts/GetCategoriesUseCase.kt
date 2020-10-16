@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.CategoryNode
+import org.wordpress.android.models.wrappers.CategoryNodeWrapper
 import org.wordpress.android.util.AppLog.T.PREPUBLISHING_NUDGES
 import java.util.ArrayList
 import javax.inject.Inject
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class GetCategoriesUseCase @Inject constructor(
     private val taxonomyStore: TaxonomyStore,
     private val dispatcher: Dispatcher,
-    private val appLogWrapper: AppLogWrapper
+    private val appLogWrapper: AppLogWrapper,
+    private val categoryNodeWrapper: CategoryNodeWrapper
 ) {
     fun getPostCategoriesString(
         editPostRepository: EditPostRepository,
@@ -39,10 +41,10 @@ class GetCategoriesUseCase @Inject constructor(
             editPostRepository.getPost()?.categoryIdList ?: listOf()
 
     fun getSiteCategories(siteModel: SiteModel): ArrayList<CategoryNode> {
-        val rootCategory = CategoryNode.createCategoryTreeFromList(
+        val rootCategory = categoryNodeWrapper.createCategoryTreeFromList(
                 getCategoriesForSite(siteModel)
         )
-        return CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory) ?: arrayListOf()
+        return categoryNodeWrapper.getSortedListOfCategoriesFromRoot(rootCategory)
     }
 
     fun fetchSiteCategories(siteModel: SiteModel) {
