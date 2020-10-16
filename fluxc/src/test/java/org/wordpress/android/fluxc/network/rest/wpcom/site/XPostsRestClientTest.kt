@@ -26,10 +26,16 @@ internal class XPostsRestClientTest {
         val expected = mock<WPComGsonRequestBuilder.Response<Array<XPostSiteModel>>>()
 
         val url = WPCOMV2.sites.site(site.siteId).xposts.url
-        whenever(wpComGsonRequestBuilder.syncGetRequest(subject,
-                                                        url,
-                                                        emptyMap(),
-                                                        Array<XPostSiteModel>::class.java))
+        whenever(
+                wpComGsonRequestBuilder.syncGetRequest(
+                        subject,
+                        url,
+                        emptyMap(),
+                        Array<XPostSiteModel>::class.java,
+                        true,
+                        60000
+                )
+        )
                 .thenReturn(expected)
 
         val actual = subject.fetch(site)
