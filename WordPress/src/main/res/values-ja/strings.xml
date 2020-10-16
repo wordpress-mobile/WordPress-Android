@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-29 14:10:47+0000
+Translation-Revision-Date: 2020-10-08 13:28:24+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_white">白</string>
+    <string name="gutenberg_native_vivid_red">鮮やかな赤</string>
+    <string name="gutenberg_native_vivid_purple">鮮やかなパープル</string>
+    <string name="gutenberg_native_vivid_green_cyan">鮮やかなグリーンシアン</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">鮮やかなシアンブルーから鮮やかなパープル</string>
+    <string name="gutenberg_native_vivid_cyan_blue">鮮やかなシアンブルー</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">非常に薄いグレーからシアンブルー系グレー</string>
+    <string name="gutenberg_native_select_item">項目を選択</string>
+    <string name="gutenberg_native_search_or_type_url">検索または URL を入力</string>
+    <string name="gutenberg_native_pale_pink">ピンク</string>
+    <string name="gutenberg_native_pale_ocean">淡い海</string>
+    <string name="gutenberg_native_pale_cyan_blue">淡いシアンブルー</string>
+    <string name="gutenberg_native_midnight">ミッドナイト</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">明るく鮮やかなオレンジ色から鮮やかな赤</string>
+    <string name="gutenberg_native_luminous_vivid_orange">オレンジ</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">明るく鮮やかな琥珀色から明るく鮮やかなオレンジ色</string>
+    <string name="gutenberg_native_luminous_vivid_amber">琥珀</string>
+    <string name="gutenberg_native_luminous_dusk">明るい夕暮れ</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">明るいグリーンシアンから鮮やかなグリーンシアン</string>
+    <string name="gutenberg_native_light_green_cyan">薄いグリーンシアン</string>
+    <string name="gutenberg_native_electric_grass">エレクトリックグラス</string>
+    <string name="gutenberg_native_cyan_bluish_gray">シアンブルーグレー</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">寒色から暖色へのスペクトラム</string>
+    <string name="gutenberg_native_blush_light_purple">赤みのある明るいパープル</string>
+    <string name="gutenberg_native_blush_bordeaux">赤みのあるボルドー</string>
+    <string name="gutenberg_native_black">黒</string>
+    <string name="gutenberg_native_add_this_telephone_link">この電話リンクを追加</string>
+    <string name="gutenberg_native_add_this_link">このリンクを追加</string>
+    <string name="gutenberg_native_add_this_email_link">このメールリンクを追加</string>
+    <string name="suggestion_no_connection">「インターネットに接続できません。\n提案は利用できません。」</string>
     <string name="typeface_label_shrikhand">太字</string>
     <string name="typeface_label_space_mono">モダン</string>
     <string name="typeface_label_pacifico">プレイフル</string>
@@ -151,7 +181,6 @@ Language: ja_JP
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b>%1$s&lt;/b>をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
-    <string name="gutenberg_native_remove_block">ブロックを削除</string>
     <string name="gutenberg_native_duplicate_block">ブロックを複製</string>
     <string name="gutenberg_native_copy_block">ブロックをコピー</string>
     <string name="gutenberg_native_copied_block">コピーしたブロック</string>
@@ -166,11 +195,9 @@ Language: ja_JP
     <string name="error_update_site_title_network">サイトのタイトルを更新できませんでした。 ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">保存されていない変更</string>
     <string name="gutenberg_native_open_link_in_a_browser">リンクをブラウザーで開く</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">前のコンテンツシートへ移動</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">グラデーションのカスタマイズへ移動</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">カスタムカラーピッカーへ移動</string>
     <string name="gutenberg_native_gradient_type">グラデーションタイプ</string>
-    <string name="gutenberg_native_go_back">戻る</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">ダブルタップしてオプションを選択</string>
     <string name="gutenberg_native_customize_gradient">グラデーションをカスタマイズ</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,9 +207,6 @@ Language: ja_JP
     <string name="menu_content_info">コンテンツ構造</string>
     <string name="everyone">誰でも</string>
     <string name="me">自分</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">リリースごとにブロックを追加できるよう努めています。それまでの間は、端末の Web ブラウザーを使用してこのブロックを編集できます。</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Web ブラウザーでブロックを編集</string>
-    <string name="gutenberg_native_dismiss">非表示</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます。</string>
     <string name="prepublishing_nudges_toolbar_title_publish">公開日</string>
@@ -480,12 +504,10 @@ Language: ja_JP
     <string name="posts_cannot_be_started">現在、投稿を開くことができません。後ほど、もう一度お試しください</string>
     <string name="site_cannot_be_loaded">現在、サイトのデータを読み込めません。後ほど、もう一度お試しください</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress メディアライブラリ</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">リリースごとにブロックを追加できるよう努めています。 それまでは、Web でこの投稿を編集できます。</string>
     <string name="gutenberg_native_ungroup">グループ解除</string>
     <string name="gutenberg_native_translate">翻訳</string>
     <string name="gutenberg_native_title">タイトル:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">タップしてキーボードを非表示</string>
-    <string name="gutenberg_native_tap_here_to_show_help">タップしてヘルプを表示</string>
     <string name="gutenberg_native_take_a_video">動画を撮る</string>
     <string name="gutenberg_native_take_a_photo_or_video">写真または動画を撮る</string>
     <string name="gutenberg_native_take_a_photo">写真を撮る</string>
@@ -493,8 +515,6 @@ Language: ja_JP
     <string name="gutenberg_native_size">サイズ</string>
     <string name="gutenberg_native_sidebar_title_plugin">サイドバータイトルプラグイン</string>
     <string name="gutenberg_native_show_section">セクションを表示</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">「%s」は WordPress for iOS ではまだサポートされていません</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">「%s」は WordPress for Android ではまだサポートされていません</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>
     <string name="gutenberg_native_s_block_empty">%sブロック。空</string>
     <string name="gutenberg_native_cut_block">ブロックを切り取る</string>
@@ -517,12 +537,9 @@ Language: ja_JP
     <string name="gutenberg_native_move_block_up">ブロックを上に移動</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に下に移動します</string>
     <string name="gutenberg_native_move_block_down">ブロックを下に移動</string>
-    <string name="gutenberg_native_link_text">リンク文字列</string>
-    <string name="gutenberg_native_link_inserted">リンクを挿入しました</string>
     <string name="gutenberg_native_image_caption_s">画像キャプション。%s</string>
     <string name="gutenberg_native_hide_keyboard">キーボードを非表示</string>
     <string name="gutenberg_native_here_is_the_panel_content">ここにパネルコンテンツが入ります</string>
-    <string name="gutenberg_native_help_icon">ヘルプアイコン</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">メディアを挿入できませんでした。\nタップするとオプションが表示されます</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">ダブルタップして前回の変更を元に戻す</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">ダブルタップして設定を切り替え</string>
@@ -543,7 +560,6 @@ Language: ja_JP
     <string name="gutenberg_native_alt_text">代替テキスト</string>
     <string name="gutenberg_native_add_video">動画を追加</string>
     <string name="gutenberg_native_add_url">URL を追加</string>
-    <string name="gutenberg_native_add_link_text">リンク文字列を追加</string>
     <string name="gutenberg_native_add_image_or_video">画像または動画を追加</string>
     <string name="gutenberg_native_add_image">画像を追加</string>
     <string name="gutenberg_native_add_block_here">ここにブロックを追加</string>
@@ -602,7 +618,7 @@ Language: ja_JP
     <string name="post_waiting_for_connection_pending">端末が再びオンラインになった時に、投稿のレビュー申請を送信します。</string>
     <string name="post_waiting_for_connection_publish">端末が再びオンラインになった時に、投稿を公開します。</string>
     <string name="settings_username_changer_snackbar_cancel">この操作はキャンセルできません。ユーザー名はすでに更新されている可能性があります。</string>
-    <string name="settings_username_changer_toast_content">新しいユーザー名は %1$s です。</string>
+    <string name="settings_username_changer_toast_content">新しいユーザー名は %1$s です</string>
     <string name="settings_username_changer_progress_dialog">ユーザー名を保存しています…</string>
     <string name="settings_username_changer_confirm_dialog_positive_action">ユーザー名を変更する</string>
     <string name="settings_username_changer_confirm_dialog_content">ユーザー名を %1$s%2$s%3$s に変更します。ユーザー名を変更すると、Gravatar プロフィールと IntenseDebate プロフィールのアドレスも変更されます。変更後のユーザー名を確認して続行してください。</string>
@@ -796,7 +812,7 @@ Language: ja_JP
     <string name="plugin_install_custom_domain_required_dialog_register_btn">ドメインを登録</string>
     <string name="plugin_install_custom_domain_required_dialog_message">プラグインをインストールするには、カスタムドメインをサイトに関連付ける必要があります。</string>
     <string name="plugin_install_custom_domain_required_dialog_title">プラグインをインストール</string>
-    <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます。</string>
+    <string name="new_site_creation_preview_subtitle">サイトの外見は後でカスタマイズできます</string>
     <string name="publish_on">公開日:%s</string>
     <string name="schedule_for">予約:%s</string>
     <string name="published_on">公開日時:%s</string>
@@ -883,7 +899,7 @@ Language: ja_JP
     <string name="new_site_creation_clear_all_content_description">クリア</string>
     <string name="site_created_but_not_fetched_snackbar_message">接続速度が遅いようです。リストに新しいサイトが表示されない場合は、再度更新してみてください。</string>
     <string name="cancel_new_site_wizard_content_description">「Cancel Site Creation」ウィザード</string>
-    <string name="notification_new_site_creation_creating_site_subtitle">新しいサイトを作成しています。</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">新しいサイトを作成しています</string>
     <string name="notification_new_site_creation_failed">問題が発生しました</string>
     <string name="notification_new_site_creation_title">サイトを作成</string>
     <string name="new_site_creation_create_site_button">サイトを作成</string>
@@ -1685,7 +1701,7 @@ Language: ja_JP
     <string name="connected">連携済み</string>
     <string name="twitter">Twitter</string>
     <string name="likes">いいね</string>
-    <string name="sharing_comment_likes_description">すべてのコメントに対して自分や他の読者が「いいね」の評価を付けられるようにします。</string>
+    <string name="sharing_comment_likes_description">すべてのコメントに対して自分や他の読者が「いいね」の評価を付けられるようにする</string>
     <string name="buttons">ボタン</string>
     <string name="sharing_edit_more_buttons">「その他」ボタンを編集</string>
     <string name="sharing_more_description">「その他」ボタンには共有ボタンを表示するドロップダウンリストが含まれています</string>
@@ -1978,9 +1994,9 @@ Language: ja_JP
     <string name="days_quantity_one">1日</string>
     <string name="web_address">ウェブアドレス</string>
     <string name="primary_site">基本のサイト</string>
-    <string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください。</string>
+    <string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください</string>
     <string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
-    <string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます。</string>
+    <string name="error_refresh_comments_showing_older">現在、コメントを更新することができないため、古いコメントが表示されます</string>
     <string name="post_settings_set_featured_image">アイキャッチ画像を設定</string>
     <string name="post_settings_featured_image">アイキャッチ画像</string>
     <string name="email_address">メールアドレス</string>
@@ -2005,9 +2021,9 @@ Language: ja_JP
     <string name="search">検索</string>
     <string name="remove">削除</string>
     <string name="site_settings_image_original_size">元のサイズ</string>
-    <string name="privacy_private">サイトはあなたと、承認したユーザーのみが表示できます。</string>
-    <string name="privacy_public_not_indexed">誰でもサイトを閲覧することができますが、検索エンジンにはインデックスしないよう要求します。</string>
-    <string name="privacy_public">誰でもサイトを閲覧することができ、検索エンジンにインデックスされる可能性があります。</string>
+    <string name="privacy_private">サイトはあなたと、承認したユーザーのみが表示できます</string>
+    <string name="privacy_public_not_indexed">誰でもサイトを閲覧することができますが、検索エンジンにはインデックスしないよう要求します</string>
+    <string name="privacy_public">誰でもサイトを閲覧することができ、検索エンジンにインデックスされる可能性があります</string>
     <string name="about_me_hint">簡単な自己紹介</string>
     <string name="about_me">自己紹介</string>
     <string name="public_display_name_hint">表示名が設定されていない場合、デフォルトでユーザー名が指定されます</string>
@@ -2255,12 +2271,12 @@ Language: ja_JP
     <string name="reader_label_liked_by">いいね:</string>
     <string name="reader_label_like">いいね</string>
     <string name="reader_label_view_original">元の記事を表示</string>
-    <string name="reader_label_comments_closed">コメントは受け付けていません。</string>
+    <string name="reader_label_comments_closed">コメントは受け付けていません</string>
     <string name="reader_title_photo_viewer">%1$d/%2$d</string>
     <string name="error_publish_empty_post">空の投稿はできません。</string>
-    <string name="error_refresh_unauthorized_posts">投稿の表示/編集の権限がありません。</string>
-    <string name="error_refresh_unauthorized_pages">ページの表示/編集の権限がありません。</string>
-    <string name="error_refresh_unauthorized_comments">コメントの表示/編集の権限がありません。</string>
+    <string name="error_refresh_unauthorized_posts">投稿の表示/編集権限がありません</string>
+    <string name="error_refresh_unauthorized_pages">ページの表示/編集権限がありません</string>
+    <string name="error_refresh_unauthorized_comments">コメントの表示/編集権限がありません</string>
     <string name="more">続き</string>
     <string name="older_month">1ヶ月以上前</string>
     <string name="older_last_week">1週間以上前</string>
@@ -2365,14 +2381,14 @@ Language: ja_JP
     <string name="media_gallery_type_thumbnail_grid">サムネイルグリッド</string>
     <string name="learn_more">さらに詳しく</string>
     <string name="post_not_found">投稿を読み込む際にエラーが発生しました。再読み込みしてもう一度お試しください。</string>
-    <string name="plugin_not_found">プラグインへのアクセス中にエラーが発生しました。</string>
+    <string name="plugin_not_found">プラグインへのアクセス中にエラーが発生しました</string>
     <string name="cancel_edit">編集をキャンセル</string>
     <string name="connection_error">接続エラー</string>
     <string name="select_categories">カテゴリーを選択</string>
     <string name="share_link">リンクを共有</string>
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」をしています。</string>
-    <string name="reader_likes_multi">%,d 人が「いいね」しています。</string>
+    <string name="reader_likes_multi">%,d 人が「いいね」しています</string>
     <string name="reader_label_reply">返信</string>
     <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>

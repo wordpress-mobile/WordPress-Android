@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-23 14:22:34+0000
+Translation-Revision-Date: 2020-10-06 10:14:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_luminous_vivid_orange">Lysande intensivt orange</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Intensivt lysande orange till intensivt rött</string>
+    <string name="gutenberg_native_midnight">Midnatt</string>
+    <string name="gutenberg_native_pale_cyan_blue">Blekt cyanblå</string>
+    <string name="gutenberg_native_pale_ocean">Blekt havsfärgad</string>
+    <string name="gutenberg_native_pale_pink">Blekt rosa</string>
+    <string name="gutenberg_native_search_or_type_url">Sök eller skriv URL</string>
+    <string name="gutenberg_native_select_item">Välj objekt</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Mycket ljust grått till cyanblågrått</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Intensivt cyanblå</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Intensivt cyanblått till intensivt lila</string>
+    <string name="gutenberg_native_vivid_green_cyan">Intensivt cyangrönt</string>
+    <string name="gutenberg_native_vivid_purple">Intensivt lila</string>
+    <string name="gutenberg_native_vivid_red">Intensivt röd</string>
+    <string name="gutenberg_native_white">Vitt</string>
+    <string name="gutenberg_native_add_this_telephone_link">Länka till detta telefonnummer</string>
+    <string name="gutenberg_native_black">Svart</string>
+    <string name="gutenberg_native_blush_bordeaux">Bordeaux-rodnad</string>
+    <string name="gutenberg_native_blush_light_purple">Ljuslila rodnad</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Kallt till varmt spektrum</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Cyan blågrå</string>
+    <string name="gutenberg_native_electric_grass">Elektriskt gräs</string>
+    <string name="gutenberg_native_light_green_cyan">Ljusgrön cyan</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Ljusgrön cyan till intensivt lysande cyan</string>
+    <string name="gutenberg_native_luminous_dusk">Ljus skymning</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Lysande intensivt gult</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Intensivt lysande gult till intensivt lysande orange</string>
+    <string name="suggestion_no_connection">”Internetförbindelse saknas.\nFörslag är inte tillgängliga.”</string>
+    <string name="gutenberg_native_add_this_email_link">Länka till denna e-postadress</string>
+    <string name="gutenberg_native_add_this_link">Lägg till denna länk</string>
     <string name="mlp_selected_description">%s valt</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="toast_capture_operation_permission_needed">För att kunna spela in video måste du ge appen tillstånd att spela in ljud</string>
@@ -139,6 +169,7 @@ Language: sv_SE
     <string name="reset_your_password">Återställ ditt lösenord</string>
     <string name="or_type_your_password">Eller skriv ditt lösenord</string>
     <string name="create_account">Skapa konto</string>
+    <string name="login_promo_title_37_percent">37\% av webben är byggd på WordPress.</string>
     <string name="get_started">Kom igång</string>
     <string name="enter_email_to_continue_wordpress_com">Ange din e-postadress för att logga in eller skapa ett WordPress.com-konto.</string>
     <string name="send_link_by_email">Skicka länk via e-post</string>
@@ -158,15 +189,12 @@ Language: sv_SE
     <string name="gutenberg_native_block_settings">Blockinställningar</string>
     <string name="gutenberg_native_copy_block">Kopiera block</string>
     <string name="gutenberg_native_duplicate_block">Duplicera block</string>
-    <string name="gutenberg_native_remove_block">Ta bort block</string>
     <string name="gutenberg_native_copied_block">Blocket kopierat</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ej sparade ändringar</string>
     <string name="error_update_site_title_network">Det gick inte att uppdatera webbplatsens rubrik. Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="reader_title_tag_preview">Ämne</string>
     <string name="my_site_title_changer_dialog_hint">Webbplatsrubriken syns webbläsarens titelrad och de flesta teman visar den också i sidhuvudet.</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Går till föregående innehållsblad</string>
     <string name="gutenberg_native_open_link_in_a_browser">Öppna länken i en webbläsare</string>
-    <string name="gutenberg_native_go_back">Gå tillbaka</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dubbeltryck för att välja alternativet</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="gutenberg_native_customize_gradient">Anpassa gradient</string>
@@ -179,9 +207,6 @@ Language: sv_SE
     <string name="menu_content_info">Innehållsstruktur</string>
     <string name="error_media_thumbnail_not_loaded">Ingen miniatyr av mediafilen kunde inte laddas</string>
     <string name="pages_list_author">Sidans författare</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Vi jobbar hårt med att lägga till fler block i varje version. Under tiden kan du även redigera det här blocket med din enhets webbläsare.</string>
-    <string name="gutenberg_native_dismiss">Avfärda</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Redigera block i webbläsaren</string>
     <string name="prepublishing_nudges_home_tags_not_set">Inte inställd</string>
     <string name="prepublishing_nudges_home_save_button">Spara nu</string>
     <string name="prepublishing_nudges_home_submit_button">Skicka nu</string>
@@ -479,12 +504,10 @@ Language: sv_SE
     <string name="suffix_1_000_000_000_000_000">%s biljarder</string>
     <string name="posts_cannot_be_started">Det går inte att öppna inläggen just nu. Försök igen senare</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress mediabibliotek</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Vi arbetar hårt med att lägga till fler block för varje utgåva. Under tiden kan du även redigera detta inlägg på webben.</string>
     <string name="gutenberg_native_start_writing">Börja skriva…</string>
     <string name="gutenberg_native_take_a_photo">Ta en bild</string>
     <string name="gutenberg_native_take_a_photo_or_video">Ta ett foto eller spela in video</string>
     <string name="gutenberg_native_take_a_video">Spela in en video</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tryck här för att visa hjälp</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tryck för att dölja tangentbordet</string>
     <string name="gutenberg_native_title">Rubrik:</string>
     <string name="gutenberg_native_translate">Översätt</string>
@@ -492,8 +515,6 @@ Language: sv_SE
     <string name="gutenberg_native_reset_block">Återställ block</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">Blocktypen ”%s” stöds ännu inte i WordPress för Android</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">Blocktypen ”%s” stöds ännu inte i WordPress för iOS</string>
     <string name="gutenberg_native_show_section">Visa sektion</string>
     <string name="gutenberg_native_sidebar_title_plugin">Tillägg för sidopanelrubrik</string>
     <string name="gutenberg_native_size">Storlek</string>
@@ -517,12 +538,9 @@ Language: sv_SE
     <string name="gutenberg_native_navigate_up">Navigera upp</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Dubbeltryck för att ångra senaste ändring</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Kunde inte lägga in mediafil.\nTryck för att visa alternativ.</string>
-    <string name="gutenberg_native_help_icon">Hjälpikon</string>
     <string name="gutenberg_native_here_is_the_panel_content">Här är panelen innehåll!</string>
     <string name="gutenberg_native_hide_keyboard">Dölj tangentbordet</string>
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
-    <string name="gutenberg_native_link_inserted">Länk infogad</string>
-    <string name="gutenberg_native_link_text">Länktext</string>
     <string name="gutenberg_native_move_block_down">Flytta block nedåt</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Dubbeltryck för att göra om senaste ändring</string>
     <string name="gutenberg_native_double_tap_to_select">Dubbeltryck för att välja</string>
@@ -543,7 +561,6 @@ Language: sv_SE
     <string name="gutenberg_native_add_block_here">LÄGG TILL BLOCK HÄR</string>
     <string name="gutenberg_native_add_image">LÄGG TILL BILD</string>
     <string name="gutenberg_native_add_image_or_video">LÄGG TILL BILD ELLER VIDEO</string>
-    <string name="gutenberg_native_add_link_text">Lägg till länktext</string>
     <string name="gutenberg_native_add_url">Lägg till URL</string>
     <string name="gutenberg_native_add_video">LÄGG TILL VIDEO</string>
     <string name="gutenberg_native_alt_text">Alt-text</string>
