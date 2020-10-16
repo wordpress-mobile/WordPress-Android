@@ -150,7 +150,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
         }
-        outState.putParcelable(FETCHED_LAYOUTS, viewModel.layouts)
+        outState.putParcelable(FETCHED_LAYOUTS, viewModel.fetchedLayouts())
 
         super.onSaveInstanceState(outState)
     }

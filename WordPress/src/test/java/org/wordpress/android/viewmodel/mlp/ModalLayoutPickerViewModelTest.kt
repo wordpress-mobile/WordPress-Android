@@ -31,6 +31,7 @@ import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Blank
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Preview
@@ -54,6 +55,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
     @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Create>
     @Mock lateinit var onPreviewPageRequestedObserver: Observer<Preview>
 
@@ -83,6 +85,7 @@ class ModalLayoutPickerViewModelTest {
                 appPrefsWrapper,
                 supportedBlocksProvider,
                 thumbDimensionProvider,
+                networkUtils,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
