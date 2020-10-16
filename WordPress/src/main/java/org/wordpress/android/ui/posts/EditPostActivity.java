@@ -2591,11 +2591,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
-                    if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
-                        String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
-                        if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
-                            key = MediaBrowserActivity.RESULT_IDS;
-                        }
+                    String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
+                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                        key = MediaBrowserActivity.RESULT_IDS;
+                    }
+                    if (data.hasExtra(key)) {
                         long[] mediaIds = data.getLongArrayExtra(key);
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
