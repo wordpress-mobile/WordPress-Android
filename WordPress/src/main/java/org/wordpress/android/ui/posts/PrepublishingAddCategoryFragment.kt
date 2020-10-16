@@ -44,26 +44,12 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     }
 
     override fun onResume() {
+        // Note: This supports the re-calculation and visibility of views when coming from stories.
         val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
         if (needsRequestLayout) {
             requireActivity().window.decorView.requestLayout()
         }
         super.onResume()
-    }
-
-    companion object {
-        const val TAG = "prepublishing_add_category_fragment_tag"
-        const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
-        @JvmStatic fun newInstance(
-            site: SiteModel,
-            needsRequestLayout: Boolean
-        ): PrepublishingAddCategoryFragment {
-            val bundle = Bundle().apply {
-                putSerializable(WordPress.SITE, site)
-                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
-            }
-            return PrepublishingAddCategoryFragment().apply { arguments = bundle }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -160,5 +146,20 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
                 requireContext(), message,
                 LONG
         )
+    }
+
+    companion object {
+        const val TAG = "prepublishing_add_category_fragment_tag"
+        const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
+        @JvmStatic fun newInstance(
+            site: SiteModel,
+            needsRequestLayout: Boolean
+        ): PrepublishingAddCategoryFragment {
+            val bundle = Bundle().apply {
+                putSerializable(WordPress.SITE, site)
+                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
+            }
+            return PrepublishingAddCategoryFragment().apply { arguments = bundle }
+        }
     }
 }
