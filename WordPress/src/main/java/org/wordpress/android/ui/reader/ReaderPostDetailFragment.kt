@@ -551,6 +551,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (hasPost()) {
+                    AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, post)
                 } else if (interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(
