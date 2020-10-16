@@ -22,11 +22,11 @@ class GetCategoriesUseCase @Inject constructor(
     fun getPostCategoriesString(
         editPostRepository: EditPostRepository,
         siteModel: SiteModel
-    ): String? {
+    ): String {
         val post = editPostRepository.getPost()
                 if (post == null) {
                     appLogWrapper.d(PREPUBLISHING_NUDGES, "Post is null in EditPostRepository")
-                    return null
+                    return ""
                 }
         val categories: List<TermModel> = taxonomyStore.getCategoriesForPost(
                 post,
@@ -49,8 +49,8 @@ class GetCategoriesUseCase @Inject constructor(
             dispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel))
     }
 
-    private fun formatCategories(categoryList: List<TermModel>): String? {
-        if (categoryList.isEmpty()) return null
+    private fun formatCategories(categoryList: List<TermModel>): String {
+        if (categoryList.isEmpty()) return ""
 
         val formattedCategories = categoryList.joinToString { it -> it.name }
         return StringEscapeUtils.unescapeHtml4(formattedCategories)
