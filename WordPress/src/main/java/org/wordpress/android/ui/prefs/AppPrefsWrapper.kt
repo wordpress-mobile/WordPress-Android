@@ -72,6 +72,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderDiscoverWelcomeBannerShown()
         set(showBanner) = AppPrefs.setReaderDiscoverWelcomeBannerShown(showBanner)
 
+    var shouldShowStoriesIntro: Boolean
+        get() = AppPrefs.shouldShowStoriesIntro()
+        set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)

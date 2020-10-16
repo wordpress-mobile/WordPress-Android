@@ -15,6 +15,7 @@ import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
+import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.reader.subfilter.SubfilterPageFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
@@ -118,5 +119,13 @@ public abstract class ApplicationModule {
         builder.apiKey(BuildConfig.TENOR_API_KEY);
         ApiClient.init(context, builder);
         return new TenorProvider(context, ApiClient.getInstance(context));
+    }
+
+    @Provides
+    static TenorGifClient provideTenorGifClient(Context context) {
+        ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
+        builder.apiKey(BuildConfig.TENOR_API_KEY);
+        ApiClient.init(context, builder);
+        return new TenorGifClient(context, ApiClient.getInstance(context));
     }
 }
