@@ -26,6 +26,13 @@ class XPostsSuggestionSource @Inject constructor(
     override val suggestions: LiveData<List<Suggestion>> = _suggestions
 
     init {
+        launch {
+            val suggestions = xPostsStore
+                    .getXPostsFromDb(site)
+                    .map { Suggestion.fromXpost(it) }
+                    .sortedBy { it.value }
+            _suggestions.postValue(suggestions)
+        }
         refreshSuggestions()
     }
 
@@ -35,6 +42,7 @@ class XPostsSuggestionSource @Inject constructor(
                     .fetchXPosts(site)
                     .xPosts
                     .map { Suggestion.fromXpost(it) }
+                    .sortedBy { it.value }
             _suggestions.postValue(suggestions)
         }
     }
