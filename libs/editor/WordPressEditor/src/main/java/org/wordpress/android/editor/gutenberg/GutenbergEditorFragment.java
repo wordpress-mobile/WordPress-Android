@@ -981,4 +981,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
     }
+
+    @Override
+    public void showNotice(String message) {
+        getGutenbergContainerFragment().showNotice(message);
+    }
 }

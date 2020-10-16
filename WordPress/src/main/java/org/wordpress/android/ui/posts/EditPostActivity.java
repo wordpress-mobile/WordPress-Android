@@ -647,6 +647,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setupPreviewUI();
     }
 
+    private void presentNewPageNoticeIfNeeded() {
+        if (mIsPreview
+            || !mIsPage
+            || !mIsNewPost
+            || !mModalLayoutPickerFeatureConfig.isEnabled()) {
+            return;
+        }
+        String message = mEditPostRepository.getContent().isEmpty() ? getString(R.string.mlp_notice_blank_page_created)
+                : getString(R.string.mlp_notice_page_created);
+        mEditorFragment.showNotice(message);
+    }
+
     private void setupPreviewUI() {
         if (!mIsPreview) {
             return;
@@ -3099,6 +3111,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
+        presentNewPageNoticeIfNeeded();
     }
 
     @Override public void onGutenbergEditorSessionTemplateApplyTracked(String template) {
