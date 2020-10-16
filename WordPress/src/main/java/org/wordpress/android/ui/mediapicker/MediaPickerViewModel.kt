@@ -257,7 +257,7 @@ class MediaPickerViewModel @Inject constructor(
                         null
                     }
             )
-        } else if (domainModel?.isLoading != null) {
+        } else if (domainModel?.isLoading == true) {
             PhotoListUiModel.Loading
         } else {
             PhotoListUiModel.Empty(
