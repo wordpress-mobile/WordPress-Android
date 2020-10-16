@@ -98,6 +98,7 @@ class MediaPickerViewModel @Inject constructor(
     private lateinit var mediaLoader: MediaLoader
     private lateinit var mediaInsertHandler: MediaInsertHandler
     private val loadActions = Channel<LoadAction>()
+    private var searchJob: Job? = null
     private val _domainModel = MutableLiveData<DomainModel>()
     private val _selectedIds = MutableLiveData<List<Identifier>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
@@ -572,7 +573,9 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun onSearch(query: String) {
-        launch(bgDispatcher) {
+        searchJob?.cancel()
+        searchJob = launch(bgDispatcher) {
+            delay(300)
             mediaPickerTracker.trackSearch(mediaPickerSetup)
             loadActions.send(LoadAction.Filter(query))
         }
@@ -585,9 +588,10 @@ class MediaPickerViewModel @Inject constructor(
 
     fun onSearchCollapsed() {
         if (!mediaPickerSetup.defaultSearchView) {
-            mediaPickerTracker.trackSearchCollapsed(mediaPickerSetup)
             _searchExpanded.value = false
-            launch(bgDispatcher) {
+            searchJob?.cancel()
+            searchJob = launch(bgDispatcher) {
+                mediaPickerTracker.trackSearchCollapsed(mediaPickerSetup)
                 loadActions.send(LoadAction.ClearFilter)
             }
         } else {
@@ -597,6 +601,11 @@ class MediaPickerViewModel @Inject constructor(
 
     fun onPullToRefresh() {
         refreshData(true)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        searchJob?.cancel()
     }
 
     data class MediaPickerUiState(
