@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
+import kotlinx.android.synthetic.main.modal_layout_picker_error.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
@@ -33,8 +34,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
@@ -97,6 +96,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         previewButton.setOnClickListener {
             viewModel.onPreviewPageClicked()
         }
+        actionableEmptyView.button.setOnClickListener {
+            errorLayout.setVisible(false)
+            viewModel.retry()
+        }
 
         setScrollListener()
 
@@ -150,7 +153,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
         }
-        outState.putParcelable(FETCHED_LAYOUTS, viewModel.layouts)
+        outState.putParcelable(FETCHED_LAYOUTS, viewModel.fetchedLayouts())
 
         super.onSaveInstanceState(outState)
     }
@@ -174,19 +177,19 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             when (uiState) {
                 is LoadingUiState -> {
                     setTitleVisibility(uiState.isHeaderVisible)
-                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
+                    setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
                 }
                 is ContentUiState -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                     setButtonsVisibility(uiState.buttonsUiState)
                     setTitleVisibility(uiState.isHeaderVisible)
-                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
+                    setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
                 }
                 is ErrorUiState -> {
                     setTitleVisibility(uiState.isHeaderVisible)
-                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
-                    ToastUtils.showToast(activity, uiState.message, SHORT)
+                    setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
+                    actionableEmptyView.title.setText(uiState.message)
                 }
             }
         })
@@ -202,11 +205,12 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         })
     }
 
-    private fun showLoadingSkeleton(skeleton: Boolean) {
+    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
         categoriesSkeleton.setVisible(skeleton)
-        categoriesRecyclerView.setVisible(!skeleton)
+        categoriesRecyclerView.setVisible(!skeleton && !error)
         layoutsSkeleton.setVisible(skeleton)
-        layoutsRecyclerView.setVisible(!skeleton)
+        layoutsRecyclerView.setVisible(!skeleton && !error)
+        errorLayout.setVisible(error)
     }
 
     private fun setButtonsVisibility(uiState: ButtonsUiState) {
