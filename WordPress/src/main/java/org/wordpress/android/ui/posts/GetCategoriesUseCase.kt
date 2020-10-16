@@ -7,20 +7,27 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.CategoryNode
+import org.wordpress.android.util.AppLog.T.PREPUBLISHING_NUDGES
 import java.util.ArrayList
 import javax.inject.Inject
 
 @Reusable
 class GetCategoriesUseCase @Inject constructor(
     private val taxonomyStore: TaxonomyStore,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val appLogWrapper: AppLogWrapper
 ) {
     fun getPostCategoriesString(
         editPostRepository: EditPostRepository,
         siteModel: SiteModel
     ): String? {
-        val post = editPostRepository.getPost() ?: return null
+        val post = editPostRepository.getPost()
+                if (post == null) {
+                    appLogWrapper.d(PREPUBLISHING_NUDGES, "Post is null in EditPostRepository")
+                    return null
+                }
         val categories: List<TermModel> = taxonomyStore.getCategoriesForPost(
                 post,
                 siteModel
