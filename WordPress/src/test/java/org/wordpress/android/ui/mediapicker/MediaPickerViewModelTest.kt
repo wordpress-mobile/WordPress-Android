@@ -25,6 +25,10 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerActio
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.ChooseFromAndroidDevice
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.SwitchSource
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
@@ -410,6 +414,19 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on search searches for results`() = test {
+        val query = "dog"
+        setupViewModel(listOf(firstItem), singleSelectMediaPickerSetup, filter = query)
+
+        assertThat(uiStates).hasSize(2)
+
+        viewModel.onSearch(query)
+
+        verify(mediaPickerTracker).trackSearch(singleSelectMediaPickerSetup)
+        assertThat(uiStates).hasSize(2)
+    }
+
+    @Test
     fun `system picker opened for photo when allowed types is IMAGE only`() = test {
         setupViewModel(listOf(), singleSelectMediaPickerSetup, true)
 
@@ -502,7 +519,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     fun `switch media source from DEVICE to WP_MEDIA_LIBRARY`() = test {
         val mediaPickerSetup = singleSelectMediaPickerSetup.copy(
                 availableDataSources = setOf(WP_LIBRARY),
-                cameraEnabled = true
+                cameraSetup = ENABLED
         )
         setupViewModel(listOf(), mediaPickerSetup, true)
 
@@ -529,7 +546,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
                 primaryDataSource = WP_LIBRARY,
                 availableDataSources = setOf(),
                 systemPickerEnabled = false,
-                cameraEnabled = false
+                cameraSetup = HIDDEN
         ))
     }
 
@@ -567,14 +584,14 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `camera FAB is shown in stories when no selected items`() = test {
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), true))
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), STORIES))
         assertStoriesFabIsVisible()
     }
 
     @Test
     fun `camera FAB is not shown in stories when selected items`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), true))
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), STORIES))
 
         selectItem(0)
 
@@ -583,7 +600,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `camera FAB is not shown when no stories`() = test {
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), false))
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), HIDDEN))
 
         assertStoriesFabIsHidden()
     }
@@ -807,7 +824,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private fun buildMediaPickerSetup(
         canMultiselect: Boolean,
         allowedTypes: Set<MediaType>,
-        cameraAllowed: Boolean = false,
+        cameraSetup: CameraSetup = HIDDEN,
         editingEnabled: Boolean = true
     ) = MediaPickerSetup(
             primaryDataSource = DEVICE,
@@ -815,7 +832,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
             canMultiselect = canMultiselect,
             requiresStoragePermissions = true,
             allowedTypes = allowedTypes,
-            cameraEnabled = cameraAllowed,
+            cameraSetup = cameraSetup,
             systemPickerEnabled = true,
             editingEnabled = editingEnabled,
             queueResults = false,

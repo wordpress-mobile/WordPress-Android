@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
@@ -48,7 +49,7 @@ class MediaLoaderFactoryTest {
                 canMultiselect = true,
                 requiresStoragePermissions = true,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = true,
                 editingEnabled = true,
                 queueResults = false,
@@ -74,7 +75,7 @@ class MediaLoaderFactoryTest {
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
@@ -101,7 +102,7 @@ class MediaLoaderFactoryTest {
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,

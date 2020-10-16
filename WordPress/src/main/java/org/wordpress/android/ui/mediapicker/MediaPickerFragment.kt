@@ -41,6 +41,7 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.InsertMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.CAPTURE_PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.SWITCH_SOURCE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
@@ -83,7 +84,8 @@ class MediaPickerFragment : Fragment() {
     enum class MediaPickerIconType {
         ANDROID_CHOOSE_FROM_DEVICE,
         SWITCH_SOURCE,
-        WP_STORIES_CAPTURE;
+        WP_STORIES_CAPTURE,
+        CAPTURE_PHOTO;
 
         companion object {
             @JvmStatic
@@ -114,6 +116,7 @@ class MediaPickerFragment : Fragment() {
         ) : MediaPickerAction()
 
         data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
+        object OpenCameraForPhotos : MediaPickerAction()
         data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
     }
 
@@ -125,6 +128,7 @@ class MediaPickerFragment : Fragment() {
         data class SwitchSource(val dataSource: DataSource) : MediaPickerIcon(SWITCH_SOURCE)
 
         object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
+        object CapturePhoto : MediaPickerIcon(CAPTURE_PHOTO)
 
         fun toBundle(bundle: Bundle) {
             bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
@@ -157,6 +161,7 @@ class MediaPickerFragment : Fragment() {
                         ChooseFromAndroidDevice(allowedTypes)
                     }
                     WP_STORIES_CAPTURE -> WpStoriesCapture
+                    CAPTURE_PHOTO -> CapturePhoto
                     SWITCH_SOURCE -> {
                         val ordinal = bundle.getInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, -1)
                         if (ordinal != -1) {
@@ -310,6 +315,7 @@ class MediaPickerFragment : Fragment() {
                 showSnackbar(messageHolder)
             }
         })
+
         setupProgressDialog()
 
         viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
@@ -511,12 +517,12 @@ class MediaPickerFragment : Fragment() {
 
     private fun setupFab(fabUiModel: FabUiModel) {
         if (fabUiModel.show) {
-            wp_stories_take_picture.show()
-            wp_stories_take_picture.setOnClickListener {
+            fab_take_picture.show()
+            fab_take_picture.setOnClickListener {
                 fabUiModel.action()
             }
         } else {
-            wp_stories_take_picture.hide()
+            fab_take_picture.hide()
         }
     }
 
