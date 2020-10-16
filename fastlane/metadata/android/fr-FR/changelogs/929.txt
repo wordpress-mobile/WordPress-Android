@@ -1,3 +1,0 @@
-15.8 :
-- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
-- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
