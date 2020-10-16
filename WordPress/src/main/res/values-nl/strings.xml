@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-23 17:19:40+0000
+Translation-Revision-Date: 2020-10-06 11:21:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_white">Wit</string>
+    <string name="gutenberg_native_vivid_red">Levendig rood</string>
+    <string name="gutenberg_native_vivid_purple">Levendig paars</string>
+    <string name="gutenberg_native_vivid_green_cyan">Levendig groen cyaan</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Levendig cyaan blauw tot levendig paars</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Levendig cyaan blauw</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Zeer lichtgrijs tot cyaan blauwachtig grijs</string>
+    <string name="gutenberg_native_select_item">Selecteer item</string>
+    <string name="gutenberg_native_search_or_type_url">Zoek of typ URL</string>
+    <string name="gutenberg_native_pale_pink">Bleek roze</string>
+    <string name="gutenberg_native_pale_ocean">Bleek oceaan</string>
+    <string name="gutenberg_native_pale_cyan_blue">Bleek cyaan blauw</string>
+    <string name="gutenberg_native_midnight">Midnight</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Lichtgevend levendig oranje tot levendig rood</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Lichtgevend levendig oranje</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Lichtgevend levendig amber tot lichtgevend levendig oranje</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Lichtgevend levendig amber</string>
+    <string name="gutenberg_native_luminous_dusk">Lichtgevende schemering</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Licht groen cyaan tot levendig groen cyaan</string>
+    <string name="gutenberg_native_light_green_cyan">Licht groen cyaan</string>
+    <string name="gutenberg_native_electric_grass">Electrisch gras</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Cyaan blauwachtig grijs</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Koel naar warm spectrum</string>
+    <string name="gutenberg_native_blush_light_purple">Blozend lichtpaars</string>
+    <string name="gutenberg_native_blush_bordeaux">Blozend bordeaux</string>
+    <string name="gutenberg_native_black">Zwart</string>
+    <string name="gutenberg_native_add_this_telephone_link">Voeg deze telefoon link toe</string>
+    <string name="gutenberg_native_add_this_link">Voeg deze link toe</string>
+    <string name="gutenberg_native_add_this_email_link">Voeg deze e-mail link toe</string>
+    <string name="suggestion_no_connection">\"Geen internetverbinding.\nSuggesties zijn niet beschikbaar\".</string>
     <string name="typeface_label_shrikhand">Vet</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_pacifico">Speels</string>
@@ -151,7 +181,6 @@ Language: nl
     <string name="quick_start_dialog_update_site_title_message_short">Tik &lt;b>%1$s&lt;/b> om een nieuwe titel in te stellen</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
     <string name="gutenberg_native_s_block_options">%s blok opties</string>
-    <string name="gutenberg_native_remove_block">Blok verwijderen</string>
     <string name="gutenberg_native_duplicate_block">Blok dupliceren</string>
     <string name="gutenberg_native_copy_block">Blok copieren</string>
     <string name="gutenberg_native_copied_block">Blok gecopieerd</string>
@@ -166,11 +195,9 @@ Language: nl
     <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigeert naar het vorige inhoudsblad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigeert naar aanpassen van het verloop</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigeert naar de aangepaste kleurkiezer</string>
     <string name="gutenberg_native_gradient_type">Verloop type</string>
-    <string name="gutenberg_native_go_back">Ga terug</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tik tweemaal om de optie te selecteren</string>
     <string name="gutenberg_native_customize_gradient">Pas de verloop aan</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,9 +207,6 @@ Language: nl
     <string name="menu_content_info">Inhoudstructuur</string>
     <string name="everyone">Iedereen</string>
     <string name="me">Mij</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We werken er hard aan om met iedere release nieuwe blokken toe te voegen. Tot die tijd kan je dit blok ook op het web met je browser bewerken.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Bewerk blok in je browser</string>
-    <string name="gutenberg_native_dismiss">Negeren</string>
     <string name="prepublishing_nudges_home_tags_not_set">Niet ingesteld</string>
     <string name="prepublishing_tags_description">Tags helpen de lezers om aan te geven waar het bericht over gaat</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publicatie datum</string>
@@ -480,12 +504,10 @@ Language: nl
     <string name="posts_cannot_be_started">We kunnen de berichten momenteel niet openen. Probeer het later opnieuw</string>
     <string name="site_cannot_be_loaded">We kunnen op dit moment geen gegevens voor je site laden. Probeer het later opnieuw</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-mediabibliotheek</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">We doen ons best om bij elke release meer blokken toe te voegen. In de tussentijd kun je dit bericht ook online bewerken.</string>
     <string name="gutenberg_native_ungroup">Groep opheffen</string>
     <string name="gutenberg_native_translate">Vertalen</string>
     <string name="gutenberg_native_title">Titel:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tik om toetsenbord te verbergen</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tik hier om help te tonen</string>
     <string name="gutenberg_native_take_a_video">Maak een video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Maak een foto of video</string>
     <string name="gutenberg_native_take_a_photo">Maak een foto</string>
@@ -493,8 +515,6 @@ Language: nl
     <string name="gutenberg_native_size">Afmetingen</string>
     <string name="gutenberg_native_sidebar_title_plugin">Sidebartitel-plugin</string>
     <string name="gutenberg_native_show_section">Sectie tonen</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' wordt nog niet ondersteund door WordPress voor iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' wordt nog niet ondersteund door WordPress voor Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blok. Dit blok bevat ongeldige inhoud</string>
     <string name="gutenberg_native_s_block_empty">%s-blok. Leegmaken</string>
     <string name="gutenberg_native_cut_block">Blok knippen</string>
@@ -517,12 +537,9 @@ Language: nl
     <string name="gutenberg_native_move_block_up">Blok omhoog verplaatsen</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Blok omlaag bewegen van rij %1$s naar rij %2$s</string>
     <string name="gutenberg_native_move_block_down">Blok omlaag verplaatsen</string>
-    <string name="gutenberg_native_link_text">Tekst van link</string>
-    <string name="gutenberg_native_link_inserted">Link ingevoerd</string>
     <string name="gutenberg_native_image_caption_s">Afbeelding vastleggen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Toetsenbord verbergen</string>
     <string name="gutenberg_native_here_is_the_panel_content">Dit is de inhoud van het venster!</string>
-    <string name="gutenberg_native_help_icon">Help-pictogram</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Invoegen van media mislukt.\nTik voor opties.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Tik tweemaal om laatste wijziging ongedaan te maken</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Tik tweemaal om instelling in/uit te schakelen</string>
@@ -543,7 +560,6 @@ Language: nl
     <string name="gutenberg_native_alt_text">Alt. tekst</string>
     <string name="gutenberg_native_add_video">VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_url">URL toevoegen</string>
-    <string name="gutenberg_native_add_link_text">Linktekst toevoegen</string>
     <string name="gutenberg_native_add_image_or_video">AFBEELDING OF VIDEO TOEVOEGEN</string>
     <string name="gutenberg_native_add_image">AFBEELDING TOEVOEGEN</string>
     <string name="gutenberg_native_add_block_here">BLOK HIER TOEVOEGEN</string>

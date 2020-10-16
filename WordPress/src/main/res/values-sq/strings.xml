@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-24 11:26:53+0000
+Translation-Revision-Date: 2020-10-07 08:42:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_white">E bardhë</string>
+    <string name="gutenberg_native_vivid_red">E kuqe e ndezur</string>
+    <string name="gutenberg_native_vivid_purple">E purpur e gjallë</string>
+    <string name="gutenberg_native_vivid_green_cyan">Blu e kaltër e gjelbër e ndezur</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Blu e gjelbër në blu e ndezur në të purpur të ndezur</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Blu e kaltër e gjelbër e ndezur</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Gri shumë e çelët në gri blu në të gjelbër me nuanca bluje</string>
+    <string name="gutenberg_native_select_item">Përzgjidhni objekt</string>
+    <string name="gutenberg_native_search_or_type_url">Kërkoni ose shtypni URL</string>
+    <string name="gutenberg_native_pale_pink">Vjollcë e zbehtë</string>
+    <string name="gutenberg_native_pale_ocean">Oqean i zbehtë</string>
+    <string name="gutenberg_native_pale_cyan_blue">Blu e kaltër e gjelbër e zbehtë</string>
+    <string name="gutenberg_native_midnight">Mesnatë</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Portokalli e ndritshme e ndezur në të kuqe të ndezur</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Portokalli e ndritshme e ndezur</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Ngjyrë mjalti e ndezur e ndritshme në portokalli të ndezur të ndritshme</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Ngjyrë mjalti e ndezur e ndritshme</string>
+    <string name="gutenberg_native_luminous_dusk">Muzg i ndritshëm</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Blu e gjelbër në të gjelbër e çelët në blu të gjelbër në të gjelbër të ndezur</string>
+    <string name="gutenberg_native_light_green_cyan">Blu e gjelbër e çelët</string>
+    <string name="gutenberg_native_electric_grass">Bar elektrik</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Gri e kaltër e gjelbër në blu</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Spektri nga të ftohta te të ngrohta</string>
+    <string name="gutenberg_native_blush_light_purple">E purpur e çelët e përndezur</string>
+    <string name="gutenberg_native_blush_bordeaux">Bordo e përndezur</string>
+    <string name="gutenberg_native_black">E zezë</string>
+    <string name="gutenberg_native_add_this_telephone_link">Shtoni këtë lidhje telefoni</string>
+    <string name="gutenberg_native_add_this_link">Shtoje këtë lidhje</string>
+    <string name="gutenberg_native_add_this_email_link">Shtoni këtë lidhje email</string>
+    <string name="suggestion_no_connection">“S’ka lidhje në internet.\nS’merren dot sugjerime.”</string>
     <string name="typeface_label_shrikhand">Të trasha</string>
     <string name="typeface_label_space_mono">Moderne</string>
     <string name="typeface_label_pacifico">Lojcake</string>
@@ -100,7 +130,7 @@ Language: sq_AL
     <string name="mlp_create_page">Krijoni faqe</string>
     <string name="mlp_create_blank_page">Krijoni faqe të zbrazët</string>
     <string name="mlp_choose_layout_subtitle">Nisjani duke zgjedhur nga një larmi e madhe skemash të parapërgatitura faqesh. Ose thjesht fillojani me një faqe të zbrazët.</string>
-    <string name="mlp_choose_layout_title">Zgjidhni Skemë</string>
+    <string name="mlp_choose_layout_title">Zgjidhni një skemë</string>
     <string name="prepublishing_nudges_story_title_hint">Jepini një titull shkrimit tuaj</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Krijoni një postim ose një shkrim</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Krijoni një postim, faqe ose shkrim</string>
@@ -142,6 +172,7 @@ Language: sq_AL
     <string name="create_account">Krijo llogari</string>
     <string name="send_link_by_email">Dërgoje lidhjen me email</string>
     <string name="login_promo_text_unlock_the_power">Çlironi fuqinë e krijuesit më të zhdërvjellët të sajteve.</string>
+    <string name="login_promo_title_37_percent">37\% e web-it ngrihet mbi WordPress.</string>
     <string name="reset_your_password">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_request_failed_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
     <string name="quick_start_list_update_site_title_subtitle">Jepini sajtit tuaj një emër që pasqyron personalitetin dhe subjektin e tij. Përshtypja e parë ka vlerë!</string>
@@ -149,7 +180,6 @@ Language: sq_AL
     <string name="quick_start_dialog_update_site_title_message_short">Prekni &lt;b>%1$s&lt;/b> që të caktoni një titull të ri</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Shpënia te hedhurinat e këtij postimi do të hedhë tej edhe ndryshimet e paruajtura, jeni i sigurt se doni të vazhdohet?</string>
     <string name="gutenberg_native_s_block_options">Mundësi blloku %s</string>
-    <string name="gutenberg_native_remove_block">Bllok Hiqe</string>
     <string name="gutenberg_native_duplicate_block">Bllok Përsëdyte</string>
     <string name="gutenberg_native_copy_block">Bllok Kopjoje</string>
     <string name="gutenberg_native_copied_block">Blloku u kopjua</string>
@@ -164,11 +194,9 @@ Language: sq_AL
     <string name="error_update_site_title_network">S’u përditësua dot titull sajti. Kontrolloni lidhjen në rrjet dhe riprovoni.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ndryshime të paruajtura</string>
     <string name="gutenberg_native_open_link_in_a_browser">Hape lidhjen në një shfletues</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Kalohet te fleta e mëparshme e lëndës</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Kalohet te përshtatja e gradientit</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Kalohet te zgjedhësi i ngjyrës vetjake</string>
     <string name="gutenberg_native_gradient_type">Lloj Gradienti</string>
-    <string name="gutenberg_native_go_back">Shko mbrapsht</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Që të përzgjidhni mundësinë, prekeni dyfish</string>
     <string name="gutenberg_native_customize_gradient">Përshtatni Gradientë</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -178,9 +206,6 @@ Language: sq_AL
     <string name="menu_content_info">Strukturë lënde</string>
     <string name="everyone">Gjithkush</string>
     <string name="me">Unë</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë, mundeni edhe ta përpunoni këtë bllok duke përdorur shfletuesin e pajisjes.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Përpunojeni bllokun në shfletues</string>
-    <string name="gutenberg_native_dismiss">Hidhe tej</string>
     <string name="prepublishing_nudges_home_tags_not_set">E pacaktuar</string>
     <string name="prepublishing_tags_description">Etiketat ndihmojnë t’u tregohet lexuesve se për çfarë është një postim.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Datë Botimi</string>
@@ -478,12 +503,10 @@ Language: sq_AL
     <string name="posts_cannot_be_started">S’i hapim dot postimet tani. Ju lutemi, riprovoni më vonë</string>
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë mundeni ta përpunoni këtë postim edhe në internet.</string>
     <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
     <string name="gutenberg_native_translate">Përktheni</string>
     <string name="gutenberg_native_title">Titull:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Prekeni që të fshihet tastiera</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Prekeni këtu që të shfaqet ndihmë</string>
     <string name="gutenberg_native_take_a_video">Bëni një Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
     <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
@@ -491,8 +514,6 @@ Language: sq_AL
     <string name="gutenberg_native_size">Madhësi</string>
     <string name="gutenberg_native_sidebar_title_plugin">Shtojcë titulli anështylle</string>
     <string name="gutenberg_native_show_section">Shfaq ndarje</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' nuk mbulohet ende nga WordPress-i për iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' nuk mbulohet ende nga WordPress-i për Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bllok %s. Ky bllok ka lëndë të pavlefshme</string>
     <string name="gutenberg_native_s_block_empty">Bllok %s. I zbrazët</string>
     <string name="gutenberg_native_cut_block">Bllok Prije</string>
@@ -515,12 +536,9 @@ Language: sq_AL
     <string name="gutenberg_native_move_block_up">Shpjere bllokun më sipër</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s poshtë te rreshti %2$s</string>
     <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
-    <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
-    <string name="gutenberg_native_link_inserted">Lidhja u fut</string>
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
     <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
     <string name="gutenberg_native_here_is_the_panel_content">Ja lënda e panelit!</string>
-    <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Që shfaqet/fshihet rregullimi, prekeni dyfish</string>
@@ -541,7 +559,6 @@ Language: sq_AL
     <string name="gutenberg_native_alt_text">Tekst Alternativ</string>
     <string name="gutenberg_native_add_video">SHTONI VIDEO</string>
     <string name="gutenberg_native_add_url">Shtoni URL</string>
-    <string name="gutenberg_native_add_link_text">Shtoni tekst lidhjeje</string>
     <string name="gutenberg_native_add_image_or_video">SHTONI FIGURË OSE VIDEO</string>
     <string name="gutenberg_native_add_image">SHTONI FIGURË</string>
     <string name="gutenberg_native_add_block_here">SHTONI BLLOK KËTU</string>
