@@ -56,10 +56,10 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         setStyle(STYLE_NORMAL, theme)
 
         if (savedInstanceState != null) {
-            mTag = savedInstanceState.getString(STATE_KEY_TAG)
+            mTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
             mTitle = savedInstanceState.getCharSequence(STATE_KEY_TITLE)
-            mMessage = savedInstanceState.getCharSequence(STATE_KEY_MESSAGE)
-            mPositiveButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL)
+            mMessage = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_MESSAGE))
+            mPositiveButtonLabel = requireNotNull(savedInstanceState.getCharSequence(STATE_KEY_POSITIVE_BUTTON_LABEL))
             mNegativeButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_NEGATIVE_BUTTON_LABEL)
             mCancelButtonLabel = savedInstanceState.getCharSequence(STATE_KEY_CANCEL_BUTTON_LABEL)
         }
@@ -76,7 +76,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = MaterialAlertDialogBuilder(activity)
+        val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setMessage(mMessage)
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                     dismissedByPositiveButton = true

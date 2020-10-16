@@ -29,4 +29,7 @@ private inline fun <reified T : Enum<T>> Intent.putEnumExtra(key: String, victim
 private inline fun <reified T : Enum<T>> Intent.getEnumExtra(key: String, default: T): T =
         getIntExtra(key, -1)
                 .takeUnless { it == -1 }
-                ?.let { T::class.java.enumConstants[it] } ?: default
+                ?.let {
+                    @Suppress("UNNECESSARY_SAFE_CALL")
+                    T::class.java.enumConstants?.get(it)
+                } ?: default

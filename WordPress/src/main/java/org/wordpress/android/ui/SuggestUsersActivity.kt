@@ -18,11 +18,13 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.SuggestionTable
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
@@ -189,17 +191,19 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         val hasSuggestions = suggestionAdapter?.suggestionList?.isNotEmpty() == true
         val showingSuggestions = suggestionAdapter?.isEmpty == false
 
-        val viewText = if (hasSuggestions) {
-            R.string.suggestion_no_matching_users
-        } else {
-            R.string.loading
-        }
-        empty_view.text = getString(viewText)
+        empty_view.apply {
+            text = getString(
+                    when {
+                        hasSuggestions -> R.string.suggestion_no_matching_users
+                        NetworkUtils.isNetworkAvailable(applicationContext) -> R.string.loading
+                        else -> R.string.suggestion_no_connection
+                    }
+            )
 
-        empty_view.visibility = if (showingSuggestions) {
-            View.GONE
-        } else {
-            View.VISIBLE
+            visibility = when {
+                showingSuggestions -> View.GONE
+                else -> View.VISIBLE
+            }
         }
     }
 
@@ -228,7 +232,24 @@ class SuggestUsersActivity : LocaleAwareActivity() {
             // Calling forceFiltering is the only way I was able to force the suggestions list to immediately refresh
             // with the new data
             autocompleteText.forceFiltering(autocompleteText.text)
+
+            // Ensure that the suggestions list is displayed wth the new data. This is particularly needed when
+            // suggestion list was empty before the new data was received, otherwise the no-longer-empty suggestion
+            // list will not display when it is updated.
+            autocompleteText.showDropDown()
         }
+    }
+
+    @Subscribe(threadMode = MAIN)
+    fun onEventMainThread(event: ConnectionChangeEvent) {
+        val hasNoSuggestions = suggestionAdapter?.suggestionList?.isEmpty() == true
+        if (hasNoSuggestions && event.isConnected) {
+            suggestionServiceConnectionManager?.apply {
+                unbindFromService()
+                bindToService()
+            }
+        }
+        updateEmptyView()
     }
 
     companion object {

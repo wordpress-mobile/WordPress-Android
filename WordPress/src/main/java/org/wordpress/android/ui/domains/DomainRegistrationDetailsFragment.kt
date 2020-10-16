@@ -92,7 +92,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
-        val domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS) as DomainProductDetails
+        val domainProductDetails = requireNotNull(
+                arguments?.getParcelable<DomainProductDetails?>(EXTRA_DOMAIN_PRODUCT_DETAILS)
+        )
         val site = requireActivity().intent?.getSerializableExtra(WordPress.SITE) as SiteModel
 
         viewModel.start(site, domainProductDetails)

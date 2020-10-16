@@ -24,7 +24,8 @@ $ ./gradlew assemble test publishToMavenLocal
 When a new version is ready to be published to the remote repository, use the following command to publish it to Bintray:
 
 ```shell
-$ ./gradlew clean build bintrayPublish -PbintrayUser=FIXME -PbintrayKey=FIXME
+$ ./gradlew clean build
+$ ./gradlew bintrayUpload -PbintrayUser=FIXME -PbintrayKey=FIXME
 ```
 
 ## Apps and libraries using WordPress-Utils-Android:

@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
-import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
@@ -53,11 +52,9 @@ fun handlePostListAction(
             ActivityLauncher.addNewPostForResult(activity, action.site, action.isPromo, POST_FROM_POSTS_LIST)
         }
         is PostListAction.NewStoryPost -> {
-            mediaPickerLauncher.showPhotoPickerForResult(
+            mediaPickerLauncher.showStoriesPhotoPickerForResult(
                     activity,
-                    WP_STORIES_MEDIA_PICKER,
-                    action.site,
-                    null // this is not required, only used for featured image in normal Posts
+                    action.site
             )
         }
         is PostListAction.PreviewPost -> {

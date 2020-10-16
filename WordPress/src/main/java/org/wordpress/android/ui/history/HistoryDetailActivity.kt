@@ -20,8 +20,8 @@ class HistoryDetailActivity : LocaleAwareActivity() {
         setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val extras = intent.extras
-        val revision = extras.getParcelable(HistoryDetailContainerFragment.EXTRA_REVISION) as Revision
+        val extras = requireNotNull(intent.extras)
+        val revision = extras.getParcelable<Revision>(HistoryDetailContainerFragment.EXTRA_REVISION)
         val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailContainerFragment.EXTRA_REVISIONS)
 
         var historyDetailContainerFragment = supportFragmentManager.findFragmentByTag(KEY_HISTORY_DETAIL_FRAGMENT)
