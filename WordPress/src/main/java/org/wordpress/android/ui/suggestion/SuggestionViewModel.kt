@@ -34,17 +34,15 @@ class SuggestionViewModel @Inject constructor(
         }
     }
 
-    fun init(
-        type: SuggestionType,
-        site: SiteModel
-    ) = if (supportsSuggestions(site)) {
-        this.type = type
-        suggestionSource = getSuggestionSourceForType(type, site)
-        true
-    } else {
-        AppLog.e(T.EDITOR, "Attempting to initialize suggestions for an unsupported site")
-        false
-    }
+    fun init(type: SuggestionType, site: SiteModel) =
+            if (supportsSuggestions(site)) {
+                this.type = type
+                suggestionSource = getSuggestionSourceForType(type, site)
+                true
+            } else {
+                AppLog.e(T.EDITOR, "Attempting to initialize suggestions for an unsupported site")
+                false
+            }
 
     private fun supportsSuggestions(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
 

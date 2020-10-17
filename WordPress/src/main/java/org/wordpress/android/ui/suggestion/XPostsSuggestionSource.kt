@@ -20,9 +20,7 @@ class XPostsSuggestionSource @Inject constructor(
 ) : SuggestionSource, CoroutineScope {
     override val coroutineContext: CoroutineContext = bgDispatcher + Job()
 
-    private val _suggestions = MutableLiveData<List<Suggestion>>().apply {
-        value = emptyList()
-    }
+    private val _suggestions = MutableLiveData<List<Suggestion>>()
     override val suggestions: LiveData<List<Suggestion>> = _suggestions
 
     init {

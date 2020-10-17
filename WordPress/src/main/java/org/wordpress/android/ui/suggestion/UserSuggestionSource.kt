@@ -14,9 +14,7 @@ class UserSuggestionSource @Inject constructor(
 ) : SuggestionSource {
     private val connectionManager = SuggestionServiceConnectionManager(context, site.siteId)
 
-    private val _suggestions = MutableLiveData<List<Suggestion>>().apply {
-        value = emptyList()
-    }
+    private val _suggestions = MutableLiveData<List<Suggestion>>()
     override val suggestions: LiveData<List<Suggestion>> = _suggestions
 
     init {
