@@ -49,7 +49,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_name"
-        style="@style/ReaderTextView.Site.Title"
+        style="@style/ReaderTextView.Label.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_medium"
@@ -95,10 +95,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/reader_btn_follow"
-        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         app:layout_constraintBottom_toBottomOf="@id/site_url"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/site_name"
-        app:wpShowFollowButtonCaption="false" />
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintTop_toTopOf="@id/site_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
