@@ -267,6 +267,51 @@ class ReaderViewModelTest {
     }
 
     @Test
+    fun `OnSettingsActionClicked emits showSettings event`() {
+        // Arrange
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        var event: Event<Unit>? = null
+        viewModel.showSettings.observeForever {
+            event = it
+        }
+        // Act
+        viewModel.onSettingsActionClicked()
+
+        // Assert
+        assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `Settings menu is disabled for self-hosted login`() = testWithNonEmptyTags {
+        // Arrange
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
+        // Act
+        triggerReaderTabContentDisplay()
+
+        // Assert
+        assertThat(state!!.settingsIconVisible).isFalse()
+    }
+
+    @Test
+    fun `Settings menu is enabled for dot com login`() = testWithNonEmptyTags {
+        // Arrange
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
+        // Act
+        triggerReaderTabContentDisplay()
+
+        // Assert
+        assertThat(state!!.settingsIconVisible).isTrue()
+    }
+
+    @Test
     fun `Tab layout is visible when loaded tags are NOT empty`() = testWithNonEmptyTags {
         // Arrange
         val uiStates = mutableListOf<ReaderUiState>()
