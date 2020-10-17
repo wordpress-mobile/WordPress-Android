@@ -140,6 +140,21 @@ class SuggestionActivity : LocaleAwareActivity() {
             post { requestFocus() }
             showDropdownOnTouch()
         }
+
+        viewModel.suggestions.observe(this, Observer {
+            suggestionAdapter?.suggestionList = it
+
+            // Calling forceFiltering seemed to be the only way to force the suggestions list to
+            // immediately refresh with the new data
+            autocompleteText.forceFiltering(autocompleteText.text)
+
+            // Ensure that the suggestions list is displayed wth the new data. This is particularly needed when
+            // suggestion list was empty before the new data was received, otherwise the no-longer-empty suggestion
+            // list will not display when it is updated.
+            autocompleteText.showDropDown()
+
+            updateEmptyView()
+        })
     }
 
     private fun exitIfOnlyOneMatchingUser(): Boolean {
@@ -198,12 +213,6 @@ class SuggestionActivity : LocaleAwareActivity() {
                 }
             })
         }
-
-        viewModel.suggestions.observe(this, Observer {
-            suggestionAdapter?.suggestionList = it
-            autocompleteText.forceFiltering(autocompleteText.text)
-            updateEmptyView()
-        })
 
         autocompleteText.setAdapter(suggestionAdapter)
     }
