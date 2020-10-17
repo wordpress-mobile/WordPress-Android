@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
