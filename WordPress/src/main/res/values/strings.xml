@@ -1316,21 +1316,24 @@
     <string name="reader">Reader</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="reader_filter_sites_title">Sites</string>
-    <string name="reader_filter_tags_title">Tags</string>
+    <string name="reader_filter_tags_title">Topics</string>
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
-    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from topics you follow</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
-    <string name="reader_filter_empty_tags_action">Add a tag</string>
+    <string name="reader_filter_empty_tags_action">Add a topic</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
+    <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
+    <string name="reader_discover_empty_title">Follow topics to discover new blogs</string>
+    <string name="reader_discover_empty_button_text">Get Started</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1700,24 +1703,21 @@
     <string name="reader_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
 
     <!-- activity titles -->
-    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
-    <string name="reader_title_related_post_detail">Related Post</string>
-    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
+    <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
 
     <!-- view pager titles -->
-    <string name="reader_page_followed_tags">Followed tags</string>
+    <string name="reader_page_followed_tags">Followed topics</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- menu text -->
-    <string name="reader_menu_tags">Edit tags and sites</string>
+    <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_menu_report_post">Report this post</string>
 
@@ -1751,7 +1751,7 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
-    <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
+    <string name="reader_hint_add_tag_or_url">Enter a URL or topic to follow</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
 
@@ -1770,11 +1770,10 @@
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
-
+    <string name="reader_label_toolbar_back">Back</string>
     <string name="reader_excerpt_link">Visit %s for more</string>
 
     <!-- reblog -->
@@ -1792,7 +1791,6 @@
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
-    <string name="reader_label_liked_by">Liked By</string>
 
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_short_like_count_one">1 Like</string>
@@ -1803,10 +1801,10 @@
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-    <string name="reader_toast_err_tag_exists">You already follow this tag</string>
-    <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
-    <string name="reader_toast_err_add_tag">Unable to add this tag</string>
-    <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
+    <string name="reader_toast_err_tag_exists">You already follow this topic</string>
+    <string name="reader_toast_err_tag_invalid">That isn\'t a valid topic</string>
+    <string name="reader_toast_err_add_tag">Unable to add this topic</string>
+    <string name="reader_toast_err_remove_tag">Unable to remove this topic</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
@@ -1839,11 +1837,11 @@
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
-    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
+    <string name="reader_empty_posts_in_tag">No posts with this topic</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
-    <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
-    <string name="reader_empty_followed_tags_title">No followed tags</string>
+    <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favorite topics</string>
+    <string name="reader_empty_followed_tags_title">No followed topics</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
@@ -2343,6 +2341,7 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
@@ -2892,8 +2891,12 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
+    <string name="mlp_preview_title">Layout Preview</string>
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_notice_page_created">Page created</string>
+    <string name="mlp_notice_blank_page_created">Blank page created</string>
+    <string name="mlp_generic_error">An error occurred while fetching the layouts</string>
 
     <!-- Stories -->
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
@@ -2964,6 +2967,17 @@
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="toast_error_playing_video">An error occurred while playing your video</string>
 
+    <!-- Intro to Stories screen -->
+    <string name="stories_intro_main_title">Introducing Story Posts</string>
+    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_image_caption_first">How to create a story post</string>
+    <string name="stories_intro_image_caption_second">Example story title</string>
+    <string name="stories_intro_title_first">Now stories are for everyone</string>
+    <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
+    <string name="stories_intro_title_second">Story posts don\'t disappear</string>
+    <string name="stories_intro_description_second">They\’re published as a new blog post on your site so your audience never misses out on a thing.</string>
+    <string name="stories_intro_create_story_post_label">Create Story Post</string>
+
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
     <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
@@ -2999,7 +3013,6 @@
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_angle" tools:ignore="UnusedResources">Angle</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
-    <string name="gutenberg_native_black" tools:ignore="UnusedResources">Black</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
     <!-- translators: displayed right after the block is cut. -->
@@ -3013,16 +3026,14 @@
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
     <!-- translators: title for "Blog" page template -->
     <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
-    <string name="gutenberg_native_blush_bordeaux" tools:ignore="UnusedResources">Blush bordeaux</string>
-    <string name="gutenberg_native_blush_light_purple" tools:ignore="UnusedResources">Blush light purple</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Choose image</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
+    <string name="gutenberg_native_choose_images" tools:ignore="UnusedResources">Choose images</string>
     <string name="gutenberg_native_choose_video" tools:ignore="UnusedResources">Choose video</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum" tools:ignore="UnusedResources">Cool to warm spectrum</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <!-- translators: %s: current cell value. -->
@@ -3030,7 +3041,7 @@
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
-    <string name="gutenberg_native_cyan_bluish_gray" tools:ignore="UnusedResources">Cyan bluish gray</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Double tap to add a block</string>
@@ -3059,8 +3070,8 @@
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_dr_seuss" tools:ignore="UnusedResources">Dr. Seuss</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
+    <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
-    <string name="gutenberg_native_electric_grass" tools:ignore="UnusedResources">Electric grass</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a" tools:ignore="UnusedResources">Email me: &lt;a href=\"mailto:mail@example.com\"&gt;mail@example.com&lt;/a&gt;</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
@@ -3074,6 +3085,8 @@ translators: sample content for "Services" page template
 translators: sample content for "Team" page template -->
     <string name="gutenberg_native_get_in_touch" tools:ignore="UnusedResources">Get in Touch</string>
     <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradient Type</string>
+    <string name="gutenberg_native_help_button" tools:ignore="UnusedResources">Help button</string>
+    <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Help icon</string>
     <string name="gutenberg_native_here_is_the_panel_content" tools:ignore="UnusedResources">Here is the panel content!</string>
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
@@ -3094,15 +3107,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3" tools:ignore="UnusedResources">Let\'s build something together!</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati" tools:ignore="UnusedResources">Let\'s talk 👋 Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
-    <string name="gutenberg_native_light_green_cyan" tools:ignore="UnusedResources">Light green cyan</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan" tools:ignore="UnusedResources">Light green cyan to vivid green cyan</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
-    <string name="gutenberg_native_luminous_dusk" tools:ignore="UnusedResources">Luminous dusk</string>
-    <string name="gutenberg_native_luminous_vivid_amber" tools:ignore="UnusedResources">Luminous vivid amber</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange" tools:ignore="UnusedResources">Luminous vivid amber to luminous vivid orange</string>
-    <string name="gutenberg_native_luminous_vivid_orange" tools:ignore="UnusedResources">Luminous vivid orange</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red" tools:ignore="UnusedResources">Luminous vivid orange to vivid red</string>
-    <string name="gutenberg_native_midnight" tools:ignore="UnusedResources">Midnight</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block down from row %1$s to row %2$s</string>
@@ -3138,9 +3143,6 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_page_title_empty" tools:ignore="UnusedResources">Page title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the page title. -->
     <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Page title. %s</string>
-    <string name="gutenberg_native_pale_cyan_blue" tools:ignore="UnusedResources">Pale cyan blue</string>
-    <string name="gutenberg_native_pale_ocean" tools:ignore="UnusedResources">Pale ocean</string>
-    <string name="gutenberg_native_pale_pink" tools:ignore="UnusedResources">Pale pink</string>
     <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Paste block after</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
     <!-- translators: title for "Portfolio" page template -->
@@ -3166,6 +3168,8 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s block options</string>
     <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
     <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s block. This block has invalid content</string>
+    <!-- translators: Missing block alert title. %s: The localized block name -->
+    <string name="gutenberg_native_s_is_not_fully_supported" tools:ignore="UnusedResources">\'%s\' is not fully–supported</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_sally_smith" tools:ignore="UnusedResources">Sally Smith</string>
     <!-- translators: sample content for "Team" page template -->
@@ -3188,6 +3192,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Take a Photo</string>
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>
+    <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap here to show help</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap to hide the keyboard</string>
     <!-- translators: title for "Team" page template -->
     <string name="gutenberg_native_team" tools:ignore="UnusedResources">Team</string>
@@ -3203,18 +3208,12 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updates the title.</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_usa" tools:ignore="UnusedResources">USA</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray" tools:ignore="UnusedResources">Very light gray to cyan bluish gray</string>
     <!-- translators: accessibility text. Empty video caption. -->
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video caption. Empty</string>
     <!-- translators: accessibility text. %s: video caption. -->
     <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u" tools:ignore="UnusedResources">Visitors will want to know who is on the other side of the page. Use this space to write about yourself, your site, your business, or anything you want. Use the testimonials below to quote others, talking about the same thing – in their own words.</string>
-    <string name="gutenberg_native_vivid_cyan_blue" tools:ignore="UnusedResources">Vivid cyan blue</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple" tools:ignore="UnusedResources">Vivid cyan blue to vivid purple</string>
-    <string name="gutenberg_native_vivid_green_cyan" tools:ignore="UnusedResources">Vivid green cyan</string>
-    <string name="gutenberg_native_vivid_purple" tools:ignore="UnusedResources">Vivid purple</string>
-    <string name="gutenberg_native_vivid_red" tools:ignore="UnusedResources">Vivid red</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_walt_disney" tools:ignore="UnusedResources">Walt Disney</string>
     <!-- translators: sample content for "Team" page template -->
@@ -3222,13 +3221,13 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources">Warning Message</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o" tools:ignore="UnusedResources">We are a small team of talented professionals with a wide range of skills and experience. We love what we do, and we do it with passion. We look forward to working with you.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release" tools:ignore="UnusedResources">We are working hard to add more blocks with each release.</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you" tools:ignore="UnusedResources">We offer a range of services to help you achieve the results you\'re after. Not sure what you need, or what it costs? We can explain what services are right for you and tell you more about our fees. Get in touch below.</string>
     <!-- translators: sample content for "Blog" page template -->
     <string name="gutenberg_native_welcome_to_our_new_blog" tools:ignore="UnusedResources">Welcome to our new blog</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_what_people_say" tools:ignore="UnusedResources">What People Say</string>
-    <string name="gutenberg_native_white" tools:ignore="UnusedResources">White</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
     <!--/Autogenerated:Gutenberg Native-->
     <string name="toast_capture_operation_permission_needed">You need to grant the app audio recording permission in order to record video</string>
