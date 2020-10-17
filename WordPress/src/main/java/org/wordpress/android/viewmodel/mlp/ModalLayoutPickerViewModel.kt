@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.mlp
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -7,6 +8,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -23,6 +25,7 @@ import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -41,11 +44,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val supportedBlocksProvider: SupportedBlocksProvider,
     private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val networkUtils: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    lateinit var layouts: GutenbergPageLayouts
-        private set
+    private lateinit var layouts: GutenbergPageLayouts
 
     /**
      * Tracks the Modal Layout Picker visibility state
@@ -62,16 +65,20 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Create new page event
      */
-    private val _onCreateNewPageRequested = SingleLiveEvent<String>()
-    val onCreateNewPageRequested: LiveData<String> = _onCreateNewPageRequested
+    private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
+    val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
     /**
      * Preview page event
      */
-    private val _onPreviewPageRequested = SingleLiveEvent<PreviewPageRequest>()
-    val onPreviewPageRequested: LiveData<PreviewPageRequest> = _onPreviewPageRequested
+    private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
+    val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
-    data class PreviewPageRequest(val site: SiteModel, val content: String)
+    sealed class PageRequest(val template: String?, val content: String) {
+        open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
+        object Blank : Create(null, "", "")
+        class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
+    }
 
     init {
         dispatcher.register(this)
@@ -100,11 +107,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
-            updateUiState(ErrorUiState(event.error.message))
+            if (networkUtils.isNetworkAvailable()) {
+                updateUiState(ErrorUiState(string.mlp_generic_error))
+            } else {
+                updateUiState(ErrorUiState(string.no_network_message))
+            }
         } else {
             handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
         }
     }
+
+    fun fetchedLayouts(): GutenbergPageLayouts = if (::layouts.isInitialized) layouts else GutenbergPageLayouts()
 
     private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
         layouts = response
@@ -260,13 +273,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun onPreviewPageClicked() {
         (uiState.value as? ContentUiState)?.let { state ->
-            val siteId = appPrefsWrapper.getSelectedSite()
-            val site = siteStore.getSiteByLocalId(siteId)
-            val selection = state.selectedLayoutSlug != null
-            val content = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
-            } else ""
-            _onPreviewPageRequested.value = PreviewPageRequest(site, content)
+            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val site = siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite())
+                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site)
+            }
         }
     }
 
@@ -285,11 +295,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun createPage() {
         (uiState.value as? ContentUiState)?.let { state ->
-            val selection = state.selectedLayoutSlug != null
-            _onCreateNewPageRequested.value = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
-            } else ""
+            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.content, layout.title)
+                return
+            }
         }
+        _onCreateNewPageRequested.value = PageRequest.Blank
     }
 
     private fun updateUiState(uiState: UiState) {
@@ -309,7 +320,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     sealed class UiState(
         open val isHeaderVisible: Boolean = false,
-        val loadingSkeletonVisible: Boolean = false
+        val loadingSkeletonVisible: Boolean = false,
+        open val errorViewVisible: Boolean = false
     ) {
         object LoadingUiState : UiState(loadingSkeletonVisible = true)
 
@@ -327,6 +339,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
             )
         ) : UiState()
 
-        data class ErrorUiState(val message: String) : UiState()
+        data class ErrorUiState(@StringRes val message: Int) : UiState(errorViewVisible = true)
     }
 }

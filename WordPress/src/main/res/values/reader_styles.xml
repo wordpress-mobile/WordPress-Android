@@ -4,7 +4,6 @@
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
 -->
 <resources>
-
     <style name="ReaderMediaViewerTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowNoTitle">true</item>
@@ -41,7 +40,7 @@
         <item name="textColor">?attr/textColor</item>
     </style>
 
-    <style name="ReaderTextView.Site.Title" parent="ReaderTextView">
+    <style name="ReaderTextView.Label.Medium" parent="ReaderTextView">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
         <item name="android:fontFamily">sans-serif-medium</item>
@@ -79,7 +78,10 @@
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:maxLines">5</item>
-        <item name="textColor">?attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
@@ -178,7 +180,6 @@
         <item name="textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
         <item name="android:fontFamily">serif</item>
-        <item name="android:textStyle">bold</item>-->
     </style>
 
     <style name="ReaderTextView.Site.Header.Caption" parent="ReaderTextView">
@@ -255,10 +256,13 @@
         <item name="android:minWidth">@dimen/min_touch_target_sz</item>
     </style>
 
+    <style name="Reader.Follow.Button.PostDetail" parent="Reader.Follow.Button.Icon"/>
+
     <style name="Reader.Follow.Button.Icon" parent="Reader.Follow.Button">
         <item name="iconTint">@color/secondary_gray_20_selector</item>
         <item name="android:minHeight">@dimen/min_touch_target_sz</item>
-        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="wpShowFollowButtonCaption">false</item>
     </style>
 
     <style name="Reader.Button.Error" parent="WordPress.Button.Primary">

@@ -36,7 +36,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
@@ -62,6 +61,8 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -79,10 +80,10 @@ private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 12
 private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 6
 private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 9
 private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 10
+private const val NUMBER_OF_ITEMS = 10L
 private const val RECOMMENDED_BLOG_PARAM_POSITION = 0
 private const val ON_RECOMMENDED_BLOG_ITEM_CLICKED_PARAM_POSITION = 1
 private const val ON_RECOMMENDED_BLOG_FOLLOW_CLICKED_PARAM_POSITION = 2
-private const val NUMBER_OF_ITEMS = 10L
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -250,17 +251,17 @@ class ReaderDiscoverViewModelTest {
 
     @Test
     fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present`() =
-            test {
-                // Arrange
-                val uiStates = init(autoUpdateFeed = false).uiStates
+        test {
+            // Arrange
+            val uiStates = init(autoUpdateFeed = false).uiStates
 
-                // Act
-                fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+            // Act
+            fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
 
-                // Assert
-                val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
-            }
+            // Assert
+            val contentUiState = uiStates[1] as ContentUiState
+            assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
+        }
 
     @Test
     fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() = test {
@@ -401,6 +402,7 @@ class ReaderDiscoverViewModelTest {
         verify(readerPostCardActionsHandler).onAction(
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
                 eq(LIKE),
+                eq(false),
                 eq(false)
         )
     }
@@ -423,7 +425,7 @@ class ReaderDiscoverViewModelTest {
         val uiStates = init().uiStates
         // Act
         ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
-                .postHeaderClickData!!.onPostHeaderViewClicked!!.invoke(2, 200)
+                .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
@@ -595,11 +597,10 @@ class ReaderDiscoverViewModelTest {
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogUrl = "",
+                blogSection = ReaderBlogSectionUiState(
+                        post.postId, post.blogId, "", mock(), "", "", ReaderBlogSectionClickData(postHeaderClicked, 0)
+                ),
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),
-                dateLine = "",
-                avatarOrBlavatarUrl = "",
-                blogName = mock(),
                 excerpt = "",
                 title = mock(),
                 photoFrameVisibility = false,
@@ -621,7 +622,6 @@ class ReaderDiscoverViewModelTest {
                 onItemRendered = onItemRendered,
                 onMoreButtonClicked = onMoreMenuClicked,
                 onVideoOverlayClicked = onVideoOverlayClicked,
-                postHeaderClickData = PostHeaderClickData(postHeaderClicked, 0),
                 moreMenuItems = mock(),
                 onMoreDismissed = onMoreMenuDismissed
         )

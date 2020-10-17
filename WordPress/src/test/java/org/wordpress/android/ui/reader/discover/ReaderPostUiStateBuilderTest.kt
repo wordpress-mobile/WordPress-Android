@@ -102,7 +102,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post, BLOG_PREVIEW)
         // Assert
-        assertThat(uiState.postHeaderClickData).isNull()
+        assertThat(uiState.blogSection.blogSectionClickData).isNull()
     }
 
     @Test
@@ -113,7 +113,7 @@ class ReaderPostUiStateBuilderTest {
             // Act
             val uiState = mapPostToUiState(post, it)
             // Assert
-            assertThat(uiState.postHeaderClickData).isNotNull
+            assertThat(uiState.blogSection.blogSectionClickData).isNotNull
         }
     }
     // endregion
@@ -127,7 +127,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogUrl).isEqualTo("dummy.url")
+        assertThat(uiState.blogSection.blogUrl).isEqualTo("dummy.url")
     }
     // endregion
 
@@ -487,7 +487,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNotNull()
+        assertThat(uiState.blogSection.blogName).isNotNull()
     }
 
     @Test
@@ -497,7 +497,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat((uiState.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
+        assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
     // endregion
 
@@ -512,7 +512,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.dateLine).isEqualTo("success")
+        assertThat(uiState.blogSection.dateLine).isEqualTo("success")
     }
     // endregion
 
