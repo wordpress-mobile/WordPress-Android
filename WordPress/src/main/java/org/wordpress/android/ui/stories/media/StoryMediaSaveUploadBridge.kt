@@ -108,7 +108,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     if (!isEditMode) {
                         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
                                 editPostRepository,
-                                ArrayList<MediaFile>(mediaFiles.values)
+                                ArrayList(mediaFiles.values)
                         )
                     } else {
                         // no op: in edit mode, we're handling replacing of the block's mediaFiles in Gutenberg

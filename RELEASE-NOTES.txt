@@ -1,6 +1,25 @@
+16.0
+-----
+* [*] Stats: Added the possibility to report and unreport a referrer as spam. [https://github.com/wordpress-mobile/WordPress-Android/pull/13047]
+* [***] Block Editor: Full-width and wide alignment support for Video, Latest-posts, Gallery, Media & text, and Pullquote block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2605]
+* [***] Block Editor: Fix unsupported block bottom sheet is triggered when device is rotated. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2710]
+* [***] Block Editor: Unsupported Block Editor: Fixed issue when cannot view or interact with the classic block on Jetpack site. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2709]
+* [**] Reader: Allow users to access Reader even when they do not follow any tags/topics.
+* [***] Reader: The new redesigned Reader detail shows your post as beautiful as ever. And if you add a featured image it would be twice as beautiful! [https://github.com/wordpress-mobile/WordPress-Android/pull/13151]
+
 15.9
 -----
 * [*] Block Editor: Add message that mentions are unavailable when device is offline. [https://github.com/wordpress-mobile/WordPress-Android/pull/12968]
+* [**] Block Editor: Increase tap-target of primary action on unsupported blocks. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2608]
+* [***] Block Editor: On Jetpack connected sites, Unsupported Block Editor can be enabled via enabling Jetpack SSO setting directly from within the missing block alert. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2610]
+* [***] Block Editor: Add support for selecting user's post when configuring the link [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2484]
+* [**] Block Editor: Fix for a crash that can occur when long pressing selected images [https://github.com/wordpress-mobile/AztecEditor-Android/pull/924]
+* [***] Block Editor: Added expected double tap for focus behavior for text fields in accessibility mode [https://github.com/WordPress/gutenberg/pull/25384]
+* [*] Improved My Site layout on devices with big screens. [https://github.com/wordpress-mobile/WordPress-Android/pull/13026]
+
+15.8.1
+-----
+* [***] Login: Fixed an issue where some users would be prevented to login with a Jetpack site address.
 
 15.8
 -----
@@ -8,8 +27,8 @@
 * [***] Block Editor: Full-width and wide alignment support for Group, Cover and Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2559]
 * [**] Block Editor: Add support for rounded style in Image block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2591]
 * [**] Improved AppBar and Site Picker design.
-* [**] Block Editor: Fixed a case where adding a block made the toolbar jump [https://github.com/WordPress/gutenberg/pull/24573] 
- 
+* [**] Block Editor: Fixed a case where adding a block made the toolbar jump [https://github.com/WordPress/gutenberg/pull/24573]
+
 15.7
 -----
 * [**] Block Editor: New block: Pullquote

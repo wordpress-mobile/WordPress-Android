@@ -10,7 +10,6 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener
@@ -21,7 +20,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -29,17 +28,17 @@ import javax.inject.Inject
 class StoriesEventListener @Inject constructor(
     private val dispatcher: Dispatcher,
     private val mediaStore: MediaStore,
+    private val eventBusWrapper: EventBusWrapper,
     private val storyRepositoryWrapper: StoryRepositoryWrapper
 ) : LifecycleObserver {
     private lateinit var lifecycle: Lifecycle
     private lateinit var site: SiteModel
     private var storySaveMediaListener: StorySaveMediaListener? = null
-    @Inject lateinit var storiesPrefs: StoriesPrefs
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun onCreate() {
         dispatcher.register(this)
-        EventBus.getDefault().register(this)
+        eventBusWrapper.register(this)
     }
 
     /**
@@ -50,7 +49,7 @@ class StoriesEventListener @Inject constructor(
     private fun onDestroy() {
         lifecycle.removeObserver(this)
         dispatcher.unregister(this)
-        EventBus.getDefault().unregister(this)
+        eventBusWrapper.unregister(this)
     }
 
     fun start(lifecycle: Lifecycle, site: SiteModel) {
@@ -70,7 +69,7 @@ class StoriesEventListener @Inject constructor(
             return
         }
         val localMediaId = event.frameId.toString()
-        val progress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
+        val progress = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
         storySaveMediaListener?.onMediaSaveReattached(localMediaId, progress)
     }
 
