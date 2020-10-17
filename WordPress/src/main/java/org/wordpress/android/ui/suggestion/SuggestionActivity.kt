@@ -14,14 +14,12 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
-import org.wordpress.android.ui.suggestion.service.SuggestionEvents.SuggestionNameListUpdated
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.AppLog.T
@@ -248,19 +246,10 @@ class SuggestionActivity : LocaleAwareActivity() {
         super.onPause()
     }
 
-    override fun onDestroy() {
-        viewModel.onDestroy()
-        super.onDestroy()
-    }
-
-    @Subscribe(threadMode = MAIN)
-    fun onEventMainThread(event: SuggestionNameListUpdated) {
-        viewModel.onSuggestionsUpdated(event.mRemoteBlogId)
-    }
-
-    @Subscribe(threadMode = MAIN)
+    @Subscribe
     fun onEventMainThread(event: ConnectionChangeEvent) {
         viewModel.onConnectionChanged(event)
+        updateEmptyView()
     }
 
     companion object {
