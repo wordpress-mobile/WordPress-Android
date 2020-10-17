@@ -13,8 +13,8 @@ fun RecyclerView.addItemDivider(drawable: Drawable) {
 
 class DividerItemDecorator(private val divider: Drawable) : RecyclerView.ItemDecoration() {
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        val dividerLeft = parent.paddingLeft
-        val dividerRight = parent.width - parent.paddingRight
+        val dividerLeft = parent.paddingStart
+        val dividerRight = parent.width - parent.paddingEnd
         val childCount = parent.childCount
         for (i in 0..childCount - 2) {
             val child: View = parent.getChildAt(i)
