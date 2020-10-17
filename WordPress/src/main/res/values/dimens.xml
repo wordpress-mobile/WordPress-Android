@@ -200,7 +200,7 @@
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
-    <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
+    <dimen name="reader_subfilter_end_guideline_margin">16dp</dimen>
 
     <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
 
