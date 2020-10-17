@@ -210,6 +210,10 @@ public class ActivityLauncher {
         return intent;
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showStockMediaPickerForResult}  instead
+     */
+    @Deprecated
     public static void showStockMediaPickerForResult(Activity activity,
                                                      @NonNull SiteModel site,
                                                      int requestCode) {
@@ -224,6 +228,9 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showGifPickerForResult}  instead
+     */
     public static void showGifPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
         Map<String, String> properties = new HashMap<>();
         properties.put("from", activity.getClass().getSimpleName());
@@ -814,14 +821,19 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Activity activity,
             @NonNull SiteModel site,
+            @NonNull String title,
             @NonNull String content,
+            @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -829,15 +841,35 @@ public class ActivityLauncher {
     public static void addNewPageForResult(
             @NonNull Fragment fragment,
             @NonNull SiteModel site,
+            @NonNull String title,
             @NonNull String content,
+            @Nullable String template,
             @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void previewPageForResult(
+            @NonNull Fragment fragment,
+            @NonNull SiteModel site,
+            @NonNull String content,
+            @Nullable String template) {
+        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, true);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
+        fragment.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void viewHistoryDetailForResult(Activity activity, Revision revision, List<Revision> revisions) {

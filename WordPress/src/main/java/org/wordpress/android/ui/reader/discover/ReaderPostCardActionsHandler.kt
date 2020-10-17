@@ -98,7 +98,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val _followStatusUpdated = MediatorLiveData<PostFollowStatusChanged>()
     val followStatusUpdated: LiveData<PostFollowStatusChanged> = _followStatusUpdated
 
-    // Used only in legacy ReaderPostListFragment. The discover tab observes reactive ReaderDiscoverDataProvider.
+    // Used only in legacy ReaderPostListFragment and ReaderPostDetailFragment.
+    // The discover tab observes reactive ReaderDiscoverDataProvider.
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
@@ -106,7 +107,12 @@ class ReaderPostCardActionsHandler @Inject constructor(
         dispatcher.register(siteNotificationsUseCase)
     }
 
-    suspend fun onAction(post: ReaderPost, type: ReaderPostCardActionType, isBookmarkList: Boolean) {
+    suspend fun onAction(
+        post: ReaderPost,
+        type: ReaderPostCardActionType,
+        isBookmarkList: Boolean,
+        fromPostDetails: Boolean = false
+    ) {
         withContext(bgDispatcher) {
             when (type) {
                 FOLLOW -> handleFollowClicked(post)
@@ -114,8 +120,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 SHARE -> handleShareClicked(post)
                 VISIT_SITE -> handleVisitSiteClicked(post)
                 BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
-                LIKE -> handleLikeClicked(post)
-                BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList)
+                LIKE -> handleLikeClicked(post, fromPostDetails)
+                BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
                 REBLOG -> handleReblogClicked(post)
                 COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
                 REPORT_POST -> handleReportPostClicked(post)
@@ -255,8 +261,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleLikeClicked(post: ReaderPost) {
-        likeUseCase.perform(post, !post.isLikedByCurrentUser).collect {
+    private suspend fun handleLikeClicked(post: ReaderPost, fromPostDetails: Boolean) {
+        likeUseCase.perform(post, !post.isLikedByCurrentUser, fromPostDetails).collect {
             when (it) {
                 is PostLikeState.PostLikedInLocalDb -> {
                     _refreshPosts.postValue(Event(Unit))
@@ -275,12 +281,18 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleBookmarkClicked(postId: Long, blogId: Long, isBookmarkList: Boolean) {
-        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList).collect {
+    private suspend fun handleBookmarkClicked(
+        postId: Long,
+        blogId: Long,
+        isBookmarkList: Boolean,
+        fromPostDetails: Boolean
+    ) {
+        bookmarkUseCase.toggleBookmark(blogId, postId, isBookmarkList, fromPostDetails).collect {
             when (it) {
                 is PreLoadPostContent -> _preloadPostEvents.postValue(Event(PreLoadPostContent(blogId, postId)))
                 is Success -> {
-                    // Content needs to be manually refreshed in the legacy ReaderPostListAdapter
+                    // Content needs to be manually refreshed in the legacy ReaderPostListAdapter and
+                    // ReaderPostDetailFragment
                     _refreshPosts.postValue(Event(Unit))
 
                     val showSnackbarAction = {

@@ -31,11 +31,9 @@ class ReaderFollowButton @JvmOverloads constructor(
     private fun initView(context: Context, attrs: AttributeSet?) {
         // default to showing caption, then read the value from passed attributes
         showCaption = true
-        if (attrs != null) {
+        attrs?.let {
             val array = context.theme.obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0)
-            array?.let {
-                showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
-            }
+            showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
         }
         if (!showCaption) {
             hideCaptionAndEnlargeIcon(context)
@@ -45,6 +43,8 @@ class ReaderFollowButton @JvmOverloads constructor(
     private fun hideCaptionAndEnlargeIcon(context: Context) {
         text = null
         iconSize = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption)
+        iconPadding = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_padding_no_caption)
+        iconGravity = ICON_GRAVITY_TEXT_START
     }
 
     private fun updateFollowTextAndIcon() {

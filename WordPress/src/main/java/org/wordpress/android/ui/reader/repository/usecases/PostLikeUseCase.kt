@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_UNLIKED
 import org.wordpress.android.fluxc.store.AccountStore
@@ -33,7 +35,11 @@ class PostLikeUseCase @Inject constructor(
     private val continuations:
             MutableMap<PostLikeRequest, Continuation<PostLikeState>?> = mutableMapOf()
 
-    suspend fun perform(post: ReaderPost, isAskingToLike: Boolean) = flow<PostLikeState> {
+    suspend fun perform(
+        post: ReaderPost,
+        isAskingToLike: Boolean,
+        fromPostDetails: Boolean = false
+    ) = flow<PostLikeState> {
         val wpComUserId = accountStore.account.userId
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
@@ -48,17 +54,35 @@ class PostLikeUseCase @Inject constructor(
             return@flow
         }
 
-        // track like action
+        // track like event
+        trackEvent(request, post, fromPostDetails)
+
+        handleLocalDb(post, request)
+    }
+
+    private fun trackEvent(
+        request: PostLikeRequest,
+        post: ReaderPost,
+        fromPostDetails: Boolean
+    ) {
         if (request.isAskingToLike) {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_LIKED, post)
+            val likedStat = if (fromPostDetails) {
+                READER_ARTICLE_DETAIL_LIKED
+            } else {
+                READER_ARTICLE_LIKED
+            }
+            analyticsUtilsWrapper.trackWithReaderPostDetails(likedStat, post)
             // Consider a like to be enough to push a page view - solves a long-standing question
             // from folks who ask 'why do I have more likes than page views?'.
             readerPostActionsWrapper.bumpPageViewForPost(post)
         } else {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_UNLIKED, post)
+            val unLikedStat = if (fromPostDetails) {
+                READER_ARTICLE_DETAIL_UNLIKED
+            } else {
+                READER_ARTICLE_UNLIKED
+            }
+            analyticsUtilsWrapper.trackWithReaderPostDetails(unLikedStat, post)
         }
-
-        handleLocalDb(post, request)
     }
 
     private suspend fun FlowCollector<PostLikeState>.handleLocalDb(

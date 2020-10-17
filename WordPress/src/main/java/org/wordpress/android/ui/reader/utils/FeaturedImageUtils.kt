@@ -1,13 +1,18 @@
 package org.wordpress.android.ui.reader.utils
 
+import androidx.annotation.NonNull
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.PhotonUtilsWrapper
 import java.net.MalformedURLException
 import java.net.URL
 import javax.inject.Inject
 
 class FeaturedImageUtils
-@Inject constructor() {
+@Inject constructor(
+    private val photonUtilsWrapper: PhotonUtilsWrapper
+) {
     fun showFeaturedImage(
         featuredImage: String,
         postText: String
@@ -30,5 +35,14 @@ class FeaturedImageUtils
             AppLog.e(T.READER, "Featured image URL is malformed so it's not shown")
             false
         }
+    }
+
+    /*
+     * returns true if the post has a featured image and the featured image is not found in the post body
+     */
+    fun shouldAddFeaturedImage(@NonNull readerPost: ReaderPost): Boolean {
+        return (readerPost.hasFeaturedImage() &&
+                !photonUtilsWrapper.isMshotsUrl(readerPost.featuredImage) &&
+                showFeaturedImage(readerPost.featuredImage, readerPost.text))
     }
 }
