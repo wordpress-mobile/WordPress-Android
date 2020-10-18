@@ -24,7 +24,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/margin_large"
         android:padding="@dimen/margin_large"
-        android:text="@string/prepublishing_nudges_toolbar_title_add_categories"
+        android:text="@string/prepublishing_nudges_add_category_action"
         android:textAlignment="viewStart"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="?colorPrimary" />

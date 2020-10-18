@@ -2867,7 +2867,6 @@
     <string name="prepublishing_nudges_home_save_button">Save Now</string>
     <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
-    <string name="prepublishing_nudges_close_button">Close</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
