@@ -137,7 +137,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         val retainedSelectedCategoryPosition = savedInstanceState?.getInt(
                 SELECTED_PARENT_CATEGORY_POSITION)
-        viewModel.start(siteModel, !needsRequestLayout, retainedSelectedCategoryPosition )
+        viewModel.start(siteModel, !needsRequestLayout, retainedSelectedCategoryPosition)
     }
 
     private fun startObserving() {

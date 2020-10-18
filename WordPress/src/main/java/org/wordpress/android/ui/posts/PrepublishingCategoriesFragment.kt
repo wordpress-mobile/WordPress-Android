@@ -138,7 +138,7 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
-                actionListener?.onActionClicked(ADD_CATEGORY)
+                showToast()
             }
         })
 
