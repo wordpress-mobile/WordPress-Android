@@ -133,6 +133,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
 
         if (!event.isError) {
+            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_CATEGORIES_ADDED)
             val categoryLevels = getSiteCategories()
             val selectedCategoryIds = (uiState.value as? ContentUiState)?.selectedCategoryIds
                     ?: hashSetOf()

@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
@@ -15,11 +17,11 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.SubmitButtonUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
 class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_category_fragment) {
@@ -56,54 +58,55 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initBackButton()
-        initCloseButton()
-        initInputText()
+        initSubmitButton()
         initAdapter()
         initSpinner()
-        initViewModel(savedInstanceState)
-        super.onViewCreated(view, savedInstanceState)
+        initInputText()
+        initViewModel()
     }
 
     private fun initBackButton() {
         back_button.setOnClickListener {
-            viewModel.addCategory(
-                    category_name.text.toString(),
-                    (parent_category.selectedItem as CategoryNode)
-            )
-            viewModel.onBackButtonClicked()
+            viewModel.onBackButtonClick()
         }
     }
 
-    private fun initCloseButton() {
-        close_button.setOnClickListener {
-            viewModel.onBackButtonClicked()
+    private fun initSubmitButton() {
+        submit_button.setOnClickListener {
+            viewModel.onSubmitButtonClick()
         }
     }
 
     private fun initInputText() {
         category_name.requestFocus()
+        category_name.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.categoryNameUpdated(s.toString())
+            }
+        })
+
         ActivityUtils.showKeyboard(category_name)
     }
 
     private fun initAdapter() {
-        val categoryLevels = arrayListOf<CategoryNode>()
-        categoryLevels.add(
-                0, CategoryNode(
-                0, 0,
-                getString(R.string.top_level_category_name)
-        ))
-
         val categoryAdapter = ParentCategorySpinnerAdapter(
                 activity,
                 R.layout.categories_row_parent,
-                categoryLevels
+                arrayListOf<CategoryNode>()
         )
         parent_category.adapter = categoryAdapter
     }
 
     private fun initSpinner() {
-        parent_category.setOnTouchListener { v, event ->
+        parent_category.setOnTouchListener { v, _ ->
             spinnerTouched = true
             v.performClick()
             false
@@ -127,7 +130,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         }
     }
 
-    private fun initViewModel(savedInstanceState: Bundle?) {
+    private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingAddCategoryViewModel::class.java)
 
@@ -135,9 +138,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
         val needsRequestLayout = requireArguments().getBoolean(PrepublishingTagsFragment.NEEDS_REQUEST_LAYOUT)
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        val retainedSelectedCategoryPosition = savedInstanceState?.getInt(
-                SELECTED_PARENT_CATEGORY_POSITION)
-        viewModel.start(siteModel, !needsRequestLayout, retainedSelectedCategoryPosition)
+        viewModel.start(siteModel, !needsRequestLayout)
     }
 
     private fun startObserving() {
@@ -164,18 +165,18 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         })
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
-                when (uiState) {
-                    is ContentUiState -> {
-                        loadCategories(uiState.categories)
-                        if (uiState.selectedParentCategoryPosition != parent_category.selectedItemPosition) {
-                            parent_category.setSelection(uiState.selectedParentCategoryPosition)
-                        }
-                    }
-                }
-            with(uiHelpers) {
-                updateVisibility(close_button, uiState.closeButtonVisible)
+            loadCategories(uiState.categories)
+            if (uiState.selectedParentCategoryPosition != parent_category.selectedItemPosition) {
+                parent_category.setSelection(uiState.selectedParentCategoryPosition)
             }
+            updateSubmitButton(uiState.submitButtonUiState)
         })
+    }
+
+    private fun updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
+        with(submit_button) {
+            isEnabled = submitButtonUiState.enabled
+        }
     }
 
     private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
@@ -186,23 +187,13 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         val message = uiHelpers.getTextOfUiString(requireContext(), this.message).toString()
         ToastUtils.showToast(
                 requireContext(), message,
-                LONG
+                SHORT
         )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        viewModel.uiState.value?.let { state ->
-            if (state is ContentUiState) {
-                outState.putInt(SELECTED_PARENT_CATEGORY_POSITION, state.selectedParentCategoryPosition)
-            }
-        }
-        super.onSaveInstanceState(outState)
     }
 
     companion object {
         const val TAG = "prepublishing_add_category_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
-        const val SELECTED_PARENT_CATEGORY_POSITION = "selected_parent_category_position"
         @JvmStatic fun newInstance(
             site: SiteModel,
             needsRequestLayout: Boolean
