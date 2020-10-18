@@ -2,8 +2,8 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +28,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
     @Inject lateinit var uiHelpers: UiHelpers
+
+    var spinnerTouched: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +59,9 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         initBackButton()
         initCloseButton()
         initInputText()
-       // initSpinner()
-        initViewModel()
+        initAdapter()
+        initSpinner()
+        initViewModel(savedInstanceState)
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -83,23 +86,58 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         ActivityUtils.showKeyboard(category_name)
     }
 
-// private fun initSpinner() {
-// todo: annmarie - get back to this after Android Studio is working again
-// parent_category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-// override fun onNothingSelected(parent: AdapterView<*>?) {
-//  Log.i(javaClass.simpleName, "***=> implement nothing selected")
-//  }
-//
-// override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-// Log.i(javaClass.simpleName, "***=> implement item selected")
-// }
-// }
-// }
+    private fun initAdapter() {
+        val categoryLevels = arrayListOf<CategoryNode>()
+        categoryLevels.add(
+                0, CategoryNode(
+                0, 0,
+                getString(R.string.top_level_category_name)
+        ))
 
-    private fun initViewModel() {
+        val categoryAdapter = ParentCategorySpinnerAdapter(
+                activity,
+                R.layout.categories_row_parent,
+                categoryLevels
+        )
+        parent_category.adapter = categoryAdapter
+    }
+
+    private fun initSpinner() {
+        parent_category.setOnTouchListener { v, event ->
+            spinnerTouched = true
+            v.performClick()
+            false
+        }
+
+        parent_category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (spinnerTouched) {
+                    viewModel.parentCategorySelected(position)
+                    spinnerTouched = false
+                }
+            }
+        }
+    }
+
+    private fun initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingAddCategoryViewModel::class.java)
+
         startObserving()
+
+        val needsRequestLayout = requireArguments().getBoolean(PrepublishingTagsFragment.NEEDS_REQUEST_LAYOUT)
+        val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val retainedSelectedCategoryPosition = savedInstanceState?.getInt(
+                SELECTED_PARENT_CATEGORY_POSITION)
+        viewModel.start(siteModel, !needsRequestLayout, retainedSelectedCategoryPosition )
     }
 
     private fun startObserving() {
@@ -129,30 +167,19 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
                 when (uiState) {
                     is ContentUiState -> {
                         loadCategories(uiState.categories)
+                        if (uiState.selectedParentCategoryPosition != parent_category.selectedItemPosition) {
+                            parent_category.setSelection(uiState.selectedParentCategoryPosition)
+                        }
                     }
                 }
             with(uiHelpers) {
                 updateVisibility(close_button, uiState.closeButtonVisible)
             }
         })
-
-        val needsRequestLayout = requireArguments().getBoolean(PrepublishingTagsFragment.NEEDS_REQUEST_LAYOUT)
-        val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        viewModel.start(siteModel, !needsRequestLayout)
     }
 
     private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
-        categoryLevels.add(
-                0, CategoryNode(
-                0, 0,
-                getString(R.string.top_level_category_name)
-        ))
-        val categoryAdapter = ParentCategorySpinnerAdapter(
-                activity,
-                R.layout.categories_row_parent,
-                categoryLevels
-        )
-        parent_category.adapter = categoryAdapter
+        (parent_category.adapter as? ParentCategorySpinnerAdapter)?.updateItems(categoryLevels)
     }
 
     private fun SnackbarMessageHolder.showToast() {
@@ -163,9 +190,19 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         )
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        viewModel.uiState.value?.let { state ->
+            if (state is ContentUiState) {
+                outState.putInt(SELECTED_PARENT_CATEGORY_POSITION, state.selectedParentCategoryPosition)
+            }
+        }
+        super.onSaveInstanceState(outState)
+    }
+
     companion object {
         const val TAG = "prepublishing_add_category_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
+        const val SELECTED_PARENT_CATEGORY_POSITION = "selected_parent_category_position"
         @JvmStatic fun newInstance(
             site: SiteModel,
             needsRequestLayout: Boolean

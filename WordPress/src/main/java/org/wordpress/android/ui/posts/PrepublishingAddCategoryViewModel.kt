@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -34,6 +33,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     private var closeKeyboard = true
     private lateinit var siteModel: SiteModel
     private var addCategoryJob: Job? = null
+    private var selectedParentCategoryPosition: Int? = null
 
     private val _navigateBack = MutableLiveData<Event<Unit>>()
     val navigateBack: LiveData<Event<Unit>> = _navigateBack
@@ -52,10 +52,12 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
 
     fun start(
         siteModel: SiteModel,
-        closeKeyboard: Boolean = false
+        closeKeyboard: Boolean = false,
+        selectedParentCategoryPosition: Int?
     ) {
         this.closeKeyboard = closeKeyboard
         this.siteModel = siteModel
+        this.selectedParentCategoryPosition = selectedParentCategoryPosition
 
         if (isStarted) return
         isStarted = true
@@ -65,7 +67,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
 
     private fun init() {
         setToolbarTitleUiState()
-        loadCategories()
+        initCategories()
     }
 
     private fun setToolbarTitleUiState() {
@@ -84,8 +86,11 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
         addCategoryJob?.cancel()
     }
 
-    private fun loadCategories() {
-        val newUiState = ContentUiState(categories = getCategoryLevels())
+    private fun initCategories() {
+        val newUiState = ContentUiState(
+                categories = getCategoryLevels(),
+                selectedParentCategoryPosition = 0
+        )
         updateUiState(newUiState)
     }
 
@@ -124,7 +129,15 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     ) {
         data class ContentUiState(
             val categories: ArrayList<CategoryNode>,
-            val selectedCategoryId: Long = 2
+            val selectedParentCategoryPosition: Int
         ) : UiState()
+    }
+
+    fun parentCategorySelected(position: Int) {
+        _uiState.value?.let { state ->
+            if (state is ContentUiState) {
+                _uiState.value = state.copy(selectedParentCategoryPosition = position)
+            }
+        }
     }
 }
