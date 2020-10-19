@@ -35,6 +35,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
@@ -69,6 +70,7 @@ import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
+import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
@@ -1721,12 +1723,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
         boolean isAutosavePending = mViewModel.isAutosavePending();
 
-        mEditorFragment.showSavingProgressDialogIfNeeded();
+        mViewModel.showSaveProgressDialog();
         updateAndSavePostAsync((result) -> {
-            if (mEditorFragment != null) {
-                mEditorFragment.hideSavingProgressDialog();
-            }
-
             listener.onPostUpdatedFromUI(result);
 
             if (result == Updated.INSTANCE) {
@@ -2019,10 +2017,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return;
             }
 
-            // Loading the content from the GB HTML editor can take time on long posts.
-            // Let's show a progress dialog for now.
-            // Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
-            mEditorFragment.showSavingProgressDialogIfNeeded();
+            mViewModel.showSaveProgressDialog();
 
             boolean isFirstTimePublish = isFirstTimePublish(publishPost);
             mEditPostRepository.updateAsync(postModel -> {
@@ -2049,8 +2044,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 // the user explicitly confirmed an intention to upload the post
                 postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
 
-                // Hide the progress dialog now
-                mEditorFragment.hideSavingProgressDialog();
                 return true;
             }, (postModel, result) -> {
                 if (result == Updated.INSTANCE) {
@@ -3450,5 +3443,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
         intent.putExtra(WordPress.SITE, mSite);
         startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
+    }
+
+    @Override
+    public LiveData<DialogVisibility> getSavingInProgressDialogVisibility() {
+        return mViewModel.getSavingInProgressDialogVisibility();
     }
 }

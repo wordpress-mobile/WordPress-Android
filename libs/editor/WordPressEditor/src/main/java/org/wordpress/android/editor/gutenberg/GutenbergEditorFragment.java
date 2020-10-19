@@ -180,6 +180,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
+        initializeSavingProgressDialog();
+
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
         }
@@ -359,6 +361,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    private void initializeSavingProgressDialog() {
+        if (mEditorFragmentListener != null) {
+            mEditorFragmentListener.getSavingInProgressDialogVisibility()
+                                   .observe(getViewLifecycleOwner(), visibility -> {
+                                       if (DialogVisibility.Showing == visibility) {
+                                           showSavingProgressDialogIfNeeded();
+                                       } else {
+                                           hideSavingProgressDialog();
+                                       }
+                                   });
+        }
     }
 
     private void openGutenbergWebViewActivity(String content, String blockId, String blockName, String blockTitle) {
@@ -906,10 +921,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void removeMedia(String mediaId) {
     }
 
-    // Getting the content from the editor can take time and the UI seems to be unresponsive.
-    // Show a progress dialog for now. Ref: https://github.com/wordpress-mobile/gutenberg-mobile/issues/713
-    @Override
-    public boolean showSavingProgressDialogIfNeeded() {
+    private boolean showSavingProgressDialogIfNeeded() {
         if (!isAdded()) {
             return false;
         }
@@ -929,13 +941,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return true;
     }
 
-    @Override
-    public boolean hideSavingProgressDialog() {
+    private boolean hideSavingProgressDialog() {
         if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
             mSavingContentProgressDialog.dismiss();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        hideSavingProgressDialog();
+        super.onDestroy();
     }
 
     @Override public void mediaSelectionCancelled() {
