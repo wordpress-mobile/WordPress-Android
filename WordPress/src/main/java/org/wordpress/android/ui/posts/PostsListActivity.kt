@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.HapticFeedbackConstants
@@ -150,8 +151,10 @@ class PostsListActivity : LocaleAwareActivity(),
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.post_list_activity)
-
         site = if (savedInstanceState == null) {
+            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
+                "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
+            }
             intent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
             restorePreviousSearch = true
@@ -609,5 +612,14 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onScrollableViewInitialized(containerId: Int) {
         appbar_main.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         appbar_main.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
+    }
+
+    companion object {
+        @JvmStatic
+        fun buildIntent(context: Context, site: SiteModel): Intent {
+            val intent = Intent(context, PostsListActivity::class.java)
+            intent.putExtra(WordPress.SITE, site)
+            return intent
+        }
     }
 }
