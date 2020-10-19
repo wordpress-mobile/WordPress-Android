@@ -119,7 +119,6 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
-import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
