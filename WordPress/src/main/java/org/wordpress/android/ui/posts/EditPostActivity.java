@@ -119,6 +119,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
@@ -3266,6 +3267,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
                 .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
+        if (mediaFiles.isEmpty()) {
+            ActivityLauncher.editEmptyStoryForResult(
+                    this,
+                    mSite,
+                    mStoryRepositoryWrapper.getCurrentStoryIndex(),
+                    blockId
+            );
+            return;
+        }
+
         if (!result.getNoSlidesLoaded()) {
             // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
             ActivityLauncher.editStoryForResult(
