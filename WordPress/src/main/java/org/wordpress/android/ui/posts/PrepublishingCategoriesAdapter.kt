@@ -12,10 +12,6 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
         RecyclerView.Adapter<PrepublishingCategoriesViewHolder>() {
     private val items = mutableListOf<PrepublishingCategoriesListItemUiState>()
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -27,10 +23,6 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
 
     override fun getItemId(position: Int): Long {
         return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
     }
 
     override fun onBindViewHolder(holder: PrepublishingCategoriesViewHolder, position: Int) {
@@ -61,9 +53,7 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
                 return false
             }
 
-            return ((oldItem).categoryNode.categoryId ==
-                    (newItem).categoryNode.categoryId) &&
-                    (oldItem.checked == newItem.checked)
+            return (oldItem).categoryNode.categoryId == (newItem).categoryNode.categoryId
         }
 
         override fun getOldListSize(): Int = oldItems.size
@@ -71,7 +61,8 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
         override fun getNewListSize(): Int = newItems.size
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldItems[oldItemPosition] == newItems[newItemPosition]
+            return oldItems[oldItemPosition] == newItems[newItemPosition] &&
+                    oldItems[oldItemPosition].checked == newItems[newItemPosition].checked
         }
     }
 }

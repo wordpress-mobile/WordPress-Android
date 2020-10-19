@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -94,7 +95,9 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                         categoryNode = categoryNode, checked = false
                 )
             }
-            itemUiState.onItemTapped = { onCategoryToggled(index, !itemUiState.checked) }
+            itemUiState.onItemTapped = {
+                onCategoryToggled(index, !itemUiState.checked)
+            }
             items.add(itemUiState)
         }
 
@@ -177,7 +180,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
 
     private fun hasChanges(): Boolean {
         val postCategories = getPostCategories()
-        val stateSelectedCategories = getSiteCategories()
+        val stateSelectedCategories = getSelectedIds()
         return (stateSelectedCategories != postCategories)
     }
 
