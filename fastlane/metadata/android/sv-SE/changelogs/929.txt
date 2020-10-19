@@ -1,5 +1,0 @@
-15.8:
-– Förbättringar i blockredigeraren: Stöd för fullbredd och brett innehåll i blocken grupp, omslag och bild. Stöd för avrundad stil i bildblock. Rättat fel där verktygslisten betedde sig konstigt när man lade till ett block.
-– Uppdatering av läsaren: Nu visas förhandsvisningsbilder för inlägg som saknar utvald bild.
-
-

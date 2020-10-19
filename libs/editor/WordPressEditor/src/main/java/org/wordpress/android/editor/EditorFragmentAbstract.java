@@ -29,6 +29,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract @NonNull String getEditorName();
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
+    public abstract void showNotice(String message);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract void showContentInfo() throws EditorFragmentNotAddedException;

@@ -211,6 +211,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.updateTheme(editorTheme);
     }
 
+    public void showNotice(String message) {
+        mWPAndroidGlueCode.showNotice(message);
+    }
+
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
         mWPAndroidGlueCode.updateCapabilities(gutenbergProps);

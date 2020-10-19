@@ -1648,6 +1648,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
     }
 
+    @Override
+    public void showNotice(String message) {
+        ToastUtils.showToast(getActivity(), message).show();
+    }
+
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
                                final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {

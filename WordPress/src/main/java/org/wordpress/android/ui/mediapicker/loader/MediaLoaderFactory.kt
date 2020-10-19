@@ -20,7 +20,7 @@ class MediaLoaderFactory
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
     fun build(mediaPickerSetup: MediaPickerSetup, siteModel: SiteModel?): MediaLoader {
-        return when (mediaPickerSetup.dataSource) {
+        return when (mediaPickerSetup.primaryDataSource) {
             DEVICE -> deviceListBuilderFactory.build(mediaPickerSetup.allowedTypes)
             WP_LIBRARY -> mediaLibraryDataSourceFactory.build(requireNotNull(siteModel) {
                 "Site is necessary when loading WP media library "

@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-25 08:54:07+0000
+Translation-Revision-Date: 2020-10-02 19:27:56+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Tebal</string>
+    <string name="typeface_label_space_mono">Modern</string>
+    <string name="typeface_label_pacifico">Riang</string>
+    <string name="typeface_label_oswald">Kuat</string>
+    <string name="typeface_label_libre_baskerville">Klasik</string>
+    <string name="typeface_label_nunito">Kasual</string>
+    <string name="toast_capture_operation_permission_needed">Anda perlu memberi aplikasi izin untuk merekam audio agar dapat merekam video</string>
+    <string name="mlp_selected_description">%s dipilih</string>
+    <string name="login_get_link_by_email">Dapatkan tautan login lewat email</string>
+    <string name="email_not_registered_wpcom">Hmm, kami tidak dapat menemukan akun WordPress.com yang terhubung dengan alamat email ini.</string>
+    <string name="permission_microphone">Mikrofon</string>
+    <string name="comment_unable_to_show_error">Tidak dapat menampilkan komentar ini</string>
+    <string name="media_browse_for_items">Telusuri item</string>
     <string name="reader_menu_report_post">Melaporkan Pos Ini</string>
     <string name="gutenberg_native_angle">Sudut</string>
     <string name="reader_welcome_banner">Selamat datang di Pembaca. Temukan jutaan blog dengan ujung jari Anda.</string>
@@ -87,7 +100,6 @@ Language: id
     <string name="mlp_create_page">Buat halaman</string>
     <string name="mlp_create_blank_page">Buat halaman kosong</string>
     <string name="mlp_choose_layout_subtitle">Mulai dengan memilih satu tata letak halaman yang siap digunakan. Atau mulai dengan halaman kosong.</string>
-    <string name="mlp_choose_layout_title">Pilih Tata Letak</string>
     <string name="prepublishing_nudges_story_title_hint">Beri judul pada cerita Anda</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Buat pos atau cerita</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Buat pos, halaman, atau cerita</string>
@@ -111,7 +123,9 @@ Language: id
     <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
     <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
+    <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi tautan pendaftaran untuk membuat akun WordPress.com baru.</string>
     <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
+    <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi tautan masuk untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
     <string name="enter_account_info_for_site">Masukkan informasi akun Anda untuk %1$s.</string>
     <string name="login_or">atau</string>
     <string name="continue_google_button_suffix">Lanjutkan dengan Google</string>
@@ -119,6 +133,7 @@ Language: id
     <string name="login_done">Selesai</string>
     <string name="magic_link_not_seeing_email_message">Tidak melihat emailnya? Periksa folder Email Spam atau Sampah.</string>
     <string name="login_magic_links_sent_label">Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
+    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi.</string>
     <string name="check_email">Periksa email</string>
     <string name="get_started">Memulai</string>
     <string name="enter_email_to_continue_wordpress_com">Masukkan alamat email Anda untuk login atau membuat akun WordPress.com.</string>
@@ -134,7 +149,6 @@ Language: id
     <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b>%1$s&lt;/b> untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="gutenberg_native_s_block_options">%s pilihan blok</string>
-    <string name="gutenberg_native_remove_block">Hapus blok</string>
     <string name="gutenberg_native_duplicate_block">Duplikasi blok</string>
     <string name="gutenberg_native_copy_block">Salin blok</string>
     <string name="gutenberg_native_copied_block">Blok disalin</string>
@@ -149,11 +163,9 @@ Language: id
     <string name="error_update_site_title_network">Tidak dapat memperbarui judul situs. Periksa koneksi jaringan Anda dan coba lagi.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Perubahan yang belum disimpan</string>
     <string name="gutenberg_native_open_link_in_a_browser">Buka tautan pada perambah</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigasi ke halaman konten sebelumnya</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigasi untuk mengustomisasi gradien</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigasi untuk mengustomisasi pemilih warna</string>
     <string name="gutenberg_native_gradient_type">Jenis Gradasi</string>
-    <string name="gutenberg_native_go_back">Kembali</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ketuk dua kali untuk memilih opsi</string>
     <string name="gutenberg_native_customize_gradient">Kustomisasi Gradasi</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -163,9 +175,6 @@ Language: id
     <string name="menu_content_info">Struktur konten</string>
     <string name="everyone">Setiap Orang</string>
     <string name="me">Saya</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat mengedit blok ini menggunakan web browser perangkat Anda.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Edit blok di browser web</string>
-    <string name="gutenberg_native_dismiss">Tutup</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
     <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tambahkan Tag</string>
@@ -463,12 +472,10 @@ Language: id
     <string name="reader_my_likes_display_name">Suka</string>
     <string name="site_cannot_be_loaded">Kami saat ini tidak dapat memuat data untuk situs Anda. Harap coba lagi nanti</string>
     <string name="gutenberg_native_wordpress_media_library">Pustaka Media WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat menyunting pos ini di web.</string>
     <string name="gutenberg_native_ungroup">Batalkan pengelompokan</string>
     <string name="gutenberg_native_translate">Terjemahan</string>
     <string name="gutenberg_native_title">Judul:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Ketuk untuk menyembunyikan keyboard</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Ketuk di sini untuk menampilkan bantuan</string>
     <string name="gutenberg_native_take_a_video">Ambil Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Potret atau Rekam Video</string>
     <string name="gutenberg_native_take_a_photo">Ambil Foto</string>
@@ -476,8 +483,6 @@ Language: id
     <string name="gutenberg_native_size">Ukuran</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin judul bilah sisi</string>
     <string name="gutenberg_native_show_section">Tampilkan bagian</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' belum didukung di WordPress untuk iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' belum didukung di WordPress untuk Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Blok ini memiliki konten yang tidak valid</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Kosong</string>
     <string name="gutenberg_native_reset_block">Reset Blok</string>
@@ -500,12 +505,9 @@ Language: id
     <string name="gutenberg_native_move_block_up">Naikkan blok</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Pindahkan balok ke bawah dari baris %1$s ke baris %2$s</string>
     <string name="gutenberg_native_move_block_down">Turunkan blok</string>
-    <string name="gutenberg_native_link_text">Teks tautan</string>
-    <string name="gutenberg_native_link_inserted">Tautan disisipkan</string>
     <string name="gutenberg_native_image_caption_s">Keterangan gambar. %s</string>
     <string name="gutenberg_native_hide_keyboard">Sembunyikan keyboard</string>
     <string name="gutenberg_native_here_is_the_panel_content">Di sini adalah konten panel!</string>
-    <string name="gutenberg_native_help_icon">Ikon bantuan</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Gagal memasukkan media.\nKetuk untuk melihat pilihan.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Ketuk dua kali untuk mengurungkan perubahan terakhir</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ketuk dua kali untuk mengaktifkan/menonaktifkan pengaturan</string>
@@ -526,7 +528,6 @@ Language: id
     <string name="gutenberg_native_alt_text">Teks Alt</string>
     <string name="gutenberg_native_add_video">TAMBAHKAN VIDEO</string>
     <string name="gutenberg_native_add_url">Tambahkan URL</string>
-    <string name="gutenberg_native_add_link_text">Tambahkan teks tautan</string>
     <string name="gutenberg_native_add_image_or_video">TAMBAHKAN GAMBAR ATAU VIDEO</string>
     <string name="gutenberg_native_add_image">TAMBAHKAN GAMBAR</string>
     <string name="gutenberg_native_add_block_here">TAMBAHKAN BLOK DI SINI</string>
@@ -1281,6 +1282,7 @@ Language: id
     <string name="help_screen_title">Bantuan dan Dukungan</string>
     <string name="license_screen_title">Lisensi</string>
     <string name="release_notes_screen_title">Catatan rilis</string>
+    <string name="my_site_section_screen_title">Situs Saya</string>
     <string name="signup_epilogue_error_avatar_view">Avatar Anda telah diunggah dan akan tersedia sesaat lagi.</string>
     <string name="permissions_denied_message">Tampaknya Anda mematikan izin wajib untuk fitur ini.&lt;br/>&lt;br/>Untuk mengubahnya, edit izin Anda dan pastikan &lt;strong>%s&lt;/strong> telah aktif.</string>
     <string name="permissions_denied_title">Izin</string>

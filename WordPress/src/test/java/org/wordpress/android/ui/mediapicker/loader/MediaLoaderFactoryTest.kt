@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
@@ -44,10 +45,11 @@ class MediaLoaderFactoryTest {
     fun `returns device list builder on DEVICE source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 DEVICE,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = true,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = true,
                 editingEnabled = true,
                 queueResults = false,
@@ -69,10 +71,11 @@ class MediaLoaderFactoryTest {
     fun `returns WP media source on WP_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 WP_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
@@ -95,10 +98,11 @@ class MediaLoaderFactoryTest {
     fun `returns stock media source on STOCK_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 STOCK_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,

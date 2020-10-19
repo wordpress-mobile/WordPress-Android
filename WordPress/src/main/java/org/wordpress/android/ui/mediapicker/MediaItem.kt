@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.mediapicker
 
+import android.net.Uri
+import android.os.Parcel
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
-import org.wordpress.android.fluxc.model.MediaModel
+import android.os.Parcelable.Creator
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.GIF_MEDIA_IDENTIFIER
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_ID
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.LOCAL_URI
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.REMOTE_ID
+import org.wordpress.android.ui.mediapicker.MediaItem.IdentifierType.STOCK_MEDIA_IDENTIFIER
 import org.wordpress.android.util.UriWrapper
 
 data class MediaItem(
@@ -14,21 +19,91 @@ data class MediaItem(
     val mimeType: String? = null,
     val dataModified: Long
 ) {
-    sealed class Identifier : Parcelable {
-        @Parcelize
-        data class LocalUri(val value: @RawValue UriWrapper) : Identifier()
+    enum class IdentifierType {
+        LOCAL_URI,
+        REMOTE_ID,
+        LOCAL_ID,
+        STOCK_MEDIA_IDENTIFIER,
+        GIF_MEDIA_IDENTIFIER
+    }
 
-        @Parcelize
-        data class RemoteId(val value: Long) : Identifier()
+    sealed class Identifier(val type: IdentifierType) : Parcelable {
+        data class LocalUri(val value: UriWrapper) : Identifier(LOCAL_URI)
 
-        @Parcelize
-        data class StockMediaIdentifier(val url: String?, val name: String?, val title: String?) : Identifier()
+        data class RemoteId(val value: Long) : Identifier(REMOTE_ID)
 
-        @Parcelize
-        data class GifMediaIdentifier(
-            val mediaModel: MediaModel?,
-            val largeImageUri: @RawValue UriWrapper,
+        data class LocalId(val value: Int) : Identifier(LOCAL_ID)
+
+        data class StockMediaIdentifier(
+            val url: String?,
+            val name: String?,
             val title: String?
-        ) : Identifier()
+        ) : Identifier(STOCK_MEDIA_IDENTIFIER)
+
+        data class GifMediaIdentifier(
+            val largeImageUri: UriWrapper,
+            val title: String?
+        ) : Identifier(GIF_MEDIA_IDENTIFIER)
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(this.type.name)
+            when (this) {
+                is LocalUri -> {
+                    parcel.writeParcelable(this.value.uri, flags)
+                }
+                is RemoteId -> {
+                    parcel.writeLong(this.value)
+                }
+                is LocalId -> {
+                    parcel.writeInt(this.value)
+                }
+                is StockMediaIdentifier -> {
+                    parcel.writeString(this.url)
+                    parcel.writeString(this.name)
+                    parcel.writeString(this.title)
+                }
+                is GifMediaIdentifier -> {
+                    parcel.writeParcelable(this.largeImageUri.uri, flags)
+                    parcel.writeString(this.title)
+                }
+            }
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Creator<Identifier> = object : Creator<Identifier> {
+                override fun createFromParcel(parcel: Parcel): Identifier {
+                    val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
+                    return when (type) {
+                        LOCAL_URI -> {
+                            LocalUri(UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))))
+                        }
+                        REMOTE_ID -> {
+                            RemoteId(parcel.readLong())
+                        }
+                        LOCAL_ID -> {
+                            LocalId(parcel.readInt())
+                        }
+                        STOCK_MEDIA_IDENTIFIER -> {
+                            StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
+                        }
+                        GIF_MEDIA_IDENTIFIER -> {
+                            GifMediaIdentifier(
+                                    UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
+                                    parcel.readString()
+                            )
+                        }
+                    }
+                }
+
+                override fun newArray(size: Int): Array<Identifier?> {
+                    return arrayOfNulls(size)
+                }
+            }
+        }
     }
 }
