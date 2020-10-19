@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -172,7 +171,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private MenuItem mSearchMenuItem;
 
     private View mSubFilterComponent;
-    private ImageView mSettingsButton;
     private View mSubFiltersListButton;
     private TextView mSubFilterTitle;
     private View mRemoveFilterButton;
@@ -605,10 +603,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void initSubFilterViews(ViewGroup rootView, LayoutInflater inflater) {
         mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
         ((ViewGroup) rootView.findViewById(R.id.sub_filter_component_container)).addView(mSubFilterComponent);
-        mSettingsButton = mSubFilterComponent.findViewById(R.id.filter_settings_button);
-        mSettingsButton.setOnClickListener(v -> {
-            showSettings();
-        });
 
         mSubFiltersListButton = mSubFilterComponent.findViewById(R.id.filter_selection);
         mSubFiltersListButton.setOnClickListener(v -> {
@@ -622,7 +616,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mSubFilterViewModel.setDefaultSubfilter();
         });
         mSubFilterComponent.setVisibility(isFollowingScreen() ? View.VISIBLE : View.GONE);
-        mSettingsButton.setVisibility(isFollowingScreen() && mAccountStore.hasAccessToken() ? View.VISIBLE : View.GONE);
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
         float cardElevation = getResources().getDimension(R.dimen.card_elevation);
@@ -1119,12 +1112,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
         return rootView;
     }
 
-    private void showSettings() {
-        ReaderActivityLauncher.showReaderSubs(getActivity());
-    }
-
     /*
-     * adds a menu to the recycler's toolbar containing settings & search items - only called
+     * adds a menu to the recycler's toolbar containing search items - only called
      * for followed tags
      */
     private void setupRecyclerToolbar() {
