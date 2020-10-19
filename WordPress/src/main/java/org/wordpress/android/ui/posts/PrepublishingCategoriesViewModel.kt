@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -12,15 +11,20 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -28,7 +32,7 @@ import javax.inject.Named
 
 class PrepublishingCategoriesViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val updatePostCategoriesUseCase: UpdatePostCategoriesUseCase,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -161,8 +165,19 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         updateCategoriesJob?.cancel()
 
         updateCategoriesJob = launch(bgDispatcher) {
-            updatePostCategoriesUseCase.updateCategories(categoryList.toList(), editPostRepository)
+            postUpdatedCategories(categoryList.toList(), editPostRepository)
         }
+    }
+
+    private fun postUpdatedCategories(categoryList: List<Long>, editPostRepository: EditPostRepository) {
+        editPostRepository.updateAsync({ postModel ->
+            postModel.setCategoryIdList(categoryList)
+            true
+        }, { _: PostImmutableModel?, result: UpdatePostResult ->
+            if (result == Updated) {
+                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_CATEGORIES_ADDED)
+            }
+        })
     }
 
     private fun getSelectedIds(): List<Long> {
