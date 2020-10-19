@@ -774,6 +774,7 @@ public class ActivityLauncher {
     public static void editEmptyStoryForResult(
             Activity activity,
             SiteModel site,
+            LocalId localPostId,
             int storyIndex,
             String storyBlockId
     ) {
@@ -785,6 +786,7 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, true);
         intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        intent.putExtra(KEY_POST_LOCAL_ID, localPostId.getValue());
         intent.putExtra(KEY_STORY_INDEX, storyIndex);
         intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);
         activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
