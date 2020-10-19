@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
+import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
@@ -67,6 +68,7 @@ class ReaderDiscoverLogic(
     @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
     @Inject lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
     @Inject lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+    @Inject lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
 
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -122,7 +124,7 @@ class ReaderDiscoverLogic(
         }
     }
 
-    private fun handleRequestDiscoverDataResponse(
+    private suspend fun handleRequestDiscoverDataResponse(
         taskType: DiscoverTasks,
         json: JSONObject?,
         resultListener: UpdateResultListener
@@ -261,8 +263,26 @@ class ReaderDiscoverLogic(
         ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString())
     }
 
-    private fun clearCache() {
+    private suspend fun clearCache() {
+        val blogIds = getRecommendedBlogsToBeDeleted().map { it.blogId }
+        ReaderBlogTable.deleteBlogsWithIds(blogIds)
+
         ReaderDiscoverCardsTable.clear()
         ReaderPostTable.deletePostsWithTag(ReaderTag.createDiscoverPostCardsTag())
+    }
+
+    private suspend fun getRecommendedBlogsToBeDeleted(): List<ReaderBlog> {
+        val discoverCards = getDiscoverCardsUseCase.get()
+
+        val blogsToBeDeleted = ArrayList<ReaderBlog>()
+        discoverCards.cards.filterIsInstance<ReaderRecommendedBlogsCard>().forEach {
+            it.blogs.forEach { blog ->
+                if (!blog.isFollowing) {
+                    blogsToBeDeleted.add(blog)
+                }
+            }
+        }
+
+        return blogsToBeDeleted
     }
 }
