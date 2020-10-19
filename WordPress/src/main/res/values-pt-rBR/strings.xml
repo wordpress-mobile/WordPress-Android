@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-12 18:15:31+0000
+Translation-Revision-Date: 2020-10-09 17:23:42+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_white">Branco</string>
+    <string name="gutenberg_native_vivid_red">Vermelho vívido</string>
+    <string name="gutenberg_native_vivid_purple">Roxo vívido</string>
+    <string name="gutenberg_native_vivid_green_cyan">Verde ciano vívido</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Azul ciano vívido a roxo vívido</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Azul ciano vívido</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Cinza muito claro a cinza azulado</string>
+    <string name="gutenberg_native_select_item">Selecionar item</string>
+    <string name="gutenberg_native_search_or_type_url">Pesquisar ou digitar o URL</string>
+    <string name="gutenberg_native_pale_pink">Rosa pálido</string>
+    <string name="gutenberg_native_pale_ocean">Oceano pálido</string>
+    <string name="gutenberg_native_pale_cyan_blue">Azul ciano pálido</string>
+    <string name="gutenberg_native_midnight">Meia-noite</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Laranja vívido luminoso a vermelho vívido</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Laranja vívido luminoso</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Âmbar vívido luminoso a laranja vívido luminoso</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Âmbar luminoso vívido</string>
+    <string name="gutenberg_native_luminous_dusk">Sombra luminosa</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Ciano verde claro a ciano verde vívido</string>
+    <string name="gutenberg_native_light_green_cyan">Verde ciano claro</string>
+    <string name="gutenberg_native_electric_grass">Grama elétrica</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Cinza ciano azulado</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Espectro frio a quente</string>
+    <string name="gutenberg_native_blush_light_purple">Roxo claro corado</string>
+    <string name="gutenberg_native_blush_bordeaux">Bordeaux corado</string>
+    <string name="gutenberg_native_black">Preto</string>
+    <string name="gutenberg_native_add_this_telephone_link">Adicionar este telefone como link</string>
+    <string name="gutenberg_native_add_this_link">Adicionar este link</string>
+    <string name="gutenberg_native_add_this_email_link">Adicionar este e-mail como link</string>
+    <string name="suggestion_no_connection">\"Sem conexão à internet.\nAs sugestões estão indisponíveis.\"</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s selecionado(s)</string>
+    <string name="typeface_label_shrikhand">Negrito</string>
+    <string name="typeface_label_nunito">Casual</string>
+    <string name="typeface_label_libre_baskerville">Clássico</string>
+    <string name="typeface_label_space_mono">Moderno</string>
+    <string name="typeface_label_pacifico">Divertido</string>
+    <string name="typeface_label_oswald">Forte</string>
+    <string name="toast_capture_operation_permission_needed">Você deve conceder ao aplicativo permissão de gravação de áudio para gravar um vídeo</string>
+    <string name="media_browse_for_items">Procurar por itens</string>
+    <string name="login_get_link_by_email">Receber um link de acesso por e-mail</string>
+    <string name="email_not_registered_wpcom">Hmm, não encontramos uma conta WordPress.com conectada a esse endereço de e-mail.</string>
+    <string name="permission_microphone">Microfone</string>
+    <string name="comment_unable_to_show_error">Não é possível mostrar este comentário</string>
+    <string name="reader_menu_report_post">Reportar este post</string>
     <string name="gutenberg_native_angle">Ângulo</string>
     <string name="error_media_xmlrpc_not_allowed">Sua ação não é permitida</string>
     <string name="reader_welcome_banner">Boas-vindas ao Leitor. Descubra milhões de blogs ao seu alcance.</string>
@@ -110,7 +155,9 @@ Language: pt_BR
     <string name="signup_confirmation_title">Confirmação de inscrição</string>
     <string name="continue_with_google_terms_of_service_text">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
     <string name="continue_terms_of_service_text">Ao continuar, você concorda com os nossos %1$sTermos de Serviço%2$s.</string>
+    <string name="signup_confirmation_magic_link_message">Enviaremos um link por e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos este endereço de e-mail para criar sua nova conta no WordPress.com.</string>
+    <string name="signup_magic_link_message">Nós enviamos um link por e-mail para criar sua nova conta no WordPress.com. Verifique sua caixa de e-mails neste dispositivo e toque no link recebido do WordPress.com.</string>
     <string name="enter_account_info_for_site">Digite as informações da conta de %1$s.</string>
     <string name="login_or">ou</string>
     <string name="continue_google_button_suffix">Continuar com Google</string>
@@ -118,6 +165,7 @@ Language: pt_BR
     <string name="login_done">Concluído</string>
     <string name="magic_link_not_seeing_email_message">Não encontrou o e-mail? Verifique a caixa de spam ou lixeira.</string>
     <string name="login_magic_links_sent_label">Verifique seu e-mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
+    <string name="login_magic_links_label">Enviaremos um e-mail com um link que conectará à sua conta instantaneamente sem precisar de senha.</string>
     <string name="check_email">Verificar e-mail</string>
     <string name="get_started">Iniciar</string>
     <string name="enter_email_to_continue_wordpress_com">Digite seu endereço de e-mail para acessar ou criar uma conta no WordPress.com.</string>
@@ -133,7 +181,6 @@ Language: pt_BR
     <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b>%1$s&lt;/b> para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
     <string name="gutenberg_native_s_block_options">Opções do bloco %s</string>
-    <string name="gutenberg_native_remove_block">Remover bloco</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloco</string>
     <string name="gutenberg_native_copy_block">Copiar bloco</string>
     <string name="gutenberg_native_copied_block">Bloco copiado</string>
@@ -148,9 +195,7 @@ Language: pt_BR
     <string name="error_update_site_title_network">Não foi possível atualizar o título do site. Verifique sua conexão de rede e tente novamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Alterações não salvas</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir link no navegador</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Ir para a folha de conteúdo anterior</string>
     <string name="gutenberg_native_gradient_type">Tipo de gradiente</string>
-    <string name="gutenberg_native_go_back">Voltar</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toque duas vezes para selecionar a opção</string>
     <string name="gutenberg_native_customize_gradient">Personalizar o gradiente</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -162,9 +207,6 @@ Language: pt_BR
     <string name="menu_content_info">Estrutura do conteúdo</string>
     <string name="everyone">Todos</string>
     <string name="me">Meus</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar este bloco no navegador.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloco no navegador</string>
-    <string name="gutenberg_native_dismiss">Dispensar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Não definido</string>
     <string name="prepublishing_tags_description">Tags: ajude os leitores a saberem o assunto do post.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Adicionar tags</string>
@@ -462,12 +504,10 @@ Language: pt_BR
     <string name="reader_my_likes_display_name">Curtidas</string>
     <string name="site_cannot_be_loaded">Não conseguimos carregar os dados de seu site no momento. Tente novamente mais tarde.</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de mídia do WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar o post no navegador.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traduzir</string>
     <string name="gutenberg_native_title">Título:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toque para ocultar o teclado</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Toque aqui para mostrar ajuda</string>
     <string name="gutenberg_native_take_a_video">Gravar um vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
     <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
@@ -475,8 +515,6 @@ Language: pt_BR
     <string name="gutenberg_native_size">Tamanho</string>
     <string name="gutenberg_native_sidebar_title_plugin">Barra lateral de título do plugin</string>
     <string name="gutenberg_native_show_section">Mostrar seção</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' ainda não é suportado no WordPress para iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' ainda não é suportado no WordPress para Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
     <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
     <string name="gutenberg_native_reset_block">Redefinir bloco</string>
@@ -499,12 +537,9 @@ Language: pt_BR
     <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
-    <string name="gutenberg_native_link_text">Texto do link</string>
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
-    <string name="gutenberg_native_link_inserted">Link adicionado</string>
     <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
     <string name="gutenberg_native_here_is_the_panel_content">Aqui está o painel de conteúdo!</string>
-    <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Falha ao inserir a mídia.\nToque para ver mais opções.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toque duas vezes para desfazer a última alteração</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toque duas vezes para alternar as configurações</string>
@@ -525,7 +560,6 @@ Language: pt_BR
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">Adicionar vídeo</string>
     <string name="gutenberg_native_add_url">Adicionar URL</string>
-    <string name="gutenberg_native_add_link_text">Adicionar texto do link</string>
     <string name="gutenberg_native_add_image_or_video">Adicionar imagem ou vídeo</string>
     <string name="gutenberg_native_add_image">Adicionar imagem</string>
     <string name="gutenberg_native_add_block_here">Adicionar um bloco aqui</string>
@@ -1275,6 +1309,7 @@ Language: pt_BR
     <string name="login_epilogue_screen_title">Conectado como</string>
     <string name="reader_screen_title">Leitor</string>
     <string name="me_section_screen_title">Eu</string>
+    <string name="my_site_section_screen_title">Meu site</string>
     <string name="notif_settings_screen_title">Configurações de notificações</string>
     <string name="license_screen_title">Licença</string>
     <string name="release_notes_screen_title">Notas da versão</string>
@@ -1354,6 +1389,7 @@ Language: pt_BR
     <string name="signup_epilogue_error_avatar">Houve um problema ao enviar seu avatar.</string>
     <string name="signup_email_header">Para criar sua nova conta no WordPress.com, digite seu endereço de e-mail.</string>
     <string name="signup_email_error_generic">Houve um problema ao verificar o endereço de e-mail.</string>
+    <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um link como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
     <string name="sign_up">Inscrever-se no WordPress.com</string>
     <string name="enter_username_instead">Acesse com seu nome de usuário.</string>
     <string name="enter_site_address_instead">Acesse digitando o endereço do seu site.</string>
