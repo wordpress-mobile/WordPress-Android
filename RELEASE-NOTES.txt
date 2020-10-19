@@ -1,3 +1,6 @@
+16.1
+-----
+ 
 16.0
 -----
 * [*] Stats: Added the possibility to report and unreport a referrer as spam. [https://github.com/wordpress-mobile/WordPress-Android/pull/13047]
