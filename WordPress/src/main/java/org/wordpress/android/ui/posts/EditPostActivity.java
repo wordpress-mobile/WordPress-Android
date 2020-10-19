@@ -3253,17 +3253,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
-                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
         if (mediaFiles.isEmpty()) {
             ActivityLauncher.editEmptyStoryForResult(
                     this,
                     mSite,
+                    new LocalId(mEditPostRepository.getId()),
                     mStoryRepositoryWrapper.getCurrentStoryIndex(),
                     blockId
             );
             return;
         }
+
+        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
+                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
 
         if (!result.getNoSlidesLoaded()) {
             // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
