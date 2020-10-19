@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.suggest_users_activity.*
@@ -19,9 +18,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
+import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
@@ -74,7 +74,7 @@ class SuggestionActivity : LocaleAwareActivity() {
             initializeWithPrefix(viewModel.suggestionPrefix)
             setOnItemClickListener { _, _, position, _ ->
                 val suggestionUserId = suggestionAdapter?.getItem(position)?.value
-                finishWithId(suggestionUserId)
+                finishWithValue(suggestionUserId)
             }
 
             setOnKeyListener { _, keyCode, event ->
@@ -102,7 +102,7 @@ class SuggestionActivity : LocaleAwareActivity() {
 
             viewModel.suggestionPrefix.let { prefix ->
 
-                // Insure the text always starts with appropriate prefix
+                // Ensure the text always starts with appropriate prefix
                 addTextChangedListener(object : TextWatcher {
                     var matchesPrefixBeforeChanged: Boolean? = null
 
@@ -156,22 +156,19 @@ class SuggestionActivity : LocaleAwareActivity() {
     }
 
     private fun exitIfOnlyOneMatchingUser(): Boolean {
-        val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
-            suggestionAdapter?.getItem(0)?.value
-        } else {
-            null
+        return when (val finishAttempt = viewModel.onAttemptToFinish(
+                suggestionAdapter?.filteredSuggestions,
+                autocompleteText.text.toString()
+        )) {
+            is OnlyOneAvailable -> {
+                finishWithValue(finishAttempt.onlySelectedValue)
+                true
+            }
+            is NotExactlyOneAvailable -> {
+                ToastUtils.showToast(this@SuggestionActivity, finishAttempt.errorMessage)
+                false
+            }
         }
-
-        if (onlySuggestedUser != null) {
-            finishWithId(onlySuggestedUser)
-        } else {
-            // If there is not exactly 1 suggestion, notify that entered text is not a valid suggestion
-            val suggestionType = getString(viewModel.suggestionTypeStringRes)
-            val message = getString(R.string.suggestion_invalid, autocompleteText.text, suggestionType)
-            ToastUtils.showToast(this@SuggestionActivity, message)
-        }
-
-        return onlySuggestedUser != null
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -190,9 +187,9 @@ class SuggestionActivity : LocaleAwareActivity() {
         overridePendingTransition(R.anim.do_nothing, R.anim.do_nothing)
     }
 
-    private fun finishWithId(userId: String?) {
+    private fun finishWithValue(value: String?) {
         setResult(Activity.RESULT_OK, Intent().apply {
-            putExtra(SELECTED_USER_ID, userId)
+            putExtra(SELECTED_VALUE, value)
         })
         finish()
     }
@@ -216,23 +213,10 @@ class SuggestionActivity : LocaleAwareActivity() {
     }
 
     private fun updateEmptyView() {
-        val hasSuggestions = suggestionAdapter?.suggestionList?.isNotEmpty() == true
-        val showingSuggestions = suggestionAdapter?.isEmpty == false
-
         empty_view.apply {
-            text = when {
-                hasSuggestions -> getString(
-                        R.string.suggestion_no_matching,
-                        getString(viewModel.suggestionTypeStringRes)
-                )
-                NetworkUtils.isNetworkAvailable(applicationContext) -> getString(R.string.loading)
-                else -> getString(R.string.suggestion_no_connection)
-            }
-
-            visibility = when {
-                showingSuggestions -> View.GONE
-                else -> View.VISIBLE
-            }
+            val (newText, newVisibility) = viewModel.getEmptyViewState(suggestionAdapter?.filteredSuggestions)
+            text = newText
+            visibility = newVisibility
         }
     }
 
@@ -253,7 +237,7 @@ class SuggestionActivity : LocaleAwareActivity() {
     }
 
     companion object {
-        const val SELECTED_USER_ID = "SELECTED_USER_ID"
+        const val SELECTED_VALUE = "SELECTED_VALUE"
 
         const val INTENT_KEY_SUGGESTION_TYPE = "INTENT_KEY_SUGGESTION_TYPE"
         const val INTENT_KEY_SITE_MODEL = "INTENT_KEY_SITE_MODEL"
