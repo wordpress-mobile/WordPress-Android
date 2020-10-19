@@ -3254,14 +3254,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
         if (mediaFiles.isEmpty()) {
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(getString(R.string.dialog_edit_story_no_new_blocks_title));
-            builder.setMessage(getString(R.string.dialog_edit_story_no_new_blocks_message));
-            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                dialog.dismiss();
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
+//            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
+//            builder.setTitle(getString(R.string.dialog_edit_story_no_new_blocks_title));
+//            builder.setMessage(getString(R.string.dialog_edit_story_no_new_blocks_message));
+//            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
+//                dialog.dismiss();
+//            });
+//            AlertDialog dialog = builder.create();
+//            dialog.show();
+            ActivityLauncher.editEmptyStoryForResult(
+                    this,
+                    mSite,
+                    mStoryRepositoryWrapper.getCurrentStoryIndex(),
+                    blockId
+            );
             return;
         }
 
