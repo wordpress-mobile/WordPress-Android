@@ -131,6 +131,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 }
                 uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
+                settingsMenuItem?.isVisible = uiState.settingsIconVisible
             }
         })
 
