@@ -22,6 +22,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
@@ -182,6 +184,24 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                         PrepublishingTagsFragment.TAG
                 )
             }
+            CATEGORIES -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingCategoriesFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingCategoriesFragment.TAG
+                )
+            }
+            ADD_CATEGORY -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingAddCategoryFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingAddCategoryFragment.TAG
+                )
+            }
         }
 
         fadeInFragment(fragment, tag)
@@ -192,8 +212,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out,
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out
+                        R.anim.prepublishing_fragment_fade_in,
+                        R.anim.prepublishing_fragment_fade_out,
+                        R.anim.prepublishing_fragment_fade_in,
+                        R.anim.prepublishing_fragment_fade_out
                 )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)

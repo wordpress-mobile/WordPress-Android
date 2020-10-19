@@ -13,6 +13,8 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.util.AppLog
@@ -66,24 +68,32 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
-        // Note: given we know both the HOME and the TAGS screens have an EditText, we can ask to send the
+        // Note: given we know both the HOME, TAGS and ADD_CATEGORY screens have an EditText, we can ask to send the
         // dismissKeyboard signal only when we're not either in one of these nor navigating towards one of these.
         // At this point in code we only know where we want to navigate to, but it's ok since landing on any of these
         // two we'll want the keyboard to stay up if it was already up ;) (i.e. don't dismiss it).
         // For the case where this is not a story and hence there's no EditText in the HOME screen, we're ok too,
         // because there wouldn't have been a keyboard up anyway.
-        if (prepublishingScreen == PUBLISH) {
+        if (prepublishingScreen == PUBLISH ||
+            prepublishingScreen == CATEGORIES) {
             _dismissKeyboard.postValue(Event(Unit))
         }
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen))
     }
 
     fun onBackClicked() {
-        if (currentScreen != HOME) {
-            currentScreen = HOME
-            navigateToScreen(currentScreen as PrepublishingScreen)
-        } else {
-            _dismissBottomSheet.postValue(Event(Unit))
+        when {
+            currentScreen == ADD_CATEGORY -> {
+                currentScreen = CATEGORIES
+                navigateToScreen(currentScreen as PrepublishingScreen)
+            }
+            currentScreen != HOME -> {
+                currentScreen = HOME
+                navigateToScreen(currentScreen as PrepublishingScreen)
+            }
+            else -> {
+                _dismissBottomSheet.postValue(Event(Unit))
+            }
         }
     }
 
@@ -121,7 +131,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) {
-            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+            AppLog.e(
+                    T.POSTS,
+                    "An error occurred while updating taxonomy with type: " + event.error.type
+            )
         }
     }
 }
@@ -130,7 +143,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 enum class PrepublishingScreen : Parcelable {
     HOME,
     PUBLISH,
-    TAGS
+    TAGS,
+    CATEGORIES,
+    ADD_CATEGORY
 }
 
 data class PrepublishingNavigationTarget(
