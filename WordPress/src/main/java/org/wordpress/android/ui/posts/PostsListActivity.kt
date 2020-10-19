@@ -59,6 +59,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
@@ -88,6 +89,8 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject internal lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+    @Inject internal lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
 
     private lateinit var site: SiteModel
 
@@ -442,8 +445,16 @@ class PostsListActivity : LocaleAwareActivity(),
             viewModel.handleEditPostResult(data)
         } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
             viewModel.handleRemotePreviewClosing()
-        } else if (requestCode == RequestCodes.PHOTO_PICKER && resultCode == Activity.RESULT_OK && data != null) {
-            StoriesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
+        } else if (!consolidatedMediaPickerFeatureConfig.isEnabled() &&
+                requestCode == RequestCodes.PHOTO_PICKER &&
+                resultCode == Activity.RESULT_OK &&
+                data != null) {
+            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
+        } else if (consolidatedMediaPickerFeatureConfig.isEnabled() &&
+                requestCode == RequestCodes.STORIES_PHOTO_PICKER &&
+                resultCode == Activity.RESULT_OK &&
+                data != null) {
+            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
         }
     }
 

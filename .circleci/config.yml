@@ -107,7 +107,7 @@ jobs:
   test:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -141,7 +141,7 @@ jobs:
   lint:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -187,7 +187,7 @@ jobs:
   Installable Build:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -233,7 +233,7 @@ jobs:
   Release Build:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     environment:
       JVM_OPTS: -Xmx2048m
     steps:
@@ -313,7 +313,7 @@ jobs:
         default: false
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -358,7 +358,7 @@ jobs:
   raw-screenshots:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     working_directory: /tmp/workspace
     steps:
       - git/shallow-checkout:
@@ -474,7 +474,7 @@ jobs:
   WordPressUtils Connected Tests:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -524,7 +524,7 @@ jobs:
   translation-review-build:
     executor:
       name: android/default
-      api-version: "28"
+      api-version: "29"
     environment:
       APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
     steps:

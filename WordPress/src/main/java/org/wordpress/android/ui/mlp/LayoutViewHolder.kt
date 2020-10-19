@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mlp
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.setVisible
 
@@ -31,7 +33,16 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
         uiState: LayoutListItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.load(preview, ImageType.THEME, uiState.preview, FIT_CENTER)
+        imageManager.loadWithResultListener(preview, ImageType.THEME, uiState.preview, FIT_CENTER, null,
+                object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: Exception?, model: Any?) {
+                    }
+
+                    override fun onResourceReady(resource: Drawable, model: Any?) {
+                        uiState.onThumbnailReady.invoke()
+                    }
+                })
+
         selected.setVisible(uiState.selectedOverlayVisible)
         preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         container.setOnClickListener {

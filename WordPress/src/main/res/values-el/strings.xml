@@ -27,14 +27,9 @@ Language: el_GR
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
     <string name="gutenberg_native_size">Μέγεθος</string>
     <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">«%s» δεν υποστηρίζεται ακόμη στο WordPress για iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">«%s» δεν υποστηρίζεται ακόμη στο WordPress για Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
     <string name="gutenberg_native_reset_block">Επαναφορά μπλοκ</string>
-    <string name="gutenberg_native_link_text">Κείμενο συνδέσμου</string>
-    <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
-    <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="gutenberg_native_content">Περιεχόμενο…</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>

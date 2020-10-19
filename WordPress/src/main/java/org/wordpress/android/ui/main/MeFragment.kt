@@ -281,7 +281,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         } else {
             getString(R.string.sign_out_wpcom_confirm_with_no_changes)
         }
-        MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder(requireActivity())
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
