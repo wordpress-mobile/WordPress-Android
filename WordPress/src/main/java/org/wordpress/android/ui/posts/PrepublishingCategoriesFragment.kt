@@ -12,20 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.prepublishing_categories_fragment.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.ADD_CATEGORY
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration.LONG
+import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
 class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
@@ -35,7 +30,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingCategoriesViewModel
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var dispatcher: Dispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,16 +48,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         actionListener = null
     }
 
-    override fun onStart() {
-        super.onStart()
-        dispatcher.register(this)
-    }
-
-    override fun onStop() {
-        dispatcher.unregister(this)
-        super.onStop()
-    }
-
     override fun onResume() {
         // Note: This supports the re-calculation and visibility of views when coming from stories.
         val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
@@ -74,37 +58,28 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initBackButton()
         initAddCategoryButton()
         initRecyclerView()
         initViewModel()
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun initBackButton() {
         back_button.setOnClickListener {
-            viewModel.updateCategories()
-            viewModel.onBackButtonClicked()
+            viewModel.onBackButtonClick()
         }
     }
 
     private fun initAddCategoryButton() {
         add_new_category.setOnClickListener {
-            viewModel.onAddNewCategoryClicked()
+            viewModel.onAddCategoryClick()
         }
     }
 
     private fun initRecyclerView() {
         recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = PrepublishingCategoriesAdapter(
-                onCheckChangeListener = { id, checked ->
-                    if (checked) {
-                        viewModel.addSelectedCategory(id)
-                    } else {
-                        viewModel.removeSelectedCategory(id)
-                    }
-                }, context = requireContext()
-        )
+        recycler_view.adapter = PrepublishingCategoriesAdapter(uiHelpers)
         recycler_view.addItemDecoration(
                 DividerItemDecoration(
                         recycler_view.context,
@@ -143,14 +118,9 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         })
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is ContentUiState -> {
-                    (recycler_view.adapter as PrepublishingCategoriesAdapter).set(
-                            it.siteCategories,
-                            it.selectedCategoryIds
-                    )
-                }
-            }
+            (recycler_view.adapter as PrepublishingCategoriesAdapter).update(
+                    it.categoriesListItemUiState
+            )
         })
 
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
@@ -179,14 +149,8 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         val message = uiHelpers.getTextOfUiString(requireContext(), this.message).toString()
         ToastUtils.showToast(
                 requireContext(), message,
-                LONG
+                SHORT
         )
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = MAIN)
-    fun onTermUploaded(event: OnTermUploaded) {
-        viewModel.onTermUploadedComplete(event)
     }
 
     companion object {
