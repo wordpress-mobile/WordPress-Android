@@ -107,11 +107,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
-            if (networkUtils.isNetworkAvailable()) {
-                updateUiState(ErrorUiState(string.mlp_generic_error))
-            } else {
-                updateUiState(ErrorUiState(string.no_network_message))
-            }
+            setErrorState()
         } else {
             handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
         }
@@ -122,6 +118,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
         layouts = response
         loadCategories()
+    }
+
+    private fun setErrorState() {
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiState(ErrorUiState(string.mlp_generic_error))
+        } else {
+            updateUiState(ErrorUiState(string.no_network_message))
+        }
     }
 
     private fun loadLayouts() {
@@ -315,11 +319,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
-        if (layouts == null) {
+        val state = uiState.value as? ContentUiState
+        if (layouts == null || state == null) {
+            setErrorState()
             return
         }
         val categories = ArrayList(selectedCategories ?: listOf())
-        val state = uiState.value as? ContentUiState ?: ContentUiState()
         updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
         updateButtonsUiState()
         handleBlockLayoutsResponse(layouts)
