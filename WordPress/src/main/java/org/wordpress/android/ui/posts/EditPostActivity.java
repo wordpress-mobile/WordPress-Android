@@ -2715,7 +2715,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.SELECTED_USER_MENTION:
                     if (mOnGetSuggestionResult != null) {
-                        String selectedMention = data.getStringExtra(SuggestionActivity.SELECTED_USER_ID);
+                        String selectedMention = data.getStringExtra(SuggestionActivity.SELECTED_VALUE);
                         mOnGetSuggestionResult.accept(selectedMention);
                         // Clear the callback once we have gotten a result
                         mOnGetSuggestionResult = null;

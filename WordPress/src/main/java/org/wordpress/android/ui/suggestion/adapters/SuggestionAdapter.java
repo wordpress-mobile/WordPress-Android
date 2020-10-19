@@ -60,6 +60,10 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         return mOrigSuggestionList;
     }
 
+    public List<Suggestion> getFilteredSuggestions() {
+        return mSuggestionList;
+    }
+
     @Override
     public int getCount() {
         if (mSuggestionList == null) {
