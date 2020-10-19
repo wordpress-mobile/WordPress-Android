@@ -155,7 +155,6 @@ class PostsListActivity : LocaleAwareActivity(),
             checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
                 "SiteModel cannot be null, check the PendingIntent starting PostsListActivity"
             }
-            intent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
             restorePreviousSearch = true
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
