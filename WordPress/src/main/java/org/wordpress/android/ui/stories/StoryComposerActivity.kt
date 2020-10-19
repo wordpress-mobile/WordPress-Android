@@ -480,7 +480,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             val blockId = intent.extras?.getString(ARG_STORY_BLOCK_ID)
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
 
-            val storyIndex = intent.getIntExtra(KEY_STORY_INDEX, DEFAULT_NONE_SELECTED)
+            var storyIndex = intent.getIntExtra(KEY_STORY_INDEX, storyRepositoryWrapper.getCurrentStoryIndex())
+            if (storyIndex == DEFAULT_NONE_SELECTED) {
+                // load a new empty story
+                storyRepositoryWrapper.loadStory(DEFAULT_NONE_SELECTED)
+                storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
+            }
             // if we are editing this Story Block, then the id is assured to be a remote media file id, but
             // the frame no longer points to such media Id on the site given we are just about to save a
             // new flattened media. Hence, we need to set a new temporary Id we can use to identify
