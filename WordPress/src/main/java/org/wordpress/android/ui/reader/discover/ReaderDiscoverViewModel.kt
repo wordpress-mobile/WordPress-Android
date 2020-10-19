@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
@@ -303,11 +304,17 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onRecommendedSiteItemClicked(blogId: Long, feedId: Long) {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_VISITED, mapOf("blog_id" to blogId))
         _navigationEvents.postValue(Event(ShowBlogPreview(blogId, feedId)))
     }
 
     private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
         launch {
+            val properties = mapOf(
+                "blog_id" to recommendedBlogUiState.blogId,
+                "follow" to !recommendedBlogUiState.isFollowed
+            )
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW, properties)
             readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(recommendedBlogUiState)
         }
     }
