@@ -72,7 +72,7 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun initAddCategoryButton() {
-        add_new_category.setOnClickListener {
+        add_action_button.setOnClickListener {
             viewModel.onAddCategoryClick()
         }
     }
@@ -121,6 +121,9 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
             (recycler_view.adapter as PrepublishingCategoriesAdapter).update(
                     it.categoriesListItemUiState
             )
+            with(uiHelpers) {
+                updateVisibility(add_action_button, it.addCategoryActionButtonVisibility)
+            }
         })
 
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel

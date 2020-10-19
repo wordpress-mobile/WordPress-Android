@@ -1335,6 +1335,5 @@
 
     <style name="WordPress.PrepubPrimaryButton" parent="WordPress.Button.Primary">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textStyle">bold</item>
     </style>
 </resources>

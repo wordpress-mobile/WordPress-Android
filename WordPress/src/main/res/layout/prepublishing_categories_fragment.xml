@@ -10,23 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:dividerHeight="@dimen/divider_size"
-        android:layout_above="@+id/add_new_category"
         android:layout_below="@+id/include_prepublishing_toolbar"/>
 
     <include
         android:id="@+id/include_prepublishing_toolbar"
         layout="@layout/prepublishing_toolbar" />
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/add_new_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/margin_large"
-        android:padding="@dimen/margin_large"
-        android:text="@string/prepublishing_nudges_add_category_action"
-        android:textAlignment="viewStart"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:textColor="?colorPrimary" />
 
 </RelativeLayout>
