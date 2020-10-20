@@ -18,6 +18,7 @@ import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
@@ -361,6 +362,28 @@ public class ReaderBlogTable {
                         stmt.execute();
                     }
                 }
+                db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                AppLog.e(AppLog.T.READER, e);
+            }
+        } finally {
+            SqlUtils.closeStatement(stmt);
+            db.endTransaction();
+        }
+    }
+
+    public static void deleteBlogsWithIds(final List<Long> blogIds) {
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        SQLiteStatement stmt = db.compileStatement(
+                "DELETE FROM tbl_blog_info"
+                + " WHERE blog_id IN ("
+                + TextUtils.join(",", blogIds)
+                + ")"
+        );
+        db.beginTransaction();
+        try {
+            try {
+                stmt.execute();
                 db.setTransactionSuccessful();
             } catch (SQLException e) {
                 AppLog.e(AppLog.T.READER, e);
