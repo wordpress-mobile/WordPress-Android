@@ -92,15 +92,12 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         siteCategories.forEachIndexed { index, categoryNode ->
             val itemUiState = if (selectedCategoryIds.contains(categoryNode.categoryId)) {
                 PrepublishingCategoriesListItemUiState(
-                        categoryNode = categoryNode, checked = true
+                        categoryNode = categoryNode, checked = true, onItemTapped = { onCategoryToggled(index, false) }
                 )
             } else {
                 PrepublishingCategoriesListItemUiState(
-                        categoryNode = categoryNode, checked = false
+                        categoryNode = categoryNode, checked = false, onItemTapped = { onCategoryToggled(index, true) }
                 )
-            }
-            itemUiState.onItemTapped = {
-                onCategoryToggled(index, !itemUiState.checked)
             }
             items.add(itemUiState)
         }
@@ -231,7 +228,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     )
 
     data class PrepublishingCategoriesListItemUiState(
-        var onItemTapped: ((Int) -> Unit)? = null,
+        val onItemTapped: ((Int) -> Unit)? = null,
         val clickable: Boolean = true,
         val categoryNode: CategoryNode,
         val checked: Boolean = false,
