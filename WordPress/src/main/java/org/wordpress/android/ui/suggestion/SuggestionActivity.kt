@@ -140,6 +140,7 @@ class SuggestionActivity : LocaleAwareActivity() {
         }
 
         viewModel.suggestions.observe(this, Observer {
+            val isFirstUpdate = suggestionAdapter?.suggestionList == null
             suggestionAdapter?.suggestionList = it
 
             // Calling forceFiltering seemed to be the only way to force the suggestions list to
@@ -148,8 +149,12 @@ class SuggestionActivity : LocaleAwareActivity() {
 
             // Ensure that the suggestions list is displayed wth the new data. This is particularly needed when
             // suggestion list was empty before the new data was received, otherwise the no-longer-empty suggestion
-            // list will not display when it is updated.
-            autocompleteText.showDropDown()
+            // list will not display when it is updated. We don't want to call showDropDown on the first update
+            // both because it is only needed when an empty list is updated, and because it avoids a crash when there
+            // is no internet connection.
+            if (!isFirstUpdate) {
+                autocompleteText.showDropDown()
+            }
 
             updateEmptyView()
         })
