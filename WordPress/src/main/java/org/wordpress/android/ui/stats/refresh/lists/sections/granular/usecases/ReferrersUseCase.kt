@@ -48,7 +48,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 1000
+private const val VIEW_ALL_ITEM_COUNT = 300
 
 class ReferrersUseCase(
     statsGranularity: StatsGranularity,
@@ -121,7 +121,7 @@ class ReferrersUseCase(
                                 group.name ?: "",
                                 group.total ?: 0
                         )
-                val spam = group.markedAsSpam != null && group.markedAsSpam!!
+                val spam = group.markedAsSpam
                 val icon = buildIcon(group.icon, spam)
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
@@ -155,7 +155,7 @@ class ReferrersUseCase(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
-                            val referrerSpam = referrer.markedAsSpam != null && referrer.markedAsSpam!!
+                            val referrerSpam = referrer.markedAsSpam
                             val referrerIcon = buildIcon(referrer.icon, referrerSpam)
                             val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
                                 EMPTY_SPACE
