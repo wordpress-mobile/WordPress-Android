@@ -2671,7 +2671,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // TODO move this to EditorMedia
         ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
-            return;
+            if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                    long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
+                    ids = new ArrayList<>();
+                    ids.add(mediaId);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         boolean allAreImages = true;

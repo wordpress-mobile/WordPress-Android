@@ -121,7 +121,7 @@ class MediaLibraryDataSource(
     }
 
     private fun List<MediaModel>.toMediaItems(mediaType: MediaType): List<MediaItem> {
-        return this.map { mediaModel ->
+        return this.filter { it.url != null }.map { mediaModel ->
             MediaItem(
                     RemoteId(mediaModel.mediaId),
                     mediaModel.url,
