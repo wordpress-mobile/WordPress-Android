@@ -88,6 +88,8 @@ class ReaderDiscoverViewModel @Inject constructor(
      */
     private var pendingReblogPost: ReaderPost? = null
 
+    private var swipeToRefreshTriggered = false
+
     /**
      * Don't recalculate the size after a device orientation change as it'd result in change of the url -> it wouldn't
      * use cached images.
@@ -131,8 +133,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                             _uiState.value = ContentUiState(
                                     convertCardsToUiStates(posts),
                                     reloadProgressVisibility = false,
-                                    loadMoreProgressVisibility = false
+                                    loadMoreProgressVisibility = false,
+                                    scrollToTop = swipeToRefreshTriggered
                             )
+                            swipeToRefreshTriggered = false
                         }
                     }
                 }
@@ -380,6 +384,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun swipeToRefresh() {
         analyticsTrackerWrapper.track(READER_PULL_TO_REFRESH)
+        swipeToRefreshTriggered = true
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
@@ -402,7 +407,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         val fullscreenProgressVisibility: Boolean = false,
         open val fullscreenErrorVisibility: Boolean = false,
         val swipeToRefreshEnabled: Boolean = false,
-        open val fullscreenEmptyVisibility: Boolean = false
+        open val fullscreenEmptyVisibility: Boolean = false,
+        open val scrollToTop: Boolean = false
     ) {
         open val reloadProgressVisibility: Boolean = false
         open val loadMoreProgressVisibility: Boolean = false
@@ -410,7 +416,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         data class ContentUiState(
             val cards: List<ReaderCardUiState>,
             override val reloadProgressVisibility: Boolean,
-            override val loadMoreProgressVisibility: Boolean
+            override val loadMoreProgressVisibility: Boolean,
+            override val scrollToTop: Boolean
         ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
 
         object LoadingUiState : DiscoverUiState(fullscreenProgressVisibility = true)
