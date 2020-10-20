@@ -2896,7 +2896,10 @@
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_notice_page_created">Page created</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
-    <string name="mlp_generic_error">An error occurred while fetching the layouts</string>
+    <string name="mlp_error_title">Layouts not available due to an error</string>
+    <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
+    <string name="mlp_network_error_title">Layouts not available while offline</string>
+    <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>

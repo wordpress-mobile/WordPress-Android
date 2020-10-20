@@ -122,9 +122,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     private fun setErrorState() {
         if (networkUtils.isNetworkAvailable()) {
-            updateUiState(ErrorUiState(string.mlp_generic_error))
+            updateUiState(ErrorUiState(string.mlp_error_title, string.mlp_error_subtitle))
         } else {
-            updateUiState(ErrorUiState(string.no_network_message))
+            updateUiState(ErrorUiState(string.mlp_network_error_title, string.mlp_network_error_subtitle))
         }
     }
 
@@ -190,8 +190,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Retries data fetching
      */
-    fun retry() {
-        fetchLayouts()
+    fun onRetryClicked() {
+        if (networkUtils.isNetworkAvailable()) {
+            fetchLayouts()
+        }
     }
 
     /**
@@ -319,11 +321,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
-        val state = uiState.value as? ContentUiState
-        if (layouts == null || state == null) {
+        if (layouts == null || layouts.isEmpty) {
             setErrorState()
             return
         }
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
         val categories = ArrayList(selectedCategories ?: listOf())
         updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
         updateButtonsUiState()
@@ -332,8 +334,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     sealed class UiState(
         open val isHeaderVisible: Boolean = false,
+        val isDescriptionVisible: Boolean = true,
         val loadingSkeletonVisible: Boolean = false,
-        open val errorViewVisible: Boolean = false
+        val errorViewVisible: Boolean = false,
+        open val buttonsUiState: ButtonsUiState = ButtonsUiState()
     ) {
         object LoadingUiState : UiState(loadingSkeletonVisible = true)
 
@@ -344,13 +348,23 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
             val layoutCategories: List<LayoutCategoryUiState> = listOf(),
-            val buttonsUiState: ButtonsUiState = ButtonsUiState(
+            override val buttonsUiState: ButtonsUiState = ButtonsUiState(
                     createBlankPageVisible = true,
                     previewVisible = false,
                     createPageVisible = false
             )
         ) : UiState()
 
-        data class ErrorUiState(@StringRes val message: Int) : UiState(errorViewVisible = true)
+        data class ErrorUiState(@StringRes val title: Int, @StringRes val subtitle: Int) : UiState(
+                errorViewVisible = true,
+                isHeaderVisible = true,
+                isDescriptionVisible = false,
+                buttonsUiState = ButtonsUiState(
+                        createBlankPageVisible = true,
+                        previewVisible = false,
+                        createPageVisible = false,
+                        retryVisible = true
+                )
+        )
     }
 }

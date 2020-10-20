@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_error.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
+import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
@@ -96,9 +97,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         previewButton.setOnClickListener {
             viewModel.onPreviewPageClicked()
         }
-        actionableEmptyView.button.setOnClickListener {
-            errorLayout.setVisible(false)
-            viewModel.retry()
+        retryButton.setOnClickListener {
+            viewModel.onRetryClicked()
         }
 
         setScrollListener()
@@ -127,6 +127,14 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             AniUtils.fadeIn(header, Duration.SHORT)
             AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
         }
+    }
+
+    /**
+     * Sets the header description visibility
+     * @param visible if true the description is visible else invisible
+     */
+    private fun setDescriptionVisibility(visible: Boolean) {
+        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
@@ -174,22 +182,20 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         loadSavedState(savedInstanceState)
 
         viewModel.uiState.observe(this, Observer { uiState ->
+            setTitleVisibility(uiState.isHeaderVisible)
+            setDescriptionVisibility(uiState.isDescriptionVisible)
+            setButtonsVisibility(uiState.buttonsUiState)
+            setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             when (uiState) {
                 is LoadingUiState -> {
-                    setTitleVisibility(uiState.isHeaderVisible)
-                    setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
                 }
                 is ContentUiState -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
-                    setButtonsVisibility(uiState.buttonsUiState)
-                    setTitleVisibility(uiState.isHeaderVisible)
-                    setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
                 }
                 is ErrorUiState -> {
-                    setTitleVisibility(uiState.isHeaderVisible)
-                    setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
-                    actionableEmptyView.title.setText(uiState.message)
+                    actionableEmptyView.title.setText(uiState.title)
+                    actionableEmptyView.subtitle.setText(uiState.subtitle)
                 }
             }
         })
@@ -217,6 +223,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         createBlankPageButton.setVisible(uiState.createBlankPageVisible)
         createPageButton.setVisible(uiState.createPageVisible)
         previewButton.setVisible(uiState.previewVisible)
+        retryButton.setVisible(uiState.retryVisible)
+        createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
