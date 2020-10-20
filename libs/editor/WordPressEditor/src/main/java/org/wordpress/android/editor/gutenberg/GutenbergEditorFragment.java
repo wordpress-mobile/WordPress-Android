@@ -90,6 +90,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
+    private static final String MEDIA_SOURCE_DOCUMENT = "MEDIA_SOURCE_DOCUMENT";
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
     private static final String GIF_MEDIA = "GIF_MEDIA";
 
@@ -253,11 +254,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
+                    public ArrayList<MediaOption> onGetOtherMediaDocumentOptions() {
+                        ArrayList<MediaOption> otherMediaDocumentOptions = initOtherMediaDocumentOptions();
+                        return otherMediaDocumentOptions;
+                    }
+
+                    @Override
                     public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
                         if (mediaSource.equals(MEDIA_SOURCE_STOCK_MEDIA)) {
                             mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
                         } else if (mediaSource.equals(GIF_MEDIA)) {
                             mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
+                        } else if (mediaSource.equals(MEDIA_SOURCE_DOCUMENT)) {
+                            mEditorFragmentListener.onAddDocumentClicked(allowMultipleSelection);
                         }
                     }
                 },
@@ -453,6 +462,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     getResources().getIdentifier("photo_picker_gif", "string", packageName);
             otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
         }
+
+        return otherMediaOptions;
+    }
+
+    private ArrayList<MediaOption> initOtherMediaDocumentOptions() {
+        ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
+
+        Bundle arguments = getArguments();
+        FragmentActivity activity = getActivity();
+        if (activity == null || arguments == null) {
+            AppLog.e(T.EDITOR,
+                    "Failed to initialize other media options because the activity or getArguments() is null");
+            return otherMediaOptions;
+        }
+
+        String packageName = activity.getApplication().getPackageName();
+
+        int stockMediaResourceId =
+                getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
+
+        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_DOCUMENT, getString(stockMediaResourceId)));
 
         return otherMediaOptions;
     }
@@ -889,7 +919,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             rnMediaList.add(createRNMediaUsingMimeType(mediaId,
                     url,
                     mediaEntry.getValue().getMimeType(),
-                    mediaEntry.getValue().getCaption()));
+                    mediaEntry.getValue().getCaption(),
+                    mediaEntry.getValue().getTitle()));
         }
 
         getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
