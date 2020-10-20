@@ -28,8 +28,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReportReferrerAsSpamResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.UnparsedReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.UnparsedReferrersResponse.UnparsedGroup
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -125,9 +126,9 @@ class ReferrersRestClientTest {
                 "\"results\":" +
                 "{\"views\":16}" +
                 "}"
-        val parsedGroup = gson.fromJson<Group>(group, Group::class.java)
+        val unparsedGroup = gson.fromJson(group, UnparsedGroup::class.java)
 
-        parsedGroup.build(gson)
+        val parsedGroup = unparsedGroup.parse(gson)
 
         assertThat(parsedGroup.views).isEqualTo(16)
         assertThat(parsedGroup.referrers).isNull()
@@ -150,9 +151,9 @@ class ReferrersRestClientTest {
                 "\"results\":" +
                 "[{\"name\":\"$firstReferrerName\",\"url\":\"$firstUrl\",\"views\":$firstViews}," +
                 "{\"name\":\"$secondReferrerName\",\"url\":\"$secondUrl\",\"views\":$secondViews}]}"
-        val parsedGroup = gson.fromJson<Group>(group, Group::class.java)
+        val unparsedGroup = gson.fromJson(group, UnparsedGroup::class.java)
 
-        parsedGroup.build(gson)
+        val parsedGroup = unparsedGroup.parse(gson)
 
         assertThat(parsedGroup.groupId).isEqualTo(groupId)
         assertThat(parsedGroup.views).isNull()
@@ -172,13 +173,13 @@ class ReferrersRestClientTest {
     }
 
     private suspend fun testFetchReferrersSuccessResponse(granularity: StatsGranularity) {
-        val response = mock<ReferrersResponse>()
+        val response = mock<UnparsedReferrersResponse>()
         initFetchReferrersResponse(response)
 
         val responseModel = restClient.fetchReferrers(site, granularity, currentDate, pageSize, false)
 
         assertThat(responseModel.response).isNotNull
-        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(responseModel.response).isEqualTo(ReferrersResponse(null, null, null, emptyList()))
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/referrers/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
@@ -282,10 +283,10 @@ class ReferrersRestClientTest {
     }
 
     private suspend fun initFetchReferrersResponse(
-        data: ReferrersResponse? = null,
+        data: UnparsedReferrersResponse? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<ReferrersResponse> {
-        return initGetResponse(ReferrersResponse::class.java, data ?: mock(), error)
+    ): Response<UnparsedReferrersResponse> {
+        return initGetResponse(UnparsedReferrersResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun initReportReferrerAsSpamApiResponse(
