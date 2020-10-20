@@ -348,23 +348,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
             val layoutCategories: List<LayoutCategoryUiState> = listOf(),
-            override val buttonsUiState: ButtonsUiState = ButtonsUiState(
-                    createBlankPageVisible = true,
-                    previewVisible = false,
-                    createPageVisible = false
-            )
+            override val buttonsUiState: ButtonsUiState = ButtonsUiState()
         ) : UiState()
 
         data class ErrorUiState(@StringRes val title: Int, @StringRes val subtitle: Int) : UiState(
                 errorViewVisible = true,
                 isHeaderVisible = true,
                 isDescriptionVisible = false,
-                buttonsUiState = ButtonsUiState(
-                        createBlankPageVisible = true,
-                        previewVisible = false,
-                        createPageVisible = false,
-                        retryVisible = true
-                )
+                buttonsUiState = ButtonsUiState(retryVisible = true)
         )
     }
 }
