@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 119
+        return 120
     }
 
     override fun getDbName(): String {
@@ -1315,6 +1315,12 @@ open class WellSqlConfig : DefaultWellConfig {
                             "LAYOUT_ID INTEGER," +
                             "CATEGORY_ID INTEGER," +
                             "SITE_ID INTEGER)")
+                }
+                119 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS StatsBlock")
+                    db.execSQL("CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER,BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT," +
+                            "POST_ID INTEGER,JSON TEXT NOT NULL)")
                 }
             }
         }
