@@ -2656,6 +2656,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mOnGetMentionResult = null;
                     }
                     break;
+                case RequestCodes.FILE_LIBRARY:
+                    List<Uri> documentUris = WPMediaUtils.retrieveMediaUris(data);
+                    //mImageEditorTracker.trackAddPhoto(uris);
+                    for (Uri item : documentUris) {
+                        mEditorMedia.addNewMediaToEditorAsync(item, true);
+                    }
+                    break;
             }
         }
 
@@ -2891,6 +2898,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddGifClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection);
+    }
+
+    @Override
+    public void onAddDocumentClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher.showDocumentPicker(this, allowMultipleSelection);
     }
 
     @Override
