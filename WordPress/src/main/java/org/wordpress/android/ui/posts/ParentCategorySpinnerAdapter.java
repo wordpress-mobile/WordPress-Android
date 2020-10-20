@@ -80,8 +80,11 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         }
     }
 
-    public void updateItems(List<CategoryNode> categoryNodes) {
-        this.mObjects.addAll(categoryNodes);
-        notifyDataSetChanged();
+    public void replaceItems(List<CategoryNode> categoryNodes) {
+        if (categoryNodes.size() != mObjects.size()) {
+            this.mObjects.clear();
+            this.mObjects.addAll(categoryNodes);
+            notifyDataSetChanged();
+        }
     }
 }
