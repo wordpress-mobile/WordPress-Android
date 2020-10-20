@@ -42,9 +42,15 @@ class MediaPickerLauncher @Inject constructor(
         localPostId: Int
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val availableDataSources = if (site != null && site.isUsingWpComRestApi) {
+                setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY)
+            } else {
+                setOf(WP_LIBRARY, GIF_LIBRARY)
+            }
+
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY),
+                    availableDataSources = availableDataSources,
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
@@ -74,7 +80,7 @@ class MediaPickerLauncher @Inject constructor(
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY, GIF_LIBRARY),
+                    availableDataSources = setOf(WP_LIBRARY),
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
