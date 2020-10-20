@@ -129,7 +129,8 @@ class MediaPickerLauncher @Inject constructor(
 
     fun showStoriesPhotoPickerForResult(
         activity: Activity,
-        site: SiteModel?
+        site: SiteModel?,
+        requestCode: Int = RequestCodes.STORIES_PHOTO_PICKER
     ) {
         val browserType = MediaBrowserType.WP_STORIES_MEDIA_PICKER
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
@@ -138,7 +139,7 @@ class MediaPickerLauncher @Inject constructor(
                     buildLocalMediaPickerSetup(browserType),
                     site
             )
-            activity.startActivityForResult(intent, RequestCodes.STORIES_PHOTO_PICKER)
+            activity.startActivityForResult(intent, requestCode)
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, browserType, site, null)
         }
