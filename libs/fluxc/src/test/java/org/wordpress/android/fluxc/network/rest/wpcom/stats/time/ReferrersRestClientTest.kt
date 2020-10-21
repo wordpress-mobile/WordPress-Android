@@ -30,7 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReportReferrerAsSpamResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.UnparsedReferrersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.UnparsedReferrersResponse.UnparsedGroup
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.UnparsedReferrersResponse.UnparsedReferrerGroup
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -126,7 +126,7 @@ class ReferrersRestClientTest {
                 "\"results\":" +
                 "{\"views\":16}" +
                 "}"
-        val unparsedGroup = gson.fromJson(group, UnparsedGroup::class.java)
+        val unparsedGroup = gson.fromJson(group, UnparsedReferrerGroup::class.java)
 
         val parsedGroup = unparsedGroup.parse(gson)
 
@@ -151,11 +151,11 @@ class ReferrersRestClientTest {
                 "\"results\":" +
                 "[{\"name\":\"$firstReferrerName\",\"url\":\"$firstUrl\",\"views\":$firstViews}," +
                 "{\"name\":\"$secondReferrerName\",\"url\":\"$secondUrl\",\"views\":$secondViews}]}"
-        val unparsedGroup = gson.fromJson(group, UnparsedGroup::class.java)
+        val unparsedGroup = gson.fromJson(group, UnparsedReferrerGroup::class.java)
 
         val parsedGroup = unparsedGroup.parse(gson)
 
-        assertThat(parsedGroup.groupId).isEqualTo(groupId)
+        assertThat(parsedGroup.group).isEqualTo(groupId)
         assertThat(parsedGroup.views).isNull()
         assertThat(parsedGroup.referrers).hasSize(2)
         parsedGroup.referrers?.get(0)?.apply {
