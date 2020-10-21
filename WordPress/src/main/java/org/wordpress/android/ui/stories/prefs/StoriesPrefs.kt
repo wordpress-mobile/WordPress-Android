@@ -73,19 +73,16 @@ class StoriesPrefs @Inject constructor(
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: RemoteId): Boolean {
-        val storyFrameItem: StoryFrameItem? = getSlideWithRemoteId(siteId, mediaId)
-        return checkSlideOriginalBackgroundMediaExists(storyFrameItem)
+    private fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: RemoteId): Boolean {
+        return checkSlideOriginalBackgroundMediaExists(getSlideWithRemoteId(siteId, mediaId))
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, tempId: TempId): Boolean {
-        val storyFrameItem: StoryFrameItem? = getSlideWithTempId(siteId, tempId)
-        return checkSlideOriginalBackgroundMediaExists(storyFrameItem)
+    private fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: TempId): Boolean {
+        return checkSlideOriginalBackgroundMediaExists(getSlideWithTempId(siteId, mediaId))
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, localId: LocalId): Boolean {
-        val storyFrameItem: StoryFrameItem? = getSlideWithLocalId(siteId, localId)
-        return checkSlideOriginalBackgroundMediaExists(storyFrameItem)
+    private fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: LocalId): Boolean {
+        return checkSlideOriginalBackgroundMediaExists(getSlideWithLocalId(siteId, mediaId))
     }
 
     private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean {
