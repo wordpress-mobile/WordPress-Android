@@ -2656,7 +2656,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         mOnGetMentionResult = null;
                     }
                     break;
-                case RequestCodes.FILE_LIBRARY:
+                case RequestCodes.DOCUMENT_LIBRARY:
                     List<Uri> documentUris = WPMediaUtils.retrieveMediaUris(data);
                     //mImageEditorTracker.trackAddPhoto(uris);
                     for (Uri item : documentUris) {

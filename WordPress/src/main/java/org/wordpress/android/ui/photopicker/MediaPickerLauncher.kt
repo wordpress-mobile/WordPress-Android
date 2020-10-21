@@ -194,6 +194,35 @@ class MediaPickerLauncher @Inject constructor(
         }
     }
 
+    fun showDocumentPicker(activity: Activity, canMultiselect: Boolean) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val allowedTypes = mutableSetOf(DOCUMENT)
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = canMultiselect,
+                    requiresStoragePermissions = true,
+                    allowedTypes = allowedTypes,
+                    cameraSetup = HIDDEN,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_choose_file
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup
+            )
+            activity.startActivityForResult(
+                    intent,
+                    RequestCodes.DOCUMENT_LIBRARY
+            )
+        } else {
+            WPMediaUtils.launchFileLibrary(activity, true)
+        }
+    }
+
     fun viewWPMediaLibraryPickerForResult(activity: Activity, site: SiteModel, browserType: MediaBrowserType) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val intent = MediaPickerActivity.buildIntent(
