@@ -2658,7 +2658,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.DOCUMENT_LIBRARY:
                     List<Uri> documentUris = WPMediaUtils.retrieveMediaUris(data);
-                    //mImageEditorTracker.trackAddPhoto(uris);
+                    // ToDo track added file e.g. mImageEditorTracker.trackAddPhoto(uris);
                     for (Uri item : documentUris) {
                         mEditorMedia.addNewMediaToEditorAsync(item, true);
                     }
