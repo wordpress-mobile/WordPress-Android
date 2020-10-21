@@ -148,7 +148,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                                 // if prefs has this Slide with the temporary key, replace it
                                 // if not, let's now save the new slide with the local key
-                                storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide_Phase1(
+                                storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
                                         TempId(oldTemporaryId),
                                         LocalId(it.id),
                                         it.localSiteId.toLong()

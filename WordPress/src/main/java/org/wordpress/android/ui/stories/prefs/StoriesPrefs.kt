@@ -206,7 +206,10 @@ class StoriesPrefs @Inject constructor(
         }
     }
 
-    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide_Phase2(
+    // Phase 2: this method is likely used after a first phase in which a local media which only has a temporary id has
+    // then be replaced by a local id. At this point, we now have a remote Id and we can replace the local
+    // media id with the remote media id.
+    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
         localIdKey: Int,
         remoteIdKey: Long,
         localSiteId: Long
@@ -230,7 +233,10 @@ class StoriesPrefs @Inject constructor(
         }
     }
 
-    fun replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide_Phase1(
+    // Phase 1: this method is likely used at the beginning when a local media which only has a temporary id needs now
+    // to be assigned with a localMediaId. At a later point when the media is uploaded to the server, it will be
+    // assigned a remote Id which will replace this localId.
+    fun replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
         tempId: TempId,
         localId: LocalId,
         localSiteId: Long
