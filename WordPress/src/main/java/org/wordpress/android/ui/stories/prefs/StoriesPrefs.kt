@@ -18,11 +18,11 @@ class StoriesPrefs @Inject constructor(
     private val context: Context
 ) {
     companion object {
-        private val KEY_STORIES_SLIDE_INCREMENTAL_ID = "incremental_id"
-        private val KEY_PREFIX_STORIES_SLIDE_ID = "story_slide_id-"
-        private val KEY_PREFIX_TEMP_MEDIA_ID = "t-"
-        private val KEY_PREFIX_LOCAL_MEDIA_ID = "l-"
-        private val KEY_PREFIX_REMOTE_MEDIA_ID = "r-"
+        private const val KEY_STORIES_SLIDE_INCREMENTAL_ID = "incremental_id"
+        private const val KEY_PREFIX_STORIES_SLIDE_ID = "story_slide_id-"
+        private const val KEY_PREFIX_TEMP_MEDIA_ID = "t-"
+        private const val KEY_PREFIX_LOCAL_MEDIA_ID = "l-"
+        private const val KEY_PREFIX_REMOTE_MEDIA_ID = "r-"
     }
 
     private fun buildSlideKey(siteId: Long, mediaId: RemoteId): String {
