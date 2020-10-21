@@ -171,7 +171,6 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
-import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -677,7 +676,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         setupPrepublishingBottomSheetRunnable();
 
-        mStoriesEventListener.start(this.getLifecycle(), mSite);
+        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository);
         setupPreviewUI();
     }
 
@@ -3252,110 +3251,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
-                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
-        if (!result.getNoSlidesLoaded()) {
-            // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
-            ActivityLauncher.editStoryForResult(
-                    this,
-                    mSite,
-                    new LocalId(mEditPostRepository.getId()),
-                    result.getStoryIndex(),
-                    result.getAllStorySlidesAreEditable(),
-                    true,
-                    blockId
-            );
-        } else {
-            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
-            // editing at this time :(
-            if (mNetworkErrorOnLastMediaFetchAttempt) {
-                // there was an error fetching media when we were loading the editor,
-                // we *may* still have a possibility, tell the user they may try refreshing the media again
-                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-                builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
-                builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
-                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                    // try another fetchMedia request
-                    fetchMediaList();
-                    dialog.dismiss();
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            } else {
-                // unrecoverable error, nothing we can do, inform the user :(.
-                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-                builder.setTitle(getString(R.string.dialog_edit_story_unrecoverable_title));
-                builder.setMessage(getString(R.string.dialog_edit_story_unrecoverable_message));
-                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                    dialog.dismiss();
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
+                this,
+                new LocalId(mEditPostRepository.getId()),
+                mNetworkErrorOnLastMediaFetchAttempt,
+                mediaFiles,
+                blockId
+        );
+
+        if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
+            // try another fetchMedia request
+            fetchMediaList();
         }
     }
 
     @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-        ArrayList<Integer> mediaIdsToRetry = new ArrayList<>();
-        for (Object mediaFile : mediaFiles) {
-            int localMediaId
-                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
-            if (localMediaId != 0) {
-                MediaModel media = mMediaStore.getMediaWithLocalId(localMediaId);
-                // if we find at least one item in the mediaFiles collection passed
-                // for which we don't have a local MediaModel, just tell the user and bail
-                if (media == null) {
-                    AppLog.e(T.MEDIA, "Can't find media with local id: " + localMediaId);
-                    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-                    builder.setTitle(getString(R.string.cannot_retry_deleted_media_item_fatal));
-                    builder.setPositiveButton(R.string.yes, (dialog, id) -> {
-                        dialog.dismiss();
-                    });
-
-                    builder.setNegativeButton(getString(R.string.no), (dialog, id) -> dialog.dismiss());
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                    return;
-                }
-
-                if (media.getUrl() != null && media.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
-                    // Note: we should actually do this when the editor fragment starts instead of waiting for user
-                    // input.
-                    // Notify the editor fragment upload was successful and it should replace the local url by the
-                    // remote url.
-                    if (mEditorMediaUploadListener != null) {
-                        mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
-                                FluxCUtils.mediaFileFromMediaModel(media));
-                    }
-                } else {
-                    UploadService.cancelFinalNotification(this, mEditPostRepository.getPost());
-                    UploadService.cancelFinalNotificationForMedia(this, mSite);
-                    mediaIdsToRetry.add(localMediaId);
-                }
-            }
-        }
-
-        if (!mediaIdsToRetry.isEmpty()) {
-            mEditorMedia.retryFailedMediaAsync(mediaIdsToRetry);
-        }
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_RETRIED);
+        mStoriesEventListener.onRetryUploadForMediaCollection(this, mediaFiles, mEditorMediaUploadListener);
     }
 
     @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-        // just cancel upload for each media
-        for (Object mediaFile : mediaFiles) {
-            int localMediaId
-                    = StringUtils.stringToInt(((HashMap<String, Object>) mediaFile).get("id").toString(), 0);
-            if (localMediaId != 0) {
-                mEditorMedia.cancelMediaUploadAsync(localMediaId, false);
-            }
-        }
+        mStoriesEventListener.onCancelUploadForMediaCollection(mediaFiles);
     }
 
     @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
-        // TODO implement cancelling save process for media collection
+        mStoriesEventListener.onCancelSaveForMediaCollection(mediaFiles);
     }
 
     // FluxC events
