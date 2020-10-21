@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.ReferrerGroup
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
@@ -64,8 +64,8 @@ class ReferrersRestClient
         )
         return when (response) {
             is Success -> {
-                val firstGroup = response.data.groups.values.firstOrNull()
-                val parsedGroups = firstGroup?.groups?.map {
+                val firstGroup = response.data.dataForPeriod.values.firstOrNull()
+                val parsedGroups = firstGroup?.unparsedReferrerGroups?.map {
                     it.parse(gson)
                 } ?: listOf()
                 FetchStatsPayload(
@@ -135,23 +135,23 @@ class ReferrersRestClient
 
     data class UnparsedReferrersResponse(
         @SerializedName("period") val statsGranularity: String?,
-        @SerializedName("days") val groups: Map<String, Groups>
+        @SerializedName("days") val dataForPeriod: Map<String, PeriodData>
     ) {
-        data class Groups(
+        data class PeriodData(
             @SerializedName("other_views") val otherViews: Int?,
             @SerializedName("total_views") val totalViews: Int?,
-            @SerializedName("groups") val groups: List<UnparsedGroup>
+            @SerializedName("groups") val unparsedReferrerGroups: List<UnparsedReferrerGroup>
         )
 
-        data class UnparsedGroup(
-            @SerializedName("group") val groupId: String?,
+        data class UnparsedReferrerGroup(
+            @SerializedName("group") val group: String?,
             @SerializedName("name") val name: String?,
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("total") val total: Int?,
             @SerializedName("results") val results: JsonElement?
         ) {
-            fun parse(gson: Gson): Group {
+            fun parse(gson: Gson): ReferrerGroup {
                 var referrers: List<Referrer>? = null
                 var views: Int? = null
                 when (this.results) {
@@ -163,44 +163,40 @@ class ReferrersRestClient
                     }
                     is JsonObject -> views = this.results.getInt("views")
                 }
-                return Group(groupId, name, icon, url, total, referrers, views, false)
+                return ReferrerGroup(group, name, icon, url, total, referrers, views, false)
             }
         }
     }
 
     data class ReferrersResponse(
-        @SerializedName("period") val statsGranularity: String?,
-        @SerializedName("other_views") val otherViews: Int?,
-        @SerializedName("total_views") val totalViews: Int?,
-        @SerializedName("groups") val groups: List<Group>
+        val statsGranularity: String?,
+        val otherViews: Int?,
+        val totalViews: Int?,
+        val referrerGroups: List<ReferrerGroup>
     ) {
-        data class Group(
-            @SerializedName("group") val groupId: String?,
-            @SerializedName("name") val name: String?,
-            @SerializedName("icon") val icon: String?,
-            @SerializedName("url") val url: String?,
-            @SerializedName("total") val total: Int?,
-            @SerializedName("referrers") val referrers: List<Referrer>? = null,
-            @SerializedName("views") val views: Int? = null,
-            @SerializedName("markedAsSpam") val markedAsSpam: Boolean
+        data class ReferrerGroup(
+            val group: String?,
+            val name: String?,
+            val icon: String?,
+            val url: String?,
+            val total: Int?,
+            val referrers: List<Referrer>? = null,
+            val views: Int? = null,
+            val markedAsSpam: Boolean
         )
 
         data class Referrer(
-            @SerializedName("group") val groupId: String?,
+            @SerializedName("group") val group: String?,
             @SerializedName("name") val name: String?,
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("views") val views: Int?,
-            @SerializedName("children") val children: List<Child>?,
+            @SerializedName("child") val children: List<Child>?,
             @SerializedName("markedAsSpam") val markedAsSpam: Boolean
         )
 
         data class Child(
-            @SerializedName("name") val name: String?,
-            @SerializedName("views") val totals: Int?,
-            @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
-            @SerializedName("markedAsSpam") val markedAsSpam: Boolean
         )
     }
 
