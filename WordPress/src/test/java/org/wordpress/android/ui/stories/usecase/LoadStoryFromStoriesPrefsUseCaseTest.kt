@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stories.usecase
 
 import android.content.Context
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
