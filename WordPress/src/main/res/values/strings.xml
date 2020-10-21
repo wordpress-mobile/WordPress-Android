@@ -2899,6 +2899,12 @@
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_generic_error">An error occurred while fetching the layouts</string>
 
+    <!-- Home Page Picker -->
+    <string name="hpp_title">Choose a design</string>
+    <string name="hpp_subtitle">Pick your favorite homepage layout. You can customize or change it later.</string>
+    <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_skip_button">Skip</string>
+
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>

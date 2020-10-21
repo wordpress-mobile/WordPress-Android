@@ -20,7 +20,17 @@
 
     <!-- The title is always visible in landscape mode -->
     <TextView
+        android:id="@+id/titleLandscape"
         style="@style/ModalLayoutPickerHeader"
         android:layout_marginEnd="@dimen/margin_medium"
         android:text="@string/mlp_choose_layout_title" />
+
+    <Button
+        android:id="@+id/skipButton"
+        style="@style/HomePagePickerSkipButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/hpp_skip_button"
+        android:visibility="gone" />
 </FrameLayout>

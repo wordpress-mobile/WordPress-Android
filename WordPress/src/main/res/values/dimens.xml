@@ -579,4 +579,8 @@
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
     <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
+
+    <!-- Home Page Picker -->
+    <dimen name="hpp_card_width">156dp</dimen>
+    <dimen name="hpp_card_height">226dp</dimen>
 </resources>
