@@ -542,10 +542,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         } else {
                             val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
                             val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
-                            mediaFile?.let {
+                            mediaFile?.let { mediafile ->
                                 val storyMediaFileData =
                                         saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                                mediaFile = it,
+                                                mediaFile = mediafile,
                                                 temporaryId = assignedTempId
                                         )
                                 frame.id = storyMediaFileData.id
