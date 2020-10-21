@@ -54,7 +54,7 @@ class TimeStatsMapper
 
     fun map(response: ReferrersResponse, cacheMode: LimitMode): ReferrersModel {
         val groups =
-                response.groups.let {
+                response.referrerGroups.let {
                     if (cacheMode is LimitMode.Top) {
                         it.take(cacheMode.limit)
                     } else {
@@ -77,7 +77,7 @@ class TimeStatsMapper
                         }
                     }
                     ReferrersModel.Group(
-                            group.groupId,
+                            group.group,
                             group.name,
                             group.icon,
                             group.url,
@@ -86,7 +86,7 @@ class TimeStatsMapper
                             group.markedAsSpam
                     )
                 }
-        val hasMore = response.groups.size > groups.size
+        val hasMore = response.referrerGroups.size > groups.size
         return ReferrersModel(response.otherViews ?: 0, response.totalViews ?: 0, groups, hasMore)
     }
 

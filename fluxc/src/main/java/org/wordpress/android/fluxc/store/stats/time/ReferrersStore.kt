@@ -108,7 +108,7 @@ class ReferrersStore
     }
 
     fun setSelectForSpam(model: ReferrersResponse, domain: String, spam: Boolean): ReferrersResponse {
-        val updatedGroups = model.groups.map { group ->
+        val updatedGroups = model.referrerGroups.map { group ->
             // Many groups has url as null, but they can still be spammed using their names as url
             val groupMarkedAsSpam = if (group.url == domain || group.name == domain) {
                 spam
@@ -116,22 +116,16 @@ class ReferrersStore
                 group.markedAsSpam
             }
             val updatedReferrers = group.referrers?.map { referrer ->
-                val children = referrer.children?.map { child ->
-                    if (child.url == domain) {
-                        child.copy(markedAsSpam = spam)
-                    } else {
-                        child
-                    }
-                }
-                val referrerMarkedAsSpam = if (referrer.url == domain) {
+                val referrerMarkedAsSpam = if (referrer.url == domain ||
+                        referrer.children?.any { it.url == domain } == true) {
                     spam
                 } else {
                     referrer.markedAsSpam
                 }
-                referrer.copy(markedAsSpam = referrerMarkedAsSpam, children = children)
+                referrer.copy(markedAsSpam = referrerMarkedAsSpam)
             }
             group.copy(markedAsSpam = groupMarkedAsSpam, referrers = updatedReferrers)
         }
-        return model.copy(groups = updatedGroups)
+        return model.copy(referrerGroups = updatedGroups)
     }
 }

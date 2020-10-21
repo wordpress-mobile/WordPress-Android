@@ -211,14 +211,14 @@ class ReferrersStoreTest {
         val groupResult = store.setSelectForSpam(REFERRERS_RESPONSE, "url_group_2.com", true)
 
         // Asserting group 1 is set with spam as false and group 2 is set with spam as true
-        assertThat(groupResult.groups[0].markedAsSpam).isFalse()
-        assertThat(groupResult.groups[1].markedAsSpam).isTrue()
+        assertThat(groupResult.referrerGroups[0].markedAsSpam).isFalse()
+        assertThat(groupResult.referrerGroups[1].markedAsSpam).isTrue()
 
         val referrerResult = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com", true)
-        assertThat(referrerResult.groups[0].referrers!![0].markedAsSpam).isTrue()
+        assertThat(referrerResult.referrerGroups[0].referrers!![0].markedAsSpam).isTrue()
 
         val childResult = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com", true)
-        assertThat(childResult.groups[0].referrers!![0].children?.get(0)?.markedAsSpam).isTrue()
+        assertThat(childResult.referrerGroups[0].referrers!![0].markedAsSpam).isTrue()
     }
 
     @Test
@@ -227,15 +227,15 @@ class ReferrersStoreTest {
         val groupResult = store.setSelectForSpam(groupResultWithSpam, "url_group_2.com", false)
 
         // Asserting group 1 and group 2 is set with spam to false
-        assertThat(groupResult.groups[0].markedAsSpam).isFalse()
-        assertThat(groupResult.groups[1].markedAsSpam).isFalse()
+        assertThat(groupResult.referrerGroups[0].markedAsSpam).isFalse()
+        assertThat(groupResult.referrerGroups[1].markedAsSpam).isFalse()
 
         val referrerResultWitSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "john.com", true)
         val referrerResult = store.setSelectForSpam(referrerResultWitSpam, "john.com", false)
-        assertThat(referrerResult.groups[0].referrers!![0].markedAsSpam).isFalse()
+        assertThat(referrerResult.referrerGroups[0].referrers!![0].markedAsSpam).isFalse()
 
         val childResultWithSpam = store.setSelectForSpam(REFERRERS_RESPONSE, "child.com", true)
         val childResult = store.setSelectForSpam(childResultWithSpam, "child.com", false)
-        assertThat(childResult.groups[0].referrers!![0].children?.get(0)?.markedAsSpam).isFalse()
+        assertThat(childResult.referrerGroups[0].referrers!![0].markedAsSpam).isFalse()
     }
 }
