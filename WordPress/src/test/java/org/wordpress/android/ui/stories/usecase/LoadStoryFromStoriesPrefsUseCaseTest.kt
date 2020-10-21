@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
@@ -25,7 +24,6 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Mock lateinit var mediaStore: MediaStore
     @Mock lateinit var storiesPrefs: StoriesPrefs
     @Mock lateinit var context: Context
-    @Mock lateinit var postRepository: EditPostRepository
     private lateinit var siteModel: SiteModel
 
     @Before
