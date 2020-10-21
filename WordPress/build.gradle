@@ -110,6 +110,7 @@ android {
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
+            buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
