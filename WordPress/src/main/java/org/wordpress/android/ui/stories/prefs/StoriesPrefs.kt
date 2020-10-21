@@ -68,7 +68,7 @@ class StoriesPrefs @Inject constructor(
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    fun checkSlideIdExists(siteId: Long, localId: LocalId): Boolean {
+    private fun checkSlideIdExists(siteId: Long, localId: LocalId): Boolean {
         val slideIdKey = buildSlideKey(siteId, localId)
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
