@@ -196,7 +196,7 @@ class ReferrersRestClient
         )
 
         data class Child(
-            @SerializedName("url") val url: String?,
+            @SerializedName("url") val url: String?
         )
     }
 
