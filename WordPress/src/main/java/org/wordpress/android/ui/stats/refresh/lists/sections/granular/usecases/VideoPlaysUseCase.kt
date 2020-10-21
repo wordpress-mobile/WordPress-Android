@@ -34,9 +34,6 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 300
-
 class VideoPlaysUseCase
 constructor(
     statsGranularity: StatsGranularity,
