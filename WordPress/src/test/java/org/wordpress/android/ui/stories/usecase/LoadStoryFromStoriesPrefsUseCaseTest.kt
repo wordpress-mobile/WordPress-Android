@@ -143,7 +143,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
                 for (i in 1..10) {
                     val oneMediaFile = HashMap<String, Any>()
                     oneMediaFile.put("mime", "image/jpeg")
-                    oneMediaFile.put("link", "https://testmzorz3.files.wordpress.com/2020/10/wp-0000000.jpg")
+                    oneMediaFile.put("link", "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg")
                     oneMediaFile.put("type", "image")
                     oneMediaFile.put("id", i.toString())
                     mediaFiles.add(oneMediaFile)
