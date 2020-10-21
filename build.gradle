@@ -6,7 +6,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.androidx_work_version = "2.0.1"
     ext.buildGutenbergMobileJSBundle = 1
-    ext.wordPressUtilsVersion = '1.30'
+    ext.wordPressUtilsVersion = '40-b5e3198'
 
     repositories {
         google()
@@ -50,6 +50,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
+        maven { url "https://dl.bintray.com/mokagio/maven" }
         maven { url "https://jitpack.io" }
 
         if (rootProject.ext.buildGutenbergFromSource) {
