@@ -1,6 +1,6 @@
 16.1
 -----
-* [*] Improved page layout selection experience
+* [***] Block Editor: Adds new option to select from a variety of predefined page templates when creating a new page for a Gutenberg site.
 
 16.0
 -----
