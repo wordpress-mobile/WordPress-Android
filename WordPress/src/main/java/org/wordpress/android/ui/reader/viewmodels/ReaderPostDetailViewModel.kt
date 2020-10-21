@@ -173,9 +173,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun onBlogSectionClicked(postId: Long, blogId: Long) {
         launch {
-            findPost(postId, blogId)?.let {
-                readerPostCardActionsHandler.handleHeaderClicked(blogId, it.feedId)
-            }
+            readerPostCardActionsHandler.handleHeaderClicked(blogId, postId)
         }
     }
 
