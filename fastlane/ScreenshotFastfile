@@ -58,7 +58,7 @@ platform :android do
       },
       {
         screenshot_type: 'tenInch',
-        device_name: 'Nexus_9_API_30',
+        device_name: 'Nexus_9_API_28',
         device_serial: options[:tenInch_serial],
       }
     ]

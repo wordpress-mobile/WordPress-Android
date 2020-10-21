@@ -1,7 +1,6 @@
 package org.wordpress.android.support;
 
 import android.app.Activity;
-import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,13 +8,13 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Checkable;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.CoordinatesProvider;
 import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.GeneralLocation;
 import androidx.test.espresso.action.GeneralSwipeAction;
@@ -44,10 +43,6 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.swipeDown;
-import static androidx.test.espresso.action.ViewActions.swipeUp;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
-import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -59,6 +54,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
@@ -66,6 +62,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
+import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 
 
 public class WPSupportUtils {
@@ -709,12 +706,14 @@ public class WPSupportUtils {
         return getCurrentActivity().getResources().getString(resourceID);
     }
 
-    public static boolean isTabletScreen() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        float widthDp = displayMetrics.widthPixels / displayMetrics.density;
-        float heightDp = displayMetrics.heightPixels / displayMetrics.density;
-        float screenDimension = Math.min(widthDp, heightDp);
-        return screenDimension >= 600;
+    public static void setNightMode(boolean isNightMode) {
+        getCurrentActivity().runOnUiThread(new Runnable() {
+            @Override public void run() {
+                AppCompatDelegate.setDefaultNightMode(
+                        isNightMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        });
+
+        idleFor(1000);
     }
 }

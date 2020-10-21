@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.screenshots;
 
-import android.content.pm.ActivityInfo;
 import android.provider.Settings;
 
 import androidx.test.espresso.Espresso;
@@ -29,10 +28,11 @@ import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
-import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
+import static org.wordpress.android.support.WPSupportUtils.longClickOn;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
+import static org.wordpress.android.support.WPSupportUtils.setNightMode;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
 import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
@@ -63,11 +63,6 @@ public class WPScreenshotTest extends BaseTest {
 
         // Enable Demo Mode
         mDemoModeEnabler.enable();
-
-        if (isTabletScreen()) {
-            getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-
         wpLogin();
 
         editBlogPost();
@@ -145,7 +140,10 @@ public class WPScreenshotTest extends BaseTest {
 
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
+
+        setNightMode(true);
         takeScreenshot("2-discover-new-reads");
+        setNightMode(false);
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -178,8 +176,11 @@ public class WPScreenshotTest extends BaseTest {
         (new SitePickerPage()).chooseSiteWithURL("tricountyrealestate.wordpress.com");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
+        longClickOn(R.id.quick_action_posts_button);
 
+        setNightMode(true);
         takeScreenshot("4-keep-tabs-on-your-site");
+        setNightMode(false);
     }
 
     private void navigateNotifications() {
@@ -203,7 +204,9 @@ public class WPScreenshotTest extends BaseTest {
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
+        setNightMode(true);
         takeScreenshot("6-upload-on-the-go");
+        setNightMode(false);
 
         pressBackUntilElementIsDisplayed(R.id.quick_action_media_button);
     }
