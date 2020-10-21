@@ -28,6 +28,7 @@ import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
@@ -78,6 +79,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void editBlogPost() {
+        setNightMode(false);
+
         // Choose the "sites" tab in the nav
         clickOn(R.id.nav_sites);
 
@@ -133,6 +136,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateDiscover() {
+        setNightMode(true);
+
         // Click on the "Reader" tab and take a screenshot
         clickOn(R.id.nav_reader);
 
@@ -141,15 +146,14 @@ public class WPScreenshotTest extends BaseTest {
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 
-        setNightMode(true);
         takeScreenshot("2-discover-new-reads");
-        setNightMode(false);
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void navigateStats() {
+        setNightMode(false);
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
         clickOn(R.id.row_stats);
@@ -167,6 +171,7 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void navigateMySite() {
+        setNightMode(true);
         // Click on the "Sites" tab and take a screenshot
         clickOn(R.id.nav_sites);
 
@@ -176,14 +181,16 @@ public class WPScreenshotTest extends BaseTest {
         (new SitePickerPage()).chooseSiteWithURL("tricountyrealestate.wordpress.com");
 
         waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
-        longClickOn(R.id.quick_action_posts_button);
 
-        setNightMode(true);
+        if (isElementDisplayed(R.id.tooltip_message)) {
+            clickOn(R.id.tooltip_message);
+        }
+
         takeScreenshot("4-keep-tabs-on-your-site");
-        setNightMode(false);
     }
 
     private void navigateNotifications() {
+        setNightMode(false);
         // Click on the "Notifications" tab in the nav
         clickOn(R.id.nav_notifications);
 
@@ -198,15 +205,15 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void manageMedia() {
+        setNightMode(true);
+
         // Click on the "Sites" tab in the nav, then choose "Media"
         clickOn(R.id.nav_sites);
         clickOn(R.id.quick_action_media_button);
 
         waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
-        setNightMode(true);
         takeScreenshot("6-upload-on-the-go");
-        setNightMode(false);
 
         pressBackUntilElementIsDisplayed(R.id.quick_action_media_button);
     }
