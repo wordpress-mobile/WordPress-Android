@@ -538,7 +538,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                                     frame,
                                     it
                             )
-                            // frame.id = storyMediaFileData.id
                             storyMediaFileDataList.add(storyMediaFileData)
                         } else {
                             val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
