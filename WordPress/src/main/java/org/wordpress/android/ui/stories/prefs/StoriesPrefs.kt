@@ -51,7 +51,7 @@ class StoriesPrefs @Inject constructor(
         return currentIncrementalId
     }
 
-    fun getIncrementalTempId(): Long {
+    private fun getIncrementalTempId(): Long {
         return PreferenceManager.getDefaultSharedPreferences(context).getLong(
                         KEY_STORIES_SLIDE_INCREMENTAL_ID,
                         0
