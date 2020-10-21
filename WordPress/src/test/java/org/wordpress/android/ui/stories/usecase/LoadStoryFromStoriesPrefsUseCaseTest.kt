@@ -76,6 +76,66 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
         Assertions.assertThat(result).isTrue()
     }
 
+    @Test
+    fun `verify all story slides are editable with local ids`() {
+        // Given
+        val mediaIdsLocal = setupTestSildes(sayValid = true, useTempPrefix = false, useRemoteId = false)
+
+        // When
+        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
+
+        // Then
+        Assertions.assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `verify all story slides are editable with remote ids`() {
+        // Given
+        val mediaIdsLocal = setupTestSildes(sayValid = true, useTempPrefix = false, useRemoteId = true)
+
+        // When
+        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
+
+        // Then
+        Assertions.assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `verify not all story slides are editable with temporary ids`() {
+        // Given
+        val mediaIdsLocal = setupTestSildes(sayValid = false, useTempPrefix = true, useRemoteId = false)
+
+        // When
+        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
+
+        // Then
+        Assertions.assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `verify not all story slides are editable with remote ids`() {
+        // Given
+        val mediaIdsLocal = setupTestSildes(sayValid = false, useTempPrefix = false, useRemoteId = true)
+
+        // When
+        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
+
+        // Then
+        Assertions.assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `verify not all story slides are editable with local ids`() {
+        // Given
+        val mediaIdsLocal = setupTestSildes(sayValid = false, useTempPrefix = false, useRemoteId = false)
+
+        // When
+        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
+
+        // Then
+        Assertions.assertThat(result).isFalse()
+    }
+
     private fun setupMediaFiles(
         emptyList: Boolean
     ): ArrayList<HashMap<String, Any>> {
@@ -104,15 +164,15 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
         val mediaIds = ArrayList<String>()
 
         for (i in 1..10) {
-            mediaIds.add((if (useTempPrefix) TEMPORARY_ID_PREFIX else "") + i.toString())
-        }
-
-        if (useTempPrefix) {
-            whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), mock<TempId>())).thenReturn(sayValid)
-        } else if (useRemoteId) {
-            whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), mock<RemoteId>())).thenReturn(sayValid)
-        } else {
-            whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), mock<LocalId>())).thenReturn(sayValid)
+            val mediaId = (if (useTempPrefix) TEMPORARY_ID_PREFIX else "") + i.toString()
+            mediaIds.add(mediaId)
+            if (useTempPrefix) {
+                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), TempId(mediaId))).thenReturn(sayValid)
+            } else if (useRemoteId) {
+                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), RemoteId(mediaId.toLong()))).thenReturn(sayValid)
+            } else {
+                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), LocalId(mediaId.toInt()))).thenReturn(sayValid)
+            }
         }
 
         return mediaIds
