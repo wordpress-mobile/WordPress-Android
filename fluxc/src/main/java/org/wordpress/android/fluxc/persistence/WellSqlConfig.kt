@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 119
+        return 120
     }
 
     override fun getDbName(): String {
@@ -1315,6 +1315,9 @@ open class WellSqlConfig : DefaultWellConfig {
                             "LAYOUT_ID INTEGER," +
                             "CATEGORY_ID INTEGER," +
                             "SITE_ID INTEGER)")
+                }
+                119 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DELETE FROM WCOrderModel")
                 }
             }
         }
