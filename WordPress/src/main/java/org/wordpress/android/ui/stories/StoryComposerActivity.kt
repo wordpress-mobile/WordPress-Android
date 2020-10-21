@@ -560,8 +560,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun buildStoryMediaFileDataForTemporarySlide(frame: StoryFrameItem, tempId: String): StoryMediaFileData {
-        val storyMediaFileData =
-                saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
+        return saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
                         temporaryId = tempId,
                         url = if (frame.source is FileBackgroundSource) {
                             (frame.source as FileBackgroundSource).file.toString()
@@ -570,7 +569,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         },
                         isVideo = (frame.frameItemType is VIDEO)
                 )
-        return storyMediaFileData
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
