@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.helpers.MediaFile
 
@@ -73,6 +75,55 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
         Assertions.assertThat(editPostRepository.content).isEqualTo(blockWithNonEmptyMediaFiles)
     }
 
+    @Test
+    fun `builds non-empty story block string from non-empty mediaFiles array`() {
+        // Given
+        val mediaFileDataList: ArrayList<StoryMediaFileData> = setupMediaFileDataList(emptyList = false)
+
+        // When
+        val result = saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
+                mediaFileDataList
+        )
+
+        // Then
+        Assertions.assertThat(result).isEqualTo(blockWithNonEmptyMediaFiles)
+    }
+
+    @Test
+    fun `builds empty story block string from empty mediaFiles array`() {
+        // Given
+        val mediaFileDataList: ArrayList<StoryMediaFileData> = setupMediaFileDataList(emptyList = true)
+
+        // When
+        val result = saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
+                mediaFileDataList
+        )
+
+        // Then
+        Assertions.assertThat(result).isEqualTo(blockWithEmptyMediaFiles)
+    }
+
+    @Test
+    fun `obtain a mediaFileData from a MediaFile with a temporary id`() {
+        // Given
+        val mediaFile = getOneMediaFile(1)
+
+        // When
+        val mediaFileData = saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
+                mediaFile,
+                TEMPORARY_ID_PREFIX + 1
+        )
+
+        // Then
+        Assertions.assertThat(mediaFileData.alt).isEqualTo("")
+        Assertions.assertThat(mediaFileData.id).isEqualTo(TEMPORARY_ID_PREFIX + 1)
+        Assertions.assertThat(mediaFileData.link).isEqualTo("https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg")
+        Assertions.assertThat(mediaFileData.type).isEqualTo("image")
+        Assertions.assertThat(mediaFileData.mime).isEqualTo(mediaFile.mimeType)
+        Assertions.assertThat(mediaFileData.caption).isEqualTo("")
+        Assertions.assertThat(mediaFileData.url).isEqualTo(mediaFile.fileURL)
+    }
+
     private fun setupFluxCMediaFiles(
         emptyList: Boolean
     ): ArrayList<MediaFile> {
@@ -86,6 +137,39 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
                     oneMediaFile.mediaId = (i + 1000).toString()
                     oneMediaFile.mimeType = "image/jpeg"
                     oneMediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
+                    mediaFiles.add(oneMediaFile)
+                }
+                return mediaFiles
+            }
+        }
+    }
+
+    private fun getOneMediaFile(id: Int): MediaFile {
+        val oneMediaFile = MediaFile()
+        oneMediaFile.id = id
+        oneMediaFile.mediaId = (id + 1000).toString()
+        oneMediaFile.mimeType = "image/jpeg"
+        oneMediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
+        return oneMediaFile
+    }
+
+    private fun setupMediaFileDataList(
+        emptyList: Boolean
+    ): ArrayList<StoryMediaFileData> {
+        when (emptyList) {
+            true -> return ArrayList()
+            false -> {
+                val mediaFiles = ArrayList<StoryMediaFileData>()
+                for (i in 1..10) {
+                    val oneMediaFile = StoryMediaFileData(
+                            id = i.toString(),
+                            mime = "image/jpeg",
+                            link = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
+                            url = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
+                            alt = "",
+                            type = "image",
+                            caption = ""
+                    )
                     mediaFiles.add(oneMediaFile)
                 }
                 return mediaFiles
