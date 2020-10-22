@@ -138,19 +138,19 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     private fun setupMediaFiles(
         emptyList: Boolean
     ): ArrayList<HashMap<String, Any>> {
-        when (emptyList) {
-            true -> return ArrayList()
+        return when (emptyList) {
+            true -> ArrayList()
             false -> {
                 val mediaFiles = ArrayList<HashMap<String, Any>>()
                 for (i in 1..10) {
-                    val oneMediaFile = HashMap<String, Any>()
-                    oneMediaFile.put("mime", "image/jpeg")
-                    oneMediaFile.put("link", "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg")
-                    oneMediaFile.put("type", "image")
-                    oneMediaFile.put("id", i.toString())
-                    mediaFiles.add(oneMediaFile)
+                    val mediaFile = HashMap<String, Any>()
+                    mediaFile["mime"] = "image/jpeg"
+                    mediaFile["link"] = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg")
+                    mediaFile["type"] = "image"
+                    mediaFile["id"] = i.toString()
+                    mediaFiles.add(mediaFile)
                 }
-                return mediaFiles
+                mediaFiles
             }
         }
     }
