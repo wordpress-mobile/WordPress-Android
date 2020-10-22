@@ -171,12 +171,12 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
             false -> {
                 val mediaFiles = ArrayList<MediaFile>()
                 for (i in 1..10) {
-                    val oneMediaFile = MediaFile()
-                    oneMediaFile.id = i
-                    oneMediaFile.mediaId = (i + 1000).toString()
-                    oneMediaFile.mimeType = "image/jpeg"
-                    oneMediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
-                    mediaFiles.add(oneMediaFile)
+                    val mediaFile = MediaFile()
+                    mediaFile.id = i
+                    mediaFile.mediaId = (i + 1000).toString()
+                    mediaFile.mimeType = "image/jpeg"
+                    mediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
+                    mediaFiles.add(mediaFile)
                 }
                 return mediaFiles
             }
@@ -184,12 +184,12 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     }
 
     private fun getOneMediaFile(id: Int): MediaFile {
-        val oneMediaFile = MediaFile()
-        oneMediaFile.id = id
-        oneMediaFile.mediaId = (id + 1000).toString()
-        oneMediaFile.mimeType = "image/jpeg"
-        oneMediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
-        return oneMediaFile
+        val mediaFile = MediaFile()
+        mediaFile.id = id
+        mediaFile.mediaId = (id + 1000).toString()
+        mediaFile.mimeType = "image/jpeg"
+        mediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
+        return mediaFile
     }
 
     private fun getOneStoryFrameItem(id: String): StoryFrameItem {
@@ -207,7 +207,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
             false -> {
                 val mediaFiles = ArrayList<StoryMediaFileData>()
                 for (i in 1..10) {
-                    val oneMediaFile = StoryMediaFileData(
+                    val mediaFile = StoryMediaFileData(
                             id = i.toString(),
                             mime = "image/jpeg",
                             link = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg",
@@ -216,7 +216,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                             type = "image",
                             caption = ""
                     )
-                    mediaFiles.add(oneMediaFile)
+                    mediaFiles.add(mediaFile)
                 }
                 return mediaFiles
             }
