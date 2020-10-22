@@ -66,10 +66,10 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with temporary ids`() {
         // Given
-        val mediaIdsTemp = setupTestSildes(sayValid = true, useTempPrefix = true, useRemoteId = false)
+        val tempMediaIds = setupTestSildes(sayValid = true, useTempPrefix = true, useRemoteId = false)
 
         // When
-        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsTemp)
+        val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, tempMediaIds)
 
         // Then
         Assertions.assertThat(result).isTrue()
