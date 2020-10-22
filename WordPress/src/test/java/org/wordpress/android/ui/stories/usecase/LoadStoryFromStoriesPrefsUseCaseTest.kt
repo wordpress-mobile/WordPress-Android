@@ -66,7 +66,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with temporary ids`() {
         // Given
-        val tempMediaIds = setupTestSildes(sayValid = true, useTempPrefix = true, useRemoteId = false)
+        val tempMediaIds = setupTestSlides(sayValid = true, useTempPrefix = true, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, tempMediaIds)
@@ -78,7 +78,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with local ids`() {
         // Given
-        val mediaIdsLocal = setupTestSildes(sayValid = true, useTempPrefix = false, useRemoteId = false)
+        val mediaIdsLocal = setupTestSlides(sayValid = true, useTempPrefix = false, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -90,7 +90,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with remote ids`() {
         // Given
-        val mediaIdsLocal = setupTestSildes(sayValid = true, useTempPrefix = false, useRemoteId = true)
+        val mediaIdsLocal = setupTestSlides(sayValid = true, useTempPrefix = false, useRemoteId = true)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -102,7 +102,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify not all story slides are editable with temporary ids`() {
         // Given
-        val mediaIdsLocal = setupTestSildes(sayValid = false, useTempPrefix = true, useRemoteId = false)
+        val mediaIdsLocal = setupTestSlides(sayValid = false, useTempPrefix = true, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -114,7 +114,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify not all story slides are editable with remote ids`() {
         // Given
-        val mediaIdsLocal = setupTestSildes(sayValid = false, useTempPrefix = false, useRemoteId = true)
+        val mediaIdsLocal = setupTestSlides(sayValid = false, useTempPrefix = false, useRemoteId = true)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -126,7 +126,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify not all story slides are editable with local ids`() {
         // Given
-        val mediaIdsLocal = setupTestSildes(sayValid = false, useTempPrefix = false, useRemoteId = false)
+        val mediaIdsLocal = setupTestSlides(sayValid = false, useTempPrefix = false, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -155,7 +155,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
         }
     }
 
-    private fun setupTestSildes(
+    private fun setupTestSlides(
         sayValid: Boolean,
         useTempPrefix: Boolean,
         useRemoteId: Boolean
