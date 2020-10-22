@@ -3167,6 +3167,8 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_sally_smith" tools:ignore="UnusedResources">Sally Smith</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_samuel_the_dog" tools:ignore="UnusedResources">Samuel the Dog</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>
