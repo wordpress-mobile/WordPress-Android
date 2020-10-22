@@ -151,17 +151,12 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
     }
 
     @Test
-    fun `slides are saved locally`() {
+    fun `slides are saved locally to storiedPrefs`() {
         // Given
         val frames = ArrayList<StoryFrameItem>()
         frames.add(getOneStoryFrameItem("1"))
         frames.add(getOneStoryFrameItem("2"))
         frames.add(getOneStoryFrameItem("3"))
-//        frames.add(mock())
-//        frames.add(mock())
-//        frames.add(mock())
-        whenever(storiesPrefs.saveSlideWithTempId(ArgumentMatchers.anyLong(), any(), any()))
-                .then {  }
 
         // When
         saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
@@ -171,9 +166,7 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
         )
 
         // Then
-        // eq(expectedPostId.value)
-        verify(storiesPrefs, times(3)).saveSlideWithTempId(siteModel.siteId, mock(), mock())
-        // Assertions.assertThat(onePost.content).isEqualTo(blockWithNonEmptyMediaFilesWithOneRemoteId)
+        verify(storiesPrefs, times(3)).saveSlideWithTempId(any(), any(), any())
     }
 
     private fun setupFluxCMediaFiles(
@@ -208,9 +201,6 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
     private fun getOneStoryFrameItem(id: String): StoryFrameItem {
         return StoryFrameItem(
                 source = mock(),
-                frameItemType = IMAGE,
-                saveResultReason = SaveSuccess,
-                composedFrameFile = mock(),
                 id = id
         )
     }
