@@ -2,20 +2,15 @@ package org.wordpress.android.ui.stories
 
 import android.content.Context
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import com.wordpress.stories.compose.frame.StorySaveEvents.SaveResultReason.SaveSuccess
 import com.wordpress.stories.compose.story.StoryFrameItem
-import com.wordpress.stories.compose.story.StoryFrameItemType.IMAGE
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
@@ -30,7 +25,7 @@ import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)
-class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
+class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var siteModel: SiteModel
@@ -126,7 +121,9 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
         // Then
         Assertions.assertThat(mediaFileData.alt).isEqualTo("")
         Assertions.assertThat(mediaFileData.id).isEqualTo(TEMPORARY_ID_PREFIX + 1)
-        Assertions.assertThat(mediaFileData.link).isEqualTo("https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg")
+        Assertions.assertThat(mediaFileData.link).isEqualTo(
+                "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
+        )
         Assertions.assertThat(mediaFileData.type).isEqualTo("image")
         Assertions.assertThat(mediaFileData.mime).isEqualTo(mediaFile.mimeType)
         Assertions.assertThat(mediaFileData.caption).isEqualTo("")

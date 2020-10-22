@@ -42,7 +42,9 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
         val mediaFiles: ArrayList<HashMap<String, Any>> = setupMediaFiles(emptyList = true)
 
         // When
-        val mediaIds = loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles as ArrayList<Any>)
+        val mediaIds = loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(
+                mediaFiles as ArrayList<Any>
+        )
 
         // Then
         Assertions.assertThat(mediaIds).isEmpty()
@@ -54,7 +56,9 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
         val mediaFiles: ArrayList<HashMap<String, Any>> = setupMediaFiles(emptyList = false)
 
         // When
-        val mediaIds = loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(mediaFiles as ArrayList<Any>)
+        val mediaIds = loadStoryFromStoriesPrefsUseCase.getMediaIdsFromStoryBlockBridgeMediaFiles(
+                mediaFiles as ArrayList<Any>
+        )
 
         // Then
         Assertions.assertThat(mediaIds).isNotEmpty
@@ -166,9 +170,18 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
             if (useTempPrefix) {
                 whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), TempId(mediaId))).thenReturn(sayValid)
             } else if (useRemoteId) {
-                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), RemoteId(mediaId.toLong()))).thenReturn(sayValid)
+                whenever(
+                        storiesPrefs.isValidSlide(
+                                siteModel.id.toLong(),
+                                RemoteId(mediaId.toLong())
+                        )
+                ).thenReturn(sayValid)
             } else {
-                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), LocalId(mediaId.toInt()))).thenReturn(sayValid)
+                whenever(storiesPrefs.isValidSlide(
+                            siteModel.id.toLong(),
+                            LocalId(mediaId.toInt())
+                        )
+                ).thenReturn(sayValid)
             }
         }
 
