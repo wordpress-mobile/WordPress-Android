@@ -653,6 +653,10 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private void deserializeWpComRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
+        if (settingsObject == null) {
+            AppLog.w(AppLog.T.API, "Error: Settings response doesn't contain settings object");
+            return;
+        }
 
         mRemoteSettings.username = site.getUsername();
         mRemoteSettings.password = site.getPassword();
