@@ -24,7 +24,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Mock lateinit var mediaStore: MediaStore
     @Mock lateinit var storiesPrefs: StoriesPrefs
     @Mock lateinit var context: Context
-    private lateinit var siteModel: SiteModel
+    @Mock lateinit var siteModel: SiteModel
 
     @Before
     fun setUp() {
@@ -33,7 +33,6 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
                 storiesPrefs,
                 mediaStore
         )
-        siteModel = SiteModel()
     }
 
     @Test
