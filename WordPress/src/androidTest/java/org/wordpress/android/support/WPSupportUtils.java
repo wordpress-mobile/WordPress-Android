@@ -54,10 +54,12 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
+import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
@@ -217,6 +219,14 @@ public class WPSupportUtils {
         );
         waitForElementToBeDisplayed(childElement);
         clickOn(childElement);
+    }
+
+    public static void swipeLeftOnViewPager(int viewPagerID) {
+        onView(withId(viewPagerID)).perform(swipeLeft());
+    }
+
+    public static void swipeRightOnViewPager(int viewPagerID) {
+        onView(withId(viewPagerID)).perform(swipeRight());
     }
 
     public static void clickOnSpinnerItemAtIndex(int index) {

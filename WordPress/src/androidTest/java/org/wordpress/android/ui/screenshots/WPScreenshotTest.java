@@ -29,11 +29,12 @@ import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
-import static org.wordpress.android.support.WPSupportUtils.longClickOn;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
+import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
+import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
 import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
@@ -146,6 +147,8 @@ public class WPScreenshotTest extends BaseTest {
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 
+        swipeLeftOnViewPager(R.id.view_pager);
+        swipeRightOnViewPager(R.id.view_pager);
         takeScreenshot("2-discover-new-reads");
 
         // Exit back to the main activity
