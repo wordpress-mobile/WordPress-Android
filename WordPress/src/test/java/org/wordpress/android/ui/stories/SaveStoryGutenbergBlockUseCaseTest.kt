@@ -107,17 +107,18 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @Test
     fun `verify all properties of mediaFileData that are created from buildMediaFileDataWithTemporaryId are correct`() {
         // Given
-        val mediaFile = getMediaFile(1)
+        val mediaFileId = 1
+        val mediaFile = getMediaFile(mediaFileId)
 
         // When
         val mediaFileData = saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
                 mediaFile,
-                TEMPORARY_ID_PREFIX + 1
+                TEMPORARY_ID_PREFIX + mediaFileId
         )
 
         // Then
         Assertions.assertThat(mediaFileData.alt).isEqualTo("")
-        Assertions.assertThat(mediaFileData.id).isEqualTo(TEMPORARY_ID_PREFIX + 1)
+        Assertions.assertThat(mediaFileData.id).isEqualTo(TEMPORARY_ID_PREFIX + mediaFileId)
         Assertions.assertThat(mediaFileData.link).isEqualTo(
                 "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
         )
