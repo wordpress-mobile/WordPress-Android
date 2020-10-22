@@ -25,6 +25,26 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/add_action_button"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/toolbar_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/prepublishing_nudges_add_category_button"
+            android:src="@drawable/ic_plus_white_24dp"
+            android:tint="@color/prepublishing_toolbar_icon_color"/>
+    </RelativeLayout>
+
     <View
         android:id="@+id/bottom_sheet_handle"
         android:layout_width="@dimen/bottom_sheet_handle_width"

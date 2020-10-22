@@ -235,6 +235,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             )
 
     data class UiState(
+        val addCategoryActionButtonVisibility: Boolean = true,
         val categoriesListItemUiState: List<PrepublishingCategoriesListItemUiState> = listOf()
     )
 
