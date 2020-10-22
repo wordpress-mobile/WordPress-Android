@@ -38,6 +38,7 @@
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textSize="18sp"
                 android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:lineSpacingMultiplier="1.2"
                 android:text="@string/stories_intro_main_subtitle" />
 
             <LinearLayout
@@ -101,9 +102,11 @@
                 android:id="@+id/feature_subtitle_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:lineSpacingMultiplier="1.2"
                 android:text="@string/stories_intro_description_first" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -117,9 +120,11 @@
                 android:id="@+id/feature_subtitle_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:lineSpacingMultiplier="1.2"
                 android:text="@string/stories_intro_description_second" />
 
         </LinearLayout>
