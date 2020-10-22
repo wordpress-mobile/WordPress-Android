@@ -538,15 +538,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                                     frame,
                                     it
                             )
-                            // frame.id = storyMediaFileData.id
                             storyMediaFileDataList.add(storyMediaFileData)
                         } else {
                             val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
                             val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
-                            mediaFile?.let {
+                            mediaFile?.let { mediafile ->
                                 val storyMediaFileData =
                                         saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
-                                                mediaFile = it,
+                                                mediaFile = mediafile,
                                                 temporaryId = assignedTempId
                                         )
                                 frame.id = storyMediaFileData.id
@@ -561,8 +560,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun buildStoryMediaFileDataForTemporarySlide(frame: StoryFrameItem, tempId: String): StoryMediaFileData {
-        val storyMediaFileData =
-                saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
+        return saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryIdNoMediaFile(
                         temporaryId = tempId,
                         url = if (frame.source is FileBackgroundSource) {
                             (frame.source as FileBackgroundSource).file.toString()
@@ -571,7 +569,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         },
                         isVideo = (frame.frameItemType is VIDEO)
                 )
-        return storyMediaFileData
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
