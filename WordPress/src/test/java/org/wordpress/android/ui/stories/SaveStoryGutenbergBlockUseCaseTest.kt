@@ -131,17 +131,17 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     fun `local media id is found and gets replaced with remote media id`() {
         // Given
         val mediaFile = getOneMediaFile(1)
-        val onePost = PostModel()
-        onePost.setContent(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
+        val postModel = PostModel()
+        postModel.setContent(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
 
         // When
         saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(
-                onePost,
+                postModel,
                 mediaFile
         )
 
         // Then
-        Assertions.assertThat(onePost.content).isEqualTo(BLOCK_WITH_NON_EMPTY_MEDIA_FILES_WITH_ONE_REMOTE_ID)
+        Assertions.assertThat(postModel.content).isEqualTo(BLOCK_WITH_NON_EMPTY_MEDIA_FILES_WITH_ONE_REMOTE_ID)
     }
 
     @Test
@@ -183,7 +183,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         }
     }
 
-    private fun getOneMediaFile(id: Int): MediaFile {
+    private fun getOneMediaFile(id: Int = 1): MediaFile {
         val mediaFile = MediaFile()
         mediaFile.id = id
         mediaFile.mediaId = (id + 1000).toString()
