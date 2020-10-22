@@ -25,11 +25,13 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
 class StockMediaDataSourceTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var stockMediaStore: StockMediaStore
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     private lateinit var stockMediaDataSource: StockMediaDataSource
     private val url = "wordpress://url"
     private val title = "title"
@@ -46,11 +48,12 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        stockMediaDataSource = StockMediaDataSource(stockMediaStore, TEST_DISPATCHER)
+        stockMediaDataSource = StockMediaDataSource(stockMediaStore, TEST_DISPATCHER, networkUtilsWrapper)
     }
 
     @Test
     fun `returns empty list with filter with less than 2 chars`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val filter = "do"
 
         val result = stockMediaDataSource.load(forced = false, loadMore = false, filter = filter)
@@ -69,6 +72,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
     @Test
     fun `returns success from store with filter with more than 2 chars`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val filter = "dog"
         val loadMore = false
         val hasMore = true
@@ -99,6 +103,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
 
     @Test
     fun `returns empty from store with filter with more than 2 chars`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         val filter = "dog"
         val loadMore = false
         val hasMore = false
@@ -116,5 +121,20 @@ class StockMediaDataSourceTest : BaseUnitTest() {
         }
         verify(stockMediaStore).fetchStockMedia(any(), any())
         verify(stockMediaStore).getStockMedia()
+    }
+
+    @Test
+    fun `returns error when network not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val filter = "dog"
+
+        val result = stockMediaDataSource.load(forced = false, loadMore = false, filter = filter)
+
+        (result as MediaLoadingResult.Failure).apply {
+            assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_title)
+            assertThat(this.htmlSubtitle).isEqualTo(UiStringRes(R.string.no_network_message))
+            assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+        }
+        verifyZeroInteractions(stockMediaStore)
     }
 }

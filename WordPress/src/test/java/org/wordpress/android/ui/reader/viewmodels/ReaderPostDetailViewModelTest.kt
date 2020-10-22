@@ -38,7 +38,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
@@ -69,7 +69,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock private lateinit var reblogUseCase: ReblogUseCase
 
-    private val fakePostFollowStatusChangedFeed = MutableLiveData<PostFollowStatusChanged>()
+    private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
