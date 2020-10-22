@@ -147,8 +147,8 @@ public class WPScreenshotTest extends BaseTest {
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 
-        swipeLeftOnViewPager(R.id.view_pager);
         swipeRightOnViewPager(R.id.view_pager);
+        swipeLeftOnViewPager(R.id.view_pager);
         takeScreenshot("2-discover-new-reads");
 
         // Exit back to the main activity
