@@ -177,6 +177,9 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         with(submit_button) {
             isEnabled = submitButtonUiState.enabled
         }
+        with(uiHelpers) {
+            updateVisibility(submit_button, submitButtonUiState.visibility)
+        }
     }
 
     private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
