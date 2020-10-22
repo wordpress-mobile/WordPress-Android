@@ -105,7 +105,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `obtain a mediaFileData from a MediaFile with a temporary id`() {
+    fun `verify all properties of mediaFileData that are created from buildMediaFileDataWithTemporaryId are correct`() {
         // Given
         val mediaFile = getOneMediaFile(1)
 
