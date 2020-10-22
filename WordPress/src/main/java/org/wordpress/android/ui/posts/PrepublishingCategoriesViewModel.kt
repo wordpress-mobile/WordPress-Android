@@ -1,19 +1,26 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.DimenRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -25,9 +32,9 @@ import javax.inject.Named
 
 class PrepublishingCategoriesViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val updatePostCategoriesUseCase: UpdatePostCategoriesUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val dispatcher: Dispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -50,6 +57,10 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    init {
+        dispatcher.register(this)
+    }
+
     fun start(editPostRepository: EditPostRepository, siteModel: SiteModel) {
         this.editPostRepository = editPostRepository
         this.siteModel = siteModel
@@ -65,30 +76,76 @@ class PrepublishingCategoriesViewModel @Inject constructor(
 
         val siteCategories = getSiteCategories()
         val postCategories = getPostCategories()
-        _uiState.value = ContentUiState(
-                siteCategories = siteCategories,
-                selectedCategoryIds = postCategories.toHashSet()
+        _uiState.value = UiState(
+                categoriesListItemUiState = createListItemUiState(
+                        siteCategories = siteCategories,
+                        selectedCategoryIds = postCategories
+                )
         )
     }
 
-    private fun setToolbarTitleUiState() {
-        _toolbarTitleUiState.postValue(UiStringRes(string.prepublishing_nudges_toolbar_title_categories))
+    private fun createListItemUiState(
+        siteCategories: ArrayList<CategoryNode>,
+        selectedCategoryIds: List<Long>
+    ): List<PrepublishingCategoriesListItemUiState> {
+        val items: ArrayList<PrepublishingCategoriesListItemUiState> = arrayListOf()
+        siteCategories.forEachIndexed { index, categoryNode ->
+            val itemUiState =
+                    createPrepublishingCategoriesListItemUiState(
+                            categoryNode,
+                            selectedCategoryIds.contains(categoryNode.categoryId),
+                            index
+                    )
+            items.add(itemUiState)
+        }
+
+        return items
     }
 
-    fun onBackButtonClicked() {
-        _navigateToHomeScreen.postValue(Event(Unit))
+    fun onBackButtonClick() {
+        saveAndFinish()
     }
 
-    fun onAddNewCategoryClicked() {
+    fun onAddCategoryClick() {
         _navigateToAddCategoryScreen.postValue(Event(Unit))
     }
 
     override fun onCleared() {
         super.onCleared()
-        updateCategoriesJob?.cancel()
+        dispatcher.unregister(this)
     }
 
-    fun updateCategories() {
+    private fun onCategoryToggled(position: Int, checked: Boolean) {
+        uiState.value?.let {
+            val currentUiState = it
+            val updatedUiState = getUpdatedListState(position, checked)
+
+            _uiState.value = currentUiState.copy(categoriesListItemUiState = updatedUiState)
+        }
+    }
+
+    private fun getUpdatedListState(
+        position: Int,
+        checked: Boolean
+    ): List<PrepublishingCategoriesListItemUiState> {
+        val currentUiState = uiState.value as UiState
+        val newListItemUiState = currentUiState.categoriesListItemUiState.toMutableList()
+        newListItemUiState[position] = currentUiState.categoriesListItemUiState[position].copy(
+                checked = checked, onItemTapped = { onCategoryToggled(position, !checked) }
+        )
+        return newListItemUiState
+    }
+
+    private fun setToolbarTitleUiState() {
+        _toolbarTitleUiState.value = UiStringRes(string.prepublishing_nudges_toolbar_title_categories)
+    }
+
+    private fun saveAndFinish() {
+        updateCategories()
+        _navigateToHomeScreen.postValue(Event(Unit))
+    }
+
+    private fun updateCategories() {
         if (!hasChanges()) return
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -98,51 +155,33 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             return
         }
 
-        val categoryList = (uiState.value as? ContentUiState)?.selectedCategoryIds ?: return
+        val categoryList = getSelectedIds()
         updateCategoriesJob?.cancel()
+
         updateCategoriesJob = launch(bgDispatcher) {
-            updatePostCategoriesUseCase.updateCategories(categoryList.toList(), editPostRepository)
+            postUpdatedCategories(categoryList.toList(), editPostRepository)
         }
-        trackCategoriesChangedEvent()
     }
 
-    fun addSelectedCategory(categoryId: Long) {
-        uiState.value.let { state ->
-            if (state is ContentUiState) {
-                state.selectedCategoryIds.add(categoryId)
-                _uiState.value = state.copy()
+    private fun postUpdatedCategories(
+        categoryList: List<Long>,
+        editPostRepository: EditPostRepository
+    ) {
+        editPostRepository.updateAsync({ postModel ->
+            postModel.setCategoryIdList(categoryList)
+            true
+        }, { _: PostImmutableModel?, result: UpdatePostResult ->
+            if (result == Updated) {
+                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_CATEGORIES_ADDED)
             }
-        }
+        })
     }
 
-    fun removeSelectedCategory(categoryId: Long) {
-        uiState.value.let { state ->
-            if (state is ContentUiState) {
-                state.selectedCategoryIds.remove(categoryId)
-                _uiState.value = state.copy()
-            }
-        }
-    }
-
-    fun onTermUploadedComplete(event: OnTermUploaded) {
-        val message = if (event.isError) {
-            string.adding_cat_failed
-        } else {
-            string.adding_cat_success
-        }
-        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
-
-        if (!event.isError) {
-            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_CATEGORIES_ADDED)
-            val categoryLevels = getSiteCategories()
-            val selectedCategoryIds = (uiState.value as? ContentUiState)?.selectedCategoryIds
-                    ?: hashSetOf()
-            selectedCategoryIds.add(event.term.remoteTermId)
-            _uiState.value = ContentUiState(
-                    siteCategories = categoryLevels,
-                    selectedCategoryIds = selectedCategoryIds
-            )
-        }
+    private fun getSelectedIds(): List<Long> {
+        val uiState = uiState.value as UiState
+        return uiState.categoriesListItemUiState.filter { x -> x.checked }
+                .map { id -> id.categoryNode.categoryId }
+                .toList()
     }
 
     private fun getSiteCategories() =
@@ -151,28 +190,60 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private fun getPostCategories() =
             getCategoriesUseCase.getPostCategories(editPostRepository, siteModel)
 
-    private fun trackCategoriesChangedEvent() {
-        analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_CATEGORIES_ADDED)
-    }
-
     private fun hasChanges(): Boolean {
         val postCategories = getPostCategories()
-        val stateSelectedCategories =
-                uiState.value.let { state ->
-                    if (state is ContentUiState) {
-                        state.selectedCategoryIds.toList()
-                    } else {
-                        listOf()
-                    }
-                }
-
+        val stateSelectedCategories = getSelectedIds()
         return (stateSelectedCategories != postCategories)
     }
 
-    sealed class UiState {
-        data class ContentUiState(
-            val siteCategories: List<CategoryNode>,
-            val selectedCategoryIds: HashSet<Long>
-        ) : UiState()
+    private fun onTermUploadedComplete(event: OnTermUploaded) {
+        val message = if (event.isError) {
+            string.adding_cat_failed
+        } else {
+            string.adding_cat_success
+        }
+        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
+
+        if (!event.isError) {
+            val categoryLevels = getSiteCategories()
+            val selectedCategoryIds = getSelectedIds().toMutableList()
+            selectedCategoryIds.add(event.term.remoteTermId)
+            _uiState.value = UiState(
+                    categoriesListItemUiState = createListItemUiState(
+                            categoryLevels,
+                            selectedCategoryIds
+                    )
+            )
+        }
     }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = MAIN)
+    fun onTermUploaded(event: OnTermUploaded) {
+        onTermUploadedComplete(event)
+    }
+
+    private fun createPrepublishingCategoriesListItemUiState(
+        categoryNode: CategoryNode,
+        checked: Boolean,
+        index: Int
+    ): PrepublishingCategoriesListItemUiState =
+            PrepublishingCategoriesListItemUiState(
+                    categoryNode = categoryNode,
+                    checked = checked,
+                    onItemTapped = { onCategoryToggled(index, !checked) }
+            )
+
+    data class UiState(
+        val categoriesListItemUiState: List<PrepublishingCategoriesListItemUiState> = listOf()
+    )
+
+    data class PrepublishingCategoriesListItemUiState(
+        val onItemTapped: ((Int) -> Unit),
+        val clickable: Boolean = true,
+        val categoryNode: CategoryNode,
+        val checked: Boolean = false,
+        @DimenRes val verticalPaddingResId: Int = R.dimen.margin_large,
+        @DimenRes val horizontalPaddingResId: Int = R.dimen.margin_extra_large
+    )
 }

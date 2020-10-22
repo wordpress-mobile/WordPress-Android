@@ -180,7 +180,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     }
 
     private fun loadCategories(categoryLevels: ArrayList<CategoryNode>) {
-        (parent_category.adapter as? ParentCategorySpinnerAdapter)?.updateItems(categoryLevels)
+        (parent_category.adapter as? ParentCategorySpinnerAdapter)?.replaceItems(categoryLevels)
     }
 
     private fun SnackbarMessageHolder.showToast() {

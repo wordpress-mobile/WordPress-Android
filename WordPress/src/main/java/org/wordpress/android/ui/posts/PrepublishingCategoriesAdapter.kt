@@ -1,121 +1,67 @@
 package org.wordpress.android.ui.posts
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
+import androidx.annotation.MainThread
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.prepublishing_categories_row.view.*
-import org.apache.commons.text.StringEscapeUtils
-import org.wordpress.android.R
-import org.wordpress.android.models.CategoryNode
-import org.wordpress.android.ui.posts.PrepublishingCategoriesAdapter.CategoriesViewHolder
+import org.wordpress.android.ui.posts.PrepublishingCategoriesViewHolder.PrepublishingCategoriesListItemViewHolder
+import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel.PrepublishingCategoriesListItemUiState
+import org.wordpress.android.ui.utils.UiHelpers
 
-class PrepublishingCategoriesAdapter(
-    private val context: Context,
-    private val onCheckChangeListener: ((Long, Boolean) -> Unit)
-) : RecyclerView.Adapter<CategoriesViewHolder>() {
-    var categoryNodeList: List<CategoryNode> = arrayListOf()
-        set(value) {
-            if (!isSameCategoryList(value)) {
-                field = value
-                notifyDataSetChanged()
-            }
-        }
+class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
+        RecyclerView.Adapter<PrepublishingCategoriesViewHolder>() {
+    private val items = mutableListOf<PrepublishingCategoriesListItemUiState>()
 
-    private var selectedCategoryIds: HashSet<Long> = hashSetOf()
-
-    fun set(categoryLevels: List<CategoryNode>, categoriesSelected: HashSet<Long>) {
-        selectedCategoryIds = categoriesSelected
-        categoryNodeList = categoryLevels
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PrepublishingCategoriesViewHolder {
+        return PrepublishingCategoriesListItemViewHolder(parent, uiHelpers)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriesViewHolder {
-        val itemView = LayoutInflater.from(context)
-                .inflate(R.layout.prepublishing_categories_row, parent, false)
-        return CategoriesViewHolder(onCheckChangeListener, itemView)
-    }
-
-    override fun onBindViewHolder(viewHolder: CategoriesViewHolder, position: Int) {
-        viewHolder.bind(categoryNodeList[position], selectedCategoryIds)
-    }
-
-    init {
-        setHasStableIds(true)
-    }
+    override fun getItemCount(): Int = items.size
 
     override fun getItemId(position: Int): Long {
-        return categoryNodeList[position].categoryId
+        return position.toLong()
     }
 
-    override fun getItemCount(): Int {
-        return categoryNodeList.size
+    override fun onBindViewHolder(holder: PrepublishingCategoriesViewHolder, position: Int) {
+        holder.onBind(items[position])
     }
 
-    private fun isSameCategoryList(categoryList: List<CategoryNode>): Boolean {
-        if (categoryList.size != categoryNodeList.size) {
-            return false
-        }
+    @MainThread
+    fun update(newItems: List<PrepublishingCategoriesListItemUiState>) {
+        val diffResult = DiffUtil.calculateDiff(
+                PrepublishingCategoriesDiffUtils(
+                        items.toList(),
+                        newItems
+                )
+        )
+        items.clear()
+        items.addAll(newItems)
+        diffResult.dispatchUpdatesTo(this)
+    }
 
-        categoryNodeList.forEach {
-            if (!containsNode(it)) {
+    private class PrepublishingCategoriesDiffUtils(
+        val oldItems: List<PrepublishingCategoriesListItemUiState>,
+        val newItems: List<PrepublishingCategoriesListItemUiState>
+    ) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldItems[oldItemPosition]
+            val newItem = newItems[newItemPosition]
+            if (oldItem::class != newItem::class) {
                 return false
             }
+
+            return (oldItem).categoryNode.categoryId == (newItem).categoryNode.categoryId
         }
-        return true
-    }
 
-    private fun isSameSelectedList(selectedCategoryIdList: HashSet<Long>): Boolean {
-        return selectedCategoryIdList == selectedCategoryIds
-    }
+        override fun getOldListSize(): Int = oldItems.size
 
-    private fun containsNode(categoryNode: CategoryNode): Boolean {
-        categoryNodeList.forEach {
-            if (it.categoryId == categoryNode.categoryId) {
-                return true
-            }
-        }
-        return false
-    }
+        override fun getNewListSize(): Int = newItems.size
 
-    class CategoriesViewHolder(
-        private val onCheckedChangeClickListener: ((Long, Boolean) -> Unit),
-        itemView: View
-    ) : RecyclerView.ViewHolder(itemView) {
-        fun bind(row: CategoryNode, selectedCategoryIds: HashSet<Long>) = with(itemView) {
-            itemView.isClickable = true
-
-            setOnClickListener {
-                prepublishing_category_check.isChecked = !prepublishing_category_check.isChecked
-            }
-            val verticalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(
-                    R.dimen.margin_large
-            )
-            val horizontalPadding: Int = prepublishing_category_text.resources.getDimensionPixelOffset(
-                    R.dimen.margin_extra_large
-            )
-
-            ViewCompat.setPaddingRelative(
-                    prepublishing_category_text,
-                    horizontalPadding * row.level,
-                    verticalPadding,
-                    horizontalPadding,
-                    verticalPadding
-            )
-
-            prepublishing_category_text.text = StringEscapeUtils.unescapeHtml4(
-                    row.name
-            )
-
-            prepublishing_category_check.isChecked = false
-            if (selectedCategoryIds.contains(row.categoryId)) {
-                prepublishing_category_check.isChecked = true
-            }
-
-            prepublishing_category_check.setOnCheckedChangeListener { _, isChecked ->
-                onCheckedChangeClickListener.invoke(row.categoryId, isChecked)
-            }
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
         }
     }
 }
