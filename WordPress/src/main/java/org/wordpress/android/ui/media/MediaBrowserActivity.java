@@ -62,7 +62,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.gif.GifPickerActivity;
@@ -1013,11 +1012,16 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 mMediaPickerLauncher.showFilePicker(this);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
-                ActivityLauncher.showStockMediaPickerForResult(this,
-                        mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                mMediaPickerLauncher.showStockMediaPickerForResult(this,
+                        mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT, true);
                 break;
             case ITEM_CHOOSE_GIF:
-                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_MULTI_SELECT);
+                mMediaPickerLauncher.showGifPickerForResult(
+                        this,
+                        mSite,
+                        RequestCodes.GIF_PICKER_MULTI_SELECT,
+                        true
+                );
                 break;
         }
     }

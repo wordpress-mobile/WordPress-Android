@@ -90,18 +90,12 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     ): List<PrepublishingCategoriesListItemUiState> {
         val items: ArrayList<PrepublishingCategoriesListItemUiState> = arrayListOf()
         siteCategories.forEachIndexed { index, categoryNode ->
-            val itemUiState = if (selectedCategoryIds.contains(categoryNode.categoryId)) {
-                PrepublishingCategoriesListItemUiState(
-                        categoryNode = categoryNode, checked = true
-                )
-            } else {
-                PrepublishingCategoriesListItemUiState(
-                        categoryNode = categoryNode, checked = false
-                )
-            }
-            itemUiState.onItemTapped = {
-                onCategoryToggled(index, !itemUiState.checked)
-            }
+            val itemUiState =
+                    createPrepublishingCategoriesListItemUiState(
+                            categoryNode,
+                            selectedCategoryIds.contains(categoryNode.categoryId),
+                            index
+                    )
             items.add(itemUiState)
         }
 
@@ -137,7 +131,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         val currentUiState = uiState.value as UiState
         val newListItemUiState = currentUiState.categoriesListItemUiState.toMutableList()
         newListItemUiState[position] = currentUiState.categoriesListItemUiState[position].copy(
-                checked = checked
+                checked = checked, onItemTapped = { onCategoryToggled(position, !checked) }
         )
         return newListItemUiState
     }
@@ -169,7 +163,10 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         }
     }
 
-    private fun postUpdatedCategories(categoryList: List<Long>, editPostRepository: EditPostRepository) {
+    private fun postUpdatedCategories(
+        categoryList: List<Long>,
+        editPostRepository: EditPostRepository
+    ) {
         editPostRepository.updateAsync({ postModel ->
             postModel.setCategoryIdList(categoryList)
             true
@@ -226,13 +223,24 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         onTermUploadedComplete(event)
     }
 
+    private fun createPrepublishingCategoriesListItemUiState(
+        categoryNode: CategoryNode,
+        checked: Boolean,
+        index: Int
+    ): PrepublishingCategoriesListItemUiState =
+            PrepublishingCategoriesListItemUiState(
+                    categoryNode = categoryNode,
+                    checked = checked,
+                    onItemTapped = { onCategoryToggled(index, !checked) }
+            )
+
     data class UiState(
         val addCategoryActionButtonVisibility: Boolean = true,
         val categoriesListItemUiState: List<PrepublishingCategoriesListItemUiState> = listOf()
     )
 
     data class PrepublishingCategoriesListItemUiState(
-        var onItemTapped: ((Int) -> Unit)? = null,
+        val onItemTapped: ((Int) -> Unit),
         val clickable: Boolean = true,
         val categoryNode: CategoryNode,
         val checked: Boolean = false,

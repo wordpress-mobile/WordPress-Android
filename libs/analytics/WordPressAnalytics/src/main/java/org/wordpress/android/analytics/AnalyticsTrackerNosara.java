@@ -1125,6 +1125,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_referrers_view_more_tapped";
             case STATS_REFERRERS_ITEM_TAPPED:
                 return "stats_referrers_item_tapped";
+            case STATS_REFERRERS_ITEM_LONG_PRESSED:
+                return "stats_referrers_item_long_pressed";
+            case STATS_REFERRERS_ITEM_MARKED_AS_SPAM:
+                return "stats_referrers_item_marked_as_spam";
+            case STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM:
+                return "stats_referrers_item_marked_as_not_spam";
             case STATS_CLICKS_VIEW_MORE_TAPPED:
                 return "stats_clicks_view_more_tapped";
             case STATS_COUNTRIES_VIEW_MORE_TAPPED:
@@ -1787,6 +1793,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_error_snackbar_manage_tapped";
             case STORY_POST_PUBLISH_TAPPED:
                 return "story_post_publish_tapped";
+            case STORY_TEXT_CHANGED:
+                return "story_text_changed";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";

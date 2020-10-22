@@ -61,8 +61,7 @@ class PrepublishingCategoriesAdapter(private val uiHelpers: UiHelpers) :
         override fun getNewListSize(): Int = newItems.size
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldItems[oldItemPosition] == newItems[newItemPosition] &&
-                    oldItems[oldItemPosition].checked == newItems[newItemPosition].checked
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
         }
     }
 }

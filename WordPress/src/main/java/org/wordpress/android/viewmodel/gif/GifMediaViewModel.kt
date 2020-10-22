@@ -3,6 +3,8 @@ package org.wordpress.android.viewmodel.gif
 import android.net.Uri
 import androidx.lifecycle.LiveData
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * A data-representation of [GifMediaViewHolder]
  *
