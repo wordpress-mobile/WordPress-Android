@@ -33,21 +33,22 @@ class SiteHomepageRestClient
         homepageSettings: SiteHomepageSettings
     ): Response<UpdateHomepageResponse> {
         val url = WPCOMREST.sites.site(site.siteId).homepage.urlV1_1
-        val params = mutableMapOf(
+        val body = mutableMapOf(
                 "is_page_on_front" to (homepageSettings.showOnFront == ShowOnFront.PAGE).toString()
         )
         if (homepageSettings is StaticPage) {
             if (homepageSettings.pageOnFrontId > -1) {
-                params["page_on_front_id"] = homepageSettings.pageOnFrontId.toString()
+                body["page_on_front_id"] = homepageSettings.pageOnFrontId.toString()
             }
             if (homepageSettings.pageForPostsId > -1) {
-                params["page_for_posts_id"] = homepageSettings.pageForPostsId.toString()
+                body["page_for_posts_id"] = homepageSettings.pageForPostsId.toString()
             }
         }
         return wpComGsonRequestBuilder.syncPostRequest(
                 this,
                 url,
-                params,
+                null,
+                body,
                 UpdateHomepageResponse::class.java
         )
     }

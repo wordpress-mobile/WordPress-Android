@@ -8,6 +8,8 @@ import org.wordpress.android.util.AppLog;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -75,7 +77,13 @@ public class RestUploadRequestBody extends BaseUploadRequestBody {
         // add media file data
         File mediaFile = new File(media.getFilePath());
         RequestBody body = RequestBody.create(MediaType.parse(media.getMimeType()), mediaFile);
-        builder.addFormDataPart(MEDIA_DATA_KEY, media.getFileName(), body);
+        String fileName = media.getFileName();
+        try {
+            fileName = URLEncoder.encode(media.getFileName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        builder.addFormDataPart(MEDIA_DATA_KEY, fileName, body);
 
         return builder.build();
     }

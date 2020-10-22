@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 117
+        return 119
     }
 
     override fun getDbName(): String {
@@ -1283,6 +1283,38 @@ open class WellSqlConfig : DefaultWellConfig {
                             "QUANTITY INTEGER, " +
                             "UNIT TEXT," +
                             "TOTAL REAL)")
+                }
+                117 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS StockMedia")
+                    db.execSQL("CREATE TABLE StockMedia (_id INTEGER PRIMARY KEY AUTOINCREMENT,ITEM_ID TEXT," +
+                            "NAME TEXT,TITLE TEXT,URL TEXT,DATE TEXT,THUMBNAIL TEXT)")
+                    db.execSQL("DROP TABLE IF EXISTS StockMediaPage")
+                    db.execSQL("CREATE TABLE StockMediaPage (_id INTEGER PRIMARY KEY AUTOINCREMENT,PAGE INTEGER," +
+                            "NEXT_PAGE INTEGER)")
+                }
+                118 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutCategoryModel")
+                    db.execSQL("CREATE TABLE GutenbergLayoutCategoryModel (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "SLUG TEXT NOT NULL," +
+                            "SITE_ID INTEGER," +
+                            "TITLE TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "EMOJI TEXT NOT NULL)")
+                    db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutModel")
+                    db.execSQL("CREATE TABLE GutenbergLayoutModel (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "SLUG TEXT NOT NULL," +
+                            "SITE_ID INTEGER," +
+                            "TITLE TEXT NOT NULL," +
+                            "PREVIEW TEXT NOT NULL," +
+                            "CONTENT TEXT NOT NULL)")
+                    db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutCategoriesModel")
+                    db.execSQL("CREATE TABLE GutenbergLayoutCategoriesModel (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LAYOUT_ID INTEGER," +
+                            "CATEGORY_ID INTEGER," +
+                            "SITE_ID INTEGER)")
                 }
             }
         }

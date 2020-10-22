@@ -148,6 +148,23 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class FetchBlockLayoutsPayload extends Payload<BaseNetworkError> {
+        @NonNull public SiteModel site;
+        @Nullable public List<String> supportedBlocks;
+        @Nullable public Float previewWidth;
+        @Nullable public Float scale;
+
+        public FetchBlockLayoutsPayload(@NonNull SiteModel site,
+                                        @Nullable List<String> supportedBlocks,
+                                        @Nullable Float previewWidth,
+                                        @Nullable Float scale) {
+            this.site = site;
+            this.supportedBlocks = supportedBlocks;
+            this.previewWidth = previewWidth;
+            this.scale = scale;
+        }
+    }
+
     public static class FetchedBlockLayoutsResponsePayload extends Payload<SiteError> {
         public SiteModel site;
         public List<GutenbergLayout> layouts;
@@ -1497,7 +1514,7 @@ public class SiteStore extends Store {
                 fetchSiteEditors((SiteModel) action.getPayload());
                 break;
             case FETCH_BLOCK_LAYOUTS:
-                fetchBlockLayouts((SiteModel) action.getPayload());
+                fetchBlockLayouts((FetchBlockLayoutsPayload) action.getPayload());
                 break;
             case FETCHED_BLOCK_LAYOUTS:
                 handleFetchedBlockLayouts((FetchedBlockLayoutsResponsePayload) action.getPayload());
@@ -1817,9 +1834,13 @@ public class SiteStore extends Store {
         }
     }
 
-    private void fetchBlockLayouts(SiteModel site) {
-        if (site.isUsingWpComRestApi()) {
-            mSiteRestClient.fetchBlockLayouts(site);
+    private void fetchBlockLayouts(FetchBlockLayoutsPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mSiteRestClient
+                    .fetchWpComBlockLayouts(payload.site, payload.supportedBlocks, payload.previewWidth, payload.scale);
+        } else {
+            mSiteRestClient.fetchSelfHostedBlockLayouts(payload.site, payload.supportedBlocks, payload.previewWidth,
+                    payload.scale);
         }
     }
 
@@ -2079,7 +2100,19 @@ public class SiteStore extends Store {
     }
 
     private void handleFetchedBlockLayouts(FetchedBlockLayoutsResponsePayload payload) {
-        emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+        if (payload.isError()) {
+            // Return cached layouts on error
+            List<GutenbergLayout> layouts = SiteSqlUtils.getBlockLayouts(payload.site);
+            List<GutenbergLayoutCategory> categories = SiteSqlUtils.getBlockLayoutCategories(payload.site);
+            if (!layouts.isEmpty() && !categories.isEmpty()) {
+                emitChange(new OnBlockLayoutsFetched(layouts, categories, null));
+            } else {
+                emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+            }
+        } else {
+            SiteSqlUtils.insertOrReplaceBlockLayouts(payload.site, payload.categories, payload.layouts);
+            emitChange(new OnBlockLayoutsFetched(payload.layouts, payload.categories, payload.error));
+        }
     }
 
     // Automated Transfers

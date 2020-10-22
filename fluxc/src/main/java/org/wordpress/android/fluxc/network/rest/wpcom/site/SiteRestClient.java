@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.site;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -97,6 +98,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -560,9 +562,40 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchBlockLayouts(final SiteModel site) {
-        Map<String, String> params = new HashMap<>();
+    public void fetchWpComBlockLayouts(final SiteModel site,
+                                       List<String> supportedBlocks,
+                                       Float previewWidth,
+                                       Float scale) {
         String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale);
+    }
+
+    public void fetchSelfHostedBlockLayouts(final SiteModel site,
+                                            List<String> supportedBlocks,
+                                            Float previewWidth,
+                                            Float scale) {
+        String url = WPCOMV2.common_block_layouts.getUrl();
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale);
+    }
+
+    private void fetchBlockLayouts(final SiteModel site, String url,
+                                   List<String> supportedBlocks,
+                                   Float previewWidth,
+                                   Float scale) {
+        Map<String, String> params = new HashMap<>();
+
+        if (supportedBlocks != null && !supportedBlocks.isEmpty()) {
+            params.put("supported_blocks", TextUtils.join(",", supportedBlocks));
+        }
+
+        if (previewWidth != null) {
+            params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
+        }
+
+        if (scale != null) {
+            params.put("scale", String.format(Locale.US, "%.1f", scale));
+        }
+
         final WPComGsonRequest<BlockLayoutsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 BlockLayoutsResponse.class,
                 new Listener<BlockLayoutsResponse>() {

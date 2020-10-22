@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignatedPrimaryDomainPayloa
 import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
@@ -92,7 +93,7 @@ public enum SiteAction implements IAction {
     DESIGNATE_PRIMARY_DOMAIN,
     @Action(payloadType = FetchPrivateAtomicCookiePayload.class)
     FETCH_PRIVATE_ATOMIC_COOKIE,
-    @Action(payloadType = SiteModel.class)
+    @Action(payloadType = FetchBlockLayoutsPayload.class)
     FETCH_BLOCK_LAYOUTS,
 
     // Remote responses
