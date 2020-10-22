@@ -1055,17 +1055,16 @@ public class UploadService extends Service {
 
     private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
         // get all retriable media ? To retry or not to retry, that is the question
-        List<MediaModel> failedMedia = new ArrayList<>();
         List<MediaModel> failedStandAloneMedia = new ArrayList<>();
         if (selectedSite != null) {
-            failedMedia = mMediaStore.getSiteMediaWithState(
+            List<MediaModel> failedMedia = mMediaStore.getSiteMediaWithState(
                     selectedSite, MediaUploadState.FAILED);
-        }
 
-        // only take into account those media items that do not belong to any Post
-        for (MediaModel media : failedMedia) {
-            if (media.getLocalPostId() == 0) {
-                failedStandAloneMedia.add(media);
+            // only take into account those media items that do not belong to any Post
+            for (MediaModel media : failedMedia) {
+                if (media.getLocalPostId() == 0) {
+                    failedStandAloneMedia.add(media);
+                }
             }
         }
 
