@@ -61,7 +61,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `post with non-empty Story block is given a non-empty mediaFiles array`() {
+    fun `post with non-empty Story block is set given a non-empty mediaFiles array`() {
         // Given
         val mediaFiles: ArrayList<MediaFile> = setupFluxCMediaFiles(emptyList = false)
         editPostRepository.set { PostModel() }
@@ -166,8 +166,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private fun setupFluxCMediaFiles(
         emptyList: Boolean
     ): ArrayList<MediaFile> {
-        when (emptyList) {
-            true -> return ArrayList()
+        return when (emptyList) {
+            true -> ArrayList()
             false -> {
                 val mediaFiles = ArrayList<MediaFile>()
                 for (i in 1..10) {
@@ -178,7 +178,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                     mediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
                     mediaFiles.add(mediaFile)
                 }
-                return mediaFiles
+                mediaFiles
             }
         }
     }
