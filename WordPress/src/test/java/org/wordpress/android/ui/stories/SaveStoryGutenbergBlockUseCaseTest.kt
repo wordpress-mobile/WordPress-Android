@@ -61,7 +61,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `post with non-empty Story block is set given a non-empty mediaFiles array`() {
+    fun `post with non-empty Story block is given a non-empty mediaFiles array`() {
         // Given
         val mediaFiles: ArrayList<MediaFile> = setupFluxCMediaFiles(emptyList = false)
         editPostRepository.set { PostModel() }
