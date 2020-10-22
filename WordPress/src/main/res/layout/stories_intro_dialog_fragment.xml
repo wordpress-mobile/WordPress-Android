@@ -67,15 +67,6 @@
                         android:scaleType="fitCenter"
                         android:contentDescription="@string/stories_intro_image_caption_first" />
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/image_caption_first"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?attr/wpColorOnSurfaceMedium"
-                        android:text="@string/stories_intro_image_caption_first" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -95,14 +86,6 @@
                         android:scaleType="fitCenter"
                         android:contentDescription="@string/stories_intro_image_caption_second"/>
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/image_caption_second"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?attr/wpColorOnSurfaceMedium"
-                        android:text="@string/stories_intro_image_caption_second" />
                 </LinearLayout>
 
             </LinearLayout>
