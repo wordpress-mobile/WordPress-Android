@@ -145,7 +145,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
                 for (i in 1..10) {
                     val mediaFile = HashMap<String, Any>()
                     mediaFile["mime"] = "image/jpeg"
-                    mediaFile["link"] = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg")
+                    mediaFile["link"] = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
                     mediaFile["type"] = "image"
                     mediaFile["id"] = i.toString()
                     mediaFiles.add(mediaFile)
