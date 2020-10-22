@@ -184,7 +184,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         }
     }
 
-    private fun getMediaFile(id: Int = 1): MediaFile {
+    private fun getMediaFile(id: Int): MediaFile {
         val mediaFile = MediaFile()
         mediaFile.id = id
         mediaFile.mediaId = (id + 1000).toString()
