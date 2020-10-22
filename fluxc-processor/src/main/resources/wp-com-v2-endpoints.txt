@@ -13,6 +13,7 @@
 /sites/$site/stats/top-earners
 
 /sites/$site/block-layouts
+/common-block-layouts
 
 /users/username/suggestions/
 

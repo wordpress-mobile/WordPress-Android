@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.WellSqlTestUtils;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayoutCategory;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
@@ -29,6 +31,8 @@ import org.wordpress.android.fluxc.store.SiteStore.UpdateSitesResult;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -733,6 +737,25 @@ public class SiteStoreUnitTest {
             duplicate = true;
         }
         assertTrue(duplicate);
+    }
+
+    @Test
+    public void testInsertOrReplaceBlockLayouts() {
+        // Test data
+        SiteModel site = generateWPComSite();
+        GutenbergLayoutCategory cat1 = new GutenbergLayoutCategory("a", "About", "About", "👋");
+        GutenbergLayoutCategory cat2 = new GutenbergLayoutCategory("b", "Blog", "Blog", "📰");
+        List<GutenbergLayoutCategory> categories = Arrays.asList(cat1, cat2);
+        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "content", categories);
+        List<GutenbergLayout> layouts = Collections.singletonList(layout);
+        // Store
+        SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
+        // Retrieve
+        List<GutenbergLayoutCategory> retrievedCategories = SiteSqlUtils.getBlockLayoutCategories(site);
+        List<GutenbergLayout> retrievedLayouts = SiteSqlUtils.getBlockLayouts(site);
+        // Check
+        assertEquals(categories, retrievedCategories);
+        assertEquals(layouts, retrievedLayouts);
     }
 
     @Test

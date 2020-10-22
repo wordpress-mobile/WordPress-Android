@@ -65,7 +65,13 @@ class TimeStatsMapper
                 val children = group.referrers?.mapNotNull { result ->
                     if (result.name != null && result.views != null) {
                         val firstChildUrl = result.children?.firstOrNull()?.url
-                        Referrer(result.name, result.views, result.icon, firstChildUrl ?: result.url)
+                        Referrer(
+                                result.name,
+                                result.views,
+                                result.icon,
+                                firstChildUrl ?: result.url,
+                                result.markedAsSpam
+                        )
                     } else {
                         AppLog.e(STATS, "ReferrersResponse: Missing fields on a referrer")
                         null
@@ -77,7 +83,8 @@ class TimeStatsMapper
                         group.icon,
                         group.url,
                         group.total,
-                        children ?: listOf()
+                        children ?: listOf(),
+                        group.markedAsSpam
                 )
             }
         }
