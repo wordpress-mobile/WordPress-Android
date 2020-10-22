@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,7 +36,6 @@ class TransactionsStoreTest {
         private const val TEST_DOMAIN_PRODUCT_ID = 76
     }
 
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         transactionsStore = TransactionsStore(transactionsRestClient, initCoroutineEngine(), dispatcher)
