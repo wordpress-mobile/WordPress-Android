@@ -107,7 +107,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @Test
     fun `verify all properties of mediaFileData that are created from buildMediaFileDataWithTemporaryId are correct`() {
         // Given
-        val mediaFile = getOneMediaFile(1)
+        val mediaFile = getMediaFile(1)
 
         // When
         val mediaFileData = saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
@@ -130,7 +130,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @Test
     fun `local media id is found and gets replaced with remote media id`() {
         // Given
-        val mediaFile = getOneMediaFile(1)
+        val mediaFile = getMediaFile(1)
         val postModel = PostModel()
         postModel.setContent(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
 
@@ -183,7 +183,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         }
     }
 
-    private fun getOneMediaFile(id: Int = 1): MediaFile {
+    private fun getMediaFile(id: Int = 1): MediaFile {
         val mediaFile = MediaFile()
         mediaFile.id = id
         mediaFile.mediaId = (id + 1000).toString()
