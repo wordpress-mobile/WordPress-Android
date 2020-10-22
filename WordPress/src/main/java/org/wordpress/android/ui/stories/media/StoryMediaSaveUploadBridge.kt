@@ -148,7 +148,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                                 // if prefs has this Slide with the temporary key, replace it
                                 // if not, let's now save the new slide with the local key
-                                storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide_Phase1(
+                                storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
                                         TempId(oldTemporaryId),
                                         LocalId(it.id),
                                         it.localSiteId.toLong()
@@ -235,7 +235,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             // yet.
             if (isStorySavingComplete(event) && !event.isRetry) {
                 // only remove it if it was successful - we want to keep it and show a snackbar once when the user
-                // comes back to the app if it wasn't, see MySiteFrament for details.
+                // comes back to the app if it wasn't, see MySiteFragment for details.
                 eventBusWrapper.removeStickyEvent(event)
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync

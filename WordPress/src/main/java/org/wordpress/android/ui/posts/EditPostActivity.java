@@ -1685,7 +1685,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
                     // within a story block in this post: we will only replace items for which a local-keyed frame has
                     // been created before, which can only happen when using the Story Creator.
-                    mStoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide_Phase2(
+                    mStoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
                             media.getId(),
                             media.getMediaId(),
                             mSite.getId()

@@ -133,7 +133,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
                                     // look for the slide saved with the local id key (mediaFile.id), and re-convert to
                                     // mediaId.
-                                    storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide_Phase2(
+                                    storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
                                             mediaFile.id,
                                             mediaFile.mediaId.toLong(),
                                             postModel.localSiteId.toLong()

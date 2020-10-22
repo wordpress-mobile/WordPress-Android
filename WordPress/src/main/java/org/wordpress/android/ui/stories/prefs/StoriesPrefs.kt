@@ -18,11 +18,11 @@ class StoriesPrefs @Inject constructor(
     private val context: Context
 ) {
     companion object {
-        private val KEY_STORIES_SLIDE_INCREMENTAL_ID = "incremental_id"
-        private val KEY_PREFIX_STORIES_SLIDE_ID = "story_slide_id-"
-        private val KEY_PREFIX_TEMP_MEDIA_ID = "t-"
-        private val KEY_PREFIX_LOCAL_MEDIA_ID = "l-"
-        private val KEY_PREFIX_REMOTE_MEDIA_ID = "r-"
+        private const val KEY_STORIES_SLIDE_INCREMENTAL_ID = "incremental_id"
+        private const val KEY_PREFIX_STORIES_SLIDE_ID = "story_slide_id-"
+        private const val KEY_PREFIX_TEMP_MEDIA_ID = "t-"
+        private const val KEY_PREFIX_LOCAL_MEDIA_ID = "l-"
+        private const val KEY_PREFIX_REMOTE_MEDIA_ID = "r-"
     }
 
     private fun buildSlideKey(siteId: Long, mediaId: RemoteId): String {
@@ -51,7 +51,7 @@ class StoriesPrefs @Inject constructor(
         return currentIncrementalId
     }
 
-    fun getIncrementalTempId(): Long {
+    private fun getIncrementalTempId(): Long {
         return PreferenceManager.getDefaultSharedPreferences(context).getLong(
                         KEY_STORIES_SLIDE_INCREMENTAL_ID,
                         0
@@ -63,29 +63,26 @@ class StoriesPrefs @Inject constructor(
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    fun checkSlideIdExists(siteId: Long, tempId: TempId): Boolean {
+    private fun checkSlideIdExists(siteId: Long, tempId: TempId): Boolean {
         val slideIdKey = buildSlideKey(siteId, tempId)
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    fun checkSlideIdExists(siteId: Long, localId: LocalId): Boolean {
+    private fun checkSlideIdExists(siteId: Long, localId: LocalId): Boolean {
         val slideIdKey = buildSlideKey(siteId, localId)
         return PreferenceManager.getDefaultSharedPreferences(context).contains(slideIdKey)
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: RemoteId): Boolean {
-        val storyFrameItem: StoryFrameItem? = getSlideWithRemoteId(siteId, mediaId)
-        return checkSlideOriginalBackgroundMediaExists(storyFrameItem)
+    private fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: RemoteId): Boolean {
+        return checkSlideOriginalBackgroundMediaExists(getSlideWithRemoteId(siteId, mediaId))
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, tempId: TempId): Boolean {
-        val storyFrameItem: StoryFrameItem? = getSlideWithTempId(siteId, tempId)
-        return checkSlideOriginalBackgroundMediaExists(storyFrameItem)
+    private fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: TempId): Boolean {
+        return checkSlideOriginalBackgroundMediaExists(getSlideWithTempId(siteId, mediaId))
     }
 
-    fun checkSlideOriginalBackgroundMediaExists(siteId: Long, localId: LocalId): Boolean {
-        val storyFrameItem: StoryFrameItem? = getSlideWithLocalId(siteId, localId)
-        return checkSlideOriginalBackgroundMediaExists(storyFrameItem)
+    private fun checkSlideOriginalBackgroundMediaExists(siteId: Long, mediaId: LocalId): Boolean {
+        return checkSlideOriginalBackgroundMediaExists(getSlideWithLocalId(siteId, mediaId))
     }
 
     private fun checkSlideOriginalBackgroundMediaExists(storyFrameItem: StoryFrameItem?): Boolean {
@@ -206,7 +203,10 @@ class StoriesPrefs @Inject constructor(
         }
     }
 
-    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide_Phase2(
+    // Phase 2: this method is likely used after a first phase in which a local media which only has a temporary id has
+    // then be replaced by a local id. At this point, we now have a remote Id and we can replace the local
+    // media id with the remote media id.
+    fun replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
         localIdKey: Int,
         remoteIdKey: Long,
         localSiteId: Long
@@ -230,7 +230,10 @@ class StoriesPrefs @Inject constructor(
         }
     }
 
-    fun replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide_Phase1(
+    // Phase 1: this method is likely used at the beginning when a local media which only has a temporary id needs now
+    // to be assigned with a localMediaId. At a later point when the media is uploaded to the server, it will be
+    // assigned a remote Id which will replace this localId.
+    fun replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
         tempId: TempId,
         localId: LocalId,
         localSiteId: Long
