@@ -88,6 +88,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
     private NotificationDetailFragmentAdapter mAdapter;
     private AppBarLayout mAppBarLayout;
+    private Toolbar mToolbar;
 
     @Override
     public void onBackPressed() {
@@ -109,8 +110,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         setContentView(R.layout.notifications_detail_activity);
 
-        Toolbar toolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(mToolbar);
 
         mAppBarLayout = findViewById(R.id.appbar_main);
 
@@ -213,6 +214,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
                 @Override
                 public void onPageSelected(int position) {
+                    Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
+                    boolean hideToolbar = (fragment instanceof ReaderPostDetailFragment);
+                    showHideToolbar(hideToolbar);
+
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                     // change the action bar title for the current note
                     Note currentNote = mAdapter.getNoteAtPosition(position);
@@ -229,6 +234,18 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             };
         }
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+    }
+
+    public void showHideToolbar(boolean hide) {
+        if (getSupportActionBar() != null) {
+            if (hide) {
+                getSupportActionBar().hide();
+            } else {
+                setSupportActionBar(mToolbar);
+                getSupportActionBar().show();
+            }
+            getSupportActionBar().setDisplayShowTitleEnabled(!hide);
+        }
     }
 
     @Override
