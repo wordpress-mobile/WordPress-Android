@@ -1,12 +1,21 @@
 package org.wordpress.android.ui.stories
 
 import android.content.Context
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import com.wordpress.stories.compose.frame.StorySaveEvents.SaveResultReason.SaveSuccess
+import com.wordpress.stories.compose.story.StoryFrameItem
+import com.wordpress.stories.compose.story.StoryFrameItemType.IMAGE
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
@@ -141,6 +150,32 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
         Assertions.assertThat(onePost.content).isEqualTo(blockWithNonEmptyMediaFilesWithOneRemoteId)
     }
 
+    @Test
+    fun `slides are saved locally`() {
+        // Given
+        val frames = ArrayList<StoryFrameItem>()
+        frames.add(getOneStoryFrameItem("1"))
+        frames.add(getOneStoryFrameItem("2"))
+        frames.add(getOneStoryFrameItem("3"))
+//        frames.add(mock())
+//        frames.add(mock())
+//        frames.add(mock())
+        whenever(storiesPrefs.saveSlideWithTempId(ArgumentMatchers.anyLong(), any(), any()))
+                .then {  }
+
+        // When
+        saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
+                siteModel,
+                0,
+                frames
+        )
+
+        // Then
+        // eq(expectedPostId.value)
+        verify(storiesPrefs, times(3)).saveSlideWithTempId(siteModel.siteId, mock(), mock())
+        // Assertions.assertThat(onePost.content).isEqualTo(blockWithNonEmptyMediaFilesWithOneRemoteId)
+    }
+
     private fun setupFluxCMediaFiles(
         emptyList: Boolean
     ): ArrayList<MediaFile> {
@@ -168,6 +203,16 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
         oneMediaFile.mimeType = "image/jpeg"
         oneMediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
         return oneMediaFile
+    }
+
+    private fun getOneStoryFrameItem(id: String): StoryFrameItem {
+        return StoryFrameItem(
+                source = mock(),
+                frameItemType = IMAGE,
+                saveResultReason = SaveSuccess,
+                composedFrameFile = mock(),
+                id = id
+        )
     }
 
     private fun setupMediaFileDataList(
@@ -252,6 +297,5 @@ class SaveStoryGutenbergBlockUseCaseTest: BaseUnitTest()  {
                 "ption\":\"\",\"url\":\"https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg\"}]} -->\n" +
                 "<div class=\"wp-story wp-block-jetpack-story\"></div>\n" +
                 "<!-- /wp:jetpack/story -->"
-
     }
 }
