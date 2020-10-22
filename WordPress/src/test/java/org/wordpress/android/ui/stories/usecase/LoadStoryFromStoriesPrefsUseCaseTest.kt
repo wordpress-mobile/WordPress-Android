@@ -66,7 +66,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with temporary ids`() {
         // Given
-        val tempMediaIds = setupTestSlides(sayValid = true, useTempPrefix = true, useRemoteId = false)
+        val tempMediaIds = setupTestSlides(markAsValid = true, useTempPrefix = true, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, tempMediaIds)
@@ -78,7 +78,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with local ids`() {
         // Given
-        val mediaIdsLocal = setupTestSlides(sayValid = true, useTempPrefix = false, useRemoteId = false)
+        val mediaIdsLocal = setupTestSlides(markAsValid = true, useTempPrefix = false, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -90,7 +90,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify all story slides are editable with remote ids`() {
         // Given
-        val mediaIdsLocal = setupTestSlides(sayValid = true, useTempPrefix = false, useRemoteId = true)
+        val mediaIdsLocal = setupTestSlides(markAsValid = true, useTempPrefix = false, useRemoteId = true)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -102,7 +102,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify not all story slides are editable with temporary ids`() {
         // Given
-        val mediaIdsLocal = setupTestSlides(sayValid = false, useTempPrefix = true, useRemoteId = false)
+        val mediaIdsLocal = setupTestSlides(markAsValid = false, useTempPrefix = true, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -114,7 +114,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify not all story slides are editable with remote ids`() {
         // Given
-        val mediaIdsLocal = setupTestSlides(sayValid = false, useTempPrefix = false, useRemoteId = true)
+        val mediaIdsLocal = setupTestSlides(markAsValid = false, useTempPrefix = false, useRemoteId = true)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -126,7 +126,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     @Test
     fun `verify not all story slides are editable with local ids`() {
         // Given
-        val mediaIdsLocal = setupTestSlides(sayValid = false, useTempPrefix = false, useRemoteId = false)
+        val mediaIdsLocal = setupTestSlides(markAsValid = false, useTempPrefix = false, useRemoteId = false)
 
         // When
         val result = loadStoryFromStoriesPrefsUseCase.areAllStorySlidesEditable(siteModel, mediaIdsLocal)
@@ -156,7 +156,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
     }
 
     private fun setupTestSlides(
-        sayValid: Boolean,
+        markAsValid: Boolean,
         useTempPrefix: Boolean,
         useRemoteId: Boolean
     ): ArrayList<String> {
@@ -166,20 +166,20 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
             val mediaId = (if (useTempPrefix) TEMPORARY_ID_PREFIX else "") + i.toString()
             mediaIds.add(mediaId)
             if (useTempPrefix) {
-                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), TempId(mediaId))).thenReturn(sayValid)
+                whenever(storiesPrefs.isValidSlide(siteModel.id.toLong(), TempId(mediaId))).thenReturn(markAsValid)
             } else if (useRemoteId) {
                 whenever(
                         storiesPrefs.isValidSlide(
                                 siteModel.id.toLong(),
                                 RemoteId(mediaId.toLong())
                         )
-                ).thenReturn(sayValid)
+                ).thenReturn(markAsValid)
             } else {
                 whenever(storiesPrefs.isValidSlide(
                             siteModel.id.toLong(),
                             LocalId(mediaId.toInt())
                         )
-                ).thenReturn(sayValid)
+                ).thenReturn(markAsValid)
             }
         }
 
