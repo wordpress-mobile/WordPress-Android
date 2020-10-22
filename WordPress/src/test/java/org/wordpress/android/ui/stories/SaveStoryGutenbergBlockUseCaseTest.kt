@@ -16,7 +16,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
@@ -28,7 +27,6 @@ import org.wordpress.android.util.helpers.MediaFile
 class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     private lateinit var editPostRepository: EditPostRepository
-    private lateinit var siteModel: SiteModel
     @Mock lateinit var storiesPrefs: StoriesPrefs
     @Mock lateinit var context: Context
     @Mock lateinit var postStore: PostStore
@@ -37,7 +35,6 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @Before
     fun setUp() {
         saveStoryGutenbergBlockUseCase = SaveStoryGutenbergBlockUseCase(storiesPrefs)
-        siteModel = SiteModel()
         editPostRepository = EditPostRepository(
                 mock(),
                 postStore,
@@ -157,7 +154,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // When
         saveStoryGutenbergBlockUseCase.saveNewLocalFilesToStoriesPrefsTempSlides(
-                siteModel,
+                mock(),
                 0,
                 frames
         )
