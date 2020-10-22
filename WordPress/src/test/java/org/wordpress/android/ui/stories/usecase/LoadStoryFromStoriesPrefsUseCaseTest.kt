@@ -139,7 +139,7 @@ class LoadStoryFromStoriesPrefsUseCaseTest {
         emptyList: Boolean
     ): ArrayList<HashMap<String, Any>> {
         when (emptyList) {
-            true -> return ArrayList<HashMap<String, Any>>()
+            true -> return ArrayList()
             false -> {
                 val mediaFiles = ArrayList<HashMap<String, Any>>()
                 for (i in 1..10) {
