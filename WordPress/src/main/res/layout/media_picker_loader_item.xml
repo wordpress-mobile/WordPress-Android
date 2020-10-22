@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    android:foregroundGravity="center_horizontal">
+    android:foregroundGravity="center">
 
     <ProgressBar
         android:id="@+id/progress"
@@ -13,10 +13,14 @@
         android:indeterminate="true"
         android:progressTint="?attr/colorPrimary" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/error"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button"
+        style="@style/WordPress.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/margin_extra_large"
+        android:text="@string/retry"
         android:visibility="gone" />
 
 </FrameLayout>
