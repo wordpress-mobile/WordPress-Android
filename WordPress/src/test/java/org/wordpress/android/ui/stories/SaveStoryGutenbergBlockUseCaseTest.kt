@@ -57,7 +57,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         )
 
         // Then
-        Assertions.assertThat(editPostRepository.content).isEqualTo(blockWithEmptyMediaFiles)
+        Assertions.assertThat(editPostRepository.content).isEqualTo(BLOCK_WITH_EMPTY_MEDIA_FILES)
     }
 
     @Test
@@ -73,7 +73,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         )
 
         // Then
-        Assertions.assertThat(editPostRepository.content).isEqualTo(blockWithNonEmptyMediaFiles)
+        Assertions.assertThat(editPostRepository.content).isEqualTo(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
     }
 
     @Test
@@ -87,7 +87,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         )
 
         // Then
-        Assertions.assertThat(result).isEqualTo(blockWithNonEmptyMediaFiles)
+        Assertions.assertThat(result).isEqualTo(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
     }
 
     @Test
@@ -101,7 +101,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         )
 
         // Then
-        Assertions.assertThat(result).isEqualTo(blockWithEmptyMediaFiles)
+        Assertions.assertThat(result).isEqualTo(BLOCK_WITH_EMPTY_MEDIA_FILES)
     }
 
     @Test
@@ -132,7 +132,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         // Given
         val mediaFile = getOneMediaFile(1)
         val onePost = PostModel()
-        onePost.setContent(blockWithNonEmptyMediaFiles)
+        onePost.setContent(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
 
         // When
         saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(
@@ -141,7 +141,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         )
 
         // Then
-        Assertions.assertThat(onePost.content).isEqualTo(blockWithNonEmptyMediaFilesWithOneRemoteId)
+        Assertions.assertThat(onePost.content).isEqualTo(BLOCK_WITH_NON_EMPTY_MEDIA_FILES_WITH_ONE_REMOTE_ID)
     }
 
     @Test
@@ -224,10 +224,10 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     }
 
     companion object {
-        private const val blockWithEmptyMediaFiles = "<!-- wp:jetpack/story {\"mediaFiles\":[]} -->\n" +
+        private const val BLOCK_WITH_EMPTY_MEDIA_FILES = "<!-- wp:jetpack/story {\"mediaFiles\":[]} -->\n" +
                 "<div class=\"wp-story wp-block-jetpack-story\"></div>\n" +
                 "<!-- /wp:jetpack/story -->"
-        private const val blockWithNonEmptyMediaFiles = "<!-- wp:jetpack/story " +
+        private const val BLOCK_WITH_NON_EMPTY_MEDIA_FILES = "<!-- wp:jetpack/story " +
                 "{\"mediaFiles\":[{\"alt\":\"\",\"id\":\"1\",\"link\":\"https://testsite.files." +
                 "wordpress.com/2020/10/wp-0000000.jpg\",\"type\":\"image\",\"mime\":\"image/jpeg\",\"caption\":\"\"," +
                 "\"url\":\"https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg\"},{\"alt\":\"\",\"id\":\"2\"," +
@@ -254,7 +254,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                 "ption\":\"\",\"url\":\"https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg\"}]} -->\n" +
                 "<div class=\"wp-story wp-block-jetpack-story\"></div>\n" +
                 "<!-- /wp:jetpack/story -->"
-        private const val blockWithNonEmptyMediaFilesWithOneRemoteId = "<!-- wp:jetpack/story " +
+        private const val BLOCK_WITH_NON_EMPTY_MEDIA_FILES_WITH_ONE_REMOTE_ID = "<!-- wp:jetpack/story " +
                 "{\"mediaFiles\":[{\"alt\":\"\",\"id\":\"1001\",\"link\":\"https://testsite.files." +
                 "wordpress.com/2020/10/wp-0000000.jpg\",\"type\":\"image\",\"mime\":\"image/jpeg\",\"caption\":\"\"," +
                 "\"url\":\"https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg\"},{\"alt\":\"\",\"id\":\"2\"," +
