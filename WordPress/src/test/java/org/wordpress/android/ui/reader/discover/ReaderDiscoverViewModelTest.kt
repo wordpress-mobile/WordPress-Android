@@ -536,6 +536,32 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
+    fun `Scroll to top is triggered when discover feed is updated after swipe to refresh`() = test {
+        // Arrange
+        val uiStates = init().uiStates
+        // Act
+        viewModel.swipeToRefresh()
+        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        // Assert
+        assertThat(uiStates.last().scrollToTop).isTrue()
+    }
+
+    @Test
+    fun `Scroll to top is not triggered when discover feed is updated after load more action`() = test {
+        // Arrange
+        val uiStates = init().uiStates
+        val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
+        init()
+        // Act
+        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
+            it.onItemRendered.invoke(it)
+        }
+        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        // Assert
+        assertThat(uiStates.last().scrollToTop).isFalse()
+    }
+
+    @Test
     fun `OnEmptyActionClicked shows select interests screen`() = test {
         // Arrange
         init()
@@ -544,6 +570,7 @@ class ReaderDiscoverViewModelTest {
         // Assert
         verify(parentViewModel).onShowReaderInterests()
     }
+
     private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {

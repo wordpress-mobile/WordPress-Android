@@ -10,16 +10,21 @@ interface MediaSource {
         filter: String? = null
     ): MediaLoadingResult
 
-    sealed class MediaLoadingResult {
-        data class Success(val data: List<MediaItem>, val hasMore: Boolean = false) : MediaLoadingResult()
+    sealed class MediaLoadingResult(open val data: List<MediaItem>) {
+        data class Success(override val data: List<MediaItem>, val hasMore: Boolean = false) : MediaLoadingResult(data)
         data class Empty(
             val title: UiString,
             val htmlSubtitle: UiString? = null,
             val image: Int? = null,
             val bottomImage: Int? = null,
             val bottomImageContentDescription: UiString? = null
-        ) : MediaLoadingResult()
+        ) : MediaLoadingResult(listOf())
 
-        data class Failure(val message: String) : MediaLoadingResult()
+        data class Failure(
+            val title: UiString,
+            val htmlSubtitle: UiString? = null,
+            val image: Int? = null,
+            override val data: List<MediaItem> = listOf()
+        ) : MediaLoadingResult(data)
     }
 }

@@ -2361,6 +2361,7 @@
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
     <string name="media_insert_failed">Media insert failed.</string>
+    <string name="media_loading_failed">Media loading failed</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
