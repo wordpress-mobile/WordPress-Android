@@ -2615,11 +2615,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
-                    if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
-                        String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
-                        if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
-                            key = MediaBrowserActivity.RESULT_IDS;
-                        }
+                    String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
+                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                        key = MediaBrowserActivity.RESULT_IDS;
+                    }
+                    if (data.hasExtra(key)) {
                         long[] mediaIds = data.getLongArrayExtra(key);
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
@@ -2695,7 +2695,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // TODO move this to EditorMedia
         ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
-            return;
+            if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                    long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
+                    ids = new ArrayList<>();
+                    ids.add(mediaId);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         boolean allAreImages = true;
