@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.my_profile_activity.*
 import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -82,7 +83,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 if (event.action != KeyEvent.ACTION_DOWN) {
                     true
                 } else {
-                    onBackClicked()
+                    viewModel.onBackPressed()
                     true
                 }
             } else {
@@ -154,7 +155,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
+        viewModel.triggerOnBackPressedHandler.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                triggerOnBackPressed(it)
+            }
+        })
+
+        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
+                KEY_SCREEN_STATE
+        )
         val site = arguments?.getSerializable(SITE) as SiteModel
 
         viewModel.start(site, prepublishingScreenState)
@@ -180,7 +189,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
                         PrepublishingTagsFragment.TAG
                 )
             }
@@ -192,7 +201,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                         PrepublishingCategoriesFragment.newInstance(
                                 navigationTarget.site,
                                 isStoryPost,
-                                navigationTarget.bundle),
+                                navigationTarget.bundle
+                        ),
                         PrepublishingCategoriesFragment.TAG
                 )
             }
@@ -201,7 +211,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                        PrepublishingAddCategoryFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingAddCategoryFragment.newInstance(
+                                navigationTarget.site,
+                                isStoryPost
+                        ),
                         PrepublishingAddCategoryFragment.TAG
                 )
             }
@@ -223,6 +236,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
             fragmentTransaction.commit()
+        }
+    }
+
+    private fun triggerOnBackPressed(screen: PrepublishingScreen) {
+        if (screen == CATEGORIES) {
+            val fragment = childFragmentManager.findFragmentByTag(PrepublishingCategoriesFragment.TAG)
+            if (fragment != null) {
+                (fragment as PrepublishingBackPressedHandler).onBackPressed()
+            }
         }
     }
 

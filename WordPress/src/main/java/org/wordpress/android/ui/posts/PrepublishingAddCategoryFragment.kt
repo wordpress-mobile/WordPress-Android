@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
@@ -69,6 +70,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
     private fun initBackButton() {
         back_button.setOnClickListener {
+            Log.i(javaClass.simpleName, "***=> back button pressed")
             viewModel.onBackButtonClick()
         }
     }

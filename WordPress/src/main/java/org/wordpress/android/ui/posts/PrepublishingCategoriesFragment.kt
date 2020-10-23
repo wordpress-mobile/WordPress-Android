@@ -23,7 +23,8 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
-class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
+class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment),
+    PrepublishingBackPressedHandler {
     private var closeListener: PrepublishingScreenClosedListener? = null
     private var actionListener: PrepublishingActionClickedListener? = null
 
@@ -54,7 +55,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         if (needsRequestLayout) {
             requireActivity().window.decorView.requestLayout()
         }
-
         super.onResume()
     }
 
@@ -79,7 +79,11 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun initRecyclerView() {
-        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        recycler_view.layoutManager = LinearLayoutManager(
+                context,
+                RecyclerView.VERTICAL,
+                false
+        )
         recycler_view.adapter = PrepublishingCategoriesAdapter(uiHelpers)
         recycler_view.addItemDecoration(
                 DividerItemDecoration(
@@ -102,11 +106,13 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
             }
         })
 
-        viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                actionListener?.onActionClicked(ADD_CATEGORY)
-            }
-        })
+        viewModel.navigateToAddCategoryScreen.observe(
+                viewLifecycleOwner,
+                Observer { event ->
+                    event?.applyIfNotHandled {
+                        actionListener?.onActionClicked(ADD_CATEGORY)
+                    }
+                })
 
         viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
@@ -180,5 +186,9 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
 
             return PrepublishingCategoriesFragment().apply { arguments = newBundle }
         }
+    }
+
+    override fun onBackPressed() {
+        viewModel.onBackButtonClick()
     }
 }

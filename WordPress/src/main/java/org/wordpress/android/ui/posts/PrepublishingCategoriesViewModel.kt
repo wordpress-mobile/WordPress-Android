@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import androidx.annotation.DimenRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -262,5 +263,11 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         val checked: Boolean = false,
         @DimenRes val verticalPaddingResId: Int = R.dimen.margin_large,
         @DimenRes val horizontalPaddingResId: Int = R.dimen.margin_extra_large
+    )
+
+    data class ToolbarUiState(
+        val addCategoryButtonEnabled: Boolean = true,
+        val backButtonEnabled: Boolean = true,
+        @StringRes val title: Int = string.prepublishing_nudges_toolbar_title_categories
     )
 }

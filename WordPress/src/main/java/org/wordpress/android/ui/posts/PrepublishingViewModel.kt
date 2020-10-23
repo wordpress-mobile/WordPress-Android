@@ -43,6 +43,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     private val _triggerOnSubmitButtonClickedListener = MutableLiveData<Event<PublishPost>>()
     val triggerOnSubmitButtonClickedListener: LiveData<Event<PublishPost>> = _triggerOnSubmitButtonClickedListener
 
+    private val _triggerOnBackPressedHandler = MutableLiveData<Event<PrepublishingScreen>>()
+    val triggerOnBackPressedHandler: LiveData<Event<PrepublishingScreen>> = _triggerOnBackPressedHandler
+
     init {
         dispatcher.register(this)
     }
@@ -80,6 +83,17 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
             _dismissKeyboard.postValue(Event(Unit))
         }
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen, bundle))
+    }
+
+    // Send this back out to the current screen and so it can determine if it needs to save
+    // any data before accepting a backPress - in our case, the only view that needs this today
+    // is the Categories selection
+    fun onBackPressed() {
+        if (currentScreen == CATEGORIES) {
+            _triggerOnBackPressedHandler.value = Event(currentScreen as PrepublishingScreen)
+        } else {
+            onBackClicked()
+        }
     }
 
     fun onBackClicked(bundle: Bundle? = null) {
