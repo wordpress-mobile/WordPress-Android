@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.my_profile_activity.*
 import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
