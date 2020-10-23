@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.stories
 
 import com.google.gson.Gson
+import com.wordpress.stories.compose.frame.FrameIndex
+import com.wordpress.stories.compose.story.StoryFrameItem
+import com.wordpress.stories.compose.story.StoryIndex
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -52,7 +57,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
         return StoryMediaFileData(
                 alt = "",
-                id = TEMPORARY_ID_PREFIX + temporaryId, // mediaFile.id,
+                id = temporaryId, // mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
                 mime = StringUtils.notNullStr(mediaFile.mimeType),
@@ -68,7 +73,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     ): StoryMediaFileData {
         return StoryMediaFileData(
                 alt = "",
-                id = TEMPORARY_ID_PREFIX + temporaryId, // mediaFile.id,
+                id = temporaryId, // mediaFile.id,
                 link = url,
                 type = if (isVideo) "video" else "image",
                 mime = "",
@@ -77,35 +82,8 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         )
     }
 
-    fun cleanTemporaryMediaFilesStructFoundInAnyStoryBlockInPost(editPostRepository: EditPostRepository) {
-        editPostRepository.update { postModel: PostModel ->
-            val gson = Gson()
-            findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
-                    postModel,
-                    object : DoWithMediaFilesListener {
-                        override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
-                            var processedContent = content
-                            val storyBlockData: StoryBlockData? =
-                                    gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
-                            storyBlockData?.let {
-                                if (hasTemporaryIdsInStoryData(it)) {
-                                    // here remove the whole mediaFiles attribute
-                                    processedContent = content.replace(mediaFilesJsonString, "")
-                                }
-                            }
-                            return processedContent
-                        }
-                    }
-            )
-            true
-        }
-    }
-
-    private fun hasTemporaryIdsInStoryData(storyBlockData: StoryBlockData): Boolean {
-        val temporaryIds = storyBlockData.mediaFiles.filter {
-            it.id.startsWith(TEMPORARY_ID_PREFIX)
-        }
-        return temporaryIds.size > 0
+    fun getTempIdForStoryFrame(tempIdBase: Long, storyIndex: StoryIndex, frameIndex: FrameIndex): String {
+        return TEMPORARY_ID_PREFIX + "$tempIdBase-$storyIndex-$frameIndex"
     }
 
     fun findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
@@ -156,7 +134,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                                     // look for the slide saved with the local id key (mediaFile.id), and re-convert to
                                     // mediaId.
                                     storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                                            mediaFile.id.toInt(),
+                                            mediaFile.id,
                                             mediaFile.mediaId.toLong(),
                                             postModel.localSiteId.toLong()
                                     )
@@ -168,6 +146,28 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                     }
                 }
         )
+    }
+
+    fun saveNewLocalFilesToStoriesPrefsTempSlides(
+        site: SiteModel,
+        storyIndex: StoryIndex,
+        frames: ArrayList<StoryFrameItem>
+    ) {
+        for ((frameIndex, frame) in frames.withIndex()) {
+            if (frame.id == null) {
+                val assignedTempId = getTempIdForStoryFrame(
+                        storiesPrefs.getNewIncrementalTempId(),
+                        storyIndex,
+                        frameIndex
+                )
+                frame.id = assignedTempId
+            }
+            storiesPrefs.saveSlideWithTempId(
+                    site.id.toLong(),
+                    TempId(requireNotNull(frame.id)), // should not be null at this point
+                    frame
+            )
+        }
     }
 
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {

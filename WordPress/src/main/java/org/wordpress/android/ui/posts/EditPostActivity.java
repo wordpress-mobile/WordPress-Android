@@ -171,7 +171,6 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
-import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase.ReCreateStoryResult;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -677,7 +676,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         setupPrepublishingBottomSheetRunnable();
 
-        mStoriesEventListener.start(this.getLifecycle(), mSite);
+        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository);
         setupPreviewUI();
     }
 
@@ -3252,60 +3251,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        if (mLoadStoryFromStoriesPrefsUseCase.anyMediaIdsInGutenbergStoryBlockAreCorrupt(mediaFiles)) {
-            // unfortunately the medaiIds seem corrupt so, show a dialog and bail
-            AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-            builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
-            builder.setMessage(getString(R.string.dialog_edit_story_corrupt_message));
-            builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                dialog.dismiss();
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-            return;
-        }
+        boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
+                this,
+                new LocalId(mEditPostRepository.getId()),
+                mNetworkErrorOnLastMediaFetchAttempt,
+                mediaFiles,
+                blockId
+        );
 
-        ReCreateStoryResult result = mLoadStoryFromStoriesPrefsUseCase
-                .loadStoryFromMemoryOrRecreateFromPrefs(mSite, mediaFiles);
-        if (!result.getNoSlidesLoaded()) {
-            // Story instance loaded or re-created! Load it onto the StoryComposer for editing now
-            ActivityLauncher.editStoryForResult(
-                    this,
-                    mSite,
-                    new LocalId(mEditPostRepository.getId()),
-                    result.getStoryIndex(),
-                    result.getAllStorySlidesAreEditable(),
-                    true,
-                    blockId
-            );
-        } else {
-            // unfortunately we couldn't even load the remote media Ids indicated by the StoryBlock so we can't allow
-            // editing at this time :(
-            if (mNetworkErrorOnLastMediaFetchAttempt) {
-                // there was an error fetching media when we were loading the editor,
-                // we *may* still have a possibility, tell the user they may try refreshing the media again
-                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-                builder.setTitle(getString(R.string.dialog_edit_story_unavailable_title));
-                builder.setMessage(getString(R.string.dialog_edit_story_unavailable_message));
-                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                    // try another fetchMedia request
-                    fetchMediaList();
-                    dialog.dismiss();
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            } else {
-                // unrecoverable error, nothing we can do, inform the user :(.
-                AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-                builder.setTitle(getString(R.string.dialog_edit_story_unrecoverable_title));
-                builder.setMessage(getString(R.string.dialog_edit_story_unrecoverable_message));
-                builder.setPositiveButton(R.string.dialog_button_ok, (dialog, id) -> {
-                    dialog.dismiss();
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+        if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
+            // try another fetchMedia request
+            fetchMediaList();
         }
+    }
+
+    @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+        mStoriesEventListener.onRetryUploadForMediaCollection(this, mediaFiles, mEditorMediaUploadListener);
+    }
+
+    @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
+        mStoriesEventListener.onCancelUploadForMediaCollection(mediaFiles);
+    }
+
+    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
+        mStoriesEventListener.onCancelSaveForMediaCollection(mediaFiles);
     }
 
     // FluxC events
