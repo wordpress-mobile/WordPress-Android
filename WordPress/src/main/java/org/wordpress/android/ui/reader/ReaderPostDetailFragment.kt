@@ -297,33 +297,26 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
-        if (activity is ReaderPostPagerActivity) {
-            toolBar.setVisible(true)
-            appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
+        toolBar.setVisible(true)
+        appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
-            (activity as AppCompatActivity).setSupportActionBar(toolBar)
-            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-
-            // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
-            ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
-                val insetTop = insets.systemWindowInsetTop
-                if (insetTop > 0) {
-                    toolBar.setPadding(0, insetTop, 0, 0)
-                }
-                insets.consumeSystemWindowInsets()
+        // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
+        ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+            val insetTop = insets.systemWindowInsetTop
+            if (insetTop > 0) {
+                toolBar.setPadding(0, insetTop, 0, 0)
             }
-
-            // Fixes viewpager not displaying menu items for first fragment
-            toolBar.inflateMenu(R.menu.reader_detail)
-
-            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-            toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
-
-            featuredImageView = appBar.findViewById(R.id.featured_image)
-            featuredImageView.setOnClickListener { showFullScreen() }
-        } else {
-            toolBar.setVisible(false)
+            insets.consumeSystemWindowInsets()
         }
+
+        // Fixes viewpager not displaying menu items for first fragment
+        toolBar.inflateMenu(R.menu.reader_detail)
+
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+
+        featuredImageView = appBar.findViewById(R.id.featured_image)
+        featuredImageView.setOnClickListener { showFullScreen() }
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
@@ -357,6 +350,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         showPost()
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isVisible) {
+            replaceActivityToolbarWithCollapsingToolbar()
+        }
+    }
+
+    private fun replaceActivityToolbarWithCollapsingToolbar() {
+        val activity = activity as? AppCompatActivity
+        activity?.supportActionBar?.hide()
+
+        toolBar.setVisible(true)
+        activity?.setSupportActionBar(toolBar)
+
+        activity?.supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
