@@ -23,6 +23,7 @@ import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiSta
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
@@ -32,6 +33,7 @@ private const val NUM_COLUMNS = 2
  * Implements the Home Page Picker UI
  */
 class HomePagePickerFragment : Fragment() {
+    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
 
@@ -47,7 +49,7 @@ class HomePagePickerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         layoutsRecyclerView.apply {
-            adapter = HomePagePickerAdapter()
+            adapter = HomePagePickerAdapter(imageManager)
             layoutManager = GridLayoutManager(activity, NUM_COLUMNS)
         }
 
@@ -70,10 +72,13 @@ class HomePagePickerFragment : Fragment() {
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
                 is UiState.Loading -> {
+                    // TODO: Show skeleton
                 }
                 is UiState.Content -> {
+                    (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
                 is UiState.Error -> {
+                    // TODO: Show error
                 }
             }
         })
