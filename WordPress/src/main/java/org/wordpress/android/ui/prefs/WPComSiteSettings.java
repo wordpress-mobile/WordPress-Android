@@ -654,7 +654,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
         if (settingsObject == null) {
-            AppLog.w(AppLog.T.API, "Error: Settings response doesn't contain settings object");
+            AppLog.e(AppLog.T.API, "Error: Settings response doesn't contain settings object");
             return;
         }
 
