@@ -23,7 +23,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
-// todo: annmarie - show progress on back button & lock dismiss
 class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
     private var closeListener: PrepublishingScreenClosedListener? = null
     private var actionListener: PrepublishingActionClickedListener? = null

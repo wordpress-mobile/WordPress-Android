@@ -222,7 +222,6 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             val categoryLevels = getSiteCategories()
             val selectedCategoryIds = getSelectedIds().toMutableList()
             selectedCategoryIds.add(event.term.remoteTermId)
-            // todo: annmarie fix this as a copy to hold on to previous selected
             _uiState.value = UiState(
                     categoriesListItemUiState = createListItemUiState(
                             categoryLevels,
