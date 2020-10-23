@@ -879,12 +879,13 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
-        } else if (site.isWPComAtomic() && !site.isPrivateWPComAtomic()) {
+        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
+                   && !site.isPrivateWPComAtomic()) {
             openAtomicBlogPostPreview(
-                            context,
-                            url,
-                            site.getLoginUrl(),
-                            site.getFrameNonce());
+                    context,
+                    url,
+                    site.getLoginUrl(),
+                    site.getFrameNonce());
         } else if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             WPWebViewActivity
                     .openJetpackBlogPostPreview(
