@@ -41,7 +41,7 @@
                     android:orientation="vertical">
 
                     <include
-                        layout="@layout/modal_layout_picker_titlebar"
+                        layout="@layout/home_page_picker_titlebar"
                         android:layout_width="match_parent"
                         android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content" />

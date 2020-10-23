@@ -14,15 +14,16 @@ import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.home_page_picker_fragment.appBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
+import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
 private const val NUM_COLUMNS = 2
@@ -81,11 +82,9 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setupUi() {
-        title?.setText(R.string.hpp_title)
-        titleLandscape?.setText(R.string.hpp_title)
+        title?.setVisible(DisplayUtils.isLandscape(requireContext()))
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
-        skipButton?.visibility = View.VISIBLE
     }
 
     private fun setupActionListeners() {
