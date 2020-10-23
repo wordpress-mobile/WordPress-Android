@@ -33,6 +33,7 @@ import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElement
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
 import static org.wordpress.android.support.WPSupportUtils.setNightMode;
+import static org.wordpress.android.support.WPSupportUtils.swipeDownOnView;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
@@ -147,16 +148,18 @@ public class WPScreenshotTest extends BaseTest {
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 
+        // Workaround to avoid gray overlay
         swipeRightOnViewPager(R.id.view_pager);
         swipeLeftOnViewPager(R.id.view_pager);
+        idleFor(1000);
+
         takeScreenshot("2-discover-new-reads");
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateStats() {
-        setNightMode(false);
+    private void moveToStats() {
         // Click on the "Sites" tab in the nav, then choose "Stats"
         clickOn(R.id.nav_sites);
         clickOn(R.id.row_stats);
@@ -166,6 +169,18 @@ public class WPScreenshotTest extends BaseTest {
 
         // Wait for the stats to load
         idleFor(5000);
+    }
+
+    private void navigateStats() {
+        setNightMode(false);
+
+        swipeDownOnView(R.id.scroll_view);
+        moveToStats();
+
+        // Workaround to avoid gray overlay
+        swipeLeftOnViewPager(R.id.statsPager);
+        swipeRightOnViewPager(R.id.statsPager);
+        idleFor(1000);
 
         takeScreenshot("3-build-an-audience");
 

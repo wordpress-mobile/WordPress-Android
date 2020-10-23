@@ -458,10 +458,6 @@
                 "subject": [{
                     "text": "Joao Montes commented on My Top 10 Pastry Recipes",
                     "ranges": [{
-                        "type": "noticon",
-                        "indices": [0, 0],
-                        "value": "\uf467"
-                    }, {
                         "type": "user",
                         "indices": [0, 11],
                         "url": "http:\/\/joaomontes.wordpress.com",
