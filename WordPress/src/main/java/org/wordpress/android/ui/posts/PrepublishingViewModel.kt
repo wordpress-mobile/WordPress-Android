@@ -79,7 +79,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         // For the case where this is not a story and hence there's no EditText in the HOME screen, we're ok too,
         // because there wouldn't have been a keyboard up anyway.
         if (prepublishingScreen == PUBLISH ||
-            prepublishingScreen == CATEGORIES) {
+                prepublishingScreen == CATEGORIES) {
             _dismissKeyboard.postValue(Event(Unit))
         }
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen, bundle))
@@ -89,7 +89,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     // any data before accepting a backPress - in our case, the only view that needs this today
     // is the Categories selection
     fun onBackPressed() {
-        if (currentScreen == CATEGORIES) {
+        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY) {
             _triggerOnBackPressedHandler.value = Event(currentScreen as PrepublishingScreen)
         } else {
             onBackClicked()
@@ -124,10 +124,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         outState.putParcelable(KEY_SCREEN_STATE, currentScreen)
     }
 
-    fun onActionClicked(actionType: ActionType) {
+    fun onActionClicked(actionType: ActionType, bundle: Bundle?) {
         val screen = PrepublishingScreen.valueOf(actionType.name)
         currentScreen = screen
-        navigateToScreen(screen)
+        navigateToScreen(screen, bundle)
     }
 
     fun onSubmitButtonClicked(publishPost: PublishPost) {

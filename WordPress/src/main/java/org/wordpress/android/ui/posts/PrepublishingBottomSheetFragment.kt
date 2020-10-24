@@ -212,7 +212,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 Pair(
                         PrepublishingAddCategoryFragment.newInstance(
                                 navigationTarget.site,
-                                isStoryPost
+                                isStoryPost,
+                                navigationTarget.bundle
                         ),
                         PrepublishingAddCategoryFragment.TAG
                 )
@@ -244,6 +245,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             if (fragment != null) {
                 (fragment as PrepublishingBackPressedHandler).onBackPressed()
             }
+        } else if (screen == ADD_CATEGORY) {
+            val fragment = childFragmentManager.findFragmentByTag(PrepublishingAddCategoryFragment.TAG)
+            if (fragment != null) {
+                (fragment as PrepublishingBackPressedHandler).onBackPressed()
+            }
         }
     }
 
@@ -256,8 +262,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.onBackClicked(bundle)
     }
 
-    override fun onActionClicked(actionType: ActionType) {
-        viewModel.onActionClicked(actionType)
+    override fun onActionClicked(actionType: ActionType, bundle: Bundle?) {
+        viewModel.onActionClicked(actionType, bundle)
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
