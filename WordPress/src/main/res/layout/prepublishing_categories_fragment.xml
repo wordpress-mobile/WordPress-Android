@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/relative_layout"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="@dimen/divider_size"
-        android:layout_below="@+id/include_prepublishing_toolbar"/>
+        android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_below="@+id/include_prepublishing_toolbar" />
+        <ProgressBar
+            android:id="@+id/progress_loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/include_prepublishing_toolbar"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_extra_large" />
 
-    <include
-        android:id="@+id/include_prepublishing_toolbar"
-        layout="@layout/prepublishing_toolbar" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:layout_below="@+id/include_prepublishing_toolbar"
+            android:dividerHeight="@dimen/divider_size" />
 
-</RelativeLayout>
+        <include
+            android:id="@+id/include_prepublishing_toolbar"
+            layout="@layout/prepublishing_toolbar" />
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
