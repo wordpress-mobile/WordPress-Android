@@ -124,7 +124,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         outState.putParcelable(KEY_SCREEN_STATE, currentScreen)
     }
 
-    fun onActionClicked(actionType: ActionType, bundle: Bundle?) {
+    fun onActionClicked(actionType: ActionType, bundle: Bundle? = null) {
         val screen = PrepublishingScreen.valueOf(actionType.name)
         currentScreen = screen
         navigateToScreen(screen, bundle)
