@@ -15,16 +15,19 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
+import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.DomainModel
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
-import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
-import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 class MediaLoaderTest : BaseUnitTest() {
     @Mock lateinit var mediaSource: MediaSource
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var identifier1: Identifier
     @Mock lateinit var identifier2: Identifier
     private lateinit var mediaLoader: MediaLoader
@@ -34,7 +37,7 @@ class MediaLoaderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        mediaLoader = MediaLoader(mediaSource, localeManagerWrapper)
+        mediaLoader = MediaLoader(mediaSource, localeManagerWrapper, networkUtilsWrapper)
         firstMediaItem = MediaItem(identifier1, "url://first_item", "first item", IMAGE, "image/jpeg", 1)
         secondMediaItem = MediaItem(identifier2, "url://second_item", "second item", VIDEO, "video/mpeg", 2)
     }
@@ -59,7 +62,7 @@ class MediaLoaderTest : BaseUnitTest() {
         val errorMessage = "error"
         whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(
                 MediaLoadingResult.Failure(
-                        errorMessage
+                        UiStringText(errorMessage)
                 )
         )
 
@@ -88,7 +91,7 @@ class MediaLoaderTest : BaseUnitTest() {
     fun `shows an error when loading next page fails`() = withMediaLoader { resultModel, performAction ->
         val firstPage = MediaLoadingResult.Success(listOf(firstMediaItem), hasMore = true)
         val message = "error"
-        val secondPage = MediaLoadingResult.Failure(message)
+        val secondPage = MediaLoadingResult.Failure(UiStringText(message), data = listOf(firstMediaItem))
         whenever(mediaSource.load(forced = false, loadMore = false)).thenReturn(firstPage)
         whenever(mediaSource.load(forced = false, loadMore = true)).thenReturn(secondPage)
 
@@ -173,7 +176,12 @@ class MediaLoaderTest : BaseUnitTest() {
     ) {
         this.last().apply {
             assertThat(this.domainItems).isEqualTo(mediaItems)
-            assertThat(this.error).isEqualTo(errorMessage)
+            if (errorMessage != null) {
+                assertThat(this.emptyState?.title).isEqualTo(UiStringText(errorMessage))
+                assertThat(this.emptyState?.isError).isTrue()
+            } else {
+                assertThat(this.emptyState?.title).isNull()
+            }
             assertThat(this.hasMore).isEqualTo(hasMore)
         }
     }
