@@ -347,6 +347,7 @@ class MediaPickerFragment : Fragment() {
 
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
+                searchView.maxWidth = Integer.MAX_VALUE;
                 searchView.setQuery(uiState.searchUiModel.filter, true)
                 searchView.setOnCloseListener { !uiState.searchUiModel.closeable }
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
