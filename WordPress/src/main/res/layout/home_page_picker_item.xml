@@ -20,7 +20,7 @@
         android:layout_width="@dimen/hpp_card_width"
         android:layout_height="@dimen/hpp_card_height"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_layout_selection_overlay_148dp"
+        android:src="@drawable/ic_layout_selection_overlay_153dp"
         tools:ignore="ContentDescription" />
 
 </com.google.android.material.card.MaterialCardView>
