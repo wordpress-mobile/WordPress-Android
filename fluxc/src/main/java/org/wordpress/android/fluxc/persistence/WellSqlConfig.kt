@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 120
+        return 121
     }
 
     override fun getDbName(): String {
@@ -1316,7 +1316,10 @@ open class WellSqlConfig : DefaultWellConfig {
                             "CATEGORY_ID INTEGER," +
                             "SITE_ID INTEGER)")
                 }
-                119 -> migrate(version) {
+                119 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DELETE FROM WCOrderModel")
+                }
+                120 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS StatsBlock")
                     db.execSQL("CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "LOCAL_SITE_ID INTEGER,BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT," +
