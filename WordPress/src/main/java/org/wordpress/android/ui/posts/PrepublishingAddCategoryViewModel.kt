@@ -158,6 +158,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     )
 
     sealed class SubmitButtonUiState(
+        val visibility: Boolean = true,
         val enabled: Boolean = false
     ) {
         object SubmitButtonEnabledUiState : SubmitButtonUiState(

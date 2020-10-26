@@ -58,6 +58,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_medium"
             android:enabled="false"
-            android:text="@string/prepublishing_nudges_add_category_button" />
+            android:text="@string/prepublishing_nudges_add_category_button"
+            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>
