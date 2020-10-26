@@ -4245,4 +4245,71 @@
             column="28"/>
     </issue>
 
+    <issue
+        id="StringFormatInvalid"
+        severity="Error"
+        message="Incorrect formatting string `login_promo_title_37_percent`; missing conversion character in &apos;`% a`&apos; ?"
+        category="Correctness:Messages"
+        priority="9"
+        summary="Invalid format string"
+        explanation="If a string contains a &apos;%&apos; character, then the string may be a formatting string which will be passed to `String.format` from Java code to replace each &apos;%&apos; occurrence with specific values.&#xA;&#xA;This lint warning checks for two related problems:&#xA;(1) Formatting strings that are invalid, meaning that `String.format` will throw exceptions at runtime when attempting to use the format string.&#xA;(2) Strings containing &apos;%&apos; that are not formatting strings getting passed to a `String.format` call. In this case the &apos;%&apos; will need to be escaped as &apos;%%&apos;.&#xA;&#xA;NOTE: Not all Strings which look like formatting strings are intended for use by `String.format`; for example, they may contain date formats intended for `android.text.format.Time#format()`. Lint cannot always figure out that a String is a date format, so you may get false warnings in those scenarios. See the suppress help topic for information on how to suppress errors in that case."
+        errorLine1="    &lt;string name=&quot;login_promo_title_37_percent&quot;>37% av alle nettsteder er bygget på WordPress.&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="./src/main/res/values-nb/strings.xml"
+            line="106"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StringFormatInvalid"
+        severity="Error"
+        message="Incorrect formatting string `login_promo_title_37_percent`; missing conversion character in &apos;`% a`&apos; ?"
+        category="Correctness:Messages"
+        priority="9"
+        summary="Invalid format string"
+        explanation="If a string contains a &apos;%&apos; character, then the string may be a formatting string which will be passed to `String.format` from Java code to replace each &apos;%&apos; occurrence with specific values.&#xA;&#xA;This lint warning checks for two related problems:&#xA;(1) Formatting strings that are invalid, meaning that `String.format` will throw exceptions at runtime when attempting to use the format string.&#xA;(2) Strings containing &apos;%&apos; that are not formatting strings getting passed to a `String.format` call. In this case the &apos;%&apos; will need to be escaped as &apos;%%&apos;.&#xA;&#xA;NOTE: Not all Strings which look like formatting strings are intended for use by `String.format`; for example, they may contain date formats intended for `android.text.format.Time#format()`. Lint cannot always figure out that a String is a date format, so you may get false warnings in those scenarios. See the suppress help topic for information on how to suppress errors in that case."
+        errorLine1="    &lt;string name=&quot;login_promo_title_37_percent&quot;>37% av webben är byggd på WordPress.&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="./src/main/res/values-sv/strings.xml"
+            line="181"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StringFormatInvalid"
+        severity="Error"
+        message="Incorrect formatting string `login_promo_title_37_percent`; missing conversion character in &apos;`% e`&apos; ?"
+        category="Correctness:Messages"
+        priority="9"
+        summary="Invalid format string"
+        explanation="If a string contains a &apos;%&apos; character, then the string may be a formatting string which will be passed to `String.format` from Java code to replace each &apos;%&apos; occurrence with specific values.&#xA;&#xA;This lint warning checks for two related problems:&#xA;(1) Formatting strings that are invalid, meaning that `String.format` will throw exceptions at runtime when attempting to use the format string.&#xA;(2) Strings containing &apos;%&apos; that are not formatting strings getting passed to a `String.format` call. In this case the &apos;%&apos; will need to be escaped as &apos;%%&apos;.&#xA;&#xA;NOTE: Not all Strings which look like formatting strings are intended for use by `String.format`; for example, they may contain date formats intended for `android.text.format.Time#format()`. Lint cannot always figure out that a String is a date format, so you may get false warnings in those scenarios. See the suppress help topic for information on how to suppress errors in that case."
+        errorLine1="    &lt;string name=&quot;login_promo_title_37_percent&quot;>37% e web-it ngrihet mbi WordPress.&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="./src/main/res/values-sq/strings.xml"
+            line="184"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="StringFormatCount"
+        severity="Error"
+        message="Inconsistent number of arguments in formatting string `login_promo_title_37_percent`; found both 0 and 1"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Formatting argument types incomplete or inconsistent"
+        explanation="When a formatted string takes arguments, it usually needs to reference the same arguments in all translations (or all arguments if there are no translations.&#xA;&#xA;There are cases where this is not the case, so this issue is a warning rather than an error by default. However, this usually happens when a language is not translated or updated correctly."
+        errorLine1="    &lt;string name=&quot;login_promo_title_37_percent&quot;>37% of the web is built on WordPress.&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="./WordPress/src/main/res/values/strings.xml"
+            line="2406"
+            column="5"/>
+        <location
+            file="./WordPress/src/main/res/values-ar/strings.xml"
+            line="146"
+            column="5"/>
+    </issue>
 </issues>
