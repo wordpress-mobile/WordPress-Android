@@ -1,5 +1,0 @@
-15.8:
-- Mejoras en el editor de bloques: Añadida compatibilidad con alineación de ancho amplio y ancho completo para los bloques de grupo, fondo e imagen; añadida compatibilidad con el estilo redondeado en el bloque de imagen; y solucionado un problema por el que la barra de herramientas se comportaba de modo inesperado al añadir un bloque.
-- Actualización del lector: La vista previa de imágenes ahora se muestra en las entradas cuando no se ha configurado una imagen destacada.
-
-

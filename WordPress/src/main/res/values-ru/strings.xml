@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-23 14:36:31+0000
+Translation-Revision-Date: 2020-10-06 11:00:14+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_white">Белый</string>
+    <string name="gutenberg_native_vivid_red">Ярко-красный</string>
+    <string name="gutenberg_native_vivid_purple">Яркий пурпурный</string>
+    <string name="gutenberg_native_vivid_green_cyan">Яркий зелёно-голубой</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Яркий зеленовато-голубой к яркому пурпурному</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Яркий зеленовато-голубой</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Светло-серый к голубовато-серому</string>
+    <string name="gutenberg_native_select_item">Выбрать элемент</string>
+    <string name="gutenberg_native_search_or_type_url">Введите поисковый запрос или URL</string>
+    <string name="gutenberg_native_pale_pink">Бледно-розовый</string>
+    <string name="gutenberg_native_pale_ocean">Бледный океан</string>
+    <string name="gutenberg_native_pale_cyan_blue">Бледный зеленовато-голубой</string>
+    <string name="gutenberg_native_midnight">Полночь</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Ярко-оранжевый к ярко-красному</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Светящийся яркий оранжевый</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Янтарный к ярко-оранжевому</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Светящийся яркий янтарь</string>
+    <string name="gutenberg_native_luminous_dusk">Светящиеся сумерки</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Светло-зеленый к ярко-зелёному</string>
+    <string name="gutenberg_native_light_green_cyan">Легкий зелёно-голубой</string>
+    <string name="gutenberg_native_electric_grass">Электрическая трава</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Зеленовато-голубовато серый</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Холодный к тёплому спектру</string>
+    <string name="gutenberg_native_blush_light_purple">Пылающий светло-пурпурный</string>
+    <string name="gutenberg_native_blush_bordeaux">Пылающий бордовый</string>
+    <string name="gutenberg_native_black">Чёрный</string>
+    <string name="gutenberg_native_add_this_telephone_link">Добавить ссылку на номер телефона</string>
+    <string name="gutenberg_native_add_this_link">Добавить ссылку</string>
+    <string name="gutenberg_native_add_this_email_link">Добавить ссылку на email</string>
+    <string name="suggestion_no_connection">\"Нет подключения к сети.\nПредложения недоступны.\"</string>
     <string name="typeface_label_shrikhand">Жирный</string>
     <string name="typeface_label_space_mono">Современный</string>
     <string name="typeface_label_pacifico">Игривый</string>
@@ -151,7 +181,6 @@ Language: ru
     <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b>%1$s&lt;/b> для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
     <string name="gutenberg_native_s_block_options">настройки блока %s</string>
-    <string name="gutenberg_native_remove_block">Удалить блок</string>
     <string name="gutenberg_native_duplicate_block">Дублировать блок</string>
     <string name="gutenberg_native_copy_block">Копировать блок</string>
     <string name="gutenberg_native_copied_block">Скопированный блок</string>
@@ -166,11 +195,9 @@ Language: ru
     <string name="error_update_site_title_network">Невозможно обновить название сайта. Проверьте подключение к сети и попробуйте снова.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несохранённые изменения</string>
     <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Переход на предыдущий экран содержимого</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Переход к настройкам градиента</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Переход к выбору пользовательского цвета</string>
     <string name="gutenberg_native_gradient_type">Тип градиента</string>
-    <string name="gutenberg_native_go_back">Вернуться</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Нажмите дважды для выбора</string>
     <string name="gutenberg_native_customize_gradient">Настройка градиента</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,9 +207,6 @@ Language: ru
     <string name="menu_content_info">Структура содержимого</string>
     <string name="everyone">Все</string>
     <string name="me">Мой профиль</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать этот блок в веб-браузере.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Редактировать блок в браузере</string>
-    <string name="gutenberg_native_dismiss">Закрыть</string>
     <string name="prepublishing_nudges_home_tags_not_set">Не установлены</string>
     <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Дата публикации</string>
@@ -416,7 +440,7 @@ Language: ru
     <string name="reader_filter_main_title">Подписки</string>
     <string name="reader_filter_cta">Фильтр</string>
     <string name="gutenberg_native_video_caption_s">Подпись к видео. %s</string>
-    <string name="gutenberg_native_edit_video">Измненить видео</string>
+    <string name="gutenberg_native_edit_video">Изменить видео</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Нажмите дважды для выбора макета</string>
     <string name="gutenberg_native_add_a_shortcode">Добавить шорткод…</string>
     <string name="post_list_author">Автор записи</string>
@@ -480,12 +504,10 @@ Language: ru
     <string name="posts_cannot_be_started">Сейчас невозможно загрузить записи вашего сайта. Попробуйте позже.</string>
     <string name="site_cannot_be_loaded">Сейчас невозможно загрузить данные для вашего сайта. Попробуйте позже.</string>
     <string name="gutenberg_native_wordpress_media_library">Медиатека WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать эту запись в веб-браузере.</string>
     <string name="gutenberg_native_ungroup">Разгруппировать</string>
     <string name="gutenberg_native_translate">Перевести</string>
     <string name="gutenberg_native_title">Заголовок:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Нажмите, чтобы скрыть клавиатуру</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Нажмите тут для показа справки</string>
     <string name="gutenberg_native_take_a_video">Записать видео</string>
     <string name="gutenberg_native_take_a_photo_or_video">Сделать фото или записать видео</string>
     <string name="gutenberg_native_take_a_photo">Сделать фото</string>
@@ -493,8 +515,6 @@ Language: ru
     <string name="gutenberg_native_size">Размер</string>
     <string name="gutenberg_native_sidebar_title_plugin">Плагин заголовка боковой панели</string>
     <string name="gutenberg_native_show_section">Показать раздел</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s пока не поддерживается WordPress для iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s пока не поддерживается WordPress для Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Блок %s. Блок имеет неверное содержимое.</string>
     <string name="gutenberg_native_s_block_empty">Блок %s. Пустой</string>
     <string name="gutenberg_native_cut_block">Вырезать блок</string>
@@ -517,12 +537,9 @@ Language: ru
     <string name="gutenberg_native_move_block_up">Переместить блок вверх</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Переместить блок вниз из ряда %1$s в ряд %2$s</string>
     <string name="gutenberg_native_move_block_down">Переместить блок ниже</string>
-    <string name="gutenberg_native_link_text">Текст ссылки</string>
-    <string name="gutenberg_native_link_inserted">Ссылка вставлена</string>
     <string name="gutenberg_native_image_caption_s">Подпись к изображению. %s</string>
     <string name="gutenberg_native_hide_keyboard">Скрыть клавиатуру</string>
     <string name="gutenberg_native_here_is_the_panel_content">Это содержимое панели!</string>
-    <string name="gutenberg_native_help_icon">Значок справки</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Невозможно вставить медиафайл.\nНажмите для выбора вариантов.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Нажмите дважды для отмены последнего действия</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Нажмите дважды для переключения настройки</string>
@@ -543,7 +560,6 @@ Language: ru
     <string name="gutenberg_native_alt_text">Текст атрибута alt</string>
     <string name="gutenberg_native_add_video">ДОБАВИТЬ ВИДЕО</string>
     <string name="gutenberg_native_add_url">Добавить URL</string>
-    <string name="gutenberg_native_add_link_text">Добавить текст ссылки</string>
     <string name="gutenberg_native_add_image_or_video">ДОБАВИТЬ ИЗОБРАЖЕНИЕ ИЛИ ВИДЕО</string>
     <string name="gutenberg_native_add_image">ДОБАВИТЬ ИЗОБРАЖЕНИЕ</string>
     <string name="gutenberg_native_add_block_here">ДОБАВИТЬ БЛОК ЗДЕСЬ</string>

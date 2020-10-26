@@ -496,9 +496,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        Intent intent = new Intent(context, PostsListActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
+        context.startActivity(PostsListActivity.buildIntent(context, site));
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 

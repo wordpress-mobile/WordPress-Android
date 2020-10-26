@@ -80,6 +80,7 @@ public class ReaderConstants {
     public static final String JSON_CARD_INTERESTS_YOU_MAY_LIKE = "interests_you_may_like";
     public static final String JSON_CARD_POST = "post";
     public static final String JSON_CARD_DATA = "data";
+    public static final String JSON_CARD_RECOMMENDED_BLOGS = "recommended_blogs";
     public static final String JSON_NEXT_PAGE_HANDLE = "next_page_handle";
 
     // JSON Post key names
@@ -91,4 +92,8 @@ public class ReaderConstants {
     public static final String KEY_DISCOVER = "discover";
     public static final String KEY_LIKES = "likes";
     public static final String KEY_SAVED = "saved";
+
+    // JSON Recommended blog key names
+    public static final String RECOMMENDED_BLOG_ID = "ID";
+    public static final String RECOMMENDED_FEED_ID = "feed_ID";
 }
