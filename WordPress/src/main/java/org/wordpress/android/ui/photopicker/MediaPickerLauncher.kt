@@ -302,7 +302,7 @@ class MediaPickerLauncher @Inject constructor(
         }
         return MediaPickerSetup(
                 primaryDataSource = DEVICE,
-                availableDataSources = setOf(),
+                availableDataSources = if (browserType.isWPStoriesPicker) setOf(WP_LIBRARY) else setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,
