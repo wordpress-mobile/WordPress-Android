@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><!--    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"-->
+<?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,6 +12,14 @@
         android:layout_height="wrap_content"
         android:dividerHeight="@dimen/divider_size"
         android:layout_below="@+id/include_prepublishing_toolbar"/>
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_below="@+id/include_prepublishing_toolbar" />
 
     <include
         android:id="@+id/include_prepublishing_toolbar"

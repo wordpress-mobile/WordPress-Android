@@ -189,7 +189,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                        PrepublishingCategoriesFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingCategoriesFragment.newInstance(
+                                navigationTarget.site,
+                                isStoryPost,
+                                navigationTarget.bundle),
                         PrepublishingCategoriesFragment.TAG
                 )
             }
@@ -228,8 +231,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    override fun onBackClicked() {
-        viewModel.onBackClicked()
+    override fun onBackClicked(bundle: Bundle?) {
+        viewModel.onBackClicked(bundle)
     }
 
     override fun onActionClicked(actionType: ActionType) {

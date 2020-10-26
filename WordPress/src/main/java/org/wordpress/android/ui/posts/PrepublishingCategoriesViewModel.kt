@@ -32,6 +32,7 @@ import javax.inject.Named
 
 class PrepublishingCategoriesViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
+    private val addCategoryUseCase: AddCategoryUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
@@ -41,6 +42,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var siteModel: SiteModel
     private var updateCategoriesJob: Job? = null
+    private var addCategoryJob: Job? = null
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
@@ -61,18 +63,29 @@ class PrepublishingCategoriesViewModel @Inject constructor(
         dispatcher.register(this)
     }
 
-    fun start(editPostRepository: EditPostRepository, siteModel: SiteModel) {
+    fun start(
+        editPostRepository: EditPostRepository,
+        siteModel: SiteModel,
+        addCategoryRequest: PrepublishingAddCategoryRequest? = null
+    ) {
         this.editPostRepository = editPostRepository
         this.siteModel = siteModel
 
         if (isStarted) return
         isStarted = true
 
-        init()
+        init(addCategoryRequest)
     }
 
-    private fun init() {
+    private fun init(addCategoryRequest: PrepublishingAddCategoryRequest?) {
         setToolbarTitleUiState()
+
+        addCategoryRequest?.let {
+            addCategoryJob?.cancel()
+            addCategoryJob = launch(bgDispatcher) {
+                addCategoryUseCase.addCategory(it.categoryText, it.categoryParentId, siteModel)
+            }
+        }
 
         val siteCategories = getSiteCategories()
         val postCategories = getPostCategories()
@@ -80,7 +93,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                 categoriesListItemUiState = createListItemUiState(
                         siteCategories = siteCategories,
                         selectedCategoryIds = postCategories
-                )
+                ), progressVisibility = addCategoryRequest != null
         )
     }
 
@@ -203,6 +216,7 @@ class PrepublishingCategoriesViewModel @Inject constructor(
             string.adding_cat_success
         }
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
+        _uiState.value = uiState.value?.copy(progressVisibility = false)
 
         if (!event.isError) {
             val categoryLevels = getSiteCategories()
@@ -236,7 +250,9 @@ class PrepublishingCategoriesViewModel @Inject constructor(
 
     data class UiState(
         val addCategoryActionButtonVisibility: Boolean = true,
-        val categoriesListItemUiState: List<PrepublishingCategoriesListItemUiState> = listOf()
+        val categoriesListItemUiState: List<PrepublishingCategoriesListItemUiState> = listOf(),
+        val categoryListVisibility: Boolean = true,
+        val progressVisibility: Boolean = false
     )
 
     data class PrepublishingCategoriesListItemUiState(

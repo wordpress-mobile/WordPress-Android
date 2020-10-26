@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.posts
 
+import android.os.Bundle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.CategoryNode
@@ -13,6 +12,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.SubmitButtonUiState.SubmitButtonDisabledUiState
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel.SubmitButtonUiState.SubmitButtonEnabledUiState
+import org.wordpress.android.ui.posts.PrepublishingCategoriesFragment.Companion.ADD_CATEGORY_REQUEST
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -24,7 +24,6 @@ import javax.inject.Named
 
 class PrepublishingAddCategoryViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val addCategoryUseCase: AddCategoryUseCase,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -32,10 +31,9 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     private var isStarted = false
     private var closeKeyboard = true
     private lateinit var siteModel: SiteModel
-    private var addCategoryJob: Job? = null
 
-    private val _navigateBack = MutableLiveData<Event<Unit>>()
-    val navigateBack: LiveData<Event<Unit>> = _navigateBack
+    private val _navigateBack = MutableLiveData<Bundle>()
+    val navigateBack: LiveData<Bundle> = _navigateBack
 
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
@@ -130,20 +128,20 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
             return
         }
 
-        val parentCategoryId = parentCategory.categoryId
-        addCategoryJob?.cancel()
-        addCategoryJob = launch(bgDispatcher) {
-            addCategoryUseCase.addCategory(categoryText, parentCategoryId, siteModel)
+        val bundle = Bundle().apply {
+            putSerializable(ADD_CATEGORY_REQUEST,
+                    PrepublishingAddCategoryRequest(categoryText, parentCategory.categoryId))
         }
 
-        cleanupAndFinish()
+        cleanupAndFinish(bundle)
     }
 
-    private fun cleanupAndFinish() {
+    private fun cleanupAndFinish(bundle: Bundle? = null) {
         if (closeKeyboard) {
             _dismissKeyboard.postValue(Event(Unit))
         }
-        _navigateBack.postValue(Event(Unit))
+
+        _navigateBack.postValue(bundle)
     }
 
     private fun getCategoryLevels(): ArrayList<CategoryNode> =

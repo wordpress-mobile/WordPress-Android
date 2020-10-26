@@ -148,10 +148,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             }
         })
 
-        viewModel.navigateBack.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onBackClicked()
-            }
+        viewModel.navigateBack.observe(viewLifecycleOwner, Observer { bundle ->
+            closeListener?.onBackClicked(bundle)
         })
 
         viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->

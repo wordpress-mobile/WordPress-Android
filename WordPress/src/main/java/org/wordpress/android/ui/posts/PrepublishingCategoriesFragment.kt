@@ -54,6 +54,7 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         if (needsRequestLayout) {
             requireActivity().window.decorView.requestLayout()
         }
+
         super.onResume()
     }
 
@@ -123,11 +124,15 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
             )
             with(uiHelpers) {
                 updateVisibility(add_action_button, it.addCategoryActionButtonVisibility)
+                updateVisibility(progress_loading, it.progressVisibility)
+                updateVisibility(recycler_view, it.categoryListVisibility)
             }
         })
 
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        viewModel.start(getEditPostRepository(), siteModel)
+        val addCategoryRequest: PrepublishingAddCategoryRequest? =
+                arguments?.getSerializable(ADD_CATEGORY_REQUEST) as? PrepublishingAddCategoryRequest
+        viewModel.start(getEditPostRepository(), siteModel, addCategoryRequest)
     }
 
     private fun getEditPostRepository(): EditPostRepository {
@@ -159,15 +164,21 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     companion object {
         const val TAG = "prepublishing_categories_fragment_tag"
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_categories_fragment_needs_request_layout"
+        const val ADD_CATEGORY_REQUEST = "prepublishing_add_category_request"
         @JvmStatic fun newInstance(
             site: SiteModel,
-            needsRequestLayout: Boolean
+            needsRequestLayout: Boolean,
+            bundle: Bundle? = null
         ): PrepublishingCategoriesFragment {
-            val bundle = Bundle().apply {
+            val newBundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
                 putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
-            return PrepublishingCategoriesFragment().apply { arguments = bundle }
+            bundle?.let {
+                newBundle.putAll(bundle)
+            }
+
+            return PrepublishingCategoriesFragment().apply { arguments = newBundle }
         }
     }
 }

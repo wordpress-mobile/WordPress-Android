@@ -20,6 +20,7 @@ import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
+import java.io.Serializable
 import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
@@ -67,7 +68,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         fetchTags()
     }
 
-    private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
+    private fun navigateToScreen(prepublishingScreen: PrepublishingScreen, bundle: Bundle? = null) {
         // Note: given we know both the HOME, TAGS and ADD_CATEGORY screens have an EditText, we can ask to send the
         // dismissKeyboard signal only when we're not either in one of these nor navigating towards one of these.
         // At this point in code we only know where we want to navigate to, but it's ok since landing on any of these
@@ -78,14 +79,14 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
             prepublishingScreen == CATEGORIES) {
             _dismissKeyboard.postValue(Event(Unit))
         }
-        updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen))
+        updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen, bundle))
     }
 
-    fun onBackClicked() {
+    fun onBackClicked(bundle: Bundle? = null) {
         when {
             currentScreen == ADD_CATEGORY -> {
                 currentScreen = CATEGORIES
-                navigateToScreen(currentScreen as PrepublishingScreen)
+                navigateToScreen(currentScreen as PrepublishingScreen, bundle)
             }
             currentScreen != HOME -> {
                 currentScreen = HOME
@@ -150,5 +151,11 @@ enum class PrepublishingScreen : Parcelable {
 
 data class PrepublishingNavigationTarget(
     val site: SiteModel,
-    val targetScreen: PrepublishingScreen
+    val targetScreen: PrepublishingScreen,
+    val bundle: Bundle? = null
 )
+
+data class PrepublishingAddCategoryRequest(
+    val categoryText: String,
+    val categoryParentId: Long
+) : Serializable
