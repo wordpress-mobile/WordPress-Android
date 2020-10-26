@@ -4,6 +4,7 @@ import android.text.Spanned
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
@@ -65,6 +67,29 @@ sealed class ReaderCardUiState {
             val isDividerVisible: Boolean,
             val onClicked: ((String) -> Unit)
         )
+    }
+
+    data class ReaderRecommendedBlogsCardUiState(
+        val blogs: List<ReaderRecommendedBlogUiState>
+    ) : ReaderCardUiState() {
+        data class ReaderRecommendedBlogUiState(
+            val name: String,
+            val url: String,
+            val blogId: Long,
+            val feedId: Long,
+            val description: String?,
+            val iconUrl: String?,
+            val isFollowed: Boolean,
+            val onItemClicked: (Long, Long) -> Unit,
+            val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
+        ) {
+            val followContentDescription: UiStringRes by lazy {
+                when (isFollowed) {
+                    true -> R.string.reader_btn_unfollow
+                    false -> R.string.reader_btn_follow
+                }.let(::UiStringRes)
+            }
+        }
     }
 }
 

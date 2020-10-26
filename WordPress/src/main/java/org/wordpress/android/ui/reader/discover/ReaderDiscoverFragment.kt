@@ -100,6 +100,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             when (it) {
                 is ContentUiState -> {
                     (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
+                    if (it.scrollToTop) {
+                        recycler_view.scrollToPosition(0)
+                    }
                 }
                 is ErrorUiState -> {
                     uiHelpers.setTextOrHide(error_title, it.titleResId)

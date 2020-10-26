@@ -1330,6 +1330,7 @@
     <string name="reader_expandable_tags_view_overflow_indicator_expand_title" translatable="false">%1$s+</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Hide</string>
     <string name="reader_discover_interests_header">You might like</string>
+    <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Follow topics to discover new blogs</string>
@@ -2360,6 +2361,7 @@
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
     <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
     <string name="media_insert_failed">Media insert failed.</string>
+    <string name="media_loading_failed">Media loading failed</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
 
     <!-- GIFs -->
@@ -2896,7 +2898,10 @@
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_notice_page_created">Page created</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
-    <string name="mlp_generic_error">An error occurred while fetching the layouts</string>
+    <string name="mlp_error_title">Layouts not available due to an error</string>
+    <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
+    <string name="mlp_network_error_title">Layouts not available while offline</string>
+    <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>

@@ -96,6 +96,12 @@
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <include
+        layout="@layout/modal_layout_picker_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
