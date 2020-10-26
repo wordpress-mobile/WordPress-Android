@@ -12,6 +12,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class HomePagePickerViewModel @Inject constructor(
+    private val thumbDimensionProvider: ThumbDimensionProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -26,17 +27,19 @@ class HomePagePickerViewModel @Inject constructor(
     private fun loadLayouts() {
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         launch(bgDispatcher) {
+            val width = thumbDimensionProvider.width
+            val scale = thumbDimensionProvider.scale.toInt()
             // FIXME: Dummy temporary implementation
             val preview = arrayOf(
-                    "https://headstartdata.files.wordpress.com/2020/01/about-4.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2020/01/contact-6.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2019/06/about-2.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2020/03/team.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2019/09/menu.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2020/01/brompton.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2020/01/exford.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2020/08/seedlet-1.png?w=476&zoom=1",
-                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=476&zoom=1"
+                    "https://headstartdata.files.wordpress.com/2020/01/about-4.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/contact-6.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2019/06/about-2.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/03/team.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2019/09/menu.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/brompton.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/exford.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/08/seedlet-1.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale"
             )
 
             val items = ArrayList<LayoutGridItemUiState>()

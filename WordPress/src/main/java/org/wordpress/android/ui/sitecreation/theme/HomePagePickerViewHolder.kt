@@ -1,27 +1,18 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import android.graphics.drawable.Drawable
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.home_page_picker_item.view.*
-import org.wordpress.android.R
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.setVisible
 
-class HomePagePickerViewHolder(internal val parent: ViewGroup) :
-        RecyclerView.ViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                        R.layout.home_page_picker_item,
-                        parent,
-                        false
-                )
-        ) {
+class HomePagePickerViewHolder(view: View, val parent: ViewGroup) : RecyclerView.ViewHolder(view) {
     private val container: View = itemView.layout_container
     private val preview: ImageView = itemView.preview
     private val selected: ImageView = itemView.selected_overlay

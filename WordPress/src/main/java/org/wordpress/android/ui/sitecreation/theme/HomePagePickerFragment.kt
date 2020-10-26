@@ -27,13 +27,12 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
-private const val NUM_COLUMNS = 2
-
 /**
  * Implements the Home Page Picker UI
  */
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
 
@@ -49,8 +48,8 @@ class HomePagePickerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         layoutsRecyclerView.apply {
-            adapter = HomePagePickerAdapter(imageManager)
-            layoutManager = GridLayoutManager(activity, NUM_COLUMNS)
+            adapter = HomePagePickerAdapter(imageManager, thumbDimensionProvider)
+            layoutManager = GridLayoutManager(activity, thumbDimensionProvider.columns)
         }
 
         setupUi()
