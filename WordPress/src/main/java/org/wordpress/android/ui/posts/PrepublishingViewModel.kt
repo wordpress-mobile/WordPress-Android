@@ -43,8 +43,8 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     private val _triggerOnSubmitButtonClickedListener = MutableLiveData<Event<PublishPost>>()
     val triggerOnSubmitButtonClickedListener: LiveData<Event<PublishPost>> = _triggerOnSubmitButtonClickedListener
 
-    private val _triggerOnBackPressedHandler = MutableLiveData<Event<PrepublishingScreen>>()
-    val triggerOnBackPressedHandler: LiveData<Event<PrepublishingScreen>> = _triggerOnBackPressedHandler
+    private val _triggerOnDeviceBackPressed = MutableLiveData<Event<PrepublishingScreen>>()
+    val triggerOnDeviceBackPressed: LiveData<Event<PrepublishingScreen>> = _triggerOnDeviceBackPressed
 
     init {
         dispatcher.register(this)
@@ -87,10 +87,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 
     // Send this back out to the current screen and so it can determine if it needs to save
     // any data before accepting a backPress - in our case, the only view that needs this today
-    // is the Categories selection
-    fun onBackPressed() {
+    // is the Categories selection & AddCategory
+    fun onDeviceBackPressed() {
         if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY) {
-            _triggerOnBackPressedHandler.value = Event(currentScreen as PrepublishingScreen)
+            _triggerOnDeviceBackPressed.value = Event(currentScreen as PrepublishingScreen)
         } else {
             onBackClicked()
         }

@@ -82,7 +82,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 if (event.action != KeyEvent.ACTION_DOWN) {
                     true
                 } else {
-                    viewModel.onBackPressed()
+                    viewModel.onDeviceBackPressed()
                     true
                 }
             } else {
@@ -151,12 +151,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.dismissKeyboard.observe(this, Observer { event ->
             event.applyIfNotHandled {
                 ActivityUtils.hideKeyboardForced(view)
-            }
-        })
-
-        viewModel.triggerOnBackPressedHandler.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let {
-                triggerOnBackPressed(it)
             }
         })
 
@@ -236,20 +230,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
             fragmentTransaction.commit()
-        }
-    }
-
-    private fun triggerOnBackPressed(screen: PrepublishingScreen) {
-        if (screen == CATEGORIES) {
-            val fragment = childFragmentManager.findFragmentByTag(PrepublishingCategoriesFragment.TAG)
-            if (fragment != null) {
-                (fragment as PrepublishingBackPressedHandler).onBackPressed()
-            }
-        } else if (screen == ADD_CATEGORY) {
-            val fragment = childFragmentManager.findFragmentByTag(PrepublishingAddCategoryFragment.TAG)
-            if (fragment != null) {
-                (fragment as PrepublishingBackPressedHandler).onBackPressed()
-            }
         }
     }
 

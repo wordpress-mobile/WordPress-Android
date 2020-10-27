@@ -24,12 +24,12 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
-class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_category_fragment),
-        PrepublishingBackPressedHandler {
+class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_category_fragment) {
     private var closeListener: PrepublishingScreenClosedListener? = null
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
+    private lateinit var parentViewModel: PrepublishingViewModel
     @Inject lateinit var uiHelpers: UiHelpers
 
     var spinnerTouched: Boolean = false
@@ -134,6 +134,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingAddCategoryViewModel::class.java)
+        parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+                .get(PrepublishingViewModel::class.java)
 
         startObserving()
 
@@ -175,6 +177,12 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
             }
             updateSubmitButton(uiState.submitButtonUiState)
         })
+
+        parentViewModel.triggerOnDeviceBackPressed.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                closeListener?.onBackClicked(arguments)
+            }
+        })
     }
 
     private fun updateSubmitButton(submitButtonUiState: SubmitButtonUiState) {
@@ -193,10 +201,6 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
                 requireContext(), message,
                 SHORT
         )
-    }
-
-    override fun onBackPressed() {
-        closeListener?.onBackClicked(arguments)
     }
 
     companion object {

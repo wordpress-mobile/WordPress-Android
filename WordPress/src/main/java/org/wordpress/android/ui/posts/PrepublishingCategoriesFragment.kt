@@ -27,13 +27,13 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import javax.inject.Inject
 
-class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment),
-        PrepublishingBackPressedHandler {
+class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categories_fragment) {
     private var closeListener: PrepublishingScreenClosedListener? = null
     private var actionListener: PrepublishingActionClickedListener? = null
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingCategoriesViewModel
+    private lateinit var parentViewModel: PrepublishingViewModel
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var dispatcher: Dispatcher
 
@@ -111,12 +111,15 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingCategoriesViewModel::class.java)
+        parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+                .get(PrepublishingViewModel::class.java)
         startObserving()
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         val addCategoryRequest: PrepublishingAddCategoryRequest? =
                 arguments?.getSerializable(ADD_CATEGORY_REQUEST) as? PrepublishingAddCategoryRequest
         val selectedCategoryIds: List<Long> =
                 arguments?.getLongArray(SELECTED_CATEGORY_IDS)?.toList() ?: listOf()
+
         viewModel.start(getEditPostRepository(), siteModel, addCategoryRequest, selectedCategoryIds)
     }
 
@@ -128,8 +131,8 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         })
 
         viewModel.navigateToAddCategoryScreen.observe(viewLifecycleOwner, Observer { bundle ->
-                    actionListener?.onActionClicked(ADD_CATEGORY, bundle)
-                }
+            actionListener?.onActionClicked(ADD_CATEGORY, bundle)
+        }
         )
 
         viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
@@ -150,6 +153,11 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
                 updateVisibility(add_action_button, it.addCategoryActionButtonVisibility)
                 updateVisibility(progress_loading, it.progressVisibility)
                 updateVisibility(recycler_view, it.categoryListVisibility)
+            }
+        })
+        parentViewModel.triggerOnDeviceBackPressed.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                viewModel.onBackButtonClick()
             }
         })
     }
@@ -199,10 +207,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
             }
             return PrepublishingCategoriesFragment().apply { arguments = newBundle }
         }
-    }
-
-    override fun onBackPressed() {
-        viewModel.onBackButtonClick()
     }
 
     @SuppressWarnings("unused")
