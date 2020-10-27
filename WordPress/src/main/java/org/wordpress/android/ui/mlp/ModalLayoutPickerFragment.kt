@@ -21,8 +21,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
+import kotlinx.android.synthetic.main.modal_layout_picker_error.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
+import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
@@ -33,8 +35,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
@@ -97,6 +97,9 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         previewButton.setOnClickListener {
             viewModel.onPreviewPageClicked()
         }
+        retryButton.setOnClickListener {
+            viewModel.onRetryClicked()
+        }
 
         setScrollListener()
 
@@ -105,7 +108,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     private fun setScrollListener() {
         if (DisplayUtils.isLandscape(requireContext())) return // Always visible
-        val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
+        val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
@@ -124,6 +127,14 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             AniUtils.fadeIn(header, Duration.SHORT)
             AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
         }
+    }
+
+    /**
+     * Sets the header description visibility
+     * @param visible if true the description is visible else invisible
+     */
+    private fun setDescriptionVisibility(visible: Boolean) {
+        description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
@@ -171,22 +182,20 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         loadSavedState(savedInstanceState)
 
         viewModel.uiState.observe(this, Observer { uiState ->
+            setTitleVisibility(uiState.isHeaderVisible)
+            setDescriptionVisibility(uiState.isDescriptionVisible)
+            setButtonsVisibility(uiState.buttonsUiState)
+            setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             when (uiState) {
                 is LoadingUiState -> {
-                    setTitleVisibility(uiState.isHeaderVisible)
-                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
                 }
                 is ContentUiState -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
-                    setButtonsVisibility(uiState.buttonsUiState)
-                    setTitleVisibility(uiState.isHeaderVisible)
-                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
                 }
                 is ErrorUiState -> {
-                    setTitleVisibility(uiState.isHeaderVisible)
-                    showLoadingSkeleton(uiState.loadingSkeletonVisible)
-                    ToastUtils.showToast(activity, uiState.message, SHORT)
+                    actionableEmptyView.title.setText(uiState.title)
+                    actionableEmptyView.subtitle.setText(uiState.subtitle)
                 }
             }
         })
@@ -202,17 +211,20 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         })
     }
 
-    private fun showLoadingSkeleton(skeleton: Boolean) {
+    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
         categoriesSkeleton.setVisible(skeleton)
-        categoriesRecyclerView.setVisible(!skeleton)
+        categoriesRecyclerView.setVisible(!skeleton && !error)
         layoutsSkeleton.setVisible(skeleton)
-        layoutsRecyclerView.setVisible(!skeleton)
+        layoutsRecyclerView.setVisible(!skeleton && !error)
+        errorLayout.setVisible(error)
     }
 
     private fun setButtonsVisibility(uiState: ButtonsUiState) {
         createBlankPageButton.setVisible(uiState.createBlankPageVisible)
         createPageButton.setVisible(uiState.createPageVisible)
         previewButton.setVisible(uiState.previewVisible)
+        retryButton.setVisible(uiState.retryVisible)
+        createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {

@@ -10,8 +10,8 @@ data class GutenbergPageLayouts(
     val layouts: List<GutenbergLayout> = listOf(),
     val categories: List<GutenbergLayoutCategory> = listOf()
 ) : Parcelable {
-    val isNotEmpty: Boolean
-        get() = layouts.isNotEmpty() || categories.isNotEmpty()
+    val isEmpty: Boolean
+        get() = layouts.isEmpty() || categories.isEmpty()
     fun getFilteredLayouts(categorySlug: String) =
             layouts.filter { l -> l.categories.any { c -> c.slug == categorySlug } }
 }
