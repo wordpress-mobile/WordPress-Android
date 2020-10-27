@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appbar_main"
     android:layout_width="match_parent"
-    android:paddingTop="@dimen/status_bar_height_offset"
     android:layout_height="wrap_content">
 
     <com.google.android.material.appbar.MaterialToolbar
