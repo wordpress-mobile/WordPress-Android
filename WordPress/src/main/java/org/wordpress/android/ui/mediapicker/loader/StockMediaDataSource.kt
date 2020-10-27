@@ -15,25 +15,40 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 class StockMediaDataSource
 @Inject constructor(
     private val stockMediaStore: StockMediaStore,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) : MediaSource {
     override suspend fun load(
         forced: Boolean,
         loadMore: Boolean,
         filter: String?
     ): MediaLoadingResult {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return Failure(
+                    UiStringRes(R.string.no_network_title),
+                    htmlSubtitle = UiStringRes(R.string.no_network_message),
+                    image = R.drawable.img_illustration_cloud_off_152dp,
+                    data = if (loadMore) get() else listOf()
+            )
+        }
         return withValidFilter(filter) { validFilter ->
             val result = stockMediaStore.fetchStockMedia(validFilter, loadMore)
             val error = result.error
             return@withValidFilter when {
                 error != null -> {
-                    Failure(error.message)
+                    Failure(
+                            UiStringRes(R.string.media_loading_failed),
+                            htmlSubtitle = UiStringText(error.message),
+                            image = R.drawable.img_illustration_cloud_off_152dp,
+                            data = get()
+                    )
                 }
                 else -> {
                     val data = get()
