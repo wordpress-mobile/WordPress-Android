@@ -43,7 +43,6 @@ public class RequestCodes {
     public static final int MULTI_SELECT_MEDIA_PICKER = 2600;
     public static final int SINGLE_SELECT_MEDIA_PICKER = 2601;
     public static final int MEDIA_SETTINGS = 2700;
-    public static final int DOCUMENT_LIBRARY = 2800;
 
     // Jetpack
     public static final int REQUEST_JETPACK = 3000;
