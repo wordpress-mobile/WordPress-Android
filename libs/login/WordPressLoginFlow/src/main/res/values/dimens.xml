@@ -6,8 +6,6 @@
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
 
-    <dimen name="status_bar_height_offset">0dp</dimen>
-
     <dimen name="margin_none">0dp</dimen>
     <dimen name="margin_dialog">24dp</dimen>
     <dimen name="margin_extra_extra_small">1dp</dimen>

@@ -7,6 +7,7 @@
     android:background="?attr/wpColorLoginPrologueBg">
 
     <FrameLayout
+        android:importantForAccessibility="noHideDescendants"
         android:id="@+id/promo_background_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -16,22 +17,24 @@
         style="@style/Widget.LoginFlow.TextView.PromoTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="126dp"
-        android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="56dp"
+        android:layout_marginEnd="24dp"
+        android:minHeight="126dp"
+        android:importantForAccessibility="yes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/login_prologue_title_fifth" />
 
     <FrameLayout
+        android:importantForAccessibility="noHideDescendants"
         android:id="@+id/promo_layout_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
-        android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
