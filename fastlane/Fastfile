@@ -85,6 +85,24 @@ ENV["validate_translations"]="lintVanillaRelease"
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
+  #####################################################################################
+  # complete_code_freeze
+  # -----------------------------------------------------------------------------------
+  # This lane executes the initial steps planned on code freeze
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane complete_code_freeze [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane complete_code_freeze
+  # bundle exec fastlane complete_code_freeze skip_confirm:true
+  #####################################################################################
+  desc "Creates a new release branch from the current develop"
+  lane :complete_code_freeze do | options |
+    android_completecodefreeze_prechecks(options)
+    android_tag_build()
+  end
+
 #####################################################################################
 # update_appstore_strings
 # -----------------------------------------------------------------------------------
