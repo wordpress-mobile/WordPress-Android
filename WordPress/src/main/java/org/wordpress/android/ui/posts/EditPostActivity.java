@@ -2657,10 +2657,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.DOCUMENT_LIBRARY:
-                    List<Uri> documentUris = WPMediaUtils.retrieveMediaUris(data);
-                    // ToDo track added file e.g. mImageEditorTracker.trackAddPhoto(uris);
-                    for (Uri item : documentUris) {
-                        mEditorMedia.addNewMediaToEditorAsync(item, true);
+                    if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                        uris = convertStringArrayIntoUrisList(
+                                data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                        for (Uri item : uris) {
+                            mEditorMedia.addNewMediaToEditorAsync(item, true);
+                            mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_DOCUMENT_VIA_LIBRARY);
+                        }
                     }
                     break;
             }
