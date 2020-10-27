@@ -10,6 +10,7 @@ import androidx.core.view.MotionEventCompat
 import androidx.core.view.NestedScrollingChild3
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
+import org.wordpress.android.ui.WPWebView
 
 /**
  * To make WebView work with AppBar in Coordinator layout we need to put into a NestedScrollView
@@ -24,7 +25,7 @@ class NestedWebView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = attr.webViewStyle
-) : WebView(context, attrs, defStyleAttr), NestedScrollingChild3 {
+) : WPWebView(context, attrs, defStyleAttr), NestedScrollingChild3 {
     private var lastY = 0
     private val scrollOffset = IntArray(2)
     private val scrollConsumed = IntArray(2)
