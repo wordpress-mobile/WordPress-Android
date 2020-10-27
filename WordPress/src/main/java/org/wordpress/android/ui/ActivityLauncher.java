@@ -771,6 +771,27 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
     }
 
+    public static void editEmptyStoryForResult(
+            Activity activity,
+            SiteModel site,
+            LocalId localPostId,
+            int storyIndex,
+            String storyBlockId
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, true);
+        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        intent.putExtra(KEY_POST_LOCAL_ID, localPostId.getValue());
+        intent.putExtra(KEY_STORY_INDEX, storyIndex);
+        intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
+    }
+
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
         editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
     }

@@ -187,6 +187,17 @@ class StoriesEventListener @Inject constructor(
         mediaFiles: ArrayList<Any>,
         blockId: String
     ): Boolean {
+        if (mediaFiles.isEmpty()) {
+            ActivityLauncher.editEmptyStoryForResult(
+                    activity,
+                    site,
+                    postId,
+                    storyRepositoryWrapper.getCurrentStoryIndex(),
+                    blockId
+            )
+            return false
+        }
+
         val reCreateStoryResult = loadStoryFromStoriesPrefsUseCase
                 .loadStoryFromMemoryOrRecreateFromPrefs(site, mediaFiles)
         if (!reCreateStoryResult.noSlidesLoaded) {
