@@ -2403,7 +2403,6 @@
     <!-- If any of these appear unused, be sure to check the same string in the login library -
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
-    <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="login_prologue_title_first">Welcome to the world\’s most popular website builder.</string>
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
     <string name="login_prologue_title_third">See comments and notification in real time.</string>
