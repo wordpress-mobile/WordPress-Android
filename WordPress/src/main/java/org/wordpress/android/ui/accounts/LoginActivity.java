@@ -200,7 +200,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
         }
-
     }
 
     private void loginFromPrologue() {
