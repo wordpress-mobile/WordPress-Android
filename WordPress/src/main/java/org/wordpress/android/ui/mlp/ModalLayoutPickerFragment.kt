@@ -105,7 +105,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     private fun setScrollListener() {
         if (DisplayUtils.isLandscape(requireContext())) return // Always visible
-        val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
+        val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
