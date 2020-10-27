@@ -254,8 +254,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override
-                    public ArrayList<MediaOption> onGetOtherMediaDocumentOptions() {
-                        ArrayList<MediaOption> otherMediaDocumentOptions = initOtherMediaDocumentOptions();
+                    public ArrayList<MediaOption> onGetOtherMediaFileOptions() {
+                        ArrayList<MediaOption> otherMediaDocumentOptions = initOtherMediaFileOptions();
                         return otherMediaDocumentOptions;
                     }
 
@@ -466,7 +466,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return otherMediaOptions;
     }
 
-    private ArrayList<MediaOption> initOtherMediaDocumentOptions() {
+    private ArrayList<MediaOption> initOtherMediaFileOptions() {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
 
         Bundle arguments = getArguments();
