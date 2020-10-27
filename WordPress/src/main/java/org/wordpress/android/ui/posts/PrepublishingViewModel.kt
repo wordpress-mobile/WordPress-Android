@@ -43,6 +43,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     private val _triggerOnSubmitButtonClickedListener = MutableLiveData<Event<PublishPost>>()
     val triggerOnSubmitButtonClickedListener: LiveData<Event<PublishPost>> = _triggerOnSubmitButtonClickedListener
 
+    private val _triggerOnDeviceBackPressed = MutableLiveData<Event<PrepublishingScreen>>()
+    val triggerOnDeviceBackPressed: LiveData<Event<PrepublishingScreen>> = _triggerOnDeviceBackPressed
+
     init {
         dispatcher.register(this)
     }
@@ -76,10 +79,21 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         // For the case where this is not a story and hence there's no EditText in the HOME screen, we're ok too,
         // because there wouldn't have been a keyboard up anyway.
         if (prepublishingScreen == PUBLISH ||
-            prepublishingScreen == CATEGORIES) {
+                prepublishingScreen == CATEGORIES) {
             _dismissKeyboard.postValue(Event(Unit))
         }
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen, bundle))
+    }
+
+    // Send this back out to the current screen and so it can determine if it needs to save
+    // any data before accepting a backPress - in our case, the only view that needs this today
+    // is the Categories selection & AddCategory
+    fun onDeviceBackPressed() {
+        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY) {
+            _triggerOnDeviceBackPressed.value = Event(currentScreen as PrepublishingScreen)
+        } else {
+            onBackClicked()
+        }
     }
 
     fun onBackClicked(bundle: Bundle? = null) {
@@ -110,10 +124,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         outState.putParcelable(KEY_SCREEN_STATE, currentScreen)
     }
 
-    fun onActionClicked(actionType: ActionType) {
+    fun onActionClicked(actionType: ActionType, bundle: Bundle? = null) {
         val screen = PrepublishingScreen.valueOf(actionType.name)
         currentScreen = screen
-        navigateToScreen(screen)
+        navigateToScreen(screen, bundle)
     }
 
     fun onSubmitButtonClicked(publishPost: PublishPost) {

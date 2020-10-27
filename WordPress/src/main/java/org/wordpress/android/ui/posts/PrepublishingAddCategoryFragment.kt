@@ -29,6 +29,7 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingAddCategoryViewModel
+    private lateinit var parentViewModel: PrepublishingViewModel
     @Inject lateinit var uiHelpers: UiHelpers
 
     var spinnerTouched: Boolean = false
@@ -133,6 +134,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingAddCategoryViewModel::class.java)
+        parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+                .get(PrepublishingViewModel::class.java)
 
         startObserving()
 
@@ -149,7 +152,12 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         })
 
         viewModel.navigateBack.observe(viewLifecycleOwner, Observer { bundle ->
-            closeListener?.onBackClicked(bundle)
+            val newBundle = Bundle()
+            newBundle.putAll(arguments)
+            bundle?.let {
+                newBundle.putAll(bundle)
+            }
+            closeListener?.onBackClicked(newBundle)
         })
 
         viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
@@ -168,6 +176,12 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
                 parent_category.setSelection(uiState.selectedParentCategoryPosition)
             }
             updateSubmitButton(uiState.submitButtonUiState)
+        })
+
+        parentViewModel.triggerOnDeviceBackPressed.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                closeListener?.onBackClicked(arguments)
+            }
         })
     }
 
@@ -197,13 +211,17 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
         const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
         @JvmStatic fun newInstance(
             site: SiteModel,
-            needsRequestLayout: Boolean
+            needsRequestLayout: Boolean,
+            bundle: Bundle? = null
         ): PrepublishingAddCategoryFragment {
-            val bundle = Bundle().apply {
+            val newBundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
                 putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
-            return PrepublishingAddCategoryFragment().apply { arguments = bundle }
+            bundle?.let {
+                newBundle.putAll(bundle)
+            }
+            return PrepublishingAddCategoryFragment().apply { arguments = newBundle }
         }
     }
 }
