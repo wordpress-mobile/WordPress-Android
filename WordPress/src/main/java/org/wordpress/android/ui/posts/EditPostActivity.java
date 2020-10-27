@@ -2658,7 +2658,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.FILE_LIBRARY:
                     uris = WPMediaUtils.retrieveMediaUris(data);
-                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_DOCUMENT_VIA_LIBRARY);
+                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
                     for (Uri item : uris) {
                         mEditorMedia.addNewMediaToEditorAsync(item, false);
                     }
@@ -2911,7 +2911,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onAddDocumentClicked(boolean allowMultipleSelection) {
+    public void onAddFileClicked(boolean allowMultipleSelection) {
         WPMediaUtils.launchFileLibrary(this, allowMultipleSelection);
     }
 

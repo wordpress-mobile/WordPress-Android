@@ -90,7 +90,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
-    private static final String MEDIA_SOURCE_DOCUMENT = "MEDIA_SOURCE_DOCUMENT";
+    private static final String MEDIA_SOURCE_FILE = "MEDIA_SOURCE_FILE";
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
     private static final String GIF_MEDIA = "GIF_MEDIA";
 
@@ -265,8 +265,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
                         } else if (mediaSource.equals(GIF_MEDIA)) {
                             mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
-                        } else if (mediaSource.equals(MEDIA_SOURCE_DOCUMENT)) {
-                            mEditorFragmentListener.onAddDocumentClicked(allowMultipleSelection);
+                        } else if (mediaSource.equals(MEDIA_SOURCE_FILE)) {
+                            mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
                         }
                     }
                 },
@@ -482,7 +482,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         int stockMediaResourceId =
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_DOCUMENT, getString(stockMediaResourceId)));
+        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(stockMediaResourceId)));
 
         return otherMediaOptions;
     }
