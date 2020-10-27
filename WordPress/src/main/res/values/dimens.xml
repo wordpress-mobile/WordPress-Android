@@ -582,7 +582,6 @@
 
     <!-- Home Page Picker -->
     <dimen name="hpp_card_width">160dp</dimen>
-    <dimen name="hpp_card_height">213dp</dimen>
     <dimen name="hpp_card_padding">16dp</dimen>
     <dimen name="hpp_card_margin_outer">40dp</dimen>
     <dimen name="hpp_maximum_container_width">728dp</dimen>
