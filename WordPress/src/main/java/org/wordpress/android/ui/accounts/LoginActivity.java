@@ -3,10 +3,8 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -203,14 +201,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
         }
 
-        // setting up a full screen flags that will work with transparent status bar used in login prologue
-        // rest of the screens will have a 24dp top padding so the content will stay below status bar
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            View decorView = getWindow().getDecorView();
-            int flags = decorView.getSystemUiVisibility();
-            flags = flags | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(flags);
-        }
     }
 
     private void loginFromPrologue() {
