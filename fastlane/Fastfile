@@ -167,6 +167,7 @@ ENV["validate_translations"]="lintVanillaRelease"
   lane :new_beta_release do | options |
     android_betabuild_prechecks(options)
     send_strings_for_translation()
+    android_update_metadata(options)
     android_bump_version_beta()
     android_tag_build()
   end
