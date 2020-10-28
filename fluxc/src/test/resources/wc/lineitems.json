@@ -80,6 +80,13 @@
         "value":"medium",
         "display_key":"size",
         "display_value":"Medium"
+      },
+      {
+        "id":45560,
+        "key":"pa_size",
+        "value":"medium",
+        "display_key":"size",
+        "display_value":""
       }
     ],
     "sku":"woo-vneck-tee",
