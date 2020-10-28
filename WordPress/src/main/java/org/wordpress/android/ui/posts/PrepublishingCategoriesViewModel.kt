@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
-import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.wordpress.stories.util.LOG_TAG
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -207,7 +205,10 @@ class PrepublishingCategoriesViewModel @Inject constructor(
                     .toMutableList()
             selectedIds.add(event.term.remoteTermId)
             val categoryLevels = getSiteCategories()
-            val recreatedListItemUiState = buildListOfCategoriesItemUiState(categoryLevels, selectedIds)
+            val recreatedListItemUiState = buildListOfCategoriesItemUiState(
+                    categoryLevels,
+                    selectedIds
+            )
             _uiState.value = uiState.value?.copy(
                     categoriesListItemUiState = recreatedListItemUiState, progressVisibility = false
             )
