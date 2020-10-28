@@ -2920,6 +2920,12 @@
     <string name="mlp_network_error_title">Layouts not available while offline</string>
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
 
+    <!-- Home Page Picker -->
+    <string name="hpp_title">Choose a design</string>
+    <string name="hpp_subtitle">Pick your favorite homepage layout. You can customize or change it later.</string>
+    <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_skip_button">Skip</string>
+
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>
