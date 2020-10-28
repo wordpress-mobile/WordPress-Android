@@ -3,7 +3,7 @@
 
 15.9.2
 -----
-* [*] Block Editor: Fix for a crash that can occur when activity is null [https://github.com/wordpress-mobile/WordPress-Android/issues/13248]
+* [*] Block Editor: Fix for a crash that can occur when activity is null during capabilities update[https://github.com/wordpress-mobile/WordPress-Android/issues/13248]
  
 15.9
 -----
