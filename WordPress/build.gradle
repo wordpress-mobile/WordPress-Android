@@ -127,7 +127,7 @@ android {
             applicationId "org.wordpress.android.prealpha"
             dimension "buildType"
             buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
-            buildConfigField "boolean", "HOME_PAGE_PICKER", "true"
+            buildConfigField "boolean", "HOME_PAGE_PICKER", "false"
         }
     }
 
