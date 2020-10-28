@@ -48,22 +48,10 @@ public class ReaderBlogTable {
                    + " date_updated TEXT,"
                    + " PRIMARY KEY (blog_id)"
                    + ")");
-
-        db.execSQL("CREATE TABLE tbl_recommended_blogs ("
-                   + " blog_id INTEGER DEFAULT 0,"
-                   + " follow_reco_id INTEGER DEFAULT 0,"
-                   + " score INTEGER DEFAULT 0,"
-                   + " title TEXT COLLATE NOCASE,"
-                   + " blog_url TEXT COLLATE NOCASE,"
-                   + " image_url TEXT,"
-                   + " reason TEXT,"
-                   + " PRIMARY KEY (blog_id)"
-                   + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_blog_info");
-        db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs");
     }
 
     public static ReaderBlog getBlogInfo(long blogId) {
