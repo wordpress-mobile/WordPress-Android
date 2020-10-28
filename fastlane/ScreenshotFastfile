@@ -53,7 +53,7 @@ platform :android do
     screenshot_devices = [
       {
         screenshot_type: 'phone',
-        device_name: 'Pixel_3_API_30',
+        device_name: 'Pixel_3_API_28',
         device_serial: options[:phone_serial],
       },
       {

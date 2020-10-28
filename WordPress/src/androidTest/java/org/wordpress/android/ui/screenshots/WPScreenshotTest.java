@@ -29,6 +29,7 @@ import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
+import static org.wordpress.android.support.WPSupportUtils.isTabletScreen;
 import static org.wordpress.android.support.WPSupportUtils.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.scrollToThenClickOn;
 import static org.wordpress.android.support.WPSupportUtils.selectItemWithTitleInTabLayout;
@@ -131,6 +132,7 @@ public class WPScreenshotTest extends BaseTest {
 
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
+            idleFor(2000);
         }
 
         takeScreenshot(screenshotName);
@@ -148,10 +150,18 @@ public class WPScreenshotTest extends BaseTest {
         swipeUpOnView(R.id.interests_fragment_container, (float) 1.15);
         swipeUpOnView(R.id.fragment_container, (float) 0.5);
 
+        idleFor(1000);
+
         // Workaround to avoid gray overlay
         swipeRightOnViewPager(R.id.view_pager);
+        idleFor(1000);
         swipeLeftOnViewPager(R.id.view_pager);
         idleFor(1000);
+
+        if (isTabletScreen()) {
+            swipeDownOnView(R.id.view_pager, (float) 0.5);
+            idleFor(1000);
+        }
 
         takeScreenshot("2-discover-new-reads");
 
@@ -179,6 +189,7 @@ public class WPScreenshotTest extends BaseTest {
 
         // Workaround to avoid gray overlay
         swipeLeftOnViewPager(R.id.statsPager);
+        idleFor(1000);
         swipeRightOnViewPager(R.id.statsPager);
         idleFor(1000);
 
@@ -216,6 +227,9 @@ public class WPScreenshotTest extends BaseTest {
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
 
 
+        // Wait for the images to load
+        idleFor(5000);
+
         takeScreenshot("5-reply-in-real-time");
 
         // Exit the notifications activity
@@ -237,6 +251,7 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void takeScreenshot(String screenshotName) {
+        idleFor(2000);
         try {
             if (runningInTestLab()) {
                 ScreenShotter.takeScreenshot(screenshotName, getCurrentActivity());

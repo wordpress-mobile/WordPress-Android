@@ -1,6 +1,7 @@
 package org.wordpress.android.support;
 
 import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -385,8 +386,22 @@ public class WPSupportUtils {
                 }, GeneralLocation.TOP_CENTER, Press.FINGER);
     }
 
+    private static ViewAction swipeFromTopToBottom(float yFactor) {
+        return new GeneralSwipeAction(Swipe.SLOW,
+                GeneralLocation.TOP_CENTER,
+                view -> {
+                    float[] coordinates = GeneralLocation.CENTER.calculateCoordinates(view);
+                    coordinates[1] *= yFactor;
+                    return coordinates;
+                }, Press.FINGER);
+    }
+
     public static void swipeUpOnView(Integer elementID, float yFactor) {
         onView(withId(elementID)).perform(swipeFromBottomToTop(yFactor));
+    }
+
+    public static void swipeDownOnView(Integer elementID, float yFactor) {
+        onView(withId(elementID)).perform(swipeFromTopToBottom(yFactor));
     }
 
     public static void swipeDownOnView(Integer elementID) {
@@ -723,5 +738,15 @@ public class WPSupportUtils {
         });
 
         idleFor(1000);
+    }
+
+    // Checks for screen width greater than 600dp
+    public static boolean isTabletScreen() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float widthDp = displayMetrics.widthPixels / displayMetrics.density;
+        float heightDp = displayMetrics.heightPixels / displayMetrics.density;
+        float screenSw = Math.min(widthDp, heightDp);
+        return screenSw >= 600;
     }
 }
