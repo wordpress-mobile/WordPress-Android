@@ -86,7 +86,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setupUi() {
-        title?.setVisible(DisplayUtils.isLandscape(requireContext()))
+        title?.setVisible(isPhoneLandscape(requireContext()))
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
@@ -103,7 +103,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setScrollListener() {
-        if (DisplayUtils.isLandscape(requireContext())) return // Always visible
+        if (isPhoneLandscape(requireContext())) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
@@ -120,4 +120,8 @@ class HomePagePickerFragment : Fragment() {
             AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
         }
     }
+
+    private fun isPhoneLandscape(context: Context) =
+            DisplayUtils.isLandscape(requireContext()) &&
+                    !DisplayUtils.isTablet(requireContext()) && !DisplayUtils.isXLargeTablet(requireContext())
 }
