@@ -10,5 +10,6 @@ class DisplayUtilsWrapper @Inject constructor(private val contextProvider: Conte
 
     fun isLandscape() = DisplayUtils.isLandscape(contextProvider.getContext())
 
-    fun isTablet() = DisplayUtils.isTablet(contextProvider.getContext())
+    fun isTablet() = DisplayUtils.isTablet(contextProvider.getContext()) ||
+            DisplayUtils.isXLargeTablet(contextProvider.getContext())
 }
