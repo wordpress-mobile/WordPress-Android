@@ -13,6 +13,7 @@ data class PostAndPageViewsModel(val views: List<ViewsModel>, val hasMore: Boole
         POST,
         PAGE,
         HOMEPAGE,
-        OTHER
+        OTHER,
+        ATTACHMENT
     }
 }
