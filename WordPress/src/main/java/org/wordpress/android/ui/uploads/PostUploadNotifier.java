@@ -349,9 +349,12 @@ class PostUploadNotifier {
         Intent notificationIntent = getNotificationIntent(post, site);
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
-        PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
-                                                                    (int) notificationId,
-                                                                    notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntentPost = PendingIntent.getActivity(
+                mContext,
+                (int) notificationId,
+                notificationIntent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+        );
         notificationBuilder.setContentIntent(pendingIntentPost);
 
         // Share intent - started if the user tap the share link button - only if the link exist
@@ -498,9 +501,12 @@ class PostUploadNotifier {
         NotificationType notificationType = NotificationType.POST_UPLOAD_ERROR;
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
-                                                                (int) notificationId,
-                                                                notificationIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                mContext,
+                (int) notificationId,
+                notificationIntent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
+        );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
 
@@ -543,14 +549,14 @@ class PostUploadNotifier {
         if (post.isPage()) {
             notificationIntent = new Intent(mContext, PagesActivity.class);
             notificationIntent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, post.getRemotePostId());
+            notificationIntent.putExtra(WordPress.SITE, site);
         } else {
-            notificationIntent = new Intent(mContext, PostsListActivity.class);
+            notificationIntent = PostsListActivity.buildIntent(mContext, site);
             notificationIntent.putExtra(PostsListActivityKt.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         }
 
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(WordPress.SITE, site);
         return notificationIntent;
     }
 

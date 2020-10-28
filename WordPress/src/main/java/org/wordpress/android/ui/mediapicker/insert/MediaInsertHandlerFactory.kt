@@ -18,7 +18,7 @@ class MediaInsertHandlerFactory
     private val gifMediaInsertUseCaseFactory: GifMediaInsertUseCaseFactory
 ) {
     fun build(mediaPickerSetup: MediaPickerSetup, siteModel: SiteModel?): MediaInsertHandler {
-        return when (mediaPickerSetup.dataSource) {
+        return when (mediaPickerSetup.primaryDataSource) {
             DEVICE -> deviceListInsertUseCaseFactory.build(mediaPickerSetup.queueResults)
             WP_LIBRARY -> DefaultMediaInsertUseCase
             STOCK_LIBRARY -> stockMediaInsertUseCaseFactory.build(requireNotNull(siteModel) {

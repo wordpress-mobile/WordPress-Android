@@ -11,7 +11,6 @@ Language: gl_ES
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
-    <string name="gutenberg_native_remove_block">Eliminar bloque</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
     <string name="gutenberg_native_copy_block">Copiar bloque</string>
     <string name="gutenberg_native_copied_block">Bloque copiado</string>
@@ -20,8 +19,6 @@ Language: gl_ES
     <string name="gutenberg_native_block_duplicated">Bloque duplicado</string>
     <string name="gutenberg_native_block_cut">Bloque cortado</string>
     <string name="gutenberg_native_block_copied">Bloque copiado</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque no navegador web</string>
-    <string name="gutenberg_native_dismiss">Rexeitar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Non establecido</string>
     <string name="prepublishing_tags_description">As etiquetas axudan aos lectores dicíndolles de que se trata a entrada.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Engadir etiquetas</string>
@@ -308,12 +305,10 @@ Language: gl_ES
     <string name="posts_cannot_be_started">Non podemos abrir as entradas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="site_cannot_be_loaded">Non puidemos cargar os datos para o teu sitio neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos traballando duro para engadir máis bloques en cada versión. Mentres tanto, tamén podes editar esta entrada na web.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_title">Título:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toca para ocultar o teclado</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Toca aquí para amosar a axuda</string>
     <string name="gutenberg_native_take_a_video">Fai un vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fai unha foto ou un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Fai unha foto</string>
@@ -321,8 +316,6 @@ Language: gl_ES
     <string name="gutenberg_native_size">Tamaño</string>
     <string name="gutenberg_native_sidebar_title_plugin">Título do plugin na barra lateral</string>
     <string name="gutenberg_native_show_section">Amosar a sección</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s aínda non é compatible en WordPress para iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s aínda non é compatible en WordPress para Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque ten contido non válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Baleiro</string>
     <string name="gutenberg_native_reset_block">Restablecer o bloque</string>
@@ -342,12 +335,9 @@ Language: gl_ES
     <string name="gutenberg_native_my_document_setting_panel">Panel de axustes dos meus documentos</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover o bloque cara arriba, da fila %1$s á fila %2$s</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloque cara abaixo, da fila %1$s á fila %2$s</string>
-    <string name="gutenberg_native_link_text">Texto do enlace</string>
-    <string name="gutenberg_native_link_inserted">Enlace insertado</string>
     <string name="gutenberg_native_image_caption_s">Lenda da imaxe. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar o teclado</string>
     <string name="gutenberg_native_here_is_the_panel_content">Aquí está o panel de contido!</string>
-    <string name="gutenberg_native_help_icon">Icona de axuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Erro ao inserir os medios.\nPor favor, toca para ver as opcións.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toca dúas veces para desfacer o último cambio</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toca dúas veces para alternar os axustes</string>
@@ -368,7 +358,6 @@ Language: gl_ES
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">ENGADIR UN VÍDEO</string>
     <string name="gutenberg_native_add_url">Engadir a URL</string>
-    <string name="gutenberg_native_add_link_text">Engadir o texto do enlace</string>
     <string name="gutenberg_native_add_image_or_video">ENGADIR UNHA IMAXE OU UN VÍDEO</string>
     <string name="gutenberg_native_add_image">ENGADIR UNHA IMAXE</string>
     <string name="gutenberg_native_add_block_here">ENGADIR O BLOQUE AQUÍ</string>

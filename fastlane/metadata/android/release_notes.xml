@@ -1,71 +1,44 @@
 <en-US>
-15.8:
-- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.
-- Reader update: Preview images are now displayed on posts when no featured image is set.
-
+15.9:
+- Block editor: Edit unsupported blocks by enabling Jetpack SSO from the missing block alert. Use the link picker to add URLs to posts. Double-tap text fields in accessibility mode now works as expected.
+- Improved My Site layout for large-screen devices.
 
 </en-US>
 <es-ES>
-15.8:
-- Mejoras en el editor de bloques: Añadida compatibilidad con alineación de ancho amplio y ancho completo para los bloques de grupo, fondo e imagen; añadida compatibilidad con el estilo redondeado en el bloque de imagen; y solucionado un problema por el que la barra de herramientas se comportaba de modo inesperado al añadir un bloque.
-- Actualización del lector: La vista previa de imágenes ahora se muestra en las entradas cuando no se ha configurado una imagen destacada.
-
+15.9:
+- Editor de bloques: Edita los bloques no compatibles activando Jetpack SSO desde la alerta de bloque faltante. Usa el selector de enlaces para añadir las URL a las entradas. El doble toque en los campos de texto en el modo de accesibilidad ahora funciona como se espera.
+- Diseño mejorado de «Mi sitio» para dispositivos de pantalla grande.
 
 </es-ES>
 <fr-CA>
-15.8 :
-- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
-- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
+15.9 :
+- Éditeur de blocs : Modifiez des blocs non pris en charge en autorisant Jetpack SSO à partir de l’alerte de bloc manquante. Utilisez le sélecteur de liens pour ajouter des URL aux publications. Touchez 2 fois sur les champs de texte en mode accessibilité comme prévu.
+- Amélioration de la mise en page Mon site pour les appareils à écran large.
 </fr-CA>
 <fr-FR>
-15.8 :
-- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
-- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
+15.9 :
+- Éditeur de blocs : Modifiez des blocs non pris en charge en autorisant Jetpack SSO à partir de l’alerte de bloc manquante. Utilisez le sélecteur de liens pour ajouter des URL aux publications. Touchez 2 fois sur les champs de texte en mode accessibilité comme prévu.
+- Amélioration de la mise en page Mon site pour les appareils à écran large.
 </fr-FR>
-<iw-IL>
-15.8:
-- שיפורים בעורך הבלוקים: הוספנו תמיכה ברוחב מלא וביישור לרוחב בבלוקים של קבוצות, כיסוי ותמונות; הוספנו תמיכה בסגנון 'מעוגל' בבלוק התמונה; פתרנו בעיה שגרמה לפעולה לא תקינה של סרגל הכלים במהלך הוספה של בלוק.
-- עדכונים ל-Reader: תמונות בתצוגה מקדימה מוצגות כעת בפוסטים כאשר לא מוגדרת תמונה מרכזית.
-
-
-</iw-IL>
-<ja-JP>
-15.8:
-- ブロックエディターの機能強化。グループブロック、カバーブロック、画像ブロックの全幅および幅広整列サポートを追加。
-- Reader の更新: アイキャッチ画像が設定されていない場合、プレビュー画像が投稿に表示されるようになりました。
-
-</ja-JP>
 <ko-KR>
-15.8:
-- 블록 편집기 개선: 그룹, 표지, 그리고 이미지 블록에 대한 전체너비와 넓은 정렬  지원을 추가했습니다. 이미지 블록에 대한 둥굴린 스타일에 대한 지원을 추가했습니다. 그리고 도구모음이 블록을 추가할 때 예기치 않게 동작하는 문제를 해결했습니다.
-- 리더 업데이트: 미리보기 이미지가 이제 대표 이미지를 설정하지 않았을 때 보이게 됩니다.
-
+15.9:
+- 블록 편집기: 누락 블록 경고에서 젯팩 SSO를 활성화하여 지원하지 않는 블록을 편집하세요. 글에 URL을 넣는 링크 선택기를 사용하세요. 접근성 모드에서 문자 항목을 두 번 누르면 이제 예상대로 동작합니다.
+- 큰 화면 장치에서 내 사이트 레이아웃을 개선했습니다.
 
 </ko-KR>
 <nl-NL>
-15.8:
-- Verbeteringen in de blok-editor: Ondersteuning voor uitlijning over de volledige breedte en breedte toegevoegd voor groeps-, cover- en afbeelding blokken; ondersteuning toegevoegd voor de stijl Afgerond in het afbeelding blok; en loste een probleem op waarbij de toolbar zich onverwacht gedroeg bij het toevoegen van een blok.
--Reader update: voorbeeld afbeeldingen worden nu getoond in berichten als er geen uitgelichte afbeelding is ingesteld.
-
-
+15.9:
+- Blok-editor: bewerk niet-ondersteunde blokken door Jetpack SSO in te schakelen vanuit de waarschuwing voor ontbrekende blokken. Gebruik de link kiezer om URL's aan berichten toe te voegen. Dubbel tik op tekstvelden in de toegankelijkheidsmodus werkt nu zoals verwacht.
+- Verbeterde My Site lay-out voor apparaten met een groot scherm.
 </nl-NL>
 <ru-RU>
-15.8:
-- Улучшения редактора блоков: добавлена поддержка полноразмерного и широкого выравнивания для блоков группы, обложки и изображения; добавлена поддержка скруглённого стиля в блоке изображения; решена проблема, из-за которой панель инструментов вела себя неожиданно при добавлении блока.
-- Обновление для Чтива: изображения предварительного просмотра теперь отображаются в сообщениях, если не задано ни одного избранного изображения.
-
+15.9:
+- Редактор блоков: редактирование неподдерживаемых блоков через Jetpack SSO. Возможность использования сборщика ссылок для добавления URL к записям. Двойное нажатие в режиме доступности будет ожидаемо работать в текстовых полях.
+- Улучшен макет страницы "Мой сайт" для устройств с большим экраном.
 </ru-RU>
 <sv-SE>
-15.8:
-– Förbättringar i blockredigeraren: Stöd för fullbredd och brett innehåll i blocken grupp, omslag och bild. Stöd för avrundad stil i bildblock. Rättat fel där verktygslisten betedde sig konstigt när man lade till ett block.
-– Uppdatering av läsaren: Nu visas förhandsvisningsbilder för inlägg som saknar utvald bild.
-
+15.9:
+– Blockredigeraren: Redigering av block som saknar stöd genom aktivering av Jetpack SSO från notisen om saknat block. Använd länkväljaren för att lägga till URL:er i inlägg. Dubbeltryck på textfält i åtkomlighetsläge fungerar nu som förväntat.
+– Layouten av sidan Min webbplats har förbättrats för enheter med stor skärm.
 
 </sv-SE>
-<zh-TW>
-15.8：
-- 區塊編輯器增強功能：為「群組」、「封面」和「圖片」區塊新增全寬和寬幅對齊方式支援；在「圖片」區塊中新增「圓角」樣式支援；並解決新增區塊時，工具列異常運作的問題。
-- 讀取器更新：現在未設定精選圖片的文章會顯示預覽圖片。
-
-
-</zh-TW>

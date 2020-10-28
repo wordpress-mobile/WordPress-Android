@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.mlp
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -7,8 +8,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
@@ -20,7 +23,9 @@ import org.wordpress.android.ui.mlp.GutenbergPageLayouts
 import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
+import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -38,6 +43,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val siteStore: SiteStore,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val supportedBlocksProvider: SupportedBlocksProvider,
+    private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val networkUtils: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -58,8 +65,20 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Create new page event
      */
-    private val _onCreateNewPageRequested = SingleLiveEvent<String>()
-    val onCreateNewPageRequested: LiveData<String> = _onCreateNewPageRequested
+    private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
+    val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
+
+    /**
+     * Preview page event
+     */
+    private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
+    val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
+
+    sealed class PageRequest(val template: String?, val content: String) {
+        open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
+        object Blank : Create(null, "", "")
+        class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
+    }
 
     init {
         dispatcher.register(this)
@@ -70,16 +89,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun init() {
-        fetchLayouts()
-    }
-
     private fun fetchLayouts() {
         updateUiState(LoadingUiState)
         launch(bgDispatcher) {
             val siteId = appPrefsWrapper.getSelectedSite()
             val site = siteStore.getSiteByLocalId(siteId)
-            val payload = FetchBlockLayoutsPayload(site, supportedBlocksProvider.fromAssets().supported)
+            val payload = FetchBlockLayoutsPayload(
+                    site,
+                    supportedBlocksProvider.fromAssets().supported,
+                    thumbDimensionProvider.previewWidth.toFloat(),
+                    thumbDimensionProvider.scale.toFloat()
+            )
             dispatcher.dispatch(SiteActionBuilder.newFetchBlockLayoutsAction(payload))
         }
     }
@@ -87,15 +107,25 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
-            updateUiState(ErrorUiState(event.error.message))
+            setErrorState()
         } else {
             handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
         }
     }
 
+    fun fetchedLayouts(): GutenbergPageLayouts = if (::layouts.isInitialized) layouts else GutenbergPageLayouts()
+
     private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
         layouts = response
         loadCategories()
+    }
+
+    private fun setErrorState() {
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiState(ErrorUiState(string.mlp_error_title, string.mlp_error_subtitle))
+        } else {
+            updateUiState(ErrorUiState(string.mlp_network_error_title, string.mlp_network_error_subtitle))
+        }
     }
 
     private fun loadLayouts() {
@@ -153,8 +183,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Triggers the create page flow and shows the MLP
      */
     fun createPageFlowTriggered() {
-        init()
         _isModalLayoutPickerShowing.value = Event(true)
+        fetchLayouts()
+    }
+
+    /**
+     * Retries data fetching
+     */
+    fun onRetryClicked() {
+        if (networkUtils.isNetworkAvailable()) {
+            fetchLayouts()
+        }
     }
 
     /**
@@ -163,14 +202,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
         updateUiState(ContentUiState())
-    }
-
-    /**
-     * Notifies the VM to start passing the orientation
-     * @param landscapeMode app operates in landscape mode
-     */
-    fun start(landscapeMode: Boolean) {
-        setHeaderTitleVisibility(landscapeMode)
     }
 
     /**
@@ -251,7 +282,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
-     * Updates the buttons UiState depending on the [_selectedLayoutSlug] value
+     * Preview page tapped
+     */
+    fun onPreviewPageClicked() {
+        (uiState.value as? ContentUiState)?.let { state ->
+            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val site = siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite())
+                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site)
+            }
+        }
+    }
+
+    /**
+     * Updates the buttons UiState
      */
     private fun updateButtonsUiState() {
         (uiState.value as? ContentUiState)?.let { state ->
@@ -265,20 +308,36 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun createPage() {
         (uiState.value as? ContentUiState)?.let { state ->
-            val selection = state.selectedLayoutSlug != null
-            _onCreateNewPageRequested.value = if (selection) {
-                layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.content ?: ""
-            } else ""
+            layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                _onCreateNewPageRequested.value = PageRequest.Create(layout.slug, layout.content, layout.title)
+                return
+            }
         }
+        _onCreateNewPageRequested.value = PageRequest.Blank
     }
 
     private fun updateUiState(uiState: UiState) {
         _uiState.value = uiState
     }
 
+    fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
+        if (layouts == null || layouts.isEmpty) {
+            setErrorState()
+            return
+        }
+        val state = uiState.value as? ContentUiState ?: ContentUiState()
+        val categories = ArrayList(selectedCategories ?: listOf())
+        updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
+        updateButtonsUiState()
+        handleBlockLayoutsResponse(layouts)
+    }
+
     sealed class UiState(
         open val isHeaderVisible: Boolean = false,
-        val loadingSkeletonVisible: Boolean = false
+        val isDescriptionVisible: Boolean = true,
+        val loadingSkeletonVisible: Boolean = false,
+        val errorViewVisible: Boolean = false,
+        open val buttonsUiState: ButtonsUiState = ButtonsUiState()
     ) {
         object LoadingUiState : UiState(loadingSkeletonVisible = true)
 
@@ -289,13 +348,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
             val layoutCategories: List<LayoutCategoryUiState> = listOf(),
-            val buttonsUiState: ButtonsUiState = ButtonsUiState(
-                    createBlankPageVisible = true,
-                    previewVisible = false,
-                    createPageVisible = false
-            )
+            override val buttonsUiState: ButtonsUiState = ButtonsUiState()
         ) : UiState()
 
-        data class ErrorUiState(val message: String) : UiState()
+        data class ErrorUiState(@StringRes val title: Int, @StringRes val subtitle: Int) : UiState(
+                errorViewVisible = true,
+                isHeaderVisible = true,
+                isDescriptionVisible = false,
+                buttonsUiState = ButtonsUiState(retryVisible = true)
+        )
     }
 }

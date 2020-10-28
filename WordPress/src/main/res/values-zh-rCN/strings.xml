@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-25 08:54:08+0000
+Translation-Revision-Date: 2020-10-05 21:04:02+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="typeface_label_shrikhand">粗体</string>
+    <string name="typeface_label_space_mono">现代</string>
+    <string name="typeface_label_pacifico">有趣</string>
+    <string name="typeface_label_oswald">强</string>
+    <string name="typeface_label_libre_baskerville">经典</string>
+    <string name="typeface_label_nunito">休闲</string>
+    <string name="toast_capture_operation_permission_needed">您需要授予应用程序录音权限才能录制视频</string>
+    <string name="mlp_selected_description">%s 已选择</string>
+    <string name="login_get_link_by_email">通过电子邮件获取登录链接</string>
+    <string name="email_not_registered_wpcom">找不到与此电子邮件地址关联的 WordPress.com 帐户。</string>
+    <string name="permission_microphone">麦克风</string>
+    <string name="comment_unable_to_show_error">无法显示此评论</string>
+    <string name="media_browse_for_items">浏览商品</string>
     <string name="reader_menu_report_post">报告此文章</string>
     <string name="gutenberg_native_angle">角度</string>
     <string name="reader_welcome_banner">欢迎使用阅读器。 动动手指即可发现数百万个博客。</string>
@@ -85,7 +98,6 @@ Language: zh_CN
     <string name="mlp_create_page">创建页面</string>
     <string name="mlp_create_blank_page">创建空白页面</string>
     <string name="mlp_choose_layout_subtitle">从种类繁多的预设页面布局中选择心仪的布局，开始打造自己的页面。 或者，您也可以从一个空白页面开始。</string>
-    <string name="mlp_choose_layout_title">选择布局</string>
     <string name="prepublishing_nudges_story_title_hint">为您的故事设定标题</string>
     <string name="quick_start_dialog_create_new_post_message_short">轻点%1$s创建。 %2$s 然后选择&lt;b>博文&lt;/b></string>
     <string name="photo_picker_choose_file">从设备中选择</string>
@@ -107,7 +119,9 @@ Language: zh_CN
     <string name="signup_confirmation_title">注册确认</string>
     <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
     <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
+    <string name="signup_confirmation_magic_link_message">我们将通过电子邮件向您发送注册链接，供您创建新的 WordPress.com 帐户。</string>
     <string name="signup_confirmation_message">我们将使用此电子邮件地址为您创建新 WordPress.com 帐户。</string>
+    <string name="signup_magic_link_message">我们已通过电子邮件向您发送一个注册链接，供您创建新的 WordPress.com 帐户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
     <string name="enter_account_info_for_site">输入您的 %1$s 帐户信息。</string>
     <string name="login_or">或</string>
     <string name="continue_google_button_suffix">继续使用 Google</string>
@@ -115,6 +129,7 @@ Language: zh_CN
     <string name="login_done">完成</string>
     <string name="magic_link_not_seeing_email_message">没有看到电子邮件？ 请检查您的垃圾邮件文件夹。</string>
     <string name="login_magic_links_sent_label">在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
+    <string name="login_magic_links_label">我们将通过电子邮件向您发送一个链接，无需密码即可登录。</string>
     <string name="check_email">查收电子邮件</string>
     <string name="get_started">开始</string>
     <string name="enter_email_to_continue_wordpress_com">输入您的电子邮件地址以登录或创建 WordPress.com 帐户。</string>
@@ -122,13 +137,13 @@ Language: zh_CN
     <string name="create_account">创建帐户</string>
     <string name="send_link_by_email">通过电子邮件发送链接</string>
     <string name="login_promo_text_unlock_the_power">发挥最灵活的网站生成器的强大功能。</string>
+    <string name="login_promo_title_37_percent">网上有 37\% 的内容是在 WordPress 上构建的。</string>
     <string name="reset_your_password">重置密码</string>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
     <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b>%1$s&lt;/b> 以设置新标题</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
     <string name="gutenberg_native_s_block_options">%s 区块选项</string>
-    <string name="gutenberg_native_remove_block">移除区块</string>
     <string name="gutenberg_native_duplicate_block">复制区块</string>
     <string name="gutenberg_native_copy_block">拷贝区块</string>
     <string name="gutenberg_native_copied_block">已拷贝区块</string>
@@ -143,11 +158,9 @@ Language: zh_CN
     <string name="error_update_site_title_network">无法更新站点标题。 请检查您的网络连接，然后重试。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未保存的更改</string>
     <string name="gutenberg_native_open_link_in_a_browser">在浏览器中打开链接</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">导航到上一个内容工作表</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">导航以自定义渐变</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">导航至自定义颜色选择器</string>
     <string name="gutenberg_native_gradient_type">渐变类型</string>
-    <string name="gutenberg_native_go_back">返回</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">轻点两下以选择选项</string>
     <string name="gutenberg_native_customize_gradient">自定义渐变</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -157,9 +170,6 @@ Language: zh_CN
     <string name="menu_content_info">内容结构</string>
     <string name="everyone">所有人</string>
     <string name="me">我</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我们正在努力在每个版本中添加更多区块。 与此同时，您还可以使用设备的 Web 浏览器编辑此区块。</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">在 Web 浏览器中编辑区块</string>
-    <string name="gutenberg_native_dismiss">忽略</string>
     <string name="prepublishing_nudges_home_tags_not_set">未设置</string>
     <string name="prepublishing_tags_description">标签有助于读者了解文章内容。</string>
     <string name="prepublishing_nudges_toolbar_title_tags">添加标签</string>
@@ -455,7 +465,6 @@ Language: zh_CN
     <string name="reader_my_likes_display_name">赞</string>
     <string name="site_cannot_be_loaded">我们现在无法为您的站点加载数据。请稍后重试</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒体库</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">我们正在努力在每个版本中添加更多区块。 同时，您还可以在网站上编辑这篇文章。</string>
     <string name="gutenberg_native_ungroup">取消分组</string>
     <string name="gutenberg_native_translate">翻译</string>
     <string name="gutenberg_native_take_a_video">拍摄视频</string>
@@ -464,12 +473,9 @@ Language: zh_CN
     <string name="gutenberg_native_start_writing">开始撰写…</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">轻按可隐藏键盘</string>
     <string name="gutenberg_native_title">标题:</string>
-    <string name="gutenberg_native_tap_here_to_show_help">轻按此处以显示帮助</string>
     <string name="gutenberg_native_size">尺寸</string>
     <string name="gutenberg_native_sidebar_title_plugin">边栏标题插件</string>
     <string name="gutenberg_native_show_section">显示分区</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">适用于 iOS 的 WordPress 尚不支持“%s”</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">适用于 Android 的 WordPress 尚不支持“%s”</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 区块。此区块包含无效内容</string>
     <string name="gutenberg_native_s_block_empty">%s 区块。空白</string>
     <string name="gutenberg_native_reset_block">重置区块</string>
@@ -492,12 +498,9 @@ Language: zh_CN
     <string name="gutenberg_native_move_block_up">向上移动区块</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">将区块从第 %1$s 行向下移动到第 %2$s 行</string>
     <string name="gutenberg_native_move_block_down">向下移动区块</string>
-    <string name="gutenberg_native_link_text">链接文本</string>
-    <string name="gutenberg_native_link_inserted">已插入链接</string>
     <string name="gutenberg_native_image_caption_s">图片说明。%s</string>
     <string name="gutenberg_native_hide_keyboard">隐藏键盘</string>
     <string name="gutenberg_native_here_is_the_panel_content">这里是面板内容！</string>
-    <string name="gutenberg_native_help_icon">“帮助”图标</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">无法插入媒体。\n请轻按以查看选项。</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">轻按两下以撤销上次的更改</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">轻按两下以切换设置</string>
@@ -518,7 +521,6 @@ Language: zh_CN
     <string name="gutenberg_native_alt_text">替代文本</string>
     <string name="gutenberg_native_add_video">添加视频</string>
     <string name="gutenberg_native_add_url">添加 URL</string>
-    <string name="gutenberg_native_add_link_text">添加链接文本</string>
     <string name="gutenberg_native_add_image_or_video">添加图片或视频</string>
     <string name="gutenberg_native_add_image">添加图片</string>
     <string name="gutenberg_native_add_block_here">在此处添加区块</string>
@@ -1347,6 +1349,7 @@ Language: zh_CN
     <string name="signup_email_header">要创建新的 WordPress.com 帐户，请输入您的电子邮件地址。</string>
     <string name="signup_email_error_generic">检查电子邮件地址时出现问题。</string>
     <string name="signup_magic_link_error">发送电子邮件时出现问题。您可以立即重试，或关闭并稍后重试。</string>
+    <string name="signup_epilogue_hint_password_detail">通常情况下，您可以随时使用刚刚用过的链接登录，但如果您愿意，也可以设置密码。</string>
     <string name="sign_up">注册 WordPress.com</string>
     <string name="enter_username_instead">使用用户名登录。</string>
     <string name="enter_site_address_instead">通过输入您的站点地址登录。</string>

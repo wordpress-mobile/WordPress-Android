@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-30 14:00:52+0000
+Translation-Revision-Date: 2020-10-08 17:48:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_white">Biały</string>
+    <string name="gutenberg_native_vivid_purple">Żywy purpurowy</string>
+    <string name="gutenberg_native_select_item">Wybierz element</string>
+    <string name="gutenberg_native_search_or_type_url">Przeszukaj lub wpisz adres URL</string>
+    <string name="gutenberg_native_pale_pink">Blady różowy</string>
+    <string name="gutenberg_native_pale_ocean">Bladoturkusowy</string>
+    <string name="gutenberg_native_midnight">Północ</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Od żywego pomarańczowego do jaskrawej czerwieni</string>
+    <string name="gutenberg_native_vivid_red">Żywa czerwień</string>
+    <string name="gutenberg_native_vivid_green_cyan">Żywy zielony cyjan</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Wyrazisty niebieskozielony do wyrazistego fioletu</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Żywy błękitny cyjan</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Od jasnej szarości do szarości z żywo niebieskim odcieniem</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Świecący żywy bursztyn</string>
+    <string name="gutenberg_native_pale_cyan_blue">Jasnobłękitny niebieski</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Spektrum od chłodnego do ciepłego</string>
+    <string name="gutenberg_native_blush_bordeaux">Róż bordowy</string>
+    <string name="gutenberg_native_black">Czarny</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Od jasnego bursztynu do żywej pomarańczy</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Świecący żywy bursztyn</string>
+    <string name="gutenberg_native_luminous_dusk">Blask zachodzącego słońca</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Jasny zielononiebieski do wyrazistego zielononiebieskiego</string>
+    <string name="gutenberg_native_light_green_cyan">Jasnozielony cyjan</string>
+    <string name="gutenberg_native_electric_grass">Elektryczna trawa</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Szaro-niebieski cyjan</string>
+    <string name="gutenberg_native_blush_light_purple">Różowo-jasnopurpurowy</string>
+    <string name="gutenberg_native_add_this_telephone_link">Dodaj ten odnośnik do numeru telefonu</string>
+    <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
+    <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
+    <string name="suggestion_no_connection">\"Brak połączenia internetowego.\nSugestie nie są dostępne.\"</string>
     <string name="typeface_label_shrikhand">Pogrubiona</string>
     <string name="typeface_label_space_mono">Nowoczesna</string>
     <string name="typeface_label_pacifico">Zabawna</string>
@@ -151,7 +181,6 @@ Language: pl
     <string name="quick_start_list_update_site_title_subtitle">Nadaj witrynie nazwę, która odzwierciedla jej osobowość i tematykę. Pierwsze wrażenie się liczy!</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
-    <string name="gutenberg_native_remove_block">Usuń blok</string>
     <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>
     <string name="gutenberg_native_copy_block">Skopiuj blok</string>
     <string name="gutenberg_native_copied_block">Skopiowany blok</string>
@@ -166,11 +195,9 @@ Language: pl
     <string name="my_site_title_changer_dialog_hint">Tytuł witryny jest wyświetlony na pasku tytułu przeglądarki a także w nagłówku większości motywów.</string>
     <string name="error_update_site_title_network">Nie można było zaktualizować tytułu witryny. Sprawdź ustawienia sieci i spróbuj ponownie.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Otwórz odnośnik w przeglądarce</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Przechodzi do poprzedniego arkusza z treściami</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Przechodzi do personalizacji gradientów</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Przechodzi do personalizacji selektora kolorów</string>
     <string name="gutenberg_native_gradient_type">Typ gradientu</string>
-    <string name="gutenberg_native_go_back">Wróć</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Stuknij dwukrotnie aby wybrać opcję</string>
     <string name="gutenberg_native_customize_gradient">Personalizuj gradient</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,9 +207,6 @@ Language: pl
     <string name="menu_content_info">Struktura treści</string>
     <string name="everyone">Wszyscy</string>
     <string name="me">Ja</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Pracujemy ciężko aby dodać więcj bloków z każdym kolejnym wydaniem. W międzyczasie, możesz również edytować ten blok przy pomocy przeglądarki swojego urządzenia.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Edytuj blok w przeglądarce</string>
-    <string name="gutenberg_native_dismiss">Odrzuć</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
     <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Dodaj tagi</string>
@@ -480,20 +504,16 @@ Language: pl
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Pracujemy ciężko aby dodać więcj bloków z każdym kolejnym wydaniem. W międzyczasie, możesz również edytować ten wpis na sieci.</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
     <string name="gutenberg_native_translate">Przetłumacz</string>
     <string name="gutenberg_native_title">Tytuł:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Stuknij aby ukryć klawiaturę</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Stuknij tutaj aby otworzyć pomoc</string>
     <string name="gutenberg_native_take_a_video">Nakręć film</string>
     <string name="gutenberg_native_take_a_photo_or_video">Zrób zdjęcie lub nakręć film</string>
     <string name="gutenberg_native_take_a_photo">Wykonaj zdjęcie</string>
     <string name="gutenberg_native_start_writing">Rozpocznij pisanie…</string>
     <string name="gutenberg_native_size">Rozmiar</string>
     <string name="gutenberg_native_show_section">Wybierz sekcję</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s\' nie jest jeszcze wspierane na WordPressie dla iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s\' nie jest jeszcze wspierane na WordPressie dla Androida</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
@@ -519,11 +539,8 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_undo_last_change">Stuknij dwukrotnie aby cofnąć zmiany</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Nie można było osadzić plików mediów.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
-    <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_hide_keyboard">Ukryj klawiaturę</string>
     <string name="gutenberg_native_here_is_the_panel_content">Tutaj jest zawartość panelu!</string>
-    <string name="gutenberg_native_help_icon">Ikona pomocy</string>
-    <string name="gutenberg_native_link_text">Tekst odnośnika</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
@@ -543,7 +560,6 @@ Language: pl
     <string name="gutenberg_native_alt_text">Tekst alternatywny</string>
     <string name="gutenberg_native_add_video">DODAJ FILM</string>
     <string name="gutenberg_native_add_url">Dodaj adres URL</string>
-    <string name="gutenberg_native_add_link_text">Dodaj tekst odnośnika</string>
     <string name="gutenberg_native_add_image_or_video">DODAJ ZDJĘCIE LUB FILM</string>
     <string name="gutenberg_native_add_image">DODAJ ZDJĘCIE</string>
     <string name="gutenberg_native_add_block_here">DODAJ TUTAJ BLOK</string>

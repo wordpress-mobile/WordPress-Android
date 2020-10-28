@@ -101,7 +101,6 @@ Language: it
     <string name="mlp_create_page">Crea pagina</string>
     <string name="mlp_create_blank_page">Crea pagina vuota</string>
     <string name="mlp_choose_layout_subtitle">Inizia scegliendo tra un\'ampia varietà di layout di pagina già pronti. Altrimenti, inizia semplicemente con una pagina bianca.</string>
-    <string name="mlp_choose_layout_title">Scegli un layout</string>
     <string name="prepublishing_nudges_story_title_hint">Dai un titolo alla tua storia</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crea un articolo o una storia</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Crea un articolo, una pagina o una storia</string>
@@ -151,7 +150,6 @@ Language: it
     <string name="quick_start_dialog_update_site_title_message_short">Tocca &lt;b>%1$s&lt;/b> per impostare un nuovo titolo</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche apportate in locale. Continuare?</string>
     <string name="gutenberg_native_s_block_options">%s opzioni blocco</string>
-    <string name="gutenberg_native_remove_block">Rimuovi il blocco</string>
     <string name="gutenberg_native_duplicate_block">Duplica il blocco</string>
     <string name="gutenberg_native_copy_block">Copia il blocco</string>
     <string name="gutenberg_native_copied_block">Blocco copiato</string>
@@ -166,11 +164,9 @@ Language: it
     <string name="error_update_site_title_network">Impossibile aggiornare il titolo del sito. Controlla la connessione di rete e riprova.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modifiche non salvate.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Apri il link in un browser.</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Naviga al foglio dei contenuti precedente</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Naviga alla personalizzazione del gradiente</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Naviga al selezionatore del colore personalizzato</string>
     <string name="gutenberg_native_gradient_type">Tipo di gradiente</string>
-    <string name="gutenberg_native_go_back">Torna indietro</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tocca due volte per selezionare l\'opzione</string>
     <string name="gutenberg_native_customize_gradient">Personalizza gradiente</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,9 +176,6 @@ Language: it
     <string name="menu_content_info">Struttura del contenuto</string>
     <string name="everyone">Tutti</string>
     <string name="me">Io</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione. Nel frattempo, puoi anche modificare questo blocco usando il browser web del dispositivo.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Modifica il blocco sul browser web</string>
-    <string name="gutenberg_native_dismiss">Chiudi</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nessuna impostazione</string>
     <string name="prepublishing_tags_description">I tag aiutano a dire al lettore di cosa parla un articolo.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data di pubblicazione</string>
@@ -480,12 +473,10 @@ Language: it
     <string name="posts_cannot_be_started">Non siamo in grado di aprire gli articoli in questo momento. Riprova più tardi.</string>
     <string name="site_cannot_be_loaded">Non siamo in grado di caricare i dati per il tuo sito in questo momento. Riprova più tardi.</string>
     <string name="gutenberg_native_wordpress_media_library">Libreria multimediale WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione. Nel frattempo, puoi anche modificare questo articolo sul web.</string>
     <string name="gutenberg_native_ungroup">Non raggruppare</string>
     <string name="gutenberg_native_translate">Traduci</string>
     <string name="gutenberg_native_title">Titolo:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tocca per nascondere la tastiera</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tocca qui per mostrare la guida</string>
     <string name="gutenberg_native_take_a_video">Fai un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fai un video o scatta una foto</string>
     <string name="gutenberg_native_take_a_photo">Scatta una foto</string>
@@ -493,8 +484,6 @@ Language: it
     <string name="gutenberg_native_size">Dimensione</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin del titolo sulla barra laterale</string>
     <string name="gutenberg_native_show_section">Mostra sezione</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' non è ancora supportato su WordPress per iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' non è ancora supportato su WordPress per Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Blocco %s. Questo blocco ha contenuti non validi</string>
     <string name="gutenberg_native_s_block_empty">Blocco %s. Vuoto</string>
     <string name="gutenberg_native_cut_block">Taglia il blocco</string>
@@ -517,12 +506,9 @@ Language: it
     <string name="gutenberg_native_move_block_up">Sposta il blocco verso l\'alto</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Sposta il blocco in basso dalla riga %1$s alla riga %2$s</string>
     <string name="gutenberg_native_move_block_down">Sposta il blocco verso il basso</string>
-    <string name="gutenberg_native_link_text">Testo del link</string>
-    <string name="gutenberg_native_link_inserted">Link inserito</string>
     <string name="gutenberg_native_image_caption_s">Didascalia dell\'immagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Nascondi tastiera</string>
     <string name="gutenberg_native_here_is_the_panel_content">Ecco il pannello dei contenuti!</string>
-    <string name="gutenberg_native_help_icon">Icona della guida</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserimento media non riuscito.\nTocca per ulteriori opzioni.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Tocca due volte per annullare l\'ultima modifica</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Tocca due volte per attivare/disattivare l\'impostazione</string>
@@ -543,7 +529,6 @@ Language: it
     <string name="gutenberg_native_alt_text">Testo Alt</string>
     <string name="gutenberg_native_add_video">AGGIUNGI VIDEO</string>
     <string name="gutenberg_native_add_url">Aggiungi URL</string>
-    <string name="gutenberg_native_add_link_text">Aggiungi testo del link</string>
     <string name="gutenberg_native_add_image_or_video">AGGIUNGI IMMAGINE O VIDEO</string>
     <string name="gutenberg_native_add_image">AGGIUNGI IMMAGINE</string>
     <string name="gutenberg_native_add_block_here">AGGIUNGI BLOCCO QUI</string>

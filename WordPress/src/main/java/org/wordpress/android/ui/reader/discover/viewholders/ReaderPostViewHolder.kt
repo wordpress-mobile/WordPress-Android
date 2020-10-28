@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
 import kotlinx.android.synthetic.main.reader_cardview_post.*
+import kotlinx.android.synthetic.main.reader_blog_section_view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -47,25 +48,12 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
         expandable_tags_view.updateUi(state.tagItems)
 
-        // Header section
-        updateAvatarOrBlavatar(state)
-        uiHelpers.setTextOrHide(text_author_and_blog_name, state.blogName)
-        uiHelpers.setTextOrHide(text_blog_url, state.blogUrl)
-        uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
-        uiHelpers.setTextOrHide(text_dateline, state.dateLine)
+        // Blog section
+        updateBlogSection(state)
+
+        // More menu
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
         image_more.setOnClickListener { uiState.onMoreButtonClicked.invoke(state) }
-        layout_post_header.setBackgroundResource(
-                layout_post_header.context.getDrawableResIdFromAttribute(uiState.postHeaderClickData?.background ?: 0)
-        )
-        uiState.postHeaderClickData?.onPostHeaderViewClicked?.let {
-            layout_post_header.setOnClickListener {
-                uiState.postHeaderClickData.onPostHeaderViewClicked.invoke(uiState.postId, uiState.blogId)
-            }
-        } ?: run {
-            layout_post_header.setOnClickListener(null)
-            layout_post_header.isClickable = false
-        }
 
         // Featured image section
         updateFeaturedImage(state)
@@ -102,6 +90,28 @@ class ReaderPostViewHolder(
         state.onItemRendered.invoke(uiState)
     }
 
+    private fun updateBlogSection(state: ReaderPostUiState) {
+        updateAvatarOrBlavatar(state)
+        uiHelpers.setTextOrHide(text_author_and_blog_name, state.blogSection.blogName)
+        uiHelpers.setTextOrHide(text_blog_url, state.blogSection.blogUrl)
+        uiHelpers.updateVisibility(dot_separator, state.blogSection.dotSeparatorVisibility)
+        uiHelpers.setTextOrHide(text_dateline, state.blogSection.dateLine)
+
+        layout_blog_section.setBackgroundResource(
+                layout_blog_section.context.getDrawableResIdFromAttribute(
+                        state.blogSection.blogSectionClickData?.background ?: 0
+                )
+        )
+        state.blogSection.blogSectionClickData?.onBlogSectionClicked?.let {
+            layout_blog_section.setOnClickListener {
+                state.blogSection.blogSectionClickData.onBlogSectionClicked.invoke(state.postId, state.blogId)
+            }
+        } ?: run {
+            layout_blog_section.setOnClickListener(null)
+            layout_blog_section.isClickable = false
+        }
+    }
+
     private fun updateFeaturedImage(state: ReaderPostUiState) {
         uiHelpers.updateVisibility(image_featured, state.featuredImageVisibility)
         if (state.featuredImageUrl == null) {
@@ -117,13 +127,13 @@ class ReaderPostViewHolder(
     }
 
     private fun updateAvatarOrBlavatar(state: ReaderPostUiState) {
-        uiHelpers.updateVisibility(image_avatar_or_blavatar, state.avatarOrBlavatarUrl != null)
-        if (state.avatarOrBlavatarUrl == null) {
+        uiHelpers.updateVisibility(image_avatar_or_blavatar, state.blogSection.avatarOrBlavatarUrl != null)
+        if (state.blogSection.avatarOrBlavatarUrl == null) {
             imageManager.cancelRequestAndClearImageView(image_avatar_or_blavatar)
         } else {
             imageManager.loadIntoCircle(
                     image_avatar_or_blavatar,
-                    BLAVATAR_CIRCULAR, state.avatarOrBlavatarUrl
+                    BLAVATAR_CIRCULAR, state.blogSection.avatarOrBlavatarUrl
             )
         }
     }

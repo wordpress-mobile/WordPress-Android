@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
@@ -11,8 +12,12 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
+import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
@@ -23,11 +28,81 @@ import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 
-class MediaPickerLauncher
-@Inject constructor(private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig) {
+class MediaPickerLauncher @Inject constructor(
+    private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+) {
+    fun showFeaturedImagePicker(
+        activity: Activity,
+        site: SiteModel?,
+        localPostId: Int
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val availableDataSources = if (site != null && site.isUsingWpComRestApi) {
+                setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY)
+            } else {
+                setOf(WP_LIBRARY, GIF_LIBRARY)
+            }
+
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = availableDataSources,
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraSetup = ENABLED,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = true,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site,
+                    localPostId
+            )
+            activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(activity, FEATURED_IMAGE_PICKER, site, localPostId)
+        }
+    }
+
+    fun showSiteIconPicker(
+        activity: Activity,
+        site: SiteModel?
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(WP_LIBRARY),
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraSetup = ENABLED,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = true,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup,
+                    site,
+                    null
+            )
+            activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(activity, SITE_ICON_PICKER, site, null)
+        }
+    }
+
     fun showPhotoPickerForResult(
         activity: Activity,
         browserType: MediaBrowserType,
@@ -47,9 +122,15 @@ class MediaPickerLauncher
         }
     }
 
+    fun showStoriesPhotoPickerForResultAndTrack(activity: Activity, site: SiteModel?) {
+        analyticsTrackerWrapper.track(Stat.MEDIA_PICKER_OPEN_FOR_STORIES)
+        showStoriesPhotoPickerForResult(activity, site)
+    }
+
     fun showStoriesPhotoPickerForResult(
         activity: Activity,
-        site: SiteModel?
+        site: SiteModel?,
+        requestCode: Int = RequestCodes.STORIES_PHOTO_PICKER
     ) {
         val browserType = MediaBrowserType.WP_STORIES_MEDIA_PICKER
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
@@ -58,36 +139,30 @@ class MediaPickerLauncher
                     buildLocalMediaPickerSetup(browserType),
                     site
             )
-            activity.startActivityForResult(intent, RequestCodes.STORIES_PHOTO_PICKER)
+            activity.startActivityForResult(intent, requestCode)
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, browserType, site, null)
         }
     }
 
-    fun showPhotoPickerForResult(
-        fragment: Fragment,
-        browserType: MediaBrowserType,
-        site: SiteModel?,
-        localPostId: Int?
-    ) {
-        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val intent = MediaPickerActivity.buildIntent(
-                    fragment.requireContext(),
-                    buildLocalMediaPickerSetup(browserType),
-                    site,
-                    localPostId
-            )
-            fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
-        } else {
-            ActivityLauncher.showPhotoPickerForResult(fragment, browserType, site, localPostId)
-        }
-    }
-
     fun showGravatarPicker(fragment: Fragment) {
         val intent = if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = false,
+                    requiresStoragePermissions = true,
+                    allowedTypes = setOf(IMAGE),
+                    cameraSetup = ENABLED,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_title
+            )
             MediaPickerActivity.buildIntent(
                     fragment.requireContext(),
-                    buildLocalMediaPickerSetup(GRAVATAR_IMAGE_PICKER)
+                    mediaPickerSetup
             )
         } else {
             Intent(fragment.requireContext(), PhotoPickerActivity::class.java).apply {
@@ -101,11 +176,12 @@ class MediaPickerLauncher
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
-                    dataSource = DEVICE,
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
                     canMultiselect = true,
                     requiresStoragePermissions = true,
                     allowedTypes = allowedTypes,
-                    cameraEnabled = false,
+                    cameraSetup = HIDDEN,
                     systemPickerEnabled = true,
                     editingEnabled = true,
                     queueResults = false,
@@ -151,11 +227,12 @@ class MediaPickerLauncher
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
-                    dataSource = STOCK_LIBRARY,
+                    primaryDataSource = STOCK_LIBRARY,
+                    availableDataSources = setOf(),
                     canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),
-                    cameraEnabled = false,
+                    cameraSetup = HIDDEN,
                     systemPickerEnabled = false,
                     editingEnabled = false,
                     queueResults = false,
@@ -176,16 +253,21 @@ class MediaPickerLauncher
     fun showGifPickerForResult(
         activity: Activity,
         site: SiteModel,
-        requestCode: Int,
         allowMultipleSelection: Boolean
     ) {
+        val requestCode = if (allowMultipleSelection) {
+            RequestCodes.GIF_PICKER_MULTI_SELECT
+        } else {
+            RequestCodes.GIF_PICKER_SINGLE_SELECT
+        }
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
-                    dataSource = GIF_LIBRARY,
+                    primaryDataSource = GIF_LIBRARY,
+                    availableDataSources = setOf(),
                     canMultiselect = allowMultipleSelection,
                     requiresStoragePermissions = false,
                     allowedTypes = setOf(IMAGE),
-                    cameraEnabled = false,
+                    cameraSetup = HIDDEN,
                     systemPickerEnabled = false,
                     editingEnabled = false,
                     queueResults = false,
@@ -219,11 +301,12 @@ class MediaPickerLauncher
             R.string.photo_picker_title
         }
         return MediaPickerSetup(
-                dataSource = DEVICE,
+                primaryDataSource = DEVICE,
+                availableDataSources = setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,
-                cameraEnabled = browserType.isWPStoriesPicker,
+                cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
                 systemPickerEnabled = true,
                 editingEnabled = browserType.isImagePicker,
                 queueResults = browserType == FEATURED_IMAGE_PICKER,
@@ -241,11 +324,12 @@ class MediaPickerLauncher
             allowedTypes.add(VIDEO)
         }
         return MediaPickerSetup(
-                dataSource = WP_LIBRARY,
+                primaryDataSource = WP_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = false,
                 allowedTypes = allowedTypes,
-                cameraEnabled = browserType.isWPStoriesPicker,
+                cameraSetup = if (browserType.isWPStoriesPicker) STORIES else HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -45,6 +47,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.ui.stories.StoryComposerViewModel;
+import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
@@ -115,6 +118,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderPostDetailViewModel.class)
+    abstract ViewModel readerPostDetailViewModel(ReaderPostDetailViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -298,6 +306,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(HomePagePickerViewModel.class)
+    abstract ViewModel hppViewModel(HomePagePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
 
@@ -370,6 +383,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(StoryComposerViewModel.class)
     abstract ViewModel storyComposerViewModel(StoryComposerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StoriesIntroViewModel.class)
+    abstract ViewModel storiesIntroViewModel(StoriesIntroViewModel viewModel);
 
     @Binds
     @IntoMap
