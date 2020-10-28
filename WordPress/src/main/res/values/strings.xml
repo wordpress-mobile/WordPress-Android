@@ -1715,7 +1715,6 @@
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
-    <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit topics and sites</string>

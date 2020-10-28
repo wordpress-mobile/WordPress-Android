@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -28,7 +27,7 @@ import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
 import org.wordpress.android.util.AppLog;
 
 /*
- * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
+ * fragment hosted by ReaderSubsActivity which shows followed blogs
  */
 public class ReaderBlogFragment extends Fragment
         implements ReaderBlogAdapter.BlogClickListener {
@@ -110,9 +109,6 @@ public class ReaderBlogFragment extends Fragment
             });
 
             switch (getBlogType()) {
-                case RECOMMENDED:
-                    actionableEmptyView.title.setText(R.string.reader_empty_recommended_blogs);
-                    break;
                 case FOLLOWED:
                     if (getBlogAdapter().hasSearchFilter()) {
                         actionableEmptyView.updateLayoutForSearch(true, 0);
@@ -257,10 +253,7 @@ public class ReaderBlogFragment extends Fragment
 
     @Override
     public void onBlogClicked(Object item) {
-        if (item instanceof ReaderRecommendedBlog) {
-            ReaderRecommendedBlog blog = (ReaderRecommendedBlog) item;
-            ReaderActivityLauncher.showReaderBlogPreview(getActivity(), blog.blogId);
-        } else if (item instanceof ReaderBlog) {
+        if (item instanceof ReaderBlog) {
             ReaderBlog blog = (ReaderBlog) item;
             ReaderActivityLauncher.showReaderBlogOrFeedPreview(getActivity(), blog.blogId, blog.feedId);
         }
