@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.posts
 
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.DimenRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.wordpress.stories.util.LOG_TAG
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -187,14 +189,17 @@ class PrepublishingCategoriesViewModel @Inject constructor(
     }
 
     fun onTermUploadedComplete(event: OnTermUploaded) {
-        val message = if (event.isError) {
+        // Sometimes the API will return a success response with a null name which we will
+        // treat as an error because without a name, there is no category
+        val isError = event.isError || event.term?.name == null
+        val message = if (isError) {
             string.adding_cat_failed
         } else {
             string.adding_cat_success
         }
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringRes(message))))
 
-        if (!event.isError) {
+        if (!isError) {
             val currentState = uiState.value as UiState
             val selectedIds = currentState.categoriesListItemUiState.toMutableList()
                     .filter { x -> x.checked }
