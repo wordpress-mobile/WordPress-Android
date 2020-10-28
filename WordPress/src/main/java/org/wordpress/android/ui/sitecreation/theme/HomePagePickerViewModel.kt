@@ -39,6 +39,17 @@ class HomePagePickerViewModel @Inject constructor(
                     "https://headstartdata.files.wordpress.com/2020/01/brompton.png?w=$width&zoom=$scale",
                     "https://headstartdata.files.wordpress.com/2020/01/exford.png?w=$width&zoom=$scale",
                     "https://headstartdata.files.wordpress.com/2020/08/seedlet-1.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/about-4.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/contact-6.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2019/06/about-2.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/03/team.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2019/09/menu.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/brompton.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/exford.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/08/seedlet-1.png?w=$width&zoom=$scale",
+                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale",
                     "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale"
             )
 
