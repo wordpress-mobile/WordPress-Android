@@ -212,7 +212,11 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
-        GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
-        mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        // We want to make sure that activity isn't null
+        // as it can make this crash to happen: https://github.com/wordpress-mobile/WordPress-Android/issues/13248
+        if (getActivity() != null) {
+            GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
+            mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        }
     }
 }
