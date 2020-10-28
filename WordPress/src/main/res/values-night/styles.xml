@@ -26,6 +26,7 @@
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
+        <item name="wpColorLoginPrologueBg">?attr/colorSurface</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
