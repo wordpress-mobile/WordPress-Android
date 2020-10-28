@@ -16,6 +16,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.lists.BLOCK_ITEM_COUNT
+import org.wordpress.android.ui.stats.refresh.lists.VIEW_ALL_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -46,9 +48,6 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class ReferrersUseCase(
     statsGranularity: StatsGranularity,
@@ -121,7 +120,7 @@ class ReferrersUseCase(
                                 group.name ?: "",
                                 group.total ?: 0
                         )
-                val spam = group.markedAsSpam != null && group.markedAsSpam!!
+                val spam = group.markedAsSpam
                 val icon = buildIcon(group.icon, spam)
                 if (group.referrers.isEmpty()) {
                     val headerItem = ListItemWithIcon(
@@ -155,7 +154,7 @@ class ReferrersUseCase(
                     })
                     if (isExpanded) {
                         items.addAll(group.referrers.map { referrer ->
-                            val referrerSpam = referrer.markedAsSpam != null && referrer.markedAsSpam!!
+                            val referrerSpam = referrer.markedAsSpam
                             val referrerIcon = buildIcon(referrer.icon, referrerSpam)
                             val iconStyle = if (group.icon != null && referrer.icon == null && referrerIcon == null) {
                                 EMPTY_SPACE
