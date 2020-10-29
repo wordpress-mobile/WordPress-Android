@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 121
+        return 122
     }
 
     override fun getDbName(): String {
@@ -1324,6 +1324,17 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                             "LOCAL_SITE_ID INTEGER,BLOCK_TYPE TEXT NOT NULL,STATS_TYPE TEXT NOT NULL,DATE TEXT," +
                             "POST_ID INTEGER,JSON TEXT NOT NULL)")
+                }
+                121 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCPlugins")
+                    db.execSQL("CREATE TABLE WCPlugins (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "ACTIVE BOOLEAN NOT NULL," +
+                            "DISPLAY_NAME TEXT NOT NULL," +
+                            "SLUG TEXT NOT NULL," +
+                            "VERSION TEXT NOT NULL)"
+                    )
                 }
             }
         }
