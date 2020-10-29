@@ -135,7 +135,7 @@ class MediaLoaderFactoryTest {
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
@@ -148,7 +148,8 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         gifMediaDataSource,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }

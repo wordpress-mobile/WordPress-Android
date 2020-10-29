@@ -11,9 +11,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.Mockito.doAnswer
 import org.mockito.invocation.InvocationOnMock
@@ -25,6 +23,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.EmptyList
 import org.wordpress.android.ui.mediapicker.loader.GifMediaDataSourceTest.GifResponseTestScenario.PopulatedList
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UriUtilsWrapper
 import org.wordpress.android.util.UriWrapper
 
@@ -33,16 +33,15 @@ class GifMediaDataSourceTest : BaseUnitTest() {
     @Mock lateinit var context: Context
     @Mock internal lateinit var tenorClient: TenorGifClient
     @Mock lateinit var gifsResponse: GifsResponse
-    @Mock lateinit var responseResult: Result
     @Mock lateinit var uriUtilsWrapper: UriUtilsWrapper
-    @Captor lateinit var onSuccessCalback: ArgumentCaptor<(GifsResponse) -> Unit>
-    @Captor lateinit var onFailCalback: ArgumentCaptor<(Throwable?) -> Unit>
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private lateinit var gifMediaDataSource: GifMediaDataSource
 
     @Before
     fun setUp() {
-        gifMediaDataSource = GifMediaDataSource(context, tenorClient, uriUtilsWrapper)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        gifMediaDataSource = GifMediaDataSource(context, tenorClient, uriUtilsWrapper, networkUtilsWrapper)
     }
 
     @Test
@@ -96,6 +95,20 @@ class GifMediaDataSourceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `returns error when network not available`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        val filter = "dog"
+
+        val result = gifMediaDataSource.load(forced = false, loadMore = false, filter = filter)
+
+        (result as MediaLoadingResult.Failure).apply {
+            Assertions.assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.no_network_title)
+            Assertions.assertThat(this.htmlSubtitle).isEqualTo(UiStringRes(R.string.no_network_message))
+            Assertions.assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+        }
+    }
+
+    @Test
     fun `returns failure on error`() = test {
         val filter = "exception while filtering"
         val errorMessage = "There was an error."
@@ -109,8 +122,9 @@ class GifMediaDataSourceTest : BaseUnitTest() {
         val result = gifMediaDataSource.load(forced = false, loadMore = false, filter = filter)
 
         (result as MediaLoadingResult.Failure).apply {
-            Assertions.assertThat(this.message).isNotEmpty()
-            Assertions.assertThat(this.message).isEqualTo(errorMessage)
+            Assertions.assertThat((this.title as UiStringRes).stringRes).isEqualTo(R.string.media_loading_failed)
+            Assertions.assertThat(this.htmlSubtitle).isEqualTo(UiStringText(errorMessage))
+            Assertions.assertThat(this.image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
         }
     }
 
