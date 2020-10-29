@@ -1382,10 +1382,13 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
+    <style name="WordPress.PrepubPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <!-- Home Page Picker Styles -->
     <style name="HomePagePickerSkipButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/blue_50</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
-
 </resources>
