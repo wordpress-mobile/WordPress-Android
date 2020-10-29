@@ -87,6 +87,13 @@
         "value":"medium",
         "display_key":"size",
         "display_value":""
+      },
+      {
+        "id": 6412,
+        "key": "_reduced_stock",
+        "value": "1",
+        "display_key": "_reduced_stock",
+        "display_value": "1"
       }
     ],
     "sku":"woo-vneck-tee",
