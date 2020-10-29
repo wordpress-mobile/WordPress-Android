@@ -53,6 +53,7 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
@@ -397,15 +398,17 @@ public class WPSupportUtils {
     }
 
     public static void swipeUpOnView(Integer elementID, float yFactor) {
-        onView(withId(elementID)).perform(swipeFromBottomToTop(yFactor));
+        onView(withId(elementID)).perform(withCustomConstraints(swipeFromBottomToTop(yFactor),
+                isDisplayingAtLeast(10)));
     }
 
     public static void swipeDownOnView(Integer elementID, float yFactor) {
-        onView(withId(elementID)).perform(swipeFromTopToBottom(yFactor));
+        onView(withId(elementID)).perform(withCustomConstraints(swipeFromTopToBottom(yFactor),
+                isDisplayingAtLeast(10)));
     }
 
     public static void swipeDownOnView(Integer elementID) {
-        onView(withId(elementID)).perform(swipeDown());
+        onView(withId(elementID)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)));
     }
 
     private static Boolean tabLayoutHasTextDisplayed(Integer elementID, String text) {
@@ -748,5 +751,24 @@ public class WPSupportUtils {
         float heightDp = displayMetrics.heightPixels / displayMetrics.density;
         float screenSw = Math.min(widthDp, heightDp);
         return screenSw >= 600;
+    }
+
+    private static ViewAction withCustomConstraints(final ViewAction action, final Matcher<View> constraints) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return constraints;
+            }
+
+            @Override
+            public String getDescription() {
+                return action.getDescription();
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                action.perform(uiController, view);
+            }
+        };
     }
 }
