@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
@@ -29,6 +30,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Singleton
 
@@ -43,16 +45,27 @@ constructor(
     userAgent: UserAgent
 ) :
         BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchActivity(site: SiteModel, number: Int, offset: Int): FetchedActivityLogPayload {
-        val url = WPCOMV2.sites.site(site.siteId).activity.url
+    suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
+        val url = WPCOMV2.sites.site(payload.site.siteId).activity.url
         val pageNumber = offset / number + 1
-        val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
+        val params = mutableMapOf(
+                "page" to pageNumber.toString(),
+                "number" to number.toString()
+        )
+
+        payload.after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
+        payload.before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
+        // the API accepts only "group[]=ABC&group[]=XYZ" format and we can't put the same key twice into a map
+        val group = payload.groups.joinToString(separator = "&group[]=")
+        if (group.isNotEmpty()) {
+            params["group[]"] = group
+        }
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, ActivitiesResponse::class.java)
         return when (response) {
             is Success -> {
                 val activities = response.data.current?.orderedItems ?: listOf()
                 val totalItems = response.data.totalItems ?: 0
-                buildActivityPayload(activities, site, totalItems, number, offset)
+                buildActivityPayload(activities, payload.site, totalItems, number, offset)
             }
             is Error -> {
                 val errorType = genericToError(
@@ -62,7 +75,7 @@ constructor(
                         ActivityLogErrorType.AUTHORIZATION_REQUIRED
                 )
                 val error = ActivityError(errorType, response.error.message)
-                FetchedActivityLogPayload(error, site, number = number, offset = offset)
+                FetchedActivityLogPayload(error, payload.site, number = number, offset = offset)
             }
         }
     }
