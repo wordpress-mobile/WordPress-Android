@@ -179,23 +179,25 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         data: Intent?
     ) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK || data == null) {
+        if (resultCode != Activity.RESULT_OK) {
             return
         }
         val intent: Intent? = when (requestCode) {
             MEDIA_LIBRARY -> {
-                val intent = Intent()
-                val uris = WPMediaUtils.retrieveMediaUris(data)
-                if (mediaPickerSetup.queueResults) {
-                    intent.putQueuedUris(uris)
-                } else {
-                    intent.putUris(uris)
+                data?.let {
+                    val intent = Intent()
+                    val uris = WPMediaUtils.retrieveMediaUris(data)
+                    if (mediaPickerSetup.queueResults) {
+                        intent.putQueuedUris(uris)
+                    } else {
+                        intent.putUris(uris)
+                    }
+                    intent.putExtra(
+                            EXTRA_MEDIA_SOURCE,
+                            ANDROID_PICKER.name
+                    )
+                    intent
                 }
-                intent.putExtra(
-                        EXTRA_MEDIA_SOURCE,
-                        ANDROID_PICKER.name
-                )
-                intent
             }
             TAKE_PHOTO -> {
                 try {
@@ -221,18 +223,20 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 }
             }
             IMAGE_EDITOR_EDIT_IMAGE -> {
-                val intent = Intent()
-                val uris = WPMediaUtils.retrieveImageEditorResult(data)
-                if (mediaPickerSetup.queueResults) {
-                    intent.putQueuedUris(uris)
-                } else {
-                    intent.putUris(uris)
+                data?.let {
+                    val intent = Intent()
+                    val uris = WPMediaUtils.retrieveImageEditorResult(data)
+                    if (mediaPickerSetup.queueResults) {
+                        intent.putQueuedUris(uris)
+                    } else {
+                        intent.putUris(uris)
+                    }
+                    intent.putExtra(
+                            EXTRA_MEDIA_SOURCE,
+                            APP_PICKER.name
+                    )
+                    intent
                 }
-                intent.putExtra(
-                        EXTRA_MEDIA_SOURCE,
-                        APP_PICKER.name
-                )
-                intent
             }
             else -> {
                 data
