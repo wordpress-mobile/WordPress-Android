@@ -183,7 +183,12 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         val intent: Intent? = when (requestCode) {
             MEDIA_LIBRARY -> {
                 val intent = Intent()
-                intent.putUris(WPMediaUtils.retrieveMediaUris(data))
+                val uris = WPMediaUtils.retrieveMediaUris(data)
+                if (mediaPickerSetup.queueResults) {
+                    intent.putQueuedUris(uris)
+                } else {
+                    intent.putUris(uris)
+                }
                 intent.putExtra(
                         EXTRA_MEDIA_SOURCE,
                         ANDROID_PICKER.name
@@ -197,7 +202,11 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                         WPMediaUtils.scanMediaFile(this, it)
                         val f = File(it)
                         val capturedImageUri = listOf(Uri.fromFile(f))
-                        intent.putUris(capturedImageUri)
+                        if (mediaPickerSetup.queueResults) {
+                            intent.putQueuedUris(capturedImageUri)
+                        } else {
+                            intent.putUris(capturedImageUri)
+                        }
                         intent.putExtra(
                                 EXTRA_MEDIA_SOURCE,
                                 ANDROID_CAMERA.name
@@ -236,7 +245,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         this.putExtra(EXTRA_MEDIA_URIS, mediaUris.toStringArray())
     }
 
-    private fun Intent.doQueuedUrisSelected(
+    private fun Intent.putQueuedUris(
         mediaUris: List<Uri>
     ) {
         this.putExtra(EXTRA_MEDIA_QUEUED_URIS, mediaUris.toStringArray())
@@ -270,7 +279,7 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             intent.putUris(chosenUris)
         }
         if (!queuedUris.isNullOrEmpty()) {
-            intent.doQueuedUrisSelected(queuedUris)
+            intent.putQueuedUris(queuedUris)
         }
         if (!chosenIds.isNullOrEmpty()) {
             intent.putMediaIds(chosenIds)
