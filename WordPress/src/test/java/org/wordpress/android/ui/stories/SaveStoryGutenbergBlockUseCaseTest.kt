@@ -51,15 +51,11 @@ class SaveStoryGutenbergBlockUseCaseTest {
             action(postModel)
             null
         }
-        whenever(editPostRepository.getPost()).thenReturn(postModel)
-
         whenever(mediaFile.id).thenReturn(TestContent.localMediaId.toInt())
-        whenever(mediaFile.mediaId).thenReturn(TestContent.localMediaId)
         whenever(mediaFile.fileURL).thenReturn(TestContent.localImageUrl)
         whenever(mediaFile.mimeType).thenReturn(TestContent.storyMediaFileMimeTypeImage)
 
         whenever(mediaFile2.id).thenReturn(TestContent.localMediaId2.toInt())
-        whenever(mediaFile2.mediaId).thenReturn(TestContent.localMediaId2)
         whenever(mediaFile2.fileURL).thenReturn(TestContent.localImageUrl2)
         whenever(mediaFile2.mimeType).thenReturn(TestContent.storyMediaFileMimeTypeImage)
 
