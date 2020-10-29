@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE
 import org.wordpress.android.ui.RequestCodes.MEDIA_LIBRARY
 import org.wordpress.android.ui.RequestCodes.PHOTO_PICKER
 import org.wordpress.android.ui.RequestCodes.TAKE_PHOTO
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
@@ -217,6 +219,20 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                     AppLog.e(MEDIA, e)
                     null
                 }
+            }
+            IMAGE_EDITOR_EDIT_IMAGE -> {
+                val intent = Intent()
+                val uris = WPMediaUtils.retrieveImageEditorResult(data)
+                if (mediaPickerSetup.queueResults) {
+                    intent.putQueuedUris(uris)
+                } else {
+                    intent.putUris(uris)
+                }
+                intent.putExtra(
+                        EXTRA_MEDIA_SOURCE,
+                        APP_PICKER.name
+                )
+                intent
             }
             else -> {
                 data
