@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -177,6 +178,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
             }
             loadLayouts()
         }
+    }
+
+    /**
+     * Checks if the Modal Layout Picker can be shown
+     * at this point the only requirement is to have the block editor enabled
+     * @return true if the Modal Layout Picker can be shown
+     */
+    fun canShowModalLayoutPicker(): Boolean {
+        val siteId = appPrefsWrapper.getSelectedSite()
+        val site = siteStore.getSiteByLocalId(siteId)
+        return SiteUtils.isBlockEditorDefaultForNewPost(site)
     }
 
     /**
