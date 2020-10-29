@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.mlp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -14,6 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.MainCoroutineScopeRule
@@ -29,8 +29,14 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
+import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.util.SiteUtils.GB_EDITOR_NAME
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Blank
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Preview
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
 
@@ -49,7 +55,10 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
-    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<String>
+    @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Create>
+    @Mock lateinit var onPreviewPageRequestedObserver: Observer<Preview>
 
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
         get() {
@@ -76,11 +85,16 @@ class ModalLayoutPickerViewModelTest {
                 siteStore,
                 appPrefsWrapper,
                 supportedBlocksProvider,
+                thumbDimensionProvider,
+                networkUtils,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onCreateNewPageRequested.observeForever(
                 onCreateNewPageRequestedObserver
+        )
+        viewModel.onPreviewPageRequested.observeForever(
+                onPreviewPageRequestedObserver
         )
     }
 
@@ -88,11 +102,13 @@ class ModalLayoutPickerViewModelTest {
     private fun <T> mockFetchingSelectedSite(isError: Boolean = false, block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             val siteId = 1
-            val site = SiteModel()
+            val site = SiteModel().apply { mobileEditor = GB_EDITOR_NAME }
             whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
+            whenever(thumbDimensionProvider.previewWidth).thenReturn(136)
+            whenever(thumbDimensionProvider.scale).thenReturn(1.0)
             setupFetchLayoutsDispatcher(isError)
             block()
         }
@@ -109,22 +125,6 @@ class ModalLayoutPickerViewModelTest {
         })).then {
             viewModel.onBlockLayoutsFetched(event)
         }
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `when modal layout picker starts in landscape mode the title is visible`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.start(true)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
-    }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `when modal layout picker starts in portrait mode the title is not visible`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.start(false)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
     }
 
     @ExperimentalCoroutinesApi
@@ -181,11 +181,40 @@ class ModalLayoutPickerViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `when the create page is triggered the page creation flow starts`() = mockFetchingSelectedSite {
-        viewModel.createPageFlowTriggered()
-        viewModel.onCreatePageClicked()
-        verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
-    }
+    fun `when no layout is selected and the create page is triggered the blank page creation flow starts`() =
+            mockFetchingSelectedSite {
+                viewModel.createPageFlowTriggered()
+                viewModel.onCreatePageClicked()
+                val captor = ArgumentCaptor.forClass(Create::class.java)
+                verify(onCreateNewPageRequestedObserver).onChanged(captor.capture())
+                assertThat(captor.value).isEqualTo(Blank)
+            }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when a layout is selected and the create page is triggered the page creation flow starts with a template`() =
+            mockFetchingSelectedSite {
+                viewModel.createPageFlowTriggered()
+                viewModel.onThumbnailReady("about")
+                viewModel.onLayoutTapped("about")
+                viewModel.onCreatePageClicked()
+                val captor = ArgumentCaptor.forClass(Create::class.java)
+                verify(onCreateNewPageRequestedObserver).onChanged(captor.capture())
+                assertThat(captor.value.template).isEqualTo("about")
+            }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when a layout is selected and the preview page is clicked the preview flow starts`() =
+            mockFetchingSelectedSite {
+                viewModel.createPageFlowTriggered()
+                viewModel.onThumbnailReady("about")
+                viewModel.onLayoutTapped("about")
+                viewModel.onPreviewPageClicked()
+                val captor = ArgumentCaptor.forClass(Preview::class.java)
+                verify(onPreviewPageRequestedObserver).onChanged(captor.capture())
+                assertThat(captor.value.template).isEqualTo("about")
+            }
 
     @ExperimentalCoroutinesApi
     @Test

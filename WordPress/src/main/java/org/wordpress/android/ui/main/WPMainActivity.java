@@ -104,6 +104,7 @@ import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -437,10 +438,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
-                    if (mModalLayoutPickerFeatureConfig.isEnabled()) {
+                    if (mModalLayoutPickerFeatureConfig.isEnabled() && mMLPViewModel.canShowModalLayoutPicker()) {
                         mMLPViewModel.createPageFlowTriggered();
                     } else {
-                        handleNewPageAction(""/*empty page*/, PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                        handleNewPageAction("", "", null,
+                                PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     }
                     break;
                 case CREATE_NEW_STORY:
@@ -463,8 +465,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         });
 
-        mMLPViewModel.getOnCreateNewPageRequested().observe(this, content -> {
-            handleNewPageAction(content, PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+        mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
+            handleNewPageAction(request.getTitle(), request.getContent(), request.getTemplate(),
+                    PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -879,7 +882,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_NAV_BAR);
     }
 
-    private void handleNewPageAction(String content, PagePostCreationSourcesDetail source) {
+    private void handleNewPageAction(String title, String content, String template,
+                                     PagePostCreationSourcesDetail source) {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
@@ -889,7 +893,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewPageForResult(this, site, content, source);
+            ActivityLauncher.addNewPageForResult(this, site, title, content, template, source);
         }
     }
 
@@ -912,12 +916,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         SiteModel site = getSelectedSite();
         if (site != null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            mMediaPickerLauncher.showStoriesPhotoPickerForResult(
-                    this,
-                    site
-            );
+            if (AppPrefs.shouldShowStoriesIntro()) {
+                StoriesIntroDialogFragment.newInstance(site)
+                        .show(getSupportFragmentManager(), StoriesIntroDialogFragment.TAG);
+            } else {
+                mMediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(this, site);
+            }
         }
     }
 

@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-23 21:41:49+0000
+Translation-Revision-Date: 2020-10-06 23:50:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_white">Beyaz</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Parlak canlı turuncu</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Parlak canlı turuncudan canlı kırmızıya</string>
+    <string name="gutenberg_native_midnight">Gece yarısı</string>
+    <string name="gutenberg_native_pale_cyan_blue">Soluk cam göbeği mavi</string>
+    <string name="gutenberg_native_pale_ocean">Soluk okyanus</string>
+    <string name="gutenberg_native_pale_pink">Soluk pembe</string>
+    <string name="gutenberg_native_search_or_type_url">URL arayın veya yazın</string>
+    <string name="gutenberg_native_select_item">Öğeyi seç</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Çok açık griden mavimsi griye</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Canlı cam göbeği mavi</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Canlı cam göbeği maviden canlı mora</string>
+    <string name="gutenberg_native_vivid_green_cyan">Canlı yeşil cam göbeği</string>
+    <string name="gutenberg_native_vivid_purple">Canlı mor</string>
+    <string name="gutenberg_native_vivid_red">Canlı kırmızı</string>
+    <string name="gutenberg_native_black">Siyah</string>
+    <string name="gutenberg_native_blush_bordeaux">Kızıla çalan bordo</string>
+    <string name="gutenberg_native_blush_light_purple">Kızıla çalan açık mor</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Soğuktan sıcağa spektrum</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Cam göbeği mavimsi gri</string>
+    <string name="gutenberg_native_electric_grass">Elektrikli çim</string>
+    <string name="gutenberg_native_light_green_cyan">Açık yeşil cam göbeği</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Açık yeşil cam göbeğinden parlak yeşil cam göbeğine</string>
+    <string name="gutenberg_native_luminous_dusk">Aydınlık alacakaranlık</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Parlak canlı kehribardan parlak canlı turuncuya</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Parlak canlı kehribar</string>
+    <string name="gutenberg_native_add_this_telephone_link">Bu telefon bağlantısını ekle</string>
+    <string name="gutenberg_native_add_this_link">Bu bağlantıyı ekle</string>
+    <string name="gutenberg_native_add_this_email_link">Bu e-posta bağlantısını ekle</string>
+    <string name="suggestion_no_connection">\"İnternet bağlantısı yok.\nÖneriler kullanılamaz.\"</string>
     <string name="mlp_selected_description">%s seçildi</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="typeface_label_nunito">Gelişigüzel</string>
@@ -14,9 +44,12 @@ Language: tr
     <string name="typeface_label_pacifico">Eğlenceli</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_shrikhand">Gözüpek</string>
+    <string name="toast_capture_operation_permission_needed">Video kaydetmek için uygulamaya ses kaydetme izni vermeniz gerekiyor</string>
     <string name="comment_unable_to_show_error">Bu yorum gösterilemiyor</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="login_get_link_by_email">E-posta ile bir oturum açma bağlantısı alın</string>
+    <string name="email_not_registered_wpcom">Bu e-posta hesabına bağlı bir WordPress.com hesabı bulamıyoruz.</string>
+    <string name="media_browse_for_items">Öğelere göz atın</string>
     <string name="reader_menu_report_post">Bu yazıyı bildir</string>
     <string name="reader_welcome_banner">Okuyucuya hoş geldiniz. Parmaklarınızın ucunda milyonlarca blogu keşfedin.</string>
     <string name="gutenberg_native_angle">Açı</string>
@@ -98,7 +131,6 @@ Language: tr
     <string name="mlp_create_page">Sayfa Oluştur</string>
     <string name="mlp_create_blank_page">Boş sayfa oluştur</string>
     <string name="mlp_choose_layout_subtitle">Önceden hazırlanmış çeşitli sayfa düzenleri arasından seçim yaparak başlayın. Veya boş bir sayfayla başlayın.</string>
-    <string name="mlp_choose_layout_title">Bir Düzen Seç</string>
     <string name="prepublishing_nudges_story_title_hint">Öykünüze bir başlık koyun</string>
     <string name="quick_start_dialog_create_new_post_message_short">%1$s Oluştur\'a dokunun. %2$s Ardından &lt;b>Blog yayını&lt;/b>\'nı seçin</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Bir yazı veya öykü oluştur</string>
@@ -157,15 +189,12 @@ Language: tr
     <string name="gutenberg_native_copied_block">Kopyalanan blok</string>
     <string name="gutenberg_native_copy_block">Bloğu kopyala</string>
     <string name="gutenberg_native_duplicate_block">Bloğu çoğalt</string>
-    <string name="gutenberg_native_remove_block">Bloğu kaldır</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Kaydedilmemiş değişiklikler</string>
     <string name="error_update_site_title_network">Site başlığı güncellenemedi. Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="reader_title_tag_preview">Konu</string>
     <string name="my_site_title_changer_dialog_hint">Site Başlığı, web tarayıcısının başlık çubuğunda görüntülenir ve çoğu temada üst bilgide gösterilir.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Önceki içerik sayfasına gider</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
-    <string name="gutenberg_native_go_back">Geri dön</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Bir seçenek belirlemek için çift dokunun</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Gradyanı özelleştirme bölümüne gider</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Özel renk seçiciye gider</string>
@@ -177,10 +206,7 @@ Language: tr
     <string name="pages_list_author">Sayfa yazarı</string>
     <string name="photo_picker_use_gif">Bu GIF\'i kullan</string>
     <string name="error_media_thumbnail_not_loaded">Medya küçük resmi yüklenemedi</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için çok çalışıyoruz. Bu arada, bu bloğu cihazınızın web tarayıcısını kullanarak da düzenleyebilirsiniz.</string>
-    <string name="gutenberg_native_dismiss">Kapat</string>
     <string name="prepublishing_nudges_home_tags_not_set">Belirlenmemiş</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Bloğu tarayıcıda düzenle</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Taslağa taşı</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">İptal</string>
     <string name="prepublishing_nudges_publish_action">Yayımlama tarihi</string>
@@ -477,21 +503,17 @@ Language: tr
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="site_cannot_be_loaded">Şu anda siteniz için veri yüklemesi yapamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz. Bu arada, bu yazıyı webde de düzenleyebilirsiniz.</string>
     <string name="gutenberg_native_take_a_photo">Fotoğraf Çek</string>
     <string name="gutenberg_native_start_writing">Yazmaya başlayın…</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
     <string name="gutenberg_native_translate">Çevir</string>
     <string name="gutenberg_native_title">Başlık:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Klavyeyi gizlemek için dokunun</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Yardımı görüntülemek için buraya dokunun</string>
     <string name="gutenberg_native_take_a_video">Video Çek</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotoğraf veya Video Çek</string>
     <string name="gutenberg_native_size">Boyut</string>
     <string name="gutenberg_native_sidebar_title_plugin">Kenar çubuğu başlık eklentisi</string>
     <string name="gutenberg_native_show_section">Bölümü göster</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\"%s\" henüz iOS için WordPress\'te desteklenmiyor</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\"%s\" henüz Android için WordPress\'te desteklenmiyor</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
     <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
@@ -514,12 +536,9 @@ Language: tr
     <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
     <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
-    <string name="gutenberg_native_link_text">Metin bağlantısı ver</string>
-    <string name="gutenberg_native_link_inserted">Bağlantı eklendi</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
     <string name="gutenberg_native_here_is_the_panel_content">İşte panel içeriği!</string>
-    <string name="gutenberg_native_help_icon">Yardım simgesi</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Son değişikliği geri almak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ayarı değiştirmek için çift dokunun</string>
@@ -539,7 +558,6 @@ Language: tr
     <string name="gutenberg_native_alt_text">Alternatif metin</string>
     <string name="gutenberg_native_add_video">VİDEO EKLE</string>
     <string name="gutenberg_native_add_url">URL ekle</string>
-    <string name="gutenberg_native_add_link_text">Bağlantı metni ekle</string>
     <string name="gutenberg_native_add_image_or_video">GÖRSEL VEYA VİDEO EKLE</string>
     <string name="gutenberg_native_add_image">GÖRSEL EKLE</string>
     <string name="gutenberg_native_add_block_here">BURAYA BLOK EKLE</string>

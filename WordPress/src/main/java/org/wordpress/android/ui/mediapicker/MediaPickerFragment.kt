@@ -41,6 +41,7 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.InsertMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.CAPTURE_PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.SWITCH_SOURCE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
@@ -54,9 +55,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
@@ -83,7 +81,8 @@ class MediaPickerFragment : Fragment() {
     enum class MediaPickerIconType {
         ANDROID_CHOOSE_FROM_DEVICE,
         SWITCH_SOURCE,
-        WP_STORIES_CAPTURE;
+        WP_STORIES_CAPTURE,
+        CAPTURE_PHOTO;
 
         companion object {
             @JvmStatic
@@ -114,6 +113,7 @@ class MediaPickerFragment : Fragment() {
         ) : MediaPickerAction()
 
         data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
+        object OpenCameraForPhotos : MediaPickerAction()
         data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
     }
 
@@ -125,6 +125,7 @@ class MediaPickerFragment : Fragment() {
         data class SwitchSource(val dataSource: DataSource) : MediaPickerIcon(SWITCH_SOURCE)
 
         object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
+        object CapturePhoto : MediaPickerIcon(CAPTURE_PHOTO)
 
         fun toBundle(bundle: Bundle) {
             bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
@@ -157,6 +158,7 @@ class MediaPickerFragment : Fragment() {
                         ChooseFromAndroidDevice(allowedTypes)
                     }
                     WP_STORIES_CAPTURE -> WpStoriesCapture
+                    CAPTURE_PHOTO -> CapturePhoto
                     SWITCH_SOURCE -> {
                         val ordinal = bundle.getInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, -1)
                         if (ordinal != -1) {
@@ -310,6 +312,7 @@ class MediaPickerFragment : Fragment() {
                 showSnackbar(messageHolder)
             }
         })
+
         setupProgressDialog()
 
         viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
@@ -344,6 +347,7 @@ class MediaPickerFragment : Fragment() {
 
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
+                searchView.maxWidth = Integer.MAX_VALUE
                 searchView.setQuery(uiState.searchUiModel.filter, true)
                 searchView.setOnCloseListener { !uiState.searchUiModel.closeable }
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
@@ -437,54 +441,54 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
+        loading_view.visibility = if (uiModel == PhotoListUiModel.Loading) View.VISIBLE else View.GONE
+        actionable_empty_view.visibility = if (uiModel is PhotoListUiModel.Empty) View.VISIBLE else View.GONE
+        recycler.visibility = if (uiModel is PhotoListUiModel.Data) View.VISIBLE else View.INVISIBLE
         when (uiModel) {
-            is Data -> {
-                actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.VISIBLE
+            is PhotoListUiModel.Data -> {
                 setupAdapter(uiModel.items)
             }
-            is Empty -> {
+            is PhotoListUiModel.Empty -> {
+                setupAdapter(listOf())
                 actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
-                actionable_empty_view.visibility = View.VISIBLE
                 actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
-                if (uiModel.htmlSubtitle != null) {
+
+                actionable_empty_view.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
                     actionable_empty_view.subtitle.text = Html.fromHtml(
                             uiHelpers.getTextOfUiString(
                                     requireContext(),
-                                    uiModel.htmlSubtitle
+                                    htmlSubtitle
                             ).toString()
                     )
                     actionable_empty_view.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
-                    actionable_empty_view.subtitle.visibility = View.VISIBLE
-                } else {
-                    actionable_empty_view.subtitle.visibility = View.GONE
                 }
-
-                if (uiModel.image != null) {
-                    actionable_empty_view.image.setImageResource(uiModel.image)
-                    actionable_empty_view.image.visibility = View.VISIBLE
-                } else {
-                    actionable_empty_view.image.visibility = View.GONE
+                actionable_empty_view.image.applyOrHide(uiModel.image) { image ->
+                    this.setImageResource(image)
                 }
-                if (uiModel.bottomImage != null) {
-                    actionable_empty_view.bottomImage.setImageResource(uiModel.bottomImage)
-                    actionable_empty_view.bottomImage.visibility = View.VISIBLE
+                actionable_empty_view.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
+                    this.setImageResource(bottomImage)
                     if (uiModel.bottomImageDescription != null) {
-                        actionable_empty_view.bottomImage.contentDescription = uiHelpers.getTextOfUiString(
+                        this.contentDescription = uiHelpers.getTextOfUiString(
                                 requireContext(),
                                 uiModel.bottomImageDescription
                         ).toString()
                     }
-                } else {
-                    actionable_empty_view.bottomImage.visibility = View.GONE
                 }
-                recycler.visibility = View.INVISIBLE
-                setupAdapter(listOf())
+                actionable_empty_view.button.applyOrHide(uiModel.retryAction) { action ->
+                    this.setOnClickListener {
+                        action()
+                    }
+                }
             }
-            Hidden -> {
-                actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.INVISIBLE
-            }
+        }
+    }
+
+    private fun <T, U : View> U.applyOrHide(item: T?, action: U.(T) -> Unit) {
+        if (item != null) {
+            this.visibility = View.VISIBLE
+            this.action(item)
+        } else {
+            this.visibility = View.GONE
         }
     }
 
@@ -511,12 +515,12 @@ class MediaPickerFragment : Fragment() {
 
     private fun setupFab(fabUiModel: FabUiModel) {
         if (fabUiModel.show) {
-            wp_stories_take_picture.show()
-            wp_stories_take_picture.setOnClickListener {
+            fab_take_picture.show()
+            fab_take_picture.setOnClickListener {
                 fabUiModel.action()
             }
         } else {
-            wp_stories_take_picture.hide()
+            fab_take_picture.hide()
         }
     }
 

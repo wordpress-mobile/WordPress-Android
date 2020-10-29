@@ -17,5 +17,6 @@
         android:id="@+id/title"
         style="@style/ModalLayoutPickerHeader"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:text="@string/mlp_choose_layout_title" />
+        android:text="@string/mlp_choose_layout_title"
+        android:visibility="gone" />
 </FrameLayout>

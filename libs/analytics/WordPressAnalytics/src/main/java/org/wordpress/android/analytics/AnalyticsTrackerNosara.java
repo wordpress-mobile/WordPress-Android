@@ -666,6 +666,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_blog_previewed";
             case READER_BLOG_UNFOLLOWED:
                 return "reader_site_unfollowed";
+            case READER_SUGGESTED_SITE_VISITED:
+                return "reader_suggested_site_visited";
+            case READER_SUGGESTED_SITE_TOGGLE_FOLLOW:
+                return "reader_suggested_site_toggle_follow";
             case READER_ARTICLE_VISITED:
                 return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
@@ -1817,6 +1821,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_publish_tapped";
             case STORY_TEXT_CHANGED:
                 return "story_text_changed";
+            case STORY_INTRO_SHOWN:
+                return "story_intro_shown";
+            case STORY_INTRO_DISMISSED:
+                return "story_intro_dismissed";
+            case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
+                return "story_intro_create_story_button_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
@@ -1859,6 +1869,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_pull_to_refresh";
             case POST_CARD_MORE_TAPPED:
                 return "post_card_more_tapped";
+            case READER_ARTICLE_DETAIL_MORE_TAPPED:
+                return "reader_article_detail_more_tapped";
             case READER_CHIPS_MORE_TOGGLED:
                 return "reader_chips_more_toggled";
             case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:

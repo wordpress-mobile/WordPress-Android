@@ -1,11 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-24 06:50:19+0000
+Translation-Revision-Date: 2020-10-07 11:28:45+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_white">Alb</string>
+    <string name="gutenberg_native_vivid_red">Roșu viu</string>
+    <string name="gutenberg_native_vivid_purple">Violet viu</string>
+    <string name="gutenberg_native_vivid_green_cyan">Cyan verde viu</string>
+    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">De la albastru turcoaz viu la violet viu</string>
+    <string name="gutenberg_native_vivid_cyan_blue">Albastru cyan viu</string>
+    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">De la gri foarte deschis la gri albăstrui-turcoaz</string>
+    <string name="gutenberg_native_select_item">Selectează un element</string>
+    <string name="gutenberg_native_search_or_type_url">Caută sau tastează URL-ul</string>
+    <string name="gutenberg_native_pale_pink">Roz pal</string>
+    <string name="gutenberg_native_pale_ocean">Albastru-verde (ocean) pal</string>
+    <string name="gutenberg_native_pale_cyan_blue">Albastru cyan pal</string>
+    <string name="gutenberg_native_midnight">Miezul nopții</string>
+    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">De la portocaliu viu luminos la roșu viu</string>
+    <string name="gutenberg_native_luminous_vivid_orange">Portocaliu viu luminos</string>
+    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">De la chihlimbar viu luminos la portocaliu viu luminos</string>
+    <string name="gutenberg_native_luminous_vivid_amber">Chihlimbar viu luminos</string>
+    <string name="gutenberg_native_luminous_dusk">Crepuscul luminos</string>
+    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">De la turcoaz verde deschis la turcoaz verde viu</string>
+    <string name="gutenberg_native_light_green_cyan">Cyan verde deschis</string>
+    <string name="gutenberg_native_electric_grass">Verde electrizant</string>
+    <string name="gutenberg_native_cyan_bluish_gray">Gri albăstrui cyan</string>
+    <string name="gutenberg_native_cool_to_warm_spectrum">Spectru de culori de la reci la calde</string>
+    <string name="gutenberg_native_blush_light_purple">Mov roșu-violet deschis</string>
+    <string name="gutenberg_native_blush_bordeaux">Bordo roșu-violet</string>
+    <string name="gutenberg_native_black">Negru</string>
+    <string name="gutenberg_native_add_this_telephone_link">Adaugă această legătură la telefon</string>
+    <string name="gutenberg_native_add_this_link">Adaugă această legătură</string>
+    <string name="gutenberg_native_add_this_email_link">Adaugă această legătură la email</string>
+    <string name="suggestion_no_connection">„Nu există conexiune la internet.\nSugestiile nu sunt disponibile.”</string>
     <string name="typeface_label_shrikhand">Aldin</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_pacifico">Vesel</string>
@@ -151,7 +181,6 @@ Language: ro
     <string name="quick_start_dialog_update_site_title_message_short">Atinge &lt;b>%1$s&lt;/b> pentru a seta un nou titlu</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula și modificările locale, sigur vrei să continui?</string>
     <string name="gutenberg_native_s_block_options">Opțiuni bloc %s</string>
-    <string name="gutenberg_native_remove_block">Înlătură blocul</string>
     <string name="gutenberg_native_duplicate_block">Fă un duplicat al blocului</string>
     <string name="gutenberg_native_copy_block">Copiază blocul</string>
     <string name="gutenberg_native_copied_block">Bloc copiat</string>
@@ -166,11 +195,9 @@ Language: ro
     <string name="error_update_site_title_network">Nu am putut actualiza titlul sitului. Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modificări nesalvate</string>
     <string name="gutenberg_native_open_link_in_a_browser">Deschide legătura într-un navigator</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navighează la foaia anterioară cu conținut</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navighează pentru a personaliza gradientul</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navighează la selectorul de culoare personalizat</string>
     <string name="gutenberg_native_gradient_type">Tip de gradient</string>
-    <string name="gutenberg_native_go_back">Du-te înapoi</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Atinge de două ori pentru a selecta opțiunea</string>
     <string name="gutenberg_native_customize_gradient">Personalizează gradientul</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,9 +207,6 @@ Language: ro
     <string name="menu_content_info">Structură conținut</string>
     <string name="everyone">Oricine</string>
     <string name="me">Eu</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest bloc folosind navigatorul dispozitivului tău.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Editează blocul în navigatorul web</string>
-    <string name="gutenberg_native_dismiss">Respinge</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nesetat</string>
     <string name="prepublishing_tags_description">Etichetele le spun cititorilor la ce se referă articolul.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Data publicării</string>
@@ -480,12 +504,10 @@ Language: ro
     <string name="posts_cannot_be_started">Nu putem deschide articolele acum. Te rog reîncearcă mai târziu</string>
     <string name="site_cannot_be_loaded">Nu putem încărca datele pentru situl tău chiar acum. Te rog reîncearcă mai târziu</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliotecă media WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest articol pe web.</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
     <string name="gutenberg_native_translate">Tradu</string>
     <string name="gutenberg_native_title">Titlu:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Atinge pentru a ascunde tastatura</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Atinge aici pentru a afișa ajutorul</string>
     <string name="gutenberg_native_take_a_video">Fă un video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fă o fotografie sau un video</string>
     <string name="gutenberg_native_take_a_photo">Fă o poză</string>
@@ -493,8 +515,6 @@ Language: ro
     <string name="gutenberg_native_size">Dimensiune</string>
     <string name="gutenberg_native_sidebar_title_plugin">Conectare titlu bară laterală</string>
     <string name="gutenberg_native_show_section">Arată secțiunea</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">„%s” nu este încă suportat pe WordPress pentru iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">„%s” nu este încă suportat pe WordPress pentru Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
     <string name="gutenberg_native_cut_block">Șterge blocul</string>
@@ -517,12 +537,9 @@ Language: ro
     <string name="gutenberg_native_move_block_up">Mută blocul în sus</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mută blocul în jos de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_down">Mută blocul în jos</string>
-    <string name="gutenberg_native_link_text">Text legătură</string>
-    <string name="gutenberg_native_link_inserted">Legătură inserată</string>
     <string name="gutenberg_native_image_caption_s">Text asociat imagine. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ascunde tastatura</string>
     <string name="gutenberg_native_here_is_the_panel_content">Iată conținutul panoului!</string>
-    <string name="gutenberg_native_help_icon">Icon pentru ajutor</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Inserarea elementului media a eșuat.\nTe rog atinge pentru opțiuni.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Atinge de două ori pentru a anula ultima modificare</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Atinge de două ori pentru a comuta setarea</string>
@@ -543,7 +560,6 @@ Language: ro
     <string name="gutenberg_native_alt_text">Text alternativ</string>
     <string name="gutenberg_native_add_video">ADAUGĂ VIDEO</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
-    <string name="gutenberg_native_add_link_text">Adaugă text la legătură</string>
     <string name="gutenberg_native_add_image_or_video">ADAUGĂ IMAGINE SAU VIDEO</string>
     <string name="gutenberg_native_add_image">ADAUGĂ IMAGINE</string>
     <string name="gutenberg_native_add_block_here">ADAUGĂ BLOC AICI</string>

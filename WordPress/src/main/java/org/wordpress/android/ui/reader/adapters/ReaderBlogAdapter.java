@@ -16,8 +16,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
-import org.wordpress.android.models.ReaderRecommendBlogList;
-import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -37,17 +35,16 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /*
- * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
+ * adapter which shows followed blogs - used by ReaderBlogFragment
  */
 public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_ITEM = 0;
 
     public enum ReaderBlogType {
-        RECOMMENDED, FOLLOWED
+        FOLLOWED
     }
 
     public interface BlogClickListener {
@@ -58,7 +55,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private BlogClickListener mClickListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
 
-    private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
 
     private String mSearchFilter;
@@ -100,8 +96,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public int getItemCount() {
         switch (getBlogType()) {
-            case RECOMMENDED:
-                return mRecommendedBlogs.size();
             case FOLLOWED:
                 return mFollowedBlogs.size();
             default:
@@ -136,14 +130,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof BlogViewHolder) {
             final BlogViewHolder blogHolder = (BlogViewHolder) holder;
             switch (getBlogType()) {
-                case RECOMMENDED:
-                    final ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
-                    blogHolder.mTxtTitle.setText(blog.getTitle());
-                    blogHolder.mTxtDescription.setText(blog.getReason());
-                    blogHolder.mTxtUrl.setText(UrlUtils.getHost(blog.getBlogUrl()));
-                    mImageManager.load(blogHolder.mImgBlog, ImageType.BLAVATAR, blog.getImageUrl());
-                    break;
-
                 case FOLLOWED:
                     final ReaderBlog blogInfo = mFollowedBlogs.get(position);
                     if (blogInfo.hasName()) {
@@ -176,9 +162,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             return;
                         }
                         switch (getBlogType()) {
-                            case RECOMMENDED:
-                                mClickListener.onBlogClicked(mRecommendedBlogs.get(clickedPosition));
-                                break;
                             case FOLLOWED:
                                 mClickListener.onBlogClicked(mFollowedBlogs.get(clickedPosition));
                                 break;
@@ -190,11 +173,10 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     /*
-     * holder used for followed/recommended blogs
+     * holder used for followed blogs
      */
     class BlogViewHolder extends RecyclerView.ViewHolder {
         private final TextView mTxtTitle;
-        private final TextView mTxtDescription;
         private final TextView mTxtUrl;
         private final ImageView mImgBlog;
         private final ReaderFollowButton mFollowButton;
@@ -203,21 +185,13 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(view);
 
             mTxtTitle = view.findViewById(R.id.text_title);
-            mTxtDescription = view.findViewById(R.id.text_description);
             mTxtUrl = view.findViewById(R.id.text_url);
             mImgBlog = view.findViewById(R.id.image_blog);
             mFollowButton = view.findViewById(R.id.follow_button);
 
-            // followed blogs don't have a description
-            // recommended blogs don't have a follow button
             switch (getBlogType()) {
                 case FOLLOWED:
-                    mTxtDescription.setVisibility(GONE);
                     mFollowButton.setVisibility(VISIBLE);
-                    break;
-                case RECOMMENDED:
-                    mTxtDescription.setVisibility(VISIBLE);
-                    mFollowButton.setVisibility(GONE);
                     break;
             }
         }
@@ -255,13 +229,12 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (result) {
-            followButton.setIsFollowedAnimated(isAskingToFollow);
+            followButton.setIsFollowed(isAskingToFollow);
             blog.isFollowing = isAskingToFollow;
         }
     }
 
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
-        private ReaderRecommendBlogList mTmpRecommendedBlogs;
         private ReaderBlogList mTmpFollowedBlogs;
 
         @Override
@@ -277,10 +250,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         protected Boolean doInBackground(Void... params) {
             switch (getBlogType()) {
-                case RECOMMENDED:
-                    mTmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs();
-                    return !mRecommendedBlogs.isSameList(mTmpRecommendedBlogs);
-
                 case FOLLOWED:
                     mTmpFollowedBlogs = new ReaderBlogList();
                     ReaderBlogList allFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
@@ -316,9 +285,6 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         protected void onPostExecute(Boolean result) {
             if (result) {
                 switch (getBlogType()) {
-                    case RECOMMENDED:
-                        mRecommendedBlogs = (ReaderRecommendBlogList) mTmpRecommendedBlogs.clone();
-                        break;
                     case FOLLOWED:
                         mFollowedBlogs = (ReaderBlogList) mTmpFollowedBlogs.clone();
                         break;

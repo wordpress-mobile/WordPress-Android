@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
 import android.annotation.SuppressLint
 import android.net.http.SslError
+import android.util.Base64
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.SslErrorHandler
@@ -119,7 +120,8 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 }
                 webView.settings.javaScriptEnabled = true
                 webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
-                webView.loadData(htmlPage, "text/html", "UTF-8")
+                val base64version: String = Base64.encodeToString(htmlPage.toByteArray(), Base64.DEFAULT)
+                webView.loadData(base64version, "text/html; charset=UTF-8", "base64")
             }
         }
     }
