@@ -176,7 +176,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -191,7 +191,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -206,7 +206,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -221,7 +221,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -236,7 +236,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -251,7 +251,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		},
@@ -266,7 +266,7 @@
 					"size": [3000,120],
 					"position": [0,120 ],
 					"alignment": "center",
-					"stylesheet": "playstoreres/assets/intro-text.css"
+					"stylesheet": "playstoreres/assets/intro-text-tablet.css"
 				}
 			]
 		}

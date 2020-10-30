@@ -202,7 +202,7 @@ public class WPScreenshotTest extends BaseTest {
         selectItemWithTitleInTabLayout(getTranslatedString(R.string.stats_timeframe_months), R.id.tabLayout);
 
         // Wait for the stats to load
-        idleFor(5000);
+        idleFor(8000);
     }
 
     private void navigateStats(boolean isNightMode) {
