@@ -211,6 +211,7 @@ import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
+import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -407,6 +408,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject LoadStoryFromStoriesPrefsUseCase mLoadStoryFromStoriesPrefsUseCase;
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
+    @Inject WPStoriesFeatureConfig mWPStoriesFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2308,6 +2310,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
+                mWPStoriesFeatureConfig.isEnabled(),
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
