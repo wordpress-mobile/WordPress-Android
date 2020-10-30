@@ -1,4 +1,0 @@
-15.9:
-- Editor de bloques: Edita los bloques no compatibles activando Jetpack SSO desde la alerta de bloque faltante. Usa el selector de enlaces para añadir las URL a las entradas. El doble toque en los campos de texto en el modo de accesibilidad ahora funciona como se espera.
-- Diseño mejorado de «Mi sitio» para dispositivos de pantalla grande.
-
