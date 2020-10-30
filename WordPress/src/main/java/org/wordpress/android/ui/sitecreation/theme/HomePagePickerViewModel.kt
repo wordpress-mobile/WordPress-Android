@@ -2,72 +2,83 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
 class HomePagePickerViewModel @Inject constructor(
-    private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val networkUtils: NetworkUtilsWrapper,
+    private val dispatcher: Dispatcher,
+    private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ScopedViewModel(mainDispatcher) {
+) : ViewModel(), CoroutineScope {
+    private val fetchHomePageLayoutsJob = Job()
+    override val coroutineContext: CoroutineContext
+        get() = bgDispatcher + fetchHomePageLayoutsJob
+
+    private lateinit var layouts: List<StarterDesignModel>
+
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    init {
+        dispatcher.register(fetchHomePageLayoutsUseCase)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        fetchHomePageLayoutsJob.cancel()
+        dispatcher.unregister(fetchHomePageLayoutsUseCase)
+    }
+
     fun start() {
         updateUiState(UiState.Loading)
-        loadLayouts()
+        fetchLayouts()
+    }
+
+    private fun fetchLayouts() {
+        updateUiState(UiState.Loading)
+        launch {
+            val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
+            withContext(mainDispatcher) {
+                if (event.isError) {
+                    // TODO: Error handling
+                } else {
+                    layouts = event.designs
+                    loadLayouts()
+                }
+            }
+        }
     }
 
     private fun loadLayouts() {
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         launch(bgDispatcher) {
-            val width = thumbDimensionProvider.width
-            val scale = thumbDimensionProvider.scale.toInt()
-            // FIXME: Dummy temporary implementation
-            val preview = arrayOf(
-                    "https://headstartdata.files.wordpress.com/2020/01/about-4.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/contact-6.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2019/06/about-2.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/03/team.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2019/09/menu.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/brompton.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/exford.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/08/seedlet-1.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/about-4.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/contact-6.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2019/06/about-2.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/03/team.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2019/09/menu.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/brompton.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/exford.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/08/seedlet-1.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale",
-                    "https://headstartdata.files.wordpress.com/2020/01/dalston.png?w=$width&zoom=$scale"
-            )
-
-            val items = ArrayList<LayoutGridItemUiState>()
-            preview.indices.forEach {
-                val slug = "layout$it"
-                items.add(
-                        LayoutGridItemUiState(
-                                slug = slug,
-                                title = "Layout $1",
-                                preview = preview[it],
-                                selected = slug == state.selectedLayoutSlug,
-                                onItemTapped = { onLayoutTapped(layoutSlug = slug) },
-                                onThumbnailReady = { onThumbnailReady(layoutSlug = slug) })
+            val designs = layouts.filter { it.slug != null && it.screenshot != null }.map {
+                LayoutGridItemUiState(
+                        slug = it.slug!!,
+                        title = it.title ?: "",
+                        preview = it.screenshot!!,
+                        selected = it.slug == state.selectedLayoutSlug,
+                        onItemTapped = { onLayoutTapped(layoutSlug = it.slug!!) },
+                        onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug!!) }
                 )
             }
             withContext(mainDispatcher) {
-                updateUiState(state.copy(layouts = items))
+                updateUiState(state.copy(layouts = designs))
             }
         }
     }
