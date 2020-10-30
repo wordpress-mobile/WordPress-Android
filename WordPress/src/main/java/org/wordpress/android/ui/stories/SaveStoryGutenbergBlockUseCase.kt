@@ -53,7 +53,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
 
         val localMediaId = mediaFile.id
         // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
-        storyBlockData?.mediaFiles?.filter { it.id == localMediaId }?.get(0)?.apply {
+        storyBlockData?.mediaFiles?.find { it.id == localMediaId }?.apply {
             id = mediaFile.mediaId.toInt()
             link = mediaFile.fileURL
             url = mediaFile.fileURL
