@@ -83,7 +83,7 @@ class PostMediaHandlerTest {
         assertThat(firstAction.payload.media.mediaId).isEqualTo(firstMediaItem.mediaId)
         assertThat(firstAction.payload.media.postId).isEqualTo(updatedPostId)
         assertThat(firstAction.payload.site).isEqualTo(site)
-        val secondAction = actions[0]
+        val secondAction = actions[1]
         assertThat(secondAction.payload.media.mediaId).isEqualTo(secondMediaItem.mediaId)
         assertThat(secondAction.payload.media.postId).isEqualTo(updatedPostId)
         assertThat(secondAction.payload.site).isEqualTo(site)
