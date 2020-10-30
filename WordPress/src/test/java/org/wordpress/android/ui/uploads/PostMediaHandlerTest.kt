@@ -92,7 +92,6 @@ class PostMediaHandlerTest {
     @Test
     fun `does not emit when post remote ID is 0`() {
         // Arrange
-        whenever(mediaStore.getMediaForPost(post)).thenReturn(listOf(firstMediaItem))
         post.setRemotePostId(0L)
         firstMediaItem.postId = 0L
 
