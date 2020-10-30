@@ -1,44 +1,54 @@
 <en-US>
-15.9:
-- Block editor: Edit unsupported blocks by enabling Jetpack SSO from the missing block alert. Use the link picker to add URLs to posts. Double-tap text fields in accessibility mode now works as expected.
-- Improved My Site layout for large-screen devices.
+16.0:
+Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.
 
+Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.
 </en-US>
 <es-ES>
-15.9:
-- Editor de bloques: Edita los bloques no compatibles activando Jetpack SSO desde la alerta de bloque faltante. Usa el selector de enlaces para añadir las URL a las entradas. El doble toque en los campos de texto en el modo de accesibilidad ahora funciona como se espera.
-- Diseño mejorado de «Mi sitio» para dispositivos de pantalla grande.
+16.0:
+Actualizaciones en el editor de bloques: Ahora es compatible con la alineación ancha y completa en los bloques de vídeo, galería y más. Hemos corregido un problema que afectaba al bloque clásico en los sitios Jetpack y resuelto un problema relacionado con blloques no compatibles en dispositivos rotados.
 
+Actualizaciones en el lector: Disfruta de una experiencia de lectura más limpia y de bonitas imágenes en el rediseñado lector. Puede acceder aunque no sigas ningún tema.
 </es-ES>
-<fr-CA>
-15.9 :
-- Éditeur de blocs : Modifiez des blocs non pris en charge en autorisant Jetpack SSO à partir de l’alerte de bloc manquante. Utilisez le sélecteur de liens pour ajouter des URL aux publications. Touchez 2 fois sur les champs de texte en mode accessibilité comme prévu.
-- Amélioration de la mise en page Mon site pour les appareils à écran large.
-</fr-CA>
-<fr-FR>
-15.9 :
-- Éditeur de blocs : Modifiez des blocs non pris en charge en autorisant Jetpack SSO à partir de l’alerte de bloc manquante. Utilisez le sélecteur de liens pour ajouter des URL aux publications. Touchez 2 fois sur les champs de texte en mode accessibilité comme prévu.
-- Amélioration de la mise en page Mon site pour les appareils à écran large.
-</fr-FR>
-<ko-KR>
-15.9:
-- 블록 편집기: 누락 블록 경고에서 젯팩 SSO를 활성화하여 지원하지 않는 블록을 편집하세요. 글에 URL을 넣는 링크 선택기를 사용하세요. 접근성 모드에서 문자 항목을 두 번 누르면 이제 예상대로 동작합니다.
-- 큰 화면 장치에서 내 사이트 레이아웃을 개선했습니다.
+<iw-IL>
+16.0:
+עדכונים לעורך הבלוקים: יש כעת תמיכה ביישור בפריסה רחבה וברוחב מלא עבור הבלוקים 'וידאו', 'גלריה' ועוד. תיקנו בעיה שהשפיעה על הבלוק הקלאסי באתרי Jetpack ופתרנו בעיה בנוגע לבלוקים שאינם נתמכים בעת סיבוב המכשיר.
 
+עדכונים ל-Reader: כעת אפשר ליהנות מחוויית קריאה נקייה יותר ומתמונות מרהיבות ב-Reader שעוצב מחדש. אפשר לגשת אליו גם אם לא עוקבים אחר נושאים.
+</iw-IL>
+<it-IT>
+16.0:
+Aggiornamenti editor a blocchi: ora è disponibile il supporto per l'allineamento Wide e Full width per i blocchi Video, Galleria e molti altri. Abbiamo corretto un problema che influenzava il blocco Classico sui siti Jetpack e abbiamo risolto un problema relativo a blocchi non supportati su dispositivi ruotati.
+
+Aggiornamenti Reader: Goditi un'esperienza di lettura più pulita e con immagini più belle nel Reader riprogettato. Puoi accedervi anche se non segui altri argomenti.
+</it-IT>
+<ko-KR>
+16.0:
+블록 편집기 업데이트: 영상, 갤러리 등 많은 블록이 이제 가로 전체 확장과 와이드 정렬을 지원합니다. Jetpack 사이트에서 클래식 블록에서 발생하는 문제와 회전된 기기를 지원하지 않는 블록과 관련된 문제를 수정했습니다.
+
+리더 업데이트: 새롭게 디자인된 리더로 향상된 가독성 경험과 아름다운 이미지를 사용해보세요. 주제를 팔로우하지 않아도 사용할 수 있습니다.
 </ko-KR>
 <nl-NL>
-15.9:
-- Blok-editor: bewerk niet-ondersteunde blokken door Jetpack SSO in te schakelen vanuit de waarschuwing voor ontbrekende blokken. Gebruik de link kiezer om URL's aan berichten toe te voegen. Dubbel tik op tekstvelden in de toegankelijkheidsmodus werkt nu zoals verwacht.
-- Verbeterde My Site lay-out voor apparaten met een groot scherm.
+16.0:
+Updates voor blok-editor: er is nu ondersteuning voor uitlijning over de volledige breedte en breedte voor de video-, galerij- en meer blokken. We hebben een probleem met het klassieke blok op Jetpack sites opgelost en een probleem met niet-ondersteunde blokken op geroteerde apparaten opgelost.
+
+Reader updates: geniet van een betere leeservaring en prachtige afbeeldingen in de opnieuw ontworpen Reader. Je hebt er zelfs toegang toe als je geen onderwerpen volgt.
 </nl-NL>
 <ru-RU>
-15.9:
-- Редактор блоков: редактирование неподдерживаемых блоков через Jetpack SSO. Возможность использования сборщика ссылок для добавления URL к записям. Двойное нажатие в режиме доступности будет ожидаемо работать в текстовых полях.
-- Улучшен макет страницы "Мой сайт" для устройств с большим экраном.
+16.0:
+Обновления редактора блоков: поддержка широкого и выравнивания на полную ширину блоков видео, галереи и многих других. Исправлена проблема с классическим блоком на сайтах Jetpack и другая проблема с неподдерживаемых блоках и поворотом экрана устройства.
+
+Обновления чтива: переработано оформление, вам понравится! Доступно даже если у вас нет подписок.
 </ru-RU>
 <sv-SE>
-15.9:
-– Blockredigeraren: Redigering av block som saknar stöd genom aktivering av Jetpack SSO från notisen om saknat block. Använd länkväljaren för att lägga till URL:er i inlägg. Dubbeltryck på textfält i åtkomlighetsläge fungerar nu som förväntat.
-– Layouten av sidan Min webbplats har förbättrats för enheter med stor skärm.
+16.0:
+Nytt i blockredigereran: Nu finns det stöd för fullbredd och bredd layout av video-, galleri- m.fl. block. Vi har korrigerat ett problem med det klassiska blocket på webbplatser med Jetpack och löst ett bekymmer med ej stödda block vid rotering av mobila enheter.
 
+Uppdateringar i läsaren: Njut av en snyggare läsupplevelse och vackra bilder med den nya designen av läsaren. Du kommer åt den även om du inte har följt några ämnen.
 </sv-SE>
+<zh-CN>
+16.0：
+区块编辑器更新：现在，我们为视频、画廊和更多区块提供了“全宽”和“加宽”对齐支持。 我们修复了影响 Jetpack 站点上经典区块的问题，并解决了设备旋转后区块不受支持的问题。
+
+阅读器更新：阅读器经过重新设计，可带来更清晰的阅读体验和精美图像。 即使您没有关注任何主题，也可以享受阅读器带来的这些出色体验。
+</zh-CN>
