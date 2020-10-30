@@ -1,37 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-06 23:50:43+0000
+Translation-Revision-Date: 2020-10-17 00:56:33+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
-    <string name="gutenberg_native_white">Beyaz</string>
-    <string name="gutenberg_native_luminous_vivid_orange">Parlak canlı turuncu</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Parlak canlı turuncudan canlı kırmızıya</string>
-    <string name="gutenberg_native_midnight">Gece yarısı</string>
-    <string name="gutenberg_native_pale_cyan_blue">Soluk cam göbeği mavi</string>
-    <string name="gutenberg_native_pale_ocean">Soluk okyanus</string>
-    <string name="gutenberg_native_pale_pink">Soluk pembe</string>
     <string name="gutenberg_native_search_or_type_url">URL arayın veya yazın</string>
     <string name="gutenberg_native_select_item">Öğeyi seç</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Çok açık griden mavimsi griye</string>
-    <string name="gutenberg_native_vivid_cyan_blue">Canlı cam göbeği mavi</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Canlı cam göbeği maviden canlı mora</string>
-    <string name="gutenberg_native_vivid_green_cyan">Canlı yeşil cam göbeği</string>
-    <string name="gutenberg_native_vivid_purple">Canlı mor</string>
-    <string name="gutenberg_native_vivid_red">Canlı kırmızı</string>
-    <string name="gutenberg_native_black">Siyah</string>
-    <string name="gutenberg_native_blush_bordeaux">Kızıla çalan bordo</string>
-    <string name="gutenberg_native_blush_light_purple">Kızıla çalan açık mor</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum">Soğuktan sıcağa spektrum</string>
-    <string name="gutenberg_native_cyan_bluish_gray">Cam göbeği mavimsi gri</string>
-    <string name="gutenberg_native_electric_grass">Elektrikli çim</string>
-    <string name="gutenberg_native_light_green_cyan">Açık yeşil cam göbeği</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Açık yeşil cam göbeğinden parlak yeşil cam göbeğine</string>
-    <string name="gutenberg_native_luminous_dusk">Aydınlık alacakaranlık</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Parlak canlı kehribardan parlak canlı turuncuya</string>
-    <string name="gutenberg_native_luminous_vivid_amber">Parlak canlı kehribar</string>
     <string name="gutenberg_native_add_this_telephone_link">Bu telefon bağlantısını ekle</string>
     <string name="gutenberg_native_add_this_link">Bu bağlantıyı ekle</string>
     <string name="gutenberg_native_add_this_email_link">Bu e-posta bağlantısını ekle</string>
@@ -135,6 +111,7 @@ Language: tr
     <string name="quick_start_dialog_create_new_post_message_short">%1$s Oluştur\'a dokunun. %2$s Ardından &lt;b>Blog yayını&lt;/b>\'nı seçin</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Bir yazı veya öykü oluştur</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Bir yazı, sayfa veya öykü oluştur</string>
+    <string name="mlp_choose_layout_title">Bir düzen seç</string>
     <string name="photo_picker_choose_file">Cihazdan seç</string>
     <string name="my_site_bottom_sheet_add_story">Öykü yayını</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Kendi kendine barındırılan WordPress sitelerinde site simgelerini düzenlemek için Jetpack eklentisi gerekir.</string>
@@ -206,6 +183,7 @@ Language: tr
     <string name="pages_list_author">Sayfa yazarı</string>
     <string name="photo_picker_use_gif">Bu GIF\'i kullan</string>
     <string name="error_media_thumbnail_not_loaded">Medya küçük resmi yüklenemedi</string>
+    <string name="gutenberg_native_dismiss">Kapat</string>
     <string name="prepublishing_nudges_home_tags_not_set">Belirlenmemiş</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Taslağa taşı</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">İptal</string>
@@ -229,7 +207,6 @@ Language: tr
     <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
     <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
     <string name="reader_choose_interests_content_description">İlgi alanlarınızı seçin</string>
-    <string name="reader_label_discover_follow_tags">Sevdiğiniz etiketleri keşfedin ve takip edin</string>
     <string name="reader_label_choose_your_interests">İlgi alanlarınızı seçin</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
     <string name="update_now">Şimdi güncelle</string>
@@ -422,12 +399,9 @@ Language: tr
     <string name="reader_btn_selected_filter_tick_content_description">Seçilen</string>
     <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
-    <string name="reader_title_subs">Etiketleri ve Siteleri Yönet</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Takip ettiğiniz etiketlerle ilişkili en son yazıları görmek için WordPress.com\'da oturum açın</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
     <string name="reader_filter_empty_sites_action">Bir siteyi takip et</string>
-    <string name="reader_filter_empty_tags_action">Bir etiket ekle</string>
     <string name="gutenberg_native_add_block_after">Blok sonrasına ekle</string>
     <string name="gutenberg_native_add_block_before">Blok öncesine ekle</string>
     <string name="gutenberg_native_add_to_beginning">Başa ekle</string>
@@ -435,7 +409,6 @@ Language: tr
     <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
     <string name="gutenberg_native_template_preview">Şablon ön izlemesi</string>
     <string name="reader_filter_empty_sites_list">Takip ettiğiniz sitelerdeki en yeni yazıları görün</string>
-    <string name="reader_filter_empty_tags_list">Bir etiket ekleyerek belirli bir konudaki yayınları takip edebilirsiniz</string>
     <string name="reader_filter_cta">Filtrele</string>
     <string name="reader_filter_main_title">Takip edilen</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
@@ -497,7 +470,6 @@ Language: tr
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="reader_filter_sites_title">Siteler</string>
-    <string name="reader_filter_tags_title">Etiketler</string>
     <string name="reader_save_for_later_display_name">Kaydedildi</string>
     <string name="reader_discover_display_name">Keşfet</string>
     <string name="reader_my_likes_display_name">Beğeniler</string>
@@ -509,6 +481,7 @@ Language: tr
     <string name="gutenberg_native_translate">Çevir</string>
     <string name="gutenberg_native_title">Başlık:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Klavyeyi gizlemek için dokunun</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Yardımı görüntülemek için buraya dokunun</string>
     <string name="gutenberg_native_take_a_video">Video Çek</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotoğraf veya Video Çek</string>
     <string name="gutenberg_native_size">Boyut</string>
@@ -539,6 +512,7 @@ Language: tr
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
     <string name="gutenberg_native_hide_keyboard">Klavyeyi gizle</string>
     <string name="gutenberg_native_here_is_the_panel_content">İşte panel içeriği!</string>
+    <string name="gutenberg_native_help_icon">Yardım simgesi</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Medya eklenemedi.\nLütfen seçenekler için dokunun.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Son değişikliği geri almak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ayarı değiştirmek için çift dokunun</string>
@@ -1077,8 +1051,6 @@ Language: tr
     <string name="my_site_create_new_site_title">Hiçbir siteniz yok</string>
     <string name="quick_start_dialog_choose_theme_message">Mükemmel uyumunuzu bulmak için tüm temalarımıza göz atın.</string>
     <string name="quick_start_dialog_choose_theme_title">Bir tema seç</string>
-    <string name="reader_empty_followed_tags_title">Takip edilen etiket yok</string>
-    <string name="reader_empty_followed_tags_subtitle">Beğendiğiniz konularla ilgili yazıları bulmak için buraya etiket ekleyin</string>
     <string name="quick_start_dialog_browse_themes_message_short">Yeni temalar keşfetmek için %1$s Temalar %2$s seçeneğine dokunun</string>
     <string name="content_description_more">Daha fazlası</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
@@ -1820,8 +1792,6 @@ Language: tr
     <string name="reader_toast_err_already_liked">Bu yorumu zaten beğenmişsiniz</string>
     <string name="reader_toast_err_comment_not_found">Yorum bulunamadı!</string>
     <string name="reader_toast_err_cannot_like_post">Yazı beğenme başarısız oldu</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com yazısı</string>
-    <string name="reader_title_deeplink">WordPress okuyucu</string>
     <string name="error_notif_q_action_reply">Yorum cevaplanamıyor. Lütfen daha sonra tekrar deneyin.</string>
     <string name="error_notif_q_action_approve">Yorum onaylanamıyor. Lütfen daha sonra tekrar deneyin.</string>
     <string name="error_notif_q_action_like">Yorum beğenilemiyor. Lütfen daha sonra tekrar deneyin.</string>
@@ -1898,7 +1868,6 @@ Language: tr
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_search_description">Dilinizde %s için hiç sonuç bulunamadı</string>
     <string name="reader_hint_post_search">WordPress üzerinde ara</string>
-    <string name="reader_title_related_post_detail">İlişkili yazı</string>
     <string name="preview_screen_links_disabled">Önizleme ekranında bağlantılar etkisiz durumdadır</string>
     <string name="send">Gönder</string>
     <string name="user_remove_confirmation_message">Eğer %1$s kullanıcısını kaldırırsanız, o kullanıcı bu siteye artık erişemez fakat %1$s kullanıcı tarafından oluşturulmuş içerik sitede kalır.\n\nHala bu kullanıcıyı kaldırmak istiyor musunuz?</string>
@@ -2166,7 +2135,6 @@ Language: tr
     <string name="reader_short_like_count_none">Beğen</string>
     <string name="reader_short_like_count_one">1 beğeni</string>
     <string name="reader_label_follow_count">%,d takipçi</string>
-    <string name="reader_menu_tags">Etiketleri ve siteleri düzenle</string>
     <string name="reader_title_post_detail">Okuyucu yazısı</string>
     <string name="notifications_push_summary">Cihazınızda görünen bildirimlerin ayarları.</string>
     <string name="notifications_email_summary">Hesabınıza bağlı e-posta adresine gönderilen bildirimlerin ayarları.</string>
@@ -2266,7 +2234,6 @@ Language: tr
     <string name="cab_selected">%d seçili</string>
     <string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>
-    <string name="reader_empty_posts_in_tag">Bu etiketi içeren yazı yok</string>
     <string name="reader_label_view_original">Orijinal makaleyi oku</string>
     <string name="reader_label_like">Beğen</string>
     <string name="reader_label_comments_closed">Yorumlar kapandı</string>
@@ -2284,7 +2251,6 @@ Language: tr
     <string name="signing_out">Çıkış yapılıyor…</string>
     <string name="comment_reply_to_user">Şunu cevapla: %s</string>
     <string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
-    <string name="reader_label_liked_by">Beğenenler</string>
     <string name="comment">Yorum yap</string>
     <string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
     <string name="reader_toast_err_block_blog">Bu site engellenemiyor</string>
@@ -2292,9 +2258,7 @@ Language: tr
     <string name="reader_menu_block_blog">Bu siteyi engelleyin</string>
     <string name="update_verb">Güncelle</string>
     <string name="schedule_verb">Zamanla</string>
-    <string name="reader_page_followed_tags">Takip edilen etiketler</string>
     <string name="reader_page_followed_blogs">Takip edilen siteler</string>
-    <string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya adres girin</string>
     <string name="reader_label_followed_blog">Site takip edildi</string>
     <string name="reader_toast_err_get_blog_info">Bu site gösterilemiyor</string>
     <string name="reader_toast_err_already_follow_blog">Bu siteyi zaten takip ediyorsunuz</string>
@@ -2353,8 +2317,6 @@ Language: tr
     <string name="category_name">Kategori adı</string>
     <string name="http_authorization_required">Yetkilendirme gerekli</string>
     <string name="new_media">Yeni medya</string>
-    <string name="reader_toast_err_add_tag">Bu etiket eklenemiyor</string>
-    <string name="reader_toast_err_remove_tag">Bu etiket kaldırılamıyor</string>
     <string name="saving_changes">Değişiklikler kaydediliyor</string>
     <string name="sure_to_cancel_edit_comment">Bu yorumun düzenlenmesi iptal edilsin mi?</string>
     <string name="content_required">Yorum gerekli</string>
@@ -2398,8 +2360,6 @@ Language: tr
     <string name="empty_list_default">Bu liste boş</string>
     <string name="reader_untitled_post">(Başlıksız)</string>
     <string name="reader_btn_share">Paylaş</string>
-    <string name="reader_toast_err_tag_exists">Bu etiketi zaten takip ediyorsunuz</string>
-    <string name="reader_toast_err_tag_invalid">Bu geçerli bir etiket değil</string>
     <string name="reader_toast_err_share_intent">Paylaşılamadı</string>
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
     <string name="reader_likes_one">Bir kişi bunu beğendi</string>

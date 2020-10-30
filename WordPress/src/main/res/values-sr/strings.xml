@@ -102,7 +102,6 @@ Language: sr_RS
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>
     <string name="reader_empty_comments">Нема коментара</string>
-    <string name="reader_empty_posts_in_tag">Нема чланака са том ознаком</string>
     <string name="reader_label_view_original">Прикажи изворни чланак</string>
     <string name="reader_label_like">Свиђа ми се</string>
     <string name="reader_label_comments_closed">Коментарисање је затворено</string>
@@ -124,7 +123,6 @@ Language: sr_RS
     <string name="reader_toast_err_generic">Није могуће обавити ову радњу</string>
     <string name="schedule_verb">Заказати</string>
     <string name="update_verb">Ажурирај</string>
-    <string name="reader_page_followed_tags">Ознаке које пратите</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
     <string name="help">Помоћ</string>
     <string name="forgot_password">Изгубили сте лозинку?</string>
@@ -187,8 +185,6 @@ Language: sr_RS
     <string name="open_source_licenses">Дозволе Отвореног кода</string>
     <string name="wordpress_blog">Вордпрес блог</string>
     <string name="error_blog_hidden">Овај блог је сакривен и не може се учитати. У подешавањима поново омогућите да буде видљив и пробајте поново.</string>
-    <string name="reader_toast_err_add_tag">Није могуће додати ову ознаку</string>
-    <string name="reader_toast_err_remove_tag">Није могуће уклонити ову ознаку</string>
     <string name="add_new_category">Додај нову категорију</string>
     <string name="category_name">Име категорије</string>
     <string name="file_error_create">Није могуће направити привремену датотеку за отпремање медија. Потврдите да имате довољно слободног простора за складиштење на свом уређају.</string>
@@ -218,8 +214,6 @@ Language: sr_RS
     <string name="reader_likes_one">Једној особи се ово свиђа</string>
     <string name="reader_likes_only_you">Свиђа вам се ово</string>
     <string name="reader_toast_err_comment_failed">Није могуће објавити ваш коментар</string>
-    <string name="reader_toast_err_tag_exists">Већ пратите ову ознаку</string>
-    <string name="reader_toast_err_tag_invalid">Ово није исправна ознака</string>
     <string name="reader_toast_err_share_intent">Није могуће делити</string>
     <string name="reader_untitled_post">(Без наслова)</string>
     <string name="reader_btn_share">Поделите</string>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-02 19:27:56+0000
+Translation-Revision-Date: 2020-10-16 17:54:53+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_select_item">Pilih item</string>
+    <string name="gutenberg_native_search_or_type_url">Cari atau ketik URL</string>
+    <string name="gutenberg_native_add_this_telephone_link">Tambahkan link telepon ini</string>
+    <string name="gutenberg_native_add_this_link">Tambahkan link ini</string>
+    <string name="gutenberg_native_add_this_email_link">Tambahkan link email ini</string>
+    <string name="suggestion_no_connection">\"Tidak ada koneksi internet.\nSaran tidak tersedia.\"</string>
     <string name="typeface_label_shrikhand">Tebal</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_pacifico">Riang</string>
@@ -104,6 +110,7 @@ Language: id
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Buat pos atau cerita</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Buat pos, halaman, atau cerita</string>
     <string name="quick_start_dialog_create_new_post_message_short">Ketuk %1$s Buat. %2$s Lalu pilih &lt;b>Pos blog&lt;/b></string>
+    <string name="mlp_choose_layout_title">Pilih tata letak</string>
     <string name="photo_picker_choose_file">Pilih dari perangkat</string>
     <string name="my_site_bottom_sheet_add_story">Pos cerita</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Penyuntingan ikon situs pada situs WordPress hosting sendiri memerlukan plugin Jetpack.</string>
@@ -175,6 +182,7 @@ Language: id
     <string name="menu_content_info">Struktur konten</string>
     <string name="everyone">Setiap Orang</string>
     <string name="me">Saya</string>
+    <string name="gutenberg_native_dismiss">Tutup</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
     <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Tambahkan Tag</string>
@@ -191,7 +199,6 @@ Language: id
     <string name="prepublishing_nudges_toolbar_title_publish">Tanggal Publikasi</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Pindahkan pos ke Konsep?</string>
     <string name="reader_label_choose_your_interests">Pilih minat Anda</string>
-    <string name="reader_label_discover_follow_tags">Temukan dan ikuti tag yang Anda suka</string>
     <string name="reader_choose_interests_content_description">Pilih minat Anda</string>
     <string name="reader_btn_done">Selesai</string>
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
@@ -391,9 +398,7 @@ Language: id
     <string name="reader_btn_selected_filter_tick_content_description">Terpilih</string>
     <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
-    <string name="reader_title_subs">Kelola Tag &amp; Situs</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Login ke WordPress.com untuk melihat pos terbaru dari tag yang Anda ikuti</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
     <string name="gutenberg_native_template_preview">Pratinjau Template</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
@@ -401,9 +406,7 @@ Language: id
     <string name="gutenberg_native_add_to_beginning">Tambahkan ke Awal</string>
     <string name="gutenberg_native_add_block_before">Tambahkan Blok Sebelum</string>
     <string name="gutenberg_native_add_block_after">Tambahkan Blok Setelah</string>
-    <string name="reader_filter_empty_tags_action">Tambahkan tag</string>
     <string name="reader_filter_empty_sites_action">Ikuti situs</string>
-    <string name="reader_filter_empty_tags_list">Anda dapat mengikuti pos dengan subjek tertentu dengan menambahkan tag</string>
     <string name="reader_filter_empty_sites_list">Lihat pos terbaru dari situs yang Anda ikuti</string>
     <string name="reader_filter_main_title">Mengikuti</string>
     <string name="reader_filter_cta">Penyaring</string>
@@ -466,7 +469,6 @@ Language: id
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="reader_filter_sites_title">Situs</string>
-    <string name="reader_filter_tags_title">Tag</string>
     <string name="reader_save_for_later_display_name">Disimpan</string>
     <string name="reader_discover_display_name">Temukan</string>
     <string name="reader_my_likes_display_name">Suka</string>
@@ -476,6 +478,7 @@ Language: id
     <string name="gutenberg_native_translate">Terjemahan</string>
     <string name="gutenberg_native_title">Judul:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Ketuk untuk menyembunyikan keyboard</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Ketuk di sini untuk menampilkan bantuan</string>
     <string name="gutenberg_native_take_a_video">Ambil Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Potret atau Rekam Video</string>
     <string name="gutenberg_native_take_a_photo">Ambil Foto</string>
@@ -508,6 +511,7 @@ Language: id
     <string name="gutenberg_native_image_caption_s">Keterangan gambar. %s</string>
     <string name="gutenberg_native_hide_keyboard">Sembunyikan keyboard</string>
     <string name="gutenberg_native_here_is_the_panel_content">Di sini adalah konten panel!</string>
+    <string name="gutenberg_native_help_icon">Ikon bantuan</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Gagal memasukkan media.\nKetuk untuk melihat pilihan.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Ketuk dua kali untuk mengurungkan perubahan terakhir</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Ketuk dua kali untuk mengaktifkan/menonaktifkan pengaturan</string>
@@ -1046,8 +1050,6 @@ Language: id
     <string name="quick_start_button_negative_short">Batal</string>
     <string name="quick_start_button_negative">Jangan sekarang</string>
     <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
-    <string name="reader_empty_followed_tags_title">Tidak ada tag yang diikuti</string>
-    <string name="reader_empty_followed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
     <string name="content_description_more">Lainnya</string>
     <string name="quick_start_dialog_browse_themes_message_short">Ketuk %1$s Tema %2$s untuk menemukan tema baru</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
@@ -1788,8 +1790,6 @@ Language: id
     <string name="reader_toast_err_already_liked">Anda sudah menyukai komentar itu</string>
     <string name="reader_toast_err_comment_not_found">Komentar tidak ditemukan!</string>
     <string name="reader_toast_err_cannot_like_post">Gagal menyukai pos ini</string>
-    <string name="reader_title_post_detail_wpcom">Pos WordPress.com</string>
-    <string name="reader_title_deeplink">Pembaca WordPress</string>
     <string name="error_notif_q_action_reply">Tak bisa membalas komentar. Silakan coba lagi nanti.</string>
     <string name="error_notif_q_action_approve">Tidak bisa menyetujui komentar. Silakan coba lagi nanti.</string>
     <string name="error_notif_q_action_like">Tidak bisa menyukai komentar. Silakan coba lagi nanti.</string>
@@ -1866,7 +1866,6 @@ Language: id
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
     <string name="reader_empty_search_description">Tidak ada hasil untuk %s dalam bahasa Anda</string>
     <string name="reader_hint_post_search">Cari di WordPress</string>
-    <string name="reader_title_related_post_detail">Pos Terkait</string>
     <string name="preview_screen_links_disabled">Tautan dinonaktifkan pada laman pratinjau</string>
     <string name="send">Kirim</string>
     <string name="user_remove_confirmation_message">Jika Anda menghapus %1$s, pengguna tsb tak bisa mengakses situs ini lagi, tetapi semua konten yang telah dibuat oleh %1$s akan tetap ada di situs ini.\n\nApakah Anda masih ingin menghapus pengguna ini?</string>
@@ -2134,7 +2133,6 @@ Language: id
     <string name="reader_short_like_count_one">1 Suka</string>
     <string name="reader_label_follow_count">%,d pengikut</string>
     <string name="reader_short_like_count_none">Suka</string>
-    <string name="reader_menu_tags">Sunting tag dan situs</string>
     <string name="reader_title_post_detail">Pos Pembaca</string>
     <string name="notifications_push_summary">Pengaturan pemberitahuan yang muncul di perangkat Anda.</string>
     <string name="notifications_email_summary">Pengaturan pemberitahuan yang dikirim melalui email yang terhubung dengan akun Anda.</string>
@@ -2234,10 +2232,8 @@ Language: id
     <string name="cab_selected">%d terpilih</string>
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
-    <string name="reader_empty_posts_in_tag">Belum ada pos dengan tag ini</string>
     <string name="reader_label_view_original">Lihat artikel asli</string>
     <string name="reader_label_like">Suka</string>
-    <string name="reader_label_liked_by">Disukai oleh</string>
     <string name="reader_label_comments_closed">Komentar ditutup</string>
     <string name="reader_title_photo_viewer">%1$d dari %2$d</string>
     <string name="error_publish_empty_post">Tidak dapat menerbitkan pos kosong</string>
@@ -2260,9 +2256,7 @@ Language: id
     <string name="reader_toast_blog_blocked">Pos dari situs ini tidak akan ditampilkan lagi</string>
     <string name="update_verb">Mutakhirkan</string>
     <string name="schedule_verb">Jadwalkan</string>
-    <string name="reader_page_followed_tags">Tag yang diikuti</string>
     <string name="reader_page_followed_blogs">Situs yang diikuti</string>
-    <string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
     <string name="reader_label_followed_blog">Situs diikuti</string>
     <string name="reader_toast_err_get_blog_info">Tidak dapat menampilkan situs ini</string>
     <string name="reader_toast_err_already_follow_blog">Anda sudah mengikuti situs ini</string>
@@ -2341,8 +2335,6 @@ Language: id
     <string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
     <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
     <string name="reader_title_applog">Log aplikasi</string>
-    <string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
-    <string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
     <string name="remove_account">Hapus situs</string>
     <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang.</string>
@@ -2373,8 +2365,6 @@ Language: id
     <string name="reader_likes_one">Satu orang menyukai ini</string>
     <string name="reader_likes_only_you">Anda menyukai ini</string>
     <string name="reader_toast_err_comment_failed">Tidak bisa menambahkan komentar anda</string>
-    <string name="reader_toast_err_tag_exists">Anda telah mengikuti tag ini</string>
-    <string name="reader_toast_err_tag_invalid">Tag ini tidak valid</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
