@@ -21,6 +21,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -33,6 +34,7 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
     private val resourceProvider: ResourceProvider,
+    private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -52,6 +54,10 @@ class ActivityLogViewModel @Inject constructor(
     private val _eventListStatus = MutableLiveData<ActivityLogListStatus>()
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
+
+    private val _dateRangePickerVisibility = MutableLiveData<Boolean>()
+    val dateRangePickerVisibility: LiveData<Boolean>
+        get() = _dateRangePickerVisibility
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
     val showRewindDialog: LiveData<ActivityLogListItem>
@@ -115,6 +121,10 @@ class ActivityLogViewModel @Inject constructor(
 
         reloadEvents(done = true)
         requestEventsUpdate(false)
+
+        if (activityLogFiltersFeatureConfig.isEnabled()) {
+            _dateRangePickerVisibility.value = true
+        }
 
         isStarted = true
     }
