@@ -17,8 +17,8 @@
         android:background="?attr/categoriesBackground"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/mlp_bottom_button_vertical_margin"
-        android:paddingTop="@dimen/mlp_bottom_button_vertical_margin">
+        android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"
+        android:paddingTop="@dimen/picker_bottom_button_vertical_margin">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/createPageButton"

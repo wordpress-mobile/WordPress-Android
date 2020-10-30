@@ -453,6 +453,9 @@ class MediaPickerViewModel @Inject constructor(
                         progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
+                        if (_searchExpanded.value == true) {
+                            _searchExpanded.value = false
+                        }
                         _onNavigate.value = Event(MediaNavigationEvent.InsertMedia(it.identifiers))
                     }
                 }

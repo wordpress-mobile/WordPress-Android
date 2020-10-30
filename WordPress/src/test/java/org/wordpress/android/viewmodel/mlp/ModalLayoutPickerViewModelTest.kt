@@ -33,6 +33,7 @@ import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
+import org.wordpress.android.util.SiteUtils.GB_EDITOR_NAME
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Blank
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Preview
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
@@ -101,7 +102,7 @@ class ModalLayoutPickerViewModelTest {
     private fun <T> mockFetchingSelectedSite(isError: Boolean = false, block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             val siteId = 1
-            val site = SiteModel()
+            val site = SiteModel().apply { mobileEditor = GB_EDITOR_NAME }
             whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
             whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
