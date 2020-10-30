@@ -102,7 +102,7 @@ public class WPScreenshotTest extends BaseTest {
         // Wait for the editor to load all images
         idleFor(5000);
 
-        screenshotPostWithName("Our Services", name, false, true, false);
+        screenshotPostWithName("Our Services", name, false, !isTabletScreen(), false);
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
