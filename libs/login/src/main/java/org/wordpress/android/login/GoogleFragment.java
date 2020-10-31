@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
+public abstract class GoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
     private static final String STATE_SHOULD_RESOLVE_ERROR = "STATE_SHOULD_RESOLVE_ERROR";
     private static final String STATE_FINISHED = "STATE_FINISHED";
     private static final String STATE_DISPLAY_NAME = "STATE_DISPLAY_NAME";
@@ -209,9 +209,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         }
     }
 
-    protected void startFlow() {
-        // Do nothing here.  This should be overridden by inheriting class.
-    }
+    protected abstract void startFlow();
 
     protected void finishFlow() {
         /* This flag might get lost when the finishFlow is called after the fragment's
