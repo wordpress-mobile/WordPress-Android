@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -54,6 +55,8 @@ public abstract class GoogleFragment extends Fragment implements ConnectionCallb
     protected String mGoogleEmail;
     protected String mIdToken;
     protected String mPhotoUrl;
+
+    protected ProgressDialog mProgressDialog;
 
     public static final String SERVICE_TYPE_GOOGLE = "google";
 
@@ -119,6 +122,7 @@ public abstract class GoogleFragment extends Fragment implements ConnectionCallb
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mProgressDialog = ProgressDialog.show(getActivity(), null, getProgressDialogText(), true, false, null);
         mLoginListener = (LoginListener) context;
 
         try {
@@ -129,6 +133,12 @@ public abstract class GoogleFragment extends Fragment implements ConnectionCallb
         if (mFinished) {
             finishFlow();
         }
+    }
+
+    @Override
+    public void onDetach() {
+        dismissProgressDialog();
+        super.onDetach();
     }
 
     @Override
@@ -209,6 +219,8 @@ public abstract class GoogleFragment extends Fragment implements ConnectionCallb
         }
     }
 
+    protected abstract String getProgressDialogText();
+
     protected abstract void startFlow();
 
     protected void finishFlow() {
@@ -245,6 +257,12 @@ public abstract class GoogleFragment extends Fragment implements ConnectionCallb
 
                 mIsResolvingError = false;
                 break;
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
