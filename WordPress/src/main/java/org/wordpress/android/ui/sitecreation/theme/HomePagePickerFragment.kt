@@ -12,8 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
-import kotlinx.android.synthetic.main.home_page_picker_fragment.appBarLayout
-import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
+import kotlinx.android.synthetic.main.home_page_picker_fragment.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
@@ -65,28 +64,26 @@ class HomePagePickerFragment : Fragment() {
     private fun setupViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
-
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             setTitleVisibility(uiState.isHeaderVisible)
+            description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
+            loadingIndicator.setVisible(uiState.loadingIndicatorVisible)
+            errorView.setVisible(uiState.errorViewVisible)
+            layoutsRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
-                is UiState.Loading -> {
-                    // TODO: Show skeleton
-                }
+                is UiState.Loading -> {}
                 is UiState.Content -> {
                     (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
-                is UiState.Error -> {
-                    // TODO: Show error
-                }
+                is UiState.Error -> {}
             }
         })
-
         viewModel.start()
     }
 
     private fun setupUi() {
-        title?.setVisible(isPhoneLandscape(requireContext()))
+        title?.setVisible(isPhoneLandscape())
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
@@ -95,6 +92,7 @@ class HomePagePickerFragment : Fragment() {
         previewButton.setOnClickListener { viewModel.onPreviewTapped() }
         chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
+        errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         backButton.setOnClickListener {
             requireActivity().onBackPressed() // FIXME: This is temporary for PR #13192
             viewModel.onBackPressed()
@@ -103,7 +101,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setScrollListener() {
-        if (isPhoneLandscape(requireContext())) return // Always visible
+        if (isPhoneLandscape()) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
@@ -121,7 +119,6 @@ class HomePagePickerFragment : Fragment() {
         }
     }
 
-    private fun isPhoneLandscape(context: Context) =
-            DisplayUtils.isLandscape(requireContext()) &&
-                    !DisplayUtils.isTablet(requireContext()) && !DisplayUtils.isXLargeTablet(requireContext())
+    private fun isPhoneLandscape() = DisplayUtils.isLandscape(requireContext()) &&
+            !DisplayUtils.isTablet(requireContext()) && !DisplayUtils.isXLargeTablet(requireContext())
 }

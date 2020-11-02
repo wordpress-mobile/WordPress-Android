@@ -2929,6 +2929,8 @@
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can customize or change it later.</string>
     <string name="hpp_choose_button">Choose</string>
     <string name="hpp_skip_button">Skip</string>
+    <string name="hpp_error_title">Layouts not available while offline</string>
+    <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>

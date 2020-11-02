@@ -45,7 +45,6 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start() {
-        updateUiState(UiState.Loading)
         fetchLayouts()
     }
 
@@ -55,7 +54,7 @@ class HomePagePickerViewModel @Inject constructor(
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
             withContext(mainDispatcher) {
                 if (event.isError) {
-                    // TODO: Error handling
+                    updateUiState(UiState.Error)
                 } else {
                     layouts = event.designs
                     loadLayouts()
@@ -108,6 +107,12 @@ class HomePagePickerViewModel @Inject constructor(
         // TODO
     }
 
+    fun onRetryClicked() {
+        if (networkUtils.isNetworkAvailable()) {
+            fetchLayouts()
+        }
+    }
+
     private fun updateUiState(uiState: UiState) {
         _uiState.value = uiState
     }
@@ -147,9 +152,12 @@ class HomePagePickerViewModel @Inject constructor(
 
     sealed class UiState(
         open val isHeaderVisible: Boolean = false,
-        open val isToolbarVisible: Boolean = false
+        open val isToolbarVisible: Boolean = false,
+        val isDescriptionVisible: Boolean = true,
+        val loadingIndicatorVisible: Boolean = false,
+        val errorViewVisible: Boolean = false
     ) {
-        object Loading : UiState()
+        object Loading : UiState(loadingIndicatorVisible = true)
 
         data class Content(
             override val isHeaderVisible: Boolean = false,
@@ -159,6 +167,6 @@ class HomePagePickerViewModel @Inject constructor(
             val layouts: List<LayoutGridItemUiState> = listOf()
         ) : UiState()
 
-        class Error : UiState()
+        object Error : UiState(errorViewVisible = true, isHeaderVisible = true, isDescriptionVisible = false)
     }
 }
