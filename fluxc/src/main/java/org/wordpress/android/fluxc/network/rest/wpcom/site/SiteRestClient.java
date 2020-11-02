@@ -224,7 +224,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         Map<String, Object> body = new HashMap<>();
         body.put("blog_name", siteName);
         body.put("lang_id", language);
-        body.put("public", visibility.toString());
+        body.put("public", String.valueOf(visibility.value()));
         body.put("validate", dryRun ? "1" : "0");
         body.put("client_id", mAppSecrets.getAppId());
         body.put("client_secret", mAppSecrets.getAppSecret());
