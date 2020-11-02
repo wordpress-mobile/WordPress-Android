@@ -59,7 +59,7 @@ class TimeStatsMapperTest {
 
     @Test
     fun `parses empty referrers`() {
-        val response = ReferrersResponse("DAYS", emptyMap())
+        val response = ReferrersResponse("DAYS", null, null, emptyList())
 
         val result = timeStatsMapper.map(response, LimitMode.Top(5))
 

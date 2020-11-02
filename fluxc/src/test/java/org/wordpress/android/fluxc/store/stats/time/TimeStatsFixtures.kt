@@ -18,9 +18,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageView
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse.PostViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Child
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Groups
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.ReferrerGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse.SearchTerm
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
@@ -67,38 +66,32 @@ val REFERRER = Referrer(
         "john.jpg",
         "john.com",
         30,
-        listOf(Child("Child", 20, "child.jpg", "child.com", false)),
+        listOf(Child("child.com")),
         false
 )
-val GROUP_WITH_REFERRALS = Group(
+val GROUP_WITH_REFERRALS = ReferrerGroup(
         GROUP_ID_1,
         "Group 1",
         "icon_group_1.jpg",
         "url_group_1.com",
         50,
-        null,
         referrers = listOf(REFERRER),
         markedAsSpam = false
 )
-val GROUP_WITH_EMPTY_REFERRALS = Group(
+val GROUP_WITH_EMPTY_REFERRALS = ReferrerGroup(
         GROUP_ID_2,
         "Group 2",
         "icon_group_2.jpg",
         "url_group_2.com",
         50,
         null,
-        referrers = null,
         markedAsSpam = false
 )
 val REFERRERS_RESPONSE = ReferrersResponse(
         null,
-        mapOf(
-                "2018-10-10" to Groups(
-                        10,
-                        20,
-                        listOf(GROUP_WITH_REFERRALS, GROUP_WITH_EMPTY_REFERRALS)
-                )
-        )
+        10,
+        20,
+        listOf(GROUP_WITH_REFERRALS, GROUP_WITH_EMPTY_REFERRALS)
 )
 val CLICK_GROUP = ClickGroup(GROUP_ID_1, "Click name", "click.jpg", "click.com", 20, null)
 val CLICKS_RESPONSE = ClicksResponse(null, mapOf("2018-10-10" to ClicksResponse.Groups(10, 15, listOf(CLICK_GROUP))))
