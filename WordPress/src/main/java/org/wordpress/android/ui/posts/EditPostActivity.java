@@ -2535,10 +2535,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
                         setFeaturedImageId(mediaId, true);
-                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
                         if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
                             List<Uri> uris = convertStringArrayIntoUrisList(
-                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
                             int postId = getImmutablePost().getId();
                             mFeaturedImageHelper.trackFeaturedImageEvent(
                                     FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,

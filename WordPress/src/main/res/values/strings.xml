@@ -1715,7 +1715,6 @@
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
-    <string name="reader_page_recommended_blogs">Sites you may like</string>
 
     <!-- menu text -->
     <string name="reader_menu_tags">Edit topics and sites</string>
@@ -2544,7 +2543,7 @@
     <string name="signup_confirmation_title">Signup confirmation</string>
 
     <string name="continue_with_wpcom">Continue with WordPress.com</string>
-    <string name="enter_your_site_address">Enter your site address</string>
+    <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
@@ -2891,6 +2890,7 @@
     <!-- Prepublishing Nudges -->
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
+    <string name="prepublishing_nudges_categories_action">Categories</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
@@ -2903,6 +2903,10 @@
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
+    <string name="prepublishing_nudges_add_category_button">Add Category</string>
 
     <!-- Modal Layout Picker -->
     <string name="mlp_choose_layout_title">Choose a layout</string>
@@ -2919,6 +2923,12 @@
     <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
     <string name="mlp_network_error_title">Layouts not available while offline</string>
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
+
+    <!-- Home Page Picker -->
+    <string name="hpp_title">Choose a design</string>
+    <string name="hpp_subtitle">Pick your favorite homepage layout. You can customize or change it later.</string>
+    <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_skip_button">Skip</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
@@ -3188,6 +3198,8 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_sally_smith" tools:ignore="UnusedResources">Sally Smith</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_samuel_the_dog" tools:ignore="UnusedResources">Samuel the Dog</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed" tools:ignore="UnusedResources">Scrollable block menu closed.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block" tools:ignore="UnusedResources">Scrollable block menu opened. Select a block.</string>
     <string name="gutenberg_native_search_or_type_url" tools:ignore="UnusedResources">Search or type URL</string>
     <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
     <string name="gutenberg_native_select_a_layout" tools:ignore="UnusedResources">Select a layout</string>

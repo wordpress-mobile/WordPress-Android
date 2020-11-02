@@ -306,8 +306,6 @@ Language: es_CO
     <string name="reader_toast_err_already_liked">Ya has dado a me gusta para este comentario</string>
     <string name="reader_toast_err_comment_not_found">¡Comentario no encontrado!</string>
     <string name="reader_toast_err_cannot_like_post">Error al marcar como me gusta la publicación</string>
-    <string name="reader_title_post_detail_wpcom">Entrada de WordPress.com</string>
-    <string name="reader_title_deeplink">Lector de WordPress</string>
     <string name="error_notif_q_action_reply">No se pudo responder al comentario. Por favor inténtalo de nuevo más tarde.</string>
     <string name="error_notif_q_action_approve">No se pudo aprobar el comentario. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="error_notif_q_action_like">No se puede marcar como me gusta el comentario. Por favor inténtalo de nuevo más tarde.</string>
@@ -382,7 +380,6 @@ Language: es_CO
     <string name="send_link">Enviar enlace</string>
     <string name="label_clear_search_history">Borrar historial de búsqueda</string>
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
-    <string name="reader_title_related_post_detail">Entrada relacionada</string>
     <string name="preview_screen_links_disabled">Los enlaces están inhabilitados en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">\@%1$s eliminado correctamente.</string>
@@ -743,18 +740,14 @@ Language: es_CO
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía.</string>
     <string name="reader_title_photo_viewer">%1$d de %2$d</string>
     <string name="reader_label_comments_closed">Los comentarios están cerrados</string>
-    <string name="reader_label_liked_by">Le gusta a</string>
     <string name="reader_label_like">Me gusta</string>
     <string name="reader_label_view_original">Ver artículo original</string>
-    <string name="reader_empty_posts_in_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="schedule_verb">Programación</string>
     <string name="update_verb">Actualizar</string>
-    <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
     <string name="forgot_password">¿Has olvidado la contraseña?</string>
@@ -781,8 +774,6 @@ Language: es_CO
     <string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
     <string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
     <string name="no_network_message">No hay ninguna conexión de red disponible</string>
-    <string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
-    <string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
@@ -849,12 +840,10 @@ Language: es_CO
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_btn_follow">Seguir</string>
     <string name="reader_btn_unfollow">Siguiendo</string>
-    <string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
     <string name="reader_likes_only_you">Te gusta esto</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_share_intent">Imposible compartir</string>
-    <string name="reader_toast_err_tag_invalid">Esta no es una etiqueta válida</string>
     <string name="reader_toast_err_comment_failed">No se pudo publicar tu comentario </string>
     <string name="reader_label_added_tag">Añadido %s</string>
     <string name="reader_hint_comment_on_comment">Contestar al comentario </string>
