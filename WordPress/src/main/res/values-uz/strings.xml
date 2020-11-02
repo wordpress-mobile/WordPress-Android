@@ -21,8 +21,6 @@ Language: uz
     <string name="reader_btn_follow">Kuzatish</string>
     <string name="reader_btn_unfollow">Kuzatmoqda</string>
     <string name="reader_toast_err_comment_failed">Mulohazangiz kiritilmadi</string>
-    <string name="reader_toast_err_tag_exists">Allaqachon bu tegni kuzatishni boshlagansiz</string>
-    <string name="reader_toast_err_tag_invalid">Bu yaroqli teg emas</string>
     <string name="reader_toast_err_share_intent">Bo‘lishib bo‘lmadi</string>
     <string name="reader_toast_err_view_image">Rasm ko‘rinmayapti</string>
     <string name="reader_toast_err_url_intent">%s ochilmayapti</string>

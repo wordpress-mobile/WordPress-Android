@@ -155,6 +155,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverService;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -178,6 +179,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidge
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
+import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -404,6 +406,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderTagHeaderView object);
 
+    void inject(ReaderPostDetailHeaderView object);
+
     void inject(ReaderExpandableTagsView object);
 
     void inject(ReaderLikingUsersView object);
@@ -553,6 +557,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(FeatureAnnouncementListAdapter object);
 
     void inject(StoryComposerActivity object);
+
+    void inject(StoriesIntroDialogFragment object);
 
     void inject(ReaderFragment object);
 

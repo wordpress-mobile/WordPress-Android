@@ -1,3 +1,0 @@
-15.9 :
-- Éditeur de blocs : Modifiez des blocs non pris en charge en autorisant Jetpack SSO à partir de l’alerte de bloc manquante. Utilisez le sélecteur de liens pour ajouter des URL aux publications. Touchez 2 fois sur les champs de texte en mode accessibilité comme prévu.
-- Amélioration de la mise en page Mon site pour les appareils à écran large.

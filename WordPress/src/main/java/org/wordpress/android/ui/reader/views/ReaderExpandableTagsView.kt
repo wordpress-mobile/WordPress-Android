@@ -109,7 +109,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             chip.left >= left + (paddingStart + chipSpacingHorizontal)
         }
     } else {
-        chip.bottom <= bottom - (paddingBottom + chipSpacingVertical)
+        chip.bottom <= bottom
     }
 
     private fun updateLastVisibleTagChip() {

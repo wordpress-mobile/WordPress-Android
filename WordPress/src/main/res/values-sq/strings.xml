@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-07 08:42:48+0000
+Translation-Revision-Date: 2020-10-20 11:33:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
-    <string name="gutenberg_native_white">E bardhë</string>
-    <string name="gutenberg_native_vivid_red">E kuqe e ndezur</string>
-    <string name="gutenberg_native_vivid_purple">E purpur e gjallë</string>
-    <string name="gutenberg_native_vivid_green_cyan">Blu e kaltër e gjelbër e ndezur</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Blu e gjelbër në blu e ndezur në të purpur të ndezur</string>
-    <string name="gutenberg_native_vivid_cyan_blue">Blu e kaltër e gjelbër e ndezur</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Gri shumë e çelët në gri blu në të gjelbër me nuanca bluje</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' s’mbulohet plotësisht</string>
+    <string name="gutenberg_native_help_button">Buton ndihme</string>
+    <string name="gutenberg_native_edit_using_web_editor">Përpunojeni duke përdorur përpunuesin web</string>
+    <string name="gutenberg_native_choose_images">Zgjidhni figura</string>
+    <string name="stories_intro_create_story_post_label">Krijo Postim Shkrimi</string>
+    <string name="stories_intro_description_second">Botohen si postim i ri blogu në sajtin tuaj, që kështu publiku juaj kurrë të mos humbë një gjë.</string>
+    <string name="stories_intro_title_second">Postimet e shkrimeve s’zhduken</string>
+    <string name="stories_intro_description_first">Ndërthurni foto, video dhe tekst, që të krijoni postime shkrimesh tërheqës, që vizitorët tuaj do t’i duan fort.</string>
+    <string name="stories_intro_title_first">Tani më shkrimet janë për këdo</string>
+    <string name="stories_intro_image_caption_second">Titull shembulli shkrimi</string>
+    <string name="stories_intro_image_caption_first">Si të krijohet një postim shkrimi</string>
+    <string name="stories_intro_main_subtitle">Ju është dhënë mundësia e përdorimit të hershëm të Postimeve të Shkrimeve dhe do të donim ta provonit.</string>
+    <string name="stories_intro_main_title">Ju Paraqesim Postime Shkrimesh</string>
+    <string name="mlp_generic_error">Ndodhi një gabim teksa silleshin skemat</string>
+    <string name="mlp_notice_blank_page_created">U krijua faqe e zbrazët</string>
+    <string name="mlp_notice_page_created">Faqja u krijua</string>
+    <string name="mlp_preview_title">Paraparje Skeme</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s-it iu mohua hyrja te fotot tuaj. Që të ndreqet kjo, përpunoni lejet tuaj dhe aktivizoni %2$s dhe %3$s.</string>
+    <string name="media_insert_failed">Dështoi futje medie.</string>
+    <string name="media_insert_failed_with_reason">Dështoi futje medie: %s</string>
+    <string name="photo_picker_wordpress_media_library">Zgjidhni prej Mediatekës WordPress</string>
+    <string name="reader_label_toolbar_back">Mbrapsht</string>
+    <string name="reader_discover_empty_button_text">Fillojani</string>
+    <string name="reader_discover_empty_title">Ndiqni tema, që të zbuloni blogje të rinj</string>
+    <string name="reader_post_details_header_by_author_name">Nga</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">Këtij referuesi s’mund t’i vihet shenjë si i padëshiruar</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Hiqja Shenjën Si i Padëshiruar</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Vëri Shenjë si I padëshiruar</string>
+    <string name="stats_referrer_popup_menu_open_website">Hap Sajtin</string>
+    <string name="media_uploading_gif_library_photo">Po ngarkohet media gif</string>
+    <string name="media_uploading_stock_library_photo">Po ngarkohet media stok</string>
+    <string name="media_uploading_default">Po ngarkohet media</string>
     <string name="gutenberg_native_select_item">Përzgjidhni objekt</string>
     <string name="gutenberg_native_search_or_type_url">Kërkoni ose shtypni URL</string>
-    <string name="gutenberg_native_pale_pink">Vjollcë e zbehtë</string>
-    <string name="gutenberg_native_pale_ocean">Oqean i zbehtë</string>
-    <string name="gutenberg_native_pale_cyan_blue">Blu e kaltër e gjelbër e zbehtë</string>
-    <string name="gutenberg_native_midnight">Mesnatë</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Portokalli e ndritshme e ndezur në të kuqe të ndezur</string>
-    <string name="gutenberg_native_luminous_vivid_orange">Portokalli e ndritshme e ndezur</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Ngjyrë mjalti e ndezur e ndritshme në portokalli të ndezur të ndritshme</string>
-    <string name="gutenberg_native_luminous_vivid_amber">Ngjyrë mjalti e ndezur e ndritshme</string>
-    <string name="gutenberg_native_luminous_dusk">Muzg i ndritshëm</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Blu e gjelbër në të gjelbër e çelët në blu të gjelbër në të gjelbër të ndezur</string>
-    <string name="gutenberg_native_light_green_cyan">Blu e gjelbër e çelët</string>
-    <string name="gutenberg_native_electric_grass">Bar elektrik</string>
-    <string name="gutenberg_native_cyan_bluish_gray">Gri e kaltër e gjelbër në blu</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum">Spektri nga të ftohta te të ngrohta</string>
-    <string name="gutenberg_native_blush_light_purple">E purpur e çelët e përndezur</string>
-    <string name="gutenberg_native_blush_bordeaux">Bordo e përndezur</string>
-    <string name="gutenberg_native_black">E zezë</string>
     <string name="gutenberg_native_add_this_telephone_link">Shtoni këtë lidhje telefoni</string>
     <string name="gutenberg_native_add_this_link">Shtoje këtë lidhje</string>
     <string name="gutenberg_native_add_this_email_link">Shtoni këtë lidhje email</string>
@@ -206,6 +215,7 @@ Language: sq_AL
     <string name="menu_content_info">Strukturë lënde</string>
     <string name="everyone">Gjithkush</string>
     <string name="me">Unë</string>
+    <string name="gutenberg_native_dismiss">Hidhe tej</string>
     <string name="prepublishing_nudges_home_tags_not_set">E pacaktuar</string>
     <string name="prepublishing_tags_description">Etiketat ndihmojnë t’u tregohet lexuesve se për çfarë është një postim.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Datë Botimi</string>
@@ -222,7 +232,6 @@ Language: sq_AL
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Postimet e shpënë në hedhurina s’mund të përpunohen. Doni të ndryshohet gjendja e këtij postimi në “skicë”, që të mund të merreni me të?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Të kalohet postimi te Skicat?</string>
     <string name="reader_label_choose_your_interests">Zgjidhni ç’ju intereson</string>
-    <string name="reader_label_discover_follow_tags">Zbuloni dhe ndiqni etiketat që keni për zemër</string>
     <string name="reader_choose_interests_content_description">Zgjidhni ç’ju intereson</string>
     <string name="reader_btn_done">U bë</string>
     <string name="reader_btn_select_few_interests">Që të vazhdohet, përzgjidhni ndoca</string>
@@ -422,9 +431,9 @@ Language: sq_AL
     <string name="reader_btn_selected_filter_tick_content_description">E përzgjedhur</string>
     <string name="reader_btn_select_filter_content_description">Përzgjidhni një Sajt ose Etiketë që të filtrohen postime</string>
     <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
-    <string name="reader_title_subs">Administroni Etiketa &amp; Sajte</string>
+    <string name="reader_title_subs">Administroni Tema &amp; Sajte</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Hyni te WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej etiketash që ndiqni</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Që të shihni postimet më të reja në temat që ndiqni, bëni hyrjen te llogaria juaj në WordPress.com </string>
     <string name="reader_filter_self_hosted_empty_sites_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej sajtesh që ndiqni</string>
     <string name="gutenberg_native_template_preview">Paraparje Gjedheje</string>
     <string name="gutenberg_native_replace_current_block">Zëvendëso Bllokun e Tanishëm</string>
@@ -432,9 +441,9 @@ Language: sq_AL
     <string name="gutenberg_native_add_to_beginning">Shtoje Në Fillim</string>
     <string name="gutenberg_native_add_block_before">Shtoje Përpara Bllokut</string>
     <string name="gutenberg_native_add_block_after">Shtoje Pas Bllokut</string>
-    <string name="reader_filter_empty_tags_action">Shtoni një etiketë</string>
+    <string name="reader_filter_empty_tags_action">Shtoni një temë</string>
     <string name="reader_filter_empty_sites_action">Ndiqni një sajt</string>
-    <string name="reader_filter_empty_tags_list">Mund të ndiqni postime lidhur me një subjekt të caktuar, duke dhënë një etiketë</string>
+    <string name="reader_filter_empty_tags_list">Mund të ndiqni postime lidhur me një subjekt të caktuar, duke shtuar një temë</string>
     <string name="reader_filter_empty_sites_list">Shihni postimet më të reja prej sajtesh që ndiqni</string>
     <string name="reader_filter_main_title">Në ndjekje</string>
     <string name="reader_filter_cta">Filtër</string>
@@ -492,7 +501,7 @@ Language: sq_AL
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="reader_discover_display_name">Zbuloni</string>
     <string name="reader_save_for_later_display_name">U ruajt</string>
-    <string name="reader_filter_tags_title">Etiketa</string>
+    <string name="reader_filter_tags_title">Tema</string>
     <string name="reader_filter_sites_title">Sajte</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -507,6 +516,7 @@ Language: sq_AL
     <string name="gutenberg_native_translate">Përktheni</string>
     <string name="gutenberg_native_title">Titull:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Prekeni që të fshihet tastiera</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Prekeni këtu që të shfaqet ndihmë</string>
     <string name="gutenberg_native_take_a_video">Bëni një Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
     <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
@@ -539,6 +549,7 @@ Language: sq_AL
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
     <string name="gutenberg_native_hide_keyboard">Fshihe tastierën</string>
     <string name="gutenberg_native_here_is_the_panel_content">Ja lënda e panelit!</string>
+    <string name="gutenberg_native_help_icon">Ikonë ndihme</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">S’u arrit të futej media.\nJu lutemi, prekeni për mundësi.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Që të zhbëhet ndryshimi i fundit, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Që shfaqet/fshihet rregullimi, prekeni dyfish</string>
@@ -1079,8 +1090,8 @@ Language: sq_AL
     <string name="quick_start_button_negative">Jo tani</string>
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
-    <string name="reader_empty_followed_tags_title">Pa etiketa të ndjekura</string>
-    <string name="reader_empty_followed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
+    <string name="reader_empty_followed_tags_title">Pa tema të ndjekura</string>
+    <string name="reader_empty_followed_tags_subtitle">Shtoni këtu tema që të gjeni postime rreth temave tuaja të parapëlqyera</string>
     <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="install_jetpack_retry">Riprovoni</string>
     <string name="install_jetpack_continue">Ujdise</string>
@@ -1820,8 +1831,6 @@ Language: sq_AL
     <string name="reader_toast_err_already_liked">E keni pëlqyer një herë atë koment</string>
     <string name="reader_toast_err_comment_not_found">Komenti nuk u gjet!</string>
     <string name="reader_toast_err_cannot_like_post">Dështoi pëlqimi i këtij postimi</string>
-    <string name="reader_title_post_detail_wpcom">Postim WordPress.com</string>
-    <string name="reader_title_deeplink">Lexues WordPress</string>
     <string name="error_notif_q_action_reply">S’u bë dot përgjigja ndaj komentit. Ju lutemi, riprovoni më vonë.</string>
     <string name="error_notif_q_action_approve">S’mund të miratohet komenti. Ju lutemi, riprovoni më vonë.</string>
     <string name="error_notif_q_action_like">S’mund të pëlqehet komenti. Ju lutemi, riprovoni më vonë.</string>
@@ -1898,7 +1907,6 @@ Language: sq_AL
     <string name="dlg_confirm_clear_search_history">Të spastrohet historiku?</string>
     <string name="reader_empty_search_description">S’u gjetën përfundime në gjuhën tuaj për %s</string>
     <string name="reader_hint_post_search">Kërkoni te WordPress</string>
-    <string name="reader_title_related_post_detail">Postim i Afërt</string>
     <string name="preview_screen_links_disabled">Në skenën paraparje lidhjet janë të çaktivizuara</string>
     <string name="send">Dërgoje</string>
     <string name="person_removed">U hoq me sukses %1$s</string>
@@ -2166,7 +2174,7 @@ Language: sq_AL
     <string name="reader_short_like_count_one">1 Pëlqim</string>
     <string name="reader_short_like_count_none">Pëlqim</string>
     <string name="reader_label_follow_count">%,d Ndjekës</string>
-    <string name="reader_menu_tags">Përpunoni etiketa dhe sajte</string>
+    <string name="reader_menu_tags">Përpunoni tema dhe sajte</string>
     <string name="reader_title_post_detail">Postim Te Lexuesi</string>
     <string name="notifications_push_summary">Rregullime për njoftime që shfaqen në pajisjen tuaj.</string>
     <string name="notifications_email_summary">Rregullime për njoftime që dërgohen drejt email-it përshoqëruar llogarisë tuaj.</string>
@@ -2266,8 +2274,7 @@ Language: sq_AL
     <string name="cab_selected">%d të përzgjedhur</string>
     <string name="browse_our_faq_button">Shfletoni PBR tonat</string>
     <string name="reader_empty_comments">Ende pa komente</string>
-    <string name="reader_empty_posts_in_tag">S’ka postime me këtë etiketë</string>
-    <string name="reader_label_liked_by">Pëlqyer Nga</string>
+    <string name="reader_empty_posts_in_tag">S’ka postime me këtë temë</string>
     <string name="reader_label_like">Pëlqim</string>
     <string name="reader_label_view_original">Shihni shkrimin origjinal</string>
     <string name="reader_label_comments_closed">Komentet janë mbyllur</string>
@@ -2298,9 +2305,9 @@ Language: sq_AL
     <string name="reader_toast_err_already_follow_blog">E ndiqni tashmë këtë sajt</string>
     <string name="reader_toast_err_get_blog_info">S’arrihet të shfaqet ky sajt</string>
     <string name="reader_label_followed_blog">Sajti u ndoq</string>
-    <string name="reader_hint_add_tag_or_url">Jepni një URL ose etiketë që të ndiqet</string>
+    <string name="reader_hint_add_tag_or_url">Jepni një URL ose temë që të ndiqet</string>
     <string name="reader_page_followed_blogs">Sajte te ndjekur</string>
-    <string name="reader_page_followed_tags">Etiketa të ndjekura</string>
+    <string name="reader_page_followed_tags">Tema të ndjekura</string>
     <string name="reader_title_blog_preview">Sajti i Lexuesit</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>
@@ -2328,8 +2335,8 @@ Language: sq_AL
     <string name="blog_not_found">Ndodhi një gabim gjatë hyrjes te ky blog</string>
     <string name="gallery_error">S’u mor dot objekti media</string>
     <string name="no_network_message">S’ka rrjet gati</string>
-    <string name="reader_toast_err_remove_tag">I pazoti ta heqë këtë etiketë</string>
-    <string name="reader_toast_err_add_tag">I pazoti të shtojë këtë etiketë</string>
+    <string name="reader_toast_err_remove_tag">S’arrihet të hiqet kjo temë</string>
+    <string name="reader_toast_err_add_tag">S’arrihet të shtohet kjo temë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
     <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_blog_hidden">Ky blog është i fshehur dhe s’u ngarkua dot. Aktivizojeni sërish te rregullimet dhe riprovoni.</string>
@@ -2399,8 +2406,8 @@ Language: sq_AL
     <string name="reader_toast_err_url_intent">S’arrin të hapë %s</string>
     <string name="reader_toast_err_view_image">S’arrin të shihet figura</string>
     <string name="reader_toast_err_share_intent">S’arrin të ndajë me të tjerët</string>
-    <string name="reader_toast_err_tag_invalid">Kjo s’është etiketë e vlefshme</string>
-    <string name="reader_toast_err_tag_exists">E ndiqni tashmë këtë etiketë</string>
+    <string name="reader_toast_err_tag_invalid">Kjo s’është temë e vlefshme</string>
+    <string name="reader_toast_err_tag_exists">E ndiqni tashmë këtë temë</string>
     <string name="reader_toast_err_comment_failed">S’u postua dot komenti juaj</string>
     <string name="reader_likes_only_you">E pëlqeni</string>
     <string name="reader_likes_one">Kjo i pëlqen një personi</string>

@@ -100,7 +100,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post, BLOG_PREVIEW)
         // Assert
-        assertThat(uiState.postHeaderClickData).isNull()
+        assertThat(uiState.blogSection.blogSectionClickData).isNull()
     }
 
     @Test
@@ -111,7 +111,7 @@ class ReaderPostUiStateBuilderTest {
             // Act
             val uiState = mapPostToUiState(post, it)
             // Assert
-            assertThat(uiState.postHeaderClickData).isNotNull
+            assertThat(uiState.blogSection.blogSectionClickData).isNotNull
         }
     }
     // endregion
@@ -125,7 +125,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogUrl).isEqualTo("dummy.url")
+        assertThat(uiState.blogSection.blogUrl).isEqualTo("dummy.url")
     }
     // endregion
 
@@ -485,17 +485,17 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNotNull()
+        assertThat(uiState.blogSection.blogName).isNotNull()
     }
 
     @Test
-    fun `blogName is not displayed the post doesn't have a blog name`() = test {
+    fun `default blog name is displayed when the post doesn't have a blog name`() = test {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNull()
+        assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
     // endregion
 
@@ -510,7 +510,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.dateLine).isEqualTo("success")
+        assertThat(uiState.blogSection.dateLine).isEqualTo("success")
     }
     // endregion
 

@@ -255,7 +255,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (result) {
-            followButton.setIsFollowedAnimated(isAskingToFollow);
+            followButton.setIsFollowed(isAskingToFollow);
             blog.isFollowing = isAskingToFollow;
         }
     }

@@ -212,6 +212,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.updateTheme(editorTheme);
     }
 
+    public void showNotice(String message) {
+        mWPAndroidGlueCode.showNotice(message);
+    }
+
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         // We want to make sure that activity isn't null
         // as it can make this crash to happen: https://github.com/wordpress-mobile/WordPress-Android/issues/13248

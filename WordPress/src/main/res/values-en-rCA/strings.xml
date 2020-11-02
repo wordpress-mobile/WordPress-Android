@@ -6,32 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
-    <string name="gutenberg_native_white">White</string>
-    <string name="gutenberg_native_vivid_red">Vivid red</string>
-    <string name="gutenberg_native_vivid_purple">Vivid purple</string>
-    <string name="gutenberg_native_vivid_green_cyan">Vivid green cyan</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Vivid cyan blue to vivid purple</string>
-    <string name="gutenberg_native_vivid_cyan_blue">Vivid cyan blue</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Very light grey to cyan bluish grey</string>
     <string name="gutenberg_native_select_item">Select item</string>
     <string name="gutenberg_native_search_or_type_url">Search or type URL</string>
-    <string name="gutenberg_native_pale_pink">Pale pink</string>
-    <string name="gutenberg_native_pale_ocean">Pale ocean</string>
-    <string name="gutenberg_native_pale_cyan_blue">Pale cyan blue</string>
-    <string name="gutenberg_native_midnight">Midnight</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Luminous vivid orange to vivid red</string>
-    <string name="gutenberg_native_luminous_vivid_orange">Luminous vivid orange</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Luminous vivid amber to luminous vivid orange</string>
-    <string name="gutenberg_native_luminous_vivid_amber">Luminous vivid amber</string>
-    <string name="gutenberg_native_luminous_dusk">Luminous dusk</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Light green cyan to vivid green cyan</string>
-    <string name="gutenberg_native_light_green_cyan">Light green cyan</string>
-    <string name="gutenberg_native_electric_grass">Electric grass</string>
-    <string name="gutenberg_native_cyan_bluish_gray">Cyan bluish grey</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum">Cool to warm spectrum</string>
-    <string name="gutenberg_native_blush_light_purple">Blush light purple</string>
-    <string name="gutenberg_native_blush_bordeaux">Blush bordeaux</string>
-    <string name="gutenberg_native_black">Black</string>
     <string name="gutenberg_native_add_this_telephone_link">Add this telephone link</string>
     <string name="gutenberg_native_add_this_link">Add this link</string>
     <string name="gutenberg_native_add_this_email_link">Add this email link</string>
@@ -206,6 +182,7 @@ Language: en_CA
     <string name="menu_content_info">Content structure</string>
     <string name="everyone">Everyone</string>
     <string name="me">Me</string>
+    <string name="gutenberg_native_dismiss">Dismiss</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
@@ -222,7 +199,6 @@ Language: en_CA
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Trashed posts can\'t be edited. Do you want change the status of this post to \"draft\" so you can work on it?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Move post to Drafts?</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
-    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_choose_interests_content_description">Choose your interests</string>
     <string name="reader_btn_done">Done</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
@@ -422,9 +398,7 @@ Language: en_CA
     <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
-    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
     <string name="gutenberg_native_template_preview">Template Preview</string>
     <string name="gutenberg_native_replace_current_block">Replace Current Block</string>
@@ -432,9 +406,7 @@ Language: en_CA
     <string name="gutenberg_native_add_to_beginning">Add To Beginning</string>
     <string name="gutenberg_native_add_block_before">Add Block Before</string>
     <string name="gutenberg_native_add_block_after">Add Block After</string>
-    <string name="reader_filter_empty_tags_action">Add a tag</string>
     <string name="reader_filter_empty_sites_action">Follow a site</string>
-    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
     <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
     <string name="reader_filter_main_title">Following</string>
     <string name="reader_filter_cta">Filter</string>
@@ -492,7 +464,6 @@ Language: en_CA
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="reader_discover_display_name">Discover</string>
     <string name="reader_save_for_later_display_name">Saved</string>
-    <string name="reader_filter_tags_title">Tags</string>
     <string name="reader_filter_sites_title">Sites</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -507,6 +478,7 @@ Language: en_CA
     <string name="gutenberg_native_translate">Translate</string>
     <string name="gutenberg_native_title">Title:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap to hide the keyboard</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Tap here to show help</string>
     <string name="gutenberg_native_take_a_video">Take a Video</string>
     <string name="gutenberg_native_take_a_photo_or_video">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_photo">Take a Photo</string>
@@ -539,6 +511,7 @@ Language: en_CA
     <string name="gutenberg_native_image_caption_s">Image caption. %s</string>
     <string name="gutenberg_native_hide_keyboard">Hide keyboard</string>
     <string name="gutenberg_native_here_is_the_panel_content">Here is the panel content!</string>
+    <string name="gutenberg_native_help_icon">Help icon</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Double tap to undo last change</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Double tap to toggle setting</string>
@@ -1079,8 +1052,6 @@ Language: en_CA
     <string name="quick_start_button_negative">Not now</string>
     <string name="content_description_more">More</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
-    <string name="reader_empty_followed_tags_title">No followed tags</string>
-    <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="install_jetpack_retry">Retry</string>
     <string name="install_jetpack_continue">Set up</string>
@@ -1820,8 +1791,6 @@ Language: en_CA
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
-    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
@@ -1898,7 +1867,6 @@ Language: en_CA
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
     <string name="reader_hint_post_search">Search WordPress</string>
-    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
     <string name="send">Send</string>
     <string name="person_removed">Successfully removed %1$s</string>
@@ -2166,7 +2134,6 @@ Language: en_CA
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d Followers</string>
-    <string name="reader_menu_tags">Edit tags and sites</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
@@ -2266,8 +2233,6 @@ Language: en_CA
     <string name="cab_selected">%d selected</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="reader_empty_comments">No comments yet</string>
-    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
-    <string name="reader_label_liked_by">Liked By</string>
     <string name="reader_label_like">Like</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
@@ -2298,9 +2263,7 @@ Language: en_CA
     <string name="reader_toast_err_already_follow_blog">You already follow this site</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
     <string name="reader_label_followed_blog">Site followed</string>
-    <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
-    <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
@@ -2328,8 +2291,6 @@ Language: en_CA
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
-    <string name="reader_toast_err_add_tag">Unable to add this tag</string>
     <string name="reader_title_applog">Application log</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -2399,8 +2360,6 @@ Language: en_CA
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
-    <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
-    <string name="reader_toast_err_tag_exists">You already follow this tag</string>
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_one">One person likes this</string>

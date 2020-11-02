@@ -131,10 +131,8 @@ Language: da_DK
     <string name="cab_selected">%d markeret</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>
     <string name="reader_empty_comments">Endnu ingen kommentarer</string>
-    <string name="reader_empty_posts_in_tag">Ingen indlæg med dette tag</string>
     <string name="reader_label_view_original">Vis oprindelig artikel</string>
     <string name="reader_label_like">Synes om</string>
-    <string name="reader_label_liked_by">Følgende Synes om</string>
     <string name="reader_label_comments_closed">Der er lukket for kommentarer</string>
     <string name="reader_title_photo_viewer">%1$d af %2$d</string>
     <string name="error_publish_empty_post">Kan ikke udgive omt indlæg</string>
@@ -154,9 +152,7 @@ Language: da_DK
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
-    <string name="reader_page_followed_tags">Fulgte tags</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
-    <string name="reader_hint_add_tag_or_url">Indtast en URL eller et tag for at følge</string>
     <string name="help">Hjælp</string>
     <string name="forgot_password">Mistet din adgangskode?</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
@@ -216,8 +212,6 @@ Language: da_DK
     <string name="open_source_licenses">Open source-licenser</string>
     <string name="cancel_edit">Fortryd redigering</string>
     <string name="reader_title_applog">Applikationslog</string>
-    <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette tag</string>
-    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette tag</string>
     <string name="link_enter_url_text">Linktekst (valgfri)</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="sure_to_cancel_edit_comment">Annuller redigering af denne kommentar?</string>
@@ -245,12 +239,10 @@ Language: da_DK
     <string name="reader_likes_only_you">Du synes godt om dette</string>
     <string name="empty_list_default">Listen er tom</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
-    <string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt tag</string>
     <string name="reader_toast_err_url_intent">Kunne ikke åbne %s</string>
     <string name="reader_toast_err_view_image">Kunne ikke vise billede</string>
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
-    <string name="reader_toast_err_tag_exists">Du følger allerede dette tag</string>
     <string name="reader_hint_comment_on_comment">Besvar kommentar…</string>
     <string name="media_edit_failure">Opdatering mislykkedes</string>
     <string name="theme_activate_button">Aktiver</string>

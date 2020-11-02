@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
@@ -23,9 +25,14 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
-    suspend fun toggleBookmark(blogId: Long, postId: Long, isBookmarkList: Boolean) = flow<BookmarkPostState> {
+    suspend fun toggleBookmark(
+        blogId: Long,
+        postId: Long,
+        isBookmarkList: Boolean,
+        fromPostDetails: Boolean = false
+    ) = flow<BookmarkPostState> {
         val bookmarked = updatePostInDb(blogId, postId)
-        trackEvent(bookmarked, isBookmarkList)
+        trackEvent(bookmarked, isBookmarkList, fromPostDetails)
         preloadPostContentIfNecessary(bookmarked, isBookmarkList, blogId, postId)
         emit(Success(bookmarked))
     }
@@ -56,12 +63,14 @@ class ReaderPostBookmarkUseCase @Inject constructor(
         return setToBookmarked
     }
 
-    private fun trackEvent(bookmarked: Boolean, isBookmarkList: Boolean) {
+    private fun trackEvent(bookmarked: Boolean, isBookmarkList: Boolean, fromPostDetails: Boolean) {
         val trackingEvent = when {
-            bookmarked && isBookmarkList -> READER_POST_SAVED_FROM_SAVED_POST_LIST
-            bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
-            !bookmarked && isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-            !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && bookmarked && isBookmarkList -> READER_POST_SAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
+            !fromPostDetails && !bookmarked && isBookmarkList -> READER_POST_UNSAVED_FROM_SAVED_POST_LIST
+            !fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_OTHER_POST_LIST
+            fromPostDetails && bookmarked && !isBookmarkList -> READER_POST_SAVED_FROM_DETAILS
+            fromPostDetails && !bookmarked && !isBookmarkList -> READER_POST_UNSAVED_FROM_DETAILS
             else -> throw IllegalStateException("Developer error: This code should be unreachable.")
         }
         analyticsTrackerWrapper.track(trackingEvent)
