@@ -22,6 +22,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
@@ -80,7 +82,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 if (event.action != KeyEvent.ACTION_DOWN) {
                     true
                 } else {
-                    onBackClicked()
+                    viewModel.onDeviceBackPressed()
                     true
                 }
             } else {
@@ -152,7 +154,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
+        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
+                KEY_SCREEN_STATE
+        )
         val site = arguments?.getSerializable(SITE) as SiteModel
 
         viewModel.start(site, prepublishingScreenState)
@@ -178,8 +182,34 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
                         PrepublishingTagsFragment.TAG
+                )
+            }
+            CATEGORIES -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingCategoriesFragment.newInstance(
+                                navigationTarget.site,
+                                isStoryPost,
+                                navigationTarget.bundle
+                        ),
+                        PrepublishingCategoriesFragment.TAG
+                )
+            }
+            ADD_CATEGORY -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingAddCategoryFragment.newInstance(
+                                navigationTarget.site,
+                                isStoryPost,
+                                navigationTarget.bundle
+                        ),
+                        PrepublishingAddCategoryFragment.TAG
                 )
             }
         }
@@ -192,8 +222,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out,
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out
+                        R.anim.prepublishing_fragment_fade_in,
+                        R.anim.prepublishing_fragment_fade_out,
+                        R.anim.prepublishing_fragment_fade_in,
+                        R.anim.prepublishing_fragment_fade_out
                 )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
@@ -206,12 +238,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    override fun onBackClicked() {
-        viewModel.onBackClicked()
+    override fun onBackClicked(bundle: Bundle?) {
+        viewModel.onBackClicked(bundle)
     }
 
-    override fun onActionClicked(actionType: ActionType) {
-        viewModel.onActionClicked(actionType)
+    override fun onActionClicked(actionType: ActionType, bundle: Bundle?) {
+        viewModel.onActionClicked(actionType, bundle)
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

@@ -8,8 +8,6 @@ import android.text.TextUtils;
 
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
-import org.wordpress.android.models.ReaderRecommendBlogList;
-import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
@@ -18,6 +16,7 @@ import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
@@ -49,22 +48,10 @@ public class ReaderBlogTable {
                    + " date_updated TEXT,"
                    + " PRIMARY KEY (blog_id)"
                    + ")");
-
-        db.execSQL("CREATE TABLE tbl_recommended_blogs ("
-                   + " blog_id INTEGER DEFAULT 0,"
-                   + " follow_reco_id INTEGER DEFAULT 0,"
-                   + " score INTEGER DEFAULT 0,"
-                   + " title TEXT COLLATE NOCASE,"
-                   + " blog_url TEXT COLLATE NOCASE,"
-                   + " image_url TEXT,"
-                   + " reason TEXT,"
-                   + " PRIMARY KEY (blog_id)"
-                   + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_blog_info");
-        db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs");
     }
 
     public static ReaderBlog getBlogInfo(long blogId) {
@@ -312,55 +299,18 @@ public class ReaderBlogTable {
                                        args);
     }
 
-    public static ReaderRecommendBlogList getRecommendedBlogs() {
-        String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY title";
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, null);
-        try {
-            ReaderRecommendBlogList blogs = new ReaderRecommendBlogList();
-            if (c.moveToFirst()) {
-                do {
-                    ReaderRecommendedBlog blog = new ReaderRecommendedBlog();
-                    blog.blogId = c.getLong(c.getColumnIndex("blog_id"));
-                    blog.followRecoId = c.getLong(c.getColumnIndex("follow_reco_id"));
-                    blog.score = c.getInt(c.getColumnIndex("score"));
-                    blog.setTitle(c.getString(c.getColumnIndex("title")));
-                    blog.setBlogUrl(c.getString(c.getColumnIndex("blog_url")));
-                    blog.setImageUrl(c.getString(c.getColumnIndex("image_url")));
-                    blog.setReason(c.getString(c.getColumnIndex("reason")));
-                    blogs.add(blog);
-                } while (c.moveToNext());
-            }
-            return blogs;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    public static void setRecommendedBlogs(ReaderRecommendBlogList blogs) {
+    public static void deleteBlogsWithIds(final List<Long> blogIds) {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement(
-                "INSERT INTO tbl_recommended_blogs"
-                + " (blog_id, follow_reco_id, score, title, blog_url, image_url, reason)"
-                + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)");
+                "DELETE FROM tbl_blog_info"
+                + " WHERE blog_id IN ("
+                + TextUtils.join(",", blogIds)
+                + ")"
+        );
         db.beginTransaction();
         try {
             try {
-                // first delete all recommended blogs
-                SqlUtils.deleteAllRowsInTable(db, "tbl_recommended_blogs");
-
-                // then insert the passed ones
-                if (blogs != null && blogs.size() > 0) {
-                    for (ReaderRecommendedBlog blog : blogs) {
-                        stmt.bindLong(1, blog.blogId);
-                        stmt.bindLong(2, blog.followRecoId);
-                        stmt.bindLong(3, blog.score);
-                        stmt.bindString(4, blog.getTitle());
-                        stmt.bindString(5, blog.getBlogUrl());
-                        stmt.bindString(6, blog.getImageUrl());
-                        stmt.bindString(7, blog.getReason());
-                        stmt.execute();
-                    }
-                }
+                stmt.execute();
                 db.setTransactionSuccessful();
             } catch (SQLException e) {
                 AppLog.e(AppLog.T.READER, e);

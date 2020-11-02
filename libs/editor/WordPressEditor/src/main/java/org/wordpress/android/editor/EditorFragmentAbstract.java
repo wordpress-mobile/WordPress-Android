@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 
@@ -28,6 +29,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract @NonNull String getEditorName();
     public abstract void setTitle(CharSequence text);
     public abstract void setContent(CharSequence text);
+    public abstract void showNotice(String message);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
     public abstract void showContentInfo() throws EditorFragmentNotAddedException;
@@ -43,8 +45,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
     // This was required since Aztec Visual->HTML can slightly change the content of the HTML. See #692 for details.
     public abstract void removeAllFailedMediaUploads();
     public abstract void removeMedia(String mediaId);
-    public abstract boolean showSavingProgressDialogIfNeeded();
-    public abstract boolean hideSavingProgressDialog();
     // Called from EditPostActivity to let the block editor know when a media selection is cancelled
     public abstract void mediaSelectionCancelled();
 
@@ -175,7 +175,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     /**
      * Callbacks used to communicate with the parent Activity
      */
-    public interface EditorFragmentListener {
+    public interface EditorFragmentListener extends DialogVisibilityProvider {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
         void onAddMediaClicked();

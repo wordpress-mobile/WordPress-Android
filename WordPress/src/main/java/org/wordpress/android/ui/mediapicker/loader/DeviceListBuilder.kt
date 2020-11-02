@@ -1,165 +1,170 @@
 package org.wordpress.android.ui.mediapicker.loader
 
-import android.content.ContentResolver
-import android.content.Context
-import android.database.Cursor
-import android.net.Uri
-import android.net.Uri.parse
-import android.os.Environment
-import android.provider.MediaStore
-import android.provider.MediaStore.Images.Media
-import android.provider.MediaStore.MediaColumns
-import android.provider.MediaStore.Video
-import android.webkit.MimeTypeMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
+import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mediapicker.MediaItem
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier.LocalUri
 import org.wordpress.android.ui.mediapicker.MediaType
-import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.MEDIA
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.SqlUtils
-import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
 class DeviceListBuilder(
-    private val context: Context,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val deviceMediaLoader: DeviceMediaLoader,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val mediaTypes: Set<MediaType>
+    private val mediaTypes: Set<MediaType>,
+    private val pageSize: Int
 ) : MediaSource {
     private val mimeTypes = MimeTypes()
+    private val cache = mutableMapOf<MediaType, Result>()
 
     override suspend fun load(
         forced: Boolean,
         loadMore: Boolean,
         filter: String?
     ): MediaLoadingResult {
+        if (!loadMore) {
+            cache.clear()
+        }
+        val lowerCaseFilter = filter?.toLowerCase(localeManagerWrapper.getLocale())
         return withContext(bgDispatcher) {
-            val result = mutableListOf<MediaItem>()
+            val mediaItems = mutableListOf<MediaItem>()
             val deferredJobs = mediaTypes.map { mediaType ->
                 when (mediaType) {
-                    IMAGE -> async { addMedia(Media.EXTERNAL_CONTENT_URI, mediaType) }
-                    VIDEO -> async { addMedia(Video.Media.EXTERNAL_CONTENT_URI, mediaType) }
-                    AUDIO -> async { addMedia(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaType) }
-                    DOCUMENT -> async { addDownloads() }
-                }
-            }
-            deferredJobs.forEach { result.addAll(it.await()) }
-            result.sortByDescending { it.dataModified }
-            val lowerCaseFilter = filter?.toLowerCase(localeManagerWrapper.getLocale())
-            val filteredResult = lowerCaseFilter?.let {
-                result.filter {
-                    it.name?.toLowerCase(localeManagerWrapper.getLocale())
-                            ?.contains(lowerCaseFilter) == true
-                }
-            } ?: result
-            MediaLoadingResult.Success(filteredResult, false)
-        }
-    }
-
-    private fun addMedia(baseUri: Uri, mediaType: MediaType): List<MediaItem> {
-        val projection = arrayOf(ID_COL, ID_DATE_MODIFIED, ID_TITLE)
-        var cursor: Cursor? = null
-        val result = mutableListOf<MediaItem>()
-        try {
-            cursor = context.contentResolver.query(
-                    baseUri,
-                    projection,
-                    null,
-                    null,
-                    null
-            )
-        } catch (e: SecurityException) {
-            AppLog.e(MEDIA, e)
-        }
-        if (cursor == null) {
-            return result
-        }
-        try {
-            val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
-            val dateIndex = cursor.getColumnIndexOrThrow(ID_DATE_MODIFIED)
-            val titleIndex = cursor.getColumnIndexOrThrow(ID_TITLE)
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(idIndex)
-                val dateModified = cursor.getLong(dateIndex)
-                val title = cursor.getString(titleIndex)
-                val uri = Uri.withAppendedPath(baseUri, "" + id)
-                val item = MediaItem(
-                        LocalUri(UriWrapper(uri)),
-                        uri.toString(),
-                        title,
-                        mediaType,
-                        getMimeType(uri),
-                        dateModified
-                )
-                result.add(item)
-            }
-        } finally {
-            SqlUtils.closeCursor(cursor)
-        }
-        return result
-    }
-
-    private suspend fun addDownloads(): List<MediaItem> = withContext(bgDispatcher) {
-        val storagePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        return@withContext storagePublicDirectory.listFiles()
-                ?.mapNotNull { file ->
-                    val uri = parse(file.toURI().toString())
-                    val mimeType = getMimeType(uri)
-                    if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)) {
-                        MediaItem(
-                                LocalUri(UriWrapper(uri)),
-                                uri.toString(),
-                                file.name,
-                                DOCUMENT,
-                                mimeType,
-                                file.lastModified()
+                    IMAGE, VIDEO, AUDIO -> async {
+                        mediaType to loadMedia(
+                                mediaType,
+                                lowerCaseFilter
                         )
-                    } else {
-                        null
                     }
-                } ?: listOf()
-    }
-
-    private fun getMimeType(uri: Uri): String? {
-        return if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-            context.contentResolver.getType(uri)
-        } else {
-            val fileExtension: String = MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-            mimeTypes.getMimeTypeForExtension(fileExtension)
+                    DOCUMENT -> async { mediaType to loadDownloads(lowerCaseFilter) }
+                }
+            }
+            val results = deferredJobs.map { it.await() }
+            // This is necessary because of the following use case:
+            // - Page size is 5, we have 10 new images, 10 audio files that are all older than all the images
+            // - We load first 5 images and first five audio files
+            // - The 5 other images are newer than the currently loaded audio files
+            // - We shouldn't show any audio files until we show all the images
+            // The following solution goes through all the results and finds the last item in each list.
+            // From these items it picks the newest one (the last one we definitely want to show)
+            // This item sets the threshold for the visible items in all the list
+            val lastShownTimestamp = results.fold(0L) { timestamp, (_, result) ->
+                val nextTimestamp = result?.nextTimestamp
+                if (nextTimestamp != null && nextTimestamp > timestamp) {
+                    nextTimestamp
+                } else {
+                    timestamp
+                }
+            }
+            // Here we filter out all the items older than the selected last visible item
+            results.forEach { (mediaType, result) ->
+                if (result != null) {
+                    val visibleItems = result.items.takeWhile { it.dataModified >= lastShownTimestamp }
+                    cache[mediaType] = result.copy(visibleItems = visibleItems.size)
+                    mediaItems.addAll(visibleItems)
+                }
+            }
+            mediaItems.sortByDescending { it.dataModified }
+            if (filter.isNullOrEmpty() || mediaItems.isNotEmpty()) {
+                MediaLoadingResult.Success(mediaItems, lastShownTimestamp > 0L)
+            } else {
+                Empty(
+                        UiStringRes(R.string.media_empty_search_list),
+                        image = R.drawable.img_illustration_empty_results_216dp
+                )
+            }
         }
     }
 
-    companion object {
-        private const val ID_COL = Media._ID
-        private const val ID_DATE_MODIFIED = MediaColumns.DATE_MODIFIED
-        private const val ID_TITLE = MediaColumns.TITLE
+    private fun loadMedia(mediaType: MediaType, filter: String?): Result? {
+        if (!cache[mediaType].shouldLoadMoreData()) {
+            return cache[mediaType]
+        }
+        val lastDateModified = cache[mediaType]?.nextTimestamp
+        val deviceMediaList = deviceMediaLoader.loadMedia(mediaType, filter, pageSize, lastDateModified)
+        val result = deviceMediaList.items.mapNotNull {
+            val mimeType = deviceMediaLoader.getMimeType(it.uri)
+            if (MediaUtils.isSupportedMimeType(mimeType)) {
+                MediaItem(LocalUri(it.uri), it.uri.toString(), it.title, mediaType, mimeType, it.dateModified)
+            } else {
+                null
+            }
+        }
+        addPage(mediaType, result, deviceMediaList.next)
+        return cache[mediaType]
+    }
+
+    private suspend fun loadDownloads(filter: String?): Result? = withContext(bgDispatcher) {
+        if (!cache[DOCUMENT].shouldLoadMoreData()) {
+            return@withContext cache[DOCUMENT]
+        }
+        val lastDateModified = cache[DOCUMENT]?.nextTimestamp
+        val documentsList = deviceMediaLoader.loadDocuments(filter, pageSize, lastDateModified)
+
+        val filteredPage = documentsList.items.mapNotNull { document ->
+            val mimeType = deviceMediaLoader.getMimeType(document.uri)
+            if (mimeType != null && mimeTypes.isSupportedApplicationType(mimeType)) {
+                MediaItem(
+                        LocalUri(document.uri),
+                        document.uri.toString(),
+                        document.title,
+                        DOCUMENT,
+                        mimeType,
+                        document.dateModified
+                )
+            } else {
+                null
+            }
+        }
+        addPage(DOCUMENT, filteredPage, documentsList.next)
+        return@withContext cache[DOCUMENT]
+    }
+
+    private fun addPage(mediaType: MediaType, page: List<MediaItem>, nextTimestamp: Long?) {
+        val newData = cache[mediaType]?.items?.toMutableList() ?: mutableListOf()
+        newData.addAll(page)
+        cache[mediaType] = Result(newData, nextTimestamp)
+    }
+
+    data class Result(val items: List<MediaItem>, val nextTimestamp: Long? = null, val visibleItems: Int = 0)
+
+    // We only want to show more data if there isn't already a page loaded that wasn't shown before
+    private fun Result?.shouldLoadMoreData(): Boolean {
+        return this == null || (nextTimestamp != null && this.items.size <= (visibleItems + pageSize))
     }
 
     class DeviceListBuilderFactory
     @Inject constructor(
-        private val context: Context,
         private val localeManagerWrapper: LocaleManagerWrapper,
+        private val deviceMediaLoader: DeviceMediaLoader,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
     ) {
         fun build(mediaTypes: Set<MediaType>): DeviceListBuilder {
             return DeviceListBuilder(
-                    context,
                     localeManagerWrapper,
+                    deviceMediaLoader,
                     bgDispatcher,
-                    mediaTypes
+                    mediaTypes,
+                    PAGE_SIZE
             )
+        }
+
+        companion object {
+            private const val PAGE_SIZE = 32
         }
     }
 }

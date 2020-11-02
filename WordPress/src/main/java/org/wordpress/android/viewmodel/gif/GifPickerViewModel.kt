@@ -23,6 +23,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * Holds the data for [org.wordpress.android.ui.gif.GifPickerActivity]
  *
