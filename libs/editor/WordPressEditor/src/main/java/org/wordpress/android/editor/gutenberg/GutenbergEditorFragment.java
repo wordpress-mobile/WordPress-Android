@@ -264,10 +264,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         switch (mediaSource) {
                             case MEDIA_SOURCE_STOCK_MEDIA:
                                 mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
+                                break;
                             case GIF_MEDIA:
                                 mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
+                                break;
                             case MEDIA_SOURCE_FILE:
                                 mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
+                                break;
                             default:
                                 AppLog.e(T.EDITOR,
                                         "Unsupported media source " + mediaSource);
