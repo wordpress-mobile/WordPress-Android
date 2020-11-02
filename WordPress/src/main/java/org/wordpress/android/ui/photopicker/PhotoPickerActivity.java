@@ -304,8 +304,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                                     // noop
                                     break;
                             }
-                            Intent intent = new Intent()
-                                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED, true);
+                            Intent intent = new Intent();
                             setResult(RESULT_OK, intent);
                             finish();
                         }

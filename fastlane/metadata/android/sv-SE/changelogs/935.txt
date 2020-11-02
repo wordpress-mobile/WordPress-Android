@@ -1,4 +1,0 @@
-15.9:
-– Blockredigeraren: Redigering av block som saknar stöd genom aktivering av Jetpack SSO från notisen om saknat block. Använd länkväljaren för att lägga till URL:er i inlägg. Dubbeltryck på textfält i åtkomlighetsläge fungerar nu som förväntat.
-– Layouten av sidan Min webbplats har förbättrats för enheter med stor skärm.
-

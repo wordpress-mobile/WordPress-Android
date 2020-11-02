@@ -87,7 +87,7 @@ class MediaPickerLauncher @Inject constructor(
                     cameraSetup = ENABLED,
                     systemPickerEnabled = true,
                     editingEnabled = true,
-                    queueResults = true,
+                    queueResults = false,
                     defaultSearchView = false,
                     title = R.string.photo_picker_title
             )

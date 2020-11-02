@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-02 07:22:35+0000
+Translation-Revision-Date: 2020-10-20 08:20:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -933,8 +933,6 @@ Language: cs_CZ
     <string name="reader_toast_err_already_liked">Již jste tento komentář označili \"to se mi líbí\"</string>
     <string name="reader_toast_err_comment_not_found">Komentář nebyl nalezen!</string>
     <string name="reader_toast_err_cannot_like_post">Selhalo označení příspěvku \"to se mi líbí\"</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com příspěvek</string>
-    <string name="reader_title_deeplink">WordPress čtečka</string>
     <string name="error_notif_q_action_reply">Nepodařilo se odpovědět na komentář. Zkuste to znovu později.</string>
     <string name="error_notif_q_action_approve">Nepodařilo se schválit komentář. Zkuste to znovu později.</string>
     <string name="error_notif_q_action_like">Nepodařilo se označit komentář to se mi líbí. Zkuste to znovu později.</string>
@@ -1011,7 +1009,6 @@ Language: cs_CZ
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
     <string name="reader_empty_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
     <string name="reader_hint_post_search">Prohledat WordPress.com</string>
-    <string name="reader_title_related_post_detail">Související příspěvky </string>
     <string name="preview_screen_links_disabled">Odkazy jsou zakázány v náhledu na obrazovce</string>
     <string name="send">Poslat</string>
     <string name="person_removed">%1$s úspěšně odstraněno</string>
@@ -1380,7 +1377,6 @@ Language: cs_CZ
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
     <string name="reader_empty_comments">Žádné komentáře</string>
     <string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
-    <string name="reader_label_liked_by">To se líbí</string>
     <string name="reader_label_like">To se mi líbí</string>
     <string name="reader_label_view_original">Zobrazit původní článek</string>
     <string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>

@@ -6,32 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
-    <string name="gutenberg_native_white">白色</string>
-    <string name="gutenberg_native_vivid_red">亮紅色</string>
-    <string name="gutenberg_native_vivid_purple">亮紫色</string>
-    <string name="gutenberg_native_vivid_green_cyan">亮青色</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">亮藍綠到亮紫色</string>
-    <string name="gutenberg_native_vivid_cyan_blue">亮藍綠色</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">極淺灰到藍灰青色</string>
     <string name="gutenberg_native_select_item">選取項目</string>
     <string name="gutenberg_native_search_or_type_url">搜尋或輸入 URL</string>
-    <string name="gutenberg_native_pale_pink">淡粉色</string>
-    <string name="gutenberg_native_pale_ocean">淡藍色</string>
-    <string name="gutenberg_native_pale_cyan_blue">淡藍綠色</string>
-    <string name="gutenberg_native_midnight">午夜</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">亮橘到亮紅色</string>
-    <string name="gutenberg_native_luminous_vivid_orange">亮橘色</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">亮琥珀到亮橘色</string>
-    <string name="gutenberg_native_luminous_vivid_amber">亮琥珀色</string>
-    <string name="gutenberg_native_luminous_dusk">亮暮色</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">淺青到亮青色</string>
-    <string name="gutenberg_native_light_green_cyan">淺青色</string>
-    <string name="gutenberg_native_electric_grass">電子草</string>
-    <string name="gutenberg_native_cyan_bluish_gray">藍灰青色</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum">冷色至暖色調</string>
-    <string name="gutenberg_native_blush_light_purple">淺紫紅色</string>
-    <string name="gutenberg_native_blush_bordeaux">酒紅色</string>
-    <string name="gutenberg_native_black">黑色</string>
     <string name="gutenberg_native_add_this_telephone_link">新增此電話連結</string>
     <string name="gutenberg_native_add_this_link">新增此連結</string>
     <string name="gutenberg_native_add_this_email_link">新增此電子郵件連結</string>
@@ -202,6 +178,7 @@ Language: zh_TW
     <string name="menu_content_info">內容結構</string>
     <string name="everyone">所有人</string>
     <string name="me">我</string>
+    <string name="gutenberg_native_dismiss">關閉</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">標籤可協助讀者瞭解文章內容。</string>
     <string name="prepublishing_nudges_toolbar_title_publish">發表日期</string>
@@ -218,7 +195,6 @@ Language: zh_TW
     <string name="post_list_move_trashed_post_to_draft_dialog_message">你無法編輯移至垃圾桶的文章。 要將此文章狀態變更為「草稿」以便修正嗎？</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
     <string name="reader_label_choose_your_interests">選擇你的興趣</string>
-    <string name="reader_label_discover_follow_tags">探索並關注你喜愛的標籤</string>
     <string name="reader_choose_interests_content_description">選擇你的興趣</string>
     <string name="reader_btn_done">完成</string>
     <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
@@ -418,9 +394,7 @@ Language: zh_TW
     <string name="reader_btn_selected_filter_tick_content_description">已選取</string>
     <string name="reader_btn_select_filter_content_description">選擇網站或標籤以篩選文章</string>
     <string name="reader_btn_remove_filter_content_description">移除目前的篩選條件</string>
-    <string name="reader_title_subs">管理標籤和網站</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登入 WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">登入 WordPress.com，查看關注標籤的最新文章</string>
     <string name="reader_filter_self_hosted_empty_sites_list">登入 WordPress.com，查看關注網站的最新文章</string>
     <string name="gutenberg_native_template_preview">範例預覽</string>
     <string name="gutenberg_native_replace_current_block">取代目前區塊</string>
@@ -428,9 +402,7 @@ Language: zh_TW
     <string name="gutenberg_native_add_to_beginning">新增至「開始」</string>
     <string name="gutenberg_native_add_block_before">在之前新增區塊</string>
     <string name="gutenberg_native_add_block_after">在之後新增區塊</string>
-    <string name="reader_filter_empty_tags_action">新增標籤</string>
     <string name="reader_filter_empty_sites_action">關注網站</string>
-    <string name="reader_filter_empty_tags_list">你可以新增標籤以關注特定主題的文章</string>
     <string name="reader_filter_empty_sites_list">查看你關注網站的最新聞張</string>
     <string name="reader_filter_main_title">關注中</string>
     <string name="reader_filter_cta">篩選</string>
@@ -488,7 +460,6 @@ Language: zh_TW
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="reader_discover_display_name">探索</string>
     <string name="reader_save_for_later_display_name">已儲存</string>
-    <string name="reader_filter_tags_title">標籤</string>
     <string name="reader_filter_sites_title">網站</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -503,6 +474,7 @@ Language: zh_TW
     <string name="gutenberg_native_translate">翻譯</string>
     <string name="gutenberg_native_title">標題：</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">點選即可隱藏鍵盤</string>
+    <string name="gutenberg_native_tap_here_to_show_help">點選此處顯示說明</string>
     <string name="gutenberg_native_take_a_video">拍攝視訊</string>
     <string name="gutenberg_native_take_a_photo_or_video">拍攝相片或視訊</string>
     <string name="gutenberg_native_take_a_photo">拍攝照片</string>
@@ -535,6 +507,7 @@ Language: zh_TW
     <string name="gutenberg_native_image_caption_s">圖片說明。%s</string>
     <string name="gutenberg_native_hide_keyboard">隱藏鍵盤</string>
     <string name="gutenberg_native_here_is_the_panel_content">這裡是面板內容！</string>
+    <string name="gutenberg_native_help_icon">說明圖示</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">無法插入媒體。\n請點選以顯示選項。</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">按兩次即可復原上次變更</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">按兩下以切換設定</string>
@@ -1064,8 +1037,6 @@ Language: zh_TW
     <string name="quick_start_button_negative">現在不要</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
-    <string name="reader_empty_followed_tags_title">尚未有關注的標籤</string>
-    <string name="reader_empty_followed_tags_subtitle">請在此處新增標籤，以尋找有關您最喜愛主題的文章</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="install_jetpack_retry">重試</string>
     <string name="install_jetpack_continue">設定</string>
@@ -1798,8 +1769,6 @@ Language: zh_TW
     <string name="reader_toast_err_already_liked">你已經對該則留言按過讚</string>
     <string name="reader_toast_err_comment_not_found">找不到留言！</string>
     <string name="reader_toast_err_cannot_like_post">無法對此文章按讚</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com 文章</string>
-    <string name="reader_title_deeplink">WordPress 讀取器</string>
     <string name="error_notif_q_action_reply">無法回應留言。請稍後再試一次。</string>
     <string name="error_notif_q_action_approve">無法核准留言。請稍後再試一次。</string>
     <string name="error_notif_q_action_like">無法對留言按讚。請稍後再試一次。</string>
@@ -1876,7 +1845,6 @@ Language: zh_TW
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
     <string name="reader_empty_search_description">在你的語言中找不到與 %s 相關的結果</string>
     <string name="reader_hint_post_search">搜尋 WordPress</string>
-    <string name="reader_title_related_post_detail">相關文章</string>
     <string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
     <string name="send">傳送</string>
     <string name="person_removed">已成功移除 %1$s</string>
@@ -2138,7 +2106,6 @@ Language: zh_TW
     <string name="reader_short_like_count_multi">%s 個讚</string>
     <string name="reader_short_like_count_one">1 個讚</string>
     <string name="reader_short_like_count_none">讚</string>
-    <string name="reader_menu_tags">編輯標籤和網站</string>
     <string name="reader_title_post_detail">讀者文章</string>
     <string name="notifications_push_summary">在裝置上顯示通知的相關設定。</string>
     <string name="notifications_email_summary">將通知傳送至帳號所繫結之電子郵件地址的相關設定。</string>
@@ -2235,8 +2202,6 @@ Language: zh_TW
     <string name="cab_selected">已選取：%d</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
     <string name="reader_empty_comments">尚未有留言</string>
-    <string name="reader_empty_posts_in_tag">沒有任何含有此標籤的文章</string>
-    <string name="reader_label_liked_by">按讚的人：</string>
     <string name="reader_label_like">按讚</string>
     <string name="reader_label_view_original">查看原始文章</string>
     <string name="reader_label_comments_closed">留言已關閉</string>
@@ -2267,9 +2232,7 @@ Language: zh_TW
     <string name="reader_toast_err_already_follow_blog">你已經關注此網站</string>
     <string name="reader_toast_err_get_blog_info">無法顯示此網站</string>
     <string name="reader_label_followed_blog">已關注的網站</string>
-    <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或標籤</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
-    <string name="reader_page_followed_tags">關注的標籤</string>
     <string name="reader_title_blog_preview">讀者網站</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
@@ -2297,8 +2260,6 @@ Language: zh_TW
     <string name="blog_not_found">存取此網誌時發生錯誤</string>
     <string name="gallery_error">無法擷取媒體項目</string>
     <string name="no_network_message">沒有可用的網路</string>
-    <string name="reader_toast_err_remove_tag">無法移除此標籤</string>
-    <string name="reader_toast_err_add_tag">無法新增此標籤</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
@@ -2368,8 +2329,6 @@ Language: zh_TW
     <string name="reader_toast_err_url_intent">無法開啟 %s</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
-    <string name="reader_toast_err_tag_invalid">這並非有效的標籤</string>
-    <string name="reader_toast_err_tag_exists">你已經在關注此標籤</string>
     <string name="reader_toast_err_comment_failed">無法張貼你的回應</string>
     <string name="reader_likes_only_you">你說這個讚</string>
     <string name="reader_likes_one">1 人說這個讚</string>
