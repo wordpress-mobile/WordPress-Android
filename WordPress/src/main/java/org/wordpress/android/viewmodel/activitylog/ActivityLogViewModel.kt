@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.activitylog
 
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -151,6 +152,9 @@ class ActivityLogViewModel @Inject constructor(
         if (item is Event) {
             _showRewindDialog.value = item
         }
+    }
+
+    fun onDateRangeSelected(dateRange: Pair<Long, Long>?) {
     }
 
     fun onRewindConfirmed(rewindId: String) {

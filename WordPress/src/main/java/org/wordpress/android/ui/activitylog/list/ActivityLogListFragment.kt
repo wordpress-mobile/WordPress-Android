@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
@@ -27,6 +28,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+
+private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -72,6 +75,13 @@ class ActivityLogListFragment : Fragment() {
                 }
             }
         })
+
+        date_range_picker.setOnClickListener { _ ->
+            val builder = MaterialDatePicker.Builder.dateRangePicker()
+            val picker = builder.build()
+            picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
+            picker.show(parentFragmentManager, DATE_PICKER_TAG)
+        }
 
         setupObservers()
 
