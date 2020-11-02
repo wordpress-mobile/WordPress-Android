@@ -55,11 +55,10 @@ constructor(
 
         payload.after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
         payload.before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
-        // the API accepts only "group[]=ABC&group[]=XYZ" format and we can't put the same key twice into a map
-        val group = payload.groups.joinToString(separator = "&group[]=")
-        if (group.isNotEmpty()) {
-            params["group[]"] = group
+        payload.groups.forEachIndexed { index, value ->
+            params["group[$index]"] = value
         }
+
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, ActivitiesResponse::class.java)
         return when (response) {
             is Success -> {
