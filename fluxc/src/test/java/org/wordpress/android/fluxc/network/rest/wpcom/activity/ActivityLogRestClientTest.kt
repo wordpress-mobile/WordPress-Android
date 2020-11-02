@@ -92,7 +92,8 @@ class ActivityLogRestClientTest {
             assertEquals("$number", this["number"])
             assertEquals(DateTimeUtils.iso8601FromDate(Date(afterMillis)), this["after"])
             assertEquals(DateTimeUtils.iso8601FromDate(Date(beforeMillis)), this["before"])
-            assertEquals("post&group[]=attachment", this["group[]"])
+            assertEquals("post", this["group[0]"])
+            assertEquals("attachment", this["group[1]"])
         }
     }
 
