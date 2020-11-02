@@ -51,11 +51,13 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.WPMediaUtils.LaunchCameraCallback
 import java.io.File
 import javax.inject.Inject
 
 class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
     private var mediaCapturePath: String? = null
+    private var mediaCaptureUri: Uri? = null
     private lateinit var mediaPickerSetup: MediaPickerSetup
 
     // note that the site isn't required and may be null
@@ -202,20 +204,21 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             TAKE_PHOTO -> {
                 try {
                     val intent = Intent()
-                    mediaCapturePath!!.let {
+                    val photoUri = mediaCaptureUri ?: mediaCapturePath!!.let {
                         WPMediaUtils.scanMediaFile(this, it)
                         val f = File(it)
-                        val capturedImageUri = listOf(Uri.fromFile(f))
-                        if (mediaPickerSetup.queueResults) {
-                            intent.putQueuedUris(capturedImageUri)
-                        } else {
-                            intent.putUris(capturedImageUri)
-                        }
-                        intent.putExtra(
-                                EXTRA_MEDIA_SOURCE,
-                                ANDROID_CAMERA.name
-                        )
+                        Uri.fromFile(f)
                     }
+                    val capturedImageUri = listOf(photoUri)
+                    if (mediaPickerSetup.queueResults) {
+                        intent.putQueuedUris(capturedImageUri)
+                    } else {
+                        intent.putUris(capturedImageUri)
+                    }
+                    intent.putExtra(
+                            EXTRA_MEDIA_SOURCE,
+                            ANDROID_CAMERA.name
+                    )
                     intent
                 } catch (e: RuntimeException) {
                     AppLog.e(MEDIA, e)
@@ -326,7 +329,15 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 startActivityForResult(buildIntent(this, action.mediaPickerSetup, site, localPostId), PHOTO_PICKER)
             }
             OpenCameraForPhotos -> {
-                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID) { mediaCapturePath = it }
+                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, object : LaunchCameraCallback {
+                    override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+                        this@MediaPickerActivity.mediaCapturePath = mediaCapturePath
+                    }
+
+                    override fun onMediaUriReady(mediaUri: Uri?) {
+                        this@MediaPickerActivity.mediaCaptureUri = mediaUri
+                    }
+                })
             }
         }
     }
