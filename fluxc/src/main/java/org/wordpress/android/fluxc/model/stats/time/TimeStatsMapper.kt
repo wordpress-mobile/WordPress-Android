@@ -53,43 +53,41 @@ class TimeStatsMapper
     }
 
     fun map(response: ReferrersResponse, cacheMode: LimitMode): ReferrersModel {
-        val first = response.groups.values.firstOrNull()
-        val groups = first?.let {
-            first.groups.let {
-                if (cacheMode is LimitMode.Top) {
-                    it.take(cacheMode.limit)
-                } else {
-                    it
-                }
-            }.map { group ->
-                val children = group.referrers?.mapNotNull { result ->
-                    if (result.name != null && result.views != null) {
-                        val firstChildUrl = result.children?.firstOrNull()?.url
-                        Referrer(
-                                result.name,
-                                result.views,
-                                result.icon,
-                                firstChildUrl ?: result.url,
-                                result.markedAsSpam
-                        )
+        val groups =
+                response.referrerGroups.let {
+                    if (cacheMode is LimitMode.Top) {
+                        it.take(cacheMode.limit)
                     } else {
-                        AppLog.e(STATS, "ReferrersResponse: Missing fields on a referrer")
-                        null
+                        it
                     }
+                }.map { group ->
+                    val children = group.referrers?.mapNotNull { result ->
+                        if (result.name != null && result.views != null) {
+                            val firstChildUrl = result.children?.firstOrNull()?.url
+                            Referrer(
+                                    result.name,
+                                    result.views,
+                                    result.icon,
+                                    firstChildUrl ?: result.url,
+                                    result.markedAsSpam
+                            )
+                        } else {
+                            AppLog.e(STATS, "ReferrersResponse: Missing fields on a referrer")
+                            null
+                        }
+                    }
+                    ReferrersModel.Group(
+                            group.group,
+                            group.name,
+                            group.icon,
+                            group.url,
+                            group.total,
+                            children ?: listOf(),
+                            group.markedAsSpam
+                    )
                 }
-                ReferrersModel.Group(
-                        group.groupId,
-                        group.name,
-                        group.icon,
-                        group.url,
-                        group.total,
-                        children ?: listOf(),
-                        group.markedAsSpam
-                )
-            }
-        }
-        val hasMore = if (first != null && groups != null) first.groups.size > groups.size else false
-        return ReferrersModel(first?.otherViews ?: 0, first?.totalViews ?: 0, groups ?: listOf(), hasMore)
+        val hasMore = response.referrerGroups.size > groups.size
+        return ReferrersModel(response.otherViews ?: 0, response.totalViews ?: 0, groups, hasMore)
     }
 
     fun map(response: ClicksResponse, cacheMode: LimitMode): ClicksModel {
