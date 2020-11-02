@@ -18,7 +18,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class SuggestionViewModel @Inject constructor(
-    private val suggestionSourceSubcomponentFactory: SuggestionSourceSubcomponent.Factory,
+    private val suggestionSourceProvider: SuggestionSourceProvider,
     private val resourceProvider: ResourceProvider,
     private val networkUtils: NetworkUtilsWrapper
 ) : ViewModel() {
@@ -34,7 +34,7 @@ class SuggestionViewModel @Inject constructor(
         }
     }
 
-    private val suggestionTypeString: String by lazy {
+    val suggestionTypeString: String by lazy {
         resourceProvider.getString(
                 when (type) {
                     XPosts -> R.string.suggestion_xpost
@@ -46,7 +46,7 @@ class SuggestionViewModel @Inject constructor(
     fun init(type: SuggestionType, site: SiteModel) =
             if (supportsSuggestions(site)) {
                 this.type = type
-                suggestionSource = getSuggestionSourceForType(type, site)
+                suggestionSource = suggestionSourceProvider.get(type, site)
                 true
             } else {
                 AppLog.e(T.EDITOR, "Attempting to initialize suggestions for an unsupported site")
@@ -55,20 +55,8 @@ class SuggestionViewModel @Inject constructor(
 
     private fun supportsSuggestions(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
 
-    private fun getSuggestionSourceForType(
-        type: SuggestionType,
-        site: SiteModel
-    ): SuggestionSource {
-        val suggestionSourceSubcomponent = suggestionSourceSubcomponentFactory.create(site)
-        return when (type) {
-            Users -> suggestionSourceSubcomponent.userSuggestionSource()
-            XPosts -> suggestionSourceSubcomponent.xPostSuggestionSource()
-        }
-    }
-
     fun onConnectionChanged(event: ConnectionChangeEvent) {
-        val hasNoSuggestions = suggestionSource.suggestions.value?.isEmpty() == true
-        if (event.isConnected && hasNoSuggestions) {
+        if (event.isConnected) {
             suggestionSource.refreshSuggestions()
         }
     }
@@ -121,6 +109,6 @@ class SuggestionViewModel @Inject constructor(
 data class EmptyViewState(val string: String, val visibility: Int)
 
 sealed class FinishAttempt {
-    class OnlyOneAvailable(val onlySelectedValue: String) : FinishAttempt()
-    class NotExactlyOneAvailable(val errorMessage: String) : FinishAttempt()
+    data class OnlyOneAvailable(val onlySelectedValue: String) : FinishAttempt()
+    data class NotExactlyOneAvailable(val errorMessage: String) : FinishAttempt()
 }
