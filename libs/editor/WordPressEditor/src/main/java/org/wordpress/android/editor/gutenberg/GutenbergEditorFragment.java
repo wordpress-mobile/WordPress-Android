@@ -261,12 +261,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
-                        if (mediaSource.equals(MEDIA_SOURCE_STOCK_MEDIA)) {
-                            mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
-                        } else if (mediaSource.equals(GIF_MEDIA)) {
-                            mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
-                        } else if (mediaSource.equals(MEDIA_SOURCE_FILE)) {
-                            mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
+                        switch (mediaSource) {
+                            case MEDIA_SOURCE_STOCK_MEDIA:
+                                mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
+                            case GIF_MEDIA:
+                                mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
+                            case MEDIA_SOURCE_FILE:
+                                mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
+                            default:
+                                AppLog.e(T.EDITOR,
+                                        "Unsupported media source " + mediaSource);
                         }
                     }
                 },
