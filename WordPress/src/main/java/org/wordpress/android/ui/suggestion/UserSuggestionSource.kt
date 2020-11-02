@@ -31,17 +31,21 @@ class UserSuggestionSource @Inject constructor(
     override val suggestions: LiveData<List<Suggestion>> = _suggestions
 
     init {
-        postSavedSuggestions()
+        postSavedSuggestions(false)
         connectionManager.bindToService()
         eventBusWrapper.register(this)
     }
 
-    private fun postSavedSuggestions() {
+    private fun postSavedSuggestions(suggestionsWereJustUpdated: Boolean) {
         launch {
             val suggestions = Suggestion.fromUserSuggestions(
                     UserSuggestionTable.getSuggestionsForSite(site.siteId)
             )
-            _suggestions.postValue(suggestions)
+
+            // Only send empty suggestions if they are recent
+            if (suggestions.isNotEmpty() || suggestionsWereJustUpdated) {
+                _suggestions.postValue(suggestions)
+            }
         }
     }
 
@@ -55,7 +59,7 @@ class UserSuggestionSource @Inject constructor(
     @Subscribe
     fun onEventMainThread(event: SuggestionNameListUpdated) {
         if (event.mRemoteBlogId == site.siteId) {
-            postSavedSuggestions()
+            postSavedSuggestions(true)
         }
     }
 

@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.XPostsSource.REST_API
 import org.wordpress.android.fluxc.store.XPostsStore
 import org.wordpress.android.modules.BG_THREAD
 import javax.inject.Inject
@@ -29,19 +30,26 @@ class XPostsSuggestionSource @Inject constructor(
                     .getXPostsFromDb(site)
                     .map { Suggestion.fromXpost(it) }
                     .sortedBy { it.value }
-            _suggestions.postValue(suggestions)
+            if (suggestions.isNotEmpty()) {
+                _suggestions.postValue(suggestions)
+            }
         }
         refreshSuggestions()
     }
 
     override fun refreshSuggestions() {
         launch {
-            val suggestions = xPostsStore
-                    .fetchXPosts(site)
-                    .xPosts
-                    .map { Suggestion.fromXpost(it) }
-                    .sortedBy { it.value }
-            _suggestions.postValue(suggestions)
+            val result = xPostsStore.fetchXPosts(site)
+
+            // We already checked the DB when this class was initialized,
+            // so we only care if the suggestions have been updated
+            if (result.source == REST_API) {
+                val sortedSuggestions = result
+                        .xPosts
+                        .map { Suggestion.fromXpost(it) }
+                        .sortedBy { it.value }
+                _suggestions.postValue(sortedSuggestions)
+            }
         }
     }
 

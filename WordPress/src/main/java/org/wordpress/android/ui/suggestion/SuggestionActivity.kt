@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
@@ -139,20 +140,26 @@ class SuggestionActivity : LocaleAwareActivity() {
             showDropdownOnTouch()
         }
 
-        viewModel.suggestions.observe(this, Observer {
-            val isFirstUpdate = suggestionAdapter?.suggestionList == null
-            suggestionAdapter?.suggestionList = it
+        viewModel.suggestions.observe(this, Observer { suggestions ->
+            if (suggestions.isEmpty()) {
+                // Notify user that there are no suggestions and exit the suggestions activity because
+                // there is nothing the user can do here if there aren't any suggestions
+                val message = getString(string.suggestion_none, viewModel.suggestionTypeString)
+                ToastUtils.showToast(this@SuggestionActivity, message)
+                finish()
+            }
 
-            // Calling forceFiltering seemed to be the only way to force the suggestions list to
-            // immediately refresh with the new data
+            suggestionAdapter?.suggestionList = suggestions
+
+            // Calling forceFiltering is needed to force the suggestions list to always
+            // immediately refresh when there is new data
             autocompleteText.forceFiltering(autocompleteText.text)
 
             // Ensure that the suggestions list is displayed wth the new data. This is particularly needed when
-            // suggestion list was empty before the new data was received, otherwise the no-longer-empty suggestion
-            // list will not display when it is updated. We don't want to call showDropDown on the first update
-            // both because it is only needed when an empty list is updated, and because it avoids a crash when there
-            // is no internet connection.
-            if (!isFirstUpdate) {
+            // suggestion list was empty before the new data was received, otherwise the no-longer-empty
+            // suggestion list will not display when it is updated. Wrapping this in the isAttachedToWindow
+            // check avoids a crash if the suggestions are loaded when the view is not attached.
+            if (autocompleteText.isAttachedToWindow) {
                 autocompleteText.showDropDown()
             }
 
@@ -228,6 +235,9 @@ class SuggestionActivity : LocaleAwareActivity() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        if (autocompleteText.isAttachedToWindow) {
+            autocompleteText.showDropDown()
+        }
     }
 
     override fun onPause() {
