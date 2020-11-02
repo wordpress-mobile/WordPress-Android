@@ -486,7 +486,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         int chooseFileResourceId =
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(stockMediaResourceId)));
+        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(chooseFileResourceId)));
 
         return otherMediaOptions;
     }
