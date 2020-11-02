@@ -122,9 +122,7 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        if (activityLogFiltersFeatureConfig.isEnabled()) {
-            _dateRangePickerVisibility.value = true
-        }
+        _dateRangePickerVisibility.value = activityLogFiltersFeatureConfig.isEnabled()
 
         isStarted = true
     }
