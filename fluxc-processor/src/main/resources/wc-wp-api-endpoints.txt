@@ -43,5 +43,6 @@
 /connect/label/<order_id>/<shippingLabelId>/refund
 
 /connect/normalize-address
+/connect/packages
 
 /leaderboards
