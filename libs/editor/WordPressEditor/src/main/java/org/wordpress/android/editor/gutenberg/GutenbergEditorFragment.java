@@ -483,7 +483,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         String packageName = activity.getApplication().getPackageName();
 
-        int stockMediaResourceId =
+        int chooseFileResourceId =
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
         otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(stockMediaResourceId)));
