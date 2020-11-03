@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
@@ -33,6 +33,7 @@ import javax.inject.Inject
  */
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var displayUtils: DisplayUtilsWrapper
     @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
@@ -144,6 +145,5 @@ class HomePagePickerFragment : Fragment() {
         }
     }
 
-    private fun isPhoneLandscape() = DisplayUtils.isLandscape(requireContext()) &&
-            !DisplayUtils.isTablet(requireContext()) && !DisplayUtils.isXLargeTablet(requireContext())
+    private fun isPhoneLandscape() = displayUtils.isLandscape() && !displayUtils.isTablet()
 }
