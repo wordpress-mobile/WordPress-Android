@@ -7,6 +7,9 @@ import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 import kotlin.math.min
 
+/**
+ * Width to height thumbnail dimension ratio
+ */
 private const val ratio = 0.75
 
 class ThumbDimensionProvider @Inject constructor(
@@ -19,6 +22,10 @@ class ThumbDimensionProvider @Inject constructor(
     private val isTabletOrLandscape: Boolean
         get() = displayUtilsWrapper.isTablet() || displayUtilsWrapper.isLandscape()
 
+    /**
+     * We calculate the columns by dividing the container width (without the margins) by the card width. The horizontal
+     * margin between thumbnails is taken into account
+     */
     private val largeScreenColumns: Int
         get() = (containerWidth - (2 * getPixels(dimen.hpp_card_margin_outer)) - getPixels(dimen.hpp_card_padding)) /
                 (getPixels(dimen.hpp_card_width) + getPixels(dimen.hpp_card_padding))
@@ -28,6 +35,10 @@ class ThumbDimensionProvider @Inject constructor(
     private val largeScreenWidth: Int
         get() = getPixels(dimen.hpp_card_width)
 
+    /**
+     * On phones we want the thumbnails to resize to cover the whole screen width. We calculate this by dividing the
+     * container width (without the margins and spacing between thumbnails) by the number of columns
+     */
     private val phoneWidth: Int
         get() = (containerWidth - ((phoneColumns + 1) * getPixels(dimen.hpp_card_padding))) / phoneColumns
 
