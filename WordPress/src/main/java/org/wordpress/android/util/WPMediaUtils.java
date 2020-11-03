@@ -249,10 +249,11 @@ public class WPMediaUtils {
     public static void launchChooserWithContext(
             Activity activity,
             OpenSystemPicker openSystemPicker,
-            UiHelpers uiHelpers
+            UiHelpers uiHelpers,
+            int requestCode
     ) {
         activity.startActivityForResult(prepareChooserIntent(activity, openSystemPicker, uiHelpers),
-                openSystemPicker.getChooserContext().getRequestCode());
+                requestCode);
     }
 
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {

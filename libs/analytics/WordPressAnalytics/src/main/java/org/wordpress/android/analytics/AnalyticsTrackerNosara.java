@@ -666,6 +666,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_blog_previewed";
             case READER_BLOG_UNFOLLOWED:
                 return "reader_site_unfollowed";
+            case READER_SUGGESTED_SITE_VISITED:
+                return "reader_suggested_site_visited";
+            case READER_SUGGESTED_SITE_TOGGLE_FOLLOW:
+                return "reader_suggested_site_toggle_follow";
             case READER_ARTICLE_VISITED:
                 return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
@@ -1865,6 +1869,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_pull_to_refresh";
             case POST_CARD_MORE_TAPPED:
                 return "post_card_more_tapped";
+            case READER_ARTICLE_DETAIL_MORE_TAPPED:
+                return "reader_article_detail_more_tapped";
             case READER_CHIPS_MORE_TOGGLED:
                 return "reader_chips_more_toggled";
             case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:

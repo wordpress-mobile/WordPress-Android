@@ -92,7 +92,7 @@
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
     <string name="continue_with_wpcom">Continue with WordPress.com</string>
-    <string name="enter_your_site_address">Enter your site address</string>
+    <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 

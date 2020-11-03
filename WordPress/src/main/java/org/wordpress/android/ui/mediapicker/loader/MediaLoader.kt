@@ -37,7 +37,7 @@ data class MediaLoader(
                     loadAction
                 }
 
-                if (currentAction !is Start && currentAction !is NextPage) {
+                if (currentAction !is NextPage) {
                     state = updateState(state.copy(isLoading = true, emptyState = null))
                 }
                 val updatedState = loadState(currentAction, state)

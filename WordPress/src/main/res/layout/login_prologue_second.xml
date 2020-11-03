@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/login_prologue_content_area"
+    android:layout_height="@dimen/login_prologue_content_area"
+    android:layout_gravity="center">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_one"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Small"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/purple_50"
+        app:icon="@drawable/ic_align_image_left_white_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/card_two" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_two"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/pink_40"
+        app:icon="@drawable/ic_image_multiple_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/card_three" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_three"
+        style="@style/Widget.LoginFlow.Prologue.CircularButton.Medium"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/blue_50"
+        app:icon="@drawable/ic_plus_white_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_one"
+        style="@style/Widget.LoginFlow.Prologue.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="48dp"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:cursorVisible="true"
+            android:fontFamily="serif"
+            android:includeFontPadding="false"
+            android:text="@string/login_prologue_second_subtitle_one"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_two"
+        style="@style/Widget.LoginFlow.Prologue.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:minHeight="96dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_one">
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="13dp"
+            android:background="@android:color/transparent"
+            android:clickable="false"
+            android:cursorVisible="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:text="@string/login_prologue_second_subtitle_two"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp"
+            app:lineHeight="18sp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_three"
+        style="@style/Widget.LoginFlow.Prologue.Card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:minHeight="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/card_two">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:weightSum="90">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_prologue_second_asset_one" />
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_prologue_second_asset_two" />
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="8dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/login_prologue_second_asset_three" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 142;
+    private static final int DB_VERSION = 143;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -101,6 +101,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 140 - drop tbl_tags_recommended
      * 141 - added tbl_posts.tags
      * 142 - remove followed tags from tbl_tags
+     * 143 - drop tbl_recommended_blogs
      */
 
     /*
@@ -205,6 +206,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 141:
                 String[] args = {Integer.toString(ReaderTagType.FOLLOWED.toInt())};
                 db.execSQL("DELETE FROM tbl_tags WHERE tag_type=?", args);
+                currentVersion++;
+            case 142:
+                db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {

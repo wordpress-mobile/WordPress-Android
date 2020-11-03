@@ -260,9 +260,13 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showProvidedMediaPicker() {
+        // the ComposeLoopFrameActivity currently only knows about RequestCodes.PHOTO_PICKER and not about
+        // RequestCodes.STORIES_PHOTO_PICKER; as a temporary solution we are feeding the ComposeLoopFragmentActivity
+        // with the PHOTO_PICKER. We should add the STORIES_PHOTO_PICKER to the stories lib
         mediaPickerLauncher.showStoriesPhotoPickerForResult(
                 this,
-                site
+                site,
+                RequestCodes.PHOTO_PICKER
         )
     }
 

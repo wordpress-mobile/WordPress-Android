@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-29 09:04:25+0000
+Translation-Revision-Date: 2020-10-20 06:06:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
+    <string name="gutenberg_native_help_button">Botón de ayuda</string>
+    <string name="gutenberg_native_edit_using_web_editor">Editar usando el editor web</string>
+    <string name="gutenberg_native_choose_images">Elegir las imágenes</string>
+    <string name="stories_intro_create_story_post_label">Crear una entrada de historia</string>
+    <string name="stories_intro_description_second">Son publicados como una nueva entrada de blog en tu sitio para que tu audiencia nunca se pierda nada.</string>
+    <string name="stories_intro_title_second">Las entradas de historias no desaparecen</string>
+    <string name="stories_intro_description_first">Combina fotos, vídeos y texto para crear entradas de historias atractivas y accesibles que les encantarán a tus visitantes.</string>
+    <string name="stories_intro_title_first">Ahora las historias son para todos</string>
+    <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
+    <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
+    <string name="stories_intro_main_subtitle">Tienes acceso anticipado a las entradas de historias y nos encantaría que las probaras.</string>
+    <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
+    <string name="mlp_generic_error">Ha ocurrido un error al obtener los diseños</string>
+    <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
+    <string name="mlp_notice_page_created">Página creada</string>
+    <string name="mlp_preview_title">Vista previa del diseño</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s ha denegado el acceso a tus fotos. Para corregirlo, edita tus permisos y activa %2$s y %3$s.</string>
+    <string name="media_insert_failed">Inserción del medio fallida.</string>
+    <string name="media_insert_failed_with_reason">Ha fallado la inserción del medio: %s</string>
+    <string name="photo_picker_wordpress_media_library">Elige desde la biblioteca de medios de WordPress</string>
+    <string name="reader_label_toolbar_back">Volver</string>
+    <string name="reader_discover_empty_button_text">Primeros pasos</string>
+    <string name="reader_discover_empty_title">Sigue temáticas y descubre nuevos blogs</string>
+    <string name="reader_post_details_header_by_author_name">por</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Marcar como spam</string>
+    <string name="stats_referrer_popup_menu_open_website">Abrir la web</string>
+    <string name="media_uploading_gif_library_photo">Subiendo medios GIF</string>
+    <string name="media_uploading_stock_library_photo">Subiendo medios de inventarios</string>
+    <string name="media_uploading_default">Subiendo medios</string>
+    <string name="gutenberg_native_select_item">Seleccionar un elemento</string>
+    <string name="gutenberg_native_search_or_type_url">Busca o escribe la URL</string>
+    <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
+    <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
+    <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
+    <string name="suggestion_no_connection">«No hay conexión a Internet.\nNo están disponibles las sugerencias.»</string>
     <string name="typeface_label_shrikhand">Negrita</string>
     <string name="typeface_label_space_mono">Moderno</string>
     <string name="typeface_label_pacifico">Alegre</string>
@@ -151,7 +190,6 @@ Language: es_VE
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un nuevo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options">Opciones del bloque %s</string>
-    <string name="gutenberg_native_remove_block">Eliminar bloque</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
     <string name="gutenberg_native_copy_block">Copiar bloque</string>
     <string name="gutenberg_native_copied_block">Bloque copiado</string>
@@ -166,11 +204,9 @@ Language: es_VE
     <string name="error_update_site_title_network">No se ha podido actualizar el título del sitio. Comprueba tu conexión de red e inténtalo nuevamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sin guardar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir el enlace en un navegador</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navega a la hoja de contenido anterior</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navega para personalizar el degradado</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navega al selector de color personalizado</string>
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
-    <string name="gutenberg_native_go_back">Volver</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,8 +216,6 @@ Language: es_VE
     <string name="menu_content_info">Estructura del contenido</string>
     <string name="everyone">Todos</string>
     <string name="me">Yo</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar este bloque usando el navegador web de tu dispositivo.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque en el navegador web</string>
     <string name="gutenberg_native_dismiss">Descartar</string>
     <string name="prepublishing_nudges_home_tags_not_set">No establecido</string>
     <string name="prepublishing_tags_description">Las etiquetas ayudan a los lectores diciéndoles de qué se trata la entrada.</string>
@@ -199,7 +233,6 @@ Language: es_VE
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
     <string name="reader_label_choose_your_interests">Elige tus intereses</string>
-    <string name="reader_label_discover_follow_tags">Descubre y sigue las etiquetas que te gustan</string>
     <string name="reader_choose_interests_content_description">Elige tus intereses</string>
     <string name="reader_btn_done">Hecho</string>
     <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
@@ -399,9 +432,9 @@ Language: es_VE
     <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
-    <string name="reader_title_subs">Gestionar etiquetas y sitios</string>
+    <string name="reader_title_subs">Gestionar temas y sitios</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de las etiquetas que sigues</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de los temas que sigues</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver las últimas entradas de los sitios que sigues</string>
     <string name="gutenberg_native_template_preview">Vista previa de la plantilla</string>
     <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
@@ -409,9 +442,9 @@ Language: es_VE
     <string name="gutenberg_native_add_to_beginning">Añadir al principio</string>
     <string name="gutenberg_native_add_block_before">Añadir el bloque antes</string>
     <string name="gutenberg_native_add_block_after">Añadir el bloque después</string>
-    <string name="reader_filter_empty_tags_action">Añadir una etiqueta</string>
+    <string name="reader_filter_empty_tags_action">Añadir un tema</string>
     <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
-    <string name="reader_filter_empty_tags_list">Puedes seguir entradas sobre un tema específico añadiendo una etiqueta</string>
+    <string name="reader_filter_empty_tags_list">Puedes seguir entradas sobre un tema específico añadiendo un tema</string>
     <string name="reader_filter_empty_sites_list">Mira las entradas más recientes de los sitios que sigues</string>
     <string name="reader_filter_main_title">Siguiendo</string>
     <string name="reader_filter_cta">Filtrar</string>
@@ -469,7 +502,7 @@ Language: es_VE
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="reader_discover_display_name">Descubrir</string>
     <string name="reader_save_for_later_display_name">Guardado</string>
-    <string name="reader_filter_tags_title">Etiquetas</string>
+    <string name="reader_filter_tags_title">Temas</string>
     <string name="reader_filter_sites_title">Sitios</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQ</string>
     <string name="suffix_1_000_000_000_000_000">%sC</string>
@@ -480,7 +513,6 @@ Language: es_VE
     <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_title">Título:</string>
@@ -493,8 +525,6 @@ Language: es_VE
     <string name="gutenberg_native_size">Tamaño</string>
     <string name="gutenberg_native_sidebar_title_plugin">Título del plugin en la barra lateral</string>
     <string name="gutenberg_native_show_section">Mostrar la sección</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s aún no es compatible en WordPress para iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s aún no es compatible en WordPress para Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
     <string name="gutenberg_native_cut_block">Cortar bloque</string>
@@ -517,8 +547,6 @@ Language: es_VE
     <string name="gutenberg_native_move_block_up">Mover el bloque arriba</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo, desde la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque abajo</string>
-    <string name="gutenberg_native_link_text">Texto del enlace</string>
-    <string name="gutenberg_native_link_inserted">Enlace insertado</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar el teclado</string>
     <string name="gutenberg_native_here_is_the_panel_content">¡Aquí está el panel de contenido!</string>
@@ -543,7 +571,6 @@ Language: es_VE
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">AÑADIR UN VÍDEO</string>
     <string name="gutenberg_native_add_url">Añadir la URL</string>
-    <string name="gutenberg_native_add_link_text">Añadir el texto del enlace</string>
     <string name="gutenberg_native_add_image_or_video">AÑADIR UNA IMAGEN O UN VÍDEO</string>
     <string name="gutenberg_native_add_image">AÑADIR UNA IMAGEN</string>
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
@@ -1064,8 +1091,8 @@ Language: es_VE
     <string name="quick_start_button_negative">Ahora no</string>
     <string name="content_description_more">Más</string>
     <string name="my_site_create_new_site_title">No tienes sitios</string>
-    <string name="reader_empty_followed_tags_title">No sigues etiquetas</string>
-    <string name="reader_empty_followed_tags_subtitle">Añade aquí etiquetas para descubrir entradas sobre tos temáticas favoritas</string>
+    <string name="reader_empty_followed_tags_title">Temas no seguidos</string>
+    <string name="reader_empty_followed_tags_subtitle">Añade aquí temas para descubrir entradas sobre tus temáticas favoritas</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
     <string name="install_jetpack_retry">Reintentar</string>
     <string name="install_jetpack_continue">Configurar</string>
@@ -1805,8 +1832,6 @@ Language: es_VE
     <string name="reader_toast_err_already_liked">Ya has dado a me gusta para este comentario</string>
     <string name="reader_toast_err_comment_not_found">¡Comentario no encontrado!</string>
     <string name="reader_toast_err_cannot_like_post">Error al marcar como me gusta la publicación</string>
-    <string name="reader_title_post_detail_wpcom">Entrada de WordPress.com</string>
-    <string name="reader_title_deeplink">Lector de WordPress</string>
     <string name="error_notif_q_action_reply">No se pudo responder al comentario. Por favor inténtalo de nuevo más tarde.</string>
     <string name="error_notif_q_action_approve">No se pudo aprobar el comentario. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="error_notif_q_action_like">No se puede marcar como me gusta el comentario. Por favor inténtalo de nuevo más tarde.</string>
@@ -1883,7 +1908,6 @@ Language: es_VE
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_search_description">No se han encontrado resultados con %s para tu idioma</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
-    <string name="reader_title_related_post_detail">Entrada relacionada</string>
     <string name="preview_screen_links_disabled">Los enlaces están desactivados en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">\@%1$s eliminado correctamente.</string>
@@ -2151,7 +2175,7 @@ Language: es_VE
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_short_like_count_none">Me gusta</string>
     <string name="reader_label_follow_count">%,d seguidores</string>
-    <string name="reader_menu_tags">Editar etiquetas y sitios</string>
+    <string name="reader_menu_tags">Editar temas y sitios</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
     <string name="notifications_push_summary">Ajustes para los avisos que aparecen en tu dispositivo.</string>
     <string name="notifications_email_summary">Ajustes para los avisos que se envían al correo electrónico ligado a tu cuenta.</string>
@@ -2251,8 +2275,7 @@ Language: es_VE
     <string name="cab_selected">%d seleccionados</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
-    <string name="reader_empty_posts_in_tag">No hay entradas con esta etiqueta</string>
-    <string name="reader_label_liked_by">Le gusta a</string>
+    <string name="reader_empty_posts_in_tag">No hay entradas con esta temática</string>
     <string name="reader_label_like">Me gusta</string>
     <string name="reader_label_view_original">Ver artículo original</string>
     <string name="reader_label_comments_closed">Los comentarios están cerrados</string>
@@ -2283,9 +2306,9 @@ Language: es_VE
     <string name="reader_toast_err_already_follow_blog">Ya estás siguiendo este sitio</string>
     <string name="reader_toast_err_get_blog_info">No se puede mostrar este sitio</string>
     <string name="reader_label_followed_blog">Sitio seguido</string>
-    <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
+    <string name="reader_hint_add_tag_or_url">Introduce una URL o tema para seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_page_followed_tags">Etiquetas seguidas</string>
+    <string name="reader_page_followed_tags">Temas seguidos</string>
     <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">Si normalmente se conecta a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
@@ -2313,8 +2336,8 @@ Language: es_VE
     <string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
     <string name="gallery_error">El elemento multimedia no se ha podido recuperar</string>
     <string name="no_network_message">No hay conexiones de red disponible</string>
-    <string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
-    <string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
+    <string name="reader_toast_err_remove_tag">No se ha podido eliminar este tema</string>
+    <string name="reader_toast_err_add_tag">No se ha podido añadir este tema</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
@@ -2384,8 +2407,8 @@ Language: es_VE
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_share_intent">Imposible compartir</string>
-    <string name="reader_toast_err_tag_invalid">Esta no es una etiqueta válida</string>
-    <string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
+    <string name="reader_toast_err_tag_invalid">Este no es un tema válido</string>
+    <string name="reader_toast_err_tag_exists">Ya estás siguiendo este tema</string>
     <string name="reader_toast_err_comment_failed">No se pudo publicar tu comentario </string>
     <string name="reader_likes_only_you">Te gusta esto</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>

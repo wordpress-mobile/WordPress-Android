@@ -59,6 +59,9 @@ class ReaderViewModel @Inject constructor(
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
 
+    private val _showSettings = MutableLiveData<Event<Unit>>()
+    val showSettings: LiveData<Event<Unit>> = _showSettings
+
     private val _showReaderInterests = MutableLiveData<Event<Unit>>()
     val showReaderInterests: LiveData<Event<Unit>> = _showReaderInterests
 
@@ -82,7 +85,8 @@ class ReaderViewModel @Inject constructor(
                 _uiState.value = ContentUiState(
                         tagList.map { it.label },
                         tagList,
-                        searchIconVisible = isSearchSupported()
+                        searchIconVisible = isSearchSupported(),
+                        settingsIconVisible = isSettingsSupported()
                 )
                 if (!initialized) {
                     initialized = true
@@ -126,15 +130,18 @@ class ReaderViewModel @Inject constructor(
 
     sealed class ReaderUiState(
         open val searchIconVisible: Boolean,
+        open val settingsIconVisible: Boolean,
         val appBarExpanded: Boolean = false,
         val tabLayoutVisible: Boolean = false
     ) {
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
-            override val searchIconVisible: Boolean
+            override val searchIconVisible: Boolean,
+            override val settingsIconVisible: Boolean
         ) : ReaderUiState(
                 searchIconVisible = searchIconVisible,
+                settingsIconVisible = settingsIconVisible,
                 appBarExpanded = true,
                 tabLayoutVisible = true
         )
@@ -173,6 +180,14 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    fun onSettingsActionClicked() {
+        if (isSettingsSupported()) {
+            _showSettings.value = Event(Unit)
+        } else if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Settings should be hidden when isSettingsSupported returns false.")
+        }
+    }
+
     private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
     @Subscribe(threadMode = MAIN)
@@ -193,6 +208,8 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun isSearchSupported() = accountStore.hasAccessToken()
+
+    private fun isSettingsSupported() = accountStore.hasAccessToken()
 
     private fun trackReaderTabShownIfNecessary(it: ReaderTag) {
         trackReaderTabJob?.cancel()

@@ -31,7 +31,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
@@ -95,14 +94,13 @@ class MediaPickerFragment : Fragment() {
 
     enum class ChooserContext(
         val intentAction: String,
-        val requestCode: Int,
         val title: UiStringRes,
         val mediaTypeFilter: String
     ) {
-        PHOTO(ACTION_GET_CONTENT, RequestCodes.PICTURE_LIBRARY, UiStringRes(R.string.pick_photo), "image/*"),
-        VIDEO(ACTION_GET_CONTENT, RequestCodes.VIDEO_LIBRARY, UiStringRes(R.string.pick_video), "video/*"),
-        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, RequestCodes.MEDIA_LIBRARY, UiStringRes(R.string.pick_media), "*/*"),
-        MEDIA_FILE(ACTION_OPEN_DOCUMENT, RequestCodes.FILE_LIBRARY, UiStringRes(R.string.pick_file), "*/*");
+        PHOTO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_photo), "image/*"),
+        VIDEO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_video), "video/*"),
+        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_media), "*/*"),
+        MEDIA_FILE(ACTION_OPEN_DOCUMENT, UiStringRes(R.string.pick_file), "*/*");
     }
 
     sealed class MediaPickerAction {
@@ -177,7 +175,7 @@ class MediaPickerFragment : Fragment() {
      * parent activity must implement this listener
      */
     interface MediaPickerListener {
-        fun onItemsChosen(uriList: List<Identifier>)
+        fun onItemsChosen(identifiers: List<Identifier>)
         fun onIconClicked(action: MediaPickerAction)
     }
 
@@ -347,6 +345,7 @@ class MediaPickerFragment : Fragment() {
 
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
+                searchView.maxWidth = Integer.MAX_VALUE
                 searchView.setQuery(uiState.searchUiModel.filter, true)
                 searchView.setOnCloseListener { !uiState.searchUiModel.closeable }
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {

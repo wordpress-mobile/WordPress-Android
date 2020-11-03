@@ -143,8 +143,10 @@ class MediaPickerViewModel @Inject constructor(
     private fun buildBrowseMenuUiModel(softAskRequest: SoftAskRequest?, searchExpanded: Boolean?): BrowseMenuUiModel {
         val isSoftAskRequestVisible = softAskRequest?.show ?: false
         val isSearchExpanded = searchExpanded ?: false
-        val showSystemPicker = mediaPickerSetup.systemPickerEnabled && !isSoftAskRequestVisible && !isSearchExpanded
-        return if (showSystemPicker || mediaPickerSetup.availableDataSources.isNotEmpty()) {
+        val showActions = !isSoftAskRequestVisible && !isSearchExpanded
+        val showSystemPicker = mediaPickerSetup.systemPickerEnabled && showActions
+
+        return if (showActions && (showSystemPicker || mediaPickerSetup.availableDataSources.isNotEmpty())) {
             val actions = mutableSetOf<BrowseAction>()
             if (showSystemPicker) {
                 actions.add(SYSTEM_PICKER)
@@ -453,6 +455,9 @@ class MediaPickerViewModel @Inject constructor(
                         progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
+                        if (_searchExpanded.value == true) {
+                            _searchExpanded.value = false
+                        }
                         _onNavigate.value = Event(MediaNavigationEvent.InsertMedia(it.identifiers))
                     }
                 }

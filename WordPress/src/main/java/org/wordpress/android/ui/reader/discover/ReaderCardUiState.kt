@@ -4,12 +4,15 @@ import android.text.Spanned
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.image.ImageType
 
 sealed class ReaderCardUiState {
@@ -18,17 +21,14 @@ sealed class ReaderCardUiState {
     data class ReaderPostUiState(
         val postId: Long,
         val blogId: Long,
-        val dateLine: String,
+        val blogSection: ReaderBlogSectionUiState,
         val title: UiString?,
-        val blogName: UiString,
         val excerpt: String?, // mTxtText
-        val blogUrl: String?,
         val tagItems: List<TagUiState>,
         val photoTitle: String?,
         val featuredImageUrl: String?,
         val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,
-        val avatarOrBlavatarUrl: String?,
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val discoverSection: DiscoverLayoutUiState?,
         val expandableTagsViewVisibility: Boolean,
@@ -41,20 +41,12 @@ sealed class ReaderCardUiState {
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
         val moreMenuItems: List<SecondaryAction>? = null,
-        val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         val onMoreDismissed: (ReaderPostUiState) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit
     ) : ReaderCardUiState() {
-        val dotSeparatorVisibility: Boolean = blogUrl != null
-
-        data class PostHeaderClickData(
-            val onPostHeaderViewClicked: ((Long, Long) -> Unit)?,
-            @AttrRes val background: Int
-        )
-
         data class GalleryThumbnailStripData(
             val images: ReaderImageList,
             val isPrivate: Boolean,
@@ -76,7 +68,37 @@ sealed class ReaderCardUiState {
             val onClicked: ((String) -> Unit)
         )
     }
+
+    data class ReaderRecommendedBlogsCardUiState(
+        val blogs: List<ReaderRecommendedBlogUiState>
+    ) : ReaderCardUiState() {
+        data class ReaderRecommendedBlogUiState(
+            val name: String,
+            val url: String,
+            val blogId: Long,
+            val feedId: Long,
+            val description: String?,
+            val iconUrl: String?,
+            val isFollowed: Boolean,
+            val onItemClicked: (Long, Long) -> Unit,
+            val onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
+        ) {
+            val followContentDescription: UiStringRes by lazy {
+                when (isFollowed) {
+                    true -> R.string.reader_btn_unfollow
+                    false -> R.string.reader_btn_follow
+                }.let(::UiStringRes)
+            }
+        }
+    }
 }
+
+data class ReaderPostActions(
+    val likeAction: PrimaryAction,
+    val reblogAction: PrimaryAction,
+    val commentsAction: PrimaryAction,
+    val bookmarkAction: PrimaryAction
+)
 
 sealed class ReaderPostCardAction {
     abstract val type: ReaderPostCardActionType
