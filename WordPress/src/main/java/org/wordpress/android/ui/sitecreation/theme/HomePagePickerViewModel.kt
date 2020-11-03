@@ -29,7 +29,7 @@ class HomePagePickerViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + fetchHomePageLayoutsJob
 
-    private lateinit var layouts: List<StarterDesignModel>
+    lateinit var layouts: List<StarterDesignModel>
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -111,6 +111,17 @@ class HomePagePickerViewModel @Inject constructor(
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
         }
+    }
+
+    fun loadSavedState(layouts: List<StarterDesignModel>?, selected: String?) {
+        if (layouts == null || layouts.isEmpty()) {
+            fetchLayouts()
+            return
+        }
+        val state = uiState.value as? UiState.Content ?: UiState.Content()
+        updateUiState(state.copy(selectedLayoutSlug = selected))
+        this.layouts = layouts
+        loadLayouts()
     }
 
     private fun updateUiState(uiState: UiState) {
