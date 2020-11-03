@@ -10,8 +10,8 @@ data class LayoutGridItemUiState(
     val title: String,
     val preview: String,
     val selected: Boolean,
-    val onItemTapped: (() -> Unit),
-    val onThumbnailReady: (() -> Unit)
+    val onItemTapped: () -> Unit,
+    val onThumbnailReady: () -> Unit
 ) {
     val contentDescriptionResId: Int
         get() = if (selected) R.string.mlp_selected_description else R.string.mlp_notselected_description

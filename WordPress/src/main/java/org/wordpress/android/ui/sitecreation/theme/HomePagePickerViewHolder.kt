@@ -27,14 +27,14 @@ class HomePagePickerViewHolder(view: View, val parent: ViewGroup) : RecyclerView
                     }
 
                     override fun onResourceReady(resource: Drawable, model: Any?) {
-                        uiState.onThumbnailReady.invoke()
+                        uiState.onThumbnailReady()
                     }
                 })
 
         selected.setVisible(uiState.selectedOverlayVisible)
         preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         container.setOnClickListener {
-            uiState.onItemTapped.invoke()
+            uiState.onItemTapped()
         }
     }
 }
