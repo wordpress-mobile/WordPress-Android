@@ -136,7 +136,7 @@ class HomePagePickerViewModel @Inject constructor(
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
-    private fun onLayoutTapped(layoutSlug: String) {
+    fun onLayoutTapped(layoutSlug: String) {
         (uiState.value as? UiState.Content)?.let { state ->
             if (!state.loadedThumbnailSlugs.contains(layoutSlug)) return // No action
             if (layoutSlug == state.selectedLayoutSlug) { // deselect
@@ -152,7 +152,7 @@ class HomePagePickerViewModel @Inject constructor(
      * Layout thumbnail is ready
      * @param layoutSlug the slug of the tapped layout
      */
-    private fun onThumbnailReady(layoutSlug: String) {
+    fun onThumbnailReady(layoutSlug: String) {
         (uiState.value as? UiState.Content)?.let { state ->
             updateUiState(state.copy(loadedThumbnailSlugs = state.loadedThumbnailSlugs.apply { add(layoutSlug) }))
         }
