@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
+public abstract class GoogleFragment extends Fragment implements ConnectionCallbacks, OnConnectionFailedListener {
     private static final String STATE_SHOULD_RESOLVE_ERROR = "STATE_SHOULD_RESOLVE_ERROR";
     private static final String STATE_FINISHED = "STATE_FINISHED";
     private static final String STATE_DISPLAY_NAME = "STATE_DISPLAY_NAME";
@@ -54,6 +55,8 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     protected String mGoogleEmail;
     protected String mIdToken;
     protected String mPhotoUrl;
+
+    protected ProgressDialog mProgressDialog;
 
     public static final String SERVICE_TYPE_GOOGLE = "google";
 
@@ -119,6 +122,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mProgressDialog = ProgressDialog.show(getActivity(), null, getProgressDialogText(), true, false, null);
         mLoginListener = (LoginListener) context;
 
         try {
@@ -129,6 +133,12 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         if (mFinished) {
             finishFlow();
         }
+    }
+
+    @Override
+    public void onDetach() {
+        dismissProgressDialog();
+        super.onDetach();
     }
 
     @Override
@@ -209,9 +219,9 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
         }
     }
 
-    protected void startFlow() {
-        // Do nothing here.  This should be overridden by inheriting class.
-    }
+    protected abstract String getProgressDialogText();
+
+    protected abstract void startFlow();
 
     protected void finishFlow() {
         /* This flag might get lost when the finishFlow is called after the fragment's
@@ -247,6 +257,12 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
 
                 mIsResolvingError = false;
                 break;
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
