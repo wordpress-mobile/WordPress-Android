@@ -23,6 +23,7 @@ import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiSta
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
@@ -91,7 +92,9 @@ class HomePagePickerFragment : Fragment() {
                 is UiState.Content -> {
                     (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
-                is UiState.Error -> {}
+                is UiState.Error -> {
+                    uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
+                }
             }
         })
 

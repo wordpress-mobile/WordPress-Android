@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.modules.BG_THREAD
@@ -54,7 +56,7 @@ class HomePagePickerViewModel @Inject constructor(
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
             withContext(mainDispatcher) {
                 if (event.isError) {
-                    updateUiState(UiState.Error)
+                    updateUiState(UiState.Error())
                 } else {
                     layouts = event.designs
                     loadLayouts()
@@ -110,6 +112,8 @@ class HomePagePickerViewModel @Inject constructor(
     fun onRetryClicked() {
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
+        } else {
+            updateUiState(UiState.Error(toast = R.string.hpp_retry_error))
         }
     }
 
@@ -178,6 +182,7 @@ class HomePagePickerViewModel @Inject constructor(
             val layouts: List<LayoutGridItemUiState> = listOf()
         ) : UiState()
 
-        object Error : UiState(errorViewVisible = true, isHeaderVisible = true, isDescriptionVisible = false)
+        class Error(@StringRes val toast: Int? = null) :
+                UiState(errorViewVisible = true, isHeaderVisible = true, isDescriptionVisible = false)
     }
 }
