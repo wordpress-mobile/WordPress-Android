@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -12,7 +13,9 @@ import org.wordpress.android.fluxc.action.ThemeAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.StarterDesignModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
 import org.wordpress.android.fluxc.persistence.ThemeSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -78,6 +81,28 @@ public class ThemeStore extends Store {
         public SiteThemePayload(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
+        }
+    }
+
+    public static class FetchStarterDesignsPayload extends Payload<BaseNetworkError> {
+        @Nullable public Float previewWidth;
+        @Nullable public Float scale;
+
+        public FetchStarterDesignsPayload(@Nullable Float previewWidth, @Nullable Float scale) {
+            this.previewWidth = previewWidth;
+            this.scale = scale;
+        }
+    }
+
+    public static class FetchedStarterDesignsPayload extends Payload<ThemesError> {
+        public List<StarterDesignModel> designs;
+
+        public FetchedStarterDesignsPayload(@NonNull ThemesError error) {
+            this.error = error;
+        }
+
+        public FetchedStarterDesignsPayload(@NonNull List<StarterDesignModel> designs) {
+            this.designs = designs;
         }
     }
 
@@ -187,6 +212,15 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnStarterDesignsFetched extends OnChanged<ThemesError> {
+        public List<StarterDesignModel> designs;
+
+        public OnStarterDesignsFetched(List<StarterDesignModel> designs, ThemesError error) {
+            this.designs = designs;
+            this.error = error;
+        }
+    }
+
     private final ThemeRestClient mThemeRestClient;
 
     @Inject
@@ -242,6 +276,12 @@ public class ThemeStore extends Store {
             case REMOVE_SITE_THEMES:
                 removeSiteThemes((SiteModel) action.getPayload());
                 break;
+            case FETCH_STARTER_DESIGNS:
+                fetchStarterDesigns((FetchStarterDesignsPayload) action.getPayload());
+                break;
+            case FETCHED_STARTER_DESIGNS:
+                handleStarterDesignsFetched((FetchedStarterDesignsPayload) action.getPayload());
+                break;
         }
     }
 
@@ -288,6 +328,10 @@ public class ThemeStore extends Store {
 
     private void fetchWpComThemes() {
         mThemeRestClient.fetchWpComThemes();
+    }
+
+    private void fetchStarterDesigns(FetchStarterDesignsPayload payload) {
+        mThemeRestClient.fetchStarterDesigns(payload.previewWidth, payload.scale);
     }
 
     private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
@@ -409,5 +453,10 @@ public class ThemeStore extends Store {
     private void removeSiteThemes(@NonNull SiteModel site) {
         ThemeSqlUtils.removeSiteThemes(site);
         emitChange(new OnSiteThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
+    }
+
+    private void handleStarterDesignsFetched(@NonNull FetchedStarterDesignsPayload payload) {
+        OnStarterDesignsFetched event = new OnStarterDesignsFetched(payload.designs, payload.error);
+        emitChange(event);
     }
 }
