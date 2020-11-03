@@ -23,8 +23,7 @@ class ThumbDimensionProvider @Inject constructor(
         get() = (containerWidth - (2 * getPixels(dimen.hpp_card_margin_outer)) - getPixels(dimen.hpp_card_padding)) /
                 (getPixels(dimen.hpp_card_width) + getPixels(dimen.hpp_card_padding))
 
-    private val phoneColumns: Int
-        get() = 2
+    private val phoneColumns: Int = 2
 
     private val largeScreenWidth: Int
         get() = getPixels(dimen.hpp_card_width)
