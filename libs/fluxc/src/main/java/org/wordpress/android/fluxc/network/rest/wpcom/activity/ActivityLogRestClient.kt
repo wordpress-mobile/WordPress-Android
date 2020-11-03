@@ -47,18 +47,7 @@ constructor(
         BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
         val url = WPCOMV2.sites.site(payload.site.siteId).activity.url
-        val pageNumber = offset / number + 1
-        val params = mutableMapOf(
-                "page" to pageNumber.toString(),
-                "number" to number.toString()
-        )
-
-        payload.after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
-        payload.before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
-        payload.groups.forEachIndexed { index, value ->
-            params["group[$index]"] = value
-        }
-
+        val params = buildActivityParams(offset, number, payload)
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, ActivitiesResponse::class.java)
         return when (response) {
             is Success -> {
@@ -118,6 +107,25 @@ constructor(
                 ActivityLogStore.RewindResultPayload(error, rewindId, site)
             }
         }
+    }
+
+    private fun buildActivityParams(
+        offset: Int,
+        number: Int,
+        payload: FetchActivityLogPayload
+    ): MutableMap<String, String> {
+        val pageNumber = offset / number + 1
+        val params = mutableMapOf(
+                "page" to pageNumber.toString(),
+                "number" to number.toString()
+        )
+
+        payload.after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
+        payload.before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
+        payload.groups.forEachIndexed { index, value ->
+            params["group[$index]"] = value
+        }
+        return params
     }
 
     private fun buildActivityPayload(
