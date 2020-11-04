@@ -6,6 +6,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -13,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.FrameSaveErrorDialog
+import com.wordpress.stories.compose.FrameSaveErrorDialogOk
 import com.wordpress.stories.compose.GenericAnnouncementDialogProvider
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
@@ -72,6 +74,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.ListUtils
+import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -194,8 +197,29 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun setupViewModelObservers() {
         viewModel.mediaFilesUris.observe(this, Observer { uriList ->
-            addFramesToStoryFromMediaUriList(uriList)
-            setDefaultSelectionAndUpdateBackgroundSurfaceUI(uriList)
+            val filteredList = uriList.filterNot { MediaUtils.isGif(it.toString()) }
+            if (filteredList.isNotEmpty()) {
+                addFramesToStoryFromMediaUriList(filteredList)
+                setDefaultSelectionAndUpdateBackgroundSurfaceUI(filteredList)
+            }
+
+            // finally if any of the files was a gif, warn the user
+            if (filteredList.size != uriList.size) {
+                FrameSaveErrorDialog.newInstance(
+                        title = getString(R.string.dialog_edit_story_unsupported_format_title),
+                        message = getString(R.string.dialog_edit_story_unsupported_format_message),
+                        hideCancelButton = true,
+                        listener = object : FrameSaveErrorDialogOk {
+                            override fun OnOkClicked(dialog: DialogFragment) {
+                                if (filteredList.isEmpty()) {
+                                    onStoryDiscarded()
+                                    setResult(Activity.RESULT_CANCELED)
+                                    finish()
+                                }
+                            }
+                        }
+                ).show(supportFragmentManager, FRAGMENT_ANNOUNCEMENT_DIALOG)
+            }
         })
 
         viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->

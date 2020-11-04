@@ -726,7 +726,7 @@ public class ActivityLauncher {
             return;
         }
 
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
+            Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, mediaUris);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
