@@ -26,6 +26,10 @@ apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
 
+detekt {
+    baseline = file("${project.rootDir}/config/detekt/baseline.xml") // Specifying a baseline file. All findings stored in this file in subsequent runs of detekt.
+}
+
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
@@ -356,6 +360,8 @@ dependencies {
 
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
+
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
 }
 
 configurations.all {

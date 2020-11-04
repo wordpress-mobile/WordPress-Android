@@ -161,6 +161,11 @@ jobs:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace checkstyle
       - run:
+          name: Detekt
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew --stacktrace WordPress:detekt
+    - run:
           name: ktlint
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1

@@ -6,6 +6,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.androidx_work_version = "2.0.1"
     ext.buildGutenbergMobileJSBundle = 1
+    ext.detektVersion = '1.14.2'
 
     repositories {
         google()
@@ -19,6 +20,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
 }
 
@@ -44,6 +46,7 @@ setting wp.BUILD_GUTENBERG_FROM_SOURCE to false."
 
 allprojects {
     apply plugin: 'checkstyle'
+    apply plugin: "io.gitlab.arturbosch.detekt"
 
     repositories {
         google()
@@ -76,6 +79,20 @@ allprojects {
     checkstyle {
         toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+    detekt {
+        config = files("${project.rootDir}/config/detekt/detekt.yml") // Define the detekt configuration(s) you want to use. Defaults to the default detekt configuration.
+        autoCorrect = false // Enable automatic code formatting when running 'detekt' task.
+        buildUponDefaultConfig = false // Interpret config files as updates to the default config. `false` by default.
+        disableDefaultRuleSets = false // Disables all default detekt rulesets and will only run detekt with custom rules defined in plugins passed in with `detektPlugins` configuration. `false` by default.
+        ignoreFailures = false // If set to `true` the build does not fail when the maxIssues count was reached. Defaults to `false`.
+        parallel = false // Builds the AST in parallel. Rules are always executed in parallel. Can lead to speedups in larger projects. `false` by default.
+        debug = false // Adds debug output during task execution. `false` by default.
+        reports {
+            html.enabled = true // observe findings in your browser with structure and code snippets
+            xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+            txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
+        }
     }
 }
 

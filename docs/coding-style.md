@@ -29,6 +29,28 @@ Once installed, you can configure the plugin here:
 
 From there, add and enable the custom configuration file, located at [config/checkstyle.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/checkstyle.xml).
 
+## Detekt
+
+You can run detekt via a gradle command:
+
+```
+$ ./gradlew detekt
+```
+
+It generates an HTML report in `WordPress/build/reports/detekt/detekt.html`.
+
+You can also view errors and warnings in realtime with the Detekt plugin.
+
+You can install the detekt plugin in Android Studio here:
+
+`Android Studio > Preferences... > Plugins > detekt`
+
+Once installed, you can configure the plugin here:
+
+`Android Studio > Preferences... > Tools > Detekt`
+
+From there, add and enable the custom configuration file, located at [config/detekt/detekt.yml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/detekt/detekt.yml).
+
 ## ktlint
 
 You can run ktlint using `./gradlew ktlint`, and you can also run `./gradlew ktlintFormat` for auto-formatting. There is no IDEA plugin (like Checkstyle's) at this time.
