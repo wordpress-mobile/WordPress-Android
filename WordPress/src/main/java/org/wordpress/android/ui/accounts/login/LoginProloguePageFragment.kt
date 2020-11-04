@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -83,6 +85,16 @@ class LoginProloguePageFragment : Fragment() {
                         editText.isPressed = true
                         editText.setSelection(editText.length())
                     }
+                }
+
+                // format text from HTML to show bold on third prologue screen
+                if (promoLayoutId == R.layout.login_prologue_third) {
+                    view.findViewById<TextView>(R.id.text_one).text = Html.fromHtml(getString(
+                            R.string.login_prologue_third_subtitle_one))
+                    view.findViewById<TextView>(R.id.text_two).text = Html.fromHtml(getString(
+                            R.string.login_prologue_third_subtitle_two))
+                    view.findViewById<TextView>(R.id.text_three).text = Html.fromHtml(getString(
+                            R.string.login_prologue_third_subtitle_three))
                 }
             }
         }
