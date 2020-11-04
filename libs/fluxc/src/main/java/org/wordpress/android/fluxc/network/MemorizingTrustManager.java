@@ -119,7 +119,7 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     public void storeCert(String hostname, X509Certificate cert) {
         try {
-            getLocalKeyStore().setCertificateEntry(hostname.toLowerCase(Locale.US), cert);
+            getLocalKeyStore().setCertificateEntry(hostname, cert);
         } catch (KeyStoreException e) {
             AppLog.e(T.API, "Unable to store the certificate: " + cert);
         }
@@ -195,8 +195,10 @@ public class MemorizingTrustManager implements X509TrustManager {
                 //Log.d(TAG, "cert: " + cert);
                 if (cert.equals(getLocalKeyStore().getCertificate(hostname.toLowerCase(Locale.US)))) {
                     return true;
+                } if (cert.equals(getLocalKeyStore().getCertificate(cert.getSubjectDN().toString()))) {
+                    return true;
                 } else {
-                    mLastFailedHost = hostname;
+                    mLastFailedHost = hostname.toLowerCase(Locale.US);
                     mLastFailure = cert;
                     return false;
                 }
