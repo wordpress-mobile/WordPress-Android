@@ -203,9 +203,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "com.google.android.material:material:$materialVersion"
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.preference:preference:$materialVersion"
+    implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
 
