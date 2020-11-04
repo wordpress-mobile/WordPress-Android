@@ -167,28 +167,29 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public HostnameVerifier wrapHostnameVerifier(final HostnameVerifier defaultVerifier) {
-        if (defaultVerifier == null)
+        if (defaultVerifier == null) {
             throw new IllegalArgumentException("The default verifier may not be null");
+        }
 
         return new MemorizingHostnameVerifier(defaultVerifier);
     }
 
-    class MemorizingHostnameVerifier implements HostnameVerifier {
-        private HostnameVerifier defaultVerifier;
+    private class MemorizingHostnameVerifier implements HostnameVerifier {
+        private HostnameVerifier mDefaultVerifier;
 
-        public MemorizingHostnameVerifier(HostnameVerifier wrapped) {
-            defaultVerifier = wrapped;
+        MemorizingHostnameVerifier(HostnameVerifier hostnameVerifier) {
+            mDefaultVerifier = hostnameVerifier;
         }
 
         @Override
         public boolean verify(String hostname, SSLSession session) {
             // if the default verifier accepts the hostname, we are done
-            if (defaultVerifier.verify(hostname, session)) {
+            if (mDefaultVerifier.verify(hostname, session)) {
                 return true;
             }
             // otherwise, we check if the hostname is an alias for this cert in our keystore
             try {
-                X509Certificate cert = (X509Certificate)session.getPeerCertificates()[0];
+                X509Certificate cert = (X509Certificate) session.getPeerCertificates()[0];
                 return cert.equals(getLocalKeyStore().getCertificate(cert.getSubjectDN().toString()));
             } catch (Exception e) {
                 e.printStackTrace();

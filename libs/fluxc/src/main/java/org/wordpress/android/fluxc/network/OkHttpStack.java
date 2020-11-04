@@ -82,7 +82,8 @@ public class OkHttpStack extends BaseHttpStack {
     }
 
     @Override
-    public HttpResponse executeRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
+    public HttpResponse executeRequest(Request<?> request, Map<String, String> additionalHeaders)
+            throws IOException, AuthFailureError {
         int timeoutMs = request.getTimeoutMs();
 
         mClientBuilder.connectTimeout(timeoutMs, TimeUnit.MILLISECONDS);
