@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -60,13 +60,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, followed blogs, and recommended blogs
+ * activity which shows the user's subscriptions - includes
+ * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
         implements ReaderTagAdapter.TagDeletedListener {
     private EditText mEditAdd;
-    private ImageButton mBtnAdd;
+    private ReaderFollowButton mBtnAdd;
     private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
 
@@ -79,7 +79,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
     public static final int TAB_IDX_FOLLOWED_TAGS = 0;
     public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
-    public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Inject AccountStore mAccountStore;
 
@@ -136,7 +135,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             }
         });
 
-        mBtnAdd = (ImageButton) findViewById(R.id.btn_add);
+        mBtnAdd = findViewById(R.id.btn_add);
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,18 +190,10 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.RecommendedBlogsChanged event) {
-        AppLog.d(AppLog.T.READER, "reader subs > recommended blogs changed");
-        getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-    }
-
     private void performUpdate() {
         performUpdate(EnumSet.of(
                 UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS,
-                UpdateTask.RECOMMENDED_BLOGS));
+                UpdateTask.FOLLOWED_BLOGS));
     }
 
     private void performUpdate(EnumSet<UpdateTask> tasks) {
@@ -227,7 +218,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
             fragments.add(ReaderTagFragment.newInstance());
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
-            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
             FragmentManager fm = getSupportFragmentManager();
             mPageAdapter = new SubsPageAdapter(fm, fragments);
@@ -528,8 +518,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
                     return getString(R.string.reader_page_followed_tags);
-                case TAB_IDX_RECOMMENDED_BLOGS:
-                    return getString(R.string.reader_page_recommended_blogs);
                 case TAB_IDX_FOLLOWED_BLOGS:
                     return getString(R.string.reader_page_followed_blogs);
                 default:

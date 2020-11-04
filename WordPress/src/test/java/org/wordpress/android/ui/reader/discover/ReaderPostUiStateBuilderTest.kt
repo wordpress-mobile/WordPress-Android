@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
@@ -19,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -799,6 +801,56 @@ class ReaderPostUiStateBuilderTest {
     }
     // endregion
 
+    @Test
+    fun `scheme is removed from recommended blog url`() = test {
+        // Arrange
+        val url = "http://dummy.url"
+        val blog = createRecommendedBlog(blogUrl = url)
+        whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                listOf(blog),
+                { _, _ -> },
+                { }
+        )
+        // Assert
+        assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
+    }
+
+    @Test
+    fun `limits recommended blogs count to 3`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(6) { createRecommendedBlog() }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _ -> },
+                { }
+        )
+
+        // Assert
+        assertThat(uiState.blogs.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `ReaderRecommendedBlogUiState description is null when description is empty`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(1) { createRecommendedBlog(blogDescription = "") }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _ -> },
+                { }
+        )
+
+        // Assert
+        assertThat(uiState.blogs[0].description).isNull()
+    }
+
     // region Private methods
     private suspend fun mapPostToUiState(
         post: ReaderPost,
@@ -889,5 +941,18 @@ class ReaderPostUiStateBuilderTest {
             mock(),
             false
     )
+
+    private fun createRecommendedBlog(
+        blogUrl: String = "url",
+        blogDescription: String = "desc"
+    ) = ReaderBlog().apply {
+        blogId = 1L
+        name = "name"
+        description = blogDescription
+        url = blogUrl
+        imageUrl = null
+        feedId = 0L
+        isFollowing = false
+    }
     // endregion
 }

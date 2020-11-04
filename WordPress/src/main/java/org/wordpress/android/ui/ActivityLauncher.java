@@ -88,6 +88,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,6 +104,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
+import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
@@ -502,9 +505,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(context, R.string.posts_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        Intent intent = new Intent(context, PostsListActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
+        context.startActivity(PostsListActivity.buildIntent(context, site));
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
 
@@ -944,6 +945,13 @@ public class ActivityLauncher {
                     shareSubject,
                     true,
                     startPreviewForResult);
+        } else if (remotePreviewType == RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE && site.isWPComAtomic()
+                   && !site.isPrivateWPComAtomic()) {
+            openAtomicBlogPostPreview(
+                    context,
+                    url,
+                    site.getLoginUrl(),
+                    site.getFrameNonce());
         } else if (site.isJetpackConnected() && site.isUsingWpComRestApi()) {
             WPWebViewActivity
                     .openJetpackBlogPostPreview(
@@ -970,6 +978,18 @@ public class ActivityLauncher {
                     true,
                     true,
                     startPreviewForResult);
+        }
+    }
+
+    private static void openAtomicBlogPostPreview(Context context, String url, String authenticationUrl,
+                                                 String frameNonce) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(authenticationUrl + "?redirect_to=" + URLEncoder
+                    .encode(url + "&frame-nonce=" + UrlUtils.urlEncode(frameNonce), ENCODING_UTF8)));
+            context.startActivity(intent);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
     }
 

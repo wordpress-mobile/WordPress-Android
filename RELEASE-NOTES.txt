@@ -1,3 +1,10 @@
+16.2
+-----
+ 
+16.1
+-----
+* [***] Block Editor: Adds new option to select from a variety of predefined page templates when creating a new page for a Gutenberg site.
+
 16.0
 -----
 * [*] Stats: Added the possibility to report and unreport a referrer as spam. [https://github.com/wordpress-mobile/WordPress-Android/pull/13047]
@@ -6,6 +13,10 @@
 * [***] Block Editor: Unsupported Block Editor: Fixed issue when cannot view or interact with the classic block on Jetpack site. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2709]
 * [**] Reader: Allow users to access Reader even when they do not follow any tags/topics.
 * [***] Reader: The new redesigned Reader detail shows your post as beautiful as ever. And if you add a featured image it would be twice as beautiful! [https://github.com/wordpress-mobile/WordPress-Android/pull/13151]
+
+15.9.2
+-----
+* [*] Block Editor: Fix for a crash that can occur when activity is null during capabilities update[https://github.com/wordpress-mobile/WordPress-Android/issues/13248]
 
 15.9
 -----
@@ -16,6 +27,7 @@
 * [**] Block Editor: Fix for a crash that can occur when long pressing selected images [https://github.com/wordpress-mobile/AztecEditor-Android/pull/924]
 * [***] Block Editor: Added expected double tap for focus behavior for text fields in accessibility mode [https://github.com/WordPress/gutenberg/pull/25384]
 * [*] Improved My Site layout on devices with big screens. [https://github.com/wordpress-mobile/WordPress-Android/pull/13026]
+* [***] Block Editor: Unsupported Block Editor: Fixed issue when cannot view or interact with the classic block on Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/issues/2695]
 
 15.8.1
 -----

@@ -10,6 +10,7 @@ import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.ClearF
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Filter
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.NextPage
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Refresh
+import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Retry
 import org.wordpress.android.ui.mediapicker.loader.MediaLoader.LoadAction.Start
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
@@ -17,59 +18,80 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Success
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 data class MediaLoader(
     private val mediaSource: MediaSource,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
     suspend fun loadMedia(actions: Channel<LoadAction>): Flow<DomainModel> {
         return flow {
             var state = DomainModel()
+            var lastPerformedAction: LoadAction? = null
             for (loadAction in actions) {
-                when (loadAction) {
-                    is Start -> {
-                        if (state.domainItems.isEmpty() || state.error != null) {
-                            state = updateState(
-                                    buildDomainModel(mediaSource.load(filter = state.filter), state)
-                            )
-                        }
-                    }
-                    is Refresh -> {
-                        if (loadAction.forced || state.domainItems.isEmpty()) {
-                            state = updateState(state.copy(isLoading = true))
-                            state = updateState(
-                                    buildDomainModel(
-                                            mediaSource.load(
-                                                    forced = loadAction.forced,
-                                                    filter = state.filter
-                                            ), state
-                                    )
-                            )
-                        }
-                    }
-                    is NextPage -> {
-                        val load = mediaSource.load(loadMore = true, filter = state.filter)
-                        state = updateState(buildDomainModel(load, state))
-                    }
-                    is Filter -> {
-                        if (loadAction.filter != state.filter) {
-                            state = updateState(state.copy(filter = loadAction.filter, isLoading = true))
-                            val load = mediaSource.load(
-                                    filter = state.filter
-                            )
-                            state = updateState(buildDomainModel(load, state))
-                        }
-                    }
-                    is ClearFilter -> {
-                        if (!state.filter.isNullOrEmpty()) {
-                            state = updateState(state.copy(filter = null, isLoading = true))
-                            val load = mediaSource.load(
-                                    filter = state.filter
-                            )
-                            state = updateState(buildDomainModel(load, state))
-                        }
-                    }
+                val currentAction = if (loadAction is Retry) {
+                    lastPerformedAction ?: loadAction
+                } else {
+                    lastPerformedAction = loadAction
+                    loadAction
                 }
+
+                if (currentAction !is NextPage) {
+                    state = updateState(state.copy(isLoading = true, emptyState = null))
+                }
+                val updatedState = loadState(currentAction, state)
+                if (state != updatedState) {
+                    state = updateState(updatedState)
+                }
+                if (state.isLoading) {
+                    state = updateState(state.copy(isLoading = false))
+                }
+            }
+        }
+    }
+
+    private suspend fun loadState(
+        loadAction: LoadAction,
+        state: DomainModel
+    ): DomainModel {
+        return when (loadAction) {
+            is Start -> {
+                if (state.domainItems.isEmpty()) {
+                    buildDomainModel(
+                            mediaSource.load(filter = loadAction.filter),
+                            state.copy(filter = loadAction.filter)
+                    )
+                } else {
+                    state
+                }
+            }
+            is Refresh -> {
+                if (loadAction.forced || state.domainItems.isEmpty()) {
+                    buildDomainModel(
+                            mediaSource.load(
+                                    filter = state.filter,
+                                    forced = loadAction.forced
+                            ), state
+                    )
+                } else {
+                    state
+                }
+            }
+            is NextPage -> {
+                val load = mediaSource.load(filter = state.filter, loadMore = true)
+                buildDomainModel(load, state)
+            }
+            is Filter -> {
+                val load = mediaSource.load(filter = loadAction.filter)
+                buildDomainModel(load, state.copy(filter = loadAction.filter))
+            }
+            is ClearFilter -> {
+                val load = mediaSource.load(filter = null)
+                buildDomainModel(load, state.copy(filter = null))
+            }
+            is Retry -> {
+                buildDomainModel(mediaSource.load(filter = state.filter), state)
             }
         }
     }
@@ -88,14 +110,12 @@ data class MediaLoader(
         return when (partialResult) {
             is Success -> state.copy(
                     isLoading = false,
-                    error = null,
                     hasMore = partialResult.hasMore,
                     domainItems = partialResult.data,
                     emptyState = null
             )
             is Empty -> state.copy(
                     isLoading = false,
-                    error = null,
                     hasMore = false,
                     domainItems = listOf(),
                     emptyState = EmptyState(
@@ -103,10 +123,21 @@ data class MediaLoader(
                             partialResult.htmlSubtitle,
                             partialResult.image,
                             partialResult.bottomImage,
-                            partialResult.bottomImageContentDescription
+                            partialResult.bottomImageContentDescription,
+                            isError = false
                     )
             )
-            is Failure -> state.copy(isLoading = false, error = partialResult.message)
+            is Failure -> state.copy(
+                    isLoading = false,
+                    hasMore = partialResult.data.isNotEmpty(),
+                    domainItems = partialResult.data,
+                    emptyState = EmptyState(
+                            partialResult.title,
+                            partialResult.htmlSubtitle,
+                            partialResult.image,
+                            isError = true
+                    )
+            )
         }
     }
 
@@ -116,11 +147,11 @@ data class MediaLoader(
         data class Filter(val filter: String) : LoadAction()
         object NextPage : LoadAction()
         object ClearFilter : LoadAction()
+        object Retry : LoadAction()
     }
 
     data class DomainModel(
         val domainItems: List<MediaItem> = listOf(),
-        val error: String? = null,
         val hasMore: Boolean = false,
         val isFilteredResult: Boolean = false,
         val filter: String? = null,
@@ -132,7 +163,8 @@ data class MediaLoader(
             val htmlSubtitle: UiString? = null,
             val image: Int? = null,
             val bottomImage: Int? = null,
-            val bottomImageDescription: UiString? = null
+            val bottomImageDescription: UiString? = null,
+            val isError: Boolean = false
         )
     }
 }

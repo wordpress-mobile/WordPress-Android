@@ -49,6 +49,21 @@
         <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
+    <style name="ReaderTextView.Site.Description" parent="ReaderTextView">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="textColor">?attr/colorOnBackground</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+    </style>
+
+    <style name="ReaderTextView.Site.Header.Caption.Url">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -121,7 +136,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="ReaderTextView.Interests.Header" parent="ReaderTextView.Interests.Title">
+    <style name="ReaderTextView.Card.Header" parent="ReaderTextView.Interests.Title">
         <item name="android:layout_margin">@dimen/margin_extra_large</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
     </style>
@@ -195,7 +210,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="Reader.TextView.Error"  parent="Widget.MaterialComponents.TextView">
+    <style name="Reader.TextView.Error" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_extra_medium_large</item>
@@ -270,18 +285,22 @@
 
     <!-- images -->
     <style name="ReaderImageView" />
+
     <style name="ReaderImageView.Avatar" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_medium</item>
         <item name="android:layout_height">@dimen/avatar_sz_medium</item>
     </style>
+
     <style name="ReaderImageView.Avatar.Small" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_small</item>
     </style>
+
     <style name="ReaderImageView.Avatar.ExtraSmall" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_extra_small</item>
         <item name="android:layout_height">@dimen/avatar_sz_extra_small</item>
     </style>
+
     <style name="ReaderImageView.Avatar.ExtraLarge" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/blavatar_sz_extra_large</item>
         <item name="android:layout_height">@dimen/blavatar_sz_extra_large</item>

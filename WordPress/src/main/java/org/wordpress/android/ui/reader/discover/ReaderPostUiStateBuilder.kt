@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
@@ -24,6 +25,9 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -46,6 +50,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
+private const val READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT = 3
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -183,6 +188,27 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 )
             })
         }
+    }
+
+    suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+        recommendedBlogs: List<ReaderBlog>,
+        onItemClicked: (Long, Long) -> Unit,
+        onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
+    ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
+        recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
+                .map {
+                    ReaderRecommendedBlogUiState(
+                            name = it.name,
+                            url = urlUtilsWrapper.removeScheme(it.url),
+                            blogId = it.blogId,
+                            feedId = it.feedId,
+                            description = it.description.ifEmpty { null },
+                            iconUrl = it.imageUrl,
+                            isFollowed = it.isFollowing,
+                            onFollowClicked = onFollowClicked,
+                            onItemClicked = onItemClicked
+                    )
+                }.let { ReaderRecommendedBlogsCardUiState(it) }
     }
 
     private fun buildBlogSection(

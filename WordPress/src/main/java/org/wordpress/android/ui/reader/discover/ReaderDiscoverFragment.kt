@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import kotlinx.android.synthetic.main.reader_fullscreen_empty_with_action.*
 import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
@@ -100,6 +101,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             when (it) {
                 is ContentUiState -> {
                     (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
+                    if (it.scrollToTop) {
+                        recycler_view.scrollToPosition(0)
+                    }
                 }
                 is ErrorUiState -> {
                     uiHelpers.setTextOrHide(error_title, it.titleResId)
@@ -184,17 +188,19 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(
-                constraint_layout,
-                uiHelpers.getTextOfUiString(requireContext(), this.message),
-                Snackbar.LENGTH_LONG
-        )
-        if (this.buttonTitle != null) {
-            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
-                this.buttonAction.invoke()
+        activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
+            val snackbar = WPSnackbar.make(
+                    coordinator,
+                    uiHelpers.getTextOfUiString(requireContext(), this.message),
+                    Snackbar.LENGTH_LONG
+            )
+            if (this.buttonTitle != null) {
+                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
+                    this.buttonAction.invoke()
+                }
             }
+            snackbar.show()
         }
-        snackbar.show()
     }
 
     private fun PreLoadPostContent.addWebViewCachingFragment() {

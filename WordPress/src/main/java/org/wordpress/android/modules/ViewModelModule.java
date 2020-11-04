@@ -11,6 +11,8 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
+import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
 import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -303,6 +306,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(HomePagePickerViewModel.class)
+    abstract ViewModel hppViewModel(HomePagePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
 
@@ -395,6 +403,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ManualFeatureConfigViewModel.class)
     abstract ViewModel manualFeatureConfigViewModel(ManualFeatureConfigViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingCategoriesViewModel.class)
+    abstract ViewModel prepublishingCategoriesViewModel(PrepublishingCategoriesViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingAddCategoryViewModel.class)
+    abstract ViewModel prepublishingAddCategoryViewModel(PrepublishingAddCategoryViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

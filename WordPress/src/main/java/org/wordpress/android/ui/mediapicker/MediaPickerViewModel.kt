@@ -143,8 +143,10 @@ class MediaPickerViewModel @Inject constructor(
     private fun buildBrowseMenuUiModel(softAskRequest: SoftAskRequest?, searchExpanded: Boolean?): BrowseMenuUiModel {
         val isSoftAskRequestVisible = softAskRequest?.show ?: false
         val isSearchExpanded = searchExpanded ?: false
-        val showSystemPicker = mediaPickerSetup.systemPickerEnabled && !isSoftAskRequestVisible && !isSearchExpanded
-        return if (showSystemPicker || mediaPickerSetup.availableDataSources.isNotEmpty()) {
+        val showActions = !isSoftAskRequestVisible && !isSearchExpanded
+        val showSystemPicker = mediaPickerSetup.systemPickerEnabled && showActions
+
+        return if (showActions && (showSystemPicker || mediaPickerSetup.availableDataSources.isNotEmpty())) {
             val actions = mutableSetOf<BrowseAction>()
             if (showSystemPicker) {
                 actions.add(SYSTEM_PICKER)
@@ -225,14 +227,23 @@ class MediaPickerViewModel @Inject constructor(
             }
             if (domainModel.hasMore) {
                 val updatedItems = uiItems.toMutableList()
-                updatedItems.add(MediaPickerUiItem.NextPageLoader(true, domainModel.error) {
-                    launch {
-                        loadActions.send(NextPage)
+                val loaderItem = if (domainModel.emptyState?.isError == true) {
+                    MediaPickerUiItem.NextPageLoader(false) {
+                        launch {
+                            retry()
+                        }
                     }
-                })
-                PhotoListUiModel.Data(updatedItems)
+                } else {
+                    MediaPickerUiItem.NextPageLoader(true) {
+                        launch {
+                            loadActions.send(NextPage)
+                        }
+                    }
+                }
+                updatedItems.add(loaderItem)
+                PhotoListUiModel.Data(items = updatedItems)
             } else {
-                PhotoListUiModel.Data(uiItems)
+                PhotoListUiModel.Data(items = uiItems)
             }
         } else if (domainModel?.emptyState != null) {
             PhotoListUiModel.Empty(
@@ -241,8 +252,15 @@ class MediaPickerViewModel @Inject constructor(
                     domainModel.emptyState.image,
                     domainModel.emptyState.bottomImage,
                     domainModel.emptyState.bottomImageDescription,
-                    isSearching == true
+                    isSearching == true,
+                    retryAction = if (domainModel.emptyState.isError) {
+                        this::retry
+                    } else {
+                        null
+                    }
             )
+        } else if (domainModel?.isLoading == true) {
+            PhotoListUiModel.Loading
         } else {
             PhotoListUiModel.Empty(
                     UiStringRes(R.string.media_empty_list),
@@ -300,6 +318,12 @@ class MediaPickerViewModel @Inject constructor(
         }
         launch(bgDispatcher) {
             loadActions.send(LoadAction.Refresh(forceReload))
+        }
+    }
+
+    private fun retry() {
+        launch(bgDispatcher) {
+            loadActions.send(LoadAction.Retry)
         }
     }
 
@@ -431,6 +455,9 @@ class MediaPickerViewModel @Inject constructor(
                         progressDialogJob?.cancel()
                         job = null
                         _showProgressDialog.value = Hidden
+                        if (_searchExpanded.value == true) {
+                            _searchExpanded.value = false
+                        }
                         _onNavigate.value = Event(MediaNavigationEvent.InsertMedia(it.identifiers))
                     }
                 }
@@ -629,10 +656,12 @@ class MediaPickerViewModel @Inject constructor(
             val image: Int? = null,
             val bottomImage: Int? = null,
             val bottomImageDescription: UiString? = null,
-            val isSearching: Boolean = false
+            val isSearching: Boolean = false,
+            val retryAction: (() -> Unit)? = null
         ) : PhotoListUiModel()
 
         object Hidden : PhotoListUiModel()
+        object Loading : PhotoListUiModel()
     }
 
     sealed class SoftAskViewUiModel {

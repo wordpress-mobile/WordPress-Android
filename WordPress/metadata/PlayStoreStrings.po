@@ -11,21 +11,19 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_159"
+msgctxt "release_note_161"
 msgid ""
-"15.9:\n"
-"- Block editor: Edit unsupported blocks by enabling Jetpack SSO from the missing block alert. Use the link picker to add URLs to posts. Double-tap text fields in accessibility mode now works as expected.\n"
-"- Improved My Site layout for large-screen devices.\n"
+"16.1:\n"
+"* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.\n"
 "\n"
 msgstr ""
 
-msgctxt "release_note_158"
+msgctxt "release_note_160"
 msgid ""
-"15.8:\n"
-"- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.\n"
-"- Reader update: Preview images are now displayed on posts when no featured image is set.\n"
+"16.0:\n"
+"Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.\n"
 "\n"
-"\n"
+"Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

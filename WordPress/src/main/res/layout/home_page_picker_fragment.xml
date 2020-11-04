@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/categoriesBackground"
+    android:fitsSystemWindows="false"
+    android:focusableInTouchMode="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/categoriesBackground"
+        android:fitsSystemWindows="false">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="false"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <include
+                layout="@layout/home_page_picker_header_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/toolbar_height" />
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/categoriesBackground"
+                android:elevation="0dp"
+                app:layout_collapseMode="pin">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_height"
+                    android:orientation="vertical">
+
+                    <include
+                        layout="@layout/home_page_picker_titlebar"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:id="@+id/loadingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/layoutsRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:maxWidth="@dimen/hpp_maximum_container_width"
+        android:layout_gravity="center|top"
+        android:paddingStart="@dimen/hpp_card_padding"
+        android:paddingEnd="0dp"
+        android:background="?attr/categoriesBackground"
+        android:clipToPadding="false"
+        android:descendantFocusability="beforeDescendants"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:aevButton="@string/retry"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevImageHiddenInLandscape="true"
+        app:aevSubtitle="@string/hpp_error_subtitle"
+        app:aevTitle="@string/hpp_error_title"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        layout="@layout/home_page_picker_bottom_toolbar"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

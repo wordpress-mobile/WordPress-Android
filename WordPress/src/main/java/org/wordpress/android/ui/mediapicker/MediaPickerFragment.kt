@@ -31,7 +31,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
@@ -55,9 +54,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
@@ -98,14 +94,13 @@ class MediaPickerFragment : Fragment() {
 
     enum class ChooserContext(
         val intentAction: String,
-        val requestCode: Int,
         val title: UiStringRes,
         val mediaTypeFilter: String
     ) {
-        PHOTO(ACTION_GET_CONTENT, RequestCodes.PICTURE_LIBRARY, UiStringRes(R.string.pick_photo), "image/*"),
-        VIDEO(ACTION_GET_CONTENT, RequestCodes.VIDEO_LIBRARY, UiStringRes(R.string.pick_video), "video/*"),
-        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, RequestCodes.MEDIA_LIBRARY, UiStringRes(R.string.pick_media), "*/*"),
-        MEDIA_FILE(ACTION_OPEN_DOCUMENT, RequestCodes.FILE_LIBRARY, UiStringRes(R.string.pick_file), "*/*");
+        PHOTO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_photo), "image/*"),
+        VIDEO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_video), "video/*"),
+        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_media), "*/*"),
+        MEDIA_FILE(ACTION_OPEN_DOCUMENT, UiStringRes(R.string.pick_file), "*/*");
     }
 
     sealed class MediaPickerAction {
@@ -180,7 +175,7 @@ class MediaPickerFragment : Fragment() {
      * parent activity must implement this listener
      */
     interface MediaPickerListener {
-        fun onItemsChosen(uriList: List<Identifier>)
+        fun onItemsChosen(identifiers: List<Identifier>)
         fun onIconClicked(action: MediaPickerAction)
     }
 
@@ -350,6 +345,7 @@ class MediaPickerFragment : Fragment() {
 
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
+                searchView.maxWidth = Integer.MAX_VALUE
                 searchView.setQuery(uiState.searchUiModel.filter, true)
                 searchView.setOnCloseListener { !uiState.searchUiModel.closeable }
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
@@ -443,54 +439,54 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
+        loading_view.visibility = if (uiModel == PhotoListUiModel.Loading) View.VISIBLE else View.GONE
+        actionable_empty_view.visibility = if (uiModel is PhotoListUiModel.Empty) View.VISIBLE else View.GONE
+        recycler.visibility = if (uiModel is PhotoListUiModel.Data) View.VISIBLE else View.INVISIBLE
         when (uiModel) {
-            is Data -> {
-                actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.VISIBLE
+            is PhotoListUiModel.Data -> {
                 setupAdapter(uiModel.items)
             }
-            is Empty -> {
+            is PhotoListUiModel.Empty -> {
+                setupAdapter(listOf())
                 actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
-                actionable_empty_view.visibility = View.VISIBLE
                 actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
-                if (uiModel.htmlSubtitle != null) {
+
+                actionable_empty_view.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
                     actionable_empty_view.subtitle.text = Html.fromHtml(
                             uiHelpers.getTextOfUiString(
                                     requireContext(),
-                                    uiModel.htmlSubtitle
+                                    htmlSubtitle
                             ).toString()
                     )
                     actionable_empty_view.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
-                    actionable_empty_view.subtitle.visibility = View.VISIBLE
-                } else {
-                    actionable_empty_view.subtitle.visibility = View.GONE
                 }
-
-                if (uiModel.image != null) {
-                    actionable_empty_view.image.setImageResource(uiModel.image)
-                    actionable_empty_view.image.visibility = View.VISIBLE
-                } else {
-                    actionable_empty_view.image.visibility = View.GONE
+                actionable_empty_view.image.applyOrHide(uiModel.image) { image ->
+                    this.setImageResource(image)
                 }
-                if (uiModel.bottomImage != null) {
-                    actionable_empty_view.bottomImage.setImageResource(uiModel.bottomImage)
-                    actionable_empty_view.bottomImage.visibility = View.VISIBLE
+                actionable_empty_view.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
+                    this.setImageResource(bottomImage)
                     if (uiModel.bottomImageDescription != null) {
-                        actionable_empty_view.bottomImage.contentDescription = uiHelpers.getTextOfUiString(
+                        this.contentDescription = uiHelpers.getTextOfUiString(
                                 requireContext(),
                                 uiModel.bottomImageDescription
                         ).toString()
                     }
-                } else {
-                    actionable_empty_view.bottomImage.visibility = View.GONE
                 }
-                recycler.visibility = View.INVISIBLE
-                setupAdapter(listOf())
+                actionable_empty_view.button.applyOrHide(uiModel.retryAction) { action ->
+                    this.setOnClickListener {
+                        action()
+                    }
+                }
             }
-            Hidden -> {
-                actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.INVISIBLE
-            }
+        }
+    }
+
+    private fun <T, U : View> U.applyOrHide(item: T?, action: U.(T) -> Unit) {
+        if (item != null) {
+            this.visibility = View.VISIBLE
+            this.action(item)
+        } else {
+            this.visibility = View.GONE
         }
     }
 

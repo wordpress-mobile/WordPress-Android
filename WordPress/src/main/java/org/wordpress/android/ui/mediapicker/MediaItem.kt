@@ -28,7 +28,7 @@ data class MediaItem(
     }
 
     sealed class Identifier(val type: IdentifierType) : Parcelable {
-        data class LocalUri(val value: UriWrapper) : Identifier(LOCAL_URI)
+        data class LocalUri(val value: UriWrapper, val queued: Boolean = false) : Identifier(LOCAL_URI)
 
         data class RemoteId(val value: Long) : Identifier(REMOTE_ID)
 
@@ -50,6 +50,7 @@ data class MediaItem(
             when (this) {
                 is LocalUri -> {
                     parcel.writeParcelable(this.value.uri, flags)
+                    parcel.writeInt(if (this.queued) 1 else 0)
                 }
                 is RemoteId -> {
                     parcel.writeLong(this.value)
@@ -80,7 +81,10 @@ data class MediaItem(
                     val type = IdentifierType.valueOf(requireNotNull(parcel.readString()))
                     return when (type) {
                         LOCAL_URI -> {
-                            LocalUri(UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))))
+                            LocalUri(
+                                    UriWrapper(requireNotNull(parcel.readParcelable(Uri::class.java.classLoader))),
+                                    parcel.readInt() != 0
+                            )
                         }
                         REMOTE_ID -> {
                             RemoteId(parcel.readLong())

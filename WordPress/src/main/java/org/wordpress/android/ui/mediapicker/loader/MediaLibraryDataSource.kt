@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mediapicker.loader
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -24,7 +25,11 @@ import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
@@ -35,6 +40,8 @@ class MediaLibraryDataSource(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val siteModel: SiteModel,
     private val mediaTypes: Set<MediaType>
 ) : MediaSource {
@@ -49,6 +56,14 @@ class MediaLibraryDataSource(
         loadMore: Boolean,
         filter: String?
     ): MediaLoadingResult {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            return Failure(
+                    UiStringRes(R.string.no_network_title),
+                    htmlSubtitle = UiStringRes(R.string.no_network_message),
+                    image = R.drawable.img_illustration_cloud_off_152dp,
+                    data = if (loadMore) get(mediaTypes, filter) else listOf()
+            )
+        }
         return withContext(bgDispatcher) {
             val loadingResults = mediaTypes.map { mediaType ->
                 async {
@@ -58,7 +73,7 @@ class MediaLibraryDataSource(
                             mediaType.toMimeType()
                     )
                 }
-            }.map { it.await() }
+            }.awaitAll()
 
             var error: String? = null
             var hasMore = false
@@ -71,7 +86,12 @@ class MediaLibraryDataSource(
                 }
             }
             if (error != null) {
-                MediaLoadingResult.Failure(error)
+                Failure(
+                        UiStringRes(R.string.media_loading_failed),
+                        htmlSubtitle = UiStringText(error),
+                        image = R.drawable.img_illustration_cloud_off_152dp,
+                        data = if (loadMore) get(mediaTypes, filter) else listOf()
+                )
             } else {
                 val data = get(mediaTypes, filter)
                 if (filter.isNullOrEmpty() || data.isNotEmpty()) {
@@ -99,19 +119,19 @@ class MediaLibraryDataSource(
             }.fold(mutableListOf<MediaItem>()) { result, databaseItems ->
                 result.addAll(databaseItems.await())
                 result
-            }.sortedByDescending { (it.identifier as? RemoteId)?.value }
+            }.sortedByDescending { it.dataModified }
         }
     }
 
     private fun List<MediaModel>.toMediaItems(mediaType: MediaType): List<MediaItem> {
-        return this.map { mediaModel ->
+        return this.filter { it.url != null }.map { mediaModel ->
             MediaItem(
                     RemoteId(mediaModel.mediaId),
                     mediaModel.url,
                     mediaModel.title,
                     mediaType,
                     mediaModel.mimeType,
-                    0
+                    dateTimeUtilsWrapper.dateFromIso8601(mediaModel.uploadDate).time
             )
         }
     }
@@ -169,9 +189,19 @@ class MediaLibraryDataSource(
     @Inject constructor(
         private val mediaStore: MediaStore,
         private val dispatcher: Dispatcher,
-        @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+        @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        private val networkUtilsWrapper: NetworkUtilsWrapper,
+        private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
     ) {
         fun build(siteModel: SiteModel, mediaTypes: Set<MediaType>) =
-                MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel, mediaTypes)
+                MediaLibraryDataSource(
+                        mediaStore,
+                        dispatcher,
+                        bgDispatcher,
+                        networkUtilsWrapper,
+                        dateTimeUtilsWrapper,
+                        siteModel,
+                        mediaTypes
+                )
     }
 }

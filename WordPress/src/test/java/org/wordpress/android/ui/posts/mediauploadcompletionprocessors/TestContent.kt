@@ -4,8 +4,8 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 /* ktlint-disable string-template */
 object TestContent {
     const val siteUrl = "https://wordpress.org"
-    private const val localImageUrl = "file://Screenshot-1-1.png"
-    private const val localImageUrl2 = "file://Screenshot-1-2.png"
+    const val localImageUrl = "file://Screenshot-1-1.png"
+    const val localImageUrl2 = "file://Screenshot-1-2.png"
     const val remoteImageUrl = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg"
     const val remoteImageUrl2 = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"
     private const val remoteImageUrlBlogLink = "http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/"
@@ -546,6 +546,14 @@ object TestContent {
 </figure>
 <!-- /wp:gallery -->
 """
+    const val storyMediaFileMimeTypeImage = "image/jpeg"
+    const val storyBlockWithLocalIdsAndUrls = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$localMediaId","link":"$localImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
+<div class="wp-story wp-block-jetpack-story"></div>
+<!-- /wp:jetpack/story -->"""
+    const val storyBlockWithFirstRemoteIdsAndUrlsReplaced = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$remoteMediaId","link":"$remoteImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$remoteImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
+<div class="wp-story wp-block-jetpack-story"></div>
+<!-- /wp:jetpack/story -->"""
+
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock

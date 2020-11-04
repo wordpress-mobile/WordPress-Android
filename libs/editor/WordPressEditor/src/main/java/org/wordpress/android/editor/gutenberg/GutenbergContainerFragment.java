@@ -1,5 +1,6 @@
 package org.wordpress.android.editor.gutenberg;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -227,8 +228,13 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
-        GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
-        mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        // We want to make sure that activity isn't null
+        // as it can make this crash to happen: https://github.com/wordpress-mobile/WordPress-Android/issues/13248
+        final Activity activity = getActivity();
+        if (activity != null) {
+            GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(activity, mHtmlModeEnabled);
+            mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        }
     }
 
     public void clearFileSaveStatus(final String mediaId) {

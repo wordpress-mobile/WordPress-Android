@@ -1,71 +1,54 @@
 <en-US>
-15.8:
-- Block editor enhancements: Added full-width and wide alignment support for Group, Cover, and Image blocks; added support for the Rounded style in the Image block; and resolved an issue where the toolbar behaved unexpectedly when adding a block.
-- Reader update: Preview images are now displayed on posts when no featured image is set.
+16.0:
+Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.
 
-
+Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.
 </en-US>
 <es-ES>
-15.8:
-- Mejoras en el editor de bloques: Añadida compatibilidad con alineación de ancho amplio y ancho completo para los bloques de grupo, fondo e imagen; añadida compatibilidad con el estilo redondeado en el bloque de imagen; y solucionado un problema por el que la barra de herramientas se comportaba de modo inesperado al añadir un bloque.
-- Actualización del lector: La vista previa de imágenes ahora se muestra en las entradas cuando no se ha configurado una imagen destacada.
+16.0:
+Actualizaciones en el editor de bloques: Ahora es compatible con la alineación ancha y completa en los bloques de vídeo, galería y más. Hemos corregido un problema que afectaba al bloque clásico en los sitios Jetpack y resuelto un problema relacionado con blloques no compatibles en dispositivos rotados.
 
-
+Actualizaciones en el lector: Disfruta de una experiencia de lectura más limpia y de bonitas imágenes en el rediseñado lector. Puede acceder aunque no sigas ningún tema.
 </es-ES>
-<fr-CA>
-15.8 :
-- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
-- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
-</fr-CA>
-<fr-FR>
-15.8 :
-- Améliorations de l’éditeur de blocs : ajout de la prise en charge de la largeur complète et de l’alignement large pour les blocs groupe, bannière et image. Ajout de la prise en charge du style arrondi dans le bloc image, et résolution d’un problème où la barre d’outils s’est comportée de façon inattendue lors de l’ajout d’un bloc.
-- Mise à jour du Lecteur : l’aperçu des images est maintenant affiché sur les publications lorsqu’aucune image mise en avant n’est réglée.
-</fr-FR>
 <iw-IL>
-15.8:
-- שיפורים בעורך הבלוקים: הוספנו תמיכה ברוחב מלא וביישור לרוחב בבלוקים של קבוצות, כיסוי ותמונות; הוספנו תמיכה בסגנון 'מעוגל' בבלוק התמונה; פתרנו בעיה שגרמה לפעולה לא תקינה של סרגל הכלים במהלך הוספה של בלוק.
-- עדכונים ל-Reader: תמונות בתצוגה מקדימה מוצגות כעת בפוסטים כאשר לא מוגדרת תמונה מרכזית.
+16.0:
+עדכונים לעורך הבלוקים: יש כעת תמיכה ביישור בפריסה רחבה וברוחב מלא עבור הבלוקים 'וידאו', 'גלריה' ועוד. תיקנו בעיה שהשפיעה על הבלוק הקלאסי באתרי Jetpack ופתרנו בעיה בנוגע לבלוקים שאינם נתמכים בעת סיבוב המכשיר.
 
-
+עדכונים ל-Reader: כעת אפשר ליהנות מחוויית קריאה נקייה יותר ומתמונות מרהיבות ב-Reader שעוצב מחדש. אפשר לגשת אליו גם אם לא עוקבים אחר נושאים.
 </iw-IL>
-<ja-JP>
-15.8:
-- ブロックエディターの機能強化。グループブロック、カバーブロック、画像ブロックの全幅および幅広整列サポートを追加。
-- Reader の更新: アイキャッチ画像が設定されていない場合、プレビュー画像が投稿に表示されるようになりました。
+<it-IT>
+16.0:
+Aggiornamenti editor a blocchi: ora è disponibile il supporto per l'allineamento Wide e Full width per i blocchi Video, Galleria e molti altri. Abbiamo corretto un problema che influenzava il blocco Classico sui siti Jetpack e abbiamo risolto un problema relativo a blocchi non supportati su dispositivi ruotati.
 
-</ja-JP>
+Aggiornamenti Reader: Goditi un'esperienza di lettura più pulita e con immagini più belle nel Reader riprogettato. Puoi accedervi anche se non segui altri argomenti.
+</it-IT>
 <ko-KR>
-15.8:
-- 블록 편집기 개선: 그룹, 표지, 그리고 이미지 블록에 대한 전체너비와 넓은 정렬  지원을 추가했습니다. 이미지 블록에 대한 둥굴린 스타일에 대한 지원을 추가했습니다. 그리고 도구모음이 블록을 추가할 때 예기치 않게 동작하는 문제를 해결했습니다.
-- 리더 업데이트: 미리보기 이미지가 이제 대표 이미지를 설정하지 않았을 때 보이게 됩니다.
+16.0:
+블록 편집기 업데이트: 영상, 갤러리 등 많은 블록이 이제 가로 전체 확장과 와이드 정렬을 지원합니다. Jetpack 사이트에서 클래식 블록에서 발생하는 문제와 회전된 기기를 지원하지 않는 블록과 관련된 문제를 수정했습니다.
 
-
+리더 업데이트: 새롭게 디자인된 리더로 향상된 가독성 경험과 아름다운 이미지를 사용해보세요. 주제를 팔로우하지 않아도 사용할 수 있습니다.
 </ko-KR>
 <nl-NL>
-15.8:
-- Verbeteringen in de blok-editor: Ondersteuning voor uitlijning over de volledige breedte en breedte toegevoegd voor groeps-, cover- en afbeelding blokken; ondersteuning toegevoegd voor de stijl Afgerond in het afbeelding blok; en loste een probleem op waarbij de toolbar zich onverwacht gedroeg bij het toevoegen van een blok.
--Reader update: voorbeeld afbeeldingen worden nu getoond in berichten als er geen uitgelichte afbeelding is ingesteld.
+16.0:
+Updates voor blok-editor: er is nu ondersteuning voor uitlijning over de volledige breedte en breedte voor de video-, galerij- en meer blokken. We hebben een probleem met het klassieke blok op Jetpack sites opgelost en een probleem met niet-ondersteunde blokken op geroteerde apparaten opgelost.
 
-
+Reader updates: geniet van een betere leeservaring en prachtige afbeeldingen in de opnieuw ontworpen Reader. Je hebt er zelfs toegang toe als je geen onderwerpen volgt.
 </nl-NL>
 <ru-RU>
-15.8:
-- Улучшения редактора блоков: добавлена поддержка полноразмерного и широкого выравнивания для блоков группы, обложки и изображения; добавлена поддержка скруглённого стиля в блоке изображения; решена проблема, из-за которой панель инструментов вела себя неожиданно при добавлении блока.
-- Обновление для Чтива: изображения предварительного просмотра теперь отображаются в сообщениях, если не задано ни одного избранного изображения.
+16.0:
+Обновления редактора блоков: поддержка широкого и выравнивания на полную ширину блоков видео, галереи и многих других. Исправлена проблема с классическим блоком на сайтах Jetpack и другая проблема с неподдерживаемых блоках и поворотом экрана устройства.
 
+Обновления чтива: переработано оформление, вам понравится! Доступно даже если у вас нет подписок.
 </ru-RU>
 <sv-SE>
-15.8:
-– Förbättringar i blockredigeraren: Stöd för fullbredd och brett innehåll i blocken grupp, omslag och bild. Stöd för avrundad stil i bildblock. Rättat fel där verktygslisten betedde sig konstigt när man lade till ett block.
-– Uppdatering av läsaren: Nu visas förhandsvisningsbilder för inlägg som saknar utvald bild.
+16.0:
+Nytt i blockredigereran: Nu finns det stöd för fullbredd och bredd layout av video-, galleri- m.fl. block. Vi har korrigerat ett problem med det klassiska blocket på webbplatser med Jetpack och löst ett bekymmer med ej stödda block vid rotering av mobila enheter.
 
-
+Uppdateringar i läsaren: Njut av en snyggare läsupplevelse och vackra bilder med den nya designen av läsaren. Du kommer åt den även om du inte har följt några ämnen.
 </sv-SE>
-<zh-TW>
-15.8：
-- 區塊編輯器增強功能：為「群組」、「封面」和「圖片」區塊新增全寬和寬幅對齊方式支援；在「圖片」區塊中新增「圓角」樣式支援；並解決新增區塊時，工具列異常運作的問題。
-- 讀取器更新：現在未設定精選圖片的文章會顯示預覽圖片。
+<zh-CN>
+16.0：
+区块编辑器更新：现在，我们为视频、画廊和更多区块提供了“全宽”和“加宽”对齐支持。 我们修复了影响 Jetpack 站点上经典区块的问题，并解决了设备旋转后区块不受支持的问题。
 
-
-</zh-TW>
+阅读器更新：阅读器经过重新设计，可带来更清晰的阅读体验和精美图像。 即使您没有关注任何主题，也可以享受阅读器带来的这些出色体验。
+</zh-CN>

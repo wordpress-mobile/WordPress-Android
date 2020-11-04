@@ -37,6 +37,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private lateinit var viewModel: ReaderViewModel
 
     private var searchMenuItem: MenuItem? = null
+    private var settingsMenuItem: MenuItem? = null
 
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -65,6 +66,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     override fun onDestroyView() {
         super.onDestroyView()
         searchMenuItem = null
+        settingsMenuItem = null
     }
 
     override fun onResume() {
@@ -83,14 +85,25 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             searchMenuItem = this
             this.isVisible = viewModel.uiState.value?.searchIconVisible ?: false
         }
+        menu.findItem(R.id.menu_settings).apply {
+            settingsMenuItem = this
+            this.isVisible = viewModel.uiState.value?.settingsIconVisible ?: false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == R.id.menu_search) {
-            viewModel.onSearchActionClicked()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.menu_search -> {
+                viewModel.onSearchActionClicked()
+                true
+            }
+            R.id.menu_settings -> {
+                viewModel.onSettingsActionClicked()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
         }
     }
 
@@ -118,6 +131,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 }
                 uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
+                settingsMenuItem?.isVisible = uiState.settingsIconVisible
             }
         })
 
@@ -136,6 +150,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         viewModel.showSearch.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 ReaderActivityLauncher.showReaderSearch(context)
+            }
+        })
+
+        viewModel.showSettings.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                ReaderActivityLauncher.showReaderSubs(context)
             }
         })
 

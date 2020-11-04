@@ -42,9 +42,15 @@ class MediaPickerLauncher @Inject constructor(
         localPostId: Int
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val availableDataSources = if (site != null && site.isUsingWpComRestApi) {
+                setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY)
+            } else {
+                setOf(WP_LIBRARY, GIF_LIBRARY)
+            }
+
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY, STOCK_LIBRARY, GIF_LIBRARY),
+                    availableDataSources = availableDataSources,
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
@@ -74,14 +80,14 @@ class MediaPickerLauncher @Inject constructor(
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY, GIF_LIBRARY),
+                    availableDataSources = setOf(WP_LIBRARY),
                     canMultiselect = false,
                     requiresStoragePermissions = true,
                     allowedTypes = setOf(IMAGE),
                     cameraSetup = ENABLED,
                     systemPickerEnabled = true,
                     editingEnabled = true,
-                    queueResults = true,
+                    queueResults = false,
                     defaultSearchView = false,
                     title = R.string.photo_picker_title
             )
@@ -123,7 +129,8 @@ class MediaPickerLauncher @Inject constructor(
 
     fun showStoriesPhotoPickerForResult(
         activity: Activity,
-        site: SiteModel?
+        site: SiteModel?,
+        requestCode: Int = RequestCodes.STORIES_PHOTO_PICKER
     ) {
         val browserType = MediaBrowserType.WP_STORIES_MEDIA_PICKER
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
@@ -132,7 +139,7 @@ class MediaPickerLauncher @Inject constructor(
                     buildLocalMediaPickerSetup(browserType),
                     site
             )
-            activity.startActivityForResult(intent, RequestCodes.STORIES_PHOTO_PICKER)
+            activity.startActivityForResult(intent, requestCode)
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, browserType, site, null)
         }
@@ -295,7 +302,7 @@ class MediaPickerLauncher @Inject constructor(
         }
         return MediaPickerSetup(
                 primaryDataSource = DEVICE,
-                availableDataSources = setOf(),
+                availableDataSources = if (browserType.isWPStoriesPicker) setOf(WP_LIBRARY) else setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,

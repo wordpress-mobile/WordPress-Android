@@ -232,17 +232,13 @@ Language: th
     <string name="more">กว่า</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
-    <string name="reader_empty_posts_in_tag">ไม่มีเรื่องกับป้ายกำกับนี้</string>
     <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
     <string name="reader_label_like">ชื่นชอบ</string>
     <string name="signing_out">กำลังออกจากระบบ…</string>
-    <string name="reader_label_liked_by">ชื่นชอบโดย</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
     <string name="update_verb">อัปเดต</string>
     <string name="schedule_verb">ตารางงาน</string>
-    <string name="reader_page_followed_tags">ป้ายกำกับที่ติดตามแล้ว</string>
     <string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
-    <string name="reader_hint_add_tag_or_url">ใส่ URL หรือ ป้ายกำกับเพื่อติดตาม</string>
     <string name="help">ช่วยเหลือ</string>
     <string name="forgot_password">จำรหัสผ่านของคุณไม่ได้?</string>
     <string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
@@ -268,8 +264,6 @@ Language: th
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
     <string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
-    <string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
-    <string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
     <string name="image_settings">การตั้งค่ารูปภาพ</string>
@@ -334,8 +328,6 @@ Language: th
     <string name="reader_likes_one">หนึ่งคนชอบสิ่งนี้</string>
     <string name="reader_likes_only_you">คุณชอบสิ่งนี้</string>
     <string name="reader_toast_err_comment_failed">ไม่สามารถเขียนความเห็นของคุณ</string>
-    <string name="reader_toast_err_tag_exists">คุณติดตามป้ายกำกับนี้แล้ว</string>
-    <string name="reader_toast_err_tag_invalid">นี่ไม่ใช่ป้ายกำกับที่ใช้งานได้</string>
     <string name="reader_toast_err_share_intent">ไม่สามารถแบ่งปันได้</string>
     <string name="reader_label_added_tag">เพิ่ม %s แล้ว</string>
     <string name="reader_label_removed_tag">ลบ %s แล้ว</string>

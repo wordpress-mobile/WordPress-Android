@@ -38,74 +38,43 @@
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textSize="18sp"
                 android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:lineSpacingMultiplier="1.2"
                 android:text="@string/stories_intro_main_subtitle" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/story_images"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
-                android:weightSum="2"
-                android:orientation="horizontal"
+                android:layout_gravity="start"
                 android:baselineAligned="false">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <ImageView
+                    android:id="@+id/story_image_first"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:src="@drawable/stories_intro_cover_1"
+                    android:background="@color/transparent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/story_image_second"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/stories_intro_image_caption_first" />
 
-                    <ImageView
-                        android:id="@+id/story_image_first"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/stories_intro_cover_1"
-                        android:background="@color/transparent"
-                        android:layout_gravity="center"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/stories_intro_image_caption_first" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/image_caption_first"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?attr/wpColorOnSurfaceMedium"
-                        android:text="@string/stories_intro_image_caption_first" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <ImageView
+                    android:id="@+id/story_image_second"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:src="@drawable/stories_intro_cover_2"
+                    android:background="@color/transparent"
+                    app:layout_constraintStart_toEndOf="@+id/story_image_first"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="@string/stories_intro_image_caption_second"/>
 
-                    <ImageView
-                        android:id="@+id/story_image_second"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/stories_intro_cover_2"
-                        android:layout_gravity="center"
-                        android:background="@color/transparent"
-                        android:scaleType="fitCenter"
-                        android:contentDescription="@string/stories_intro_image_caption_second"/>
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/image_caption_second"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?attr/wpColorOnSurfaceMedium"
-                        android:text="@string/stories_intro_image_caption_second" />
-                </LinearLayout>
-
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/feature_title_first"
@@ -118,9 +87,11 @@
                 android:id="@+id/feature_subtitle_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:lineSpacingMultiplier="1.2"
                 android:text="@string/stories_intro_description_first" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -134,9 +105,11 @@
                 android:id="@+id/feature_subtitle_second"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_extra_medium_large"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/wpColorOnSurfaceMedium"
+                android:lineSpacingMultiplier="1.2"
                 android:text="@string/stories_intro_description_second" />
 
         </LinearLayout>

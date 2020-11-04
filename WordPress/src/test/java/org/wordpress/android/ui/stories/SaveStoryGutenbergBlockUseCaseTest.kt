@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.wordpress.stories.compose.story.StoryFrameItem
 import kotlinx.coroutines.InternalCoroutinesApi
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -18,6 +19,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.TestContent
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
@@ -30,6 +32,8 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @Mock lateinit var storiesPrefs: StoriesPrefs
     @Mock lateinit var context: Context
     @Mock lateinit var postStore: PostStore
+    @Mock lateinit var mediaFile: MediaFile
+    @Mock lateinit var mediaFile2: MediaFile
 
     @InternalCoroutinesApi
     @Before
@@ -162,6 +166,47 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
 
         // Then
         verify(storiesPrefs, times(3)).saveSlideWithTempId(any(), any(), any())
+    }
+
+    @Test
+    fun `replaceLocalMediaIdsWithRemoteMediaIdsInPost replaces local id and url for given mediaFile in Story block`() {
+        // arrange
+        whenever(mediaFile.id).thenReturn(TestContent.localMediaId.toInt())
+        whenever(mediaFile.mediaId).thenReturn(TestContent.remoteMediaId)
+        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
+        val postModel = PostModel()
+        postModel.setContent(TestContent.storyBlockWithLocalIdsAndUrls)
+
+        // act
+        saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel, mediaFile)
+
+        // assert
+        Assertions.assertThat(postModel.content).isEqualTo(TestContent.storyBlockWithFirstRemoteIdsAndUrlsReplaced)
+    }
+
+    @Test
+    fun `buildJetpackStoryBlockInPost sets the Post content to a Story block with local ids and urls`() {
+        // arrange
+        val postModel = PostModel()
+        editPostRepository.set { postModel }
+
+        whenever(mediaFile.id).thenReturn(TestContent.localMediaId.toInt())
+        whenever(mediaFile.fileURL).thenReturn(TestContent.localImageUrl)
+        whenever(mediaFile.mimeType).thenReturn(TestContent.storyMediaFileMimeTypeImage)
+
+        whenever(mediaFile2.id).thenReturn(TestContent.localMediaId2.toInt())
+        whenever(mediaFile2.fileURL).thenReturn(TestContent.localImageUrl2)
+        whenever(mediaFile2.mimeType).thenReturn(TestContent.storyMediaFileMimeTypeImage)
+
+        val mediaFiles = ArrayList<MediaFile>()
+        mediaFiles.add(mediaFile)
+        mediaFiles.add(mediaFile2)
+
+        // act
+        saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(editPostRepository, mediaFiles)
+
+        // assert
+        Assertions.assertThat(postModel.content).isEqualTo(TestContent.storyBlockWithLocalIdsAndUrls)
     }
 
     private fun setupFluxCMediaFiles(
