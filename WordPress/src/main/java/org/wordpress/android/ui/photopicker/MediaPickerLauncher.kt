@@ -133,7 +133,8 @@ class MediaPickerLauncher @Inject constructor(
         requestCode: Int = RequestCodes.STORIES_PHOTO_PICKER
     ) {
         val browserType = MediaBrowserType.WP_STORIES_MEDIA_PICKER
-        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+        // Temporarily disable new media picker for stories
+        if (false) {
             val intent = MediaPickerActivity.buildIntent(
                     activity,
                     buildLocalMediaPickerSetup(browserType),
