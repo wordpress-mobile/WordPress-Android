@@ -24,3 +24,5 @@
 /mobile/feature-announcements/
 
 /me/gutenberg/
+
+/experiments/$version#String/assignments/$platform#String
