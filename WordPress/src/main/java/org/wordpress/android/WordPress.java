@@ -133,14 +133,12 @@ import javax.inject.Named;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasServiceInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
 import kotlinx.coroutines.CoroutineScope;
 
 import static org.wordpress.android.modules.ThreadModuleKt.DEFAULT_SCOPE;
 
-public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
-        LifecycleObserver {
+public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
     public static String versionName;
@@ -164,8 +162,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     private static GoogleApiClient mCredentialsClient;
 
-    @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
-    @Inject DispatchingAndroidInjector<Fragment> mSupportFragmentInjector;
+    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -855,13 +852,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mStoryNotificationTrackerProvider;
     }
 
-    @Override
-    public AndroidInjector<Service> serviceInjector() {
-        return mServiceDispatchingAndroidInjector;
-    }
-
-    @Override public AndroidInjector<Fragment> supportFragmentInjector() {
-        return mSupportFragmentInjector;
+    @Override public AndroidInjector<Object> androidInjector() {
+        return mDispatchingAndroidInjector;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
