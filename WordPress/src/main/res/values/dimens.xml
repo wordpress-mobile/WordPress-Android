@@ -19,6 +19,7 @@
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
+    <dimen name="fab_margin_stories">64dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
