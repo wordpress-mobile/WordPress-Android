@@ -2906,7 +2906,7 @@
     <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
     <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
     <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Unsupported format</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
     <string name="dialog_edit_story_unsupported_format_message">Stories don\'t support GIF files at the moment; one or more slides have not been added to your Story. Please choose a static image or video background instead.</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
