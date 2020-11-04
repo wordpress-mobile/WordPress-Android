@@ -25,6 +25,7 @@ import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
 public abstract class DebugOkHttpClientModule {
@@ -61,6 +62,7 @@ public abstract class DebugOkHttpClientModule {
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
+            builder.hostnameVerifier(memorizingTrustManager.wrapHostnameVerifier(OkHostnameVerifier.INSTANCE));
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
             builder.sslSocketFactory(sslSocketFactory, memorizingTrustManager);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {

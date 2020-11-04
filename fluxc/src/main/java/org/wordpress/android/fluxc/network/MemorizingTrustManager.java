@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.network;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -15,6 +13,7 @@ import java.security.KeyStoreException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +22,8 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -33,11 +34,10 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     private FutureTask<X509TrustManager> mTrustManagerFutureTask;
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
+    private String mLastFailedHost;
     private X509Certificate mLastFailure;
-    private Context mContext;
 
-    public MemorizingTrustManager(Context appContext) {
-        mContext = appContext;
+    public MemorizingTrustManager() {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
             public KeyStore call() {
@@ -114,12 +114,12 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public void storeLastFailure() {
-        storeCert(mLastFailure);
+        storeCert(mLastFailedHost, mLastFailure);
     }
 
-    public void storeCert(X509Certificate cert) {
+    public void storeCert(String hostname, X509Certificate cert) {
         try {
-            getLocalKeyStore().setCertificateEntry(cert.getSubjectDN().toString(), cert);
+            getLocalKeyStore().setCertificateEntry(hostname.toLowerCase(Locale.US), cert);
         } catch (KeyStoreException e) {
             AppLog.e(T.API, "Unable to store the certificate: " + cert);
         }
@@ -129,10 +129,12 @@ public class MemorizingTrustManager implements X509TrustManager {
         getDefaultTrustManager().checkClientTrusted(chain, authType);
     }
 
+    @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
             getDefaultTrustManager().checkServerTrusted(chain, authType);
         } catch (CertificateException ce) {
+            mLastFailedHost = chain[0].getSubjectDN().toString();
             mLastFailure = chain[0];
             if (isCertificateAccepted(chain[0])) {
                 // Certificate has already been accepted by the user
@@ -164,6 +166,44 @@ public class MemorizingTrustManager implements X509TrustManager {
             }
         } catch (KeyStoreException e) {
             AppLog.e(T.API, "Unable to clear KeyStore");
+        }
+    }
+
+    public HostnameVerifier wrapHostnameVerifier(final HostnameVerifier defaultVerifier) {
+        if (defaultVerifier == null)
+            throw new IllegalArgumentException("The default verifier may not be null");
+
+        return new MemorizingHostnameVerifier(defaultVerifier);
+    }
+
+    class MemorizingHostnameVerifier implements HostnameVerifier {
+        private HostnameVerifier defaultVerifier;
+
+        public MemorizingHostnameVerifier(HostnameVerifier wrapped) {
+            defaultVerifier = wrapped;
+        }
+
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            // if the default verifier accepts the hostname, we are done
+            if (defaultVerifier.verify(hostname, session)) {
+                return true;
+            }
+            // otherwise, we check if the hostname is an alias for this cert in our keystore
+            try {
+                X509Certificate cert = (X509Certificate)session.getPeerCertificates()[0];
+                //Log.d(TAG, "cert: " + cert);
+                if (cert.equals(getLocalKeyStore().getCertificate(hostname.toLowerCase(Locale.US)))) {
+                    return true;
+                } else {
+                    mLastFailedHost = hostname;
+                    mLastFailure = cert;
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 }
