@@ -13,7 +13,6 @@ import java.security.KeyStoreException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +33,6 @@ public class MemorizingTrustManager implements X509TrustManager {
 
     private FutureTask<X509TrustManager> mTrustManagerFutureTask;
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
-    private String mLastFailedHost;
     private X509Certificate mLastFailure;
 
     public MemorizingTrustManager() {
@@ -114,12 +112,12 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public void storeLastFailure() {
-        storeCert(mLastFailedHost, mLastFailure);
+        storeCert(mLastFailure);
     }
 
-    public void storeCert(String hostname, X509Certificate cert) {
+    public void storeCert(X509Certificate cert) {
         try {
-            getLocalKeyStore().setCertificateEntry(hostname, cert);
+            getLocalKeyStore().setCertificateEntry(cert.getSubjectDN().toString(), cert);
         } catch (KeyStoreException e) {
             AppLog.e(T.API, "Unable to store the certificate: " + cert);
         }
@@ -134,7 +132,6 @@ public class MemorizingTrustManager implements X509TrustManager {
         try {
             getDefaultTrustManager().checkServerTrusted(chain, authType);
         } catch (CertificateException ce) {
-            mLastFailedHost = chain[0].getSubjectDN().toString();
             mLastFailure = chain[0];
             if (isCertificateAccepted(chain[0])) {
                 // Certificate has already been accepted by the user
@@ -192,16 +189,7 @@ public class MemorizingTrustManager implements X509TrustManager {
             // otherwise, we check if the hostname is an alias for this cert in our keystore
             try {
                 X509Certificate cert = (X509Certificate)session.getPeerCertificates()[0];
-                //Log.d(TAG, "cert: " + cert);
-                if (cert.equals(getLocalKeyStore().getCertificate(hostname.toLowerCase(Locale.US)))) {
-                    return true;
-                } if (cert.equals(getLocalKeyStore().getCertificate(cert.getSubjectDN().toString()))) {
-                    return true;
-                } else {
-                    mLastFailedHost = hostname.toLowerCase(Locale.US);
-                    mLastFailure = cert;
-                    return false;
-                }
+                return cert.equals(getLocalKeyStore().getCertificate(cert.getSubjectDN().toString()));
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
