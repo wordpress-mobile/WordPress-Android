@@ -62,7 +62,7 @@ public abstract class DebugOkHttpClientModule {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{memorizingTrustManager}, new SecureRandom());
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-            builder.sslSocketFactory(sslSocketFactory);
+            builder.sslSocketFactory(sslSocketFactory, memorizingTrustManager);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             AppLog.e(T.API, e);
         }
