@@ -4,6 +4,7 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
+import org.wordpress.android.fluxc.model.experiments.AssignmentsModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -13,6 +14,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ExperimentStore.ExperimentErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsError
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchedAssignmentsPayload
+import org.wordpress.android.fluxc.store.ExperimentStore.Platform
+import java.lang.System.currentTimeMillis
 import javax.inject.Singleton
 
 @Singleton
@@ -25,11 +28,11 @@ class ExperimentRestClient(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchAssignments(
-        platform: String,
+        platform: Platform,
         anonymousId: String? = null,
         version: String = DEFAULT_VERSION
     ): FetchedAssignmentsPayload {
-        val url = WPCOMV2.experiments.version(version).assignments.platform(platform).url
+        val url = WPCOMV2.experiments.version(version).assignments.platform(platform.value).url
         val params = mapOf("anon_id" to anonymousId.orEmpty())
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
@@ -40,7 +43,7 @@ class ExperimentRestClient(
                 forced = true
         )
         return when (response) {
-            is Success -> FetchedAssignmentsPayload(response.data.variations, response.data.ttl)
+            is Success -> FetchedAssignmentsPayload(response.data.let { AssignmentsModel(it.variations, it.ttl) })
             is Error -> FetchedAssignmentsPayload(FetchAssignmentsError(GENERIC_ERROR, response.error.message))
         }
     }
