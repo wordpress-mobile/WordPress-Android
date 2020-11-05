@@ -99,6 +99,8 @@ public class StatsUtils {
                     blogID
             );
         } else {
+            // For now, itemType.ATTACHMENT falls down this path. No need to repeat unless we
+            // want to handle attachments differently in the future.
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
         }
