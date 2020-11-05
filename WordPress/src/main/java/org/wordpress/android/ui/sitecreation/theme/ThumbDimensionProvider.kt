@@ -51,6 +51,13 @@ class ThumbDimensionProvider @Inject constructor(
     val height: Int
         get() = (width / ratio).toInt()
 
+    /**
+     * The start margin can be calculated by dividing the space remaining after placing the thumbnails by two
+     */
+    val calculatedStartMargin: Int
+        get() = (displayUtilsWrapper.getDisplayPixelWidth() -
+                ((columns * width) + ((columns - 1) * getPixels(dimen.hpp_card_padding)))) / 2
+
     val scale: Double = 1.0
 
     private fun getPixels(@DimenRes id: Int) = contextProvider.getContext().resources.getDimensionPixelSize(id)
