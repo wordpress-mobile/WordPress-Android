@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.store.StatsStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.modules.AppComponent;
+import org.wordpress.android.modules.DaggerAppComponent;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
