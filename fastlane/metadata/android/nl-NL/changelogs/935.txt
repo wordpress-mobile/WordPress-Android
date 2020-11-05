@@ -1,3 +1,0 @@
-15.9:
-- Blok-editor: bewerk niet-ondersteunde blokken door Jetpack SSO in te schakelen vanuit de waarschuwing voor ontbrekende blokken. Gebruik de link kiezer om URL's aan berichten toe te voegen. Dubbel tik op tekstvelden in de toegankelijkheidsmodus werkt nu zoals verwacht.
-- Verbeterde My Site lay-out voor apparaten met een groot scherm.

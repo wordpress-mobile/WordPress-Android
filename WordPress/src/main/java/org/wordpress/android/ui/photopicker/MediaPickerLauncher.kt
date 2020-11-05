@@ -87,7 +87,7 @@ class MediaPickerLauncher @Inject constructor(
                     cameraSetup = ENABLED,
                     systemPickerEnabled = true,
                     editingEnabled = true,
-                    queueResults = true,
+                    queueResults = false,
                     defaultSearchView = false,
                     title = R.string.photo_picker_title
             )
@@ -302,7 +302,7 @@ class MediaPickerLauncher @Inject constructor(
         }
         return MediaPickerSetup(
                 primaryDataSource = DEVICE,
-                availableDataSources = setOf(),
+                availableDataSources = if (browserType.isWPStoriesPicker) setOf(WP_LIBRARY) else setOf(),
                 canMultiselect = browserType.canMultiselect(),
                 requiresStoragePermissions = true,
                 allowedTypes = allowedTypes,

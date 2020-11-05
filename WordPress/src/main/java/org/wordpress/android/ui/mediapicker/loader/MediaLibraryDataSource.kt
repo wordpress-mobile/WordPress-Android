@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mediapicker.loader
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResul
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Failure
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -38,9 +40,10 @@ class MediaLibraryDataSource(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val siteModel: SiteModel,
-    private val mediaTypes: Set<MediaType>,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val mediaTypes: Set<MediaType>
 ) : MediaSource {
     init {
         dispatcher.register(this)
@@ -70,7 +73,7 @@ class MediaLibraryDataSource(
                             mediaType.toMimeType()
                     )
                 }
-            }.map { it.await() }
+            }.awaitAll()
 
             var error: String? = null
             var hasMore = false
@@ -87,7 +90,7 @@ class MediaLibraryDataSource(
                         UiStringRes(R.string.media_loading_failed),
                         htmlSubtitle = UiStringText(error),
                         image = R.drawable.img_illustration_cloud_off_152dp,
-                        data = get(mediaTypes, filter)
+                        data = if (loadMore) get(mediaTypes, filter) else listOf()
                 )
             } else {
                 val data = get(mediaTypes, filter)
@@ -116,7 +119,7 @@ class MediaLibraryDataSource(
             }.fold(mutableListOf<MediaItem>()) { result, databaseItems ->
                 result.addAll(databaseItems.await())
                 result
-            }.sortedByDescending { (it.identifier as? RemoteId)?.value }
+            }.sortedByDescending { it.dataModified }
         }
     }
 
@@ -128,7 +131,7 @@ class MediaLibraryDataSource(
                     mediaModel.title,
                     mediaType,
                     mediaModel.mimeType,
-                    0
+                    dateTimeUtilsWrapper.dateFromIso8601(mediaModel.uploadDate).time
             )
         }
     }
@@ -187,9 +190,18 @@ class MediaLibraryDataSource(
         private val mediaStore: MediaStore,
         private val dispatcher: Dispatcher,
         @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-        private val networkUtilsWrapper: NetworkUtilsWrapper
+        private val networkUtilsWrapper: NetworkUtilsWrapper,
+        private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
     ) {
         fun build(siteModel: SiteModel, mediaTypes: Set<MediaType>) =
-                MediaLibraryDataSource(mediaStore, dispatcher, bgDispatcher, siteModel, mediaTypes, networkUtilsWrapper)
+                MediaLibraryDataSource(
+                        mediaStore,
+                        dispatcher,
+                        bgDispatcher,
+                        networkUtilsWrapper,
+                        dateTimeUtilsWrapper,
+                        siteModel,
+                        mediaTypes
+                )
     }
 }
