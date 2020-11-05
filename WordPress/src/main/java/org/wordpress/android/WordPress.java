@@ -28,7 +28,6 @@ import androidx.core.provider.FontRequest;
 import androidx.emoji.text.EmojiCompat;
 import androidx.emoji.text.EmojiCompat.InitCallback;
 import androidx.emoji.text.FontRequestEmojiCompatConfig;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
