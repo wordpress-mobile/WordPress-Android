@@ -7,6 +7,8 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ExperimentAction
 import org.wordpress.android.fluxc.action.ExperimentAction.FETCH_ASSIGNMENTS
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.experiments.Assignments
+import org.wordpress.android.fluxc.model.experiments.AssignmentsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
@@ -38,30 +40,29 @@ class ExperimentStore @Inject constructor(
         val fetchedPayload = experimentRestClient.fetchAssignments(fetchPayload.platform, fetchPayload.anonId)
         return if (!fetchedPayload.isError) {
             // TODO: Persist locally
-            OnAssignmentsFetched(variations = fetchedPayload.variations)
+            OnAssignmentsFetched(assignments = Assignments.fromModel(fetchedPayload.assignments))
         } else {
             OnAssignmentsFetched(error = fetchedPayload.error)
         }
     }
 
     data class FetchAssignmentsPayload(
-        val platform: String,
+        val platform: Platform,
         val anonId: String? = null
     )
 
     data class FetchedAssignmentsPayload(
-        val variations: Map<String, String?>,
-        val ttl: Int
+        val assignments: AssignmentsModel
     ) : Payload<FetchAssignmentsError>() {
-        constructor(error: FetchAssignmentsError) : this(emptyMap(), 0) {
+        constructor(error: FetchAssignmentsError) : this(AssignmentsModel()) {
             this.error = error
         }
     }
 
     data class OnAssignmentsFetched(
-        val variations: Map<String, String?>
+        val assignments: Assignments
     ) : OnChanged<FetchAssignmentsError>() {
-        constructor(error: FetchAssignmentsError) : this(emptyMap()) {
+        constructor(error: FetchAssignmentsError) : this(Assignments()) {
             this.error = error
         }
     }
@@ -73,5 +74,22 @@ class ExperimentStore @Inject constructor(
 
     enum class ExperimentErrorType {
         GENERIC_ERROR
+    }
+
+    enum class Platform(val value: String) {
+        WORDPRESS_COM("wpcom"),
+        CALYPSO("calypso"),
+        JETPACK("jetpack"),
+        WOOCOMMERCE("woocommerce"),
+        WORDPRESS_IOS("wpios"),
+        WORDPRESS_ANDROID("wpandroid"),
+        WOOCOMMERCE_IOS("woocommerceios"),
+        WOOCOMMERCE_ANDROID("woocommerceandroid");
+
+        companion object {
+            fun fromValue(value: String): Platform? {
+                return values().firstOrNull { it.value == value }
+            }
+        }
     }
 }
