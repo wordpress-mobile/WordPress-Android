@@ -70,7 +70,7 @@ class PostListViewModel @Inject constructor(
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     connectionStatus: LiveData<ConnectionStatus>
-) : ScopedViewModel(uiDispatcher), LifecycleOwner {
+) : ScopedViewModel(uiDispatcher) {
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(connector.site) && connector.site.hasCapabilityViewStats
     }
@@ -119,8 +119,10 @@ class PostListViewModel @Inject constructor(
     private var searchProgressJob: Job? = null
     private lateinit var authorFilterSelection: AuthorFilterSelection
 
-    private val lifecycleRegistry = LifecycleRegistry(this)
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    private val lifecycleOwner = object : LifecycleOwner {
+        val lifecycleRegistry = LifecycleRegistry(this)
+        override fun getLifecycle(): Lifecycle = lifecycleRegistry
+    }
 
     fun start(
         postListViewModelConnector: PostListViewModelConnector,
@@ -136,7 +138,7 @@ class PostListViewModel @Inject constructor(
         connector = postListViewModelConnector
 
         isStarted = true
-        lifecycleRegistry.markState(Lifecycle.State.STARTED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
 
         if (connector.postListType == SEARCH) {
             this.authorFilterSelection = EVERYONE
@@ -146,7 +148,7 @@ class PostListViewModel @Inject constructor(
              * We don't want to initialize the list with empty search query in search mode as it'd send an unnecessary
              * request to fetch ids of all posts on the site.
              */
-            initList(dataSource, lifecycle)
+            initList(dataSource, lifecycleOwner.lifecycle)
         }
     }
 
@@ -261,10 +263,10 @@ class PostListViewModel @Inject constructor(
     }
 
     init {
-        connectionStatus.observe(this, Observer {
+        connectionStatus.observe(lifecycleOwner, Observer {
             retryOnConnectionAvailableAfterRefreshError()
         })
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleOwner.lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
     fun search(query: String?, delay: Long = SEARCH_DELAY_MS) {
@@ -284,7 +286,7 @@ class PostListViewModel @Inject constructor(
                 delay(delay)
                 searchJob = null
                 if (isActive) {
-                    initList(dataSource, lifecycle)
+                    initList(dataSource, lifecycleOwner.lifecycle)
                 }
             }
         }
@@ -304,7 +306,7 @@ class PostListViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         super.onCleared()
     }
 
@@ -400,7 +402,7 @@ class PostListViewModel @Inject constructor(
     fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {
         if (connector.postListType != SEARCH && this.authorFilterSelection != authorFilterSelection) {
             this.authorFilterSelection = authorFilterSelection
-            initList(dataSource, lifecycle)
+            initList(dataSource, lifecycleOwner.lifecycle)
             return true
         }
         return false

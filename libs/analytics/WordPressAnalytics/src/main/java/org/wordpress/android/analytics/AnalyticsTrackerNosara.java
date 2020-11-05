@@ -666,6 +666,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_blog_previewed";
             case READER_BLOG_UNFOLLOWED:
                 return "reader_site_unfollowed";
+            case READER_SUGGESTED_SITE_VISITED:
+                return "reader_suggested_site_visited";
+            case READER_SUGGESTED_SITE_TOGGLE_FOLLOW:
+                return "reader_suggested_site_toggle_follow";
             case READER_ARTICLE_VISITED:
                 return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
@@ -1125,6 +1129,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_referrers_view_more_tapped";
             case STATS_REFERRERS_ITEM_TAPPED:
                 return "stats_referrers_item_tapped";
+            case STATS_REFERRERS_ITEM_LONG_PRESSED:
+                return "stats_referrers_item_long_pressed";
+            case STATS_REFERRERS_ITEM_MARKED_AS_SPAM:
+                return "stats_referrers_item_marked_as_spam";
+            case STATS_REFERRERS_ITEM_MARKED_AS_NOT_SPAM:
+                return "stats_referrers_item_marked_as_not_spam";
             case STATS_CLICKS_VIEW_MORE_TAPPED:
                 return "stats_clicks_view_more_tapped";
             case STATS_COUNTRIES_VIEW_MORE_TAPPED:
@@ -1205,6 +1215,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
+            case LOGIN_PROLOGUE_PAGED_JETPACK:
+                return "login_prologue_paged_jetpack";
+            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
+                return "login_prologue_paged_notifications";
+            case LOGIN_PROLOGUE_PAGED_POST:
+                return "login_prologue_paged_post";
+            case LOGIN_PROLOGUE_PAGED_READER:
+                return "login_prologue_paged_reader";
+            case LOGIN_PROLOGUE_PAGED_STATS:
+                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -1221,6 +1241,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_url_form_viewed";
             case LOGIN_URL_HELP_SCREEN_VIEWED:
                 return "login_url_help_screen_viewed";
+            case LOGIN_CONNECTED_SITE_INFO_REQUESTED:
+                return "login_connected_site_info_requested";
+            case LOGIN_CONNECTED_SITE_INFO_FAILED:
+                return "login_connected_site_info_failed";
+            case LOGIN_CONNECTED_SITE_INFO_SUCCEEDED:
+                return "login_connected_site_info_succeeded";
             case LOGIN_USERNAME_PASSWORD_FORM_VIEWED:
                 return "login_username_password_form_viewed";
             case LOGIN_TWO_FACTOR_FORM_VIEWED:
@@ -1505,10 +1531,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_service_upload_canceled";
             case MEDIA_PICKER_OPEN_CAPTURE_MEDIA:
                 return "media_picker_capture_media_opened";
+            case MEDIA_PICKER_OPEN_SYSTEM_PICKER:
+                return "media_picker_open_system_picker";
             case MEDIA_PICKER_OPEN_DEVICE_LIBRARY:
                 return "media_picker_device_library_opened";
             case MEDIA_PICKER_OPEN_WP_MEDIA:
                 return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_OPEN_STOCK_LIBRARY:
+                return "media_picker_open_stock_library";
+            case MEDIA_PICKER_OPEN_GIF_LIBRARY:
+                return "media_picker_open_gif_library";
             case MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE:
                 return "media_picker_stories_capture_opened";
             case MEDIA_PICKER_OPEN_FOR_STORIES:
@@ -1517,6 +1549,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
                 return "media_picker_preview_opened";
+            case MEDIA_PICKER_SEARCH_EXPANDED:
+                return "media_picker_search_expanded";
+            case MEDIA_PICKER_SEARCH_COLLAPSED:
+                return "media_picker_search_collapsed";
+            case MEDIA_PICKER_SEARCH_TRIGGERED:
+                return "media_picker_search_triggered";
+            case MEDIA_PICKER_SHOW_PERMISSIONS_SCREEN:
+                return "media_picker_show_permissions_screen";
+            case MEDIA_PICKER_ITEM_SELECTED:
+                return "media_picker_item_selected";
+            case MEDIA_PICKER_ITEM_UNSELECTED:
+                return "media_picker_item_unselected";
+            case MEDIA_PICKER_SELECTION_CLEARED:
+                return "media_picker_selection_cleared";
+            case MEDIA_PICKER_OPENED:
+                return "media_picker_opened";
             case APP_PERMISSION_GRANTED:
                 return "app_permission_granted";
             case APP_PERMISSION_DENIED:
@@ -1771,6 +1819,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_error_snackbar_manage_tapped";
             case STORY_POST_PUBLISH_TAPPED:
                 return "story_post_publish_tapped";
+            case STORY_TEXT_CHANGED:
+                return "story_text_changed";
+            case STORY_INTRO_SHOWN:
+                return "story_intro_shown";
+            case STORY_INTRO_DISMISSED:
+                return "story_intro_dismissed";
+            case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
+                return "story_intro_create_story_button_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
@@ -1813,12 +1869,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_pull_to_refresh";
             case POST_CARD_MORE_TAPPED:
                 return "post_card_more_tapped";
+            case READER_ARTICLE_DETAIL_MORE_TAPPED:
+                return "reader_article_detail_more_tapped";
             case READER_CHIPS_MORE_TOGGLED:
                 return "reader_chips_more_toggled";
             case ENCRYPTED_LOGGING_UPLOAD_SUCCESSFUL:
                 return "encrypted_logging_upload_successful";
             case ENCRYPTED_LOGGING_UPLOAD_FAILED:
                 return "encrypted_logging_upload_failed";
+            case READER_POST_REPORTED:
+                return "reader_post_reported";
         }
         return null;
     }

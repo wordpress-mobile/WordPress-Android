@@ -46,7 +46,6 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.ME_SCREEN_HELP
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -281,7 +280,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         } else {
             getString(R.string.sign_out_wpcom_confirm_with_no_changes)
         }
-        MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder(requireActivity())
                 .setMessage(message)
                 .setPositiveButton(
                         R.string.signout
@@ -375,7 +374,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showPhotoPickerForGravatar() {
-        mediaPickerLauncher.showPhotoPickerForResult(this, GRAVATAR_IMAGE_PICKER, null, null)
+        mediaPickerLauncher.showGravatarPicker(this)
     }
 
     private fun startCropActivity(uri: Uri) {
@@ -384,7 +383,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))

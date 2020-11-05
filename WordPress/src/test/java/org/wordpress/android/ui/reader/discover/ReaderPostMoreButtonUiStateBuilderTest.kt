@@ -176,7 +176,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `follow action label color is primary(blue)`() = test {
+    fun `follow action label color is secondary(pink)`() = test {
         // Arrange
         val post = init(isFollowed = false)
         // Act
@@ -184,12 +184,12 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    it.labelColor == R.attr.colorPrimary
+                    it.labelColor == R.attr.colorSecondary
         }).isNotNull
     }
 
     @Test
-    fun `unfollow action label color is success(green)`() = test {
+    fun `unfollow action label color is OnSurfaceMedium(grey)`() = test {
         // Arrange
         val post = init(isFollowed = true)
         // Act
@@ -197,7 +197,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    it.labelColor == R.attr.wpColorSuccess
+                    it.labelColor == R.attr.wpColorOnSurfaceMedium
         }).isNotNull
     }
 
@@ -215,7 +215,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `site notifications action label color is success(green) when notifications enabled`() = test {
+    fun `site notifications action label color is OnSurfaceMedium(grey) when notifications enabled`() = test {
         // Arrange
         val post = init(isFollowed = true, isNotificationsEnabled = true)
         // Act
@@ -223,8 +223,28 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    it.labelColor == R.attr.wpColorSuccess
+                    it.labelColor == R.attr.wpColorOnSurfaceMedium
         }).isNotNull
+    }
+
+    @Test
+    fun `contains report post action when post list type is TAG_FOLLOWED`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNotNull
+    }
+
+    @Test
+    fun `does not contain report post action when post list type is not TAG_FOLLOWED`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_PREVIEW, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNull()
     }
 
     private fun init(

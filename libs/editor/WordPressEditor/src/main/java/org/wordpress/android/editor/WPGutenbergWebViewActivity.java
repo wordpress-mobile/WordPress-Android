@@ -24,7 +24,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     public static final String ARG_USER_ID = "authenticated_user_id";
     public static final String ARG_BLOCK_ID = "block_id";
-    public static final String ARG_BLOCK_NAME = "block_name";
+    public static final String ARG_BLOCK_TITLE = "block_title";
     public static final String ARG_BLOCK_CONTENT = "block_content";
 
     private boolean mIsJetpackSsoEnabled;
@@ -73,9 +73,9 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
 
     @Override
     protected String getToolbarTitle() {
-        String blockName = getIntent().getExtras().getString(ARG_BLOCK_NAME);
-        if (blockName != null) {
-            return String.format(getString(R.string.menu_toolbar_title), blockName);
+        String blockTitle = getIntent().getExtras().getString(ARG_BLOCK_TITLE);
+        if (blockTitle != null) {
+            return String.format(getString(R.string.menu_toolbar_title), blockTitle);
         }
         return "";
     }
@@ -154,6 +154,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     protected boolean isUrlOverridden(WebView view, String url) {
         if (mIsJetpackSsoEnabled) {
             if (!mIsJetpackSsoRedirected) {
+                mForegroundView.setVisibility(View.VISIBLE);
                 mIsJetpackSsoRedirected = true;
                 view.loadUrl(mUrlToLoad);
                 return true;
@@ -162,6 +163,8 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
             if (url.contains(mUrlToLoad)) {
                 mForegroundView.setVisibility(View.VISIBLE);
                 mIsRedirected = true;
+            } else {
+                mForegroundView.setVisibility(View.INVISIBLE);
             }
 
             return false;

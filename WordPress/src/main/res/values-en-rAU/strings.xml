@@ -451,9 +451,6 @@ Language: en_AU
     <string name="menu_history">History</string>
     <string name="pages_open_page_error">The selected page is not available</string>
     <string name="pages_pending">Pending review</string>
-    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
-    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
-    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_drafts">You don\'t have any draft pages</string>
@@ -485,7 +482,6 @@ Language: en_AU
     <string name="page_status_change_error">There was a problem changing the page status</string>
     <string name="page_delete_error">There was a problem deleting the page</string>
     <string name="set_parent">Set Parent</string>
-    <string name="dismiss">dismiss</string>
     <string name="quick_start_focus_point_description">tap here</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
@@ -516,8 +512,6 @@ Language: en_AU
     <string name="quick_start_button_negative">Not now</string>
     <string name="content_description_more">More</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
-    <string name="reader_empty_followed_tags_title">No followed tags</string>
-    <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="install_jetpack_retry">Retry</string>
     <string name="install_jetpack_continue">Set up</string>
@@ -745,13 +739,11 @@ Language: en_AU
     <string name="notifications_screen_title">Notifications</string>
     <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">Me</string>
-    <string name="my_site_section_screen_title">My site</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="license_screen_title">License</string>
     <string name="release_notes_screen_title">Release notes</string>
     <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
-    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/>&lt;br/>To change this, edit your permissions and make sure &lt;strong>%s&lt;/strong> is enabled.</string>
     <string name="permissions_denied_title">Permissions</string>
     <string name="plugin_caption_featured">Featured</string>
@@ -817,7 +809,6 @@ Language: en_AU
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_epilogue_hint_username">Username</string>
-    <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>
@@ -1252,8 +1243,6 @@ Language: en_AU
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
-    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
@@ -1330,7 +1319,6 @@ Language: en_AU
     <string name="dlg_confirm_clear_search_history">Clear search history?</string>
     <string name="reader_empty_search_description">No results found for %s for your language</string>
     <string name="reader_hint_post_search">Search WordPress</string>
-    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
     <string name="send">Send</string>
     <string name="person_removed">Successfully removed %1$s</string>
@@ -1596,7 +1584,6 @@ Language: en_AU
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_menu_tags">Edit tags and sites</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
@@ -1696,8 +1683,6 @@ Language: en_AU
     <string name="cab_selected">%d selected</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="reader_empty_comments">No comments yet</string>
-    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
-    <string name="reader_label_liked_by">Liked By</string>
     <string name="reader_label_like">Like</string>
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
@@ -1728,9 +1713,7 @@ Language: en_AU
     <string name="reader_toast_err_already_follow_blog">You already follow this site</string>
     <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
     <string name="reader_label_followed_blog">Site followed</string>
-    <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
-    <string name="reader_page_followed_tags">Followed tags</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
@@ -1758,8 +1741,6 @@ Language: en_AU
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
-    <string name="reader_toast_err_add_tag">Unable to add this tag</string>
     <string name="reader_title_applog">Application log</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -1828,8 +1809,6 @@ Language: en_AU
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
-    <string name="reader_toast_err_tag_invalid">That isn\'t a valid tag</string>
-    <string name="reader_toast_err_tag_exists">You already follow this tag</string>
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_one">One person likes this</string>

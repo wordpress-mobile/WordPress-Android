@@ -1,5 +1,6 @@
 package org.wordpress.android.editor.gutenberg;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -20,6 +21,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveList
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
@@ -61,6 +63,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   OnGutenbergDidRequestUnsupportedBlockFallbackListener
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                                  OnGutenbergDidSendButtonPressedActionListener
+                                          onGutenbergDidSendButtonPressedActionListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
                                   boolean isDarkMode) {
@@ -76,6 +80,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onMediaEditorListener,
                     onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                    onGutenbergDidSendButtonPressedActionListener,
                     addMentionUtil,
                     onSPTTooltipShownEventListener,
                     isDarkMode);
@@ -207,8 +212,17 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.updateTheme(editorTheme);
     }
 
+    public void showNotice(String message) {
+        mWPAndroidGlueCode.showNotice(message);
+    }
+
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
-        GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled);
-        mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        // We want to make sure that activity isn't null
+        // as it can make this crash to happen: https://github.com/wordpress-mobile/WordPress-Android/issues/13248
+        final Activity activity = getActivity();
+        if (activity != null) {
+            GutenbergProps gutenbergProps = gutenbergPropsBuilder.build(activity, mHtmlModeEnabled);
+            mWPAndroidGlueCode.updateCapabilities(gutenbergProps);
+        }
     }
 }

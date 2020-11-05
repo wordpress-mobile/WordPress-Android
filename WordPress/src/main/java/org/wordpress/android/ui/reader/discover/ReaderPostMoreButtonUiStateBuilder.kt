@@ -13,6 +13,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
@@ -49,7 +50,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = FOLLOW,
                             label = UiStringRes(R.string.reader_btn_unfollow),
-                            labelColor = R.attr.wpColorSuccess,
+                            labelColor = R.attr.wpColorOnSurfaceMedium,
                             iconRes = R.drawable.ic_reader_following_white_24dp,
                             isSelected = true,
                             onClicked = onButtonClicked
@@ -63,7 +64,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                             SecondaryAction(
                                     type = SITE_NOTIFICATIONS,
                                     label = UiStringRes(R.string.reader_btn_notifications_off),
-                                    labelColor = R.attr.wpColorSuccess,
+                                    labelColor = R.attr.wpColorOnSurfaceMedium,
                                     iconRes = R.drawable.ic_bell_white_24dp,
                                     isSelected = true,
                                     onClicked = onButtonClicked
@@ -88,7 +89,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = FOLLOW,
                             label = UiStringRes(R.string.reader_btn_follow),
-                            labelColor = R.attr.colorPrimary,
+                            labelColor = R.attr.colorSecondary,
                             iconRes = R.drawable.ic_reader_follow_white_24dp,
                             isSelected = false,
                             onClicked = onButtonClicked
@@ -111,7 +112,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                         type = VISIT_SITE,
                         label = UiStringRes(R.string.reader_label_visit),
                         labelColor = R.attr.colorOnSurface,
-                        iconRes = R.drawable.ic_external_white_24dp,
+                        iconRes = R.drawable.ic_globe_white_24dp,
                         iconColor = R.attr.wpColorOnSurfaceMedium,
                         onClicked = onButtonClicked
                 )
@@ -122,6 +123,16 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = BLOCK_SITE,
                             label = UiStringRes(R.string.reader_menu_block_blog),
+                            labelColor = R.attr.colorOnSurface,
+                            iconRes = R.drawable.ic_block_white_24dp,
+                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            onClicked = onButtonClicked
+                    )
+            )
+            menuItems.add(
+                    SecondaryAction(
+                            type = REPORT_POST,
+                            label = UiStringRes(R.string.reader_menu_report_post),
                             labelColor = R.attr.colorOnSurface,
                             iconRes = R.drawable.ic_block_white_24dp,
                             iconColor = R.attr.wpColorOnSurfaceMedium,

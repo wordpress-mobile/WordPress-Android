@@ -8,15 +8,16 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.android.tools.build:gradle:3.5.1'
-        classpath 'com.novoda:bintray-release:0.9.1'
+        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 repositories {
     google()
@@ -26,7 +27,8 @@ repositories {
 dependencies {
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
 
@@ -35,7 +37,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.assertj:assertj-core:3.11.1'
-    testImplementation "org.robolectric:robolectric:4.3.1"
+    testImplementation "org.robolectric:robolectric:4.4"
     testImplementation 'androidx.test:core:1.0.0'
 
     lintChecks 'org.wordpress:lint:1.0.1'
@@ -49,13 +51,12 @@ dependencies {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
 
     defaultConfig {
-        versionName "1.27"
+        versionName "1.30"
         minSdkVersion 18
-        targetSdkVersion 26
+        targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -87,15 +88,34 @@ android.libraryVariants.all { variant ->
     }
 }
 
-publish {
-    artifactId = 'utils'
-    userOrg = 'wordpress-mobile'
-    groupId = 'org.wordpress'
-    uploadName = 'utils'
-    desc = 'Utils library for Android'
-    publishVersion = android.defaultConfig.versionName
-    licences = ['MIT', 'GPL']
-    website = 'https://github.com/wordpress-mobile/WordPress-Utils-Android/'
-    dryRun = 'false'
-    autoPublish = 'true'
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
+    publications = ['UtilsPublication']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'utils'
+        userOrg = 'wordpress-mobile'
+        licenses = ['MIT', 'GPL']
+        vcsUrl = 'https://github.com/wordpress-mobile/WordPress-Utils-Android.git'
+        version {
+            name = android.defaultConfig.versionName
+            desc = 'Utils library for Android'
+            released  = new Date()
+        }
+    }
 }
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            UtilsPublication(MavenPublication) {
+                groupId 'org.wordpress'
+                artifactId 'utils'
+                version android.defaultConfig.versionName
+            }
+        }
+    }
+}
+

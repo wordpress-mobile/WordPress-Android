@@ -32,4 +32,6 @@ class ReaderUtilsWrapper @Inject constructor(
             ReaderUtils.getLongLikeLabelText(appContext, numLikes, isLikedByCurrentUser)
 
     fun isExternalFeed(blogId: Long, feedId: Long): Boolean = ReaderUtils.isExternalFeed(blogId, feedId)
+
+    fun getReportPostUrl(blogUrl: String): String = ReaderUtils.getReportPostUrl(blogUrl)
 }

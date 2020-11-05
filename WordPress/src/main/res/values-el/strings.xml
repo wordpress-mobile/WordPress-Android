@@ -18,7 +18,6 @@ Language: el_GR
     <string name="login_promo_viewpager_content_description">Εισαγωγή</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
     <string name="reader_filter_sites_title">Ιστότοποι</string>
-    <string name="reader_filter_tags_title">Ετικέτες</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
     <string name="gutenberg_native_translate">Μετάφραση</string>
     <string name="gutenberg_native_title">Τίτλος:</string>
@@ -27,13 +26,9 @@ Language: el_GR
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
     <string name="gutenberg_native_size">Μέγεθος</string>
     <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">«%s» δεν υποστηρίζεται ακόμη στο WordPress για iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">«%s» δεν υποστηρίζεται ακόμη στο WordPress για Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>
     <string name="gutenberg_native_reset_block">Επαναφορά μπλοκ</string>
-    <string name="gutenberg_native_link_text">Κείμενο συνδέσμου</string>
-    <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="gutenberg_native_content">Περιεχόμενο…</string>
     <string name="post_list_tab_drafts">Προσχέδια</string>
@@ -128,14 +123,12 @@ Language: el_GR
     <string name="image_size_thumbnail_label">Μικρογραφία</string>
     <string name="pages_pending">Εκκρεμής αναθεώρηση</string>
     <string name="pages_open_page_error">Η επιλεγμένη σελίδα δεν είναι διαθέσιμη</string>
-    <string name="news_card_announcement_action_sample_announcement">[Περισσότερα]</string>
     <string name="pages_delete_permanently">Οριστική διαγραφή</string>
     <string name="pages_empty_drafts">Δεν έχετε σελίδεςωςπροσχέδια</string>
     <string name="pages_empty_published">Δεν έχετε δημοσιεύσει κάποια σελίδα ακόμη</string>
     <string name="pages_empty_scheduled">Δεν έχετε σελίδες προγραμματισμένες για δημοσίευση</string>
     <string name="pages_move_to_draft">Μετακίνηση σε Προσχέδια</string>
     <string name="pages_move_to_trash">Διαγραφή</string>
-    <string name="news_card_announcement_title_sample_announcement">[Νέο διαθέσιμο χαρακτηριστικό]</string>
     <string name="pages_search_suggestion">Αναζήτηση σελίδων</string>
     <string name="pages_empty_search_result">Δεν υπάρχουν σελίδες που να αντιστοιχούν στην αναζήτηση σας</string>
     <string name="pages_drafts">Προσχέδια</string>
@@ -163,7 +156,6 @@ Language: el_GR
     <string name="quick_start_dialog_choose_theme_title">Επιλέξτε θέμα εμφάνισης</string>
     <string name="quick_start_button_negative">Οχι τώρα</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
-    <string name="reader_empty_followed_tags_title">Δεν ακολουθείτε ετικέτες</string>
     <string name="quick_start_dialog_choose_theme_message">Περιηγηθείτε σε όλα μας τα θέματα για να βρείτε το ιδανικό για εσάς.</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="install_jetpack">Εγκατάσταση Jetpack</string>
@@ -284,7 +276,6 @@ Language: el_GR
     <string name="notifications_screen_title">Ειδοποιήσεις</string>
     <string name="reader_screen_title">Αναγνώστης</string>
     <string name="media_settings_screen_title">Λεπτομέρειες αρχείου</string>
-    <string name="my_site_section_screen_title">Ο ιστότοπος μου</string>
     <string name="release_notes_screen_title">Σημειώσεις έκδοσης</string>
     <string name="permissions_denied_title">Δικαιώματα</string>
     <string name="plugin_caption_featured">Προτεινόμενα</string>
@@ -599,9 +590,7 @@ Language: el_GR
     <string name="reader_toast_err_already_liked">Σας αρέσει ήδη αυτό το σχόλιο</string>
     <string name="reader_toast_err_comment_not_found">Το σχόλιο δεν βρέθηκε!</string>
     <string name="reader_toast_err_cannot_like_post">Δεν μπορέσατε να κάνετε \"like\" σε αυτό το άρθρο</string>
-    <string name="reader_title_post_detail_wpcom">Άρθρο του WordPress.com</string>
     <string name="error_notif_q_action_reply">Δεν μπορέσατε να απαντήσετε στο σχόλιο. Παρακαλώ δοκιμάστε αργότερα.</string>
-    <string name="reader_title_deeplink">WordPress Αναγνώστης</string>
     <string name="error_notif_q_action_approve">Σφάλμα κατά την έγκριση του σχολίου. Παρακαλώ δοκιμάστε αργότερα.</string>
     <string name="error_notif_q_action_like">Δεν μπορέσατε να κάνετε \"like\" στο σχόλιο. Παρακαλώ δοκιμάστε αργότερα.</string>
     <string name="notifications_label_new_notifications_subtitle">Αγγίξτε για να τα δείτε</string>
@@ -677,7 +666,6 @@ Language: el_GR
     <string name="dlg_confirm_clear_search_history">Καθαρισμός ιστορικού αναζήτησης;</string>
     <string name="reader_empty_search_description">Δεν βρέθηκαν άρθρα στην γλώσσα σας για %s</string>
     <string name="reader_hint_post_search">Αναζήτηση στο WordPress</string>
-    <string name="reader_title_related_post_detail">Σχετικό Άρθρο</string>
     <string name="preview_screen_links_disabled">Οι σύνδεσμοι είναι απενεργοποιημένοι στην οθόνη προεπισκόπησης</string>
     <string name="send">Αποστολή</string>
     <string name="user_remove_confirmation_message">Αν αφαιρέσετε τον %1$s, αυτός ο χρήστης δεν θα μπορεί πλέον να συνδεθεί σε αυτό τον ιστότοπο αλλά ό,τι περιεχόμενο δημιουργήθηκε από τον %1$s θα παραμείνει στον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε το χρήστη;</string>
@@ -943,7 +931,6 @@ Language: el_GR
     <string name="reader_short_like_count_multi">%s \"Like\"</string>
     <string name="reader_short_like_count_one">1 \"Like\"</string>
     <string name="reader_short_like_count_none">\"Like\"</string>
-    <string name="reader_menu_tags">Επεξεργασία ετικετών και ιστότοπων</string>
     <string name="reader_title_post_detail">Άρθρο Αναγνώστη</string>
     <string name="notifications_push_summary">Ρυθμίσεις για τις ειδοποιήσεις που εμφανίζονται στη συσκευή σας.</string>
     <string name="notifications_email_summary">Ρυθμίσεις για τις ειδοποιήσεις που στέλνονται στο email που είναι συνδεδεμένο με το λογαριασμό σας.</string>
@@ -1056,9 +1043,7 @@ Language: el_GR
     <string name="older_month">Παλαιότερο από ένα μήνα</string>
     <string name="browse_our_faq_button">Περιηγηθείτε στις Συχνές Ερωτήσεις</string>
     <string name="reader_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
-    <string name="reader_empty_posts_in_tag">Δεν υπάρχουν άρθρα με αυτή την ετικέτα</string>
     <string name="reader_label_view_original">Προβολή αρχικού άρθρου</string>
-    <string name="reader_label_liked_by">Έλαβε \"like\" από</string>
     <string name="comment_trashed">Το σχόλιο διαγράφηκε</string>
     <string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
     <string name="comment_reply_to_user">Απάντηση σε %s</string>
@@ -1069,9 +1054,7 @@ Language: el_GR
     <string name="reader_toast_blog_blocked">Δεν εμφανίζονται πλέον άρθρα από αυτόν τον Ιστότοπο</string>
     <string name="update_verb">Ενημέρωση</string>
     <string name="schedule_verb">Προγραμματισμός</string>
-    <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
     <string name="reader_page_followed_blogs">Παρακολουθούμενα ιστολόγια</string>
-    <string name="reader_hint_add_tag_or_url">Εισάγετε μια ετικέτα ή URL για παρακολούθηση</string>
     <string name="reader_label_followed_blog">Παρακολουθούμενος Ιστότοπος</string>
     <string name="reader_toast_err_get_blog_info">Αδυναμία εμφάνισης αυτού του Ιστότοπου</string>
     <string name="reader_toast_err_already_follow_blog">Ακολουθείτε ήδη τον Ιστότοπο</string>
@@ -1152,8 +1135,6 @@ Language: el_GR
     <string name="error_blog_hidden">Αυτό το ιστολόγιο είναι κρυφό και δεν μπόρεσε να φορτωθεί. Ενεργοποιήστε το ξανά στις ρυθμίσεις και δοκιμάστε ξανά.</string>
     <string name="fatal_db_error">Προέκυψε σφάλμα κατά τη δημιουργία της βάσης δεδομένων της εφαρμογής. Δοκιμάστε να την εγκαταστήσετε ξανά.</string>
     <string name="reader_title_applog">Αρχείο καταγραφής εφαρμογής</string>
-    <string name="reader_toast_err_add_tag">Αδυναμία προσθήκης αυτής της ετικέτας</string>
-    <string name="reader_toast_err_remove_tag">Αδυναμία αφαίρεσης αυτής της ετικέτας</string>
     <string name="notifications_empty_all">Καμία ειδοποίηση…ακόμα.</string>
     <string name="invalid_site_url_message">Βεβαιωθείτε ότι το URL του ιστότοπου που δώσατε είναι έγκυρο</string>
     <string name="plugin_not_found">Ένα σφάλμα παρουσιάστηκε κατά την πρόσβαση σε αυτό το πρόσθετο</string>
@@ -1182,8 +1163,6 @@ Language: el_GR
     <string name="reader_view_reblog">Αναμετάδοση</string>
     <string name="reader_toast_err_view_image">Αδυναμία προβολής της εικόνας</string>
     <string name="reader_label_added_tag">Προστέθηκε η %s</string>
-    <string name="reader_toast_err_tag_exists">Ακολουθείτε ήδη αυτή την ετικέτα</string>
-    <string name="reader_toast_err_tag_invalid">Αυτή η ετικέτα δεν είναι έγκυρη</string>
     <string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>

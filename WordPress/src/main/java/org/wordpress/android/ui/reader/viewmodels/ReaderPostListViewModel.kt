@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
@@ -25,7 +26,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.PostFollowStatusChanged
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -62,8 +63,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val _refreshPosts = MediatorLiveData<Event<Unit>>()
     val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
 
-    private val _updateFollowStatus = MediatorLiveData<PostFollowStatusChanged>()
-    val updateFollowStatus: LiveData<PostFollowStatusChanged> = _updateFollowStatus
+    private val _updateFollowStatus = MediatorLiveData<FollowStatusChanged>()
+    val updateFollowStatus: LiveData<FollowStatusChanged> = _updateFollowStatus
 
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
@@ -142,6 +143,12 @@ class ReaderPostListViewModel @Inject constructor(
     fun onLikeButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(post, LIKE, bookmarksList)
+        }
+    }
+
+    fun onReportPostButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(post, REPORT_POST, bookmarksList)
         }
     }
 

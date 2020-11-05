@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
@@ -19,6 +20,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
@@ -225,6 +227,15 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(data).isNotNull
 
         Assertions.assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `when followed tags change the discover feed gets refreshed`() = test {
+        // Act
+        dataProvider.onFollowedTagsChanged(FollowedTagsChanged(true))
+        // Assert
+        verify(fetchDiscoverCardsUseCase).fetch(REQUEST_FIRST_PAGE)
     }
 
     // Helper functions lifted from ReaderDiscoverViewModelTest because why reinvent the wheel

@@ -67,9 +67,7 @@ Language: is
     <string name="reader_toast_err_already_liked">Þú hefur nú þegar líkað við þessa athugasemd</string>
     <string name="reader_toast_err_comment_not_found">Athugasemd fannst ekki!</string>
     <string name="reader_toast_err_cannot_like_post">Tókst ekki að líka við þessa færslu</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com færsla</string>
     <string name="error_notif_q_action_reply">Gat ekki svarað athugasemd. Vinsamlegast reyndu aftur síðar.</string>
-    <string name="reader_title_deeplink">WordPress lesari</string>
     <string name="error_notif_q_action_approve">Gat ekki samþykkt athugasemd. Vinsamlegast reyndu aftur síðar.</string>
     <string name="error_notif_q_action_like">Gat ekki líkað við athugasemd. Vinsamlegast reyndu aftur síðar.</string>
     <string name="notifications_label_new_notifications_subtitle">Ýttu til þess að birta þær</string>
@@ -143,7 +141,6 @@ Language: is
     <string name="my_site_header_external">Út á við</string>
     <string name="label_clear_search_history">Hreinsa leitarsögu</string>
     <string name="dlg_confirm_clear_search_history">Hreinsa leitarsögu?</string>
-    <string name="reader_title_related_post_detail">Tengdar færslur</string>
     <string name="preview_screen_links_disabled">Tenglar eru óvirkir í forsýn</string>
     <string name="send">Senda</string>
     <string name="person_removed">Fjarlægði %1$s</string>
@@ -496,7 +493,6 @@ Language: is
     <string name="error_refresh_unauthorized_pages">Þú hefur ekki heimild til að skoða eða breyta síðum</string>
     <string name="error_refresh_unauthorized_posts">Þú hefur ekki heimild til að skoða eða breyta færslum</string>
     <string name="signing_out">Skrái út…</string>
-    <string name="reader_label_liked_by">Líkað af</string>
     <string name="mnu_comment_liked">Líkar við</string>
     <string name="older_last_week">Eldri en vika</string>
     <string name="older_month">Eldri en mánuður</string>
@@ -504,13 +500,10 @@ Language: is
     <string name="posts_empty_list">Engar færslur enn. Hví ekki rita eina?</string>
     <string name="reader_empty_comments">Engar athugasemdir enn</string>
     <string name="reader_label_view_original">Skoða upprunalega grein</string>
-    <string name="reader_empty_posts_in_tag">Engar færslur með þetta merki</string>
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
     <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
-    <string name="reader_page_followed_tags">Merki sem ég fylgi</string>
-    <string name="reader_hint_add_tag_or_url">Sláðu inn vefslóð eða merki til þess að fylgja</string>
     <string name="help">Hjálp</string>
     <string name="forgot_password">Tapað lykilorð?</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>
@@ -571,7 +564,6 @@ Language: is
     <string name="new_media">Ný skrá</string>
     <string name="new_post">Ný færsla</string>
     <string name="privacy_policy">Persónuverndarstefna</string>
-    <string name="reader_toast_err_remove_tag">Gat ekki fjarlægt þetta merki</string>
     <string name="remove_account">Fjarlægja vef</string>
     <string name="saving_changes">Vista breytingar</string>
     <string name="select_categories">Veldu flokk</string>
@@ -581,7 +573,6 @@ Language: is
     <string name="local_changes">Staðværar breytingar</string>
     <string name="post_settings">Stillingar færslu</string>
     <string name="wordpress_blog">WordPress blogg</string>
-    <string name="reader_toast_err_add_tag">Gat ekki bætt þessu merki við</string>
     <string name="file_error_create">Gat ekki búið til tímabundna skrá fyrir skráarupphal. Vinsamlegast gakktu úr skugga um að það sé nægilegt geymslupláss eftir á tækinu þínu.</string>
     <string name="view_in_browser">Skoða í vafra</string>
     <string name="media_error_no_permission">Þú hefur ekki heimild til þess að skoða skráarsafnið</string>
@@ -608,8 +599,6 @@ Language: is
     <string name="reader_likes_one">Einni manneskju líkar við þetta</string>
     <string name="reader_hint_comment_on_comment">Svara athugasemd…</string>
     <string name="reader_toast_err_share_intent">Gat ekki deild</string>
-    <string name="reader_toast_err_tag_exists">Þú fylgir þessu merki nú þegar</string>
-    <string name="reader_toast_err_tag_invalid">Þetta er ekki gilt merki</string>
     <string name="reader_toast_err_url_intent">Gat ekki opnað %s</string>
     <string name="reader_toast_err_view_image">Gat ekki skoðað mynd</string>
     <string name="reader_label_removed_tag">Fjarlægja %s</string>

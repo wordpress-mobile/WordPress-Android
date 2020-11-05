@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.spy
@@ -19,6 +20,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -100,7 +102,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post, BLOG_PREVIEW)
         // Assert
-        assertThat(uiState.postHeaderClickData).isNull()
+        assertThat(uiState.blogSection.blogSectionClickData).isNull()
     }
 
     @Test
@@ -111,7 +113,7 @@ class ReaderPostUiStateBuilderTest {
             // Act
             val uiState = mapPostToUiState(post, it)
             // Assert
-            assertThat(uiState.postHeaderClickData).isNotNull
+            assertThat(uiState.blogSection.blogSectionClickData).isNotNull
         }
     }
     // endregion
@@ -125,7 +127,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogUrl).isEqualTo("dummy.url")
+        assertThat(uiState.blogSection.blogUrl).isEqualTo("dummy.url")
     }
     // endregion
 
@@ -485,17 +487,17 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNotNull()
+        assertThat(uiState.blogSection.blogName).isNotNull()
     }
 
     @Test
-    fun `blogName is not displayed the post doesn't have a blog name`() = test {
+    fun `default blog name is displayed when the post doesn't have a blog name`() = test {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.blogName).isNull()
+        assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
     // endregion
 
@@ -510,7 +512,7 @@ class ReaderPostUiStateBuilderTest {
         // Act
         val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.dateLine).isEqualTo("success")
+        assertThat(uiState.blogSection.dateLine).isEqualTo("success")
     }
     // endregion
 
@@ -587,16 +589,6 @@ class ReaderPostUiStateBuilderTest {
         val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.likeAction.isEnabled).isTrue()
-    }
-
-    @Test
-    fun `like button is disabled on bookmark list`() = test {
-        // Arrange
-        val post = createPost()
-        // Act
-        val uiState = mapPostToUiState(post, isBookmarkList = true)
-        // Assert
-        assertThat(uiState.likeAction.isEnabled).isFalse()
     }
 
     @Test
@@ -742,16 +734,6 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Comments button is disabled on bookmark list`() = test {
-        // Arrange
-        val post = createPost()
-        // Act
-        val uiState = mapPostToUiState(post, isBookmarkList = true)
-        // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
-    }
-
-    @Test
     fun `Count on Comments button corresponds to number of comments on the post`() = test {
         // Arrange
         val numReplies = 15
@@ -819,12 +801,61 @@ class ReaderPostUiStateBuilderTest {
     }
     // endregion
 
+    @Test
+    fun `scheme is removed from recommended blog url`() = test {
+        // Arrange
+        val url = "http://dummy.url"
+        val blog = createRecommendedBlog(blogUrl = url)
+        whenever(urlUtilsWrapper.removeScheme(url)).thenReturn("dummy.url")
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                listOf(blog),
+                { _, _ -> },
+                { }
+        )
+        // Assert
+        assertThat(uiState.blogs[0].url).isEqualTo("dummy.url")
+    }
+
+    @Test
+    fun `limits recommended blogs count to 3`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(6) { createRecommendedBlog() }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _ -> },
+                { }
+        )
+
+        // Assert
+        assertThat(uiState.blogs.size).isEqualTo(3)
+    }
+
+    @Test
+    fun `ReaderRecommendedBlogUiState description is null when description is empty`() = test {
+        // Arrange
+        whenever(urlUtilsWrapper.removeScheme(any())).thenReturn("dummy.url")
+        val blogs = List(1) { createRecommendedBlog(blogDescription = "") }
+
+        // Act
+        val uiState = builder.mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+                blogs,
+                { _, _ -> },
+                { }
+        )
+
+        // Assert
+        assertThat(uiState.blogs[0].description).isNull()
+    }
+
     // region Private methods
     private suspend fun mapPostToUiState(
         post: ReaderPost,
         postListType: ReaderPostListType = TAG_FOLLOWED,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock(),
-        isBookmarkList: Boolean = false
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
     ): ReaderPostUiState {
         return builder.mapPostToUiState(
                 post = post,
@@ -832,7 +863,6 @@ class ReaderPostUiStateBuilderTest {
                 photonWidth = 0,
                 photonHeight = 0,
                 postListType = postListType,
-                isBookmarkList = isBookmarkList,
                 onButtonClicked = onButtonClicked,
                 onItemClicked = mock(),
                 onItemRendered = mock(),
@@ -911,5 +941,18 @@ class ReaderPostUiStateBuilderTest {
             mock(),
             false
     )
+
+    private fun createRecommendedBlog(
+        blogUrl: String = "url",
+        blogDescription: String = "desc"
+    ) = ReaderBlog().apply {
+        blogId = 1L
+        name = "name"
+        description = blogDescription
+        url = blogUrl
+        imageUrl = null
+        feedId = 0L
+        isFollowing = false
+    }
     // endregion
 }

@@ -236,47 +236,6 @@ class RemotePreviewLogicHelperTest {
     }
 
     @Test
-    fun `preview not available for Jetpack sites on published post with modification`() {
-        // Given
-        doReturn(true).whenever(site).isJetpackConnected
-        doReturn(true).whenever(post).isLocallyChanged
-
-        // When
-        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, mock())
-
-        // Then
-        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
-        verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
-                activity,
-                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                post.title
-        )
-    }
-
-    /**
-     * Preview for Jetpack sites is temporarily disabled due to a server side bug.
-     * https://github.com/Automattic/wp-calypso/issues/20265
-     */
-    @Test
-    fun `preview not available for Jetpack sites on a post with modification`() {
-        // Given
-        // next stub not used (made lenient) in case we update future logic.
-        lenient().doReturn(true).whenever(site).isJetpackConnected
-        doReturn(true).whenever(post).isLocallyChanged
-
-        // When
-        val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
-
-        // Then
-        assertThat(result).isEqualTo(RemotePreviewLogicHelper.PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE)
-        verify(activityLauncherWrapper, times(1)).showActionableEmptyView(
-                activity,
-                WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                post.title
-        )
-    }
-
-    @Test
     fun `preview available for Jetpack sites on a post post without modification`() {
         // Given
         // next stub not used (made lenient) in case we update future logic

@@ -347,15 +347,15 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
-            if (modalLayoutPickerFeatureConfig.isEnabled()) {
-                mlpViewModel.show()
+            if (modalLayoutPickerFeatureConfig.isEnabled() && mlpViewModel.canShowModalLayoutPicker()) {
+                mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()
             }
         })
 
-        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer {
-            createNewPage()
+        mlpViewModel.onCreateNewPageRequested.observe(viewLifecycleOwner, Observer { request ->
+            createNewPage(request.title, request.content, request.template)
         })
 
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
@@ -490,11 +490,19 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
     /**
      * Triggers new page creation
+     * @param title the page title
+     * @param content the page content
+     * @param template the selected layout template
      */
-    private fun createNewPage() {
-        QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
-                viewModel.site, quickStartEvent, context)
-        ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
+    private fun createNewPage(title: String = "", content: String = "", template: String? = null) {
+        QuickStartUtils.completeTaskAndRemindNextOne(
+                quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
+                viewModel.site, quickStartEvent, context
+        )
+        ActivityLauncher.addNewPageForResult(
+                this, viewModel.site, title, content, template,
+                PAGE_FROM_PAGES_LIST
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
