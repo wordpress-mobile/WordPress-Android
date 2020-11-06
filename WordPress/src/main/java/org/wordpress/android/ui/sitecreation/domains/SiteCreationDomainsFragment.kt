@@ -122,11 +122,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         (recycler_view.adapter as SiteCreationDomainsAdapter).update(contentState.items)
     }
 
-    private fun getSegmentIdFromArguments(): Long {
-        return requireNotNull(arguments?.getLong(EXTRA_SEGMENT_ID)) {
-            "SegmentId is missing. Have you created the fragment using SiteCreationDomainsFragment.newInstance(..)?"
-        }
-    }
+    private fun getSegmentIdFromArguments(): Long? = arguments?.getLong(EXTRA_SEGMENT_ID)
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -137,11 +133,13 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         const val TAG = "site_creation_domains_fragment_tag"
         private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(screenTitle: String, segmentId: Long): SiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String, segmentId: Long?): SiteCreationDomainsFragment {
             val fragment = SiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
+            if(segmentId != null) {
+                bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
+            }
             fragment.arguments = bundle
             return fragment
         }
