@@ -1,5 +1,6 @@
 16.2
 -----
+* [***] Faster editor start and overall operation on Android. [https://github.com/wordpress-mobile/WordPress-Android/pull/13297]
  
 16.1
 -----
