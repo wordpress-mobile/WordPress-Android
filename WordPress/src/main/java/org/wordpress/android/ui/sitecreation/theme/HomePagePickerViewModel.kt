@@ -40,6 +40,9 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onChooseDesignPressed = SingleLiveEvent<String>()
     val onChooseDesignPressed: LiveData<String> = _onChooseDesignPressed
 
+    private val _onSkipPressed = SingleLiveEvent<Unit>()
+    val onSkipPressed: LiveData<Unit> = _onSkipPressed
+
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
@@ -106,7 +109,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onSkippedTapped() {
-        // TODO
+        _onSkipPressed.call()
     }
 
     fun onBackPressed() {

@@ -114,6 +114,10 @@ class HomePagePickerFragment : Fragment() {
             (requireActivity() as SiteDesignsScreenListener).onSiteDesignSelected(slug)
         })
 
+        viewModel.onSkipPressed.observe(viewLifecycleOwner,Observer {
+            (requireActivity() as SiteDesignsScreenListener).onDesignSelectionSkipped()
+        })
+
         savedInstanceState?.let {
             val layouts = it.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
             val selected = it.getString(SELECTED_LAYOUT)
