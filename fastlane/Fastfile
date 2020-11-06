@@ -544,9 +544,13 @@ ENV["validate_translations"]="lintVanillaRelease"
     # Build
     Dir.chdir("..") do
       sh("mkdir -p #{build_dir}")
-      UI.message("Cleaning branch...")
-      sh("echo \"Cleaning branch\" >> #{logfile_path}")
-      sh("./gradlew clean >> #{logfile_path} 2>&1")
+      unless (is_ci) then 
+        # We pre-build the Gutenberg RN bundle on a different job on CI,  
+        # so cleaning here breaks the build 
+        UI.message("Cleaning branch...")
+        sh("echo \"Cleaning branch\" >> #{logfile_path}")
+        sh("./gradlew clean >> #{logfile_path} 2>&1")
+      end 
       sh("mkdir -p #{build_dir}")
       UI.message("Running lint...")
       sh("echo \"Running lint...\" >> #{logfile_path}")
