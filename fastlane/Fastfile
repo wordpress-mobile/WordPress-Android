@@ -544,7 +544,7 @@ ENV["validate_translations"]="lintVanillaRelease"
     # Build
     Dir.chdir("..") do
       sh("mkdir -p #{build_dir}")
-      unless (is_ci) then 
+      unless is_ci
         # We pre-build the Gutenberg RN bundle on a different job on CI,  
         # so cleaning here breaks the build 
         UI.message("Cleaning branch...")
