@@ -6,7 +6,6 @@
     <string name="send_link">Send link</string>
     <string name="send_link_by_email">Send link by email</string>
     <string name="create_account">Create account</string>
-    <string name="send_verification_email">Send verification email</string>
     <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="or_type_your_password">Or type your password</string>
     <string name="username">Username</string>
