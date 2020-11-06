@@ -206,9 +206,9 @@ task applyCredentials(type:Exec, dependsOn:checkBundle) {
     }
 }
 
-tasks.register("prodDeps") {
+tasks.register("configureApply") {
     group = 'Onboarding'
-    description = 'Install dependencies for production builds'
+    description = 'Install dependencies for debug and production builds'
     dependsOn applyCredentials
     doLast {
         println("Done")
