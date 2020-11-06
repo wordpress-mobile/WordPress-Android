@@ -110,11 +110,11 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onChooseDesignPressed.observe(viewLifecycleOwner,Observer { slug->
+        viewModel.onChooseDesignPressed.observe(viewLifecycleOwner, Observer { slug ->
             (requireActivity() as SiteDesignsScreenListener).onSiteDesignSelected(slug)
         })
 
-        viewModel.onSkipPressed.observe(viewLifecycleOwner,Observer {
+        viewModel.onSkipPressed.observe(viewLifecycleOwner, Observer {
             (requireActivity() as SiteDesignsScreenListener).onDesignSelectionSkipped()
         })
 

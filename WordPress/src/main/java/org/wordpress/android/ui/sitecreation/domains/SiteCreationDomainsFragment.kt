@@ -137,7 +137,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             val fragment = SiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            if(segmentId != null) {
+            if (segmentId != null) {
                 bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
             }
             fragment.arguments = bundle
