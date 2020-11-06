@@ -101,7 +101,7 @@ class PhotoPickerViewModel @Inject constructor(
                         softAskRequest?.show == true
                 ),
                 buildSoftAskView(softAskRequest),
-                FabUiModel(browserType.isWPStoriesPicker) {
+                FabUiModel(browserType.isWPStoriesPicker && selectedIds.isNullOrEmpty()) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
                 buildActionModeUiModel(selectedIds)
