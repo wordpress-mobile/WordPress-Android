@@ -203,9 +203,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "com.google.android.material:material:$materialVersion"
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "androidx.preference:preference:$materialVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipeToRefresh"
+    implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
 
@@ -227,7 +228,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.android.installreferrer:installreferrer:1.0'
-    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'

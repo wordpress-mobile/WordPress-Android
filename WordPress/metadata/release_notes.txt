@@ -1,2 +1,2 @@
-* [***] Block Editor: Adds new option to select from a variety of predefined page templates when creating a new page for a Gutenberg site.
+* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
 

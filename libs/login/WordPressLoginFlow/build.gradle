@@ -50,7 +50,7 @@ dependencies {
     implementation 'androidx.media:media:1.1.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "com.google.android.material:material:1.2.1"
 
     implementation "androidx.core:core-ktx:$kotlin_ktx_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
