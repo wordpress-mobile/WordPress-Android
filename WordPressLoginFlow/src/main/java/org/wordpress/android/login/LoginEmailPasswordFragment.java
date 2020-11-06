@@ -10,16 +10,22 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
+import org.wordpress.android.login.util.AvatarHelper;
+import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -44,6 +50,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private static final String ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN";
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
+    private static final String ARG_ALLOW_MAGIC_LINK = "ARG_ALLOW_MAGIC_LINK";
+    private static final String ARG_VERIFY_MAGIC_LINK_EMAIL = "ARG_VERIFY_MAGIC_LINK_EMAIL";
 
     private static final String FORGOT_PASSWORD_URL_WPCOM = "https://wordpress.com/";
 
@@ -59,12 +67,20 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private String mPassword;
     private String mService;
     private boolean mIsSocialLogin;
+    private boolean mAllowMagicLink;
+    private boolean mVerifyMagicLinkEmail;
 
     private AutoForeground.ServiceEventConnection mServiceEventConnection;
 
     public static LoginEmailPasswordFragment newInstance(String emailAddress, String password,
                                                          String idToken, String service,
                                                          boolean isSocialLogin) {
+        return newInstance(emailAddress, password, idToken, service, isSocialLogin, false, false);
+    }
+
+    public static LoginEmailPasswordFragment newInstance(String emailAddress, String password, String idToken,
+                                                         String service, boolean isSocialLogin, boolean allowMagicLink,
+                                                         boolean verifyMagicLinkEmail) {
         LoginEmailPasswordFragment fragment = new LoginEmailPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
@@ -72,6 +88,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         args.putString(ARG_SOCIAL_ID_TOKEN, idToken);
         args.putString(ARG_SOCIAL_SERVICE, service);
         args.putBoolean(ARG_SOCIAL_LOGIN, isSocialLogin);
+        args.putBoolean(ARG_ALLOW_MAGIC_LINK, allowMagicLink);
+        args.putBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL, verifyMagicLinkEmail);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,11 +104,15 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
-        mPassword = getArguments().getString(ARG_PASSWORD);
-        mIdToken = getArguments().getString(ARG_SOCIAL_ID_TOKEN);
-        mService = getArguments().getString(ARG_SOCIAL_SERVICE);
-        mIsSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
+        if (getArguments() != null) {
+            mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
+            mPassword = getArguments().getString(ARG_PASSWORD);
+            mIdToken = getArguments().getString(ARG_SOCIAL_ID_TOKEN);
+            mService = getArguments().getString(ARG_SOCIAL_SERVICE);
+            mIsSocialLogin = getArguments().getBoolean(ARG_SOCIAL_LOGIN);
+            mAllowMagicLink = getArguments().getBoolean(ARG_ALLOW_MAGIC_LINK);
+            mVerifyMagicLinkEmail = getArguments().getBoolean(ARG_VERIFY_MAGIC_LINK_EMAIL);
+        }
 
         if (savedInstanceState == null) {
             // cleanup the service state on first appearance
@@ -103,6 +125,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Override
     public void onResume() {
         super.onResume();
+        mAnalyticsListener.emailPasswordFormScreenResumed();
+        updatePrimaryButtonEnabledStatus();
 
         // connect to the Service. We'll receive updates via EventBus.
         mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(),
@@ -119,6 +143,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         // disconnect from the Service
         mServiceEventConnection.disconnect(getContext(), this);
+    }
+
+    private void updatePrimaryButtonEnabledStatus() {
+        String currentPassword = mPasswordInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty());
     }
 
     @Override
@@ -145,16 +174,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     protected void setupContent(ViewGroup rootView) {
         // important for accessibility - talkback
         getActivity().setTitle(R.string.selfhosted_site_login_title);
-        ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
 
         mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setOnEditorCommitListener(this);
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.forgot_password);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_reset_password).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -162,6 +186,42 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 }
             }
         });
+
+        final View divider = rootView.findViewById(R.id.login_button_divider);
+        divider.setVisibility(mAllowMagicLink ? View.VISIBLE : View.GONE);
+
+        final Button magicLinkButton = rootView.findViewById(R.id.login_get_email_link);
+        magicLinkButton.setVisibility(mAllowMagicLink ? View.VISIBLE : View.GONE);
+        magicLinkButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                if (mLoginListener != null) {
+                    mAnalyticsListener.trackRequestMagicLinkClick();
+                    mLoginListener.useMagicLinkInstead(mEmailAddress, mVerifyMagicLinkEmail);
+                }
+            }
+        });
+
+        final ProgressBar avatarProgressBar = rootView.findViewById(R.id.avatar_progress);
+        final ImageView avatarView = rootView.findViewById(R.id.gravatar);
+        final TextView emailView = rootView.findViewById(R.id.email);
+
+        emailView.setText(mEmailAddress);
+
+        AvatarHelper.loadAvatarFromEmail(this, mEmailAddress, avatarView, new AvatarRequestListener() {
+            @Override public void onRequestFinished() {
+                avatarProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
@@ -186,7 +246,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackPasswordFormViewed();
+            mAnalyticsListener.trackPasswordFormViewed(mIsSocialLogin);
 
             if (!TextUtils.isEmpty(mPassword)) {
                 mPasswordInput.setText(mPassword);
@@ -209,6 +269,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     protected void next() {
+        mAnalyticsListener.trackSubmitClicked();
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -241,13 +303,17 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mPasswordInput.setError(null);
 
         LoginWpcomService.clearLoginServiceState();
+        updatePrimaryButtonEnabledStatus();
     }
 
     private void showPasswordError() {
-        mPasswordInput.setError(getString(R.string.password_incorrect));
+        String message = getString(R.string.password_incorrect);
+        mAnalyticsListener.trackFailure(message);
+        mPasswordInput.setError(message);
     }
 
     private void showError(String error) {
+        mAnalyticsListener.trackFailure(error);
         mPasswordInput.setError(error);
     }
 
@@ -318,6 +384,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 mLoginListener.loginViaWpcomUsernameInstead();
                 ToastUtils.showToast(getContext(), R.string.error_user_username_instead_of_email, Duration.LONG);
 
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 // consume the state so we don't re-redirect to username login if user backs up
                 LoginWpcomService.clearLoginServiceState();
                 break;

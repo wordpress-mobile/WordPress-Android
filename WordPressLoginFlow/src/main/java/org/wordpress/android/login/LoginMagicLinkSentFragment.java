@@ -8,12 +8,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import org.wordpress.android.login.util.AvatarHelper;
+import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 
 import javax.inject.Inject;
 
@@ -23,17 +29,24 @@ public class LoginMagicLinkSentFragment extends Fragment {
     public static final String TAG = "login_magic_link_sent_fragment_tag";
 
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    private static final String ARG_ALLOW_PASSWORD = "ARG_ALLOW_PASSWORD";
 
     private LoginListener mLoginListener;
 
     private String mEmail;
+    private boolean mAllowPassword;
 
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkSentFragment newInstance(String email) {
+        return newInstance(email, true);
+    }
+
+    public static LoginMagicLinkSentFragment newInstance(String email, boolean allowPassword) {
         LoginMagicLinkSentFragment fragment = new LoginMagicLinkSentFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
+        args.putBoolean(ARG_ALLOW_PASSWORD, allowPassword);
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,6 +56,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mEmail = getArguments().getString(ARG_EMAIL_ADDRESS);
+            mAllowPassword = getArguments().getBoolean(ARG_ALLOW_PASSWORD);
         }
 
         setHasOptionsMenu(true);
@@ -61,12 +75,27 @@ public class LoginMagicLinkSentFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.login_enter_password).setOnClickListener(new View.OnClickListener() {
+        final Button passwordButton = view.findViewById(R.id.login_enter_password);
+        passwordButton.setVisibility(mAllowPassword ? View.VISIBLE : View.GONE);
+        passwordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAnalyticsListener.trackLoginWithPasswordClick();
                 if (mLoginListener != null) {
                     mLoginListener.usePasswordInstead(mEmail);
                 }
+            }
+        });
+
+        final View avatarProgressBar = view.findViewById(R.id.avatar_progress);
+        ImageView avatarView = view.findViewById(R.id.gravatar);
+
+        TextView emailView = view.findViewById(R.id.email);
+        emailView.setText(mEmail);
+
+        AvatarHelper.loadAvatarFromEmail(this, mEmail, avatarView, new AvatarRequestListener() {
+            @Override public void onRequestFinished() {
+                avatarProgressBar.setVisibility(View.GONE);
             }
         });
 
@@ -82,12 +111,12 @@ public class LoginMagicLinkSentFragment extends Fragment {
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle(R.string.log_in);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackMagicLinkOpenEmailClientViewed();
+            mAnalyticsListener.trackLoginMagicLinkOpenEmailClientViewed();
         }
     }
 
@@ -108,6 +137,11 @@ public class LoginMagicLinkSentFragment extends Fragment {
         }
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        mAnalyticsListener.magicLinkSentScreenResumed();
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -122,6 +156,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
+            mAnalyticsListener.trackShowHelpClick();
             if (mLoginListener != null) {
                 mLoginListener.helpMagicLinkSent(mEmail);
             }

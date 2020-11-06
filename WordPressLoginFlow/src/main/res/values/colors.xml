@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- material colors -->
+    <!-- Theme Colors -->
+    <color name="wp_blue_40">#3582c4</color>
+    <color name="wp_blue_50">#2271b1</color>
+    <color name="wp_blue_70">#0a4b78</color>
+
+    <color name="wp_pink_50">#c9356e</color>
+    <color name="wp_pink_70">#8c1749</color>
+
+    <color name="wp_red_50">#d63638</color>
+
+    <color name="material_white_50">#ffffff</color>
+    <color name="material_black_800">#121212</color>
+    <color name="material_black_900">#000000</color>
+
+    <!-- Temporarily using a hardcoded color for the avatar placeholder in order
+    to avoid having to handle tint programmatically in more than one place -->
+    <color name="avatar_placeholder">#61121212</color>
+
+    <!-- Legacy -->
     <!--
         colorPrimary            app branding color for the app bar
         colorPrimaryDark        status bar and contextual app bars

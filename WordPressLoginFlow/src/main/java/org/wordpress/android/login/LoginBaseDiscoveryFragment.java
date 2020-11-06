@@ -72,6 +72,7 @@ public abstract class LoginBaseDiscoveryFragment extends LoginBaseFormFragment<L
     }
 
     private void handleDiscoveryError(DiscoveryError error, final String failedEndpoint) {
+        mAnalyticsListener.trackFailure(error.name() + " - " + failedEndpoint);
         if (error == DiscoveryError.WORDPRESS_COM_SITE) {
             mLoginBaseDiscoveryListener.handleWpComDiscoveryError(failedEndpoint);
         } else {

@@ -11,16 +11,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -43,6 +41,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -62,8 +61,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     private static final String ARG_INPUT_SITE_ADDRESS = "ARG_INPUT_SITE_ADDRESS";
     private static final String ARG_ENDPOINT_ADDRESS = "ARG_ENDPOINT_ADDRESS";
-    private static final String ARG_SITE_NAME = "ARG_SITE_NAME";
-    private static final String ARG_SITE_ICON_URL = "ARG_SITE_ICON_URL";
     private static final String ARG_INPUT_USERNAME = "ARG_INPUT_USERNAME";
     private static final String ARG_INPUT_PASSWORD = "ARG_INPUT_PASSWORD";
     private static final String ARG_IS_WPCOM = "ARG_IS_WPCOM";
@@ -72,7 +69,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     public static final String TAG = "login_username_password_fragment_tag";
 
-    private ScrollView mScrollView;
+    private NestedScrollView mScrollView;
     private WPLoginInputRow mUsernameInput;
     private WPLoginInputRow mPasswordInput;
 
@@ -88,22 +85,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private String mInputSiteAddress;
     private String mInputSiteAddressWithoutSuffix;
     private String mEndpointAddress;
-    private String mSiteName;
-    private String mSiteIconUrl;
     private String mInputUsername;
     private String mInputPassword;
     private boolean mIsWpcom;
 
     public static LoginUsernamePasswordFragment newInstance(String inputSiteAddress, String endpointAddress,
-                                                            String siteName, String siteIconUrl,
                                                             String inputUsername, String inputPassword,
                                                             boolean isWpcom) {
         LoginUsernamePasswordFragment fragment = new LoginUsernamePasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_INPUT_SITE_ADDRESS, inputSiteAddress);
         args.putString(ARG_ENDPOINT_ADDRESS, endpointAddress);
-        args.putString(ARG_SITE_NAME, siteName);
-        args.putString(ARG_SITE_ICON_URL, siteIconUrl);
         args.putString(ARG_INPUT_USERNAME, inputUsername);
         args.putString(ARG_INPUT_PASSWORD, inputPassword);
         args.putBoolean(ARG_IS_WPCOM, isWpcom);
@@ -123,9 +115,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override
     protected void setupLabel(@NonNull TextView label) {
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            label.setText(getString(R.string.enter_credentials_for_site, mInputSiteAddress));
-        }
+        final boolean isWoo = mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE;
+        final int labelResId = isWoo ? R.string.enter_credentials_for_site : R.string.enter_account_info_for_site;
+        final String formattedSiteAddress =
+                UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(mInputSiteAddress)));
+        label.setText(getString(labelResId, formattedSiteAddress));
     }
 
     @Override
@@ -133,28 +127,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         // important for accessibility - talkback
         getActivity().setTitle(R.string.selfhosted_site_login_title);
         mScrollView = rootView.findViewById(R.id.scroll_view);
-
-        rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
-        rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
-        rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
-        rootView.findViewById(R.id.label).setVisibility(
-                (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) ? View.VISIBLE : View.GONE);
-
-        if (mSiteIconUrl != null) {
-            Glide.with(this)
-                 .load(mSiteIconUrl)
-                 .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                 .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                 .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
-        }
-
-        TextView siteNameView = (rootView.findViewById(R.id.login_site_title));
-        siteNameView.setText(mSiteName);
-        siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
-
-        TextView siteAddressView = (rootView.findViewById(R.id.login_site_address));
-        siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
-        siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         mInputSiteAddressWithoutSuffix = (mEndpointAddress == null || mEndpointAddress.isEmpty())
                 ? mInputSiteAddress : UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
@@ -181,12 +153,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         mPasswordInput.addTextChangedListener(this);
 
         mPasswordInput.setOnEditorCommitListener(this);
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.forgot_password);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_reset_password).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -201,11 +169,21 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                 }
             }
         });
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
     }
 
     @Override
@@ -220,6 +198,20 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         }
     }
 
+    @Override public void onDestroyView() {
+        if (mPasswordInput != null) {
+            mPasswordInput.setOnEditorCommitListener(null);
+            mPasswordInput = null;
+        }
+        if (mUsernameInput != null) {
+            mUsernameInput.setOnEditorCommitListener(null);
+            mUsernameInput = null;
+        }
+        mScrollView = null;
+
+        super.onDestroyView();
+    }
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
@@ -232,8 +224,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
         mInputSiteAddress = getArguments().getString(ARG_INPUT_SITE_ADDRESS);
         mEndpointAddress = getArguments().getString(ARG_ENDPOINT_ADDRESS, null);
-        mSiteName = getArguments().getString(ARG_SITE_NAME);
-        mSiteIconUrl = getArguments().getString(ARG_SITE_ICON_URL);
         mInputUsername = getArguments().getString(ARG_INPUT_USERNAME);
         mInputPassword = getArguments().getString(ARG_INPUT_PASSWORD);
         mIsWpcom = getArguments().getBoolean(ARG_IS_WPCOM);
@@ -278,7 +268,20 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         outState.putBoolean(KEY_GET_SITE_OPTIONS_INITIATED, mGetSiteOptionsInitiated);
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        mAnalyticsListener.usernamePasswordScreenResumed();
+        updatePrimaryButtonEnabledStatus();
+    }
+
+    private void updatePrimaryButtonEnabledStatus() {
+        String currentUsername = mUsernameInput.getEditText().getText().toString();
+        String currentPassword = mPasswordInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty() && !currentUsername.trim().isEmpty());
+    }
+
     protected void next() {
+        mAnalyticsListener.trackSubmitClicked();
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -351,6 +354,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         showError(null);
+        updatePrimaryButtonEnabledStatus();
     }
 
     @Override
@@ -372,6 +376,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @Override
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
         ActivityUtils.hideKeyboard(getActivity());
+        mAnalyticsListener.trackFailure(error.name() + " - " + failedEndpoint);
         if (error == DiscoveryError.HTTP_AUTH_REQUIRED) {
             mLoginListener.helpNoJetpackScreen(mInputSiteAddress, mEndpointAddress,
                     getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
@@ -411,7 +416,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @Override
     public void handleWpComDiscoveryError(String failedEndpoint) {
         AppLog.e(T.API, "Inputted a wpcom address in site address screen. Redirecting to Email screen");
-        mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(failedEndpoint), null, null);
+        mLoginListener.gotWpcomSiteInfo(UrlUtils.removeScheme(failedEndpoint));
     }
 
     @Override
@@ -421,6 +426,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     private void showUsernameError(String errorMessage) {
+        mAnalyticsListener.trackFailure(errorMessage);
         mUsernameInput.setError(errorMessage);
         mPasswordInput.setError(null);
 
@@ -431,6 +437,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     private void showPasswordError(String errorMessage) {
         mUsernameInput.setError(null);
+        mAnalyticsListener.trackFailure(errorMessage);
         mPasswordInput.setError(errorMessage);
 
         if (errorMessage != null) {
@@ -441,6 +448,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private void showError(String errorMessage) {
         mUsernameInput.setError(errorMessage != null ? " " : null);
         mPasswordInput.setError(errorMessage);
+        mAnalyticsListener.trackFailure(errorMessage);
 
         if (errorMessage != null) {
             requestScrollToView(mPasswordInput);
@@ -618,7 +626,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
             return;
         }
 
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+        if (!mIsWpcom && mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
             SiteModel lastAddedXMLRPCSite = SiteUtils.getXMLRPCSiteByUrl(mSiteStore, mInputSiteAddress);
             if (lastAddedXMLRPCSite != null) {
                 // the wp.getOptions endpoint is already called
@@ -635,7 +643,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                                 lastAddedXMLRPCSite.getPassword(), mAccountStore.getAccount().getAvatarUrl(),
                                 false);
                     } else {
-                        mLoginListener.gotWpcomEmail(userEmail, true);
+                        mLoginListener.gotWpcomEmail(userEmail, true, null);
                     }
                 } else {
                     // Initiate the wp.getOptions endpoint to fetch the jetpack user email
@@ -679,3 +687,4 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         finishLogin();
     }
 }
+

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
+    <item name="material_emphasis_low" format="float" type="dimen">0.12</item>
 
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
@@ -24,8 +25,7 @@
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
-    <dimen name="avatar_sz_login">100dp</dimen>
-    <dimen name="avatar_sz_login_epilogue">60dp</dimen>
+    <dimen name="avatar_sz_login">40dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 

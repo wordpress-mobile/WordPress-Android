@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.LoginFlow.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">serif</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">serif</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">serif</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">serif</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">serif</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">serif</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+
+    <style name="TextAppearance.LoginFlow.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/login_on_surface_high_selector</item>
+    </style>
+</resources>
