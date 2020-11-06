@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-18 07:41:39+0000
+Translation-Revision-Date: 2020-10-30 08:37:04+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sk
@@ -22,7 +22,7 @@ Language: sk
     <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J. K. Rowling</string>
-    <string name="reader_filter_empty_tags_action">Pridať značku</string>
+    <string name="reader_filter_empty_tags_action">Pridať tému</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="new_site_creation_preview_subtitle">Vzhľad svojej stránky si budeš vedieť prispôsobiť neskôr.</string>
@@ -192,8 +192,8 @@ Language: sk
     <string name="quick_start_button_negative">Teraz nie</string>
     <string name="content_description_more">Viac</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
-    <string name="reader_empty_followed_tags_title">Žiadne sledované značky</string>
-    <string name="reader_empty_followed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
+    <string name="reader_empty_followed_tags_title">Žiadne sledované témy</string>
+    <string name="reader_empty_followed_tags_subtitle">Pridajte témy a nájdite články vašich obľúbených témach</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
     <string name="install_jetpack_retry">Znova</string>
     <string name="jetpack_installation_problem">Vyskytol sa problém</string>
@@ -424,7 +424,6 @@ Language: sk
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Poznámky k verzii</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar bol nahraný a zakrátko bude dostupný.</string>
-    <string name="email_not_registered_wpcom">Nemôžeme nájsť účet WordPress.com pripojený k tejto e-mailovej adrese. Vyskúšajte nižšie uvedený odkaz a prihláste sa pomocou svojej adresy webovej stránky.</string>
     <string name="permissions_denied_message">Zdá sa, že ste vypli oprávnenia požadované pre túto funkciu.&lt;br/>&lt;br/>Ak to chcete zmeniť, upravte svoje oprávnenia a uistite sa, že je povolené &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">Oprávnenia</string>
     <string name="plugin_caption_featured">Odporúčaný</string>
@@ -490,7 +489,7 @@ Language: sk
     <string name="signup_magic_link_error_button_negative">Zatvoriť</string>
     <string name="signup_magic_link_error">Vyskytol sa problém s odoslaním e-mailu. Môžete to zopakovať teraz alebo zavrieť a skúsiť to neskôr.</string>
     <string name="signup_epilogue_hint_username">Používateľské meno</string>
-    <string name="signup_epilogue_hint_password_detail">Vždy sa môžete prihlásiť pomocou magického odkazu, ako je ten, ktorý ste práve použili, ale ak chcete, môžete si tiež nastaviť heslo.</string>
+    <string name="signup_epilogue_hint_password_detail">Vždy sa môžete prihlásiť pomocou odkazu, ako je ten, ktorý ste práve použili, ale ak chcete, môžete si tiež nastaviť heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (voliteľné)</string>
     <string name="signup_epilogue_hint_display">Zobrazované meno</string>
     <string name="signup_epilogue_error_button_positive">Skúsiť znova</string>
@@ -929,8 +928,6 @@ Language: sk
     <string name="reader_toast_err_already_liked">Už ste lajkli komentár.</string>
     <string name="reader_toast_err_comment_not_found">Komentár sa nenašiel!</string>
     <string name="reader_toast_err_cannot_like_post">Lajknutie článku zlyhalo.</string>
-    <string name="reader_title_post_detail_wpcom">Článok WordPress.com </string>
-    <string name="reader_title_deeplink">Čitateľ WordPress Reader</string>
     <string name="error_notif_q_action_reply">Nedá sa odpovedať na komentár. Skúste neskôr.</string>
     <string name="error_notif_q_action_approve">Nedá sa schváliť komentár. Skúste neskôr.</string>
     <string name="error_notif_q_action_like">Komentár sa nedá lajknúť. Skúste neskôr. </string>
@@ -1007,7 +1004,6 @@ Language: sk
     <string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
     <string name="reader_empty_search_description">Nenašli sa žiadne výsledky pre %s vo vašom jazyku</string>
     <string name="reader_hint_post_search">Prehľadávať WordPress</string>
-    <string name="reader_title_related_post_detail">Podobný článok</string>
     <string name="preview_screen_links_disabled">Linky sú deaktivované v náhľade</string>
     <string name="send">Odoslať</string>
     <string name="person_removed">%1$s úspešne odstránený</string>
@@ -1272,7 +1268,7 @@ Language: sk
     <string name="reader_short_like_count_one">1 lajk</string>
     <string name="reader_short_like_count_none">lajk</string>
     <string name="reader_label_follow_count">počet sledujúcich: %,d</string>
-    <string name="reader_menu_tags">Upraviť značky a webové stránky</string>
+    <string name="reader_menu_tags">Upraviť témy a webové stránky</string>
     <string name="reader_title_post_detail">Článok čítačky</string>
     <string name="notifications_push_summary">Nastavenia upozornení zobrazujúcich sa na vašom zariadení.</string>
     <string name="notifications_email_summary">Nastavenia upozornení odosielaných na e-mail, ktorý je spojený s vašim účtom.</string>
@@ -1372,8 +1368,7 @@ Language: sk
     <string name="cab_selected">%d vybraných</string>
     <string name="browse_our_faq_button">Prehľadávať časté otázky</string>
     <string name="reader_empty_comments">Zatiaľ nie sú žiadne komentáre</string>
-    <string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto značkou</string>
-    <string name="reader_label_liked_by">Páči sa</string>
+    <string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto témou</string>
     <string name="reader_label_like">Lajk</string>
     <string name="reader_label_view_original">Pozrieť originál článku</string>
     <string name="reader_label_comments_closed">Už nie je možné pridávať komentáre</string>
@@ -1404,9 +1399,9 @@ Language: sk
     <string name="reader_toast_err_already_follow_blog">Túto webovú stránku už sledujete</string>
     <string name="reader_toast_err_get_blog_info">Nepodarilo sa zobraziť túto webovú stránku</string>
     <string name="reader_label_followed_blog">Sledovaná webová stránka</string>
-    <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
+    <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo tému, ktorú chcete sledovať</string>
     <string name="reader_page_followed_blogs">Sledované webové stránky</string>
-    <string name="reader_page_followed_tags">Sledované značky</string>
+    <string name="reader_page_followed_tags">Sledované témy</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
@@ -1434,8 +1429,8 @@ Language: sk
     <string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
     <string name="gallery_error">Súbor nebolo možné načítať</string>
     <string name="no_network_message">Nie sú k dispozícii žiadne siete</string>
-    <string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
-    <string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
+    <string name="reader_toast_err_remove_tag">Túto tému nie je možné odstrániť</string>
+    <string name="reader_toast_err_add_tag">Túto tému nie je možné pridať</string>
     <string name="reader_title_applog">Záznamy aplikácie</string>
     <string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
     <string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
@@ -1504,8 +1499,8 @@ Language: sk
     <string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>
     <string name="reader_toast_err_view_image">Nie je možné zobraziť obrázok</string>
     <string name="reader_toast_err_share_intent">Nie je možné zdieľať</string>
-    <string name="reader_toast_err_tag_invalid">Toto nie je platná značka</string>
-    <string name="reader_toast_err_tag_exists">Túto značku už sledujete</string>
+    <string name="reader_toast_err_tag_invalid">Toto nie je platná téma</string>
+    <string name="reader_toast_err_tag_exists">Túto tému už sledujete</string>
     <string name="reader_toast_err_comment_failed">Váš komentár nemohol byť odoslaný</string>
     <string name="reader_likes_only_you">Páči sa vám to</string>
     <string name="reader_likes_one">Jeden lajk</string>

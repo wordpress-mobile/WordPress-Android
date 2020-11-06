@@ -5,7 +5,7 @@ buildscript {
     }
 
     ext {
-        aztecVersion = 'v1.3.44'
+        aztecVersion = 'v1.3.45'
     }
 
     dependencies {
@@ -67,7 +67,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.1'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.25'

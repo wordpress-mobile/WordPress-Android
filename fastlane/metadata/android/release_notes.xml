@@ -1,98 +1,54 @@
 <en-US>
-15.7:
-Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.
+16.0:
+Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.
 
-Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.
-
+Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.
 </en-US>
 <es-ES>
-15.7:
-Mejoras en el lector: Una nueva pestaña «Descubrir» que puedes adaptar a tus intereses y un botón «(No) Seguir» a las pantallas de detalles del sitio y del tema.
+16.0:
+Actualizaciones en el editor de bloques: Ahora es compatible con la alineación ancha y completa en los bloques de vídeo, galería y más. Hemos corregido un problema que afectaba al bloque clásico en los sitios Jetpack y resuelto un problema relacionado con blloques no compatibles en dispositivos rotados.
 
-Mejoras en el editor de bloques: Un nuevo bloque de «Cita» que te permite añadir énfasis a una pieza de texto elegida. Ahora, cualquier cambio realizado en los carruseles del menú también se refleja inmediatamente en los ajustes del bloque.
-
+Actualizaciones en el lector: Disfruta de una experiencia de lectura más limpia y de bonitas imágenes en el rediseñado lector. Puede acceder aunque no sigas ningún tema.
 </es-ES>
-<fr-CA>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
-</fr-CA>
-<fr-FR>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
-</fr-FR>
 <iw-IL>
-15.7:
-שיפורים ב-Reader: לשונית חדשה של 'לגלות' שניתנת להתאמה לפי תחומי העניין וכפתורי מעקב או ביטול מעקב במסכי הפרטים של האתרים והנושאים.
+16.0:
+עדכונים לעורך הבלוקים: יש כעת תמיכה ביישור בפריסה רחבה וברוחב מלא עבור הבלוקים 'וידאו', 'גלריה' ועוד. תיקנו בעיה שהשפיעה על הבלוק הקלאסי באתרי Jetpack ופתרנו בעיה בנוגע לבלוקים שאינם נתמכים בעת סיבוב המכשיר.
 
-שיפורים בעורך הבלוקים: בלוק ציטוט חדש מאפשר לך להוסיף הדגשות לחלק מסוים מהטקסט. כל שינוי שמבוצע בסליידר של התפריט יחול כעת באופן מיידי בהגדרות הבלוק.
-
+עדכונים ל-Reader: כעת אפשר ליהנות מחוויית קריאה נקייה יותר ומתמונות מרהיבות ב-Reader שעוצב מחדש. אפשר לגשת אליו גם אם לא עוקבים אחר נושאים.
 </iw-IL>
-<in>
-15.7:
-Peningkatan pada Pembaca: Tab Jelajah baru yang dapat disesuaikan dengan minat Anda dan tombol “(berhenti) mengikuti” pada layar detail situs dan topik.
-
-Peningkatan Penyunting Blok: Blok Kutipan Besar baru yang memungkinkan Anda menambahkan penekanan pada bagian teks yang dipilih. Semua perubahan pada slider menu kini juga langsung ditampilkan di pengaturan blok.
-
-</in>
 <it-IT>
-15.7:
-Miglioramenti nel Reader: una nuova scheda Discover può essere adattata ai tuoi interessi e un pulsante per seguire/non seguire i un sito e le schermate dei dettagli dell'argomento.
+16.0:
+Aggiornamenti editor a blocchi: ora è disponibile il supporto per l'allineamento Wide e Full width per i blocchi Video, Galleria e molti altri. Abbiamo corretto un problema che influenzava il blocco Classico sui siti Jetpack e abbiamo risolto un problema relativo a blocchi non supportati su dispositivi ruotati.
 
-Miglioramenti all'editor a blocchi: un nuovo blocco Citazione evidenziata che ti aiuta ad aggiungere enfasi a una parte del testo scelta. Qualsiasi modifica effettuata negli slider del menu ora viene anche immediatamente riflessa nelle impostazioni del blocco.
-
+Aggiornamenti Reader: Goditi un'esperienza di lettura più pulita e con immagini più belle nel Reader riprogettato. Puoi accedervi anche se non segui altri argomenti.
 </it-IT>
-<ja-JP>
-15.7:
- Reader の改善 : 新しいディスカバータブで、サイトやトピックの詳細画面における、興味や「フォロー (解除)」ボタンをカスタマイズできます。
-
-ブロックエディターの改善 : 新しいプルクオートブロックで選択したテキストを強調できるようになりました。 メニューのスライダーの変更もすぐにブロック設定に反映されるようになりました。
-
-</ja-JP>
 <ko-KR>
-15.7:
-리더의 개선: 관심에 따라 재단할 수 있는 새 발견 탭과 사이트와 주제 세부 화면에서 “(언)팔로우” 가 있습니다.
+16.0:
+블록 편집기 업데이트: 영상, 갤러리 등 많은 블록이 이제 가로 전체 확장과 와이드 정렬을 지원합니다. Jetpack 사이트에서 클래식 블록에서 발생하는 문제와 회전된 기기를 지원하지 않는 블록과 관련된 문제를 수정했습니다.
 
-블록 편집기 개선: 본문의 일부를 선택하여 강조할 수 있게 하는 새 내부인용이 있습니다. 또한 메뉴 슬라이더에서 만든 어떤 변경사항이든 이제 블록 설정에 즉각 볬영합니다.
-
+리더 업데이트: 새롭게 디자인된 리더로 향상된 가독성 경험과 아름다운 이미지를 사용해보세요. 주제를 팔로우하지 않아도 사용할 수 있습니다.
 </ko-KR>
 <nl-NL>
-15.7:
-Verbeteringen in de Reader: een nieuw tabblad Ontdekken dat je kan afstemmen op je interesses en een knop "(ont) volgen" voor de detailschermen van de site en het onderwerp.
+16.0:
+Updates voor blok-editor: er is nu ondersteuning voor uitlijning over de volledige breedte en breedte voor de video-, galerij- en meer blokken. We hebben een probleem met het klassieke blok op Jetpack sites opgelost en een probleem met niet-ondersteunde blokken op geroteerde apparaten opgelost.
 
-Verbeteringen in blok-editor:een nieuw Pullquote-blok waarmee je de nadruk kunt leggen op een gekozen stuk tekst. Eventuele wijzigingen in menu sliders worden nu ook onmiddellijk weerspiegeld in de blok instellingen.
-
+Reader updates: geniet van een betere leeservaring en prachtige afbeeldingen in de opnieuw ontworpen Reader. Je hebt er zelfs toegang toe als je geen onderwerpen volgt.
 </nl-NL>
-<pt-BR>
-15.7:
-Melhorias no Leitor: Uma nova aba Explorar que você pode personalizar com seus interesses e botão Seguir (ou parar de seguir) sites e assuntos na tela de informações.
-
-Melhorias no editor de blocos: Um novo bloco de Citação que permite adicionar ênfase em uma parte do texto. Qualquer alteração feita no menu deslizante agora é refletida nas configurações do bloco imediatamente.
-
-
-</pt-BR>
 <ru-RU>
-15.7:
-Улучшения "Чтива": Новая вкладка поиска позволяет вам найти и подписаться (или отписаться) на сайты по интересам (на экране подробностей).
+16.0:
+Обновления редактора блоков: поддержка широкого и выравнивания на полную ширину блоков видео, галереи и многих других. Исправлена проблема с классическим блоком на сайтах Jetpack и другая проблема с неподдерживаемых блоках и поворотом экрана устройства.
 
-Улучшения редактора блоков: Новый блок выдержки, позволяет акцентировать выделенный фрагмент текста. Изменения внесенные слайдерами в меню будут применены немедленно к настройкам блоков.
-
-
+Обновления чтива: переработано оформление, вам понравится! Доступно даже если у вас нет подписок.
 </ru-RU>
 <sv-SE>
-15.7:
-Förbättringar i läsaren: Ny flik Upptäck du kan anpassa till dina intressen och knapp för att följa/sluta följa webbplatsen och sidor med ämnesinformation.
+16.0:
+Nytt i blockredigereran: Nu finns det stöd för fullbredd och bredd layout av video-, galleri- m.fl. block. Vi har korrigerat ett problem med det klassiska blocket på webbplatser med Jetpack och löst ett bekymmer med ej stödda block vid rotering av mobila enheter.
 
-Förbättringar i blockredigeraren: Ett nytt block för utdragscitat låter dig framhäva ett valt textstycke. Eventuella ändringar i menyreglagen återspeglas nu direkt i blockinställningarna.
-
+Uppdateringar i läsaren: Njut av en snyggare läsupplevelse och vackra bilder med den nya designen av läsaren. Du kommer åt den även om du inte har följt några ämnen.
 </sv-SE>
-<zh-TW>
-15.7：
-閱讀器改善功能：你可以依自己的興趣量身打造全新「探索」分頁，並在網站和主題詳細資料畫面點選「關注/取消關注」按鈕。
+<zh-CN>
+16.0：
+区块编辑器更新：现在，我们为视频、画廊和更多区块提供了“全宽”和“加宽”对齐支持。 我们修复了影响 Jetpack 站点上经典区块的问题，并解决了设备旋转后区块不受支持的问题。
 
-區塊編輯器增強功能：推出可突顯所選文字段落的全新「重要引述」區塊。 選單投影片中的任何變更現在也會隨即反映在區塊設定中。
-
-</zh-TW>
+阅读器更新：阅读器经过重新设计，可带来更清晰的阅读体验和精美图像。 即使您没有关注任何主题，也可以享受阅读器带来的这些出色体验。
+</zh-CN>

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-26 17:08:10+0000
+Translation-Revision-Date: 2020-10-23 15:04:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="typeface_label_shrikhand">Fet</string>
+    <string name="typeface_label_space_mono">Moderne</string>
+    <string name="typeface_label_pacifico">Lekende</string>
+    <string name="typeface_label_oswald">Sterkt</string>
+    <string name="typeface_label_libre_baskerville">Klassisk</string>
+    <string name="typeface_label_nunito">Hverdagslig</string>
+    <string name="mlp_notselected_description">%s</string>
+    <string name="mlp_selected_description">%s valgt</string>
+    <string name="login_get_link_by_email">Få en innloggingslenke med e-post</string>
     <string name="gutenberg_native_select_a_layout">Velg et oppsett</string>
     <string name="create_post_story_fab_tooltip">Lag et innlegg eller en fortelling</string>
     <string name="create_page_fab_tooltip">Lag en side</string>
@@ -79,9 +88,9 @@ Language: nb_NO
     <string name="enter_your_site_address">Oppgi din nettstedsadresse</string>
     <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
     <string name="signup_confirmation_title">Registreringsbekreftelse</string>
-    <string name="signup_confirmation_magic_link_message">Vi vil sende deg en magisk lenke for å lage din nye WordPress.com-konto.</string>
+    <string name="signup_confirmation_magic_link_message">Vi vil sende deg en registreringslenke for å opprette din nye WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
-    <string name="signup_magic_link_message">Vi har sendt deg en magisk lenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
+    <string name="signup_magic_link_message">Vi har sendt deg en registreringslenke for å lage din nye WordPres.com-konto. Sjekk din e-post på denne enheten og trykk lenken i e-posten du mottar fra WordPress.com.</string>
     <string name="enter_account_info_for_site">Oppgi din kontoinformasjon for %1$s.</string>
     <string name="login_or">eller</string>
     <string name="continue_google_button_suffix">Fortsett med Google</string>
@@ -101,7 +110,6 @@ Language: nb_NO
     <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b>%1$s&lt;/b> for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
     <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
-    <string name="gutenberg_native_remove_block">Fjern blokk</string>
     <string name="gutenberg_native_duplicate_block">Dupliser blokk</string>
     <string name="gutenberg_native_copy_block">Kopier blokk</string>
     <string name="gutenberg_native_copied_block">Kopiert blokk</string>
@@ -114,7 +122,6 @@ Language: nb_NO
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
-    <string name="gutenberg_native_go_back">Gå tilbake</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -122,7 +129,6 @@ Language: nb_NO
     <string name="photo_picker_use_gif">Bruk denne GIFen</string>
     <string name="everyone">Alle</string>
     <string name="me">Meg</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Rediger blokk i nettleser</string>
     <string name="gutenberg_native_dismiss">Avfei</string>
     <string name="prepublishing_nudges_home_tags_not_set">Ikke bestemt</string>
     <string name="prepublishing_tags_description">Stikkord hjelper leserne vit hva innlegg er om.</string>
@@ -139,7 +145,6 @@ Language: nb_NO
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytt til kladd</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytt innlegg til kladder?</string>
     <string name="reader_label_choose_your_interests">Velg dine interesser</string>
-    <string name="reader_label_discover_follow_tags">Oppdag og følg nøkkelord du liker</string>
     <string name="reader_choose_interests_content_description">Velg dine interesser</string>
     <string name="reader_btn_done">Utført</string>
     <string name="reader_btn_select_few_interests">Velg noen for å fortsette</string>
@@ -304,9 +309,9 @@ Language: nb_NO
     <string name="reader_btn_selected_filter_tick_content_description">Valgt</string>
     <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
     <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
-    <string name="reader_title_subs">Behandle nøkkelord og nettsteder</string>
+    <string name="reader_title_subs">Behandle emner og nettsteder</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra nøkkelord du følger</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra emner du følger</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Logg inn på WordPress.com for å se siste innlegg fra nettsteder du følger</string>
     <string name="gutenberg_native_template_preview">Forhåndsvisning av mal</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
@@ -314,9 +319,9 @@ Language: nb_NO
     <string name="gutenberg_native_add_to_beginning">Legg til i begynnelsen</string>
     <string name="gutenberg_native_add_block_before">Legg til blokk foran</string>
     <string name="gutenberg_native_add_block_after">Legg til blokk etter</string>
-    <string name="reader_filter_empty_tags_action">Legg til et stikkord</string>
+    <string name="reader_filter_empty_tags_action">Legg til et emne</string>
     <string name="reader_filter_empty_sites_action">Følg et nettsted</string>
-    <string name="reader_filter_empty_tags_list">Du kan følge innlegg om et spesifikt emne ved å legge til et nøkkelord</string>
+    <string name="reader_filter_empty_tags_list">Du kan følge innlegg om et spesifikt emne ved å legge til et emne</string>
     <string name="reader_filter_empty_sites_list">Se de siste innleggene fra nettsteder du følger</string>
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
@@ -366,7 +371,7 @@ Language: nb_NO
     <string name="reader_my_likes_display_name">Likinger</string>
     <string name="reader_discover_display_name">Oppdag</string>
     <string name="reader_save_for_later_display_name">Lagret</string>
-    <string name="reader_filter_tags_title">Stikkord</string>
+    <string name="reader_filter_tags_title">Emner</string>
     <string name="reader_filter_sites_title">Nettsteder</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -388,7 +393,6 @@ Language: nb_NO
     <string name="gutenberg_native_start_writing">Start å skrive…</string>
     <string name="gutenberg_native_size">Størrelse</string>
     <string name="gutenberg_native_show_section">Vis seksjon</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' er ennå ikke støttet i WordPress for Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
     <string name="gutenberg_native_cut_block">Kutt blokk</string>
@@ -410,8 +414,6 @@ Language: nb_NO
     <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
     <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
-    <string name="gutenberg_native_link_text">Lenketekst</string>
-    <string name="gutenberg_native_link_inserted">Lenke satt inn</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
     <string name="gutenberg_native_hide_keyboard">Skjul tastatur</string>
     <string name="gutenberg_native_here_is_the_panel_content">Her er panelinnholdet!</string>
@@ -436,7 +438,6 @@ Language: nb_NO
     <string name="gutenberg_native_alt_text">Alt-tekst</string>
     <string name="gutenberg_native_add_video">LEGG TIL VIDEO</string>
     <string name="gutenberg_native_add_url">Legg til URL</string>
-    <string name="gutenberg_native_add_link_text">Legg til lenketekst</string>
     <string name="gutenberg_native_add_image_or_video">LEGG TIL BILDE ELLER VIDEO</string>
     <string name="gutenberg_native_add_image">LEGG TIL BILDE</string>
     <string name="gutenberg_native_add_block_here">LEGG TIL BLOKK HER</string>
@@ -954,7 +955,7 @@ Language: nb_NO
     <string name="content_description_more">Mer</string>
     <string name="my_site_create_new_site_title">Du har ingen nettsteder</string>
     <string name="reader_empty_followed_tags_title">Ingen fulgte emner</string>
-    <string name="reader_empty_followed_tags_subtitle">Legg til emneord for å finne innlegg om dine favoritt-emner</string>
+    <string name="reader_empty_followed_tags_subtitle">Legg til emner for å finne innlegg om dine favoritt-emner</string>
     <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="install_jetpack_retry">Prøv på nytt</string>
     <string name="install_jetpack_continue">Sett opp</string>
@@ -1177,7 +1178,6 @@ Language: nb_NO
     <string name="license_screen_title">Lisens</string>
     <string name="release_notes_screen_title">Utgivelsesnotater</string>
     <string name="signup_epilogue_error_avatar_view">Ditt profilbilde er lastet opp og vil bli synlig om kort tid.</string>
-    <string name="email_not_registered_wpcom">Hmm, vi kan ikke finne en WordPress.com-konto knyttet til denne e-postadressen. Forsøk lenken nedenfor for å logge inn med din nettstedsadresse.</string>
     <string name="permissions_denied_title">Tillatelser</string>
     <string name="plugin_caption_featured">Fremhevet</string>
     <string name="sharing_disabled">Delingsmodulen er deaktivert</string>
@@ -1671,8 +1671,6 @@ Language: nb_NO
     <string name="reader_toast_err_already_liked">Du har allerede gitt en Like til den kommentaren</string>
     <string name="reader_toast_err_comment_not_found">Kommentaren ble ikke funnet!</string>
     <string name="reader_toast_err_cannot_like_post">Mislyktes i å gi en Like til dette innlegget</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com-innlegg</string>
-    <string name="reader_title_deeplink">WordPress-leser</string>
     <string name="error_notif_q_action_reply">Kunne ikke svare på kommentaren. Vennligst prøv igjen senere.</string>
     <string name="error_notif_q_action_approve">Klarte ikke å godkjenne kommentaren. Vennligst prøv igjen senere.</string>
     <string name="error_notif_q_action_like">Kunne ikke gi en Like til kommentaren. Vennligst prøv igjen senere.</string>
@@ -1749,7 +1747,6 @@ Language: nb_NO
     <string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
     <string name="reader_empty_search_description">Ingen innlegg ble funnet for %s på språket ditt</string>
     <string name="reader_hint_post_search">Søk i WordPress</string>
-    <string name="reader_title_related_post_detail">Relatert innlegg</string>
     <string name="preview_screen_links_disabled">Lenker er deaktivert på forhåndsvisningsskjermen</string>
     <string name="send">Send</string>
     <string name="person_removed">%1$s ble vellykket fjernet</string>
@@ -2017,7 +2014,7 @@ Language: nb_NO
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d følgere</string>
-    <string name="reader_menu_tags">Rediger stikkord og nettsteder</string>
+    <string name="reader_menu_tags">Rediger emner og nettsteder</string>
     <string name="reader_title_post_detail">Leser-innlegg</string>
     <string name="notifications_push_summary">Innstillinger for notifikasjoner som dukker opp på din enhet.</string>
     <string name="notifications_email_summary">Innstillinger for notifikasjoner som sendes til din kontotilknyttede E-postadresse.</string>
@@ -2117,8 +2114,7 @@ Language: nb_NO
     <string name="cab_selected">%d valgt</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
     <string name="reader_empty_comments">Ingen kommentarer enda</string>
-    <string name="reader_empty_posts_in_tag">Ingen innlegg med dette stikkordet</string>
-    <string name="reader_label_liked_by">Gitt Likes av</string>
+    <string name="reader_empty_posts_in_tag">Ingen innlegg om dette emnet</string>
     <string name="reader_label_like">Liker</string>
     <string name="reader_label_view_original">Vis den opprinnelige artikkelen</string>
     <string name="reader_label_comments_closed">Kommentarer er lukket</string>
@@ -2149,9 +2145,9 @@ Language: nb_NO
     <string name="reader_toast_err_already_follow_blog">Du følger allerede dette nettstedet</string>
     <string name="reader_toast_err_get_blog_info">Klarte ikke å vise dette nettstedet</string>
     <string name="reader_label_followed_blog">Nettstdedet ble fulgt</string>
-    <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et stikkord for å følge</string>
+    <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et emne å følge</string>
     <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
-    <string name="reader_page_followed_tags">Fulgte stikkord</string>
+    <string name="reader_page_followed_tags">Fulgte emner</string>
     <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
     <string name="ssl_certificate_error">Ugyldig SSL-sertifikat</string>
@@ -2179,8 +2175,8 @@ Language: nb_NO
     <string name="blog_not_found">En feil oppstod under å få tilgang til denne bloggen</string>
     <string name="gallery_error">Mediegjenstanden kunne ikke bli hentet inn</string>
     <string name="no_network_message">Ingen nettverkstilgang er tilgjengelig</string>
-    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette stikkordet</string>
-    <string name="reader_toast_err_add_tag">Kunne ikke legge til dette stikkordet</string>
+    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emnet</string>
+    <string name="reader_toast_err_add_tag">Kunne ikke legge til dette emnet</string>
     <string name="reader_title_applog">Applikasjonsloggen</string>
     <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
     <string name="error_blog_hidden">Bloggen er skjult og kunne ikke bli lastet inn. Aktiver den igjen i innstillingene og prøv igjen.</string>
@@ -2248,8 +2244,8 @@ Language: nb_NO
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
     <string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
     <string name="reader_toast_err_share_intent">Klarte ikke å dele</string>
-    <string name="reader_toast_err_tag_invalid">Det var ikke et gyldig stikkord</string>
-    <string name="reader_toast_err_tag_exists">Du følger allerede dette merket</string>
+    <string name="reader_toast_err_tag_invalid">Det var ikke et gyldig emne</string>
+    <string name="reader_toast_err_tag_exists">Du følger allerede dette emnet</string>
     <string name="reader_toast_err_comment_failed">Klarte ikke å poste kommentaren din</string>
     <string name="reader_likes_only_you">Du liker dette</string>
     <string name="reader_likes_one">En person liker dette</string>

@@ -60,7 +60,8 @@ public class AppLog {
         SUPPORT,
         SITE_CREATION,
         DOMAIN_REGISTRATION,
-        FEATURE_ANNOUNCEMENT
+        FEATURE_ANNOUNCEMENT,
+        PREPUBLISHING_NUDGES
     }
 
     public static final String TAG = "WordPress";

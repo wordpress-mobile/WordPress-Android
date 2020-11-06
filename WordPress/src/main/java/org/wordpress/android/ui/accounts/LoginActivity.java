@@ -865,14 +865,18 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     public void onGoogleEmailSelected(String email) {
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        loginEmailFragment.setGoogleEmail(email);
+        if (loginEmailFragment != null) {
+            loginEmailFragment.setGoogleEmail(email);
+        }
     }
 
     @Override
     public void onGoogleLoginFinished() {
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        loginEmailFragment.finishLogin();
+        if (loginEmailFragment != null) {
+            loginEmailFragment.finishLogin();
+        }
     }
 
     @Override

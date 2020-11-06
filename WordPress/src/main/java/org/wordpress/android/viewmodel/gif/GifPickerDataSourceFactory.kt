@@ -8,6 +8,8 @@ import androidx.paging.DataSource.Factory
 import org.wordpress.android.viewmodel.gif.provider.GifProvider
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mediapicker.loader.GifMediaDataSource} and other relevant classes")
 /**
  * Creates instances of [GifPickerDataSource]
  *

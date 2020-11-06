@@ -43,6 +43,7 @@
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
+        <item name="wpColorLoginPrologueBg">@color/blue_0</item>
 
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
         <item name="colorGutenbergBackground">@android:color/white</item>
@@ -391,11 +392,8 @@
     </style>
 
     <style name="MySiteQuickActionButtonContainer">
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">@dimen/my_site_quick_action_button_container_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">25</item>
-        <item name="android:orientation">vertical</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="MySiteQuickActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -405,14 +403,18 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:backgroundTint">?attr/colorSurface</item>
         <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteQuickActionButtonLabel">
         <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:layout_centerHorizontal">true</item>
     </style>
 
     <style name="MySiteListRowLayout">
@@ -638,8 +640,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:minHeight">?attr/listPreferredItemHeight</item>
         <item name="android:paddingBottom">@dimen/margin_extra_large</item>
-        <item name="android:paddingEnd">@dimen/margin_large</item>
-        <item name="android:paddingStart">@dimen/margin_large</item>
         <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
@@ -1021,23 +1021,71 @@
 
     <!-- To use with the LoginFlow Theme -->
     <style name="Widget.LoginFlow.TextView.PromoTitle" parent="Widget.MaterialComponents.TextView">
-        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:maxLines">2</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
-        <item name="fixWidowWords">true</item>
-    </style>
-
-    <style name="Widget.LoginFlow.TextView.PromoSubtitle" parent="Widget.MaterialComponents.TextView">
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="android:gravity">center</item>
-        <item name="android:maxLines">2</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="android:textSize">@dimen/prologue_promo_text_size</item>
         <item name="fixWidowWords">true</item>
-        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">4dp</item>
+        <item name="android:alpha">0.9</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Card.ImageOnly" parent="Widget.LoginFlow.Prologue.Card">
+        <item name="android:alpha">1</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:clickable">false</item>
+        <item name="android:selectable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Small" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="iconSize">20dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Medium" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.CircularButton.Large" parent="Widget.LoginFlow.Prologue.CircularButton">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="iconSize">28dp</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Chip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textAppearance">
+            @style/Widget.LoginFlow.Prologue.Chip.TextAppearance
+        </item>
+        <item name="chipEndPadding">3dp</item>
+        <item name="chipStartPadding">3dp</item>
+        <item name="ensureMinTouchTargetSize">false</item>
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Prologue.Chip.TextAppearance" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textSize">9sp</item>
     </style>
 
     <!-- Main actions styles -->
@@ -1334,4 +1382,13 @@
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
+    <style name="WordPress.PrepubPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <!-- Home Page Picker Styles -->
+    <style name="HomePagePickerSkipButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/blue_50</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
 </resources>

@@ -62,7 +62,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
@@ -529,7 +528,8 @@ public class EditPostSettingsFragment extends Fragment {
                     if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORY_IDS)) {
                         @SuppressWarnings("unchecked")
                         List<Long> categoryList = (ArrayList<Long>) extras.getSerializable(KEY_SELECTED_CATEGORY_IDS);
-                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_CATEGORIES_ADDED);
+                        PostAnalyticsUtilsKt.trackPostSettings(
+                                mAnalyticsTrackerWrapper, Stat.EDITOR_POST_CATEGORIES_ADDED);
                         updateCategories(categoryList);
                     }
                     break;
@@ -1062,7 +1062,7 @@ public class EditPostSettingsFragment extends Fragment {
             mFeaturedImageHelper.trackFeaturedImageEvent(TrackableEvent.IMAGE_SET_CLICKED, postId);
 
             mMediaPickerLauncher
-                    .showPhotoPickerForResult(requireActivity(), MediaBrowserType.FEATURED_IMAGE_PICKER, getSite(),
+                    .showFeaturedImagePicker(requireActivity(), getSite(),
                             postId);
         }
     }

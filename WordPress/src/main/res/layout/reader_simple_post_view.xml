@@ -29,14 +29,14 @@
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/simple_post_follow_button"
+            style="@style/Reader.Follow.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/margin_medium"
             android:contentDescription="@string/reader_btn_follow"
-            android:padding="@dimen/reader_follow_button_padding"
-            app:wpShowFollowButtonCaption="false" />
+            android:padding="@dimen/reader_follow_button_padding" />
 
         <ImageView
             android:id="@+id/image_avatar"

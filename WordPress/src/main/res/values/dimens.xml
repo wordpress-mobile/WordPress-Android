@@ -9,6 +9,7 @@
 
     <dimen name="tab_height">48dp</dimen>
     <dimen name="me_menu_width">64dp</dimen>
+    <dimen name="me_menu_avatar_end_offset">11dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="prominent_toolbar_height">112dp</dimen>
     <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
@@ -78,11 +79,7 @@
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
     <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
-    <dimen name="content_margin_site_row_end_tablet">@dimen/content_margin_tablet</dimen>
-    <dimen name="content_margin_site_row_end_tablet_big">@dimen/content_margin_tablet_big</dimen>
     <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
-    <dimen name="content_margin_site_row_start_tablet">60dp</dimen>
-    <dimen name="content_margin_site_row_start_tablet_big">108dp</dimen>
 
     <dimen name="content_margin_bottom_sheet_row_start">16dp</dimen>
     <dimen name="content_margin_bottom_sheet_row_start_tablet">60dp</dimen>
@@ -139,10 +136,6 @@
     <dimen name="reader_detail_margin_tablet_big_landscape">160dp</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_normal</dimen>
 
-    <dimen name="reader_detail_header_avatar">48dp</dimen>
-    <dimen name="reader_detail_header_blavatar">56dp</dimen>
-    <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
-
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
@@ -158,6 +151,9 @@
     <!-- padding inside the tag header view -->
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
+
+    <!-- collapsing toolbar scrim visible height trigger -->
+    <dimen name="scrim_visible_height_trigger">100dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_low
@@ -192,6 +188,7 @@
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
     <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
+    <dimen name="reader_follow_icon_padding_no_caption">@dimen/margin_none</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
@@ -203,7 +200,7 @@
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
-    <dimen name="reader_subfilter_end_guideline_margin">58dp</dimen>
+    <dimen name="reader_subfilter_end_guideline_margin">16dp</dimen>
 
     <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
 
@@ -294,6 +291,8 @@
     <dimen name="my_site_bottom_spacing">64dp</dimen>
     <dimen name="my_site_name_label_single_line_text_size">20sp</dimen>
     <dimen name="my_site_name_label_double_line_text_size">16sp</dimen>
+    <dimen name="my_site_content_area">500dp</dimen>
+    <dimen name="my_site_quick_action_button_container_width">64dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -370,19 +369,11 @@
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
-    <dimen name="prologue_intro_content_margin_vertical">24dp</dimen>
     <dimen name="prologue_intro_content_max_width">0dp</dimen>
 
-    <dimen name="prologue_logo_size">50dp</dimen>
-    <dimen name="prologue_logo_margin">16dp</dimen>
+    <dimen name="prologue_promo_title_size">24sp</dimen>
 
-    <dimen name="prologue_promo_title_size">34sp</dimen>
-    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
-
-    <dimen name="prologue_promo_text_size">20sp</dimen>
-    <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
-
-    <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
+    <dimen name="prologue_promo_illustration_margin_bottom">88dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
@@ -553,16 +544,18 @@
     <dimen name="story_thumbnail_margin">6dp</dimen>
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
-    <!-- Modal Layout Picker Styles -->
-    <dimen name="mlp_header_scroll_snap_threshold">-36dp</dimen>
+    <!-- Common Picker resources -->
+    <dimen name="picker_header_scroll_snap_threshold">-54dp</dimen>
+    <dimen name="picker_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+
+    <!-- Modal Layout Picker -->
     <dimen name="mlp_layouts_row_height">281dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
-    <dimen name="mlp_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
     <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_categories_bar_height">44dp</dimen>
     <dimen name="mlp_layout_card_height">204dp</dimen>
-    <dimen name="mlp_layout_card_width">136dp</dimen>
+    <dimen name="mlp_layout_card_width">153dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
@@ -579,4 +572,18 @@
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
+    <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
+
+    <!-- Home Page Picker -->
+    <dimen name="hpp_card_width">160dp</dimen>
+    <dimen name="hpp_card_padding">16dp</dimen>
+    <dimen name="hpp_card_margin_outer">40dp</dimen>
+    <dimen name="hpp_maximum_container_width">728dp</dimen>
+    <dimen name="hpp_subtitle_width">350dp</dimen>
+    <dimen name="hpp_button_max_width">244dp</dimen>
+
+    <!-- Login Prologue -->
+    <dimen name="login_prologue_content_area">320dp</dimen>
+    <dimen name="login_prologue_background_circle_size">140dp</dimen>
+    <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
 </resources>
