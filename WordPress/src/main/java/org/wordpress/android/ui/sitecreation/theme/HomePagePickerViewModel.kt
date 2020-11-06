@@ -16,6 +16,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -35,6 +36,9 @@ class HomePagePickerViewModel @Inject constructor(
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _onChooseDesignPressed = SingleLiveEvent<String>()
+    val onChooseDesignPressed: LiveData<String> = _onChooseDesignPressed
 
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -98,7 +102,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onChooseTapped() {
-        // TODO
+        (uiState.value as? UiState.Content)?.let { _onChooseDesignPressed.value = it.selectedLayoutSlug }
     }
 
     fun onSkippedTapped() {

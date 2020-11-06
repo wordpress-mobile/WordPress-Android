@@ -75,6 +75,9 @@ class HomePagePickerFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+        if (context !is SiteDesignsScreenListener) {
+            throw IllegalStateException("Parent activity must implement SiteDesignsScreenListener.")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -105,6 +108,10 @@ class HomePagePickerFragment : Fragment() {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
+        })
+
+        viewModel.onChooseDesignPressed.observe(viewLifecycleOwner,Observer { slug->
+            (requireActivity() as SiteDesignsScreenListener).onSiteDesignSelected(slug)
         })
 
         savedInstanceState?.let {
