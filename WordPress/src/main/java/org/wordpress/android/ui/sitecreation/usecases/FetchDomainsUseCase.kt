@@ -43,6 +43,9 @@ class FetchDomainsUseCase @Inject constructor(
                 size,
                 includeVendorDot
         )
+        payload.includeWordpressCom = true
+        payload.onlyWordpressCom = true
+        payload.includeDotBlogSubdomain = true // TODO
         return suspendCancellableCoroutine { cont ->
             pair = Pair(payload.query, cont)
             dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload))
