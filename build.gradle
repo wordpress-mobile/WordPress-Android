@@ -129,12 +129,15 @@ ext {
     androidxWorkVersion = "2.0.1"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '812f5a6b17ff0bf242a7017c462e5c76a0b06cd3'
+    fluxCVersion = '1.6.26-beta-2'
+
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.2.0'
     constraintLayoutVersion = '1.1.3'
-    materialVersion = '1.1.0'
+    materialVersion = '1.2.1'
+    preferenceVersion = '1.1.0'
+    swipeToRefresh = '1.1.0'
     uCropVersion = '2.2.4'
     lifecycleVersion = '2.2.0'
 

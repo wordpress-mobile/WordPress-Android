@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFileDownloads
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewAttachment
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMonthsAndYearsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPost
@@ -210,6 +211,15 @@ class StatsNavigator
             }
             is ViewInsightsManagement -> {
                 ActivityLauncher.viewInsightsManagement(activity, siteProvider.siteModel.id)
+            }
+            is ViewAttachment -> {
+                StatsUtils.openPostInReaderOrInAppWebview(
+                        activity,
+                        siteProvider.siteModel.siteId,
+                        target.postId.toString(),
+                        target.postType,
+                        target.postUrl
+                )
             }
         }
     }
