@@ -697,15 +697,11 @@ public class MediaStore extends Store {
         OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
 
         if (media == null) {
-            MediaError mediaError = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            mediaError.logMessage = "Empty media on updateMedia";
-            event.error = mediaError;
+            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
         } else if (MediaSqlUtils.insertOrUpdateMedia(media) > 0) {
             event.mediaList.add(media);
         } else {
-            MediaError mediaError = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
-            mediaError.logMessage = "Insert in DB failed";
-            event.error = mediaError;
+            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
         }
 
         if (emit) {
@@ -717,15 +713,11 @@ public class MediaStore extends Store {
         OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA);
 
         if (media == null) {
-            MediaError mediaError = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
-            mediaError.logMessage = "Empty media on removeMedia";
-            event.error = mediaError;
+            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
         } else if (MediaSqlUtils.deleteMedia(media) > 0) {
             event.mediaList.add(media);
         } else {
-            MediaError mediaError = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
-            mediaError.logMessage = "Delete from DB failed";
-            event.error = mediaError;
+            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
         }
         emitChange(event);
     }
@@ -752,19 +744,22 @@ public class MediaStore extends Store {
         }
     }
 
-    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media) {
+    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media, String logMessage) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
-        onMediaUploaded.error = new MediaError(errorType, errorMessage);
+        MediaError mediaError = new MediaError(errorType, errorMessage);
+        mediaError.logMessage = logMessage;
+        onMediaUploaded.error = mediaError;
         emitChange(onMediaUploaded);
     }
 
     private void performUploadMedia(UploadMediaPayload payload) {
         String errorMessage = MediaUtils.getMediaValidationError(payload.media);
         if (errorMessage != null) {
-            AppLog.e(AppLog.T.MEDIA, "Media doesn't have required data: " + errorMessage);
+            String message = "Media doesn't have required data: " + errorMessage;
+            AppLog.e(AppLog.T.MEDIA, message);
             payload.media.setUploadState(MediaUploadState.FAILED);
             MediaSqlUtils.insertOrUpdateMedia(payload.media);
-            notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media);
+            notifyMediaUploadError(MediaErrorType.MALFORMED_MEDIA_ARG, errorMessage, payload.media, message);
             return;
         }
 
