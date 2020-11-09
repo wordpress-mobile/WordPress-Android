@@ -136,8 +136,7 @@ class HomePagePickerFragment : Fragment() {
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         backButton.setOnClickListener {
-            requireActivity().onBackPressed() // FIXME: This is temporary for PR #13192
-            viewModel.onBackPressed()
+            requireActivity().onBackPressed() // [SiteCreationMainVM] will handle this event
         }
         setScrollListener()
     }

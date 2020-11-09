@@ -122,10 +122,6 @@ class HomePagePickerViewModel @Inject constructor(
         _onDesignActionPressed.value = DesignSelectionAction.Skip
     }
 
-    fun onBackPressed() {
-        // TODO
-    }
-
     fun onRetryClicked() {
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
