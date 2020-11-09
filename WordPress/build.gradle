@@ -327,6 +327,7 @@ dependencies {
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.1') {
         exclude group: 'com.google.dagger'
+        exclude group: 'com.android.support', module: 'support-annotations'
     }
 
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'
