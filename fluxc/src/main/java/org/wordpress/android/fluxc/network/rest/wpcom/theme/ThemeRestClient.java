@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -159,6 +160,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
     public void fetchStarterDesigns(Float previewWidth, Float scale) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "mobile");
+        params.put("language", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         if (previewWidth != null) {
             params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
         }
