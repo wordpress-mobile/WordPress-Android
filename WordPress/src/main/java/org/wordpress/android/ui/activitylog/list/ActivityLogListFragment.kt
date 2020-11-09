@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.datepicker.MaterialDatePicker.Builder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
@@ -76,12 +77,7 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        date_range_picker.setOnClickListener { _ ->
-            val builder = MaterialDatePicker.Builder.dateRangePicker()
-            val picker = builder.build()
-            picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
-            picker.show(parentFragmentManager, DATE_PICKER_TAG)
-        }
+        date_range_picker.setOnClickListener { showDateRangePicker() }
 
         setupObservers()
 
@@ -144,6 +140,13 @@ class ActivityLogListFragment : Fragment() {
                     getString(R.string.cancel))
             dialog.show(requireFragmentManager(), it)
         }
+    }
+
+    private fun showDateRangePicker() {
+        val builder = Builder.dateRangePicker()
+        val picker = builder.build()
+        picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
+        picker.show(parentFragmentManager, DATE_PICKER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
