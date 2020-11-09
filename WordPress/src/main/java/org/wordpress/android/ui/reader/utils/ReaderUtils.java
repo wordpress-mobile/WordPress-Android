@@ -70,9 +70,20 @@ public class ReaderUtils {
         final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
 
         if (siteAccessibilityInfo.isPhotonCapable()) {
-            return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality, siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE_ATOMIC);
+            return PhotonUtils.getPhotonImageUrl(
+                    unescapedUrl,
+                    width,
+                    height,
+                    quality,
+                    siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE_ATOMIC
+            );
         } else {
-            return getImageForDisplayWithoutPhoton(unescapedUrl, width, height, siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE);
+            return getImageForDisplayWithoutPhoton(
+                    unescapedUrl,
+                    width,
+                    height,
+                    siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE
+            );
         }
     }
 
@@ -81,7 +92,12 @@ public class ReaderUtils {
      * (i.e. a private post - images in private posts can't use photon
      * but these are usually wp images so they support the h= and w= query params)
      */
-    private static String getImageForDisplayWithoutPhoton(final String imageUrl, int width, int height, boolean forceHttps) {
+    private static String getImageForDisplayWithoutPhoton(
+            final String imageUrl,
+            int width,
+            int height,
+            boolean forceHttps
+    ) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }

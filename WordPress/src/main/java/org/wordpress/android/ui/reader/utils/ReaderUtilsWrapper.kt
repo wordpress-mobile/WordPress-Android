@@ -22,8 +22,12 @@ class ReaderUtilsWrapper @Inject constructor(
     fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
             ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
 
-    fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, siteAccessibilityInfo: SiteAccessibilityInfo): String? =
-            ReaderUtils.getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo)
+    fun getResizedImageUrl(
+        imageUrl: String?,
+        width: Int,
+        height: Int,
+        siteAccessibilityInfo: SiteAccessibilityInfo
+    ): String? = ReaderUtils.getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo)
 
     fun getTagFromTagName(tagName: String, tagType: ReaderTagType): ReaderTag =
             ReaderUtils.getTagFromTagName(tagName, tagType)

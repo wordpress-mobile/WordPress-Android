@@ -1,7 +1,6 @@
 package org.wordpress.android.util
 
 import dagger.Reusable
-import org.jetbrains.annotations.NotNull
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import javax.inject.Inject
@@ -16,6 +15,6 @@ import javax.inject.Inject
 @Reusable
 class SiteUtilsWrapper @Inject constructor() {
     fun isPhotonCapable(site: SiteModel): Boolean = SiteUtils.isPhotonCapable(site)
-    fun getAccessibilityInfoFromSite(site: SiteModel): SiteAccessibilityInfo
-            = SiteUtils.getAccessibilityInfoFromSite(site)
+    fun getAccessibilityInfoFromSite(site: SiteModel): SiteAccessibilityInfo =
+            SiteUtils.getAccessibilityInfoFromSite(site)
 }
