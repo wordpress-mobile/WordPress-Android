@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.argumentCaptor
@@ -29,6 +30,7 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -43,12 +45,14 @@ class FeaturedImageHelperTest {
     private val readerUtilsWrapper: ReaderUtilsWrapper = mock()
     private val fluxCUtilsWrapper: FluxCUtilsWrapper = mock()
     private val siteUtilsWrapper: SiteUtilsWrapper = mock()
+    private val siteAccessibilityInfo: SiteAccessibilityInfo = mock()
     private val dispatcher: Dispatcher = mock()
 
     private lateinit var featuredImageHelper: FeaturedImageHelper
 
     @Before
     fun setUp() {
+        whenever(siteUtilsWrapper.getAccessibilityInfoFromSite(any())).thenReturn(siteAccessibilityInfo)
         featuredImageHelper = FeaturedImageHelper(
                 uploadStore,
                 mediaStore,
@@ -318,8 +322,7 @@ class FeaturedImageHelperTest {
                 eq("https://testing.com/url.jpg"),
                 anyInt(),
                 anyInt(),
-                anyBoolean(),
-                anyBoolean()
+                eq(siteAccessibilityInfo)
         )
     }
 
@@ -344,8 +347,7 @@ class FeaturedImageHelperTest {
                 "https://testing.com/thumbnail.jpg"),
                 anyInt(),
                 anyInt(),
-                anyBoolean(),
-                anyBoolean()
+                eq(siteAccessibilityInfo)
         )
     }
 
