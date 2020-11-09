@@ -100,7 +100,8 @@ class HomePagePickerFragment : Fragment() {
             layoutsRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
-                is UiState.Loading -> {}
+                is UiState.Loading -> { // Nothing more to do here
+                }
                 is UiState.Content -> {
                     (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
@@ -110,12 +111,8 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onChooseDesignPressed.observe(viewLifecycleOwner, Observer { slug ->
-            (requireActivity() as SiteDesignsScreenListener).onSiteDesignSelected(slug)
-        })
-
-        viewModel.onSkipPressed.observe(viewLifecycleOwner, Observer {
-            (requireActivity() as SiteDesignsScreenListener).onDesignSelectionSkipped()
+        viewModel.onDesignActionPressed.observe(viewLifecycleOwner, Observer { design ->
+            (requireActivity() as SiteDesignsScreenListener).onSiteDesignSelected(design.template, design.segmentId)
         })
 
         savedInstanceState?.let {

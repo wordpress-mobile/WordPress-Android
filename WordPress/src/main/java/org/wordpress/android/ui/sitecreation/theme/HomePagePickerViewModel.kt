@@ -37,11 +37,13 @@ class HomePagePickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _onChooseDesignPressed = SingleLiveEvent<String>()
-    val onChooseDesignPressed: LiveData<String> = _onChooseDesignPressed
+    private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
+    val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
-    private val _onSkipPressed = SingleLiveEvent<Unit>()
-    val onSkipPressed: LiveData<Unit> = _onSkipPressed
+    sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
+        object Skip : DesignSelectionAction("default", null)
+        class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
+    }
 
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -105,11 +107,17 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onChooseTapped() {
-        (uiState.value as? UiState.Content)?.let { _onChooseDesignPressed.value = it.selectedLayoutSlug }
+        (uiState.value as? UiState.Content)?.let { state ->
+            layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
+                _onDesignActionPressed.value = DesignSelectionAction.Choose(layout.slug!!, layout.segmentId)
+                return
+            }
+        }
+        updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
     }
 
     fun onSkippedTapped() {
-        _onSkipPressed.call()
+        _onDesignActionPressed.value = DesignSelectionAction.Skip
     }
 
     fun onBackPressed() {

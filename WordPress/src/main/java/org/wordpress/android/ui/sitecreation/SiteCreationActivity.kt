@@ -111,8 +111,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.onSegmentSelected(segmentId)
     }
 
-    override fun onSiteDesignSelected(siteDesign: String?) {
-        mainViewModel.onSiteDesignSelected(siteDesign)
+    override fun onSiteDesignSelected(siteDesign: String, segmentId: Long?) {
+        mainViewModel.onSiteDesignSelected(siteDesign, segmentId)
     }
 
     override fun onDomainSelected(domain: String) {

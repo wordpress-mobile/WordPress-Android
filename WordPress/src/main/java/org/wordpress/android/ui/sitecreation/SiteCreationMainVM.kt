@@ -97,8 +97,8 @@ class SiteCreationMainVM @Inject constructor(
         wizardManager.showNextStep()
     }
 
-    fun onSiteDesignSelected(siteDesign: String?) {
-        siteCreationState = siteCreationState.copy(siteDesign = siteDesign)
+    fun onSiteDesignSelected(siteDesign: String, segmentId: Long?) {
+        siteCreationState = siteCreationState.copy(siteDesign = siteDesign, segmentId = segmentId)
         wizardManager.showNextStep()
     }
 

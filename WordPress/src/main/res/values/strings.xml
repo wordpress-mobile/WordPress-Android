@@ -2932,6 +2932,7 @@
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
+    <string name="hpp_choose_error">There was an error while selecting the design.</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
