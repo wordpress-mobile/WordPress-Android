@@ -1,6 +1,8 @@
 16.2
 -----
- 
+* [***] Block Editor: Faster editor start and overall operation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2780]
+* [*] Block Editor: Enable multiple upload support for Image block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2530]
+
 16.1
 -----
 * [***] Block Editor: Adds new option to select from a variety of predefined page templates when creating a new page for a Gutenberg site.
