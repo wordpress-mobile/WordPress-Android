@@ -1,3 +1,2 @@
-Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.
+* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
 
-Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.

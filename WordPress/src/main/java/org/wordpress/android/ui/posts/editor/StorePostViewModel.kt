@@ -169,6 +169,10 @@ class StorePostViewModel
         _onFinish.postValue(Event(state))
     }
 
+    fun hideSavingDialog() {
+        _savingProgressDialogVisibility.postValue(Hidden)
+    }
+
     sealed class UpdateResult {
         object Error : UpdateResult()
         data class Success(val postTitleOrContentChanged: Boolean) : UpdateResult()

@@ -1,37 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-06 21:05:05+0000
+Translation-Revision-Date: 2020-10-29 00:36:27+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_help_button">زر المساعدة</string>
+    <string name="gutenberg_native_edit_using_web_editor">تحرير باستخدام محرر الويب</string>
+    <string name="gutenberg_native_choose_images">اختيار الصور</string>
+    <string name="reader_label_toolbar_back">رجوع</string>
+    <string name="reader_discover_empty_button_text">البدء</string>
+    <string name="reader_post_details_header_by_author_name">بواسطة</string>
+    <string name="stats_referrer_popup_menu_open_website">فتح الموقع الإلكتروني</string>
     <string name="gutenberg_native_search_or_type_url">ابحث أو اكتب رابطاً</string>
     <string name="gutenberg_native_select_item">تحديد عنصر</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">رمادي فاتح جداً إلى أزرق سماوي رمادي</string>
-    <string name="gutenberg_native_vivid_cyan_blue">أزرق سماوي حيوي</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">أزرق سماوي حيوي إلى بنفسجي ساطع</string>
-    <string name="gutenberg_native_vivid_green_cyan">أخضر سماوي حيوي</string>
-    <string name="gutenberg_native_vivid_purple">بنفسجي ساطع</string>
-    <string name="gutenberg_native_vivid_red">أحمر فاقع</string>
-    <string name="gutenberg_native_white">أبيض</string>
-    <string name="gutenberg_native_pale_pink">زهري فاتح</string>
-    <string name="gutenberg_native_pale_ocean">محيط شاحب</string>
-    <string name="gutenberg_native_pale_cyan_blue">أزرق سماوي شاحب</string>
-    <string name="gutenberg_native_midnight">منتصف الليل</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">برتقالي فاقع إلى أحمر فاقع</string>
-    <string name="gutenberg_native_luminous_vivid_orange">برتقالي فاقع</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">برتقالي ناري إلى برتقالي فاقع</string>
-    <string name="gutenberg_native_luminous_vivid_amber">برتقالي ناري</string>
-    <string name="gutenberg_native_luminous_dusk">برتقالي مضيء</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">أخضر سماوي فاتح إلى أخضر سماوي حيوي</string>
-    <string name="gutenberg_native_light_green_cyan">أخضر سماوي فاتح</string>
-    <string name="gutenberg_native_electric_grass">أخضر مشع</string>
-    <string name="gutenberg_native_cyan_bluish_gray">أزرق سماوي رمادي</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum">بارد إلى طيف دافئ</string>
-    <string name="gutenberg_native_blush_light_purple">بنفسجي متورد</string>
-    <string name="gutenberg_native_blush_bordeaux">وردي نبيذي</string>
-    <string name="gutenberg_native_black">أسود</string>
     <string name="gutenberg_native_add_this_telephone_link">أضف رابط الهاتف هذا</string>
     <string name="gutenberg_native_add_this_link">إضافة هذا الرابط</string>
     <string name="gutenberg_native_add_this_email_link">إضافة رابط البريد الإلكتروني هذا</string>
@@ -207,6 +190,7 @@ Language: ar
     <string name="menu_content_info">هيكل المحتوى</string>
     <string name="me">أنا</string>
     <string name="pages_list_author">كاتب الصفحة</string>
+    <string name="gutenberg_native_dismiss">تجاهل</string>
     <string name="prepublishing_nudges_home_tags_not_set">لم يتم التعيين</string>
     <string name="prepublishing_nudges_back_button">رجوع</string>
     <string name="prepublishing_nudges_home_schedule_button">جدولة الآن</string>
@@ -224,7 +208,6 @@ Language: ar
     <string name="publish_date">تاريخ النشر</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">هل تريد نقل المقالة إلى المسودات؟</string>
     <string name="reader_label_choose_your_interests">اختيار اهتماماتك</string>
-    <string name="reader_label_discover_follow_tags">اكتشاف الوسوم التي تحبها ومتابعتها</string>
     <string name="reader_choose_interests_content_description">اختيار اهتماماتك</string>
     <string name="reader_btn_done">انتهى</string>
     <string name="reader_btn_select_few_interests">تحديد القليل للاستمرار</string>
@@ -356,13 +339,13 @@ Language: ar
     <string name="quickpress_shortcut_activity_label">اختر مدونة لاختصار QuickPress</string>
     <string name="app_theme_default">تعيين بواسطة موفّر البطارية</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">لقد أجريت مؤخرًا تغييرات على هذه الصفحة ولكن لم نحفظها. اختيار إصدار لتحميله:\n</string>
-    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">نوفِّر مجموعة من الخدمات لمساعدتك على تحقيق النتائج التي تسعى إليها. ألستَ متأكِّدًا مما تحتاج إليه؟، أو كم تبلغ تكلفته؟ يمكننا توضيح الخدمات المناسبة لك، وإبلاغك بالمزيد عن الرسوم التي نطلبها. ابق على اتصال من خلال المعلومات الواردة ادناه.</string>
     <string name="gutenberg_native_what_people_say">ماذا يقول الناس</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">نوفِّر مجموعة من الخدمات لمساعدتك على تحقيق النتائج التي تسعى إليها. ألستَ متأكِّدًا مما تحتاج إليه؟، أو كم تبلغ تكلفته؟ يمكننا توضيح الخدمات المناسبة لك، وإبلاغك بالمزيد عن الرسوم التي نطلبها. ابق على اتصال من خلال المعلومات الواردة ادناه.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">نحن فريق صغير من الاحترافيين الموهوبين الذين يتمتعون بمجموعة كبيرة من المهارات والخبرات. نحب ما نفعله ونقوم به بشغف. نتطلع إلى العمل معك.</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">سيرغب الزائرون في معرفة الموجودين على الجانب الآخر من الصفحة. استخدم هذه المساحة للكتابة عن نفسك أو موقعك أو شركتك أو أي شيء تريده. استعن بالتوصيات الواردة أدناه للاقتباس من الآخرين الذين يتحدثون حول الأمر نفسه بأسلوبهم الخاص.</string>
     <string name="gutenberg_native_walt_disney">والت ديزني</string>
     <string name="gutenberg_native_want_to_work_with_us">ترغب بالعمل معنا؟</string>
     <string name="gutenberg_native_warning_message">رسالة التحذير</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">سيرغب الزائرون في معرفة الموجودين على الجانب الآخر من الصفحة. استخدم هذه المساحة للكتابة عن نفسك أو موقعك أو شركتك أو أي شيء تريده. استعن بالتوصيات الواردة أدناه للاقتباس من الآخرين الذين يتحدثون حول الأمر نفسه بأسلوبهم الخاص.</string>
     <string name="gutenberg_native_position_or_job_title">المنصب أو المسمى الوظيفي</string>
     <string name="gutenberg_native_project_name">اسم المشروع</string>
     <string name="gutenberg_native_sally_smith">سالي سميث</string>
@@ -419,24 +402,24 @@ Language: ar
     <string name="stats_management_screen_title">إضافة بطاقة جديدة</string>
     <string name="stats_management_add_new_stats_card">إضافة بطاقة إحصاءات جديدة</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
-    <string name="reader_title_subs">إدارة الوسوم والمواقع</string>
     <string name="reader_btn_remove_filter_content_description">إزالة الفلتر الحالي</string>
     <string name="reader_btn_select_filter_content_description">تحديد موقع أو وسم لفلترة المقالات</string>
     <string name="reader_btn_selected_filter_tick_content_description">مُحدَّد</string>
     <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
     <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من الوسوم التي تتابعها</string>
+    <string name="reader_title_subs">إدارة المواضيع والمواقع</string>
     <string name="reader_filter_self_hosted_empty_sites_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواقع التي تتابعها</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواضيع التي تتابعها</string>
     <string name="gutenberg_native_template_preview">معاينة القالب</string>
     <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
     <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>
     <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>
     <string name="gutenberg_native_add_block_before">إضافة مكوّن قبل</string>
     <string name="gutenberg_native_add_block_after">إضافة مكوّن بعد</string>
-    <string name="reader_filter_empty_tags_action">إضافة وسم</string>
     <string name="reader_filter_empty_sites_action">متابعة موقع</string>
-    <string name="reader_filter_empty_tags_list">يمكنك متابعة مقالات حول موضوع معيَّن عن طريق إضافة وسم</string>
     <string name="reader_filter_empty_sites_list">الاطِّلاع على أحدث المقالات من المواقع التي تتابعها</string>
+    <string name="reader_filter_empty_tags_action">إضافة موضوع</string>
+    <string name="reader_filter_empty_tags_list">يمكنك متابعة مقالات حول موضوع معيَّن عن طريق إضافة موضوع</string>
     <string name="reader_filter_main_title">المتابعة</string>
     <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
@@ -498,11 +481,11 @@ Language: ar
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="reader_filter_sites_title">المواقع</string>
-    <string name="reader_filter_tags_title">الوسوم</string>
     <string name="reader_save_for_later_display_name">تم الحفظ</string>
     <string name="reader_discover_display_name">اكتشاف</string>
     <string name="reader_my_likes_display_name">الإعجابات</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
+    <string name="reader_filter_tags_title">المواضيع</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
     <string name="gutenberg_native_start_writing">بدء الكتابة…</string>
     <string name="gutenberg_native_take_a_video">تسجيل مقطع فيديو</string>
@@ -511,6 +494,7 @@ Language: ar
     <string name="gutenberg_native_title">العنوان:</string>
     <string name="gutenberg_native_translate">الترجمة</string>
     <string name="gutenberg_native_ungroup">فكّ التجميع</string>
+    <string name="gutenberg_native_tap_here_to_show_help">أنقر هنا لإظهار المساعدة</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">أنقر لإخفاء لوحة المفاتيح</string>
     <string name="gutenberg_native_size">الحجم</string>
     <string name="gutenberg_native_sidebar_title_plugin">إضافة عنوان الشريط الجانبي</string>
@@ -536,6 +520,7 @@ Language: ar
     <string name="gutenberg_native_my_document_setting_panel">لوحة تعيين مستنداتي</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أعلى من الصف %1$s إلى الصف %2$s</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أسفل من الصف %1$s إلى الصف %2$s</string>
+    <string name="gutenberg_native_help_icon">أيقونة المساعدة</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">فشلت عملية إدراج وسائط.\nيرجى النقر على الخيارات.</string>
     <string name="gutenberg_native_move_block_down">تحريك المكوّن لأسفل</string>
     <string name="gutenberg_native_image_caption_s">تسمية توضيحية للصورة. %s</string>
@@ -1078,10 +1063,10 @@ Language: ar
     <string name="quick_start_button_negative_short">إلغاء</string>
     <string name="quick_start_button_negative">ليس الآن</string>
     <string name="my_site_create_new_site_title">ليس لديك أي مواقع</string>
-    <string name="reader_empty_followed_tags_title">لا توجد وسوم تمت متابعتها</string>
-    <string name="reader_empty_followed_tags_subtitle">أضف وسومًا هنا للعثور على مقالات حول موضوعاتك المفضلة</string>
     <string name="quick_start_dialog_browse_themes_message_short">أنقر على %1$s القوالب %2$s لاكتشاف قوالب جديدة</string>
     <string name="content_description_more">المزيد</string>
+    <string name="reader_empty_followed_tags_subtitle">أضف موضوعًا هنا للعثور على مقالات حول موضوعاتك المفضلة</string>
+    <string name="reader_empty_followed_tags_title">لا توجد مواضيع تمت متابعتها</string>
     <string name="install_jetpack_retry">إعادة المحاولة</string>
     <string name="jetpack_installation_problem">حدثت مشكلة</string>
     <string name="jetpack">Jetpack</string>
@@ -1821,9 +1806,7 @@ Language: ar
     <string name="reader_toast_err_already_liked">لقد قمت بالفعل بتسجيل إعجاب لذلك التعليق</string>
     <string name="reader_toast_err_comment_not_found">لم يتم العثور على تعليق!</string>
     <string name="reader_toast_err_cannot_like_post">تعذر تسجيل إعجاب بهذه المقالة</string>
-    <string name="reader_title_post_detail_wpcom">مقالة WordPress.com</string>
     <string name="error_notif_q_action_reply">تعذر الرد على التعليق. يُرجى المحاولة مرة أخرى لاحقًا.</string>
-    <string name="reader_title_deeplink">قارئ ووردبريس</string>
     <string name="error_notif_q_action_approve">تعذرت الموافقة على التعليق. يُرجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="error_notif_q_action_like">تعذر تسجيل الإعجاب بالتعليق. يُرجى المحاولة مرة أخرى لاحقًا.</string>
     <string name="notifications_label_new_notifications_subtitle">انقر لعرضها</string>
@@ -1899,7 +1882,6 @@ Language: ar
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
     <string name="reader_empty_search_description">لم يتم العثور على نتائج تتعلق بـ %s بلغتك</string>
     <string name="reader_hint_post_search">البحث في ووردبريس</string>
-    <string name="reader_title_related_post_detail">مقالة ذات صلة</string>
     <string name="preview_screen_links_disabled">تم تعطيل الروابط في شاشة المعاينة</string>
     <string name="send">إرسال</string>
     <string name="user_remove_confirmation_message">إذا قمت بإزالة %1$s، فلن يعود هذا المستخدم قادرًا على الوصول إلى هذا الموقع، ومع ذلك سيبقى أي محتوى تم إنشاؤه بواسطة %1$s على الموقع.\n\nهل لا تزال ترغب في إزالة هذا المستخدم؟</string>
@@ -2167,7 +2149,7 @@ Language: ar
     <string name="reader_short_like_count_one">إعجاب واحد</string>
     <string name="reader_short_like_count_none">أعجبني</string>
     <string name="reader_label_follow_count">%,d متابعين</string>
-    <string name="reader_menu_tags">تحرير الوسوم والمواقع</string>
+    <string name="reader_menu_tags">تحرير المواضيع والمواقع</string>
     <string name="reader_title_post_detail">مقالة القارئ</string>
     <string name="notifications_push_summary">إعدادات للتنبيهات التي تظهر على جهازك.</string>
     <string name="notifications_email_summary">إعدادات للتنبيهات التي يتم إرسالها إلى البريد الإلكتروني المرتبط بحسابك.</string>
@@ -2267,7 +2249,6 @@ Language: ar
     <string name="cab_selected">تم تحديد %d</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
-    <string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
     <string name="reader_label_view_original">عرض المقالة الأصلية</string>
     <string name="reader_label_like">أعجبني</string>
     <string name="reader_label_comments_closed">التعليقات مغلقة</string>
@@ -2285,17 +2266,15 @@ Language: ar
     <string name="comment_trashed">تم وضع التعليق بسلة المهملات</string>
     <string name="posts_empty_list">لا توجد مقالات حتى الآن. لماذا لا تبادر بإنشاء واحدة؟</string>
     <string name="comment_reply_to_user">رد على %s</string>
-    <string name="reader_label_liked_by">إعجاب بواسطة</string>
     <string name="signing_out">جاري تسجيل الخروج…</string>
+    <string name="reader_empty_posts_in_tag">لا توجد مقالات بهذا الموضوع</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
     <string name="reader_menu_block_blog">حظر هذا الموقع</string>
     <string name="reader_toast_err_block_blog">تعذر حظر هذا الموقع</string>
     <string name="reader_toast_blog_blocked">لن تظهر المقالات من هذا الموقع بعد الآن</string>
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
-    <string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
-    <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
     <string name="reader_label_followed_blog">تمت متابعة الموقع</string>
     <string name="reader_toast_err_already_follow_blog">أنت تتابع هذا الموقع بالفعل</string>
     <string name="reader_toast_err_get_blog_info">تعذر إظهار هذا الموقع</string>
@@ -2303,6 +2282,8 @@ Language: ar
     <string name="reader_toast_err_unfollow_blog">تعذر إلغاء متابعة هذا الموقع</string>
     <string name="reader_empty_recommended_blogs">لا توجد مواقع موصى بها</string>
     <string name="reader_title_blog_preview">موقع القارئ</string>
+    <string name="reader_page_followed_tags">مواضيع تمت متابعتها</string>
+    <string name="reader_hint_add_tag_or_url">أدخل رابط URL أو موضوعًا للمتابعة</string>
     <string name="forgot_password">نسيت كلمة المرور؟</string>
     <string name="help">المساعدة</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
@@ -2358,8 +2339,6 @@ Language: ar
     <string name="dlg_confirm_trash_comments">إرسال إلى سلة المهملات؟</string>
     <string name="sure_to_cancel_edit_comment">إلغاء تعديل هذا التعليق؟</string>
     <string name="file_error_create">تعذر إنشاء ملف مؤقت لرفع الوسائط. تأكد من وجود مساحة حرة كافية على الجهاز.</string>
-    <string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الوسم</string>
-    <string name="reader_toast_err_remove_tag">غير قادر على حذف هذا الوسم</string>
     <string name="new_media">وسائط جديدة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
@@ -2385,6 +2364,8 @@ Language: ar
     <string name="file_not_found">تعذر العثور على الملف المراد رفعه. هل تم حذفه أم نقله؟</string>
     <string name="comment_status_trash">محذوف</string>
     <string name="cancel_edit">إلغاء التحرير</string>
+    <string name="reader_toast_err_remove_tag">غير قادر على إزالة هذا الموضوع</string>
+    <string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الموضوع</string>
     <string name="share_link">مشاركة الرابط</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_label_reply">رد</string>
@@ -2405,16 +2386,16 @@ Language: ar
     <string name="reader_btn_unfollow">متابع</string>
     <string name="reader_label_added_tag">أضيف %s</string>
     <string name="reader_label_removed_tag">تم حذف %s</string>
-    <string name="reader_toast_err_tag_exists">أنت متابع لهذا الوسم بالفعل</string>
     <string name="reader_toast_err_comment_failed">لايمكن نشر تعليقك</string>
     <string name="reader_toast_err_url_intent">لايمكن فتح %s</string>
     <string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
     <string name="reader_toast_err_share_intent">لايمكن المشاركة</string>
-    <string name="reader_toast_err_tag_invalid">هذا الوسم غير صالح</string>
     <string name="reader_hint_comment_on_comment">رد على التعليق…</string>
     <string name="comments_empty_list">لا توجد تعليقات حتى الآن</string>
     <string name="reader_view_reblog">إعادة التدوين</string>
     <string name="sign_up_label">التسجيل</string>
+    <string name="reader_toast_err_tag_exists">أنت متابع لهذا الموضوع بالفعل</string>
+    <string name="reader_toast_err_tag_invalid">هذا ليس موضوعًا صالحًا</string>
     <string name="themes">القوالب</string>
     <string name="media_edit_title_text">العنوان</string>
     <string name="media_edit_description_text">الوصف</string>

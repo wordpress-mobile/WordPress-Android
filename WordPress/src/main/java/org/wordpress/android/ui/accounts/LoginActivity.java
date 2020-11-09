@@ -85,11 +85,11 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
 
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
-        HasSupportFragmentInjector, BasicDialogPositiveClickInterface {
+        HasAndroidInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
     public static final String MAGIC_LOGIN = "magic-login";
     public static final String TOKEN_PARAMETER = "token";
@@ -123,7 +123,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private LoginMode mLoginMode;
 
-    @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
+    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject UnifiedLoginTracker mUnifiedLoginTracker;
@@ -865,14 +865,18 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     public void onGoogleEmailSelected(String email) {
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        loginEmailFragment.setGoogleEmail(email);
+        if (loginEmailFragment != null) {
+            loginEmailFragment.setGoogleEmail(email);
+        }
     }
 
     @Override
     public void onGoogleLoginFinished() {
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
-        loginEmailFragment.finishLogin();
+        if (loginEmailFragment != null) {
+            loginEmailFragment.finishLogin();
+        }
     }
 
     @Override
@@ -924,9 +928,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         }
     }
 
-    @Override
-    public AndroidInjector<Fragment> supportFragmentInjector() {
-        return mFragmentInjector;
+    @Override public AndroidInjector<Object> androidInjector() {
+        return mDispatchingAndroidInjector;
     }
 
     @Override

@@ -24,7 +24,6 @@ Language: hr
     <string name="people_dropdown_item_followers">Pratitelji</string>
     <string name="invite">Pozovi</string>
     <string name="invite_people">Pozovi osobe</string>
-    <string name="reader_title_related_post_detail">Vezana objava</string>
     <string name="send">Pošalji</string>
     <string name="people">Ljudi</string>
     <string name="role">Uloga</string>
@@ -239,7 +238,6 @@ Language: hr
     <string name="reader_short_like_count_none">Lajkovi</string>
     <string name="reader_label_follow_count">%,d sljedbenika</string>
     <string name="reader_short_like_count_one">1 lajk</string>
-    <string name="reader_menu_tags">Uredi oznake i web-stranice</string>
     <string name="reader_title_post_detail">Objava u Čitaču</string>
     <string name="notifications_push_summary">Postavke za obavijesti na vašem uređaju</string>
     <string name="notifications_email_summary">Postavke za obavijesti koje će biti poslane na adresu e-pošte povezane s tvojim korisničkim računom</string>
@@ -357,16 +355,12 @@ Language: hr
     <string name="comment_reply_to_user">Odgovor na %s</string>
     <string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
     <string name="more">Više</string>
-    <string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
-    <string name="reader_label_liked_by">Sviđa se</string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovu web-stranicu</string>
     <string name="reader_toast_blog_blocked">Objave sa ove web-stranice više neće biti prikazane</string>
     <string name="reader_menu_block_blog">Blokiraj ovu web-stranicu</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
-    <string name="reader_page_followed_tags">Praćene oznake</string>
-    <string name="reader_hint_add_tag_or_url">Unesite URL ili oznaku za praćenje</string>
     <string name="reader_page_followed_blogs">Praćene web-stranice</string>
     <string name="reader_toast_err_get_blog_info">Nije moguće prikazati web-stranicu</string>
     <string name="reader_toast_err_already_follow_blog">Već pratite ovu web-stranicu</string>
@@ -443,8 +437,6 @@ Language: hr
     <string name="local_changes">Lokalne promjene</string>
     <string name="image_settings">Postavke slike</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="reader_toast_err_add_tag">Nije moguće dodati ovu oznaku</string>
-    <string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu oznaku</string>
     <string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
@@ -479,8 +471,6 @@ Language: hr
     <string name="reader_likes_one">Jednoj osobi se ovo sviđa</string>
     <string name="reader_likes_only_you">Vama se ovo sviđa</string>
     <string name="reader_toast_err_comment_failed">Vaš komentar nije moguće objavaiti</string>
-    <string name="reader_toast_err_tag_exists">Već pratite ovu oznaku</string>
-    <string name="reader_toast_err_tag_invalid">To nije ispravna oznaka</string>
     <string name="reader_toast_err_share_intent">Nije moguće podijeliti</string>
     <string name="reader_toast_err_view_image">Nije moguće prikazati sliku</string>
     <string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>
