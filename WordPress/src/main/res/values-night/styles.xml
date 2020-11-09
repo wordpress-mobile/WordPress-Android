@@ -86,46 +86,6 @@
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
-    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
-    </style>
-
-    <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
-        <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
-        <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
-        <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
-        <item name="materialCalendarHeaderToggleButton">@style/WordPress.MaterialCalendarHeaderToggleButton</item>
-        <item name="materialCalendarHeaderConfirmButton">@style/WordPress.MaterialCalendarHeaderConfirmButton</item>
-        <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
-        <!-- Used to color the cancel button which doesn't use any overridable styles -->
-        <item name="colorOnPrimary">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
-    </style>
-
-    <style name="WordPress.MaterialCalendarHeaderTitle" parent="Widget.MaterialComponents.MaterialCalendar.HeaderTitle">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="WordPress.MaterialCalendarHeaderSelection" parent="Widget.MaterialComponents.MaterialCalendar.HeaderSelection.Fullscreen">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-    <style name="WordPress.MaterialCalendarHeaderToggleButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
-        <item name="android:tint">?attr/colorOnSurface</item>
-    </style>
-    <style name="WordPress.MaterialCalendarHeaderDivider" parent="Widget.MaterialComponents.MaterialCalendar.HeaderDivider">
-        <item name="android:visibility">visible</item>
-        <item name="android:background">?attr/colorOnSurface</item>
-
-    </style>
-    <style name="WordPress.MaterialCalendarHeaderLayout" parent="Widget.MaterialComponents.MaterialCalendar.HeaderLayout">
-        <item name="android:background">?attr/colorSurface</item>
-    </style>
-    <style name="WordPress.MaterialCalendarHeaderConfirmButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderConfirmButton">
-        <item name="android:textColor">@color/on_surface_button_selector</item>
-        <item name="rippleColor">@color/on_surface_button_selector</item>
-    </style>
-
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="subtitleTextStyle">@style/WordPress.ActionMode.SubtitleTextStyle</item>
         <item name="titleTextStyle">@style/WordPress.ActionMode.TitleTextStyle</item>
