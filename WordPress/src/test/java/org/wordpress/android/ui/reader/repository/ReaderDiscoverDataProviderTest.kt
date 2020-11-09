@@ -229,7 +229,6 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when followed tags change the discover feed gets refreshed`() = test {
         // Act
