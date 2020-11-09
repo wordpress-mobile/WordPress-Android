@@ -81,15 +81,15 @@
         <item name="categoriesBackground">@color/mlp_categories_background_dark</item>
 
         <!-- Material Date Range Picker -->
-        <item name="materialCalendarStyle">@style/WordPress.materialCalendarStyle</item>
-        <item name="materialCalendarFullscreenTheme">@style/WordPress.materialCalendarFullscreenTheme</item>
-        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
+        <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
-    <style name="WordPress.materialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
     </style>
 
-    <style name="WordPress.materialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+    <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
         <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
         <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
         <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
@@ -98,6 +98,9 @@
         <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
         <!-- Used to color the cancel button which doesn't use any overridable styles -->
         <item name="colorOnPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
     </style>
 
     <style name="WordPress.MaterialCalendarHeaderTitle" parent="Widget.MaterialComponents.MaterialCalendar.HeaderTitle">
