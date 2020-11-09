@@ -31,6 +31,7 @@
                 android:src="@drawable/login_prologue_third_asset_one" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_one"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -68,6 +69,7 @@
                 android:src="@drawable/login_prologue_third_asset_two" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_two"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -105,6 +107,7 @@
                 android:src="@drawable/login_prologue_third_asset_three" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_three"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

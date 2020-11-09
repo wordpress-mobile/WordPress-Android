@@ -6,32 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
-    <string name="gutenberg_native_white">Branco</string>
-    <string name="gutenberg_native_vivid_red">Vermelho vívido</string>
-    <string name="gutenberg_native_vivid_purple">Roxo vívido</string>
-    <string name="gutenberg_native_vivid_green_cyan">Verde ciano vívido</string>
-    <string name="gutenberg_native_vivid_cyan_blue_to_vivid_purple">Azul ciano vívido a roxo vívido</string>
-    <string name="gutenberg_native_vivid_cyan_blue">Azul ciano vívido</string>
-    <string name="gutenberg_native_very_light_gray_to_cyan_bluish_gray">Cinza muito claro a cinza azulado</string>
     <string name="gutenberg_native_select_item">Selecionar item</string>
     <string name="gutenberg_native_search_or_type_url">Pesquisar ou digitar o URL</string>
-    <string name="gutenberg_native_pale_pink">Rosa pálido</string>
-    <string name="gutenberg_native_pale_ocean">Oceano pálido</string>
-    <string name="gutenberg_native_pale_cyan_blue">Azul ciano pálido</string>
-    <string name="gutenberg_native_midnight">Meia-noite</string>
-    <string name="gutenberg_native_luminous_vivid_orange_to_vivid_red">Laranja vívido luminoso a vermelho vívido</string>
-    <string name="gutenberg_native_luminous_vivid_orange">Laranja vívido luminoso</string>
-    <string name="gutenberg_native_luminous_vivid_amber_to_luminous_vivid_orange">Âmbar vívido luminoso a laranja vívido luminoso</string>
-    <string name="gutenberg_native_luminous_vivid_amber">Âmbar luminoso vívido</string>
-    <string name="gutenberg_native_luminous_dusk">Sombra luminosa</string>
-    <string name="gutenberg_native_light_green_cyan_to_vivid_green_cyan">Ciano verde claro a ciano verde vívido</string>
-    <string name="gutenberg_native_light_green_cyan">Verde ciano claro</string>
-    <string name="gutenberg_native_electric_grass">Grama elétrica</string>
-    <string name="gutenberg_native_cyan_bluish_gray">Cinza ciano azulado</string>
-    <string name="gutenberg_native_cool_to_warm_spectrum">Espectro frio a quente</string>
-    <string name="gutenberg_native_blush_light_purple">Roxo claro corado</string>
-    <string name="gutenberg_native_blush_bordeaux">Bordeaux corado</string>
-    <string name="gutenberg_native_black">Preto</string>
     <string name="gutenberg_native_add_this_telephone_link">Adicionar este telefone como link</string>
     <string name="gutenberg_native_add_this_link">Adicionar este link</string>
     <string name="gutenberg_native_add_this_email_link">Adicionar este e-mail como link</string>
@@ -207,6 +183,7 @@ Language: pt_BR
     <string name="menu_content_info">Estrutura do conteúdo</string>
     <string name="everyone">Todos</string>
     <string name="me">Meus</string>
+    <string name="gutenberg_native_dismiss">Dispensar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Não definido</string>
     <string name="prepublishing_tags_description">Tags: ajude os leitores a saberem o assunto do post.</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Adicionar tags</string>
@@ -223,7 +200,6 @@ Language: pt_BR
     <string name="prepublishing_nudges_toolbar_title_publish">Data de publicação</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover post para rascunhos?</string>
     <string name="reader_label_choose_your_interests">Escolha seus interesses</string>
-    <string name="reader_label_discover_follow_tags">Descubra e siga tags que você ama</string>
     <string name="reader_choose_interests_content_description">Escolher seus interesses</string>
     <string name="reader_btn_done">Concluído</string>
     <string name="reader_btn_select_few_interests">Selecione alguns para continuar</string>
@@ -423,16 +399,12 @@ Language: pt_BR
     <string name="reader_btn_select_filter_content_description">Selecione um site ou tag para filtrar posts</string>
     <string name="reader_btn_remove_filter_content_description">Remover o filtro atual</string>
     <string name="reader_bottom_sheet_content_description">Selecione um site ou tag para filtrar posts, janela popup</string>
-    <string name="reader_title_subs">Gerenciar tags e sites</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acessar o WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Acesse com o WordPress.com para ver os posts mais recentes das tags que você segue</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Acesse com o WordPress.com para ver os posts mais recentes dos sites que você segue</string>
     <string name="gutenberg_native_add_block_before">Adicionar bloco antes</string>
     <string name="gutenberg_native_add_block_after">Adicionar bloco depois</string>
-    <string name="reader_filter_empty_tags_action">Adicionar uma tag</string>
     <string name="reader_filter_empty_sites_action">Seguir um site</string>
     <string name="gutenberg_native_replace_current_block">Substituir o bloco atual</string>
-    <string name="reader_filter_empty_tags_list">Você pode seguir posts de um assunto específico adicionando uma tag</string>
     <string name="reader_filter_empty_sites_list">Veja os posts mais recentes de sites que você segue</string>
     <string name="gutenberg_native_template_preview">Visualizar modelo</string>
     <string name="gutenberg_native_add_to_end">Adicionar ao final</string>
@@ -498,7 +470,6 @@ Language: pt_BR
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="reader_filter_sites_title">Sites</string>
-    <string name="reader_filter_tags_title">Tags</string>
     <string name="reader_save_for_later_display_name">Salvo</string>
     <string name="reader_discover_display_name">Explorar</string>
     <string name="reader_my_likes_display_name">Curtidas</string>
@@ -508,6 +479,7 @@ Language: pt_BR
     <string name="gutenberg_native_translate">Traduzir</string>
     <string name="gutenberg_native_title">Título:</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Toque para ocultar o teclado</string>
+    <string name="gutenberg_native_tap_here_to_show_help">Toque aqui para mostrar ajuda</string>
     <string name="gutenberg_native_take_a_video">Gravar um vídeo</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
     <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
@@ -540,6 +512,7 @@ Language: pt_BR
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
     <string name="gutenberg_native_hide_keyboard">Esconder teclado</string>
     <string name="gutenberg_native_here_is_the_panel_content">Aqui está o painel de conteúdo!</string>
+    <string name="gutenberg_native_help_icon">Ícone de ajuda</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Falha ao inserir a mídia.\nToque para ver mais opções.</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change">Toque duas vezes para desfazer a última alteração</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Toque duas vezes para alternar as configurações</string>
@@ -1077,9 +1050,7 @@ Language: pt_BR
     <string name="my_site_create_new_site_title">Você não tem nenhum site</string>
     <string name="quick_start_dialog_choose_theme_message">Procurar em todos os nossos temas para encontrar um perfeito para você.</string>
     <string name="quick_start_button_positive">Ir</string>
-    <string name="reader_empty_followed_tags_title">Nenhuma tag seguida</string>
     <string name="quick_start_dialog_choose_theme_title">Escolha um tema</string>
-    <string name="reader_empty_followed_tags_subtitle">Adicione tags aqui para encontrar posts sobre seus assuntos favoritos</string>
     <string name="content_description_more">Mais</string>
     <string name="quick_start_dialog_browse_themes_message_short">Toque em %1$s Temas %2$s para descobrir novos temas</string>
     <string name="install_jetpack_retry">Tentar novamente</string>
@@ -1821,8 +1792,6 @@ Language: pt_BR
     <string name="reader_toast_err_already_liked">Você já curtiu este comentário</string>
     <string name="reader_toast_err_comment_not_found">Comentário não encontrado!</string>
     <string name="reader_toast_err_cannot_like_post">Falhou ao curtir este post</string>
-    <string name="reader_title_post_detail_wpcom">Post do WordPress.com</string>
-    <string name="reader_title_deeplink">Leitor do WordPress</string>
     <string name="error_notif_q_action_reply">Não foi possível responder ao comentário. Tente novamente mais tarde.</string>
     <string name="error_notif_q_action_approve">Não foi possível aprovar o comentário. Tente novamente mais tarde.</string>
     <string name="error_notif_q_action_like">Não foi possível curtir o comentário. Tente novamente mais tarde.</string>
@@ -1899,7 +1868,6 @@ Language: pt_BR
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
     <string name="reader_empty_search_description">Nenhum resultado encontrado em seu idioma para %s.</string>
     <string name="reader_hint_post_search">Pesquisar no WordPress</string>
-    <string name="reader_title_related_post_detail">Post relacionado</string>
     <string name="preview_screen_links_disabled">Os links são desabilitados na tela de visualização</string>
     <string name="send">Enviar</string>
     <string name="person_removed">%1$s removido com sucesso</string>
@@ -2167,7 +2135,6 @@ Language: pt_BR
     <string name="reader_short_like_count_one">1 curtida</string>
     <string name="reader_label_follow_count">%,d seguidores</string>
     <string name="reader_short_like_count_none">Curtir</string>
-    <string name="reader_menu_tags">Editar tags e sites</string>
     <string name="reader_title_post_detail">Post do leitor</string>
     <string name="notifications_push_summary">Configurações de notificações que são exibidas em seu dispositivo.</string>
     <string name="notifications_email_summary">Configurações de notificações que são enviadas ao e-mail vinculado à sua conta.</string>
@@ -2266,10 +2233,8 @@ Language: pt_BR
     <string name="ssl_certificate_details">Detalhes</string>
     <string name="cab_selected">%d selecionados</string>
     <string name="reader_empty_comments">Nenhum comentário</string>
-    <string name="reader_empty_posts_in_tag">Nenhum post com esta tag</string>
     <string name="reader_label_view_original">Ver o artigo original</string>
     <string name="reader_label_like">Curtir</string>
-    <string name="reader_label_liked_by">Curtido por</string>
     <string name="reader_label_comments_closed">Os comentários estão desativados</string>
     <string name="reader_title_photo_viewer">%1$d de %2$d</string>
     <string name="error_publish_empty_post">Não é possível publicar um post em branco</string>
@@ -2293,9 +2258,7 @@ Language: pt_BR
     <string name="reader_toast_err_block_blog">Não é possível bloquear este site</string>
     <string name="update_verb">Atualizar</string>
     <string name="schedule_verb">Agendar</string>
-    <string name="reader_page_followed_tags">Tags seguidas</string>
     <string name="reader_page_followed_blogs">Sites seguidos</string>
-    <string name="reader_hint_add_tag_or_url">Insira um URL ou tag para seguir</string>
     <string name="reader_label_followed_blog">Site seguido</string>
     <string name="reader_toast_err_get_blog_info">Não é possível mostrar este site</string>
     <string name="reader_toast_err_already_follow_blog">Você já segue este site</string>
@@ -2373,8 +2336,6 @@ Language: pt_BR
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="error_blog_hidden">Este blog está oculto e não foi possível carregá-lo. Habilite-o em configurações e tente novamente.</string>
     <string name="fatal_db_error">Ocorreu um erro ao criar o banco de dados do aplicativo. Tente reinstalar o aplicativo.</string>
-    <string name="reader_toast_err_add_tag">Não é possível adicionar a tag</string>
-    <string name="reader_toast_err_remove_tag">Não é possível remover a tag</string>
     <string name="remove_account">Remover site</string>
     <string name="notifications_empty_all">Nenhuma notificação… ainda.</string>
     <string name="invalid_site_url_message">Verifique se a URL do site inserida é válida</string>
@@ -2402,8 +2363,6 @@ Language: pt_BR
     <string name="reader_likes_one">Uma pessoa curte isto</string>
     <string name="reader_likes_only_you">Você curte isto</string>
     <string name="reader_toast_err_comment_failed">Não foi possível postar o seu comentário </string>
-    <string name="reader_toast_err_tag_exists">Você já segue essa tag</string>
-    <string name="reader_toast_err_tag_invalid">Esta tag não é válida</string>
     <string name="reader_toast_err_share_intent">Não é possível compartilhar </string>
     <string name="reader_toast_err_view_image">Não é possível visualizar a imagem </string>
     <string name="reader_toast_err_url_intent">Não é possível abrir %s</string>
