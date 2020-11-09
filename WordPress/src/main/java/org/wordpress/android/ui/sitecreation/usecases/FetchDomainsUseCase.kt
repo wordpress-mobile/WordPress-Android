@@ -43,9 +43,12 @@ class FetchDomainsUseCase @Inject constructor(
                 size,
                 includeVendorDot
         )
+
+        // Depending on the payload the server may override the following values
         payload.includeWordpressCom = true
         payload.onlyWordpressCom = true
-        payload.includeDotBlogSubdomain = true // TODO
+        payload.includeDotBlogSubdomain = true
+
         return suspendCancellableCoroutine { cont ->
             pair = Pair(payload.query, cont)
             dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload))
