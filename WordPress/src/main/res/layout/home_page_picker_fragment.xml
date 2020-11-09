@@ -55,11 +55,11 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ProgressBar
-        android:id="@+id/loadingIndicator"
-        android:layout_width="wrap_content"
+    <include
+        layout="@layout/home_page_picker_loading_skeleton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/layoutsRecyclerView"
@@ -69,6 +69,7 @@
         android:layout_gravity="center|top"
         android:paddingStart="@dimen/hpp_card_padding"
         android:paddingEnd="0dp"
+        android:paddingBottom="@dimen/toolbar_height"
         android:background="?attr/categoriesBackground"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"

@@ -71,7 +71,8 @@ class CropViewModel : ViewModel() {
                 Uri.fromFile(
                     File(
                         mediaEditingDirectory,
-                        "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
+                        "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}" +
+                                "-${System.currentTimeMillis()}.$outputFileExtension"
                     )
                 )
             )
