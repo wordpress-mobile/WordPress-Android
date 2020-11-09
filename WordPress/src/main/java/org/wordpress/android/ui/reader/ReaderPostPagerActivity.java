@@ -13,19 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.appbar.AppBarLayout;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -41,9 +36,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPLaunchActivity;
-import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -58,7 +51,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -91,9 +83,7 @@ import javax.inject.Inject;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
-public class ReaderPostPagerActivity extends LocaleAwareActivity
-        implements ReaderInterfaces.AutoHideToolbarListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
+public class ReaderPostPagerActivity extends LocaleAwareActivity {
     /**
      * Type of URL intercepted
      */
@@ -115,8 +105,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
     private WPViewPager mViewPager;
     private ProgressBar mProgress;
-    private Toolbar mToolbar;
-    private AppBarLayout mAppBar;
 
     private ReaderTag mCurrentTag;
     private boolean mIsFeed;
@@ -131,7 +119,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     private boolean mPostSlugsResolutionUnderway;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
-    private boolean mIsRelatedPostView;
 
     private boolean mBackFromLogin;
 
@@ -151,17 +138,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
         setContentView(R.layout.reader_activity_post_pager);
 
-        mToolbar = findViewById(R.id.toolbar_main);
-        setSupportActionBar(mToolbar);
-
-        mAppBar = findViewById(R.id.appbar_main);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         mViewPager = findViewById(R.id.viewpager);
         mProgress = findViewById(R.id.progress_loading);
 
@@ -173,7 +149,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = savedInstanceState.getInt(ReaderConstants.ARG_COMMENT_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
-            mIsRelatedPostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_RELATED_POST);
             mInterceptedUri = savedInstanceState.getString(ReaderConstants.ARG_INTERCEPTED_URI);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
@@ -198,7 +173,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     .getSerializableExtra(ReaderConstants.ARG_DIRECT_OPERATION);
             mCommentId = getIntent().getIntExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
-            mIsRelatedPostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_RELATED_POST, false);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType =
@@ -213,23 +187,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
-        // for related posts, show an X in the toolbar which closes the activity - using the
-        // back button will navigate through related posts
-        if (mIsRelatedPostView) {
-            mToolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
-        }
-
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                onShowHideToolbar(true);
                 trackPostAtPositionIfNeeded(position);
 
                 if (mLastSelectedPosition > -1 && mLastSelectedPosition != position) {
@@ -248,48 +209,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                 }
 
                 mLastSelectedPosition = position;
-                updateTitle(position);
             }
         });
 
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
-    }
-
-    /*
-     * set the activity title based on the post at the passed position
-     */
-    private void updateTitle(int position) {
-        // for related posts, always show "Related Post" as the title
-        if (mIsRelatedPostView) {
-            setTitle(R.string.reader_title_related_post_detail);
-            return;
-        }
-
-        // otherwise set the title to the title of the post
-        ReaderBlogIdPostId ids = getAdapterBlogIdPostIdAtPosition(position);
-        if (ids != null) {
-            String title = ReaderPostTable.getPostTitle(ids.getBlogId(), ids.getPostId());
-            if (!title.isEmpty()) {
-                setTitle(title);
-                return;
-            }
-        }
-
-        // default when post hasn't been retrieved yet
-        setTitle(ActivityUtils.isDeepLinking(getIntent()) ? R.string.reader_title_post_detail_wpcom
-                : R.string.reader_title_post_detail);
-    }
-
-    /*
-     * used by the detail fragment when a post was requested due to not existing locally
-     */
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.SinglePostDownloaded event) {
-        if (!isFinishing()) {
-            updateTitle(mViewPager.getCurrentItem());
-        }
     }
 
     private void handleDeepLinking() {
@@ -371,7 +295,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
             postIdentifier) {
         if (!TextUtils.isEmpty(blogIdentifier) && !TextUtils.isEmpty(postIdentifier)) {
             mIsSinglePostView = true;
-            mIsRelatedPostView = false;
 
             switch (interceptType) {
                 case READER_BLOG:
@@ -591,7 +514,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
-        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, mIsRelatedPostView);
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, mInterceptedUri);
 
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, mDirectOperation);
@@ -728,11 +650,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                         if (adapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
                             trackPostAtPositionIfNeeded(newPosition);
-                            updateTitle(newPosition);
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                             trackPostAtPositionIfNeeded(currentPosition);
-                            updateTitle(currentPosition);
                         }
 
                         // let the user know they can swipe between posts
@@ -870,16 +790,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         ActivityLauncher.loginWithoutMagicLink(this);
     }
 
-    /*
-     * called by detail fragment to show/hide the toolbar when user scrolls
-     */
-    @Override
-    public void onShowHideToolbar(boolean show) {
-        if (!isFinishing()) {
-            AniUtils.animateTopBar(mAppBar, show);
-        }
-    }
-
     /**
      * pager adapter containing post detail fragments
      **/
@@ -946,7 +856,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     mIdList.get(position).getPostId(),
                     mDirectOperation,
                     mCommentId,
-                    mIsRelatedPostView,
                     mInterceptedUri,
                     getPostListType(),
                     mPostSlugsResolutionUnderway);
@@ -1042,14 +951,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         }
     }
 
-    @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
-        ReaderPostDetailFragment fragment = getActiveDetailFragment();
-        if (fragment != null) {
-            fragment.onPositiveClicked(instanceTag);
-        }
-    }
-
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
@@ -1064,10 +965,5 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
                     null,
                     site);
         }
-    }
-
-    @Override
-    public void onScrollableViewInitialized(int containerId) {
-        mAppBar.setLiftOnScrollTargetViewId(containerId);
     }
 }

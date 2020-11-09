@@ -635,28 +635,28 @@ workflows:
           requires: [gutenberg-bundle-build]
       - promo-screenshots:
           requires: [raw-screenshots]
-#  Release Build:
-#    unless: << pipeline.parameters.translation_review_build >>
-#    jobs:
-#      - gutenberg-bundle-build:
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+(\.\d+)*(-rc-\d)?$/
-#      - lint:
-#          requires:
-#            - gutenberg-bundle-build
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+(\.\d+)*(-rc-\d)?$/
-#      - Release Build:
-#          requires:
-#            - lint 
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+(\.\d+)*(-rc-\d)?$/
+  Release Build:
+    unless: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - gutenberg-bundle-build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - lint:
+          requires:
+            - gutenberg-bundle-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - Release Build:
+          requires:
+            - lint 
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/

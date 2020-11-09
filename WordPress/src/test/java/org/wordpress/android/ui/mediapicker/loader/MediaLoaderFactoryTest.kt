@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mediapicker.loader
 
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
@@ -18,6 +18,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRA
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLibraryDataSource.MediaLibraryDataSourceFactory
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
@@ -26,7 +27,9 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var mediaLibraryDataSourceFactory: MediaLibraryDataSourceFactory
     @Mock lateinit var mediaLibraryDataSource: MediaLibraryDataSource
     @Mock lateinit var stockMediaDataSource: StockMediaDataSource
+    @Mock lateinit var gifMediaDataSource: GifMediaDataSource
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
@@ -36,7 +39,9 @@ class MediaLoaderFactoryTest {
                 deviceListBuilderFactory,
                 mediaLibraryDataSourceFactory,
                 stockMediaDataSource,
-                localeManagerWrapper
+                gifMediaDataSource,
+                localeManagerWrapper,
+                networkUtilsWrapper
         )
     }
 
@@ -44,10 +49,11 @@ class MediaLoaderFactoryTest {
     fun `returns device list builder on DEVICE source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 DEVICE,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = true,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = true,
                 editingEnabled = true,
                 queueResults = false,
@@ -60,7 +66,8 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         deviceListBuilder,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }
@@ -69,10 +76,11 @@ class MediaLoaderFactoryTest {
     fun `returns WP media source on WP_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 WP_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
@@ -86,7 +94,8 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         mediaLibraryDataSource,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }
@@ -95,10 +104,11 @@ class MediaLoaderFactoryTest {
     fun `returns stock media source on STOCK_LIBRARY source`() {
         val mediaPickerSetup = MediaPickerSetup(
                 STOCK_LIBRARY,
+                availableDataSources = setOf(),
                 canMultiselect = true,
                 requiresStoragePermissions = false,
                 allowedTypes = setOf(),
-                cameraEnabled = false,
+                cameraSetup = HIDDEN,
                 systemPickerEnabled = false,
                 editingEnabled = false,
                 queueResults = false,
@@ -111,29 +121,36 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         stockMediaDataSource,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }
 
     @Test
-    fun `throws exception on not implemented sources`() {
-        assertThatExceptionOfType(NotImplementedError::class.java).isThrownBy {
-            mediaLoaderFactory.build(
-                    MediaPickerSetup(
-                            GIF_LIBRARY,
-                            canMultiselect = true,
-                            requiresStoragePermissions = true,
-                            allowedTypes = setOf(),
-                            cameraEnabled = false,
-                            systemPickerEnabled = true,
-                            editingEnabled = true,
-                            queueResults = false,
-                            defaultSearchView = false,
-                            title = string.wp_media_title
-                    ),
-                    site
-            )
-        }
+    fun `returns gif media source on GIF_LIBRARY source`() {
+        val mediaPickerSetup = MediaPickerSetup(
+                GIF_LIBRARY,
+                availableDataSources = setOf(),
+                canMultiselect = true,
+                requiresStoragePermissions = false,
+                allowedTypes = setOf(),
+                cameraSetup = HIDDEN,
+                systemPickerEnabled = false,
+                editingEnabled = false,
+                queueResults = false,
+                defaultSearchView = true,
+                title = string.photo_picker_gif
+        )
+
+        val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
+
+        assertThat(mediaLoader).isEqualTo(
+                MediaLoader(
+                        gifMediaDataSource,
+                        localeManagerWrapper,
+                        networkUtilsWrapper
+                )
+        )
     }
 }

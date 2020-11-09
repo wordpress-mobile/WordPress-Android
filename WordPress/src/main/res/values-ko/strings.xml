@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-24 10:47:17+0000
+Translation-Revision-Date: 2020-10-20 01:00:49+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">매 릴리즈마다 더 많은 블록을 추가하려고 열심히 일하고 있습니다.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\'을(를) 완전히 지원하지 않습니다</string>
+    <string name="gutenberg_native_help_button">도움 버튼</string>
+    <string name="gutenberg_native_edit_using_web_editor">웹 편집기를 이용하여 편집하기</string>
+    <string name="gutenberg_native_choose_images">이미지 고르기</string>
+    <string name="stories_intro_create_story_post_label">스토리 글 만들기</string>
+    <string name="stories_intro_description_second">사이트에 새 블로그 글로 발행되기에 독자들이 하나도 놓치지 않습니다.</string>
+    <string name="stories_intro_title_second">스토리 글이 보이지 않습니다</string>
+    <string name="stories_intro_description_first">사진, 비디오, 그리고 문제를 혼합하여 방문자가 좋아하여 매력적이고 탭할 수 이는 이야기 글을 만드세요.</string>
+    <string name="stories_intro_title_first">이제 모두를 위한 이야기가 있습니다</string>
+    <string name="stories_intro_image_caption_second">이야기 제목의 예제</string>
+    <string name="stories_intro_image_caption_first">이야기 글을 만드는 방법</string>
+    <string name="stories_intro_main_subtitle">이야기 글을 일찍 접근할 수 있게 되었으니 한 번 사용해 보시기 바랍니다.</string>
+    <string name="stories_intro_main_title">이야기 글 소개</string>
+    <string name="mlp_generic_error">레이아웃을 가져오는 동안 오류가 생겼습니다</string>
+    <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
+    <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
+    <string name="mlp_preview_title">레이아웃 미리보기</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s의 사진 접근이 거부되었습니다. 이를 고치려면, 권한을 고치고 %2$s와(과) %3$s을(를) 켜세요.</string>
+    <string name="media_insert_failed">미디어 삽입을 실패했습니다.</string>
+    <string name="media_insert_failed_with_reason">미디어 삽입을 실패했습니다: %s</string>
+    <string name="photo_picker_wordpress_media_library">워드프레스 미디어 라이브러리에서 선택하기</string>
+    <string name="reader_label_toolbar_back">돌아가기</string>
+    <string name="reader_discover_empty_button_text">시작하기</string>
+    <string name="reader_discover_empty_title">새 블로그를 발견할 수 있는 토픽을 팔로우하세요</string>
+    <string name="reader_post_details_header_by_author_name">작성자</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
+    <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">스팸으로 표시하기</string>
+    <string name="stats_referrer_popup_menu_open_website">웹사이트 열기</string>
+    <string name="media_uploading_gif_library_photo">gif 미디어 업로드 중</string>
+    <string name="media_uploading_stock_library_photo">스톡 미디어 업로드 중</string>
+    <string name="media_uploading_default">미디어 업로드 중</string>
+    <string name="gutenberg_native_select_item">항목 선택하기</string>
+    <string name="gutenberg_native_search_or_type_url">검색하거나 URL 입력하기</string>
+    <string name="gutenberg_native_add_this_telephone_link">이 전화 링크 추가하기</string>
+    <string name="gutenberg_native_add_this_link">이 링크 추가하기</string>
+    <string name="gutenberg_native_add_this_email_link">이 이메일 링크 추가하기</string>
+    <string name="suggestion_no_connection">“인터넷 연결이 없습니다.\n제안을 사용할 수 없습니다.”</string>
     <string name="typeface_label_shrikhand">굵게</string>
     <string name="typeface_label_space_mono">모던</string>
     <string name="typeface_label_pacifico">발랄</string>
@@ -151,7 +190,6 @@ Language: ko_KR
     <string name="quick_start_dialog_update_site_title_message_short">&lt;b>%1$s&lt;/b>(을)를 눌러 새 제목 설정하기</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경사항도 취소될 것입니다. 계속하기 원하시는게 맞나요?</string>
     <string name="gutenberg_native_s_block_options">%s 블록 옵션</string>
-    <string name="gutenberg_native_remove_block">블록 제거하기</string>
     <string name="gutenberg_native_duplicate_block">블록 복제하기</string>
     <string name="gutenberg_native_copy_block">블록 복사하기</string>
     <string name="gutenberg_native_copied_block">복사된 블록</string>
@@ -166,11 +204,9 @@ Language: ko_KR
     <string name="error_update_site_title_network">사이트 제목을 업데이트할 수 없습니다. 네트워크 연결을 확인하고 다시 시도하세요.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">저장하지 않은 변경사항</string>
     <string name="gutenberg_native_open_link_in_a_browser">브라우저에서 링크 열기</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">이전 내용 시트로 탐색하기</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">사용자 정의 그라디언트로 탐색하기</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">사용자 정의 색상 선택기로 탐색하기</string>
     <string name="gutenberg_native_gradient_type">그라디언트 유형</string>
-    <string name="gutenberg_native_go_back">뒤로 가기</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">옵션을 선택하려면 두 번 탭하기</string>
     <string name="gutenberg_native_customize_gradient">그라디언트 사용자 정의하기</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -180,8 +216,6 @@ Language: ko_KR
     <string name="menu_content_info">콘텐츠 구조</string>
     <string name="everyone">모두</string>
     <string name="me">나</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">당사는 각 릴리스에 더 많은 블록을 추가하기 위해 노력하고 있습니다. 그동안 기기의 웹 브라우저를 사용하여 이 블록을 편집할 수도 있습니다.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">웹 브라우저에서 블록 편집하기</string>
     <string name="gutenberg_native_dismiss">해제</string>
     <string name="prepublishing_nudges_home_tags_not_set">설정하지 않음</string>
     <string name="prepublishing_tags_description">태그는 독자들에게 이 글이 무엇에 관한 글인지 말하도록 돕습니다.</string>
@@ -199,7 +233,6 @@ Language: ko_KR
     <string name="post_list_move_trashed_post_to_draft_dialog_message">휴지통에 있는 글은 편집할 수 없습니다. 이 글의 상태를 “초안”으로 변경하여 작업할 수 있기를 원하십니까?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">글을 초안으로 옮깁니까?</string>
     <string name="reader_label_choose_your_interests">관심 항목을 고르세요</string>
-    <string name="reader_label_discover_follow_tags">좋아하는 태그를 발견하고 따르기</string>
     <string name="reader_choose_interests_content_description">관심사항 고르기</string>
     <string name="reader_btn_done">완료</string>
     <string name="reader_btn_select_few_interests">계속하기 위해 몇 가지 더 선택하기</string>
@@ -399,9 +432,9 @@ Language: ko_KR
     <string name="reader_btn_selected_filter_tick_content_description">선택되었습니다.</string>
     <string name="reader_btn_select_filter_content_description">사이트 또는 태그를 선택하여 글을 필터링합니다.</string>
     <string name="reader_btn_remove_filter_content_description">현재 필터 제거</string>
-    <string name="reader_title_subs">태그 및 사이트 관리</string>
+    <string name="reader_title_subs">토픽과 사이트 관리하기</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 태그의 최신 글을 확인하세요.</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">워드프레스닷컴에 로그인하여 팔로우하는 토픽의 최신 글을 확인하세요</string>
     <string name="reader_filter_self_hosted_empty_sites_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 사이트의 최신 글을 확인하세요.</string>
     <string name="gutenberg_native_template_preview">템플릿 미리보기</string>
     <string name="gutenberg_native_replace_current_block">현재 블록 대체하기</string>
@@ -409,9 +442,9 @@ Language: ko_KR
     <string name="gutenberg_native_add_to_beginning">처음에 추가하기</string>
     <string name="gutenberg_native_add_block_before">이전에 블록 추가</string>
     <string name="gutenberg_native_add_block_after">다음에 블록 추가</string>
-    <string name="reader_filter_empty_tags_action">태그 추가</string>
+    <string name="reader_filter_empty_tags_action">토픽 추가하기</string>
     <string name="reader_filter_empty_sites_action">사이트 팔로우</string>
-    <string name="reader_filter_empty_tags_list">태그를 추가하여 특정 주제의 게시물을 팔로우할 수 있습니다</string>
+    <string name="reader_filter_empty_tags_list">토픽을 추가하여 특정 주제의 글을 팔로우할 수 있습니다</string>
     <string name="reader_filter_empty_sites_list">팔로우하고 있는 사이트의 최신 글을 보십시오</string>
     <string name="reader_filter_main_title">팔로우 중</string>
     <string name="reader_filter_cta">필터</string>
@@ -469,7 +502,7 @@ Language: ko_KR
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="reader_discover_display_name">검색</string>
     <string name="reader_save_for_later_display_name">저장됨</string>
-    <string name="reader_filter_tags_title">태그</string>
+    <string name="reader_filter_tags_title">토픽</string>
     <string name="reader_filter_sites_title">사이트</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -480,7 +513,6 @@ Language: ko_KR
     <string name="posts_cannot_be_started">지금 이 글을 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="site_cannot_be_loaded">사이트의 데이터를 현재 로드할 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">각 릴리스에 더 많은 블록을 추가하기 위해 노력하고 있습니다. 그 사이에 웹에서 이 글을 편집할 수도 있습니다.</string>
     <string name="gutenberg_native_ungroup">그룹 해제</string>
     <string name="gutenberg_native_translate">번역</string>
     <string name="gutenberg_native_title">제목:</string>
@@ -493,8 +525,6 @@ Language: ko_KR
     <string name="gutenberg_native_size">크기</string>
     <string name="gutenberg_native_sidebar_title_plugin">사이드바 제목 플러그인</string>
     <string name="gutenberg_native_show_section">섹션 표시</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\'은(는) iOS용 워드프레스에서 아직 지원되지 않습니다.</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\'은(는) Android용 워드프레스에서 아직 지원되지 않습니다.</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>
     <string name="gutenberg_native_s_block_empty">%s 블록. 비어 있음</string>
     <string name="gutenberg_native_cut_block">블록 잘라내기</string>
@@ -517,8 +547,6 @@ Language: ko_KR
     <string name="gutenberg_native_move_block_up">블록을 위로 이동</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
     <string name="gutenberg_native_move_block_down">블록을 아래로 이동</string>
-    <string name="gutenberg_native_link_text">링크 텍스트</string>
-    <string name="gutenberg_native_link_inserted">링크 삽입됨</string>
     <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
     <string name="gutenberg_native_hide_keyboard">키보드 숨기기</string>
     <string name="gutenberg_native_here_is_the_panel_content">패널 콘텐츠입니다!</string>
@@ -543,7 +571,6 @@ Language: ko_KR
     <string name="gutenberg_native_alt_text">대체 텍스트</string>
     <string name="gutenberg_native_add_video">비디오 추가</string>
     <string name="gutenberg_native_add_url">URL 추가</string>
-    <string name="gutenberg_native_add_link_text">링크 텍스트 추가</string>
     <string name="gutenberg_native_add_image_or_video">이미지 또는 비디오 추가</string>
     <string name="gutenberg_native_add_image">이미지 추가</string>
     <string name="gutenberg_native_add_block_here">블록을 여기에 추가</string>
@@ -1064,8 +1091,8 @@ Language: ko_KR
     <string name="quick_start_button_negative">지금 안 함</string>
     <string name="content_description_more">더 보기</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
-    <string name="reader_empty_followed_tags_title">팔로우된 태그</string>
-    <string name="reader_empty_followed_tags_subtitle">즐겨 찾는 주제에 대한 게시물을 찾으려면 여기에 태그를 추가하세요.</string>
+    <string name="reader_empty_followed_tags_title">팔로우하고 있는 토픽이 없습니다</string>
+    <string name="reader_empty_followed_tags_subtitle">즐겨 찾는 토픽에 대한 글을 찾으려면 여기에 토픽을 추가하세요</string>
     <string name="login_to_to_connect_jetpack">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
     <string name="install_jetpack_retry">다시 시도</string>
     <string name="install_jetpack_continue">설정</string>
@@ -1805,8 +1832,6 @@ Language: ko_KR
     <string name="reader_toast_err_already_liked">이미 해당 댓글에 좋아요 표시를 했습니다.</string>
     <string name="reader_toast_err_comment_not_found">댓글이 없습니다.</string>
     <string name="reader_toast_err_cannot_like_post">이 글에 좋아요 표시를 하지 못했습니다.</string>
-    <string name="reader_title_post_detail_wpcom">워드프레스닷컴 글</string>
-    <string name="reader_title_deeplink">워드프레스 독자</string>
     <string name="error_notif_q_action_reply">댓글에 응답할 수 없습니다. 나중에 다시 시도하세요.</string>
     <string name="error_notif_q_action_approve">댓글을 승인할 수 없습니다. 나중에 다시 시도하세요.</string>
     <string name="error_notif_q_action_like">댓글에 좋아요 표시를 할 수 없습니다. 나중에 다시 시도하세요.</string>
@@ -1883,7 +1908,6 @@ Language: ko_KR
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
     <string name="reader_empty_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
     <string name="reader_hint_post_search">워드프레스닷컴 검색</string>
-    <string name="reader_title_related_post_detail">관련 글</string>
     <string name="preview_screen_links_disabled">미리보기 화면에서 링크가 비활성화되어 있습니다.</string>
     <string name="send">보내기</string>
     <string name="person_removed">\@%1$s이(가) 성공적으로 제거됨</string>
@@ -2151,7 +2175,7 @@ Language: ko_KR
     <string name="reader_short_like_count_one">좋아요 1개</string>
     <string name="reader_short_like_count_none">좋아요</string>
     <string name="reader_label_follow_count">%,d명의 팔로워</string>
-    <string name="reader_menu_tags">태그 및 블로그 편집</string>
+    <string name="reader_menu_tags">토픽과 블로그 편집하기</string>
     <string name="reader_title_post_detail">리더 글</string>
     <string name="notifications_push_summary">사용자 기기에 표시되는 알림에 대한 설정입니다.</string>
     <string name="notifications_email_summary">사용자 계정에 연결된 이메일로 전송되는 알림에 대한 설정입니다.</string>
@@ -2251,8 +2275,7 @@ Language: ko_KR
     <string name="cab_selected">%d개 선택함</string>
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
     <string name="reader_empty_comments">아직 댓글이 없음</string>
-    <string name="reader_empty_posts_in_tag">이 태그가 지정된 게시물이 없음</string>
-    <string name="reader_label_liked_by">좋아요를 표시한 회원:</string>
+    <string name="reader_empty_posts_in_tag">이 토픽의 글이 없습니다</string>
     <string name="reader_label_like">좋아요</string>
     <string name="reader_label_view_original">원본 기사 보기</string>
     <string name="reader_label_comments_closed">댓글을 남길 수 없습니다.</string>
@@ -2283,9 +2306,9 @@ Language: ko_KR
     <string name="reader_toast_err_already_follow_blog">이 블로그를 이미 팔로우하고 있습니다.</string>
     <string name="reader_toast_err_get_blog_info">이 블로그를 표시할 수 없습니다.</string>
     <string name="reader_label_followed_blog">팔로우한 블로그</string>
-    <string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
+    <string name="reader_hint_add_tag_or_url">URL이나 팔로우할 토픽을 입력하세요</string>
     <string name="reader_page_followed_blogs">팔로우된 블로그</string>
-    <string name="reader_page_followed_tags">팔로우된 태그</string>
+    <string name="reader_page_followed_tags">팔로우한 토픽</string>
     <string name="reader_title_blog_preview">리더 블로그</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
@@ -2313,8 +2336,8 @@ Language: ko_KR
     <string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>
     <string name="gallery_error">미디어 항목을 로드 할 수 없습니다.</string>
     <string name="no_network_message">사용 가능한 네트워크가 없습니다. 네트워크에 연결하고 다시 시도하십시오 .</string>
-    <string name="reader_toast_err_remove_tag">태그를 삭제할 수 없습니다.</string>
-    <string name="reader_toast_err_add_tag">태그를 추가할 수 없습니다.</string>
+    <string name="reader_toast_err_remove_tag">이 토픽을 삭제할 수 없습니다</string>
+    <string name="reader_toast_err_add_tag">이 토픽을 추가할 수 없습니다.</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
     <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
     <string name="error_blog_hidden">이 블로그는 비공개 설정이되어 로드 할 수 없습니다. 설정 화면에서 다시 활성하고 다시 시도하십시오.</string>
@@ -2384,8 +2407,8 @@ Language: ko_KR
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
     <string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
     <string name="reader_toast_err_share_intent">공유에 실패</string>
-    <string name="reader_toast_err_tag_invalid">유효한 태그가 없습니다</string>
-    <string name="reader_toast_err_tag_exists">이미 이 태그를 팔로우 중입니다</string>
+    <string name="reader_toast_err_tag_invalid">유효한 토픽이 아닙니다</string>
+    <string name="reader_toast_err_tag_exists">이미 이 토픽을 팔로우하고 있습니다</string>
     <string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
     <string name="reader_likes_only_you">\"좋아요\"를 클릭 했습니다</string>
     <string name="reader_likes_one">1명이 \"좋아요\"를 달았습니다</string>

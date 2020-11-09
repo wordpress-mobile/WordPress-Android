@@ -28,29 +28,38 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.EditMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.Exit
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.IconClickEvent
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.InsertMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewMedia
+import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.CAPTURE_PHOTO
+import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.SWITCH_SOURCE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.GIF_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.STOCK_LIBRARY
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.SYSTEM_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.CAMERA
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Data
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Empty
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.PhotoListUiModel.Hidden
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SearchUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
@@ -59,6 +68,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -69,7 +79,9 @@ import javax.inject.Inject
 class MediaPickerFragment : Fragment() {
     enum class MediaPickerIconType {
         ANDROID_CHOOSE_FROM_DEVICE,
-        WP_STORIES_CAPTURE;
+        SWITCH_SOURCE,
+        WP_STORIES_CAPTURE,
+        CAPTURE_PHOTO;
 
         companion object {
             @JvmStatic
@@ -82,14 +94,13 @@ class MediaPickerFragment : Fragment() {
 
     enum class ChooserContext(
         val intentAction: String,
-        val requestCode: Int,
         val title: UiStringRes,
         val mediaTypeFilter: String
     ) {
-        PHOTO(ACTION_GET_CONTENT, RequestCodes.PICTURE_LIBRARY, UiStringRes(R.string.pick_photo), "image/*"),
-        VIDEO(ACTION_GET_CONTENT, RequestCodes.VIDEO_LIBRARY, UiStringRes(R.string.pick_video), "video/*"),
-        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, RequestCodes.MEDIA_LIBRARY, UiStringRes(R.string.pick_media), "*/*"),
-        MEDIA_FILE(ACTION_OPEN_DOCUMENT, RequestCodes.FILE_LIBRARY, UiStringRes(R.string.pick_file), "*/*");
+        PHOTO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_photo), "image/*"),
+        VIDEO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_video), "video/*"),
+        PHOTO_OR_VIDEO(ACTION_GET_CONTENT, UiStringRes(R.string.pick_media), "*/*"),
+        MEDIA_FILE(ACTION_OPEN_DOCUMENT, UiStringRes(R.string.pick_file), "*/*");
     }
 
     sealed class MediaPickerAction {
@@ -100,6 +111,8 @@ class MediaPickerFragment : Fragment() {
         ) : MediaPickerAction()
 
         data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
+        object OpenCameraForPhotos : MediaPickerAction()
+        data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
     }
 
     sealed class MediaPickerIcon(val type: MediaPickerIconType) {
@@ -107,12 +120,23 @@ class MediaPickerFragment : Fragment() {
             val allowedTypes: Set<MediaType>
         ) : MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
 
+        data class SwitchSource(val dataSource: DataSource) : MediaPickerIcon(SWITCH_SOURCE)
+
         object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
+        object CapturePhoto : MediaPickerIcon(CAPTURE_PHOTO)
 
         fun toBundle(bundle: Bundle) {
             bundle.putString(KEY_LAST_TAPPED_ICON, type.name)
-            if (this is ChooseFromAndroidDevice) {
-                bundle.putStringArrayList(KEY_LAST_TAPPED_ICON_ALLOWED_TYPES, ArrayList(allowedTypes.map { it.name }))
+            when (this) {
+                is ChooseFromAndroidDevice -> {
+                    bundle.putStringArrayList(
+                            KEY_LAST_TAPPED_ICON_ALLOWED_TYPES,
+                            ArrayList(allowedTypes.map { it.name })
+                    )
+                }
+                is SwitchSource -> {
+                    bundle.putInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, this.dataSource.ordinal)
+                }
             }
         }
 
@@ -132,6 +156,16 @@ class MediaPickerFragment : Fragment() {
                         ChooseFromAndroidDevice(allowedTypes)
                     }
                     WP_STORIES_CAPTURE -> WpStoriesCapture
+                    CAPTURE_PHOTO -> CapturePhoto
+                    SWITCH_SOURCE -> {
+                        val ordinal = bundle.getInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, -1)
+                        if (ordinal != -1) {
+                            val dataSource = DataSource.values()[ordinal]
+                            SwitchSource(dataSource)
+                        } else {
+                            null
+                        }
+                    }
                 }
             }
         }
@@ -141,7 +175,7 @@ class MediaPickerFragment : Fragment() {
      * parent activity must implement this listener
      */
     interface MediaPickerListener {
-        fun onItemsChosen(uriList: List<Identifier>)
+        fun onItemsChosen(identifiers: List<Identifier>)
         fun onIconClicked(action: MediaPickerAction)
     }
 
@@ -151,6 +185,7 @@ class MediaPickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: MediaPickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -182,8 +217,7 @@ class MediaPickerFragment : Fragment() {
         if (savedInstanceState != null) {
             lastTappedIcon = MediaPickerIcon.fromBundle(savedInstanceState)
             if (savedInstanceState.containsKey(KEY_SELECTED_IDS)) {
-                selectedIds = savedInstanceState.getParcelableArrayList<Identifier.Parcel>(KEY_SELECTED_IDS)
-                        ?.map { Identifier.fromParcel(it) }
+                selectedIds = savedInstanceState.getParcelableArrayList<Identifier>(KEY_SELECTED_IDS)?.map { it }
             }
         }
 
@@ -224,38 +258,42 @@ class MediaPickerFragment : Fragment() {
             }
         })
 
-        viewModel.onNavigateToPreview.observe(viewLifecycleOwner, Observer
+        viewModel.onNavigate.observe(viewLifecycleOwner, Observer
         {
-            it.getContentIfNotHandled()?.let { uri ->
-                MediaPreviewActivity.showPreview(
-                        requireContext(),
-                        null,
-                        uri.toString()
-                )
-                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
-            }
-        })
-
-        viewModel.onNavigateToEdit.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { uris ->
-                val inputData = WPMediaUtils.createListOfEditImageInputData(
-                        requireContext(),
-                        uris.map { wrapper -> wrapper.uri }
-                )
-                ActivityLauncher.openImageEditor(activity, inputData)
-            }
-        })
-
-        viewModel.onInsert.observe(viewLifecycleOwner, Observer
-        { event ->
-            event.getContentIfNotHandled()?.let { selectedIds ->
-                listener?.onItemsChosen(selectedIds)
-            }
-        })
-
-        viewModel.onIconClicked.observe(viewLifecycleOwner, Observer {
-            it?.getContentIfNotHandled()?.let { (action) ->
-                listener?.onIconClicked(action)
+            it.getContentIfNotHandled()?.let { navigationEvent ->
+                when (navigationEvent) {
+                    is PreviewUrl -> {
+                        MediaPreviewActivity.showPreview(
+                                requireContext(),
+                                null,
+                                navigationEvent.url
+                        )
+                        AccessibilityUtils.setActionModeDoneButtonContentDescription(
+                                activity,
+                                getString(R.string.cancel)
+                        )
+                    }
+                    is PreviewMedia -> MediaPreviewActivity.showPreview(
+                            requireContext(),
+                            null,
+                            navigationEvent.media,
+                            null
+                    )
+                    is EditMedia -> {
+                        val inputData = WPMediaUtils.createListOfEditImageInputData(
+                                requireContext(),
+                                navigationEvent.uris.map { wrapper -> wrapper.uri }
+                        )
+                        ActivityLauncher.openImageEditor(activity, inputData)
+                    }
+                    is InsertMedia -> listener?.onItemsChosen(navigationEvent.identifiers)
+                    is IconClickEvent -> listener?.onIconClicked(navigationEvent.action)
+                    Exit -> {
+                        val activity = requireActivity()
+                        activity.setResult(Activity.RESULT_CANCELED)
+                        activity.finish()
+                    }
+                }
             }
         })
 
@@ -267,18 +305,12 @@ class MediaPickerFragment : Fragment() {
                 }
             }
         })
-        viewModel.onExit.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                val activity = requireActivity()
-                activity.setResult(Activity.RESULT_CANCELED)
-                activity.finish()
-            }
-        })
         viewModel.onSnackbarMessage.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { messageHolder ->
                 showSnackbar(messageHolder)
             }
         })
+
         setupProgressDialog()
 
         viewModel.start(selectedIds, mediaPickerSetup, lastTappedIcon, site)
@@ -294,12 +326,26 @@ class MediaPickerFragment : Fragment() {
         val browseMenuItem = checkNotNull(menu.findItem(R.id.mnu_browse_item)) {
             "Menu does not contain mandatory browse item"
         }
+        val mediaLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_media_library)) {
+            "Menu does not contain mandatory media library item"
+        }
+        val deviceMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_device)) {
+            "Menu does not contain device library item"
+        }
+        val stockLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_stock_library)) {
+            "Menu does not contain mandatory stock library item"
+        }
+        val tenorLibraryMenuItem = checkNotNull(menu.findItem(R.id.mnu_choose_from_tenor_library)) {
+            "Menu does not contain mandatory tenor library item"
+        }
+
         initializeSearchView(searchMenuItem)
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             val searchView = searchMenuItem.actionView as SearchView
 
             if (uiState.searchUiModel is SearchUiModel.Expanded && !searchMenuItem.isActionViewExpanded) {
                 searchMenuItem.expandActionView()
+                searchView.maxWidth = Integer.MAX_VALUE
                 searchView.setQuery(uiState.searchUiModel.filter, true)
                 searchView.setOnCloseListener { !uiState.searchUiModel.closeable }
             } else if (uiState.searchUiModel is SearchUiModel.Collapsed && searchMenuItem.isActionViewExpanded) {
@@ -307,13 +353,33 @@ class MediaPickerFragment : Fragment() {
             }
 
             searchMenuItem.isVisible = uiState.searchUiModel !is SearchUiModel.Hidden
-            browseMenuItem.isVisible = uiState.browseMenuUiModel.isVisible
+
+            val shownActions = uiState.browseMenuUiModel.shownActions
+            browseMenuItem.isVisible = shownActions.contains(SYSTEM_PICKER)
+            mediaLibraryMenuItem.isVisible = shownActions.contains(WP_MEDIA_LIBRARY)
+            deviceMenuItem.isVisible = shownActions.contains(DEVICE)
+            stockLibraryMenuItem.isVisible = shownActions.contains(STOCK_LIBRARY)
+            tenorLibraryMenuItem.isVisible = shownActions.contains(GIF_LIBRARY)
         })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.mnu_browse_item) {
-            viewModel.onBrowseForItems()
+        when (item.itemId) {
+            R.id.mnu_browse_item -> {
+                viewModel.onMenuItemClicked(SYSTEM_PICKER)
+            }
+            R.id.mnu_choose_from_media_library -> {
+                viewModel.onMenuItemClicked(WP_MEDIA_LIBRARY)
+            }
+            R.id.mnu_choose_from_device -> {
+                viewModel.onMenuItemClicked(DEVICE)
+            }
+            R.id.mnu_choose_from_stock_library -> {
+                viewModel.onMenuItemClicked(STOCK_LIBRARY)
+            }
+            R.id.mnu_choose_from_tenor_library -> {
+                viewModel.onMenuItemClicked(GIF_LIBRARY)
+            }
         }
         return true
     }
@@ -373,21 +439,54 @@ class MediaPickerFragment : Fragment() {
     }
 
     private fun setupPhotoList(uiModel: PhotoListUiModel) {
+        loading_view.visibility = if (uiModel == PhotoListUiModel.Loading) View.VISIBLE else View.GONE
+        actionable_empty_view.visibility = if (uiModel is PhotoListUiModel.Empty) View.VISIBLE else View.GONE
+        recycler.visibility = if (uiModel is PhotoListUiModel.Data) View.VISIBLE else View.INVISIBLE
         when (uiModel) {
-            is Data -> {
-                actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.VISIBLE
+            is PhotoListUiModel.Data -> {
                 setupAdapter(uiModel.items)
             }
-            Empty -> {
-                actionable_empty_view.visibility = View.VISIBLE
-                recycler.visibility = View.INVISIBLE
+            is PhotoListUiModel.Empty -> {
                 setupAdapter(listOf())
+                actionable_empty_view.updateLayoutForSearch(uiModel.isSearching, 0)
+                actionable_empty_view.title.text = uiHelpers.getTextOfUiString(requireContext(), uiModel.title)
+
+                actionable_empty_view.subtitle.applyOrHide(uiModel.htmlSubtitle) { htmlSubtitle ->
+                    actionable_empty_view.subtitle.text = Html.fromHtml(
+                            uiHelpers.getTextOfUiString(
+                                    requireContext(),
+                                    htmlSubtitle
+                            ).toString()
+                    )
+                    actionable_empty_view.subtitle.movementMethod = WPLinkMovementMethod.getInstance()
+                }
+                actionable_empty_view.image.applyOrHide(uiModel.image) { image ->
+                    this.setImageResource(image)
+                }
+                actionable_empty_view.bottomImage.applyOrHide(uiModel.bottomImage) { bottomImage ->
+                    this.setImageResource(bottomImage)
+                    if (uiModel.bottomImageDescription != null) {
+                        this.contentDescription = uiHelpers.getTextOfUiString(
+                                requireContext(),
+                                uiModel.bottomImageDescription
+                        ).toString()
+                    }
+                }
+                actionable_empty_view.button.applyOrHide(uiModel.retryAction) { action ->
+                    this.setOnClickListener {
+                        action()
+                    }
+                }
             }
-            Hidden -> {
-                actionable_empty_view.visibility = View.GONE
-                recycler.visibility = View.INVISIBLE
-            }
+        }
+    }
+
+    private fun <T, U : View> U.applyOrHide(item: T?, action: U.(T) -> Unit) {
+        if (item != null) {
+            this.visibility = View.VISIBLE
+            this.action(item)
+        } else {
+            this.visibility = View.GONE
         }
     }
 
@@ -407,17 +506,19 @@ class MediaPickerFragment : Fragment() {
                         1
                     }
                 }
+        val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
+        recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     private fun setupFab(fabUiModel: FabUiModel) {
         if (fabUiModel.show) {
-            wp_stories_take_picture.show()
-            wp_stories_take_picture.setOnClickListener {
+            fab_take_picture.show()
+            fab_take_picture.setOnClickListener {
                 fabUiModel.action()
             }
         } else {
-            wp_stories_take_picture.hide()
+            fab_take_picture.hide()
         }
     }
 
@@ -429,10 +530,10 @@ class MediaPickerFragment : Fragment() {
                     is Visible -> {
                         if (progressDialog == null || progressDialog?.isShowing == false) {
                             val builder: Builder = MaterialAlertDialogBuilder(requireContext())
-                            builder.setTitle(string.media_uploading_stock_library_photo)
-                            builder.setView(layout.media_picker_progress_dialog)
+                            builder.setTitle(this.title)
+                            builder.setView(R.layout.media_picker_progress_dialog)
                             builder.setNegativeButton(
-                                    string.cancel
+                                    R.string.cancel
                             ) { _, _ -> this.cancelAction() }
                             builder.setOnCancelListener { this.cancelAction() }
                             builder.setCancelable(true)
@@ -473,9 +574,9 @@ class MediaPickerFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         viewModel.lastTappedIcon?.toBundle(outState)
-        val selectedIds = viewModel.selectedIdentifiers().map { it.toParcel() }
+        val selectedIds = viewModel.selectedIdentifiers()
         if (selectedIds.isNotEmpty()) {
-            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList(selectedIds))
+            outState.putParcelableArrayList(KEY_SELECTED_IDS, ArrayList<Identifier>(selectedIds))
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
@@ -543,6 +644,7 @@ class MediaPickerFragment : Fragment() {
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
         private const val KEY_LAST_TAPPED_ICON_ALLOWED_TYPES = "last_tapped_icon_allowed_types"
+        private const val KEY_LAST_TAPPED_ICON_DATA_SOURCE = "last_tapped_icon_data_source"
         private const val KEY_SELECTED_IDS = "selected_ids"
         private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3

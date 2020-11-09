@@ -1202,16 +1202,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.removeMedia(MediaPredicate.getLocalMediaIdPredicate(mediaId));
     }
 
-    @Override
-    public boolean showSavingProgressDialogIfNeeded() {
-        return false;
-    }
-
-    @Override
-    public boolean hideSavingProgressDialog() {
-        return false;
-    }
-
     @Override public void mediaSelectionCancelled() {
         // noop implementation for shared interface with block editor
     }
@@ -1656,6 +1646,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void setIdAttributeOnMedia(AztecAttributes attrs, String idName, String localMediaId) {
         attrs.setValue(idName, localMediaId);
         mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
+    }
+
+    @Override
+    public void showNotice(String message) {
+        ToastUtils.showToast(getActivity(), message).show();
     }
 
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,

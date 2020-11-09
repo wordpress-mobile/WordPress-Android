@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mediapicker.loader
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.MediaUtils
 import org.wordpress.android.fluxc.utils.MimeTypes
 import org.wordpress.android.modules.BG_THREAD
@@ -14,6 +15,8 @@ import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
 import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult
+import org.wordpress.android.ui.mediapicker.loader.MediaSource.MediaLoadingResult.Empty
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.LocaleManagerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -76,7 +79,14 @@ class DeviceListBuilder(
                 }
             }
             mediaItems.sortByDescending { it.dataModified }
-            MediaLoadingResult.Success(mediaItems, lastShownTimestamp > 0L)
+            if (filter.isNullOrEmpty() || mediaItems.isNotEmpty()) {
+                MediaLoadingResult.Success(mediaItems, lastShownTimestamp > 0L)
+            } else {
+                Empty(
+                        UiStringRes(R.string.media_empty_search_list),
+                        image = R.drawable.img_illustration_empty_results_216dp
+                )
+            }
         }
     }
 

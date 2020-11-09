@@ -1,3 +1,2 @@
-- Block editor: Edit unsupported blocks by enabling Jetpack SSO from the missing block alert. Use the link picker to add URLs to posts. Double-tap text fields in accessibility mode as expected.
-- Improved My Site layout for large-screen devices.
+* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
 
