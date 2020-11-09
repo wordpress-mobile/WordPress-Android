@@ -40,6 +40,7 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.FAILURE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.SUCCESS
+import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 
@@ -48,7 +49,7 @@ private const val DOMAIN = ".wordpress.com"
 private const val URL = "$SUB_DOMAIN$DOMAIN"
 private const val REMOTE_SITE_ID = 1L
 private const val LOCAL_SITE_ID = 2
-private val SITE_CREATION_STATE = SiteCreationState(1, URL)
+private val SITE_CREATION_STATE = SiteCreationState(1, defaultTemplateSlug, URL)
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
