@@ -243,6 +243,7 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                     MediaError error = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
                     error.message = response.message();
                     error.logMessage = "XMLRPC: error uploading media";
+                    error.statusCode = response.code();
                     notifyMediaUploaded(media, error);
                 }
             }
