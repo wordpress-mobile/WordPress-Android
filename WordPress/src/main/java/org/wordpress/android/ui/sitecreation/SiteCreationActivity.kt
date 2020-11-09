@@ -35,7 +35,6 @@ import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
-import org.wordpress.android.ui.sitecreation.theme.SiteDesignsScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.HomePagePickerFeatureConfig
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -44,7 +43,6 @@ import javax.inject.Inject
 class SiteCreationActivity : LocaleAwareActivity(),
         SegmentsScreenListener,
         DomainsScreenListener,
-        SiteDesignsScreenListener,
         SitePreviewScreenListener,
         OnHelpClickedListener,
         BasicDialogPositiveClickInterface,
@@ -111,14 +109,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
         hppViewModel.onBackButtonPressed.observe(this, Observer {
             mainViewModel.onBackPressed()
         })
+        hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
+            mainViewModel.onSiteDesignSelected(design.template, design.segmentId)
+        })
     }
 
     override fun onSegmentSelected(segmentId: Long) {
         mainViewModel.onSegmentSelected(segmentId)
-    }
-
-    override fun onSiteDesignSelected(siteDesign: String, segmentId: Long?) {
-        mainViewModel.onSiteDesignSelected(siteDesign, segmentId)
     }
 
     override fun onDomainSelected(domain: String) {
