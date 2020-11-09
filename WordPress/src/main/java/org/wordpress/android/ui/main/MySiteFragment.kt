@@ -774,12 +774,7 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (consolidatedMediaPickerFeatureConfig.isEnabled() ||
-                        !storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                                data,
-                                activity,
-                                selectedSite
-                        )) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)

@@ -28,7 +28,7 @@ class StoriesMediaPickerResultHandler
                     PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
             )
             return true
-        } else if (consolidatedMediaPickerFeatureConfig.isEnabled() || isWPStoriesMediaBrowserTypeResult(data)) {
+        } else if (isWPStoriesMediaBrowserTypeResult(data)) {
             if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                 ActivityLauncher.addNewStoryWithMediaIdsForResult(
                         activity,
