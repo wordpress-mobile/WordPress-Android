@@ -2956,7 +2956,6 @@
     <string name="label_frame_errored">errored</string>
     <string name="label_text_alignment_button">Change text alignment</string>
     <string name="label_text_color_button">Change text color</string>
-    <string name="menu_delete_page">Delete slide</string>
     <string name="dialog_discard_page_title">Delete story slide?</string>
     <string name="dialog_discard_page_message">This slide will be removed from your story.</string>
     <string name="dialog_discard_errored_page_message">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
