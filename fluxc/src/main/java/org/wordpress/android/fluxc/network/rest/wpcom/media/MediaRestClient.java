@@ -275,7 +275,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                AppLog.w(T.MEDIA, "media upload failed: " + e);
+                String message = "media upload failed: " + e;
+                AppLog.w(T.MEDIA, message);
                 if (!mCurrentUploadCalls.containsKey(media.getId())) {
                     // This call has already been removed from the in-progress list - probably because it was cancelled
                     // In that case this has already been handled and there's nothing to do
@@ -283,6 +284,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 }
 
                 MediaError error = MediaError.fromIOException(e);
+                error.logMessage = message;
                 notifyMediaUploaded(media, error);
             }
         });
