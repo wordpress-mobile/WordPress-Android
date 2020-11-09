@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.home_page_picker_fragment.*
+import kotlinx.android.synthetic.main.home_page_picker_loading_skeleton.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
@@ -48,7 +49,14 @@ class HomePagePickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.home_page_picker_fragment, container, false)
+        val view = inflater.inflate(R.layout.home_page_picker_fragment, container, false)
+        val skeletonCardView = view.findViewById<View>(R.id.skeletonCardView)
+        skeletonCardView.minimumHeight = thumbDimensionProvider.height
+        skeletonCardView.minimumWidth = thumbDimensionProvider.width
+        (skeletonCardView.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
+            it.marginStart = thumbDimensionProvider.calculatedStartMargin
+        }
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

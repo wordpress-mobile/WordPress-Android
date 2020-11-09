@@ -396,6 +396,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.onStoryDiscarded()
     }
 
+    override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
+        // no op
+        // TODO this will be implemented after the Story block support lands in develop
+    }
+
     private fun openPrepublishingBottomSheet() {
         val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
         if (fragment == null) {
