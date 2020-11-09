@@ -31,6 +31,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import javax.inject.Inject
 import javax.inject.Named
 
+typealias DateRange = Pair<Long, Long>
+
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
@@ -64,6 +66,10 @@ class ActivityLogViewModel @Inject constructor(
     val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
 
+    private val _showDateRangePicker = SingleLiveEvent<ShowDateRangePicker>()
+    val showDateRangePicker: LiveData<ShowDateRangePicker>
+        get() = _showDateRangePicker
+
     private val _moveToTop = SingleLiveEvent<Unit>()
     val moveToTop: SingleLiveEvent<Unit>
         get() = _moveToTop
@@ -90,6 +96,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private var lastRewindActivityId: String? = null
     private var lastRewindStatus: Status? = null
+    private var currentDateRangeFilter: DateRange? = null
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
             lastRewindActivityId = it?.activityLogItem?.activityID
@@ -152,7 +159,13 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    fun onDateRangeSelected(dateRange: Pair<Long, Long>?) {
+    fun dateRangePickerClicked() {
+        _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
+    }
+
+    fun onDateRangeSelected(dateRange: DateRange?) {
+        currentDateRangeFilter = dateRange
+        // TODO malinjir: refetch/load data
     }
 
     fun onRewindConfirmed(rewindId: String) {
@@ -297,4 +310,6 @@ class ActivityLogViewModel @Inject constructor(
             _eventListStatus.value = DONE
         }
     }
+
+    data class ShowDateRangePicker(val initialSelection: DateRange?)
 }

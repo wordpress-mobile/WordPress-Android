@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.datepicker.MaterialDatePicker.Builder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
@@ -27,6 +26,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -77,7 +77,7 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        date_range_picker.setOnClickListener { showDateRangePicker() }
+        date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
 
         setupObservers()
 
@@ -104,6 +104,10 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.dateRangePickerVisibility.observe(viewLifecycleOwner, Observer { visibility ->
             uiHelpers.updateVisibility(date_range_picker, visibility)
+        })
+
+        viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
+            showDateRangePicker(event.initialSelection)
         })
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
@@ -142,8 +146,9 @@ class ActivityLogListFragment : Fragment() {
         }
     }
 
-    private fun showDateRangePicker() {
+    private fun showDateRangePicker(initialDateRange: DateRange?) {
         val builder = Builder.dateRangePicker()
+        builder.setSelection(initialDateRange)
         val picker = builder.build()
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
         picker.show(parentFragmentManager, DATE_PICKER_TAG)
