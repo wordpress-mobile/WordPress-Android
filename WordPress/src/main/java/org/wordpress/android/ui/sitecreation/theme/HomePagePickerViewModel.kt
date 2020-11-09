@@ -42,6 +42,9 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
+    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
+    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
@@ -58,7 +61,9 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start() {
-        fetchLayouts()
+        if (!::layouts.isInitialized || layouts.isEmpty()) {
+            fetchLayouts()
+        }
     }
 
     private fun fetchLayouts() {
@@ -120,6 +125,10 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onSkippedTapped() {
         _onDesignActionPressed.value = DesignSelectionAction.Skip
+    }
+
+    fun onBackPressed() {
+        _onBackButtonPressed.call()
     }
 
     fun onRetryClicked() {

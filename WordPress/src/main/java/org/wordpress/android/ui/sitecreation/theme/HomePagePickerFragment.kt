@@ -68,8 +68,8 @@ class HomePagePickerFragment : Fragment() {
         }
 
         setupUi()
-        setupActionListeners()
         setupViewModel(savedInstanceState)
+        setupActionListeners()
     }
 
     override fun onAttach(context: Context) {
@@ -135,9 +135,7 @@ class HomePagePickerFragment : Fragment() {
         chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
-        backButton.setOnClickListener {
-            requireActivity().onBackPressed() // [SiteCreationMainVM] will handle this event
-        }
+        backButton.setOnClickListener { viewModel.onBackPressed() }
         setScrollListener()
     }
 
@@ -147,6 +145,7 @@ class HomePagePickerFragment : Fragment() {
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
+        viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
 
     private fun setTitleVisibility(visible: Boolean) {

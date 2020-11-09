@@ -34,6 +34,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.Creat
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel
 import org.wordpress.android.ui.sitecreation.theme.SiteDesignsScreenListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.HomePagePickerFeatureConfig
@@ -52,12 +53,14 @@ class SiteCreationActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uiHelpers: UiHelpers
     @Inject internal lateinit var homePagePickerFeatureConfig: HomePagePickerFeatureConfig
     private lateinit var mainViewModel: SiteCreationMainVM
+    private lateinit var hppViewModel: HomePagePickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteCreationMainVM::class.java)
+        hppViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         mainViewModel.start(savedInstanceState)
 
         observeVMState()
@@ -104,6 +107,9 @@ class SiteCreationActivity : LocaleAwareActivity(),
         })
         mainViewModel.onBackPressedObservable.observe(this, Observer {
             super.onBackPressed()
+        })
+        hppViewModel.onBackButtonPressed.observe(this, Observer {
+            mainViewModel.onBackPressed()
         })
     }
 
