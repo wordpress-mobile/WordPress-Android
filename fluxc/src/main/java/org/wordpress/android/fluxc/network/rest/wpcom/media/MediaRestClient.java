@@ -105,6 +105,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            error.logMessage = "Pushed media is null";
             notifyMediaPushed(site, null, error);
             return;
         }
@@ -122,14 +123,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             notifyMediaPushed(site, responseMedia, null);
                         } else {
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                            error.logMessage = "Parsed media is null";
                             notifyMediaPushed(site, media, error);
                         }
                     }
                 }, new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AppLog.e(T.MEDIA, "error editing remote media: " + error);
+                        String errorMessage = "error editing remote media: " + error;
+                        AppLog.e(T.MEDIA, errorMessage);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        mediaError.logMessage = errorMessage;
                         notifyMediaPushed(site, media, mediaError);
                     }
                 }
@@ -143,12 +147,18 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null || media.getId() == 0) {
             // we can't have a MediaModel without an ID - otherwise we can't keep track of them.
             MediaError error = new MediaError(MediaErrorType.INVALID_ID);
+            if (media == null) {
+                error.logMessage = "Media object is null on upload";
+            } else {
+                error.logMessage = "Media ID is 0 on upload";
+            }
             notifyMediaUploaded(media, error);
             return;
         }
 
         if (!MediaUtils.canReadFile(media.getFilePath())) {
             MediaError error = new MediaError(MediaErrorType.FS_READ_PERMISSION_DENIED);
+            error.logMessage = "Can't read file on upload";
             notifyMediaUploaded(media, error);
             return;
         }
@@ -158,9 +168,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
 
         // Abort upload if it exceeds the site upload limit
         if (site.hasMaxUploadSize() && body.contentLength() > site.getMaxUploadSize()) {
-            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds site limit of "
-                    + site.getMaxUploadSize());
+            String errorMessage = "Media size of " + body.contentLength() + " exceeds site limit of "
+                             + site.getMaxUploadSize();
+            AppLog.d(T.MEDIA, errorMessage);
             MediaError error = new MediaError(MediaErrorType.EXCEEDS_FILESIZE_LIMIT);
+            error.logMessage = errorMessage;
             notifyMediaUploaded(media, error);
             return;
         }
@@ -168,18 +180,22 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         // Abort upload if it exceeds the 'safe' memory limit for the site
         double maxFilesizeForMemoryLimit = MediaUtils.getMaxFilesizeForMemoryLimit(site.getMemoryLimit());
         if (site.hasMemoryLimit() && body.contentLength() > maxFilesizeForMemoryLimit) {
-            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds safe memory limit of "
-                    + maxFilesizeForMemoryLimit + " for this site");
+            String errorMessage = "Media size of " + body.contentLength() + " exceeds safe memory limit of "
+                             + maxFilesizeForMemoryLimit + " for this site";
+            AppLog.d(T.MEDIA, errorMessage);
             MediaError error = new MediaError(MediaErrorType.EXCEEDS_MEMORY_LIMIT);
+            error.logMessage = errorMessage;
             notifyMediaUploaded(media, error);
             return;
         }
 
         // Abort upload if it exceeds the space quota limit for the site
         if (site.hasDiskSpaceQuotaInformation() && body.contentLength() > site.getSpaceAvailable()) {
-            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds disk space quota remaining  "
-                              + site.getSpaceAvailable() + " for this site");
+            String errorMessage = "Media size of " + body.contentLength() + " exceeds disk space quota remaining  "
+                             + site.getSpaceAvailable() + " for this site";
+            AppLog.d(T.MEDIA, errorMessage);
             MediaError error = new MediaError(MediaErrorType.EXCEEDS_SITE_SPACE_QUOTA_LIMIT);
+            error.logMessage = errorMessage;
             notifyMediaUploaded(media, error);
             return;
         }
@@ -214,8 +230,11 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 if (response.isSuccessful()) {
                     ResponseBody responseBody = response.body();
                     if (responseBody == null) {
-                        AppLog.e(T.MEDIA, "error uploading media, response body was empty " + response);
-                        notifyMediaUploaded(media, new MediaError(MediaErrorType.PARSE_ERROR));
+                        String errorMessage = "error uploading media, response body was empty " + response;
+                        AppLog.e(T.MEDIA, errorMessage);
+                        MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = errorMessage;
+                        notifyMediaUploaded(media, error);
                         return;
                     }
 
@@ -238,6 +257,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                         notifyMediaUploaded(uploadedMedia, null);
                     } else {
                         MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                        error.logMessage = "Failed to parse response on uploadMedia";
                         notifyMediaUploaded(media, error);
                     }
                 } else {
@@ -295,16 +315,21 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             boolean canLoadMore = mediaList.size() == number;
                             notifyMediaListFetched(site, mediaList, offset > 0, canLoadMore, mimeType);
                         } else {
-                            AppLog.w(T.MEDIA, "could not parse Fetch all media response: " + response);
+                            String errorMessage = "could not parse Fetch all media response: " + response;
+                            AppLog.w(T.MEDIA, errorMessage);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                            error.logMessage = errorMessage;
                             notifyMediaListFetched(site, error, mimeType);
                         }
                     }
                 }, new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
+                        String errorMessage = "VolleyError Fetching media: " + error;
+                        AppLog.e(T.MEDIA, errorMessage);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        mediaError.message = error.message;
+                        mediaError.logMessage = error.apiError;
                         notifyMediaListFetched(site, mediaError, mimeType);
                     }
                 }
@@ -318,6 +343,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            error.logMessage = "Requested media is null";
             notifyMediaFetched(site, null, error);
             return;
         }
@@ -333,8 +359,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             AppLog.v(T.MEDIA, "Fetched media with ID: " + media.getMediaId());
                             notifyMediaFetched(site, responseMedia, null);
                         } else {
-                            AppLog.w(T.MEDIA, "could not parse Fetch media response, ID: " + media.getMediaId());
+                            String message = "could not parse Fetch media response, ID: " + media.getMediaId();
+                            AppLog.w(T.MEDIA, message);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                            error.logMessage = message;
                             notifyMediaFetched(site, media, error);
                         }
                     }
@@ -343,6 +371,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError Fetching media: " + error);
                         MediaError mediaError = new MediaError(MediaErrorType.fromBaseNetworkError(error));
+                        mediaError.message = error.message;
+                        mediaError.logMessage = error.apiError;
                         notifyMediaFetched(site, media, mediaError);
                     }
                 }
@@ -356,6 +386,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         if (media == null) {
             // caller may be expecting a notification
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            error.logMessage = "Null media on delete";
             notifyMediaDeleted(site, null, error);
             return;
         }
@@ -370,8 +401,10 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                             AppLog.v(T.MEDIA, "deleted media: " + media.getTitle());
                             notifyMediaDeleted(site, media, null);
                         } else {
-                            AppLog.w(T.MEDIA, "could not parse delete media response, ID: " + media.getMediaId());
+                            String message = "could not parse delete media response, ID: " + media.getMediaId();
+                            AppLog.w(T.MEDIA, message);
                             MediaError error = new MediaError(MediaErrorType.PARSE_ERROR);
+                            error.logMessage = message;
                             notifyMediaDeleted(site, media, error);
                         }
                     }
@@ -379,11 +412,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         AppLog.e(T.MEDIA, "VolleyError deleting media (ID=" + media.getMediaId() + "): " + error);
-                        MediaErrorType mediaError = MediaErrorType.fromBaseNetworkError(error);
-                        if (mediaError == MediaErrorType.NOT_FOUND) {
+                        MediaErrorType mediaErrorType = MediaErrorType.fromBaseNetworkError(error);
+                        if (mediaErrorType == MediaErrorType.NOT_FOUND) {
                             AppLog.i(T.MEDIA, "Attempted to delete media that does not exist remotely.");
                         }
-                        notifyMediaDeleted(site, media, new MediaError(mediaError));
+                        MediaError mediaError = new MediaError(mediaErrorType);
+                        mediaError.message = error.message;
+                        mediaError.logMessage = error.apiError;
+                        notifyMediaDeleted(site, media, mediaError);
                     }
                 }
             ));
@@ -392,6 +428,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     public void cancelUpload(final MediaModel media) {
         if (media == null) {
             MediaError error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            error.logMessage = "Null media on cancel upload";
             notifyMediaUploaded(null, error);
             return;
         }
@@ -460,7 +497,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     //
     private MediaError parseUploadError(Response response, SiteModel siteModel) {
         MediaError mediaError = new MediaError(MediaErrorType.fromHttpStatusCode(response.code()));
-
+        mediaError.statusCode = response.code();
+        mediaError.logMessage = response.message();
         if (mediaError.type == MediaErrorType.REQUEST_TOO_LARGE) {
             // 413 (Request too large) errors are coming from the web server and are not an API response like the rest
             mediaError.message = response.message();
@@ -483,12 +521,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     // error.getString("error")) is always "upload_error"
                     if (error.has("message")) {
                         mediaError.message = error.getString("message");
+                        mediaError.logMessage = error.getString("message");
                     }
                 }
             }
             // Or an object
             if (body.has("message")) {
                 mediaError.message = body.getString("message");
+                mediaError.logMessage = body.getString("message");
             }
 
             if (!siteModel.isWPCom()) {
@@ -500,10 +540,12 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     if ("invalid_hmac".equals(error)) {
                         mediaError.type = MediaErrorType.REQUEST_TOO_LARGE;
                     }
+                    mediaError.logMessage = error;
                 }
             }
         } catch (JSONException | IOException e) {
             // no op
+            mediaError.logMessage = e.getMessage();
         }
         return mediaError;
     }
