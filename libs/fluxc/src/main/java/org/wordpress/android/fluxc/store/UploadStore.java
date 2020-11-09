@@ -352,7 +352,9 @@ public class UploadStore extends Store {
             case MediaUploadModel.UPLOADING:
                 if (newUploadState == MediaUploadState.FAILED) {
                     mediaUploadModel.setUploadState(MediaUploadModel.FAILED);
-                    mediaUploadModel.setMediaError(new MediaError(MediaErrorType.GENERIC_ERROR));
+                    MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
+                    mediaError.logMessage = "Change state from UPLOADING to FAILED";
+                    mediaUploadModel.setMediaError(mediaError);
                     mediaUploadModel.setProgress(0);
                     UploadSqlUtils.insertOrUpdateMedia(mediaUploadModel);
                     // Also cancel the associated post
