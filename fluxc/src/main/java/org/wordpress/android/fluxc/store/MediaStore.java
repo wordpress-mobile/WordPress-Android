@@ -216,6 +216,8 @@ public class MediaStore extends Store {
     public static class MediaError implements OnChangedError {
         public MediaErrorType type;
         public String message;
+        public int statusCode;
+        public String logMessage;
         public MediaError(MediaErrorType type) {
             this.type = type;
         }
@@ -227,6 +229,7 @@ public class MediaStore extends Store {
         public static MediaError fromIOException(IOException e) {
             MediaError mediaError = new MediaError(MediaErrorType.GENERIC_ERROR);
             mediaError.message = e.getLocalizedMessage();
+            mediaError.logMessage = e.getMessage();
 
             if (e instanceof SocketTimeoutException) {
                 mediaError.type = MediaErrorType.TIMEOUT;
@@ -694,11 +697,15 @@ public class MediaStore extends Store {
         OnMediaChanged event = new OnMediaChanged(MediaAction.UPDATE_MEDIA);
 
         if (media == null) {
-            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            MediaError mediaError = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            mediaError.logMessage = "Empty media on updateMedia";
+            event.error = mediaError;
         } else if (MediaSqlUtils.insertOrUpdateMedia(media) > 0) {
             event.mediaList.add(media);
         } else {
-            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
+            MediaError mediaError = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
+            mediaError.logMessage = "Insert in DB failed";
+            event.error = mediaError;
         }
 
         if (emit) {
@@ -710,11 +717,15 @@ public class MediaStore extends Store {
         OnMediaChanged event = new OnMediaChanged(MediaAction.REMOVE_MEDIA);
 
         if (media == null) {
-            event.error = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            MediaError mediaError = new MediaError(MediaErrorType.NULL_MEDIA_ARG);
+            mediaError.logMessage = "Empty media on removeMedia";
+            event.error = mediaError;
         } else if (MediaSqlUtils.deleteMedia(media) > 0) {
             event.mediaList.add(media);
         } else {
-            event.error = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
+            MediaError mediaError = new MediaError(MediaErrorType.DB_QUERY_FAILURE);
+            mediaError.logMessage = "Delete from DB failed";
+            event.error = mediaError;
         }
         emitChange(event);
     }
