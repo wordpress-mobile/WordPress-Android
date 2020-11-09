@@ -68,16 +68,13 @@ class HomePagePickerFragment : Fragment() {
         }
 
         setupUi()
-        setupActionListeners()
         setupViewModel(savedInstanceState)
+        setupActionListeners()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        if (context !is SiteDesignsScreenListener) {
-            throw IllegalStateException("Parent activity must implement SiteDesignsScreenListener.")
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -111,10 +108,6 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onDesignActionPressed.observe(viewLifecycleOwner, Observer { design ->
-            (requireActivity() as SiteDesignsScreenListener).onSiteDesignSelected(design.template, design.segmentId)
-        })
-
         savedInstanceState?.let {
             val layouts = it.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
             val selected = it.getString(SELECTED_LAYOUT)
@@ -135,10 +128,7 @@ class HomePagePickerFragment : Fragment() {
         chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
-        backButton.setOnClickListener {
-            requireActivity().onBackPressed() // FIXME: This is temporary for PR #13192
-            viewModel.onBackPressed()
-        }
+        backButton.setOnClickListener { viewModel.onBackPressed() }
         setScrollListener()
     }
 
@@ -148,6 +138,7 @@ class HomePagePickerFragment : Fragment() {
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
+        viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
 
     private fun setTitleVisibility(visible: Boolean) {

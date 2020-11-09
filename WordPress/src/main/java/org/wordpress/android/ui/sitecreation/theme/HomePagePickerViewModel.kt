@@ -21,6 +21,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+const val defaultTemplateSlug = "default"
+
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
@@ -40,8 +42,11 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
+    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
+    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
-        object Skip : DesignSelectionAction("default", null)
+        object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
     }
 
@@ -56,7 +61,9 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start() {
-        fetchLayouts()
+        if (!::layouts.isInitialized || layouts.isEmpty()) {
+            fetchLayouts()
+        }
     }
 
     private fun fetchLayouts() {
@@ -121,7 +128,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onBackPressed() {
-        // TODO
+        _onBackButtonPressed.call()
     }
 
     fun onRetryClicked() {
