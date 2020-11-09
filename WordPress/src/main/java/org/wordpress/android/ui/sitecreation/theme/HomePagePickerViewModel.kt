@@ -21,6 +21,8 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+const val defaultTemplateSlug = "default"
+
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
@@ -41,7 +43,7 @@ class HomePagePickerViewModel @Inject constructor(
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
-        object Skip : DesignSelectionAction("default", null)
+        object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
     }
 
