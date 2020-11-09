@@ -744,7 +744,8 @@ public class MediaStore extends Store {
         }
     }
 
-    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media, String logMessage) {
+    private void notifyMediaUploadError(MediaErrorType errorType, String errorMessage, MediaModel media,
+                                        String logMessage) {
         OnMediaUploaded onMediaUploaded = new OnMediaUploaded(media, 1, false, false);
         MediaError mediaError = new MediaError(errorType, errorMessage);
         mediaError.logMessage = logMessage;
