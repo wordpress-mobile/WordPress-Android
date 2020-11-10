@@ -151,6 +151,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQu
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -162,6 +163,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.requestEmailValidation
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.widgets.WPDialogSnackbar
 import org.wordpress.android.widgets.WPSnackbar
 import java.io.File
@@ -197,6 +199,8 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
+    @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -232,6 +236,8 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
+            updateScanMenuVisibility()
+
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
                     site
@@ -249,6 +255,10 @@ class MySiteFragment : Fragment(),
             showQuickStartDialogMigration()
         }
         showQuickStartNoticeIfNecessary()
+    }
+
+    private fun updateScanMenuVisibility() {
+        row_scan.setVisible(scanFeatureConfig.isEnabled())
     }
 
     private fun showQuickStartNoticeIfNecessary() {
