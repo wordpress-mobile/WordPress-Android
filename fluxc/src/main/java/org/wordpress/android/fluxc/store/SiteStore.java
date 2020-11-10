@@ -92,6 +92,11 @@ public class SiteStore extends Store {
             this(siteName, language, visibility, null, null, dryRun);
         }
 
+        public NewSitePayload(@NonNull String siteName, @NonNull String language,
+                              @NonNull SiteVisibility visibility, @Nullable Long segmentId, boolean dryRun) {
+            this(siteName, language, visibility, segmentId, null, dryRun);
+        }
+
         public NewSitePayload(@NonNull String siteName, @NonNull String language, @NonNull SiteVisibility visibility,
                               @Nullable Long segmentId, @Nullable String siteDesign, boolean dryRun) {
             this.siteName = siteName;
