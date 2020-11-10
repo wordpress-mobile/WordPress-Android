@@ -73,19 +73,19 @@ class StoryEditorMedia @Inject constructor(
     }
 
     fun addNewMediaItemsToEditorAsync(uriList: List<Uri>, freshlyTaken: Boolean) {
-        _uiState.value = if (uriList.size > 1
-                || uriList.any { !mediaUtilsWrapper.isInMediaStore(it) && !mediaUtilsWrapper.isFile(it) }) {
+        _uiState.value = if (uriList.size > 1 ||
+                uriList.any { !mediaUtilsWrapper.isInMediaStore(it) && !mediaUtilsWrapper.isFile(it) }) {
             AddingMultipleMediaToStory
         } else {
             AddingSingleMediaToStory
         }
         launch {
             val allMediaSucceed = withContext(bgDispatcher) {
-                 return@withContext addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                        uriList,
-                        site,
-                        freshlyTaken,
-                        editorMediaListener,
+                return@withContext addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
+                    uriList,
+                    site,
+                    freshlyTaken,
+                    editorMediaListener,
                         false // don't start upload for StoryComposer, that'll be all started
                                                 // when finished composing
                 )
