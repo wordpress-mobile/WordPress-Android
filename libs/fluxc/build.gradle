@@ -87,8 +87,8 @@ dependencies {
 
     // External libs
     api 'org.greenrobot:eventbus:3.1.1'
-    api 'com.squareup.okhttp3:okhttp:3.9.0'
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
+    api 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.0'
     api 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.apache.commons:commons-text:1.1'
