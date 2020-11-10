@@ -1087,6 +1087,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
                 Fragment fragment = mBottomNav.getActiveFragment();
+                // TODO move this logic directly to the fragment
                 if (fragment instanceof MySiteFragment) {
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
@@ -1148,6 +1149,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (fragment instanceof MySiteFragment) {
             return (MySiteFragment) fragment;
         }
+
+        // TODO consider the new my site fragment
         return null;
     }
 
