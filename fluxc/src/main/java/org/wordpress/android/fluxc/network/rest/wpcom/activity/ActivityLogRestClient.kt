@@ -87,9 +87,14 @@ constructor(
         }
     }
 
-    suspend fun rewind(site: SiteModel, rewindId: String): RewindResultPayload {
+    suspend fun rewind(site: SiteModel, rewindId: String, types: Map<String, Boolean> = mapOf()): RewindResultPayload {
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
-        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, null, mapOf(), RewindResponse::class.java)
+        val typesBody = if (types.isNotEmpty()) {
+            mapOf("types" to types)
+        } else {
+            types
+        }
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, null, typesBody, RewindResponse::class.java)
         return when (response) {
             is Success -> {
                 if (response.data.ok != true && (response.data.error != null && response.data.error.isNotEmpty())) {
