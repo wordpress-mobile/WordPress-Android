@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stories.usecase
 
 import android.net.Uri
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
@@ -50,27 +51,58 @@ class StoryEditorMediaTest : BaseUnitTest() {
         // Arrange
         val editorMediaListener = mock<EditorMediaListener>()
         val mediaUtilsWrapper = createMediaUtilsWrapper(shouldAdvertiseImageOptimization = false)
+        val uris = listOf<Uri>(mock())
 
         // Act
         createStoryEditorMedia(
                 editorMediaListener = editorMediaListener,
                 mediaUtilsWrapper = mediaUtilsWrapper
         )
-                .advertiseImageOptimisationAndAddMedia(mock())
+                .advertiseImageOptimisationAndAddMedia(uris)
         // Assert
         verify(editorMediaListener, never()).advertiseImageOptimization(anyOrNull())
     }
 
     @Test
-    fun `addNewMediaItemsToEditorAsync emits AddingSingleMedia for a single uri`() = test {
+    fun `addNewMediaItemsToEditorAsync emits AddingSingleMedia for a single uri that is a file`() = test {
         // Arrange
-        val editorMedia = createStoryEditorMedia()
+        val editorMedia = createStoryEditorMedia(
+                mediaUtilsWrapper = createMediaUtilsWrapper(
+                        resultForIsInMediaStore = false,
+                        resultForIsFile = true
+                )
+        )
         val captor = argumentCaptor<AddMediaToStoryPostUiState>()
+        val uris = listOf<Uri>(mock())
         val observer: Observer<AddMediaToStoryPostUiState> = mock()
         editorMedia.uiState.observeForever(observer)
 
         // Act
-        editorMedia.addNewMediaItemsToEditorAsync(mock(), false)
+        editorMedia.addNewMediaItemsToEditorAsync(uris, false)
+
+        // Assert
+        verify(observer, times(3)).onChanged(captor.capture())
+        assertThat(captor.firstValue).isEqualTo(AddMediaToStoryPostUiState.AddingMediaToStoryIdle)
+        assertThat(captor.secondValue).isEqualTo(AddMediaToStoryPostUiState.AddingSingleMediaToStory)
+        assertThat(captor.thirdValue).isEqualTo(AddMediaToStoryPostUiState.AddingMediaToStoryIdle)
+    }
+
+    @Test
+    fun `addNewMediaItemsToEditorAsync emits AddingSingleMedia for a single uri that is in media store`() = test {
+        // Arrange
+        val editorMedia = createStoryEditorMedia(
+                mediaUtilsWrapper = createMediaUtilsWrapper(
+                        resultForIsInMediaStore = true,
+                        resultForIsFile = false
+                )
+        )
+        val captor = argumentCaptor<AddMediaToStoryPostUiState>()
+        val uris = listOf<Uri>(mock())
+        val observer: Observer<AddMediaToStoryPostUiState> = mock()
+        editorMedia.uiState.observeForever(observer)
+
+        // Act
+        editorMedia.addNewMediaItemsToEditorAsync(uris, false)
 
         // Assert
         verify(observer, times(3)).onChanged(captor.capture())
@@ -86,13 +118,14 @@ class StoryEditorMediaTest : BaseUnitTest() {
                 resultForAddNewMediaToEditorAsync = false
         )
         val editorMedia = createStoryEditorMedia(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
+        val uris = listOf<Uri>(mock())
 
         val captor = argumentCaptor<Event<SnackbarMessageHolder>>()
         val observer: Observer<Event<SnackbarMessageHolder>> = mock()
         editorMedia.snackBarMessage.observeForever(observer)
 
         // Act
-        editorMedia.addNewMediaItemsToEditorAsync(mock(), false)
+        editorMedia.addNewMediaItemsToEditorAsync(uris, false)
 
         // Assert
         verify(observer, times(1)).onChanged(captor.capture())
@@ -108,12 +141,13 @@ class StoryEditorMediaTest : BaseUnitTest() {
         )
         val editorMedia = createStoryEditorMedia(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
 
+        val uris = listOf<Uri>(mock())
         val captor = argumentCaptor<Event<SnackbarMessageHolder>>()
         val observer: Observer<Event<SnackbarMessageHolder>> = mock()
         editorMedia.snackBarMessage.observeForever(observer)
 
         // Act
-        editorMedia.addNewMediaItemsToEditorAsync(mock(), false)
+        editorMedia.addNewMediaItemsToEditorAsync(uris, false)
         // Assert
         verify(observer, never()).onChanged(captor.capture())
     }
@@ -172,6 +206,7 @@ class StoryEditorMediaTest : BaseUnitTest() {
                     mediaUtilsWrapper,
                     addLocalMediaToPostUseCase,
                     addExistingMediaToPostUseCase,
+                    TEST_DISPATCHER,
                     TEST_DISPATCHER
             )
             editorMedia.start(siteModel, editorMediaListener)
@@ -179,9 +214,13 @@ class StoryEditorMediaTest : BaseUnitTest() {
         }
 
         fun createMediaUtilsWrapper(
+            resultForIsInMediaStore: Boolean = false,
+            resultForIsFile: Boolean = false,
             shouldAdvertiseImageOptimization: Boolean = false
         ) =
                 mock<MediaUtilsWrapper> {
+                    on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
+                    on { isFile(any()) }.thenReturn(resultForIsFile)
                     on { shouldAdvertiseImageOptimization() }
                             .thenReturn(shouldAdvertiseImageOptimization)
                     on { isVideo(VIDEO_URI.toString()) }.thenReturn(true)
