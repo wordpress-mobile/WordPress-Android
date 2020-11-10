@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -16,6 +17,8 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSi
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
+import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.Version;
@@ -244,6 +247,20 @@ public class SiteUtils {
     public static String getSiteIconUrl(SiteModel site, int size) {
         return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
                 site.isPrivateWPComAtomic());
+    }
+
+    public static SiteAccessibilityInfo getAccessibilityInfoFromSite(@NotNull SiteModel site) {
+        SiteVisibility siteVisibility;
+
+        if (site.isPrivateWPComAtomic()) {
+            siteVisibility = SiteVisibility.PRIVATE_ATOMIC;
+        } else if (site.isPrivate()) {
+            siteVisibility = SiteVisibility.PRIVATE;
+        } else {
+            siteVisibility = SiteVisibility.PUBLIC;
+        }
+
+        return new SiteAccessibilityInfo(siteVisibility, isPhotonCapable(site));
     }
 
     public static ArrayList<Integer> getCurrentSiteIds(SiteStore siteStore, boolean selfhostedOnly) {
