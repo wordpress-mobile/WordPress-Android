@@ -61,7 +61,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start() {
-        if (!::layouts.isInitialized || layouts.isEmpty()) {
+        if (uiState.value !is UiState.Content) {
             fetchLayouts()
         }
     }
