@@ -2,19 +2,14 @@ package org.wordpress.android.ui.posts.editor.media
 
 import android.net.Uri
 import dagger.Reusable
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import org.wordpress.android.util.MediaUtilsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 
 @Reusable
 class CopyMediaToAppStorageUseCase @Inject constructor(
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    private val mediaUtilsWrapper: MediaUtilsWrapper
 ) {
     /*
    * Some media providers (eg. Google Photos) give us a limited access to media files just so we can copy them and then
