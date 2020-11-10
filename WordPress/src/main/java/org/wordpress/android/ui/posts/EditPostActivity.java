@@ -3281,7 +3281,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mViewModel.hideSavingDialog();
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
-            mViewModel.hideSavingDialog();
             // We were uploading post for preview and we got no error:
             // update post status and preview it in the internal browser
             updateOnSuccessfulUpload();
