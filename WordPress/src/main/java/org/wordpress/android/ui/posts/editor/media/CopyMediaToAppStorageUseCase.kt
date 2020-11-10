@@ -21,11 +21,12 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
    * they revoke the access. Copying these files must be performed on the UI thread, otherwise the access might be
    * revoked before the action completes. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
    */
-    suspend fun copyFilesToAppStorageIfNecessary(uriList: List<Uri>): CopyMediaResult {
-        return withContext(mainDispatcher) {
+    fun copyFilesToAppStorageIfNecessary(uriList: List<Uri>): CopyMediaResult {
             uriList
                     .map { mediaUri ->
-                        if (!mediaUtilsWrapper.isInMediaStore(mediaUri)) {
+                        if (!mediaUtilsWrapper.isInMediaStore(mediaUri) &&
+                                // don't copy existing local files
+                                !mediaUri.toString().startsWith("file://") ) {
                             copyToAppStorage(mediaUri)
                         } else {
                             mediaUri
@@ -33,12 +34,11 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
                     }
                     .toList()
                     .let {
-                        CopyMediaResult(
+                        return CopyMediaResult(
                                 permanentlyAccessibleUris = it.filterNotNull(),
                                 copyingSomeMediaFailed = it.contains(null)
                         )
                     }
-        }
     }
 
     private fun copyToAppStorage(mediaUri: Uri): Uri? {
