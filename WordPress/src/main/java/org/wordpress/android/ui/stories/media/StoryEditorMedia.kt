@@ -73,7 +73,8 @@ class StoryEditorMedia @Inject constructor(
     }
 
     fun addNewMediaItemsToEditorAsync(uriList: List<Uri>, freshlyTaken: Boolean) {
-        _uiState.value = if (uriList.size > 1 || uriList.any { !mediaUtilsWrapper.isInMediaStore(it) }) {
+        _uiState.value = if (uriList.size > 1
+                || uriList.any { !mediaUtilsWrapper.isInMediaStore(it) && !mediaUtilsWrapper.isFile(it) }) {
             AddingMultipleMediaToStory
         } else {
             AddingSingleMediaToStory
