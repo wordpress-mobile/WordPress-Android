@@ -169,6 +169,10 @@ public class MediaUtils {
         return mediaUri != null && mediaUri.toString().startsWith("content://media/");
     }
 
+    public static boolean isFile(Uri mediaUri) {
+        return mediaUri != null && mediaUri.toString().startsWith("file://");
+    }
+
     public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, new String[]{OpenableColumns.DISPLAY_NAME},
                 null, null, null);
