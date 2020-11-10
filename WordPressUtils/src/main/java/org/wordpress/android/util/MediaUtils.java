@@ -443,10 +443,15 @@ public class MediaUtils {
 
                 // TODO handle non-primary volumes
             } else if (isDownloadsDocument(uri)) {
-                final String id = DocumentsContract.getDocumentId(uri);
+                String id = DocumentsContract.getDocumentId(uri);
 
                 if (id != null && id.startsWith("raw:")) {
                     return id.substring(4);
+                }
+
+                // https://github.com/Javernaut/WhatTheCodec/issues/2
+                if (id != null && id.startsWith("msf:")) {
+                    id = id.substring(4);
                 }
 
                 String[] contentUriPrefixesToTry = new String[]{
