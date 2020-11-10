@@ -85,7 +85,18 @@ jobs:
     steps:
       - git/shallow-checkout
       - restore-gutenberg-bundle-cache
+      - run:
+          name: Abort If JS Bundle Exists
+          command: |
+            if [ -f "libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle" ]; then
+              echo "Gutenberg-Mobile bundle already in cache, no need to create a new one."
+              circleci-agent step halt
+            else
+              echo "Gutenberg-Mobile bundle not found in cache. Proceeding to generate new bundle"
+            fi
       - checkout-submodules
+      - npm-install
+      - npm-bundle-android
       - run:
           name: Ensure assets folder exists
           command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
