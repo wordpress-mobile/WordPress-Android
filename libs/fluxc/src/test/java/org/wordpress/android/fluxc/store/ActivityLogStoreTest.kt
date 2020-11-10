@@ -108,7 +108,7 @@ class ActivityLogStoreTest {
 
     @Test
     fun onRewindActionCallRestClient() = test {
-        whenever(activityLogRestClient.rewind(eq(siteModel), any())).thenReturn(
+        whenever(activityLogRestClient.rewind(eq(siteModel), any(), any())).thenReturn(
                 RewindResultPayload(
                         "rewindId",
                         null,
@@ -117,7 +117,7 @@ class ActivityLogStoreTest {
         )
 
         val rewindId = "rewindId"
-        val payload = RewindPayload(siteModel, rewindId)
+        val payload = RewindPayload(siteModel, rewindId, mutableMapOf())
         val action = ActivityLogActionBuilder.newRewindAction(payload)
         activityLogStore.onAction(action)
 
@@ -218,7 +218,7 @@ class ActivityLogStoreTest {
         val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
         whenever(activityLogRestClient.rewind(siteModel, rewindId)).thenReturn(payload)
 
-        activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId)))
+        activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId, mutableMapOf())))
 
         val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
@@ -246,6 +246,46 @@ class ActivityLogStoreTest {
 
         assertEquals(activityLogModel, returnedItem)
         verify(activityLogSqlUtils).getActivityByActivityId(rewindId)
+    }
+
+    @Test
+    fun onRewindActionWithTypesCallRestClient() = test {
+        whenever(activityLogRestClient.rewind(eq(siteModel), any(), any())).thenReturn(
+                RewindResultPayload(
+                        "rewindId",
+                        null,
+                        siteModel
+                )
+        )
+
+        val rewindId = "rewindId"
+        val payload = RewindPayload(siteModel, rewindId, mutableMapOf())
+        val action = ActivityLogActionBuilder.newRewindAction(payload)
+        activityLogStore.onAction(action)
+
+        verify(activityLogRestClient).rewind(siteModel, rewindId)
+    }
+
+    @Test
+    fun emitsRewindResultWhenSendingTypes() = test {
+        val rewindId = "rewindId"
+        val restoreId = 10L
+        val types = mapOf(
+            "themes" to true,
+            "plugins" to true,
+            "uploads" to true,
+            "sqls" to true,
+            "roots" to true,
+            "contents" to true
+        )
+
+        val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
+        whenever(activityLogRestClient.rewind(siteModel, rewindId, types)).thenReturn(payload)
+
+        activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId, types)))
+
+        val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     private suspend fun initRestClient(
