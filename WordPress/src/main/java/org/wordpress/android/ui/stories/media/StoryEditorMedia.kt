@@ -7,8 +7,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ProgressDialogUiState
@@ -32,7 +34,8 @@ class StoryEditorMedia @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     // region Fields
     private var job: Job = Job()
@@ -70,20 +73,22 @@ class StoryEditorMedia @Inject constructor(
     }
 
     fun addNewMediaItemsToEditorAsync(uriList: List<Uri>, freshlyTaken: Boolean) {
+        _uiState.value = if (uriList.size > 1 || uriList.any { !mediaUtilsWrapper.isInMediaStore(it) }) {
+            AddingMultipleMediaToStory
+        } else {
+            AddingSingleMediaToStory
+        }
         launch {
-            _uiState.value = if (uriList.size > 1) {
-                AddingMultipleMediaToStory
-            } else {
-                AddingSingleMediaToStory
+            val allMediaSucceed = withContext(bgDispatcher) {
+                 return@withContext addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
+                        uriList,
+                        site,
+                        freshlyTaken,
+                        editorMediaListener,
+                        false // don't start upload for StoryComposer, that'll be all started
+                                                // when finished composing
+                )
             }
-            val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                    uriList,
-                    site,
-                    freshlyTaken,
-                    editorMediaListener,
-                    false // don't start upload for StoryComposer, that'll be all started
-                                            // when finished composing
-            )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.gallery_error)))
             }
