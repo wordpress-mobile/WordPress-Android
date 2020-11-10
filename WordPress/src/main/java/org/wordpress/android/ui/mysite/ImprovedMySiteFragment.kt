@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.mysite
 
 import androidx.fragment.app.Fragment
 
