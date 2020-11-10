@@ -69,19 +69,19 @@ public class WPScreenshotTest extends BaseTest {
         mDemoModeEnabler.enable();
         wpLogin();
 
-        editBlogPost(false);
-        navigateDiscover(true);
-        navigateMySite(true);
-        navigateStats(false);
-        navigateNotifications(false);
-        manageMedia(true);
+        editBlogPost();
+        navigateDiscover();
+        navigateMySite();
+        navigateStats();
+        navigateNotifications();
+        manageMedia();
 
         // Turn Demo Mode off on the emulator when we're done
         mDemoModeEnabler.disable();
         logoutIfNecessary();
     }
 
-    private void editBlogPost(boolean isNightMode) {
+    private void editBlogPost() {
         // Choose the "sites" tab in the nav
         clickOn(R.id.nav_sites);
 
@@ -102,7 +102,7 @@ public class WPScreenshotTest extends BaseTest {
         // Wait for the editor to load all images
         idleFor(5000);
 
-        screenshotPostWithName("Our Services", name, false, !isTabletScreen(), false);
+        screenshotPostWithName("Our Services", name, false, !isTabletScreen());
 
         // Exit back to the main activity
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
@@ -111,8 +111,7 @@ public class WPScreenshotTest extends BaseTest {
     private void screenshotPostWithName(String name,
                                         String screenshotName,
                                         boolean hideKeyboard,
-                                        boolean openBlockList,
-                                        boolean isNightMode) {
+                                        boolean openBlockList) {
         idleFor(2000);
 
         PostsListPage.scrollToTop();
@@ -132,10 +131,7 @@ public class WPScreenshotTest extends BaseTest {
             Espresso.closeSoftKeyboard();
         }
 
-        setNightMode(true);
-        idleFor(2000);
-        setNightMode(isNightMode);
-        idleFor(2000);
+        setNightModeAndWait(false);
 
         if (openBlockList) {
             clickOnViewWithTag("add-block-button");
@@ -146,7 +142,7 @@ public class WPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.tabLayout);
     }
 
-    private void navigateDiscover(boolean isNightMode) {
+    private void navigateDiscover() {
         // Click on the "Reader" tab and take a screenshot
         clickOn(R.id.nav_reader);
 
@@ -166,10 +162,7 @@ public class WPScreenshotTest extends BaseTest {
 
         // Workaround to avoid gray overlay
         try {
-            swipeRightOnViewPager(R.id.view_pager);
-            idleFor(1000);
-            swipeLeftOnViewPager(R.id.view_pager);
-            idleFor(1000);
+            swipeToAvoidGrayOverlay(R.id.view_pager);
 
             if (isTabletScreen()) {
                 swipeDownOnView(R.id.view_pager, (float) 0.5);
@@ -179,10 +172,7 @@ public class WPScreenshotTest extends BaseTest {
             e.printStackTrace();
         }
 
-        setNightMode(true);
-        idleFor(2000);
-        setNightMode(isNightMode);
-        idleFor(2000);
+        setNightModeAndWait(true);
 
         // Wait for the editor to load all images
         idleFor(7000);
@@ -205,22 +195,15 @@ public class WPScreenshotTest extends BaseTest {
         idleFor(8000);
     }
 
-    private void navigateStats(boolean isNightMode) {
+    private void navigateStats() {
         swipeDownOnView(R.id.scroll_view);
         moveToStats();
 
         idleFor(2000);
 
-        // Workaround to avoid gray overlay
-        swipeLeftOnViewPager(R.id.statsPager);
-        idleFor(1000);
-        swipeRightOnViewPager(R.id.statsPager);
-        idleFor(1000);
+        swipeToAvoidGrayOverlay(R.id.statsPager);
 
-        setNightMode(true);
-        idleFor(2000);
-        setNightMode(isNightMode);
-        idleFor(2000);
+        setNightModeAndWait(true);
 
         takeScreenshot("3-build-an-audience");
 
@@ -228,7 +211,7 @@ public class WPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void navigateMySite(boolean isNightMode) {
+    private void navigateMySite() {
         // Click on the "Sites" tab and take a screenshot
         clickOn(R.id.nav_sites);
 
@@ -243,15 +226,12 @@ public class WPScreenshotTest extends BaseTest {
             clickOn(R.id.tooltip_message);
         }
 
-        setNightMode(true);
-        idleFor(2000);
-        setNightMode(isNightMode);
-        idleFor(2000);
+        setNightModeAndWait(true);
 
         takeScreenshot("4-keep-tabs-on-your-site");
     }
 
-    private void navigateNotifications(boolean isNightMode) {
+    private void navigateNotifications() {
         // Click on the "Notifications" tab in the nav
         clickOn(R.id.nav_notifications);
 
@@ -262,10 +242,7 @@ public class WPScreenshotTest extends BaseTest {
         // Wait for the images to load
         idleFor(6000);
 
-        setNightMode(true);
-        idleFor(2000);
-        setNightMode(isNightMode);
-        idleFor(2000);
+        setNightModeAndWait(false);
 
         takeScreenshot("5-reply-in-real-time");
 
@@ -273,7 +250,7 @@ public class WPScreenshotTest extends BaseTest {
         pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
-    private void manageMedia(boolean isNightMode) {
+    private void manageMedia() {
         // Click on the "Sites" tab in the nav, then choose "Media"
         clickOn(R.id.nav_sites);
         clickOn(R.id.quick_action_media_button);
@@ -281,10 +258,7 @@ public class WPScreenshotTest extends BaseTest {
         waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
 
         idleFor(2000);
-        setNightMode(true);
-        idleFor(2000);
-        setNightMode(isNightMode);
-        idleFor(2000);
+        setNightModeAndWait(true);
 
         takeScreenshot("6-upload-on-the-go");
 
@@ -314,8 +288,25 @@ public class WPScreenshotTest extends BaseTest {
         return "true".equals(testLabSetting);
     }
 
+
+    //In some cases there's a gray overlay on view pager screens when taking screenshots
+    //this function swipes left and then right as a workaround to clear it
+    // resourceID should be the ID of the viewPager
+    private void swipeToAvoidGrayOverlay(int resourceID) {
+        // Workaround to avoid gray overlay
+        swipeLeftOnViewPager(resourceID);
+        idleFor(1000);
+        swipeRightOnViewPager(resourceID);
+        idleFor(1000);
+    }
+
     private boolean editPostActivityIsNoLongerLoadingImages() {
         EditPostActivity editPostActivity = (EditPostActivity) getCurrentActivity();
         return editPostActivity.getAztecImageLoader().getNumberOfImagesBeingDownloaded() == 0;
+    }
+
+    private void setNightModeAndWait(boolean isNightMode) {
+        setNightMode(isNightMode);
+        idleFor(5000);
     }
 }
