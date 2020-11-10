@@ -126,6 +126,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -210,6 +211,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject ReaderTracker mReaderTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
+    @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -237,7 +239,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mBottomNav = findViewById(R.id.bottom_navigation);
 
-        mBottomNav.init(getSupportFragmentManager(), this);
+        mBottomNav.init(getSupportFragmentManager(), this, mMySiteImprovementsFeatureConfig.isEnabled());
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(v -> {
