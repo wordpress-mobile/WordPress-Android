@@ -218,7 +218,10 @@ class ActivityLogStoreTest {
         val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
         whenever(activityLogRestClient.rewind(siteModel, rewindId)).thenReturn(payload)
 
-        activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId, mutableMapOf())))
+        activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(
+                siteModel,
+                rewindId,
+                mutableMapOf())))
 
         val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
