@@ -3268,6 +3268,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Nullable
     private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
+        mViewModel.hideSavingDialog();
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
