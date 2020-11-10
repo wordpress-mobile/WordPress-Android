@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,7 +30,14 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
+import org.wordpress.android.ui.posts.ProgressDialogHelper;
+import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog;
+import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog;
 import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
+import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase;
+import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase.CopyMediaResult;
+import org.wordpress.android.ui.utils.UiHelpers;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -39,6 +47,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.inject.Inject;
 
@@ -69,6 +79,11 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     @Inject MediaStore mMediaStore;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject ImageEditorTracker mImageEditorTracker;
+    @Inject CopyMediaToAppStorageUseCase mCopyMediaToAppStorageUseCase;
+    @Inject ProgressDialogHelper mProgressDialogHelper;
+    @Inject UiHelpers mUiHelpers;
+    private ProgressDialog mAddingMediaToEditorProgressDialog = null;
+
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -310,13 +325,40 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                         }
                     });
         } else {
-            Intent intent = new Intent()
-                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))
-                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name())
-                    // set the browserType in the result, so caller can distinguish and handle things as needed
-                    .putExtra(ARG_BROWSER_TYPE, mBrowserType);
-            setResult(RESULT_OK, intent);
-            finish();
+            // setup progress dialog
+            VisibleProgressDialog visibleProgressDialog = new VisibleProgressDialog(
+                    new UiStringRes(R.string.add_media_progress),
+                    false,
+                    true
+            );
+            mAddingMediaToEditorProgressDialog = mProgressDialogHelper
+                    .updateProgressDialogState(this, mAddingMediaToEditorProgressDialog, visibleProgressDialog,
+                            mUiHelpers);
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // do copy files locally
+                    CopyMediaResult copyMediaResult =
+                            mCopyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(mediaUris);
+
+                    // hide progress dialog
+                    mAddingMediaToEditorProgressDialog = mProgressDialogHelper
+                            .updateProgressDialogState(PhotoPickerActivity.this,
+                                    mAddingMediaToEditorProgressDialog,
+                                    HiddenProgressDialog.INSTANCE, mUiHelpers);
+
+                    // set intent result to locally copied media files
+                    Intent intent = new Intent()
+                            .putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS,
+                                    convertUrisListToStringArray(copyMediaResult.getPermanentlyAccessibleUris()))
+                            .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name())
+                            // set the browserType in the result, so caller can distinguish and handle things as needed
+                            .putExtra(ARG_BROWSER_TYPE, mBrowserType);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }, 100);
         }
     }
 
