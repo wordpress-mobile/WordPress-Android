@@ -1,6 +1,7 @@
 16.2
 -----
- 
+* [*] Posts List: fixed bug that prevented showing the Featured Image of a post for pure self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/13323]
+
 16.1
 -----
 * [***] Block Editor: Adds new option to select from a variety of predefined page templates when creating a new page for a Gutenberg site.

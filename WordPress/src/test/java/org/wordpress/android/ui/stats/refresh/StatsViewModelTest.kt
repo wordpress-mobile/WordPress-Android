@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -48,7 +47,6 @@ class StatsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
-    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
