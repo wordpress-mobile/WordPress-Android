@@ -53,7 +53,6 @@ class CreateSiteUseCase @Inject constructor(
                     languageWordPressId,
                     siteVisibility,
                     siteData.segmentId,
-                    null,
                     dryRun
             )
             continuation = cont
