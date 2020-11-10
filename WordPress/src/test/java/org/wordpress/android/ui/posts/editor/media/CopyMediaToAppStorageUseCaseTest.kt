@@ -114,7 +114,6 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
         ) =
                 mock<MediaUtilsWrapper> {
                     on { isInMediaStore(any()) }.thenReturn(resultForIsInMediaStore)
-                    on { isFile(any()) }.thenReturn(resultForIsFile)
                     on { copyFileToAppStorage(any()) }.thenReturn(mock())
                     resultForCopiedFileUri?.let {
                         on { copyFileToAppStorage(resultForCopiedFileUri.first) }.thenReturn(
