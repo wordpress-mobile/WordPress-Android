@@ -14,6 +14,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -22,11 +25,13 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 const val defaultTemplateSlug = "default"
+private const val ERROR_CONTEXT = "design"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
+    private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -62,6 +67,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun start() {
         if (uiState.value !is UiState.Content) {
+            analyticsTracker.trackSiteDesignViewed()
             fetchLayouts()
         }
     }
@@ -72,6 +78,7 @@ class HomePagePickerViewModel @Inject constructor(
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
             withContext(mainDispatcher) {
                 if (event.isError) {
+                    analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(UiState.Error())
                 } else {
                     layouts = event.designs
@@ -116,14 +123,18 @@ class HomePagePickerViewModel @Inject constructor(
     fun onChooseTapped() {
         (uiState.value as? UiState.Content)?.let { state ->
             layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
-                _onDesignActionPressed.value = DesignSelectionAction.Choose(layout.slug!!, layout.segmentId)
+                val template = layout.slug!!
+                analyticsTracker.trackSiteDesignSelected(template)
+                _onDesignActionPressed.value = DesignSelectionAction.Choose(template, layout.segmentId)
                 return
             }
         }
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error choosing design")
         updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
     }
 
     fun onSkippedTapped() {
+        analyticsTracker.trackSiteDesignSkipped()
         _onDesignActionPressed.value = DesignSelectionAction.Skip
     }
 
@@ -135,6 +146,7 @@ class HomePagePickerViewModel @Inject constructor(
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
         } else {
+            analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Retry error")
             updateUiState(UiState.Error(toast = R.string.hpp_retry_error))
         }
     }

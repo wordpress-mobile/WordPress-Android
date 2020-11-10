@@ -89,4 +89,37 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     fun trackSiteCreationServiceStateUpdated(props: Map<String, *>) {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED, props)
     }
+
+    fun trackSiteDesignViewed() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED)
+    }
+
+    fun trackSiteDesignSkipped() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED)
+    }
+
+    fun trackSiteDesignSelected(template: String) {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED, mapOf("template" to template))
+    }
+
+    fun trackSiteDesignPreviewViewed(template: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
+                mapOf("template" to template)
+        )
+    }
+
+    fun trackSiteDesignPreviewLoading(template: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
+                mapOf("template" to template)
+        )
+    }
+
+    fun trackSiteDesignPreviewLoaded(template: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
+                mapOf("template" to template)
+        )
+    }
 }
