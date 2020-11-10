@@ -172,8 +172,10 @@ class ActivityLogStore
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class RewindPayload(val site: SiteModel, val rewindId: String, val types: Map<String, Boolean> = mapOf())
-        : Payload<BaseRequest.BaseNetworkError>()
+    class RewindPayload(
+        val site: SiteModel,
+        val rewindId: String,
+        val types: Map<String, Boolean> = mapOf()) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedActivityLogPayload(
         val activityLogModels: List<ActivityLogModel> = listOf(),
