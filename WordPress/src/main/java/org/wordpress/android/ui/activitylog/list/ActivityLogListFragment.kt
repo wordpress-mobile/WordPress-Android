@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.datepicker.MaterialDatePicker.Builder
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
@@ -147,9 +147,10 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun showDateRangePicker(initialDateRange: DateRange?) {
-        val builder = Builder.dateRangePicker()
-        builder.setSelection(initialDateRange)
-        val picker = builder.build()
+        val picker = MaterialDatePicker.Builder
+                .dateRangePicker()
+                .setSelection(initialDateRange)
+                .build()
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
         picker.show(parentFragmentManager, DATE_PICKER_TAG)
     }
