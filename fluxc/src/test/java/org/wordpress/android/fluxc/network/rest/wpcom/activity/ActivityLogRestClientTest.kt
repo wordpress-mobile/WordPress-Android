@@ -84,6 +84,7 @@ class ActivityLogRestClientTest {
                 Date(beforeMillis),
                 listOf("post", "attachment")
         )
+
         activityRestClient.fetchActivity(payload, number, offset)
 
         assertEquals(urlCaptor.firstValue, "https://public-api.wordpress.com/wpcom/v2/sites/$siteId/activity/")
