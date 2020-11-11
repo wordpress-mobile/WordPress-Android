@@ -30,7 +30,7 @@ internal class XPostsRestClientTest {
                 wpComGsonRequestBuilder.syncGetRequest(
                         subject,
                         url,
-                        emptyMap(),
+                        mapOf("decode_html" to "true"),
                         Array<XPostSiteModel>::class.java,
                         true,
                         60000
