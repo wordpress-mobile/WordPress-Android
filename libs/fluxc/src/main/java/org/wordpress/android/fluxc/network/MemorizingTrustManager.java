@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.network;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -23,6 +21,8 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
@@ -34,10 +34,8 @@ public class MemorizingTrustManager implements X509TrustManager {
     private FutureTask<X509TrustManager> mTrustManagerFutureTask;
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
     private X509Certificate mLastFailure;
-    private Context mContext;
 
-    public MemorizingTrustManager(Context appContext) {
-        mContext = appContext;
+    public MemorizingTrustManager() {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         mLocalKeyStoreFutureTask = new FutureTask<>(new Callable<KeyStore>() {
             public KeyStore call() {
@@ -129,6 +127,7 @@ public class MemorizingTrustManager implements X509TrustManager {
         getDefaultTrustManager().checkClientTrusted(chain, authType);
     }
 
+    @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         try {
             getDefaultTrustManager().checkServerTrusted(chain, authType);
@@ -164,6 +163,38 @@ public class MemorizingTrustManager implements X509TrustManager {
             }
         } catch (KeyStoreException e) {
             AppLog.e(T.API, "Unable to clear KeyStore");
+        }
+    }
+
+    public HostnameVerifier wrapHostnameVerifier(final HostnameVerifier defaultVerifier) {
+        if (defaultVerifier == null) {
+            throw new IllegalArgumentException("The default verifier may not be null");
+        }
+
+        return new MemorizingHostnameVerifier(defaultVerifier);
+    }
+
+    private class MemorizingHostnameVerifier implements HostnameVerifier {
+        private HostnameVerifier mDefaultVerifier;
+
+        MemorizingHostnameVerifier(HostnameVerifier hostnameVerifier) {
+            mDefaultVerifier = hostnameVerifier;
+        }
+
+        @Override
+        public boolean verify(String hostname, SSLSession session) {
+            // if the default verifier accepts the hostname, we are done
+            if (mDefaultVerifier.verify(hostname, session)) {
+                return true;
+            }
+            // otherwise, we check if the hostname is an alias for this cert in our keystore
+            try {
+                X509Certificate cert = (X509Certificate) session.getPeerCertificates()[0];
+                return cert.equals(getLocalKeyStore().getCertificate(cert.getSubjectDN().toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 }
