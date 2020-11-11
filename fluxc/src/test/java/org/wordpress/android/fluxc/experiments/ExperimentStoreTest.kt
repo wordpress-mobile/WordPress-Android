@@ -97,7 +97,13 @@ class ExperimentStoreTest {
 
         private val successfulModel = AssignmentsModel(successfulVariations, 3600, 1604964458273)
 
-        const val successfulModelJson = "{\"variations\":{\"experiment_one\":\"control\",\"experiment_two\":\"treatment\",\"experiment_three\":null,\"experiment_four\":\"other\"},\"ttl\":3600,\"fetchedAt\":1604964458273}"
+        const val successfulModelJson = "{\"variations\":{" +
+                "\"experiment_one\":\"control\"," +
+                "\"experiment_two\":\"treatment\"," +
+                "\"experiment_three\":null," +
+                "\"experiment_four\":\"other\"}," +
+                "\"ttl\":3600," +
+                "\"fetchedAt\":1604964458273}"
 
         val successfulPayload = FetchedAssignmentsPayload(successfulModel)
 
