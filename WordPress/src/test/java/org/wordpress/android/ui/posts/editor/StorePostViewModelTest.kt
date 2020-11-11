@@ -15,6 +15,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -38,6 +39,7 @@ class StorePostViewModelTest : BaseUnitTest() {
     @Mock lateinit var postRepository: EditPostRepository
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var context: Context
 
     private lateinit var viewModel: StorePostViewModel
@@ -60,7 +62,8 @@ class StorePostViewModelTest : BaseUnitTest() {
                 postUtils,
                 uploadService,
                 savePostToDbUseCase,
-                networkUtils
+                networkUtils,
+                dispatcher
         )
         postModel.setId(postId)
         postModel.setTitle(title)
@@ -245,7 +248,7 @@ class StorePostViewModelTest : BaseUnitTest() {
         expected.add(Hidden)
         assertThat(actual).isEqualTo(expected)
 
-        viewModel.showSaveProgressDialog()
+        viewModel.showSavingProgressDialog()
         expected.add(Showing)
         assertThat(actual).isEqualTo(expected)
 

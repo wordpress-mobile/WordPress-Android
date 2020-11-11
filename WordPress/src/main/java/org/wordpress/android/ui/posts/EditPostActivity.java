@@ -1772,7 +1772,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Store this before calling updateAndSavePostAsync because its value can change before the callback returns
         boolean isAutosavePending = mViewModel.isAutosavePending();
 
-        mViewModel.showSaveProgressDialog();
+        mViewModel.showSavingProgressDialog();
         updateAndSavePostAsync((result) -> {
             listener.onPostUpdatedFromUI(result);
 
@@ -2066,7 +2066,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return;
             }
 
-            mViewModel.showSaveProgressDialog();
+            mViewModel.showSavingProgressDialog();
 
             boolean isFirstTimePublish = isFirstTimePublish(publishPost);
             mEditPostRepository.updateAsync(postModel -> {
@@ -3375,10 +3375,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Nullable
     private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
-        mViewModel.hideSavingDialog();
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
-            mViewModel.hideSavingDialog();
             // We were uploading post for preview and we got no error:
             // update post status and preview it in the internal browser
             updateOnSuccessfulUpload();
