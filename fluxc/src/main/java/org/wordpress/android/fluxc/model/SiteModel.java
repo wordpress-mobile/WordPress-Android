@@ -47,6 +47,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private boolean mIsWPCom;
     @Column private boolean mIsWPComAtomic;
     @Column private boolean mIsFeaturedImageSupported;
+    @Column private boolean mIsWpForTeamsSite;
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
     @Column private String mFrameNonce; // only wpcom and Jetpack sites
@@ -660,6 +661,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setIsWPComAtomic(boolean isWPComAtomic) {
         mIsWPComAtomic = isWPComAtomic;
+    }
+
+    public boolean isWpForTeamsSite() {
+        return mIsWpForTeamsSite;
+    }
+
+    public void setIsWpForTeamsSite(boolean wpForTeamsSite) {
+        mIsWpForTeamsSite = wpForTeamsSite;
     }
 
     public boolean isComingSoon() {
