@@ -92,7 +92,7 @@ class ExperimentStoreTest {
                 "experiment_one" to "control",
                 "experiment_two" to "treatment",
                 "experiment_three" to null,
-                "experiment_four" to "other",
+                "experiment_four" to "other"
         )
 
         private val successfulModel = AssignmentsModel(successfulVariations, 3600, 1604964458273)
