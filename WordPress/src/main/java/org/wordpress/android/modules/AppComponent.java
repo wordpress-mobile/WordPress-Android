@@ -187,6 +187,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
+import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -594,6 +595,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaPickerActivity object);
 
     void inject(MediaPickerFragment object);
+
+    void inject(MediaUploadReadyProcessor object);
 
     void inject(PrepublishingCategoriesFragment object);
 

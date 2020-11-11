@@ -54,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-255"
+            versionName "alpha-256"
         }
-        versionCode 950
+        versionCode 953
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -76,6 +76,8 @@ android {
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
+        buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
+        buildConfigField "boolean", "SCAN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
     }
 
@@ -93,9 +95,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.1-rc-2"
+                versionName "16.1-rc-3"
             }
-            versionCode 949
+            versionCode 952
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -185,6 +187,7 @@ androidExtensions {
 
 dependencies {
     implementation project(path:':libs:stories-android:stories')
+    testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
@@ -242,7 +245,6 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
-        exclude group: 'com.squareup.okhttp3'
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
         exclude group: 'androidx.appcompat', module: 'appcompat'
@@ -327,6 +329,7 @@ dependencies {
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.1') {
         exclude group: 'com.google.dagger'
+        exclude group: 'com.android.support', module: 'support-annotations'
     }
 
     implementation 'com.github.Tenor-Inc:tenor-android-core:0.5.1'

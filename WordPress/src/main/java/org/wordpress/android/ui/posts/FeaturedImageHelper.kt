@@ -169,8 +169,7 @@ class FeaturedImageHelper @Inject constructor(
                 mediaUri,
                 maxDimen,
                 maxDimen,
-                !siteUtilsWrapper.isPhotonCapable(site),
-                site.isPrivateWPComAtomic
+                siteUtilsWrapper.getAccessibilityInfoFromSite(site)
         )
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }
