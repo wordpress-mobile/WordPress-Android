@@ -80,10 +80,11 @@ commands:
 version: 2.1
 jobs:
   gutenberg-bundle-build:
-    docker:
-      - image: circleci/node:10
+    machine:
+      image: ubuntu-2004:202010-01 # Latest supported ubuntu image from https://circleci.com/docs/2.0/configuration-reference/#available-machine-images
     steps:
       - git/shallow-checkout
+      - run: node -v
       - restore-gutenberg-bundle-cache
       - run:
           name: Abort If JS Bundle Exists
