@@ -17,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
@@ -27,6 +28,8 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
+
+private const val DATE_PICKER_TAG = "activity_log_type_filter_tag"
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -73,6 +76,8 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
+        activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
+
         setupObservers()
 
         viewModel.start(site)
@@ -98,6 +103,11 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
             uiHelpers.updateVisibility(date_range_picker, visibility)
+            uiHelpers.updateVisibility(activity_type_filter, visibility)
+        })
+
+        viewModel.showActivityTypeFilter.observe(viewLifecycleOwner, Observer { _ ->
+            showActivityTypeFilter()
         })
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
@@ -134,6 +144,10 @@ class ActivityLogListFragment : Fragment() {
                     getString(R.string.cancel))
             dialog.show(requireFragmentManager(), it)
         }
+    }
+
+    private fun showActivityTypeFilter() {
+        ActivityLogTypeFilterFragment().show(parentFragmentManager, DATE_PICKER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
