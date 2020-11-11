@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.scan
 
 data class ScanStateModel(
     val state: State,
-    val threats: List<Threat>?,
+    val threats: List<ThreatModel>?,
     val credentials: List<Credentials>?,
     val hasCloud: Boolean,
     val mostRecent: MostRecent?
@@ -17,29 +17,6 @@ data class ScanStateModel(
                 return values().firstOrNull { it.value == value }
             }
         }
-    }
-
-    data class Threat(
-        val id: Int,
-        val signature: String,
-        val description: String,
-        val status: String,
-        val fixable: Fixable,
-        val extension: Extension,
-        val firstDetected: String
-    ) {
-        data class Fixable(
-            val fixer: String,
-            val target: String
-        )
-
-        data class Extension(
-            val type: String,
-            val slug: String,
-            val name: String,
-            val version: String,
-            val isPremium: Boolean
-        )
     }
 
     data class Credentials(
