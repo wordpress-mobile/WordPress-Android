@@ -1,9 +1,9 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    ext.kotlinVersion = '1.3.61'
+    ext.kotlinVersion = '1.4.10'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
 sourceCompatibility = "7"

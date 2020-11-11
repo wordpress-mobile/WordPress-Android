@@ -114,9 +114,11 @@ class StoryComposerViewModel @Inject constructor(
         outState.putSerializable(StoryComposerActivity.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
     }
 
-    fun onStoryDiscarded() {
-        // delete empty post from database
-        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
+    fun onStoryDiscarded(deleteDiscardedPost: Boolean) {
+        if (deleteDiscardedPost) {
+            // delete empty post from database
+            dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
+        }
         postEditorAnalyticsSession.setOutcome(CANCEL)
     }
 
