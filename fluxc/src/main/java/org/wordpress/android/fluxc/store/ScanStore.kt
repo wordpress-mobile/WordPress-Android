@@ -12,8 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ScanStore
-@Inject constructor(
+class ScanStore @Inject constructor(
     private val scanRestClient: ScanRestClient,
     private val scanSqlUtils: ScanSqlUtils,
     private val coroutineEngine: CoroutineEngine,
