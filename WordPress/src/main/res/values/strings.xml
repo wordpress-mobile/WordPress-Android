@@ -1027,6 +1027,9 @@
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
+    <!-- scan -->
+    <string name="scan">Scan</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
