@@ -9,9 +9,9 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.MostRecent
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.Threat
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.Threat.Extension
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.Threat.Fixable
+import org.wordpress.android.fluxc.model.scan.ThreatModel
+import org.wordpress.android.fluxc.model.scan.ThreatModel.Extension
+import org.wordpress.android.fluxc.model.scan.ThreatModel.Fixable
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -68,7 +68,7 @@ class ScanRestClient(
         return ScanStateModel(
                 state = state,
                 threats = response.threats?.map {
-                    Threat(
+                    ThreatModel(
                             id = it.id,
                             signature = it.signature,
                             description = it.description,
