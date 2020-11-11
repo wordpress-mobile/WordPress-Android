@@ -106,8 +106,8 @@ class ActivityLogListFragment : Fragment() {
             uiHelpers.updateVisibility(activity_type_filter, visibility)
         })
 
-        viewModel.showActivityTypeFilter.observe(viewLifecycleOwner, Observer { _ ->
-            showActivityTypeFilter()
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { _ ->
+            showActivityTypeFilterDialog()
         })
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
@@ -146,7 +146,7 @@ class ActivityLogListFragment : Fragment() {
         }
     }
 
-    private fun showActivityTypeFilter() {
+    private fun showActivityTypeFilterDialog() {
         ActivityLogTypeFilterFragment().show(parentFragmentManager, DATE_PICKER_TAG)
     }
 

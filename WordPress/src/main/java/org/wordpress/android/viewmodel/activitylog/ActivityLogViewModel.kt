@@ -63,9 +63,9 @@ class ActivityLogViewModel @Inject constructor(
     val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
 
-    private val _showActivityTypeFilter = SingleLiveEvent<Unit>()
-    val showActivityTypeFilter: LiveData<Unit>
-        get() = _showActivityTypeFilter
+    private val _showActivityTypeFilterDialog = SingleLiveEvent<Unit>()
+    val showActivityTypeFilterDialog: LiveData<Unit>
+        get() = _showActivityTypeFilterDialog
 
     private val _moveToTop = SingleLiveEvent<Unit>()
     val moveToTop: SingleLiveEvent<Unit>
@@ -156,7 +156,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
-        _showActivityTypeFilter.value = Unit
+        _showActivityTypeFilterDialog.value = Unit
     }
 
     fun onRewindConfirmed(rewindId: String) {
