@@ -396,7 +396,7 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public MemorizingTrustManager provideMemorizingTrustManager(Context appContext) {
-        return new MemorizingTrustManager(appContext);
+        return new MemorizingTrustManager();
     }
 
     @Singleton

@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestCl
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -85,7 +86,7 @@ class ActivityLogStore
                     SelectQuery.ORDER_ASCENDING
             ).size
         }
-        val payload = activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
+        val payload = activityLogRestClient.fetchActivity(fetchActivityLogPayload, ACTIVITY_LOG_PAGE_SIZE, offset)
         return storeActivityLog(payload, FETCH_ACTIVITIES)
     }
 
@@ -167,7 +168,10 @@ class ActivityLogStore
     // Payloads
     class FetchActivityLogPayload(
         val site: SiteModel,
-        val loadMore: Boolean = false
+        val loadMore: Boolean = false,
+        val after: Date? = null,
+        val before: Date? = null,
+        val groups: List<String> = listOf()
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
