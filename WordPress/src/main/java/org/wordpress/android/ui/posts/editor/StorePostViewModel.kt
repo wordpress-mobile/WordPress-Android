@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
@@ -189,6 +190,12 @@ class StorePostViewModel
     @SuppressWarnings("unused")
     @Subscribe
     fun onPostUploaded(event: OnPostUploaded) {
+        hideSavingProgressDialog()
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    fun onPostChanged(event: OnPostChanged) {
         hideSavingProgressDialog()
     }
 
