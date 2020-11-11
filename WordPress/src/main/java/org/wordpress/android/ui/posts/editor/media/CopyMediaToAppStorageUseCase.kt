@@ -22,7 +22,7 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
                     .map { mediaUri ->
                         if (!mediaUtilsWrapper.isInMediaStore(mediaUri) &&
                                 // don't copy existing local files
-                                !mediaUri.toString().startsWith("file://")) {
+                                !mediaUtilsWrapper.isFile(mediaUri)) {
                             copyToAppStorage(mediaUri)
                         } else {
                             mediaUri
