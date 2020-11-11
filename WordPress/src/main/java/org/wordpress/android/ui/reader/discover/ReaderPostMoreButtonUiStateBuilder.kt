@@ -1,52 +1,70 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
+import javax.inject.Named
 
 @Reusable
 class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val readerBlogTableWrapper: ReaderBlogTableWrapper
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    fun buildMoreMenuItems(
+    suspend fun buildMoreMenuItems(
         post: ReaderPost,
         postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
+        return withContext(bgDispatcher) {
+            buildMoreMenuItemsBlocking(post, postListType, onButtonClicked)
+        }
+    }
+
+    fun buildMoreMenuItemsBlocking(
+        post: ReaderPost,
+        postListType: ReaderPostListType,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ): MutableList<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
         if (readerPostTableWrapper.isPostFollowed(post)) {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
                             label = UiStringRes(R.string.reader_btn_unfollow),
-                            labelColor = R.attr.wpColorSuccess,
+                            labelColor = R.attr.wpColorOnSurfaceMedium,
                             iconRes = R.drawable.ic_reader_following_white_24dp,
                             isSelected = true,
                             onClicked = onButtonClicked
                     )
             )
 
-            // When blogId and feedId are not equal, post is not a feed so show notifications option.
-            if (post.blogId != post.feedId) {
+            // When post not from external feed then show notifications option.
+            if (!readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) {
                 if (readerBlogTableWrapper.isNotificationsEnabled(post.blogId)) {
                     menuItems.add(
                             SecondaryAction(
                                     type = SITE_NOTIFICATIONS,
                                     label = UiStringRes(R.string.reader_btn_notifications_off),
-                                    labelColor = R.attr.wpColorSuccess,
+                                    labelColor = R.attr.wpColorOnSurfaceMedium,
                                     iconRes = R.drawable.ic_bell_white_24dp,
                                     isSelected = true,
                                     onClicked = onButtonClicked
@@ -71,7 +89,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = FOLLOW,
                             label = UiStringRes(R.string.reader_btn_follow),
-                            labelColor = R.attr.colorPrimary,
+                            labelColor = R.attr.colorSecondary,
                             iconRes = R.drawable.ic_reader_follow_white_24dp,
                             isSelected = false,
                             onClicked = onButtonClicked
@@ -94,7 +112,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                         type = VISIT_SITE,
                         label = UiStringRes(R.string.reader_label_visit),
                         labelColor = R.attr.colorOnSurface,
-                        iconRes = R.drawable.ic_external_white_24dp,
+                        iconRes = R.drawable.ic_globe_white_24dp,
                         iconColor = R.attr.wpColorOnSurfaceMedium,
                         onClicked = onButtonClicked
                 )
@@ -105,6 +123,16 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = BLOCK_SITE,
                             label = UiStringRes(R.string.reader_menu_block_blog),
+                            labelColor = R.attr.colorOnSurface,
+                            iconRes = R.drawable.ic_block_white_24dp,
+                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            onClicked = onButtonClicked
+                    )
+            )
+            menuItems.add(
+                    SecondaryAction(
+                            type = REPORT_POST,
+                            label = UiStringRes(R.string.reader_menu_report_post),
                             labelColor = R.attr.colorOnSurface,
                             iconRes = R.drawable.ic_block_white_24dp,
                             iconColor = R.attr.wpColorOnSurfaceMedium,

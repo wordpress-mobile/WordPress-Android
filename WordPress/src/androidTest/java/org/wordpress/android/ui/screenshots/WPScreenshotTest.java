@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.screenshots;
 
+import android.provider.Settings;
+
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
+
+import com.google.android.libraries.cloudtesting.screenshots.ScreenShotter;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -61,6 +65,7 @@ public class WPScreenshotTest extends BaseTest {
         idleFor(1000);
         takeScreenshot("1-build-and-manage-your-website");
 
+        navigateMySite();
         editBlogPost();
         manageMedia();
         navigateNotifications();
@@ -69,6 +74,15 @@ public class WPScreenshotTest extends BaseTest {
         // Turn Demo Mode off on the emulator when we're done
         mDemoModeEnabler.disable();
         logoutIfNecessary();
+    }
+
+    private void navigateMySite() {
+        // Click on the "Sites" tab and take a screenshot
+        clickOn(R.id.nav_sites);
+
+        waitForElementToBeDisplayedWithoutFailure(R.id.row_blog_posts);
+
+        takeScreenshot("4-keep-tabs-on-your-site");
     }
 
     private void editBlogPost() {
@@ -172,10 +186,24 @@ public class WPScreenshotTest extends BaseTest {
 
     private void takeScreenshot(String screenshotName) {
         try {
-            Screengrab.screenshot(screenshotName);
+            if (runningInTestLab()) {
+                ScreenShotter.takeScreenshot(screenshotName, getCurrentActivity());
+            } else {
+                // Fallback to screengrab
+                Screengrab.screenshot(screenshotName);
+            }
         } catch (RuntimeException r) {
-            // Screenshots will fail when running outside of Fastlane, so this is safe to ignore.
+            // Screenshots will fail when running outside of Fastlane or FTL, so this is safe to ignore.
         }
+    }
+
+    private boolean runningInTestLab() {
+        // https://firebase.google.com/docs/test-lab/android/android-studio#modify_instrumented_test_behavior_for
+        String testLabSetting = Settings.System.getString(
+                getCurrentActivity().getContentResolver(),
+                "firebase.test.lab"
+        );
+        return "true".equals(testLabSetting);
     }
 
     private boolean editPostActivityIsNoLongerLoadingImages() {

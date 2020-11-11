@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.services.update;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -12,12 +11,10 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderBlogList;
-import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
@@ -41,15 +38,14 @@ public class ReaderUpdateLogic {
     /***
      * This class holds the business logic for Reader Updates, serving both ReaderUpdateService (<API26)
      * and ReaderUpdateJobService (API26+).
-     * Updates followed/recommended tags and blogs for the Reader, relies
+     * Updates followedtags and blogs for the Reader, relies
      * on EventBus to notify of changes
      */
 
     public enum UpdateTask {
         TAGS,
         INTEREST_TAGS,
-        FOLLOWED_BLOGS,
-        RECOMMENDED_BLOGS
+        FOLLOWED_BLOGS
     }
     private static final String INTERESTS = "interests";
     private EnumSet<UpdateTask> mCurrentTasks;
@@ -82,9 +78,6 @@ public class ReaderUpdateLogic {
         }
         if (tasks.contains(UpdateTask.FOLLOWED_BLOGS)) {
             updateFollowedBlogs();
-        }
-        if (tasks.contains(UpdateTask.RECOMMENDED_BLOGS)) {
-            updateRecommendedBlogs();
         }
     }
 
@@ -157,11 +150,7 @@ public class ReaderUpdateLogic {
 
                 boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
-                if (!mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
-                    serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
-                } else {
-                    serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
-                }
+                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
                 // and check if we are going to change it to trigger UI update in case of downgrade
@@ -192,19 +181,13 @@ public class ReaderUpdateLogic {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
-                    if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
-                        // Delete recommended tags which got saved as followed tags for logged out user
-                        // before we allowed following tags using interests picker
-                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
-                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
-                        }
+                    if (!mAccountStore.hasAccessToken()) {
                         // Do not delete locally saved tags for logged out user
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {
                         // if any local topics have been removed from the server, make sure to delete
-                        // them locally (including their posts)
-                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // them locally
+                        ReaderTagTable.deleteTags(localTopics.getDeletions(serverTopics));
                         // now replace local topics with the server topics
                         ReaderTagTable.replaceTags(serverTopics);
                     }
@@ -281,24 +264,6 @@ public class ReaderUpdateLogic {
         return interestTags;
     }
 
-    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
-        if (tagList == null || tagList.size() == 0) {
-            return;
-        }
-        ReaderTagTable.deleteTags(tagList);
-
-        SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        db.beginTransaction();
-        try {
-            for (ReaderTag tag : tagList) {
-                ReaderPostTable.deletePostsWithTag(tag);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
     private void fetchInterestTags() {
         RestRequest.Listener listener = this::handleInterestTagsResponse;
         RestRequest.ErrorListener errorListener = volleyError -> {
@@ -372,48 +337,6 @@ public class ReaderUpdateLogic {
                 }
 
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
-            }
-        }.start();
-    }
-
-    /***
-     * request the latest recommended blogs, replaces all local ones
-     */
-    private void updateRecommendedBlogs() {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleRecommendedBlogsResponse(jsonObject);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.READER, volleyError);
-                taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
-            }
-        };
-
-        AppLog.d(AppLog.T.READER, "reader service > updating recommended blogs");
-        String path = "read/recommendations/mine/"
-                      + "?source=mobile"
-                      + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
-        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
-    }
-
-    private void handleRecommendedBlogsResponse(final JSONObject jsonObject) {
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
-                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getRecommendedBlogs();
-
-                if (!localBlogs.isSameList(serverBlogs)) {
-                    ReaderBlogTable.setRecommendedBlogs(serverBlogs);
-                    EventBus.getDefault().post(new ReaderEvents.RecommendedBlogsChanged());
-                }
-
-                taskCompleted(UpdateTask.RECOMMENDED_BLOGS);
             }
         }.start();
     }

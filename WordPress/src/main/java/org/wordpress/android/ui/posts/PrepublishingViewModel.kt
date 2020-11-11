@@ -13,11 +13,14 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
+import java.io.Serializable
 import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
@@ -39,6 +42,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 
     private val _triggerOnSubmitButtonClickedListener = MutableLiveData<Event<PublishPost>>()
     val triggerOnSubmitButtonClickedListener: LiveData<Event<PublishPost>> = _triggerOnSubmitButtonClickedListener
+
+    private val _triggerOnDeviceBackPressed = MutableLiveData<Event<PrepublishingScreen>>()
+    val triggerOnDeviceBackPressed: LiveData<Event<PrepublishingScreen>> = _triggerOnDeviceBackPressed
 
     init {
         dispatcher.register(this)
@@ -65,25 +71,44 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         fetchTags()
     }
 
-    private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
-        // Note: given we know both the HOME and the TAGS screens have an EditText, we can ask to send the
+    private fun navigateToScreen(prepublishingScreen: PrepublishingScreen, bundle: Bundle? = null) {
+        // Note: given we know both the HOME, TAGS and ADD_CATEGORY screens have an EditText, we can ask to send the
         // dismissKeyboard signal only when we're not either in one of these nor navigating towards one of these.
         // At this point in code we only know where we want to navigate to, but it's ok since landing on any of these
         // two we'll want the keyboard to stay up if it was already up ;) (i.e. don't dismiss it).
         // For the case where this is not a story and hence there's no EditText in the HOME screen, we're ok too,
         // because there wouldn't have been a keyboard up anyway.
-        if (prepublishingScreen == PUBLISH) {
+        if (prepublishingScreen == PUBLISH ||
+                prepublishingScreen == CATEGORIES) {
             _dismissKeyboard.postValue(Event(Unit))
         }
-        updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen))
+        updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen, bundle))
     }
 
-    fun onBackClicked() {
-        if (currentScreen != HOME) {
-            currentScreen = HOME
-            navigateToScreen(currentScreen as PrepublishingScreen)
+    // Send this back out to the current screen and so it can determine if it needs to save
+    // any data before accepting a backPress - in our case, the only view that needs this today
+    // is the Categories selection & AddCategory
+    fun onDeviceBackPressed() {
+        if (currentScreen == CATEGORIES || currentScreen == ADD_CATEGORY) {
+            _triggerOnDeviceBackPressed.value = Event(currentScreen as PrepublishingScreen)
         } else {
-            _dismissBottomSheet.postValue(Event(Unit))
+            onBackClicked()
+        }
+    }
+
+    fun onBackClicked(bundle: Bundle? = null) {
+        when {
+            currentScreen == ADD_CATEGORY -> {
+                currentScreen = CATEGORIES
+                navigateToScreen(currentScreen as PrepublishingScreen, bundle)
+            }
+            currentScreen != HOME -> {
+                currentScreen = HOME
+                navigateToScreen(currentScreen as PrepublishingScreen)
+            }
+            else -> {
+                _dismissBottomSheet.postValue(Event(Unit))
+            }
         }
     }
 
@@ -99,10 +124,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         outState.putParcelable(KEY_SCREEN_STATE, currentScreen)
     }
 
-    fun onActionClicked(actionType: ActionType) {
+    fun onActionClicked(actionType: ActionType, bundle: Bundle? = null) {
         val screen = PrepublishingScreen.valueOf(actionType.name)
         currentScreen = screen
-        navigateToScreen(screen)
+        navigateToScreen(screen, bundle)
     }
 
     fun onSubmitButtonClicked(publishPost: PublishPost) {
@@ -121,7 +146,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onTaxonomyChanged(event: OnTaxonomyChanged) {
         if (event.isError) {
-            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+            AppLog.e(
+                    T.POSTS,
+                    "An error occurred while updating taxonomy with type: " + event.error.type
+            )
         }
     }
 }
@@ -130,10 +158,18 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 enum class PrepublishingScreen : Parcelable {
     HOME,
     PUBLISH,
-    TAGS
+    TAGS,
+    CATEGORIES,
+    ADD_CATEGORY
 }
 
 data class PrepublishingNavigationTarget(
     val site: SiteModel,
-    val targetScreen: PrepublishingScreen
+    val targetScreen: PrepublishingScreen,
+    val bundle: Bundle? = null
 )
+
+data class PrepublishingAddCategoryRequest(
+    val categoryText: String,
+    val categoryParentId: Long
+) : Serializable

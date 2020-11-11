@@ -20,7 +20,6 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManager
-import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -37,9 +36,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        WPActivityUtils.setLightStatusBar(requireActivity().window, true)
         initDoneButton()
         initRetryButton()
+        initBackButton()
         initViewModel()
     }
 
@@ -52,6 +51,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun initRetryButton() {
         error_retry.setOnClickListener {
             viewModel.onRetryButtonClick()
+        }
+    }
+
+    private fun initBackButton() {
+        back_button.setOnClickListener {
+            viewModel.onBackButtonClick()
         }
     }
 
@@ -77,7 +82,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             with(uiHelpers) {
                 updateVisibility(progress_bar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
-                updateVisibility(subtitle, uiState.subtitleVisible)
                 updateVisibility(error_layout, uiState.errorLayoutVisible)
             }
         })
@@ -147,11 +151,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             interests_chip_group.addView(chip)
         }
         return chip
-    }
-
-    override fun onDestroyView() {
-        WPActivityUtils.setLightStatusBar(requireActivity().window, false)
-        super.onDestroyView()
     }
 
     companion object {

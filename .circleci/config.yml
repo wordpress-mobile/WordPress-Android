@@ -12,18 +12,21 @@ parameters:
   translation_review_lang_id:
     type: string
     default: all-lang
+  generate_screenshots:
+    type: boolean
+    default: false
 
 commands:
   copy-gradle-properties:
     steps:
       - run:
           name: Setup gradle.properties
-          command: cp gradle.properties-example gradle.properties
+          command: cp gradle.properties-example gradle.properties && cp libs/utils/WordPressUtils/gradle.properties-example libs/utils/WordPressUtils/gradle.properties
   update-gradle-memory:
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -102,8 +105,9 @@ jobs:
           command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle
       - save-gutenberg-bundle-cache
   test:
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    executor:
+      name: android/default
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -114,9 +118,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Test WordPress
           environment:
@@ -127,11 +131,17 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
+      - run:
+          name: Test WordPressProcessors
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew :libs:WordPressProcessors:test --stacktrace
       - android/save-gradle-cache
       - android/save-test-results
   lint:
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    executor:
+      name: android/default
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -142,9 +152,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Checkstyle
           environment:
@@ -160,7 +170,7 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-          no_output_timeout: 15m
+          no_output_timeout: 40m
       - run:
           name: Violations
           when: on_fail
@@ -175,8 +185,9 @@ jobs:
       - android/save-gradle-cache
       - android/save-lint-results
   Installable Build:
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    executor:
+      name: android/default
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -191,9 +202,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build APK
           environment:
@@ -219,14 +230,90 @@ jobs:
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
+  Release Build:
+    executor:
+      name: android/default
+      api-version: "29"
+    environment:
+      JVM_OPTS: -Xmx2048m
+    steps:
+      - run: 
+          name: Init messages
+          command: |
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android failed!'" >> $BASH_ENV
+      - git/shallow-checkout:
+          init-submodules: true
+      - checkout-submodules
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - update-gradle-memory
+      - android/restore-gradle-cache
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
+      - run:
+          name: Install other tools
+          command: |
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+            eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+            brew install openjdk
+            brew install bundletool
+            echo "export PATH='/home/linuxbrew/.linuxbrew/Cellar/bundletool/1.2.0/bin:$PATH'" >> $BASH_ENV
+      - run: 
+          name: Prepare build
+          command: |
+            echo "export APP_VERSION=$(./gradlew -q printVersionName | tail -1)" >> $BASH_ENV 
+            SLACK_MESSAGE_VERSION=$(./gradlew -q printVersionName | tail -1)
+            echo "export SLACK_FAILURE_MESSAGE=':red_circle: Build for WordPress Android $SLACK_MESSAGE_VERSION failed!'" >> $BASH_ENV
+            echo "export SLACK_SUCCESS_MESSAGE=':tada: WordPress Android $SLACK_MESSAGE_VERSION has been deployed!'" >> $BASH_ENV
+            bundle check
+      - run:
+          name: Build Zalpha 
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_alpha skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            fi 
+          no_output_timeout: 15m
+      - run: 
+          name: Build Vanilla
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            if [[ ${APP_VERSION} == *"-rc-"* ]]; then
+              bundle exec fastlane build_beta skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            else
+              bundle exec fastlane build_and_upload_release skip_confirm:true skip_prechecks:true create_release:true upload_to_play_store:true
+            fi
+          no_output_timeout: 15m
+      - android/save-gradle-cache
+      - store_artifacts:
+          path: build
+          destination: Artifacts
+      - slack/status:
+          include_job_number_field: false
+          include_project_field: false
+          include_visit_job_action: false
+          webhook: '${SLACK_BUILD_WEBHOOK}'
+          failure_message: '${SLACK_FAILURE_MESSAGE}'
+          success_message: '${SLACK_SUCCESS_MESSAGE}'
+
   Connected Tests:
     parameters:
       post-to-slack:
         description: Post to Slack when tests fail. SLACK_WEBHOOK ENV variable must be set.
         type: boolean
         default: false
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    executor:
+      name: android/default
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -237,9 +324,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build
           environment:
@@ -254,7 +341,7 @@ jobs:
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
           test-targets: notPackage org.wordpress.android.ui.screenshots
-          device: model=Nexus5X,version=26,locale=en,orientation=portrait
+          device: model=Pixel2,version=28,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m
           num-flaky-test-attempts: 2
@@ -268,9 +355,126 @@ jobs:
                 include_job_number_field: false
                 include_project_field: false
                 failure_message: ':red_circle: WordPress Android connected tests failed on \`${CIRCLE_BRANCH}\` branch after merge by ${CIRCLE_USERNAME}. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
+  raw-screenshots:
+    executor:
+      name: android/default
+      api-version: "29"
+    working_directory: /tmp/workspace
+    steps:
+      - git/shallow-checkout:
+          init-submodules: true
+      - checkout-submodules
+      - bundle-install/bundle-install:
+          cache_key_prefix: v1-raw-screenshots
+      - android/restore-gradle-cache
+      - copy-gradle-properties
+      - update-gradle-memory
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+      - run: 
+          name: Setup assets
+          command: |
+            INDEX_BUNDLE_PATH="libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle"
+            mkdir -p "$(dirname "${CIRCLE_WORKING_DIRECTORY}/${INDEX_BUNDLE_PATH}")"
+            cp ~/project/"${INDEX_BUNDLE_PATH}" "${CIRCLE_WORKING_DIRECTORY}/${INDEX_BUNDLE_PATH}"
+      - run:
+          name: Build
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
+      - run:
+          name: Decrypt credentials
+          command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
+      - android/firebase-test:
+          key-file: .circleci/.firebase.secrets.json
+          type: instrumentation
+          apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
+          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
+          test-targets: package org.wordpress.android.ui.screenshots
+          # NOTE: When updating this list of devices, ensure to also update the `phone:` and `tenInch:` parameters in "Download Raw Screenshots from Google Storage"
+          devices: |
+            model=blueline,version=28,orientation=portrait
+            model=gts3lltevzw,version=28,orientation=default
+          # NOTE: When updating this list of locales, ensure to also update the `promo_config:` keys accordingly in the `SUPPORTED_LOCALES` in `fastlane/Fastfile`
+          # locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
+          locales: ar de_DE en_US es_ES fr_FR iw_IL in it_IT ja_JP ko_KR nl_NL pl_PL pt_BR ru_RU sr sv_SE th tr_TR vi zh_CN zh_TW
+          project: api-project-108380595987
+          timeout: 30m
+          num-flaky-test-attempts: 2
+          results-history-name: CircleCI WordPress Screenshots
+      - android/save-gradle-cache
+      - run:
+          name: Download Raw Screenshots from Google Storage
+          command: |
+            TEST_BUCKET=$(cat log.txt | grep -o "gs://test\-lab\-.*/" | head -1)
+            bundle exec fastlane download_raw_screenshots bucket:"$TEST_BUCKET" phone:blueline-28 tenInch:gts3lltevzw-28
+      - persist_to_workspace:
+          root: .
+          paths:
+            - Gemfile
+            - Gemfile.lock
+            - fastlane/
+  promo-screenshots:
+    parameters:
+      post-to-slack:
+        description: Post to Slack when screenshots job has finished. SLACK_WEBHOOK ENV variable must be set.
+        type: boolean
+        default: true
+    macos:
+      xcode: 11.6.0
+    working_directory: /tmp/workspace
+    steps:
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          # ImageMagick is used by the 'rmagick' gem, so cache invalidation of ImageMagick should depend on version of rmagick from Gemfile.lock
+          keys:
+            - &homebrew-cache-key v2-brew-imagemagick-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Brew Install ImageMagick
+          command: |
+            brew install pkg-config imagemagick
+            brew cleanup
+      - save_cache:
+          paths:
+            - ~/Library/Caches/Homebrew
+          key: *homebrew-cache-key
+      - run:
+          name: Bundle install with rmagick
+          command: |
+            # Activate 'screenshots' in bundle config options (remove it from 'without' in case it's set here)
+            bundle config --local --delete without
+            bundle config --local with screenshots
+            bundle install --path vendor/bundle
+      - run:
+          name: Download Promo Strings
+          command: bundle exec fastlane download_promo_strings
+      - run:
+          name: Create Promo Screenshots
+          command: bundle exec fastlane android create_promo_screenshots force:true
+      - run:
+          name: ZIP Metadata
+          command: cd fastlane/metadata; zip -r Android-Promo-Screenshots.zip android
+      - store_artifacts:
+          path: fastlane/metadata/Android-Promo-Screenshots.zip
+      - when:
+          condition: << parameters.post-to-slack >>
+          steps:
+            - slack/status:
+                include_job_number_field: false
+                include_project_field: false
+                webhook: '${SLACK_BUILD_WEBHOOK}'
+                # [Trial] Validate URLs (and IDs used within those) in both those messages and adapt to the ones for a8c instances once we integrate the PR from fork to main repo
+                failure_message: ':red_circle: WordPress Android Screenshots failed on \`${CIRCLE_BRANCH}\` branch. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
+                success_message: ':tada: WordPress Android Promo Screenshots have been generated and are ready to be reviewed. Download them <https://${CIRCLE_BUILD_NUM}-9306568-gh.circle-artifacts.com/0/fastlane/metadata/Android-Promo-Screenshots.zip|here>'
   WordPressUtils Connected Tests:
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    executor:
+      name: android/default
+      api-version: "29"
     steps:
       - git/shallow-checkout:
           init-submodules: true
@@ -281,9 +485,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build
           environment:
@@ -297,7 +501,7 @@ jobs:
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-apk-path: libs/utils/WordPressUtils/build/outputs/apk/androidTest/debug/WordPressUtils-debug-androidTest.apk
-          device: model=Nexus5X,version=26,locale=en,orientation=portrait
+          device: model=Pixel2,version=28,locale=en,orientation=portrait
           project: api-project-108380595987
           timeout: 10m
           results-history-name: CircleCI WPUtils Connected Tests
@@ -318,8 +522,9 @@ jobs:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
   translation-review-build:
-    docker:
-      - image: circleci/android@sha256:061e2535826cc3fe4c4a440e716bf06c36c80401ee635c339c6803b3e427ebb3
+    executor:
+      name: android/default
+      api-version: "29"
     environment:
       APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
     steps:
@@ -336,9 +541,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build APK
           environment:
@@ -366,7 +571,10 @@ jobs:
 
 workflows:
   wordpress_android:
-    unless: << pipeline.parameters.translation_review_build >>
+    unless:
+      or:
+        - << pipeline.parameters.translation_review_build >>
+        - << pipeline.parameters.generate_screenshots >>
     jobs:
       - gutenberg-bundle-build
       - strings-check
@@ -399,7 +607,10 @@ workflows:
                 - develop
                 - /^release.*/
   Optional Tests:
-    unless: << pipeline.parameters.translation_review_build >>
+    unless:
+      or:
+        - << pipeline.parameters.translation_review_build >>
+        - << pipeline.parameters.generate_screenshots >>
     #Optionally run connected tests on PRs
     jobs:
       - Hold:
@@ -416,3 +627,36 @@ workflows:
     when: << pipeline.parameters.translation_review_build >>
     jobs:
       - translation-review-build
+  Screenshots:
+    when: << pipeline.parameters.generate_screenshots >>
+    jobs:
+      - gutenberg-bundle-build
+      - raw-screenshots:
+          requires: [gutenberg-bundle-build]
+      - promo-screenshots:
+          requires: [raw-screenshots]
+  Release Build:
+    unless: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - gutenberg-bundle-build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - lint:
+          requires:
+            - gutenberg-bundle-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - Release Build:
+          requires:
+            - lint 
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/

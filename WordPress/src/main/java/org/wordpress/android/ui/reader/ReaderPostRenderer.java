@@ -19,7 +19,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.lang.ref.WeakReference;
@@ -124,9 +123,11 @@ public class ReaderPostRenderer {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl) {
-                if (!imageUrl.contains("wpcom-smileys")) {
-                    replaceImageTag(imageTag, imageUrl);
+                // Exceptions which should keep their original tag attributes
+                if (imageUrl.contains("wpcom-smileys") || imageTag.contains("wp-story")) {
+                    return;
                 }
+                replaceImageTag(imageTag, imageUrl);
             }
         };
         String content = mRenderBuilder.toString();
@@ -254,28 +255,12 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * returns true if the post has a featured image and the featured image is not found in the post body
-     */
-    private boolean shouldAddFeaturedImage() {
-        return mPost.hasFeaturedImage()
-               && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())
-               && mFeaturedImageUtils.showFeaturedImage(mPost.getFeaturedImage(), mPost.getText());
-    }
-
-    /*
      * returns the basic content of the post tweaked for use here
      */
     private String getPostContent() {
         String content = mPost.shouldShowExcerpt() ? mPost.getExcerpt() : mPost.getText();
-
         // some content (such as Vimeo embeds) don't have "http:" before links
         content = content.replace("src=\"//", "src=\"http://");
-
-        // add the featured image (if any)
-        if (shouldAddFeaturedImage()) {
-            AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
-            content = getFeaturedImageHtml() + content;
-        }
 
         // if this is a Discover post, add a link which shows the blog preview
         if (mPost.isDiscoverPost()) {
@@ -301,20 +286,6 @@ public class ReaderPostRenderer {
      */
     String getRenderedHtml() {
         return mRenderedHtml;
-    }
-
-    /*
-     * returns the HTML to use when inserting a featured image into the rendered content
-     */
-    private String getFeaturedImageHtml() {
-        String imageUrl = ReaderUtils.getResizedImageUrl(
-                mPost.getFeaturedImage(),
-                mResourceVars.mFullSizeImageWidthPx,
-                mResourceVars.mFeaturedImageHeightPx,
-                mPost.isPrivate,
-                mPost.isPrivateAtomic);
-
-        return "<img class='size-full' src='" + imageUrl + "'/>";
     }
 
     /*
@@ -380,9 +351,11 @@ public class ReaderPostRenderer {
               .append(" p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "")
                       + ", li { line-height: 1.6em; font-size: 100%; }")
               .append(" h1, h2, h3 { line-height: 1.6em; }")
-              // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as
-              // tiled gallery as those will be handled with the .tiled-gallery rules bellow.
-              .append(" p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "")
+              // Counteract pre-defined height/width styles, expect for:
+              // 1. Story blocks, which set their own mobile-friendly size we shouldn't override.
+              // 2. The tiled-gallery divs when rendering as tiled gallery, as those will be handled
+              // with the .tiled-gallery rules below.
+              .append(" p, div:not(.wp-story-container.*)" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "")
                       + ", dl, table { width: auto !important; height: auto !important; }")
               // make sure long strings don't force the user to scroll horizontally
               .append(" body, p, div, a { word-wrap: break-word; }")
@@ -393,9 +366,9 @@ public class ReaderPostRenderer {
               .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
               .append(" p:first-child { margin-top: 0px; }")
-              // add background color, fontsize and padding to pre blocks, and add overflow scrolling
-              // so user can scroll the block if it's wider than the display
-              .append(" pre { overflow-x: scroll;")
+              // add background color, fontsize and padding to pre blocks, and wrap the text
+              // so the user can see full block.
+              .append(" pre { word-wrap: break-word; white-space: pre-wrap; ")
               .append(" background-color: var(--color-neutral-20);")
               .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
               .append(" line-height: 1.2em; font-size: 14px; }")
@@ -509,6 +482,7 @@ public class ReaderPostRenderer {
                 .append(" div.feedflare { display: none; }")
                 .append(" .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, ")
                 .append(" .OUTBRAIN, .adsbygoogle { display: none; }")
+                .append(" figure { display: block; margin-inline-start: 0px; margin-inline-end: 0px; }")
                 .append("</style>");
 
         // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
@@ -541,6 +515,7 @@ public class ReaderPostRenderer {
           .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
           .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
           .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("--color-neutral-10: ").append(mResourceVars.mGreyDisabledStr).append("; ")
           .append("} ");
     }
 

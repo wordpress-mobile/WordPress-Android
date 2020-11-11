@@ -60,6 +60,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon,android:supportsRtl"
         android:supportsRtl="true"
@@ -103,7 +104,7 @@
             android:label="@string/me_section_screen_title" />
         <activity
             android:name=".ui.accounts.LoginActivity"
-            android:theme="@style/Theme.LoginFlow"
+            android:theme="@style/Theme.LoginFlow.TransparentStatusBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -145,6 +146,23 @@
             android:name=".ui.accounts.HelpActivity"
             android:label="@string/help_screen_title"
             android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name="zendesk.support.guide.HelpCenterActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.guide.ViewArticleActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.request.RequestActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
+        <activity
+            android:name="zendesk.support.requestlist.RequestListActivity"
+            android:theme="@style/WordPress.ZenDesk" />
+
         <!-- empty title -->
 
         <!-- Preferences activities -->
@@ -211,7 +229,7 @@
         <!-- Posts activities -->
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:theme="@style/WordPress.Editor.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -266,7 +284,7 @@
         <activity
             android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
-            android:theme="@style/WordPress.Editor.NoActionBar" />
+            android:theme="@style/WordPress.NoActionBar" />
 
         <!-- plans -->
         <activity
@@ -439,9 +457,12 @@
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
-            android:label="@string/reader_title_deeplink"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.NoActionBar.TranslucentStatus"
             android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity-alias
+            android:name=".WPComPostReaderActivity"
+            android:targetActivity=".ui.reader.ReaderPostPagerActivity">
             <intent-filter>
                 <data
                     android:host="wordpress.com"
@@ -496,7 +517,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-        </activity>
+        </activity-alias>
         <activity
             android:name=".ui.reader.ReaderCommentListActivity"
             android:label="@string/reader_title_comments"
@@ -577,7 +598,7 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
-            android:name=".ui.photopicker.mediapicker.MediaPickerActivity"
+            android:name=".ui.mediapicker.MediaPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
@@ -586,6 +607,10 @@
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.gif.GifPickerActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
+            android:name=".util.config.manual.ManualFeatureConfigActivity"
+            android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Notifications activities -->
@@ -636,7 +661,11 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:label="@string/edit_photo_screen_title"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <activity
+            android:name=".ui.posts.JetpackSecuritySettingsActivity"
+            android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
         <service

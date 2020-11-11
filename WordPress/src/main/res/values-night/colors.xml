@@ -37,9 +37,16 @@
     <color name="stats_map_activity_high">@color/pink_30</color>
     <color name="stats_map_activity_empty">@color/gray_80</color>
 
-    <!-- Login -->
+    <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/white_translucent_20</color>
-    <color name="login_promo_footer_background_color">#11ffffff</color>
+    <color name="login_prologue_background_circle_purple">@color/green_60</color>
+    <color name="login_prologue_background_circle_light_purple">@color/purple_60</color>
+    <color name="login_prologue_background_circle_blue">@color/wordpress_blue_60</color>
+    <color name="login_prologue_background_circle_light_blue">@color/blue_60</color>
+    <color name="login_prologue_background_circle_green">@color/green_60</color>
+    <color name="login_prologue_background_circle_yellow">@color/yellow_60</color>
+    <color name="login_prologue_background_circle_orange">@color/red_60</color>
+    <color name="login_prologue_background_circle_pink">@color/purple_60</color>
 
     <!-- Post History -->
 
@@ -58,6 +65,8 @@
 
     <!-- Reader Post Card -->
     <color name="reader_post_list_background">@color/gray_100</color>
+    <color name="reader_welcome_card_background">@color/background_dark</color>
+    <color name="reader_welcome_card_text">@color/white</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>
@@ -65,5 +74,8 @@
     <color name="prepublishing_action_result_enabled_color">@color/gray_30</color>
     <color name="prepublishing_action_type_disabled_color">@color/gray_50</color>
     <color name="prepublishing_action_result_disabled_color">@color/gray_50</color>
+
+    <!-- Collapsing Toolbar Custom Scrim Color -->
+    <color name="collapsing_toolbar_custom_scrim_color">@color/black_translucent_50</color>
 
 </resources>

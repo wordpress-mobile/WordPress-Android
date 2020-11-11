@@ -1,15 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 09:34:41+0000
+Translation-Revision-Date: 2020-08-26 21:31:09+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: hr
 -->
 <resources>
+    <string name="label_close_button">Zatvori</string>
+    <string name="label_control_publish">Sljedeće</string>
+    <string name="label_done">Gotovo</string>
+    <string name="label_share_to">Podijeli</string>
+    <string name="label_control_retry">Pokušaj ponovno</string>
+    <string name="label_control_saved">Spremljeno</string>
+    <string name="label_control_saving">Spremanje</string>
+    <string name="sound_button_alt">Zvuk</string>
+    <string name="text_button_alt">Tekst</string>
+    <string name="more_button_alt">Više</string>
+    <string name="stickers_button_alt">Naljepnice</string>
+    <string name="alignment_none">Ništa</string>
+    <string name="title_follower">Sljedbenik</string>
+    <string name="people_fetching">Dohvaćanje korisnika…</string>
+    <string name="people_dropdown_item_viewers">Posjetitelji</string>
+    <string name="people_dropdown_item_followers">Pratitelji</string>
+    <string name="invite">Pozovi</string>
+    <string name="invite_people">Pozovi osobe</string>
+    <string name="send">Pošalji</string>
+    <string name="people">Ljudi</string>
+    <string name="role">Uloga</string>
     <string name="show_purchases">Prikaži kupovine</string>
     <string name="delete_site_hint">Obriši web-stranicu</string>
     <string name="primary_domain">Primarna domena</string>
     <string name="contact_support">Kontaktirajte podršku</string>
+    <string name="start_over">Kreni ispočetka</string>
+    <string name="me_btn_app_settings">Postavke aplikacije</string>
+    <string name="site_settings_advanced_header">Napredno</string>
+    <string name="alignment_center">Sredina</string>
+    <string name="post_format_video">Video</string>
+    <string name="post_format_status">Stanje</string>
+    <string name="post_format_standard">Standardno</string>
+    <string name="post_format_quote">Citat</string>
+    <string name="post_format_link">Poveznica</string>
+    <string name="post_format_image">Slika</string>
+    <string name="post_format_gallery">Galerija</string>
+    <string name="post_format_chat">Čavrljanje</string>
+    <string name="post_format_audio">Zvuk</string>
+    <string name="notif_community">Zajednica</string>
+    <string name="notif_suggestions">Prijedlozi</string>
+    <string name="replies_to_my_comments">Odgovori na moje komentare</string>
+    <string name="notif_research">Istraži</string>
+    <string name="username_mentions">Spominjanja korisnika</string>
+    <string name="site_achievements">Dostignuća na web sjedištu</string>
+    <string name="likes_on_my_posts">\"Sviđa mi se\" u mojim objavama</string>
+    <string name="likes_on_my_comments">\"Sviđa mi se\" na moje komentare</string>
+    <string name="comments_on_my_site">Komentari na mojoj web stranici</string>
+    <string name="site_settings_list_editor_summary_other">%d stavki</string>
+    <string name="site_settings_list_editor_summary_one">1 stavka</string>
+    <string name="approve_auto">Svi korisnici</string>
+    <string name="approve_manual">Nema komentara</string>
+    <string name="site_settings_paging_summary_other">%d komentara po stranici</string>
+    <string name="site_settings_paging_summary_one">1 komentar po stranici</string>
+    <string name="detail_approve_auto">Automatski odobri svačije komentare.</string>
+    <string name="detail_approve_auto_if_previously_approved">Automatski odobri ako korisnik prethodno već ima odobreni komentar</string>
+    <string name="detail_approve_manual">Zahtijevajte ručno odobrenje za sve komentare.</string>
+    <string name="days_quantity_other">%d dana</string>
+    <string name="days_quantity_one">1 dan</string>
+    <string name="web_address">Web adresa</string>
+    <string name="primary_site">Primarna web stranica</string>
+    <string name="pending_email_change_snackbar">Kliknite poveznicu za potvrdu u poruci koja je poslana na e-poštu %1$s kako biste potvrdili novu adresu</string>
+    <string name="editor_toast_uploading_please_wait">Trenutno prenosite medije. Pričekajte dok ovo ne završi.</string>
+    <string name="error_refresh_comments_showing_older">Komentari se trenutno nisu mogli osvježiti - prikazuju se stariji komentari</string>
+    <string name="post_settings_set_featured_image">Postavi istaknutu sliku</string>
+    <string name="post_settings_featured_image">Istaknuta slika</string>
+    <string name="email_address">Adresa E-pošte</string>
+    <string name="dlg_sure_to_delete_comments">Želite li trajno izbrisati ove komentare?</string>
+    <string name="dlg_sure_to_delete_comment">Želite li trajno izbrisati ovaj komentar?</string>
+    <string name="mnu_comment_delete_permanently">Obriši</string>
+    <string name="mnu_comment_untrash">Vraćanje</string>
+    <string name="comment_deleted_permanently">Komentar obrisan</string>
+    <string name="comments_empty_list_filtered_spam">Nema neželjenih komentara</string>
+    <string name="comment_status_all">Sve</string>
+    <string name="could_not_load_page">Nemoguće je učitati stranicu</string>
+    <string name="off">Isključeno</string>
+    <string name="interface_language">Jezik sučelja</string>
+    <string name="about_the_app">O aplikaciji</string>
     <string name="error_post_account_settings">Neuspjelo snimanje postavki vašeg računa</string>
     <string name="error_fetch_account_settings">Neuspjelo dohvaćanje postavki vašeg računa</string>
     <string name="error_fetch_my_profile">Neuspjelo dohvaćanje vašeg profila</string>
@@ -165,7 +238,6 @@ Language: hr
     <string name="reader_short_like_count_none">Lajkovi</string>
     <string name="reader_label_follow_count">%,d sljedbenika</string>
     <string name="reader_short_like_count_one">1 lajk</string>
-    <string name="reader_menu_tags">Uredi oznake i web-stranice</string>
     <string name="reader_title_post_detail">Objava u Čitaču</string>
     <string name="notifications_push_summary">Postavke za obavijesti na vašem uređaju</string>
     <string name="notifications_email_summary">Postavke za obavijesti koje će biti poslane na adresu e-pošte povezane s tvojim korisničkim računom</string>
@@ -283,16 +355,12 @@ Language: hr
     <string name="comment_reply_to_user">Odgovor na %s</string>
     <string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
     <string name="more">Više</string>
-    <string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovu web-stranicu</string>
     <string name="reader_toast_blog_blocked">Objave sa ove web-stranice više neće biti prikazane</string>
     <string name="reader_menu_block_blog">Blokiraj ovu web-stranicu</string>
-    <string name="contact_us">Kontaktirajte nas</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
-    <string name="reader_page_followed_tags">Praćene oznake</string>
-    <string name="reader_hint_add_tag_or_url">Unesite URL ili oznaku za praćenje</string>
     <string name="reader_page_followed_blogs">Praćene web-stranice</string>
     <string name="reader_toast_err_get_blog_info">Nije moguće prikazati web-stranicu</string>
     <string name="reader_toast_err_already_follow_blog">Već pratite ovu web-stranicu</string>
@@ -369,8 +437,6 @@ Language: hr
     <string name="local_changes">Lokalne promjene</string>
     <string name="image_settings">Postavke slike</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="reader_toast_err_add_tag">Nije moguće dodati ovu oznaku</string>
-    <string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu oznaku</string>
     <string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
@@ -380,6 +446,9 @@ Language: hr
     <string name="remove_account">Ukloni web-stranicu</string>
     <string name="delete_post">Obriši objavu?</string>
     <string name="delete_page">Obriši stranicu?</string>
+    <string name="plugin_not_found">Dogodila se greška prilikom pristupanja ovom dodatku</string>
+    <string name="invalid_site_url_message">Provjerite je li uneseni URL web stranice ispravan</string>
+    <string name="error_refresh_media">Trenutno se medij ne može osvježiti</string>
     <string name="share_link">Podjeli poveznicu</string>
     <string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava…</string>
     <string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
@@ -402,11 +471,11 @@ Language: hr
     <string name="reader_likes_one">Jednoj osobi se ovo sviđa</string>
     <string name="reader_likes_only_you">Vama se ovo sviđa</string>
     <string name="reader_toast_err_comment_failed">Vaš komentar nije moguće objavaiti</string>
-    <string name="reader_toast_err_tag_exists">Već pratite ovu oznaku</string>
-    <string name="reader_toast_err_tag_invalid">To nije ispravna oznaka</string>
     <string name="reader_toast_err_share_intent">Nije moguće podijeliti</string>
     <string name="reader_toast_err_view_image">Nije moguće prikazati sliku</string>
     <string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>
+    <string name="comments_empty_list">Još nema komentara</string>
+    <string name="sign_up_label">Prijavite se</string>
     <string name="stats_timeframe_days">Dani</string>
     <string name="stats_timeframe_weeks">Tjedni</string>
     <string name="stats_timeframe_months">Mjeseci</string>
@@ -427,18 +496,21 @@ Language: hr
     <string name="media_edit_description_text">Opis</string>
     <string name="media_edit_caption_text">Podnatpis</string>
     <string name="media_edit_failure">Neuspjelo ažuriranje</string>
+    <string name="discard">Odbaci</string>
+    <string name="manage">Upravljanje</string>
     <string name="sign_in">Prijavi se</string>
     <string name="new_notifications">%d novih obavijesti</string>
     <string name="more_notifications">i %d više.</string>
     <string name="note_reply_successful">Odgovor objavljen</string>
     <string name="follows">Praćenje</string>
     <string name="loading">Učitavanje…</string>
-    <string name="httppassword">HTTP lozinka</string>
     <string name="httpuser">HTTP korisničko ime</string>
+    <string name="httppassword">HTTP lozinka</string>
     <string name="error_media_upload">Dogodila se greška tijekom prijenosa medijskog zapisa</string>
     <string name="incorrect_credentials">Neispravno korisničko ime ili lozinka.</string>
     <string name="password">Lozinka</string>
     <string name="username">Korisničko ime</string>
+    <string name="log_in">Prijavi se</string>
     <string name="reader">Čitač</string>
     <string name="no_network_title">Nema dostupne mreže</string>
     <string name="anonymous">Anonimno</string>
@@ -479,4 +551,5 @@ Language: hr
     <string name="category_refresh_error">Pogreška u osvježavanju kategorija</string>
     <string name="preview">Pretpregled</string>
     <string name="notification_settings">Postavke obavijesti</string>
+    <string name="publish_now">Objavi sada</string>
 </resources>

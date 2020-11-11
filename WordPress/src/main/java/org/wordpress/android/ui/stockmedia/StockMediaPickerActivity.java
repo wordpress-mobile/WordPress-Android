@@ -44,7 +44,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.MediaPickerConstants;
 import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
@@ -137,7 +137,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
         mThumbWidth = displayWidth / getColumnCount();
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -455,7 +455,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
                 }
                 intent.putExtra(KEY_UPLOADED_MEDIA_IDS, idArray);
             } else {
-                intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, event.mediaList.get(0).getMediaId());
+                intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_ID, event.mediaList.get(0).getMediaId());
             }
 
             setResult(RESULT_OK, intent);

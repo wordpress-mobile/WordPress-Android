@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_TAG_FOLLOWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
@@ -131,8 +132,6 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     fun onDoneButtonClick() {
-        trackerWrapper.track(SELECT_INTERESTS_PICKED)
-
         val contentUiState = uiState.value as ContentUiState
 
         updateUiState(
@@ -142,7 +141,10 @@ class ReaderInterestsViewModel @Inject constructor(
                 )
         )
 
+        trackInterests(contentUiState.getSelectedInterests())
+
         viewModelScope.launch {
+            readerTagRepository.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
             when (val result = readerTagRepository.saveInterests(contentUiState.getSelectedInterests())) {
                 is Success -> {
                     parentViewModel.onCloseReaderInterests()
@@ -192,11 +194,21 @@ class ReaderInterestsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
+    private fun trackInterests(tags: List<ReaderTag>) {
+        tags.forEach { it ->
+            trackerWrapper.track(READER_TAG_FOLLOWED, mapOf("tag" to it.tagSlug))
+        }
+        trackerWrapper.track(SELECT_INTERESTS_PICKED, mapOf("quantity" to tags.size))
+    }
+
+    fun onBackButtonClick() {
+        parentViewModel.onCloseReaderInterests()
+    }
+
     sealed class UiState(
         open val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
         open val progressBarVisible: Boolean = false,
         val titleVisible: Boolean = false,
-        val subtitleVisible: Boolean = false,
         val errorLayoutVisible: Boolean = false
     ) {
         object InitialLoadingUiState : UiState(
@@ -211,7 +223,6 @@ class ReaderInterestsViewModel @Inject constructor(
         ) : UiState(
                 progressBarVisible = false,
                 titleVisible = true,
-                subtitleVisible = true,
                 errorLayoutVisible = false
         )
 

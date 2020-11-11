@@ -13,11 +13,13 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
@@ -26,7 +28,11 @@ import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUs
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
+import org.wordpress.android.ui.reader.utils.ReaderTagWrapper
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.perform
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import java.util.concurrent.atomic.AtomicBoolean
@@ -37,6 +43,7 @@ import kotlin.coroutines.CoroutineContext
 class ReaderDiscoverDataProvider @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
+    private val readerTagWrapper: ReaderTagWrapper,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
@@ -49,7 +56,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private var isStarted = false
     // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
-
+    private var isLoadMoreRequestInProgress = false
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
@@ -57,6 +64,15 @@ class ReaderDiscoverDataProvider @Inject constructor(
 
     private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
     val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel
+            .perform {
+                if (it.peekContent().task == REQUEST_MORE && it.peekContent() !is Started) {
+                    AppLog.w(READER, "reader discover load more cards task is finished")
+                    isLoadMoreRequestInProgress = false
+                }
+            }
+
+    val readerTag: ReaderTag
+        get() = readerTagWrapper.createDiscoverPostCardsTag()
 
     fun start() {
         if (isStarted) return
@@ -78,7 +94,13 @@ class ReaderDiscoverDataProvider @Inject constructor(
     }
 
     suspend fun loadMoreCards() {
-        // TODO malinjir check that the request isn't already in progress
+        if (isLoadMoreRequestInProgress) {
+            AppLog.w(READER, "reader discover load more cards task is already running")
+            return
+        }
+
+        isLoadMoreRequestInProgress = true
+
         if (hasMoreCards) {
             withContext(ioDispatcher) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
@@ -92,7 +114,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         withContext(ioDispatcher) {
             val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
-            val refresh = shouldAutoUpdateTagUseCase.get(ReaderTag.createDiscoverPostCardsTag())
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
             if (forceReload || !existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
@@ -165,6 +187,15 @@ class ReaderDiscoverDataProvider @Inject constructor(
                 HAS_NEW, CHANGED -> onUpdated(event.task)
                 UNCHANGED -> onUnchanged(event.task)
                 FAILED -> onFailed(event.task)
+            }
+        }
+    }
+
+    @Subscribe(threadMode = BACKGROUND)
+    fun onFollowedTagsChanged(event: FollowedTagsChanged) {
+        if (event.didSucceed()) {
+            launch {
+                refreshCards()
             }
         }
     }

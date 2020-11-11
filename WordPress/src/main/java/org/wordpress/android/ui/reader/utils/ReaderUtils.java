@@ -49,17 +49,55 @@ public class ReaderUtils {
 
 
         if (isPrivate && !isPrivateAtomic) {
-            return getPrivateImageForDisplay(unescapedUrl, width, height);
+            return getImageForDisplayWithoutPhoton(unescapedUrl, width, height, true);
         } else {
             return PhotonUtils.getPhotonImageUrl(unescapedUrl, width, height, quality, isPrivateAtomic);
         }
     }
 
+    public static String getResizedImageUrl(final String imageUrl,
+                                            int width,
+                                            int height,
+                                            SiteAccessibilityInfo siteAccessibilityInfo) {
+        return getResizedImageUrl(imageUrl, width, height, siteAccessibilityInfo, PhotonUtils.Quality.MEDIUM);
+    }
+
+    public static String getResizedImageUrl(final String imageUrl,
+                                            int width,
+                                            int height,
+                                            SiteAccessibilityInfo siteAccessibilityInfo,
+                                            PhotonUtils.Quality quality) {
+        final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
+
+        if (siteAccessibilityInfo.isPhotonCapable()) {
+            return PhotonUtils.getPhotonImageUrl(
+                    unescapedUrl,
+                    width,
+                    height,
+                    quality,
+                    siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE_ATOMIC
+            );
+        } else {
+            return getImageForDisplayWithoutPhoton(
+                    unescapedUrl,
+                    width,
+                    height,
+                    siteAccessibilityInfo.getSiteVisibility() == SiteVisibility.PRIVATE
+            );
+        }
+    }
+
     /*
-     * use this to request a reduced size image from a private post - images in private posts can't
-     * use photon but these are usually wp images so they support the h= and w= query params
+     * use this to request a reduced size image from not photon capable sites
+     * (i.e. a private post - images in private posts can't use photon
+     * but these are usually wp images so they support the h= and w= query params)
      */
-    private static String getPrivateImageForDisplay(final String imageUrl, int width, int height) {
+    private static String getImageForDisplayWithoutPhoton(
+            final String imageUrl,
+            int width,
+            int height,
+            boolean forceHttps
+    ) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -74,8 +112,14 @@ public class ReaderUtils {
         } else {
             query = "";
         }
-        // remove the existing query string, add the new one, and make sure the url is https:
-        return UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query;
+
+        if (forceHttps) {
+            // remove the existing query string, add the new one, and make sure the url is https:
+            return UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query;
+        } else {
+            // remove the existing query string, add the new one
+            return UrlUtils.removeQuery(imageUrl) + query;
+        }
     }
 
     /*
@@ -457,5 +501,9 @@ public class ReaderUtils {
      */
     public static boolean isExternalFeed(long blogId, long feedId) {
          return (blogId == 0 && feedId != 0) || blogId == feedId;
+    }
+
+    public static String getReportPostUrl(String blogUrl) {
+        return "https://wordpress.com/abuse/?report_url=" + blogUrl;
     }
 }

@@ -1,35 +1,39 @@
 package org.wordpress.android.ui.accounts.login
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
+import android.widget.EditText
+import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.login_intro_template_view.*
 import org.wordpress.android.R
+import kotlin.math.min
 
 class LoginProloguePageFragment : Fragment() {
     @StringRes private var promoTitle: Int? = null
-    @StringRes private var promoText: Int? = null
-    @DrawableRes private var promoImage: Int? = null
+    @LayoutRes private var promoLayoutId: Int? = null
+    @LayoutRes private var promoBackgroundId: Int? = null
 
     companion object {
         private const val KEY_PROMO_TITLE = "KEY_PROMO_TITLE"
-        private const val KEY_PROMO_TEXT = "KEY_PROMO_TEXT"
-        private const val KEY_PROMO_IMAGE = "KEY_PROMO_IMAGE"
+        private const val KEY_PROMO_LAYOUT = "KEY_PROMO_LAYOUT"
+        private const val KEY_PROMO_BACKGROUND = "KEY_PROMO_BACKGROUND"
 
         @JvmStatic
         fun newInstance(
             @StringRes promoTitle: Int,
-            @StringRes promoText: Int,
-            @DrawableRes promoImage: Int
+            @LayoutRes promoLayoutId: Int,
+            @LayoutRes promoBackgroundId: Int
         ) = LoginProloguePageFragment().apply {
             arguments = Bundle().apply {
                 putInt(KEY_PROMO_TITLE, promoTitle)
-                putInt(KEY_PROMO_TEXT, promoText)
-                putInt(KEY_PROMO_IMAGE, promoImage)
+                putInt(KEY_PROMO_LAYOUT, promoLayoutId)
+                putInt(KEY_PROMO_BACKGROUND, promoBackgroundId)
             }
         }
     }
@@ -38,8 +42,8 @@ class LoginProloguePageFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             promoTitle = it.getInt(KEY_PROMO_TITLE)
-            promoText = it.getInt(KEY_PROMO_TEXT)
-            promoImage = it.getInt(KEY_PROMO_IMAGE)
+            promoLayoutId = it.getInt(KEY_PROMO_LAYOUT)
+            promoBackgroundId = it.getInt(KEY_PROMO_BACKGROUND)
         }
     }
 
@@ -51,8 +55,51 @@ class LoginProloguePageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val inflater = LayoutInflater.from(view.context)
+
         promoTitle?.let { promo_title.setText(it) }
-        promoText?.let { promo_text.setText(it) }
-        promoImage?.let { illustration_view.setImageResource(it) }
+
+        val container = view.findViewById<ViewGroup>(R.id.promo_layout_container)
+        container.post {
+            promoLayoutId?.let {
+                val content = inflater.inflate(promoLayoutId!!, container, false)
+
+                val widthOfContainer = container.width
+                val heightOfContainer = container.height
+
+                val smallestDimension = min(widthOfContainer, heightOfContainer).toFloat()
+                val sizeOfContent = resources.getDimensionPixelOffset(R.dimen.login_prologue_content_area).toFloat()
+
+                val scaleFactor = smallestDimension / sizeOfContent
+
+                content.scaleX = scaleFactor
+                content.scaleY = scaleFactor
+
+                container.addView(content)
+
+                // add a cursor to the end of the EditText at second prologue screen
+                if (promoLayoutId == R.layout.login_prologue_second) {
+                    val editText = view.findViewById<EditText>(R.id.edit_text)
+                    editText.post {
+                        editText.isPressed = true
+                        editText.setSelection(editText.length())
+                    }
+                }
+
+                // format text from HTML to show bold on third prologue screen
+                if (promoLayoutId == R.layout.login_prologue_third) {
+                    view.findViewById<TextView>(R.id.text_one).text = Html.fromHtml(getString(
+                            R.string.login_prologue_third_subtitle_one))
+                    view.findViewById<TextView>(R.id.text_two).text = Html.fromHtml(getString(
+                            R.string.login_prologue_third_subtitle_two))
+                    view.findViewById<TextView>(R.id.text_three).text = Html.fromHtml(getString(
+                            R.string.login_prologue_third_subtitle_three))
+                }
+            }
+        }
+        promoBackgroundId?.let {
+            inflater.inflate(it, promo_background_container, true)
+        }
     }
 }

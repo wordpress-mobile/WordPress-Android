@@ -13,8 +13,6 @@
     <color name="background_snackbar">@color/neutral_80</color>
     <color name="link_reader">@color/primary</color>
     <color name="link_stats">@color/accent</color>
-    <color name="status_bar">@color/primary</color>
-    <color name="status_bar_action_mode">@color/neutral</color>
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1A000000</color>
@@ -40,10 +38,16 @@
 
     <color name="post_history_underlying_background">@color/neutral_0</color>
 
-    <!-- LOGIN -->
-    <color name="color_primary">@color/primary</color>
+    <!-- Login Prologue -->
     <color name="promo_indicator_color_default">@color/black_translucent_20</color>
-    <color name="login_promo_footer_background_color">#eff3f7</color>
+    <color name="login_prologue_background_circle_purple">@color/purple_20</color>
+    <color name="login_prologue_background_circle_light_purple">@color/purple_10</color>
+    <color name="login_prologue_background_circle_blue">@color/wordpress_blue_20</color>
+    <color name="login_prologue_background_circle_light_blue">@color/blue_5</color>
+    <color name="login_prologue_background_circle_green">@color/green_5</color>
+    <color name="login_prologue_background_circle_yellow">@color/yellow_10</color>
+    <color name="login_prologue_background_circle_orange">@color/orange_10</color>
+    <color name="login_prologue_background_circle_pink">@color/pink_10</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
@@ -310,6 +314,7 @@
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
     <color name="white_translucent_20">#33ffffff</color>
     <color name="white_translucent_40">#66ffffff</color>
+    <color name="white_translucent_50">#80ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
 
     <!-- Reader -->
@@ -325,5 +330,19 @@
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
+
+    <!-- Modal Layout Picker -->
+    <color name="mlp_categories_button_background">#ffededed</color>
+    <color name="mlp_categories_button_background_dark">#ff464646</color>
+    <color name="mlp_categories_button_background_selected_dark">#ffdcdcdc</color>
+    <color name="mlp_divider_dark">#ff303030</color>
+    <color name="mlp_categories_background_dark">#ff2d2d2d</color>
+
+    <!--Reader Welcome Card -->
+    <color name="reader_welcome_card_background">@color/primary_emphasis_lowest</color>
+    <color name="reader_welcome_card_text">@color/blue_70</color>
+
+    <!-- Collapsing Toolbar Custom Scrim Color -->
+    <color name="collapsing_toolbar_custom_scrim_color">@color/white_translucent_50</color>
 
 </resources>

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -56,6 +58,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginAutofillCredentialsFilled() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+        mUnifiedLoginTracker.track(Flow.SMART_LOCK_LOGIN, Step.START);
     }
 
     @Override
@@ -134,9 +137,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackPasswordFormViewed() {
+    public void trackPasswordFormViewed(boolean isSocialChallenge) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
-        mUnifiedLoginTracker.track(Flow.LOGIN_PASSWORD, Step.START);
+        if (isSocialChallenge) {
+            mUnifiedLoginTracker.track(Flow.GOOGLE_LOGIN, Step.PASSWORD_CHALLENGE);
+        } else {
+            mUnifiedLoginTracker.track(Flow.LOGIN_PASSWORD, Step.START);
+        }
     }
 
     @Override
@@ -274,18 +281,23 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, properties);
     }
 
-    @Override public void trackConnectedSiteInfoRequested(String url) {
-        // Not used in WordPress app
+    @Override
+    public void trackConnectedSiteInfoRequested(String url) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("url", url);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_CONNECTED_SITE_INFO_REQUESTED, properties);
     }
 
     @Override
     public void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType,
                                              String errorDescription) {
-        // Not used in WordPress app
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_CONNECTED_SITE_INFO_FAILED, errorContext, errorType,
+                errorDescription);
     }
 
-    @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
-        // Not used in WordPress app
+    @Override
+    public void trackConnectedSiteInfoSucceeded(@NotNull Map<String, ?> properties) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_CONNECTED_SITE_INFO_SUCCEEDED, properties);
     }
 
     @Override

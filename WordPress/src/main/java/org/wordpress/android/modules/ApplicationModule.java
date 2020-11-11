@@ -15,8 +15,7 @@ import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
-import org.wordpress.android.ui.news.LocalNewsService;
-import org.wordpress.android.ui.news.NewsService;
+import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.reader.subfilter.SubfilterPageFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
@@ -31,8 +30,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureFragment;
+import org.wordpress.android.util.config.manual.ManualFeatureConfigFragment;
 import org.wordpress.android.util.wizard.WizardManager;
-import org.wordpress.android.viewmodel.ContextProvider;
 import org.wordpress.android.viewmodel.gif.provider.GifProvider;
 import org.wordpress.android.viewmodel.gif.provider.TenorProvider;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
@@ -48,11 +47,6 @@ public abstract class ApplicationModule {
     // Expose Application as an injectable context
     @Binds
     abstract Context bindContext(Application application);
-
-    @Provides
-    public static NewsService provideLocalNewsService(ContextProvider contextProvider) {
-        return new LocalNewsService(contextProvider);
-    }
 
     @ContributesAndroidInjector
     abstract StatsListFragment contributeStatListFragment();
@@ -105,6 +99,9 @@ public abstract class ApplicationModule {
     @ContributesAndroidInjector
     abstract SubfilterPageFragment contributeSubfilterPageFragment();
 
+    @ContributesAndroidInjector
+    abstract ManualFeatureConfigFragment contributeManualFeatureConfigFragment();
+
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(
             SiteCreationStepsProvider stepsProvider) {
@@ -122,5 +119,13 @@ public abstract class ApplicationModule {
         builder.apiKey(BuildConfig.TENOR_API_KEY);
         ApiClient.init(context, builder);
         return new TenorProvider(context, ApiClient.getInstance(context));
+    }
+
+    @Provides
+    static TenorGifClient provideTenorGifClient(Context context) {
+        ApiService.IBuilder<IApiClient> builder = new ApiService.Builder<>(context, IApiClient.class);
+        builder.apiKey(BuildConfig.TENOR_API_KEY);
+        ApiClient.init(context, builder);
+        return new TenorGifClient(context, ApiClient.getInstance(context));
     }
 }

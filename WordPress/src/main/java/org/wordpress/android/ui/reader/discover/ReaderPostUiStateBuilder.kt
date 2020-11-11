@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
@@ -14,7 +17,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
@@ -22,7 +25,9 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
+
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -30,7 +35,10 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -39,8 +47,10 @@ import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val READER_INTEREST_LIST_SIZE_LIMIT = 5
+private const val READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT = 3
 
 @Reusable
 class ReaderPostUiStateBuilder @Inject constructor(
@@ -51,18 +61,52 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
-    private val appPrefsWrapper: AppPrefsWrapper
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    // TODO malinjir move this to a bg thread
-    fun mapPostToUiState(
+    suspend fun mapPostToUiState(
         post: ReaderPost,
-        isDiscover: Boolean = false, // set to true for new discover tab
+        isDiscover: Boolean = false,
         photonWidth: Int,
         photonHeight: Int,
-            // TODO malinjir try to refactor/remove this parameter
         postListType: ReaderPostListType,
-            // TODO malinjir try to refactor/remove this parameter
-        isBookmarkList: Boolean,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (ReaderCardUiState) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        onTagItemClicked: (String) -> Unit,
+        moreMenuItems: List<SecondaryAction>? = null
+    ): ReaderPostUiState {
+        return withContext(bgDispatcher) {
+            mapPostToUiStateBlocking(
+                    post,
+                    isDiscover,
+                    photonWidth,
+                    photonHeight,
+                    postListType,
+                    onButtonClicked,
+                    onItemClicked,
+                    onItemRendered,
+                    onDiscoverSectionClicked,
+                    onMoreButtonClicked,
+                    onMoreDismissed,
+                    onVideoOverlayClicked,
+                    onPostHeaderViewClicked,
+                    onTagItemClicked,
+                    moreMenuItems
+            )
+        }
+    }
+
+    fun mapPostToUiStateBlocking(
+        post: ReaderPost,
+        isDiscover: Boolean = false,
+        photonWidth: Int,
+        photonHeight: Int,
+        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
@@ -77,10 +121,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogUrl = buildBlogUrl(post),
-                dateLine = buildDateLine(post),
-                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-                blogName = buildBlogName(post),
+                blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
                 tagItems = buildTagItems(post, onTagItemClicked),
@@ -97,47 +138,110 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 fullVideoUrl = buildFullVideoUrl(post),
                 discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
                 bookmarkAction = buildBookmarkSection(post, onButtonClicked),
-                likeAction = buildLikeSection(post, isBookmarkList, onButtonClicked),
+                likeAction = buildLikeSection(post, onButtonClicked),
                 reblogAction = buildReblogSection(post, onButtonClicked),
-                commentsAction = buildCommentsSection(post, isBookmarkList, onButtonClicked),
+                commentsAction = buildCommentsSection(post, onButtonClicked),
                 onItemClicked = onItemClicked,
                 onItemRendered = onItemRendered,
                 onMoreButtonClicked = onMoreButtonClicked,
                 onMoreDismissed = onMoreDismissed,
-                onVideoOverlayClicked = onVideoOverlayClicked,
-                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
+                onVideoOverlayClicked = onVideoOverlayClicked
         )
     }
 
-    fun mapTagListToReaderInterestUiState(
+    fun mapPostToBlogSectionUiState(
+        post: ReaderPost,
+        onBlogSectionClicked: (Long, Long) -> Unit
+    ): ReaderBlogSectionUiState {
+        return buildBlogSection(post, onBlogSectionClicked)
+    }
+
+    fun mapPostToActions(
+        post: ReaderPost,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ): ReaderPostActions {
+        return ReaderPostActions(
+                bookmarkAction = buildBookmarkSection(post, onButtonClicked),
+                likeAction = buildLikeSection(post, onButtonClicked),
+                reblogAction = buildReblogSection(post, onButtonClicked),
+                commentsAction = buildCommentsSection(post, onButtonClicked)
+        )
+    }
+
+    suspend fun mapTagListToReaderInterestUiState(
         interests: ReaderTagList,
         onClicked: ((String) -> Unit)
     ): ReaderInterestsCardUiState {
-        val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
-            interests.size
-        } else {
-            READER_INTEREST_LIST_SIZE_LIMIT
-        }
-        val lastIndex = listSize - 1
+        return withContext(bgDispatcher) {
+            val listSize = if (interests.size < READER_INTEREST_LIST_SIZE_LIMIT) {
+                interests.size
+            } else {
+                READER_INTEREST_LIST_SIZE_LIMIT
+            }
+            val lastIndex = listSize - 1
 
-        return ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
-            ReaderInterestUiState(
-                    interest.tagTitle,
-                    buildIsDividerVisible(interest, interests, lastIndex),
-                    onClicked
-            )
-        })
+            return@withContext ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
+                ReaderInterestUiState(
+                        interest.tagTitle,
+                        buildIsDividerVisible(interest, interests, lastIndex),
+                        onClicked
+                )
+            })
+        }
+    }
+
+    suspend fun mapRecommendedBlogsToReaderRecommendedBlogsCardUiState(
+        recommendedBlogs: List<ReaderBlog>,
+        onItemClicked: (Long, Long) -> Unit,
+        onFollowClicked: (ReaderRecommendedBlogUiState) -> Unit
+    ): ReaderRecommendedBlogsCardUiState = withContext(bgDispatcher) {
+        recommendedBlogs.take(READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT)
+                .map {
+                    ReaderRecommendedBlogUiState(
+                            name = it.name,
+                            url = urlUtilsWrapper.removeScheme(it.url),
+                            blogId = it.blogId,
+                            feedId = it.feedId,
+                            description = it.description.ifEmpty { null },
+                            iconUrl = it.imageUrl,
+                            isFollowed = it.isFollowing,
+                            onFollowClicked = onFollowClicked,
+                            onItemClicked = onItemClicked
+                    )
+                }.let { ReaderRecommendedBlogsCardUiState(it) }
+    }
+
+    private fun buildBlogSection(
+        post: ReaderPost,
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType? = null
+    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType)
+
+    private fun buildBlogSectionUiState(
+        post: ReaderPost,
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType?
+    ): ReaderBlogSectionUiState {
+        return ReaderBlogSectionUiState(
+                postId = post.postId,
+                blogId = post.blogId,
+                blogName = buildBlogName(post),
+                blogUrl = buildBlogUrl(post),
+                dateLine = buildDateLine(post),
+                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+                blogSectionClickData = buildOnBlogSectionClicked(onBlogSectionClicked, postListType)
+        )
     }
 
     private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
             readerTagList.indexOf(readerTag) != lastIndex
 
-    private fun buildOnPostHeaderViewClicked(
-        onPostHeaderViewClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType
-    ): PostHeaderClickData? {
+    private fun buildOnBlogSectionClicked(
+        onBlogSectionClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType?
+    ): ReaderBlogSectionClickData? {
         return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
-            PostHeaderClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
+            ReaderBlogSectionClickData(onBlogSectionClicked, android.R.attr.selectableItemBackground)
         } else {
             null
         }
@@ -157,7 +261,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     ?.let { post.featuredVideo }
 
     private fun buildExpandedTagsViewVisibility(post: ReaderPost, isDiscover: Boolean) =
-            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty() && isDiscover
+            post.tags.isNotEmpty() && isDiscover
 
     private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
             readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
@@ -187,14 +291,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     post.cardType != GALLERY
 
     // TODO malinjir show title only when buildPhotoTitle == null
-    private fun buildTitle(post: ReaderPost) =
-            post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
+    private fun buildTitle(post: ReaderPost): UiString? {
+        return if (post.cardType != PHOTO) {
+            post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
+                    ?: UiStringRes(R.string.untitled_in_parentheses)
+        } else {
+            null
+        }
+    }
 
     // TODO malinjir show excerpt only when buildPhotoTitle == null
     private fun buildExcerpt(post: ReaderPost) =
             post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
 
-    private fun buildBlogName(post: ReaderPost) = post.takeIf { it.hasBlogName() }?.blogName
+    private fun buildBlogName(post: ReaderPost) = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
+            ?: UiStringRes(R.string.untitled_in_parentheses)
 
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
             post.takeIf { it.hasBlogImageUrl() }
@@ -208,7 +319,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         discoverData: ReaderPostDiscoverData,
         onDiscoverSectionClicked: (Long, Long) -> Unit
     ): DiscoverLayoutUiState {
-        // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                 discoverData.avatarUrl,
@@ -234,33 +344,31 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
-        val contentDescription = if (post.isBookmarked) {
-            R.string.reader_remove_bookmark
-        } else {
-            R.string.reader_add_bookmark
-        }
+        val contentDescription = UiStringRes(
+                if (post.isBookmarked) {
+                    R.string.reader_remove_bookmark
+                } else {
+                    R.string.reader_add_bookmark
+                }
+        )
         return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                     isEnabled = true,
                     isSelected = post.isBookmarked,
-                    contentDescription = UiStringRes(contentDescription),
+                    contentDescription = contentDescription,
                     onClicked = onClicked,
                     type = BOOKMARK
             )
         } else {
-            PrimaryAction(isEnabled = false, type = BOOKMARK)
+            PrimaryAction(isEnabled = false, contentDescription = contentDescription, type = BOOKMARK)
         }
     }
 
     private fun buildLikeSection(
         post: ReaderPost,
-        isBookmarkList: Boolean,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
-        /* TODO malinjir why we don't show likes on bookmark list??? I think we wanted
-             to keep the card as simple as possible. However, since we are showing all the actions now, some of them
-             are just disabled, I think it's ok to enable the action. */
-        val likesEnabled = !isBookmarkList && post.canLikePost() && accountStore.hasAccessToken()
+        val likesEnabled = post.canLikePost() && accountStore.hasAccessToken()
 
         return PrimaryAction(
                 isEnabled = likesEnabled,
@@ -279,39 +387,37 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onReblogClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val canReblog = !post.isPrivate && accountStore.hasAccessToken()
-        return if (canReblog) {
-            // TODO Add content description
-            PrimaryAction(isEnabled = true, onClicked = onReblogClicked, type = REBLOG)
-        } else {
-            PrimaryAction(isEnabled = false, type = REBLOG)
-        }
+        return PrimaryAction(
+                isEnabled = canReblog,
+                contentDescription = UiStringRes(R.string.reader_view_reblog),
+                onClicked = if (canReblog) onReblogClicked else null,
+                type = REBLOG
+        )
     }
 
     private fun buildCommentsSection(
         post: ReaderPost,
-        isBookmarkList: Boolean,
         onCommentsClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val showComments = when {
-            /* TODO malinjir why we don't show comments on bookmark list??? I think we wanted
-                 to keep the card as simple as possible. However, since we are showing all the actions now, some of them
-                 are just disabled, I think it's ok to enable the action. */
-            post.isDiscoverPost || isBookmarkList -> false
+            post.isDiscoverPost -> false
             !accountStore.hasAccessToken() -> post.numReplies > 0
             else -> post.isWP && (post.isCommentsOpen || post.numReplies > 0)
         }
+        val contentDescription = UiStringRes(R.string.comments)
 
-        // TODO Add content description
         return if (showComments) {
             PrimaryAction(
                     isEnabled = true,
                     count = post.numReplies,
+                    contentDescription = contentDescription,
                     onClicked = onCommentsClicked,
                     type = ReaderPostCardActionType.COMMENTS
             )
         } else {
             PrimaryAction(
                     isEnabled = false,
+                    contentDescription = contentDescription,
                     type = ReaderPostCardActionType.COMMENTS
             )
         }

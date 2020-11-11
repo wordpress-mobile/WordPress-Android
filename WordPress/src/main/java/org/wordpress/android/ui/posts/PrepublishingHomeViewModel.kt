@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.CATEGORIES
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
@@ -38,6 +39,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
     private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -64,7 +66,11 @@ class PrepublishingHomeViewModel @Inject constructor(
         setupHomeUiState(editPostRepository, site, isStoryPost)
     }
 
-    private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
+    private fun setupHomeUiState(
+        editPostRepository: EditPostRepository,
+        site: SiteModel,
+        isStoryPost: Boolean
+    ) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             if (isStoryPost) {
                 _storyTitleUiState.postValue(StoryTitleUiState(
@@ -82,7 +88,13 @@ class PrepublishingHomeViewModel @Inject constructor(
                         HomeUiState(
                                 actionType = PUBLISH,
                                 actionResult = editPostRepository.getEditablePost()
-                                        ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
+                                        ?.let {
+                                            UiStringText(
+                                                    postSettingsUtils.getPublishDateLabel(
+                                                            it
+                                                    )
+                                            )
+                                        },
                                 actionClickable = true,
                                 onActionClicked = ::onActionClicked
                         )
@@ -92,7 +104,13 @@ class PrepublishingHomeViewModel @Inject constructor(
                         HomeUiState(
                                 actionType = PUBLISH,
                                 actionResult = editPostRepository.getEditablePost()
-                                        ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
+                                        ?.let {
+                                            UiStringText(
+                                                    postSettingsUtils.getPublishDateLabel(
+                                                            it
+                                                    )
+                                            )
+                                        },
                                 actionTypeColor = R.color.prepublishing_action_type_disabled_color,
                                 actionResultColor = R.color.prepublishing_action_result_disabled_color,
                                 actionClickable = false,
@@ -104,13 +122,39 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (!editPostRepository.isPage) {
                 add(HomeUiState(
                         actionType = TAGS,
-                        actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
+                        actionResult = getPostTagsUseCase.getTags(editPostRepository)
+                                ?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         actionClickable = true,
                         onActionClicked = ::onActionClicked
                 )
                 )
+
+                val categoryString: String = getCategoriesUseCase.getPostCategoriesString(
+                        editPostRepository,
+                        site
+                )
+                if (categoryString.isNotEmpty())
+                    UiStringText(categoryString)
+            } else {
+                UiStringRes(R.string.prepublishing_nudges_home_categories_not_set)
             }
+
+            val categoriesString = getCategoriesUseCase.getPostCategoriesString(
+                    editPostRepository,
+                    site
+            )
+
+            add(HomeUiState(
+                    actionType = CATEGORIES,
+                    actionResult = if (categoriesString.isNotEmpty()) {
+                        UiStringText(categoriesString)
+                    } else {
+                        run { UiStringRes(R.string.prepublishing_nudges_home_categories_not_set) }
+                    },
+                    actionClickable = true,
+                    onActionClicked = ::onActionClicked
+            ))
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
                 analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)

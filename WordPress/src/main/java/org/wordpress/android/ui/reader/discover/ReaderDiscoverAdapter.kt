@@ -5,14 +5,20 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.WelcomeBannerViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-private const val postViewType: Int = 1
-private const val interestViewType: Int = 2
+private const val welcomeBannerViewType: Int = 1
+private const val postViewType: Int = 2
+private const val interestViewType: Int = 3
+private const val recommendedBlogsViewType: Int = 4
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -21,12 +27,14 @@ class ReaderDiscoverAdapter(
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder {
         return when (viewType) {
+            welcomeBannerViewType -> WelcomeBannerViewHolder(parent)
             postViewType -> ReaderPostViewHolder(
                     uiHelpers,
                     imageManager,
                     parent
             )
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
+            recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent, imageManager, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
@@ -46,8 +54,10 @@ class ReaderDiscoverAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
+            is ReaderWelcomeBannerCardUiState -> welcomeBannerViewType
             is ReaderPostUiState -> postViewType
             is ReaderInterestsCardUiState -> interestViewType
+            is ReaderRecommendedBlogsCardUiState -> recommendedBlogsViewType
         }
     }
 
@@ -65,7 +75,11 @@ class ReaderDiscoverAdapter(
                 is ReaderPostUiState -> {
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
                 }
-
+                is ReaderRecommendedBlogsCardUiState -> {
+                    val newItemState = newItem as? ReaderRecommendedBlogsCardUiState
+                    oldItem.blogs.map { it.blogId to it.feedId } == newItemState?.blogs?.map { it.blogId to it.feedId }
+                }
+                is ReaderWelcomeBannerCardUiState,
                 is ReaderInterestsCardUiState -> {
                     oldItem == newItem
                 }

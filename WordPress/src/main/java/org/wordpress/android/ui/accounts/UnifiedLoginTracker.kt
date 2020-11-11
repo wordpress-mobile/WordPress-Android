@@ -129,6 +129,7 @@ class UnifiedLoginTracker
         PROLOGUE("prologue"),
         WORDPRESS_COM("wordpress_com"),
         GOOGLE_LOGIN("google_login"),
+        SMART_LOCK_LOGIN("smart_lock_login"),
         LOGIN_MAGIC_LINK("login_magic_link"),
         LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),
@@ -145,7 +146,8 @@ class UnifiedLoginTracker
         SUCCESS("success"),
         HELP("help"),
         TWO_FACTOR_AUTHENTICATION("2fa"),
-        SHOW_EMAIL_HINTS("SHOW_EMAIL_HINTS")
+        SHOW_EMAIL_HINTS("show_email_hints"),
+        PASSWORD_CHALLENGE("password_challenge")
     }
 
     enum class Click(val value: String) {

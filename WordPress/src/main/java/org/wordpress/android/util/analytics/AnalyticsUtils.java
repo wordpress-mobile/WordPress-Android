@@ -47,9 +47,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.NEWS_CARD_DIMISSED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.NEWS_CARD_EXTENDED_INFO_REQUESTED;
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.NEWS_CARD_SHOWN;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_LIKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_OPENED;
@@ -613,31 +610,16 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(AnalyticsTracker.Stat.POST_LIST_VIEW_LAYOUT_TOGGLED, properties);
     }
 
-    /**
-     * Don't use this method directly, use injectable NewsTracker instead.
-     */
-    public static void trackNewsCardShown(String origin, int version) {
-        AnalyticsTracker.track(NEWS_CARD_SHOWN, createNewsCardProperties(origin, version));
-    }
-
-    /**
-     * Don't use this method directly, use injectable NewsTracker instead.
-     */
-    public static void trackNewsCardDismissed(String origin, int version) {
-        AnalyticsTracker.track(NEWS_CARD_DIMISSED, createNewsCardProperties(origin, version));
-    }
-
-    /**
-     * Don't use this method directly, use injectable NewsTracker instead.
-     */
-    public static void trackNewsCardExtendedInfoRequested(String origin, int version) {
-        AnalyticsTracker.track(NEWS_CARD_EXTENDED_INFO_REQUESTED, createNewsCardProperties(origin, version));
-    }
-
     private static Map<String, String> createNewsCardProperties(String origin, int version) {
         Map<String, String> properties = new HashMap<>();
         properties.put(NEWS_CARD_ORIGIN, origin);
         properties.put(NEWS_CARD_VERSION, String.valueOf(version));
         return properties;
+    }
+
+    public static void trackLoginProloguePages(int page) {
+        Map<String, Integer> properties = new HashMap<>();
+        properties.put("page_number", page);
+        AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
     }
 }

@@ -78,9 +78,7 @@ Language: hi_IN
     <string name="reader_toast_err_already_liked">आपने पहले से ही उस टिप्पणी को पसंद किया हुआ हैI</string>
     <string name="reader_toast_err_comment_not_found">कोई टिप्पणी नहीं पाया!</string>
     <string name="reader_toast_err_cannot_like_post">Failed to like this post</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com पोस्ट</string>
     <string name="error_notif_q_action_reply">टिप्पणी करने के लिए जवाब नहीं कर सके। बाद में पुन: प्रयास करें।</string>
-    <string name="reader_title_deeplink">वर्डप्रेस रीडर</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
@@ -91,8 +89,8 @@ Language: hi_IN
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="send">भेजें</string>
     <string name="post_format_video">विडियो </string>
-    <string name="alignment_center">मध्य में</string>
     <string name="post_format_status">स्थिति</string>
+    <string name="alignment_center">मध्य में</string>
     <string name="post_format_standard">मानक</string>
     <string name="post_format_chat">चैट</string>
     <string name="post_format_gallery">गैलरी</string>
@@ -105,8 +103,8 @@ Language: hi_IN
     <string name="notif_suggestions">सुझाव</string>
     <string name="site_settings_list_editor_summary_one">1 आइटम </string>
     <string name="approve_auto">सभी उपयोगकर्ता</string>
-    <string name="days_quantity_one">1 दिन </string>
     <string name="days_quantity_other">%d दिन</string>
+    <string name="days_quantity_one">1 दिन </string>
     <string name="email_address">ईमेल पता</string>
     <string name="comment_status_all">सभी</string>
     <string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
@@ -145,7 +143,6 @@ Language: hi_IN
     <string name="reader_short_like_count_multi">%s पसंद</string>
     <string name="reader_short_like_count_one">1 पसंद</string>
     <string name="reader_short_like_count_none">पसंद</string>
-    <string name="reader_label_follow_count">%,d अनुयायी</string>
     <string name="reader_title_post_detail">पाठक लेख</string>
     <string name="notifications_push_summary">अपने उपकरण में सूचना हेतु व्यवस्था।</string>
     <string name="notification_types">अधिसूचना के प्रकार</string>
@@ -200,12 +197,9 @@ Language: hi_IN
     <string name="comment">टिप्पणी</string>
     <string name="comment_trashed">टिप्पणी ट्रैश किया गया</string>
     <string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
-    <string name="contact_us">हमसे संपर्क करें</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
-    <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
-    <string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
     <string name="forgot_password">आपका पासवर्ड खो गया?</string>
@@ -255,8 +249,6 @@ Language: hi_IN
     <string name="mnu_comment_trash">कचरा पेटी</string>
     <string name="trash">कचरा पेटी</string>
     <string name="comment_status_trash">कचरा पेटी में डाला गया</string>
-    <string name="reader_toast_err_add_tag">इस टैग को जोड़ने में असमर्थ</string>
-    <string name="reader_toast_err_remove_tag">इस टैग को हटाने में असमर्थ</string>
     <string name="mnu_comment_unapprove">अस्वीकृत</string>
     <string name="dlg_unapproving_comments">अस्वीकृत किया जा रहा</string>
     <string name="mnu_comment_approve">स्वीकृत करे</string>
@@ -304,9 +296,7 @@ Language: hi_IN
     <string name="reader_toast_err_url_intent">खोलने में असमर्थ %s</string>
     <string name="reader_toast_err_share_intent">साझा करने में असमर्थ</string>
     <string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
-    <string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
     <string name="empty_list_default">इस सूची खाली है</string>
-    <string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
     <string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे…</string>
     <string name="media_edit_title_text">शीर्षक</string>
     <string name="stats_timeframe_today">आज</string>

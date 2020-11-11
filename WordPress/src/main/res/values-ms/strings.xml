@@ -333,8 +333,6 @@ Language: ms
     <string name="reader_toast_err_already_liked">Anda sudahpun menyukai ulasan itu</string>
     <string name="reader_toast_err_comment_not_found">Ulasan tidak dijumpai!</string>
     <string name="reader_toast_err_cannot_like_post">Gagal untuk menyukai kiriman ini</string>
-    <string name="reader_title_post_detail_wpcom">Kiriman WordPress.com</string>
-    <string name="reader_title_deeplink">Pembaca WordPress</string>
     <string name="error_notif_q_action_reply">Tidak dapat membalas ulasan. Sila cuba sebentar lagi.</string>
     <string name="error_notif_q_action_approve">Tidak dapat meluluskan ulasan. Sila cuba sebentar lagi.</string>
     <string name="error_notif_q_action_like">Tidak boleh menyukai ulasan. Sila cuba sebentar lagi.</string>
@@ -409,7 +407,6 @@ Language: ms
     <string name="invite_people">Jemput Orang</string>
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
-    <string name="reader_title_related_post_detail">Kiriman Berkaitan</string>
     <string name="preview_screen_links_disabled">Pautan dinyah boleh pada skrin pratonton</string>
     <string name="send">Hantar</string>
     <string name="person_removed">Berjaya membuang %1$s</string>
@@ -449,7 +446,6 @@ Language: ms
     <string name="error_deleting_site">Ralat untuk memadamkan laman</string>
     <string name="site_settings_export_content_title">Eksport isi kandungan</string>
     <string name="confirm_delete_site_prompt">Sila taipkan %1$s dalam medan di bawah untuk mengesahkan. Laman anda akan hilang selamanya.</string>
-    <string name="contact_support">Hubungi sokongan</string>
     <string name="confirm_delete_site">Sah Hapuskan Laman</string>
     <string name="start_over_text">Jika anda mahukan laman tapi tidak mahu apa-apa kiriman atau laman yang anda ada sekarang, kumpulan sokongan kami boleh menghapuskan kiriman, halaman, media dan komen untuk anda.\n\nIni akan mengekalkan status aktif laman dan URL anda, tetapi memberi anda permulaan baharu untuk mewujudkan kandungan. Hubungi kami untuk menghapuskan kandungan semasa anda.</string>
     <string name="let_us_help">Biar Kami Bantu</string>
@@ -661,7 +657,6 @@ Language: ms
     <string name="reader_discover_attribution_author">Asalnya dikirim oleh %s</string>
     <string name="reader_discover_attribution_author_and_blog">Asalnya dikirim oleh %1$s pada %2$s</string>
     <string name="reader_short_like_count_multi">%s Suka</string>
-    <string name="reader_label_follow_count">%,d pengikut</string>
     <string name="reader_short_like_count_one">1 Suka</string>
     <string name="reader_short_like_count_none">Suka</string>
     <string name="reader_title_post_detail">Kiriman Pembaca</string>
@@ -771,19 +766,14 @@ Language: ms
     <string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
     <string name="comment_reply_to_user">Balasan kepada %s</string>
     <string name="signing_out">Melog keluar…</string>
-    <string name="reader_empty_posts_in_tag">Tiada kiriman dengan tag ini</string>
     <string name="reader_label_view_original">Lihat artikel asal</string>
     <string name="error_refresh_unauthorized_pages">Anda tidak mempunyai kebenaran melihat atau menyunting halaman</string>
     <string name="error_refresh_unauthorized_comments">Anda tidak mempunyai kebenaran melihat atau menyunting ulasan</string>
     <string name="older_month">Lebih dari sebulan</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
-    <string name="reader_label_liked_by">Disukai oleh</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
-    <string name="contact_us">Hubungi kami</string>
     <string name="update_verb">Kemas kini</string>
     <string name="schedule_verb">Jadual</string>
-    <string name="reader_page_followed_tags">Tag yang diikuti</string>
-    <string name="reader_hint_add_tag_or_url">Masukkan tag atau URL untuk diikuti</string>
     <string name="reader_page_followed_blogs">Laman yang diikuti</string>
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sijil SSL tidak sah</string>
@@ -842,8 +832,6 @@ Language: ms
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
     <string name="reader_title_applog">Log aplikasi</string>
-    <string name="reader_toast_err_add_tag">Tidak dapat menambah tag ini</string>
-    <string name="reader_toast_err_remove_tag">Tidak dapat membuang tag ini</string>
     <string name="http_authorization_required">Kebenaran diperlukan</string>
     <string name="new_post">Kiriman baharu</string>
     <string name="new_media">Media baharu</string>
@@ -886,8 +874,6 @@ Language: ms
     <string name="reader_likes_one">Seorang menyukainya</string>
     <string name="reader_likes_only_you">Anda menyukainya</string>
     <string name="reader_toast_err_comment_failed">Tidak dapat mengirim komen anda</string>
-    <string name="reader_toast_err_tag_exists">Anda telahpun mengikut tag ini</string>
-    <string name="reader_toast_err_tag_invalid">Ianya bukan tag yang sah</string>
     <string name="reader_toast_err_share_intent">Tidak dapat dikongsi</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat imej</string>
     <string name="reader_hint_comment_on_comment">Balas ulasan…</string>

@@ -30,8 +30,6 @@ import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -52,7 +50,6 @@ class ReaderViewModelTest {
     @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = ReaderTagList().apply {
@@ -71,9 +68,7 @@ class ReaderViewModelTest {
                 dateProvider,
                 loadReaderTabsUseCase,
                 readerTracker,
-                accountStore,
-                getFollowedTagsUseCase,
-                analyticsTrackerWrapper
+                accountStore
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -121,7 +116,7 @@ class ReaderViewModelTest {
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(state).isNotInstanceOf(ContentUiState::class.java)
+        assertThat(state).isNull()
     }
 
     @Test
@@ -165,14 +160,14 @@ class ReaderViewModelTest {
         // Arrange
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(nonEmptyReaderTagList[3])
 
-        var tabPosition: TabPosition? = null
+        var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
-            tabPosition = it.getContentIfNotHandled()
+            tabNavigation = it.getContentIfNotHandled()
         }
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(tabPosition).isEqualTo(3)
+        assertThat(tabNavigation!!.position).isEqualTo(3)
     }
 
     @Test
@@ -180,27 +175,27 @@ class ReaderViewModelTest {
         // Arrange
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
 
-        var tabPosition: TabPosition? = null
+        var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
-            tabPosition = it.getContentIfNotHandled()
+            tabNavigation = it.getContentIfNotHandled()
         }
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(tabPosition).isGreaterThan(-1)
+        assertThat(tabNavigation!!.position).isGreaterThan(-1)
     }
 
     @Test
     fun `SelectTab when tags are empty`() = testWithEmptyTags {
         // Arrange
-        var tabPosition: TabPosition? = null
+        var tabNavigation: TabNavigation? = null
         viewModel.selectTab.observeForever {
-            tabPosition = it.getContentIfNotHandled()
+            tabNavigation = it.getContentIfNotHandled()
         }
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(tabPosition).isNull()
+        assertThat(tabNavigation).isNull()
     }
 
     @Test
@@ -213,9 +208,9 @@ class ReaderViewModelTest {
 
         viewModel.uiState.observeForever { }
 
-        var tabPosition: TabPosition? = null
-            viewModel.selectTab.observeForever {
-                tabPosition = it.getContentIfNotHandled()
+        var tabNavigation: TabNavigation? = null
+        viewModel.selectTab.observeForever {
+            tabNavigation = it.getContentIfNotHandled()
         }
 
         // Act
@@ -223,7 +218,7 @@ class ReaderViewModelTest {
         viewModel.selectedTabChange(readerTag)
 
         // Assert
-        assertThat(tabPosition).isEqualTo(2)
+        assertThat(tabNavigation!!.position).isEqualTo(2)
     }
 
     @Test
@@ -272,45 +267,48 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `Search is disabled on first start`() = testWithEmptyTags {
+    fun `OnSettingsActionClicked emits showSettings event`() {
         // Arrange
-        val uiStates = mutableListOf<ReaderUiState>()
-        viewModel.uiState.observeForever {
-            uiStates.add(it)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        var event: Event<Unit>? = null
+        viewModel.showSettings.observeForever {
+            event = it
         }
         // Act
-        viewModel.start()
+        viewModel.onSettingsActionClicked()
+
         // Assert
-        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
-        assertThat((uiStates[0] as InitialUiState).searchIconVisible).isFalse()
+        assertThat(event).isNotNull
     }
 
     @Test
-    fun `Tab layout is not visible on first start`() = testWithEmptyTags {
+    fun `Settings menu is disabled for self-hosted login`() = testWithNonEmptyTags {
         // Arrange
-        val uiStates = mutableListOf<ReaderUiState>()
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
-            uiStates.add(it)
+            state = it
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
+
         // Assert
-        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
-        assertThat((uiStates[0] as InitialUiState).tabLayoutVisible).isFalse()
+        assertThat(state!!.settingsIconVisible).isFalse()
     }
 
     @Test
-    fun `App bar is not expanded on first start`() = testWithEmptyTags {
+    fun `Settings menu is enabled for dot com login`() = testWithNonEmptyTags {
         // Arrange
-        val uiStates = mutableListOf<ReaderUiState>()
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
-            uiStates.add(it)
+            state = it
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
+
         // Assert
-        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
-        assertThat((uiStates[0] as InitialUiState).appBarExpanded).isFalse()
+        assertThat(state!!.settingsIconVisible).isTrue()
     }
 
     @Test
@@ -323,9 +321,9 @@ class ReaderViewModelTest {
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[1] as ContentUiState).tabLayoutVisible).isTrue()
+        assertThat(uiStates.size).isEqualTo(1)
+        assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[0] as ContentUiState).tabLayoutVisible).isTrue()
     }
 
     @Test
@@ -338,25 +336,13 @@ class ReaderViewModelTest {
         // Act
         triggerReaderTabContentDisplay()
         // Assert
-        assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
-        assertThat((uiStates[1] as ContentUiState).appBarExpanded).isTrue()
-    }
-
-    @Test
-    fun `Choose interests screen shown on first start`() = testWithEmptyTags {
-        // Arrange
-        whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
-        // Act
-        viewModel.start()
-        // Assert
-        assertThat(viewModel.showReaderInterests.value).isNotNull
+        assertThat(uiStates.size).isEqualTo(1)
+        assertThat(uiStates[0]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[0] as ContentUiState).appBarExpanded).isTrue()
     }
 
     @Test
     fun `Choose interests screen closed when onCloseReaderInterests is invoked`() = testWithNonEmptyTags {
-        // Arrange
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
         // Act
         viewModel.onCloseReaderInterests()
         // Assert
@@ -364,36 +350,22 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `Choose interests screen shown if tag changed to discover and followed tags not found for user`() =
-            testWithEmptyUserTags {
-                // Arrange
-                whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
-                val selectedTag: ReaderTag = mock()
-                whenever(selectedTag.isDiscover).thenReturn(true)
-                // Act
-                viewModel.onTagChanged(selectedTag)
-                // Assert
-                assertThat(viewModel.showReaderInterests.value).isNotNull
-            }
-
-    @Test
-    fun `Choose interests screen not shown if tag changed to discover and followed tags found for user`() =
-            testWithNonEmptyUserTags {
-                // Arrange
-                whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
-                val selectedTag: ReaderTag = mock()
-                whenever(selectedTag.isDiscover).thenReturn(true)
-                // Act
-                viewModel.onTagChanged(selectedTag)
-                // Assert
-                assertThat(viewModel.showReaderInterests.value).isNull()
-            }
+    fun `Bookmark tab is selected when bookmarkTabRequested is invoked`() = testWithNonMockedNonEmptyTags {
+        // Arrange
+        var tabNavigation: TabNavigation? = null
+        viewModel.uiState.observeForever {}
+        viewModel.selectTab.observeForever {
+            tabNavigation = it.getContentIfNotHandled()
+        }
+        // Act
+        triggerReaderTabContentDisplay()
+        viewModel.bookmarkTabRequested()
+        // Assert
+        assertThat(tabNavigation!!.position).isEqualTo(3)
+    }
 
     private fun triggerReaderTabContentDisplay() {
         viewModel.start()
-        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
-            viewModel.onCloseReaderInterests()
-        }
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
@@ -440,7 +412,7 @@ class ReaderViewModelTest {
             add(ReaderTag("Following", "Following", "Following", FOLLOWING_PATH, ReaderTagType.DEFAULT))
             add(ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT))
             add(ReaderTag("Like", "Like", "Like", LIKED_PATH, ReaderTagType.DEFAULT))
-            add(ReaderTag("Saved", "Saved", "Saved", "Saved", ReaderTagType.DEFAULT))
+            add(ReaderTag("Saved", "Saved", "Saved", "Saved", ReaderTagType.BOOKMARKED))
         }
     }
 }

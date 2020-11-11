@@ -16,12 +16,12 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
@@ -35,7 +35,7 @@ public class ReaderBlogActions {
     public static class BlockedBlogResult {
         public long blogId;
         // Key: Pair<ReaderTagSlug, ReaderTagType>, Value: ReaderPostList
-        public Map<Pair<String, ReaderTagType>, ReaderPostList> deleteRows;
+        public Map<Pair<String, ReaderTagType>, ReaderPostList> deletedRows;
         public boolean wasFollowing;
     }
 
@@ -239,18 +239,14 @@ public class ReaderBlogActions {
     /*
      * helper routine when following a blog from a post view
      */
-    public static boolean followBlogForPost(ReaderPost post,
-                                            boolean isAskingToFollow,
-                                            ActionListener actionListener) {
-        if (post == null) {
-            AppLog.w(T.READER, "follow action performed with null post");
-            ReaderActions.callActionListener(actionListener, false);
-            return false;
-        }
-        if (post.feedId != 0) {
-            return followFeedById(post.feedId, isAskingToFollow, actionListener);
+    public static boolean followBlog(final Long blogId,
+                                     final Long feedId,
+                                     boolean isAskingToFollow,
+                                     ActionListener actionListener) {
+        if (ReaderUtils.isExternalFeed(blogId, feedId)) {
+            return followFeedById(feedId, isAskingToFollow, actionListener);
         } else {
-            return followBlogById(post.blogId, isAskingToFollow, actionListener);
+            return followBlogById(blogId, isAskingToFollow, actionListener);
         }
     }
 
@@ -442,19 +438,22 @@ public class ReaderBlogActions {
         WordPress.sRequestQueue.add(request);
     }
 
+    public static BlockedBlogResult blockBlogFromReaderLocal(final long blogId) {
+        final BlockedBlogResult blockResult = new BlockedBlogResult();
+        blockResult.blogId = blogId;
+        blockResult.deletedRows = ReaderPostTable.getTagPostMap(blogId);
+        blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
+
+        ReaderPostTable.deletePostsInBlog(blockResult.blogId);
+        ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, false);
+        return blockResult;
+    }
+
     /*
      * block a blog - result includes the list of posts that were deleted by the block so they
      * can be restored if the user undoes the block
      */
-    public static BlockedBlogResult blockBlogFromReader(final long blogId, final ActionListener actionListener) {
-        final BlockedBlogResult blockResult = new BlockedBlogResult();
-        blockResult.blogId = blogId;
-        blockResult.deleteRows = ReaderPostTable.getTagPostMap(blogId);
-        blockResult.wasFollowing = ReaderBlogTable.isFollowedBlog(blogId);
-
-        ReaderPostTable.deletePostsInBlog(blogId);
-        ReaderBlogTable.setIsFollowedBlogId(blogId, false);
-
+    public static void blockBlogFromReaderRemote(BlockedBlogResult blockResult, final ActionListener actionListener) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -467,24 +466,22 @@ public class ReaderBlogActions {
                 AppLog.e(T.READER, volleyError);
                 undoBlockBlogLocal(blockResult);
                 if (blockResult.wasFollowing) {
-                    ReaderBlogTable.setIsFollowedBlogId(blogId, true);
+                    ReaderBlogTable.setIsFollowedBlogId(blockResult.blogId, true);
                 }
                 ReaderActions.callActionListener(actionListener, false);
             }
         };
 
-        AppLog.i(T.READER, "blocking blog " + blogId);
-        String path = "me/block/sites/" + Long.toString(blogId) + "/new";
+        AppLog.i(T.READER, "blocking blog " + blockResult.blogId);
+        String path = "me/block/sites/" + Long.toString(blockResult.blogId) + "/new";
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
-
-        return blockResult;
     }
 
     public static void undoBlockBlogFromReader(final BlockedBlogResult blockResult) {
         if (blockResult == null) {
             return;
         }
-       undoBlockBlogLocal(blockResult);
+        undoBlockBlogLocal(blockResult);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -511,10 +508,10 @@ public class ReaderBlogActions {
     }
 
     private static void undoBlockBlogLocal(final BlockedBlogResult blockResult) {
-        if (blockResult.deleteRows != null) {
-            for (Pair<String, ReaderTagType> tagInfo : blockResult.deleteRows.keySet()) {
+        if (blockResult.deletedRows != null) {
+            for (Pair<String, ReaderTagType> tagInfo : blockResult.deletedRows.keySet()) {
                 ReaderTag tag = ReaderTagTable.getTag(tagInfo.first, tagInfo.second);
-                ReaderPostTable.addOrUpdatePosts(tag, blockResult.deleteRows.get(tagInfo));
+                ReaderPostTable.addOrUpdatePosts(tag, blockResult.deletedRows.get(tagInfo));
             }
         }
     }

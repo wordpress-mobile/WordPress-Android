@@ -1,17 +1,30 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/editor_activity"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar_container"
-        layout="@layout/toolbar_main" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:duplicateParentState="true"
+            android:background="@drawable/tab_layout_background"
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -47,4 +60,5 @@
 
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+    <include layout="@layout/mlp_editor_preview_toolbar"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

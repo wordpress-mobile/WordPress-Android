@@ -12,6 +12,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.editor.gutenberg.DialogVisibility
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -228,5 +231,27 @@ class StorePostViewModelTest : BaseUnitTest() {
         assertThat(result).isEqualTo(SAVED_ONLINE)
         verify(postUtils).trackSavePostAnalytics(postModel, site)
         verify(uploadService).uploadPost(context, postId, isFirstTimePublish)
+    }
+
+    @Test
+    fun `updates progress dialog LiveData appropriately`() {
+        val actual = mutableListOf<DialogVisibility>()
+        val expected = mutableListOf<DialogVisibility>()
+        viewModel.savingInProgressDialogVisibility.observeForever {
+            actual.add(it)
+        }
+
+        // is Hidden upon initialization
+        expected.add(Hidden)
+        assertThat(actual).isEqualTo(expected)
+
+        viewModel.showSaveProgressDialog()
+        expected.add(Showing)
+        assertThat(actual).isEqualTo(expected)
+
+        val randomNonNullFinishState = SAVED_LOCALLY
+        viewModel.finish(randomNonNullFinishState)
+        expected.add(Hidden)
+        assertThat(actual).isEqualTo(expected)
     }
 }

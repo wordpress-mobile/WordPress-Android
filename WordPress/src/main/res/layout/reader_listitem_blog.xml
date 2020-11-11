@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!---
-    list item which shows a recommended or followed blog - see ReaderBlogAdapter
+    list item which shows a followed blog - see ReaderBlogAdapter
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -57,25 +56,14 @@
             android:textColor="?attr/colorPrimary"
             tools:text="text_url" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:ellipsize="end"
-            android:gravity="start"
-            android:maxLines="2"
-            android:textAlignment="viewStart"
-            android:textAppearance="?attr/textAppearanceCaption"
-            tools:text="text_description" />
-
     </LinearLayout>
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton
         android:id="@+id/follow_button"
+        style="@style/Reader.Follow.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_medium"
-        app:wpShowFollowButtonCaption="false" />
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"/>
 
 </LinearLayout>

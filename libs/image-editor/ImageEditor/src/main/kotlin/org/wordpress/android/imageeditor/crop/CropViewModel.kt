@@ -71,7 +71,8 @@ class CropViewModel : ViewModel() {
                 Uri.fromFile(
                     File(
                         mediaEditingDirectory,
-                        "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
+                        "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}" +
+                                "-${System.currentTimeMillis()}.$outputFileExtension"
                     )
                 )
             )
@@ -193,6 +194,6 @@ class CropViewModel : ViewModel() {
         private const val COMPRESS_QUALITY_100 = 100
         private const val PNG = "png"
         private const val WEBP = "webp"
-        private const val MEDIA_EDITING = "media_editing"
+        const val MEDIA_EDITING = "media_editing"
     }
 }

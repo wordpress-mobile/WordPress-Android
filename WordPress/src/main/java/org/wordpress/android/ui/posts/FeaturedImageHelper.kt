@@ -35,7 +35,7 @@ const val EMPTY_LOCAL_POST_ID = -1
  * However, it at least separates this piece of business logic from the view layer.
  */
 @Reusable
-internal class FeaturedImageHelper @Inject constructor(
+class FeaturedImageHelper @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
     private val uploadServiceFacade: UploadServiceFacade,
@@ -87,6 +87,23 @@ internal class FeaturedImageHelper @Inject constructor(
     ): EnqueueFeaturedImageResult {
         val media = fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
                 ?: return EnqueueFeaturedImageResult.FILE_NOT_FOUND
+        if (localPostId != EMPTY_LOCAL_POST_ID) {
+            media.localPostId = localPostId
+        } else {
+            AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.")
+            return EnqueueFeaturedImageResult.INVALID_POST_ID
+        }
+        media.markedLocallyAsFeatured = true
+
+        dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
+        startUploadService(media)
+        return EnqueueFeaturedImageResult.SUCCESS
+    }
+
+    fun queueFeaturedImageForUpload(
+        localPostId: Int,
+        media: MediaModel
+    ): EnqueueFeaturedImageResult {
         if (localPostId != EMPTY_LOCAL_POST_ID) {
             media.localPostId = localPostId
         } else {
@@ -152,8 +169,7 @@ internal class FeaturedImageHelper @Inject constructor(
                 mediaUri,
                 maxDimen,
                 maxDimen,
-                !siteUtilsWrapper.isPhotonCapable(site),
-                site.isPrivateWPComAtomic
+                siteUtilsWrapper.getAccessibilityInfoFromSite(site)
         )
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }
@@ -163,9 +179,9 @@ internal class FeaturedImageHelper @Inject constructor(
         postId: Int
     ) = analyticsTrackerWrapper.track(event.label, mapOf(POST_ID_KEY to postId))
 
-    internal data class FeaturedImageData(val uiState: FeaturedImageState, val mediaUri: String?)
+    data class FeaturedImageData(val uiState: FeaturedImageState, val mediaUri: String?)
 
-    internal enum class FeaturedImageState(
+    enum class FeaturedImageState(
         val buttonVisible: Boolean = false,
         val imageViewVisible: Boolean = false,
         val localImageViewVisible: Boolean = false,
@@ -179,11 +195,11 @@ internal class FeaturedImageHelper @Inject constructor(
         IMAGE_UPLOAD_FAILED(localImageViewVisible = true, retryOverlayVisible = true);
     }
 
-    internal enum class EnqueueFeaturedImageResult {
+    enum class EnqueueFeaturedImageResult {
         FILE_NOT_FOUND, INVALID_POST_ID, SUCCESS
     }
 
-    internal enum class TrackableEvent(val label: Stat) {
+    enum class TrackableEvent(val label: Stat) {
         IMAGE_SET_CLICKED(Stat.FEATURED_IMAGE_SET_CLICKED_POST_SETTINGS),
         IMAGE_PICKED(Stat.FEATURED_IMAGE_PICKED_POST_SETTINGS),
         IMAGE_UPLOAD_CANCELED(Stat.FEATURED_IMAGE_UPLOAD_CANCELED_POST_SETTINGS),

@@ -7,6 +7,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.wordpress.android.editor.gutenberg.DialogVisibility
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
+import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
+import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -39,13 +43,19 @@ class StorePostViewModel
     private val uploadService: UploadServiceFacade,
     private val savePostToDbUseCase: SavePostToDbUseCase,
     private val networkUtils: NetworkUtilsWrapper
-) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(mainDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
     val onSavePostTriggered: LiveData<Event<Unit>> = _onSavePostTriggered
+
     private val _onFinish = MutableLiveData<Event<ActivityFinishState>>()
     val onFinish: LiveData<Event<ActivityFinishState>> = _onFinish
+
+    private val _savingProgressDialogVisibility = MutableLiveData<DialogVisibility>().apply {
+        postValue(Hidden)
+    }
+    override val savingInProgressDialogVisibility: LiveData<DialogVisibility> = _savingProgressDialogVisibility
 
     fun savePostOnline(
         isFirstTimePublish: Boolean,
@@ -150,8 +160,17 @@ class StorePostViewModel
         return titleChanged || contentChanged
     }
 
+    fun showSaveProgressDialog() {
+        _savingProgressDialogVisibility.postValue(Showing)
+    }
+
     fun finish(state: ActivityFinishState) {
+        _savingProgressDialogVisibility.postValue(Hidden)
         _onFinish.postValue(Event(state))
+    }
+
+    fun hideSavingDialog() {
+        _savingProgressDialogVisibility.postValue(Hidden)
     }
 
     sealed class UpdateResult {
