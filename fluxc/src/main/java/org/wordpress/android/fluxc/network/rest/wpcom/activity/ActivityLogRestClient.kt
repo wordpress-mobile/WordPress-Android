@@ -47,7 +47,7 @@ constructor(
         BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
         val url = WPCOMV2.sites.site(payload.site.siteId).activity.url
-        val params = buildActivityParams(offset, number, payload)
+        val params = buildParams(offset, number, payload)
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, ActivitiesResponse::class.java)
         return when (response) {
             is Success -> {
@@ -109,7 +109,7 @@ constructor(
         }
     }
 
-    private fun buildActivityParams(
+    private fun buildParams(
         offset: Int,
         number: Int,
         payload: FetchActivityLogPayload
