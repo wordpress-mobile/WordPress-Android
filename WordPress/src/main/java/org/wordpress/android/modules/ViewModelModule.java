@@ -413,8 +413,9 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(PrepublishingAddCategoryViewModel.class)
-    abstract ViewModel prepublishingAddCategoryViewModel(PrepublishingAddCategoryViewModel viewModel);@Binds
+    abstract ViewModel prepublishingAddCategoryViewModel(PrepublishingAddCategoryViewModel viewModel);
 
+    @Binds
     @IntoMap
     @ViewModelKey(ActivityLogTypeFilterViewModel.class)
     abstract ViewModel activityLogTypeFilterViewModel(ActivityLogTypeFilterViewModel viewModel);
