@@ -332,7 +332,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(false, viewModel.dateRangePickerVisibility.value)
+        assertEquals(false, viewModel.filtersVisibility.value)
     }
 
     @Test
@@ -341,7 +341,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(true, viewModel.dateRangePickerVisibility.value)
+        assertEquals(true, viewModel.filtersVisibility.value)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

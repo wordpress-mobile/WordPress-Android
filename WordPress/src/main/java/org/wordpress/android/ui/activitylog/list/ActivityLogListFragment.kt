@@ -96,7 +96,7 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.dateRangePickerVisibility.observe(viewLifecycleOwner, Observer { visibility ->
+        viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
             uiHelpers.updateVisibility(date_range_picker, visibility)
         })
 
