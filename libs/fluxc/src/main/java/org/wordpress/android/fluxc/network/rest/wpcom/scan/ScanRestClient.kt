@@ -10,10 +10,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import javax.inject.Singleton
 
 @Singleton
-class ScanRestClient
-constructor(
-    dispatcher: Dispatcher,
+class ScanRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
     accessToken: AccessToken,
