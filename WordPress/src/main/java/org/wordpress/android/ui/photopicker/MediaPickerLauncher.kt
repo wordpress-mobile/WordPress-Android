@@ -13,6 +13,7 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.FEATURED_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
+import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
@@ -129,21 +130,9 @@ class MediaPickerLauncher @Inject constructor(
 
     fun showStoriesPhotoPickerForResult(
         activity: Activity,
-        site: SiteModel?,
-        requestCode: Int = RequestCodes.STORIES_PHOTO_PICKER
+        site: SiteModel?
     ) {
-        val browserType = MediaBrowserType.WP_STORIES_MEDIA_PICKER
-        // Temporarily disable new media picker for stories
-        if (false) {
-            val intent = MediaPickerActivity.buildIntent(
-                    activity,
-                    buildLocalMediaPickerSetup(browserType),
-                    site
-            )
-            activity.startActivityForResult(intent, requestCode)
-        } else {
-            ActivityLauncher.showPhotoPickerForResult(activity, browserType, site, null)
-        }
+        ActivityLauncher.showPhotoPickerForResult(activity, WP_STORIES_MEDIA_PICKER, site, null)
     }
 
     fun showGravatarPicker(fragment: Fragment) {

@@ -10,11 +10,10 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
-import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import javax.inject.Inject
 
 class StoriesMediaPickerResultHandler
-@Inject constructor(private val consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig) {
+@Inject constructor() {
     /* return true if MediaPickerResult was handled */
     fun handleMediaPickerResultForStories(
         data: Intent,
