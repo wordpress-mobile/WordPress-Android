@@ -65,7 +65,7 @@ class ExperimentRestClientTest {
 
         experimentRestClient.fetchAssignments(platform, anonymousId, version)
 
-        val expectedUrl = "https://public-api.wordpress.com/wpcom/v2/experiments/$version/assignments/${platform.value}/"
+        val expectedUrl = "$EXPERIMENTS_ENDPOINT/$version/assignments/${platform.value}/"
         val expectedParams = mapOf("anon_id" to anonymousId)
 
         assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
@@ -108,6 +108,8 @@ class ExperimentRestClientTest {
     }
 
     companion object {
+        const val EXPERIMENTS_ENDPOINT = "https://public-api.wordpress.com/wpcom/v2/experiments"
+
         val defaultPlatform = CALYPSO
 
         private val successfulVariations = mapOf(
