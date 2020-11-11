@@ -202,7 +202,7 @@ public class ReleaseNetworkModule {
                                                        @Named("regular") RequestQueue requestQueue,
                                                        AccessToken token, UserAgent userAgent,
                                                        WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ScanRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
                 userAgent);
     }
 
