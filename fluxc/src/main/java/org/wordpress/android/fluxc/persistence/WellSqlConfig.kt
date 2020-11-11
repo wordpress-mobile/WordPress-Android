@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 122
+        return 123
     }
 
     override fun getDbName(): String {
@@ -1335,6 +1335,9 @@ open class WellSqlConfig : DefaultWellConfig {
                             "SLUG TEXT NOT NULL," +
                             "VERSION TEXT NOT NULL)"
                     )
+                }
+                122 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD IS_WP_FOR_TEAMS_SITE BOOLEAN")
                 }
             }
         }
