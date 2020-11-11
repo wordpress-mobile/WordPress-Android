@@ -28,7 +28,7 @@ class XPostsRestClient @Inject constructor(
         return wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                emptyMap(),
+                mapOf("decode_html" to "true"),
                 Array<XPostSiteModel>::class.java,
                 true,
                 60 * 1000
