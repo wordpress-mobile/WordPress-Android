@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.FormattableContent
@@ -322,5 +323,72 @@ class ActivityLogRestClientTest {
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
+    }
+
+    private suspend fun initPostRewindWithTypes(
+        data: RewindResponse? = null,
+        error: WPComGsonNetworkError? = null,
+        requestTypes: RewindRequestTypes
+    ): Response<RewindResponse> {
+        val nonNullData = data ?: mock()
+        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(nonNullData)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf("types" to requestTypes)),
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    @Test
+    fun postRewindOperationWithTypes() = test {
+        val restoreId = 10L
+        val response = RewindResponse(restoreId, true, null)
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(data = response, requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertEquals(restoreId, payload.restoreId)
+    }
+
+    @Test
+    fun postRewindOperationErrorWithTypes() = test {
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)), requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertTrue(payload.isError)
+    }
+
+    @Test
+    fun postRewindApiErrorWithTypes() = test {
+        val restoreId = 10L
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(data = RewindResponse(restoreId, false, "error"), requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertTrue(payload.isError)
     }
 }
