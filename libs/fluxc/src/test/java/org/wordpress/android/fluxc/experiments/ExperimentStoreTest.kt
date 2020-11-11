@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.experiments
 
 import android.content.SharedPreferences
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -13,7 +12,6 @@ import org.mockito.Mock
 import org.mockito.Mockito.inOrder
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ExperimentActionBuilder
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.AssignmentsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient
@@ -50,21 +48,16 @@ class ExperimentStoreTest {
     fun `fetch assignments emits correct event when successful`() = test {
         whenever(experimentRestClient.fetchAssignments(defaultPlatform)).thenReturn(successfulPayload)
 
-        val action = ExperimentActionBuilder.newFetchAssignmentsAction(FetchAssignmentsPayload(defaultPlatform))
+        val onAssignmentsFetched = experimentStore.fetchAssignments(FetchAssignmentsPayload(defaultPlatform))
 
-        experimentStore.onAction(action)
-
-        val expectedEvent = OnAssignmentsFetched(successfulAssignments)
-        verify(dispatcher).emitChange(eq(expectedEvent))
+        assertThat(onAssignmentsFetched).isEqualTo(OnAssignmentsFetched(successfulAssignments))
     }
 
     @Test
     fun `fetch assignments stores result locally when successful`() = test {
         whenever(experimentRestClient.fetchAssignments(defaultPlatform)).thenReturn(successfulPayload)
 
-        val action = ExperimentActionBuilder.newFetchAssignmentsAction(FetchAssignmentsPayload(defaultPlatform))
-
-        experimentStore.onAction(action)
+        experimentStore.fetchAssignments(FetchAssignmentsPayload(defaultPlatform))
 
         verify(sharedPreferences).edit()
         inOrder(sharedPreferencesEditor).apply {
@@ -74,7 +67,7 @@ class ExperimentStoreTest {
     }
 
     @Test
-    fun `get cached assignments returns last fetch result when existent`() = test {
+    fun `get cached assignments returns last fetch result when existent`() {
         whenever(sharedPreferences.getString(EXPERIMENT_ASSIGNMENTS_KEY, null)).thenReturn(successfulModelJson)
 
         val cachedAssignments = experimentStore.getCachedAssignments()
@@ -84,7 +77,7 @@ class ExperimentStoreTest {
     }
 
     @Test
-    fun `get cached assignments returns null when no fetch results were stored`() = test {
+    fun `get cached assignments returns null when no fetch results were stored`() {
         whenever(sharedPreferences.getString(EXPERIMENT_ASSIGNMENTS_KEY, null)).thenReturn(null)
 
         val cachedAssignments = experimentStore.getCachedAssignments()
