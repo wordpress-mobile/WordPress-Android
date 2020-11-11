@@ -114,7 +114,7 @@ class ExperimentRestClientTest {
                 "experiment_one" to "control",
                 "experiment_two" to "treatment",
                 "experiment_three" to null,
-                "experiment_four" to "other",
+                "experiment_four" to "other"
         )
 
         val successfulResponse = FetchAssignmentsResponse(successfulVariations, 3600)
