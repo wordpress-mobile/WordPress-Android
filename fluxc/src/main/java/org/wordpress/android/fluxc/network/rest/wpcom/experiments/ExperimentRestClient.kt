@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.ExperimentStore.ExperimentErrorType.GEN
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsError
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchedAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
-import java.lang.System.currentTimeMillis
 import javax.inject.Singleton
 
 @Singleton
