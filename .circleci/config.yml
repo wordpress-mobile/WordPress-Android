@@ -387,6 +387,11 @@ jobs:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebug --stacktrace
       - run:
+          name: Build Android test
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
+      - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
       - android/firebase-test:
