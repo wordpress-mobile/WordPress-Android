@@ -29,7 +29,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-private const val DATE_PICKER_TAG = "activity_log_type_filter_tag"
+private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -147,7 +147,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun showActivityTypeFilterDialog() {
-        ActivityLogTypeFilterFragment().show(parentFragmentManager, DATE_PICKER_TAG)
+        ActivityLogTypeFilterFragment().show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
