@@ -289,8 +289,8 @@ public class WPScreenshotTest extends BaseTest {
     }
 
 
-    //In some cases there's a gray overlay on view pager screens when taking screenshots
-    //this function swipes left and then right as a workaround to clear it
+    // In some cases there's a gray overlay on view pager screens when taking screenshots
+    // this function swipes left and then right as a workaround to clear it
     // resourceID should be the ID of the viewPager
     private void swipeToAvoidGrayOverlay(int resourceID) {
         // Workaround to avoid gray overlay
