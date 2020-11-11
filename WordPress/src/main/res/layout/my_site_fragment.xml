@@ -408,6 +408,24 @@
 
                     </LinearLayout>
 
+                    <!--Scan-->
+                    <LinearLayout
+                        android:id="@+id/row_scan"
+                        style="@style/MySiteListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/my_site_scan_icon"
+                            style="@style/MySiteListRowIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_scan_alt_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_scan_text_view"
+                            style="@style/MySiteListRowTextView"
+                            android:text="@string/scan" />
+
+                    </LinearLayout>
+
                     <!--Plan-->
                     <LinearLayout
                         android:id="@+id/row_plan"

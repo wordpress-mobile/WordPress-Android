@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -29,6 +30,7 @@ import javax.inject.Inject
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ActivityLogViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
@@ -92,6 +94,10 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.eventListStatus.observe(viewLifecycleOwner, Observer { listStatus ->
             refreshProgressBars(listStatus)
+        })
+
+        viewModel.dateRangePickerVisibility.observe(viewLifecycleOwner, Observer { visibility ->
+            uiHelpers.updateVisibility(date_range_picker, visibility)
         })
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
