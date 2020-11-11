@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayl
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
@@ -87,13 +88,14 @@ constructor(
         }
     }
 
-    suspend fun rewind(site: SiteModel, rewindId: String, types: Map<String, Boolean> = mapOf()): RewindResultPayload {
+    suspend fun rewind(site: SiteModel, rewindId: String, types: RewindRequestTypes? = null): RewindResultPayload {
         val url = WPCOMREST.activity_log.site(site.siteId).rewind.to.rewind(rewindId).urlV1
-        val typesBody = if (types.isNotEmpty()) {
+        val typesBody = if (types != null) {
             mapOf("types" to types)
         } else {
-            types
+            mapOf()
         }
+
         val response = wpComGsonRequestBuilder.syncPostRequest(this, url, null, typesBody, RewindResponse::class.java)
         return when (response) {
             is Success -> {
