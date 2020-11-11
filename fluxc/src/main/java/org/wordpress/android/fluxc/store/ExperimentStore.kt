@@ -46,7 +46,7 @@ class ExperimentStore @Inject constructor(
         AppLog.d(API, "${this.javaClass.simpleName}: onRegister")
     }
 
-    private suspend fun fetchAssignments(fetchPayload: FetchAssignmentsPayload): OnAssignmentsFetched {
+    suspend fun fetchAssignments(fetchPayload: FetchAssignmentsPayload): OnAssignmentsFetched {
         val fetchedPayload = experimentRestClient.fetchAssignments(fetchPayload.platform, fetchPayload.anonId)
         return if (!fetchedPayload.isError) {
             storeFetchedAssignments(fetchedPayload.assignments)
