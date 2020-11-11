@@ -74,6 +74,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
@@ -416,6 +417,10 @@ class MediaPickerViewModel @Inject constructor(
 
     fun performInsertAction() {
         val ids = selectedIdentifiers()
+        insertIdentifiers(ids)
+    }
+
+    private fun insertIdentifiers(ids: List<Identifier>) {
         var job: Job? = null
         job = launch {
             var progressDialogJob: Job? = null
@@ -633,6 +638,10 @@ class MediaPickerViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         searchJob?.cancel()
+    }
+
+    fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
+        insertIdentifiers(uris.map { LocalUri(it) })
     }
 
     data class MediaPickerUiState(
