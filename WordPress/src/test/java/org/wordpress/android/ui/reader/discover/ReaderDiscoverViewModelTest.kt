@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeB
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -201,7 +202,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags `() = test {
+    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags`() = test {
         // Arrange
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         val uiStates = init().uiStates
@@ -210,6 +211,16 @@ class ReaderDiscoverViewModelTest {
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
         assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
+    }
+
+    @Test
+    fun `ShowNoPostsUiState is shown when the discoverFeed does not contain any posts`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList(numberOfItems = 0)
+        // Assert
+        assertThat(uiStates[1]).isInstanceOf(ShowNoPostsUiState::class.java)
     }
 
     @Test
@@ -583,8 +594,12 @@ class ReaderDiscoverViewModelTest {
     // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
         return ReaderDiscoverCards(
-                createInterestsYouMayLikeCardList()
-                        .plus(createDummyReaderPostCardList(numberOfItems - 1))
+                if (numberOfItems != 0L) {
+                    createInterestsYouMayLikeCardList()
+                            .plus(createDummyReaderPostCardList(numberOfItems - 1))
+                } else {
+                    listOf()
+                }
         )
     }
 
