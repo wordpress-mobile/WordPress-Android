@@ -8,8 +8,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -349,11 +349,9 @@ class MediaPickerViewModel @Inject constructor(
             mediaPickerTracker.trackMediaPickerOpened(mediaPickerSetup)
             this.mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
             this.mediaInsertHandler = mediaInsertHandlerFactory.build(mediaPickerSetup, site)
-            launch(bgDispatcher) {
-                mediaLoader.loadMedia(loadActions).collect { domainModel ->
-                    withContext(mainDispatcher) {
-                        _domainModel.value = domainModel
-                    }
+            launch {
+                mediaLoader.loadMedia(loadActions).flowOn(bgDispatcher).collect { domainModel ->
+                    _domainModel.value = domainModel
                 }
             }
             launch(bgDispatcher) {
@@ -424,7 +422,7 @@ class MediaPickerViewModel @Inject constructor(
         var job: Job? = null
         job = launch {
             var progressDialogJob: Job? = null
-            mediaInsertHandler.insertMedia(ids).collect {
+            mediaInsertHandler.insertMedia(ids).flowOn(bgDispatcher).collect {
                 when (it) {
                     is InsertModel.Progress -> {
                         progressDialogJob = launch {
@@ -641,7 +639,10 @@ class MediaPickerViewModel @Inject constructor(
     }
 
     fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
-        insertIdentifiers(uris.map { LocalUri(it) })
+        launch {
+            delay(100)
+            insertIdentifiers(uris.map { LocalUri(it) })
+        }
     }
 
     data class MediaPickerUiState(
