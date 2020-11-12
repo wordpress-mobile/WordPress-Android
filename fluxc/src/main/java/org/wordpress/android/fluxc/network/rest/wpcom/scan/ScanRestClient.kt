@@ -67,6 +67,7 @@ class ScanRestClient(
 
         return ScanStateModel(
                 state = state,
+                reason = response.reason,
                 threats = response.threats?.map {
                     ThreatModel(
                             id = it.id,
