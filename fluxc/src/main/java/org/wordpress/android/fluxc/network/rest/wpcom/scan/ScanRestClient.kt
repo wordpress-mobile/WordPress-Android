@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.MostRecent
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.ThreatModel
 import org.wordpress.android.fluxc.model.scan.ThreatModel.Extension
@@ -91,8 +91,8 @@ class ScanRestClient(
                 credentials = response.credentials?.map {
                     Credentials(it.type, it.role, it.stillValid)
                 },
-                mostRecent = response.mostRecent?.let {
-                    MostRecent(
+                scanProgressStatus = response.scanProgressStatus?.let {
+                    ScanProgressStatus(
                             timestamp = it.timestamp,
                             duration = it.duration,
                             progress = it.progress,
