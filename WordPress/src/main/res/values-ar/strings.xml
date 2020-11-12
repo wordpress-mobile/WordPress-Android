@@ -1,18 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-29 00:36:27+0000
+Translation-Revision-Date: 2020-11-10 13:35:43+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="hpp_skip_button">تخطي</string>
+    <string name="hpp_choose_button">اختيار</string>
+    <string name="hpp_subtitle">اختر تخطيط الصفحة الرئيسية المفضَّل لديك. يمكنك تخصيصه أو تغييره لاحقًا.</string>
+    <string name="hpp_title">اختيار تصميم</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">أضف تصنيفاً جديداً</string>
+    <string name="prepublishing_nudges_categories_action">التصنيفات</string>
+    <string name="prepublishing_nudges_home_categories_not_set">لم يتم التعيين</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">التصنيفات</string>
+    <string name="prepublishing_nudges_add_category_button">إضافة تصنيف</string>
+    <string name="mlp_error_title">التخطيطات غير متوفرة بسبب خطأ</string>
+    <string name="mlp_network_error_title">التخطيطات غير متوفرة دون اتصال انترنت</string>
+    <string name="login_prologue_fifth_subtitle_two">أخبار الويب</string>
+    <string name="login_prologue_fifth_subtitle_one">باميلا نجوين</string>
+    <string name="login_prologue_fifth_tag_two">الطهي</string>
+    <string name="login_prologue_fifth_tag_one">الفن</string>
+    <string name="login_prologue_fifth_tag_four">زراعة الحدائق</string>
+    <string name="login_prologue_fifth_tag_five">الموسيقى</string>
+    <string name="login_prologue_fifth_tag_six">السياسة</string>
+    <string name="login_prologue_fifth_caption_one">أفضل عشرة مقاهي</string>
+    <string name="login_prologue_fifth_caption_two">أفضل المعجبين بالعالم</string>
+    <string name="login_prologue_fifth_caption_three">المتاحف في لندن</string>
+    <string name="login_prologue_fifth_tag_three">كرة القدم</string>
+    <string name="login_prologue_fifth_subtitle_three">موسيقى Rock n\' Roll الأسبوعية</string>
+    <string name="login_prologue_second_subtitle_one">الحصول على الإلهام</string>
+    <string name="login_prologue_title_first">مرحبًا بك في أداة إنشاء مواقع الويب الأكثر رواجًا في العالم.</string>
+    <string name="login_prologue_title_second">باستخدام المحرر الضخم والقوي، يمكنك النشر أثناء التنقّل.</string>
+    <string name="login_prologue_title_third">شاهد التعليقات والإشعارات في الوقت الفعلي.</string>
+    <string name="reader_discover_recommended_blogs_header">مواقع لمتابعتها</string>
+    <string name="media_loading_failed">فشل تحميل الوسائط</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">لم يتم دعم \"%s\" بالكامل</string>
     <string name="gutenberg_native_help_button">زر المساعدة</string>
     <string name="gutenberg_native_edit_using_web_editor">تحرير باستخدام محرر الويب</string>
     <string name="gutenberg_native_choose_images">اختيار الصور</string>
+    <string name="stories_intro_create_story_post_label">إنشاء مقالة قصة</string>
+    <string name="stories_intro_description_second">تُنشر المقالة كمقالة جديدة على موقعك حتى لا يفوِّت جمهورك أي شيء.</string>
+    <string name="stories_intro_description_first">اجمع بين الصور ومقاطع الفيديو والنصوص لإنشاء مقالات قصة جذابة وقابلة للنقر سيحبها زائروك.</string>
+    <string name="stories_intro_title_second">مقالات القصة لا تختفي</string>
+    <string name="stories_intro_title_first">تتوافر القصص الآن للجميع</string>
+    <string name="stories_intro_image_caption_second">مثال لعنوان قصة</string>
+    <string name="stories_intro_image_caption_first">كيفية إنشاء مقالة قصة</string>
+    <string name="stories_intro_main_subtitle">يحق لك الوصول مبكرًا إلى مقالات القصص، ويسعدنا أن نجربها.</string>
+    <string name="stories_intro_main_title">مقدمة لمقالات القصص</string>
+    <string name="mlp_notice_blank_page_created">تم إنشاء صفحة فارغة</string>
+    <string name="mlp_notice_page_created">تم إنشاء صفحة</string>
+    <string name="mlp_preview_title">معاينة التخطيط</string>
+    <string name="media_picker_soft_ask_permissions_denied">⁦%1$s⁩ تم رفض الوصول إلى صورك. لإصلاح هذا، حرِّر صلاحياتك وشغِّل ⁦%2$s⁩ و⁦%3$s⁩.</string>
+    <string name="media_insert_failed">فشل إدراج الوسائط.</string>
+    <string name="media_insert_failed_with_reason">فشل إدراج الوسائط: %s</string>
+    <string name="photo_picker_wordpress_media_library">الاختيار من مكتبة وسائط ووردبريس </string>
     <string name="reader_label_toolbar_back">رجوع</string>
     <string name="reader_discover_empty_button_text">البدء</string>
     <string name="reader_post_details_header_by_author_name">بواسطة</string>
+    <string name="reader_discover_empty_title">اتباع الموضوعات لاكتشاف مدونات جديدة</string>
     <string name="stats_referrer_popup_menu_open_website">فتح الموقع الإلكتروني</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">يتعر وسم هذا المرجع بأنه بريد مزعج</string>
+    <string name="stats_referrer_popup_unmark_as_spam">عدم الوسم بأنه بريد مزعج</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">وضع علامة مزعج</string>
+    <string name="media_uploading_gif_library_photo">رفع وسائط بتنسيق gif</string>
+    <string name="media_uploading_stock_library_photo">رفع وسائط المخزون</string>
+    <string name="media_uploading_default">رفع الوسائط</string>
     <string name="gutenberg_native_search_or_type_url">ابحث أو اكتب رابطاً</string>
     <string name="gutenberg_native_select_item">تحديد عنصر</string>
     <string name="gutenberg_native_add_this_telephone_link">أضف رابط الهاتف هذا</string>
@@ -129,14 +183,13 @@ Language: ar
     <string name="gutenberg_native_replace_image_or_video">استبدال صورة أو فيديو</string>
     <string name="gutenberg_native_replace_video">استبدال الفيديو</string>
     <string name="continue_with_wpcom">المتابعة باستخدام WordPress.com</string>
-    <string name="enter_your_site_address">أدخل رابط موقعك</string>
-    <string name="content_description_logo">شعار ووردبريس</string>
     <string name="gutenberg_native_block_removed">تم إزالة المكوّن</string>
     <string name="gutenberg_native_choose_image">اختيار صورة</string>
     <string name="gutenberg_native_choose_image_or_video">اختيار صورة أو فيديو</string>
     <string name="gutenberg_native_choose_video">اختيار فيديو</string>
     <string name="continue_with_google_terms_of_service_text">إذا تابعت مع Google وليس لديك حساب WordPress.com بالفعل، فأنت تقوم بإنشاء حساب وتوافق على %1$sشروط الخدمة%2$s.</string>
     <string name="signup_confirmation_title">تأكيد التسجيل</string>
+    <string name="enter_your_site_address">أدخل رابط موقعك الحالي</string>
     <string name="continue_terms_of_service_text">بالمتابعة، أنت توافق على %1$sشروط الخدمة%2$s.</string>
     <string name="signup_confirmation_magic_link_message">سنرسل لك عبر البريد الإلكتروني رابطًا لإنشاء حسابك الجديد على WordPress.com.</string>
     <string name="signup_confirmation_message">سنستخدم عنوان البريد الإلكتروني هذا لإنشاء حسابك الجديد على WordPress.com.</string>
@@ -150,8 +203,6 @@ Language: ar
     <string name="magic_link_not_seeing_email_message">لم تشاهد البريد الإلكتروني؟ تحقّق من مجلد البريد المزعج أو البريد العشوائي.</string>
     <string name="login_magic_links_label">سنرسل لك عبر البريد الإلكتروني رابطًا يسجّل دخولك على الفور، دون الحاجة إلى كلمة مرور.</string>
     <string name="reset_your_password">إعادة تعيين كلمة المرور الخاصة بك</string>
-    <string name="login_promo_title_37_percent">37\% من مواقع الويب مبنية على ووردبريس.</string>
-    <string name="login_promo_text_unlock_the_power">أطلق العنان لقدرات منشئ المواقع الأكثر مرونة.</string>
     <string name="send_link_by_email">إرسال الرابط عبر البريد الإلكتروني</string>
     <string name="create_account">إنشاء حساب</string>
     <string name="or_type_your_password">أو اكتب كلمة المرور الخاصة بك</string>
@@ -461,7 +512,6 @@ Language: ar
     <string name="dialog_confirm_scheduled_post_sync_message">ستتم مزامنة هذه المقالة فورًا.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">هل أنت جاهز للمزامنة؟</string>
     <string name="new_site_creation_unavailable_domain">هذا النطاق غير متاح.</string>
-    <string name="login_promo_viewpager_content_description">المقدمة</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">تعذر علينا الوصول إلى موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_discovery_error_ssl">تعذر علينا الوصول إلى موقعك بسبب حدوث مشكلة في &lt;b>شهادة SSL&lt;/b>. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
@@ -1286,7 +1336,6 @@ Language: ar
     <string name="edit_photo_screen_title">تحرير الصورة</string>
     <string name="share_intent_screen_title">اختيار الموقع</string>
     <string name="signup_epilogue_screen_title">حساب جديد</string>
-    <string name="login_prologue_screen_title">تسجيل الدخول</string>
     <string name="site_settings_quota_space_hint">إذا كنت بحاجة إلى مزيد من المساحة، ففكر في ترقية خطة ووردبريس الخاصة بك.</string>
     <string name="login_epilogue_screen_title">تم تسجيل الدخول كـ</string>
     <string name="person_detail_screen_title">تفاصيل الشخص</string>
@@ -2221,7 +2270,6 @@ Language: ar
     <string name="logs_copied_to_clipboard">تم نسخ سجلات التطبيق إلى الحافظة</string>
     <string name="reader_label_new_posts">مقالات جديدة</string>
     <string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
-    <string name="reader_page_recommended_blogs">مواقع قد تحوز إعجابك</string>
     <string name="reader_empty_posts_in_blog">هذا الموقع فارغ</string>
     <string name="post_uploading">جاري رفع المقالة</string>
     <string name="stats_followers_months">%1$d من الشهور</string>
@@ -2343,7 +2391,6 @@ Language: ar
     <string name="local_changes">التغيرات المحلية</string>
     <string name="post_settings">إعدادات المقالة</string>
     <string name="comment_status_approved">تمت الموافقة</string>
-    <string name="http_authorization_required">مطلوب ترخيص</string>
     <string name="error_blog_hidden">هذه المدونة مخفية و لايمكن تحميلها . قم بتفعيلها مرة اخرى من الإعدادات وأعد المحاولة.</string>
     <string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
     <string name="trash">سلة المهملات</string>
@@ -2366,6 +2413,7 @@ Language: ar
     <string name="cancel_edit">إلغاء التحرير</string>
     <string name="reader_toast_err_remove_tag">غير قادر على إزالة هذا الموضوع</string>
     <string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الموضوع</string>
+    <string name="http_authorization_required">التخويل مطلوب</string>
     <string name="share_link">مشاركة الرابط</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_label_reply">رد</string>

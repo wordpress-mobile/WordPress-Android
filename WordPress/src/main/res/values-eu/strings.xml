@@ -273,7 +273,6 @@ Language: eu_ES
     <string name="stats_view_search_terms">Bilaketa terminoak</string>
     <string name="reader_label_new_posts">Bidalketa berriak</string>
     <string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
-    <string name="reader_page_recommended_blogs">Gogoko izan ditzakezun guneak</string>
     <string name="post_uploading">Bidalketa igotzen</string>
     <string name="stats_view_top_posts_and_pages">Bidalketak eta orrialdeak</string>
     <string name="stats_view_videos">Bideoak</string>

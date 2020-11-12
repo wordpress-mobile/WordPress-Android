@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-08 13:28:24+0000
+Translation-Revision-Date: 2020-11-02 08:54:55+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">リリースごとにブロックを追加できるよう努めています。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">「%s」は完全にはサポートされていません</string>
+    <string name="gutenberg_native_help_button">ヘルプボタン</string>
+    <string name="gutenberg_native_edit_using_web_editor">Web エディターを使って編集</string>
+    <string name="gutenberg_native_choose_images">画像を選択</string>
+    <string name="stories_intro_create_story_post_label">ストーリー投稿を作成</string>
+    <string name="stories_intro_description_second">新しいブログ投稿としてサイトに公開されるため、読者が見逃すことはありません。</string>
+    <string name="stories_intro_title_second">ストーリー投稿は消えません</string>
+    <string name="stories_intro_description_first">写真、動画、文章を組み合わせて、見た人が心をつかまれタップしたくなるような、好感を持たれるストーリー投稿を作ります。</string>
+    <string name="stories_intro_title_first">いまやストーリーはみなさんのためのものです</string>
+    <string name="stories_intro_image_caption_second">ストーリーのタイトルの例</string>
+    <string name="stories_intro_image_caption_first">ストーリー投稿の作り方</string>
+    <string name="stories_intro_main_subtitle">ストーリー投稿への早期アクセスへの権利を得ました。ぜひお試しください。</string>
+    <string name="stories_intro_main_title">ストーリー投稿の紹介</string>
+    <string name="mlp_notice_blank_page_created">空白ページが作成されました</string>
+    <string name="mlp_notice_page_created">ページが作成されました</string>
+    <string name="mlp_preview_title">レイアウトのプレビュー</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s は写真へのアクセスを拒否されました。 これを解決するには、権限を編集して%2$sと%3$sをオンにしてください。</string>
+    <string name="media_insert_failed">メディアの挿入に失敗しました。</string>
+    <string name="media_insert_failed_with_reason">メディアの挿入に失敗しました : %s</string>
+    <string name="photo_picker_wordpress_media_library">WordPress メディアライブラリから選択</string>
+    <string name="reader_label_toolbar_back">戻る</string>
+    <string name="reader_discover_empty_button_text">今すぐ始める</string>
+    <string name="reader_discover_empty_title">トピックをフォローして新しいブログを見つける</string>
+    <string name="reader_post_details_header_by_author_name">By</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">このリファラーはスパムとしてマークできません</string>
+    <string name="stats_referrer_popup_unmark_as_spam">スパムとしてのマークを解除</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">スパムとしてマーク</string>
+    <string name="stats_referrer_popup_menu_open_website">サイトを開く</string>
+    <string name="media_uploading_gif_library_photo">GIF メディアをアップロード中</string>
+    <string name="media_uploading_stock_library_photo">ストックメディアをアップロード中</string>
+    <string name="media_uploading_default">メディアをアップロード中</string>
     <string name="gutenberg_native_select_item">項目を選択</string>
     <string name="gutenberg_native_search_or_type_url">検索または URL を入力</string>
     <string name="gutenberg_native_add_this_telephone_link">この電話リンクを追加</string>
@@ -125,8 +157,6 @@ Language: ja_JP
     <string name="gutenberg_native_choose_image_or_video">画像または動画を選択</string>
     <string name="gutenberg_native_choose_image">画像を選択</string>
     <string name="gutenberg_native_block_removed">削除したブロック</string>
-    <string name="content_description_logo">WordPress のロゴ</string>
-    <string name="enter_your_site_address">サイトアドレスを入力</string>
     <string name="continue_with_wpcom">WordPress.com で続ける</string>
     <string name="signup_confirmation_title">登録の確認</string>
     <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
@@ -148,8 +178,6 @@ Language: ja_JP
     <string name="or_type_your_password">または、パスワードを入力してください。</string>
     <string name="create_account">アカウントを作成</string>
     <string name="send_link_by_email">リンクをメールで送信</string>
-    <string name="login_promo_text_unlock_the_power">柔軟性の高いサイトビルダー機能を活用しましょう。</string>
-    <string name="login_promo_title_37_percent">Web の37\% が WordPress で構築されています。</string>
     <string name="reset_your_password">パスワードをリセット</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。 第一印象が大事です。</string>
@@ -399,7 +427,9 @@ Language: ja_JP
     <string name="reader_btn_selected_filter_tick_content_description">選択済</string>
     <string name="reader_btn_select_filter_content_description">投稿を絞り込むためのサイトまたはタグを選択</string>
     <string name="reader_btn_remove_filter_content_description">現在のフィルターを削除</string>
+    <string name="reader_title_subs">トピックとサイトを管理</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com にログイン</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">WordPress.com にログインし、フォロー中のトピックの最新投稿をチェック</string>
     <string name="reader_filter_self_hosted_empty_sites_list">WordPress.com にログインし、フォロー中のサイトの最新投稿をチェック</string>
     <string name="gutenberg_native_template_preview">テンプレートのプレビュー</string>
     <string name="gutenberg_native_replace_current_block">現在のブロックを置き換え</string>
@@ -407,7 +437,9 @@ Language: ja_JP
     <string name="gutenberg_native_add_to_beginning">先頭に追加</string>
     <string name="gutenberg_native_add_block_before">前にブロックを追加</string>
     <string name="gutenberg_native_add_block_after">後にブロックを追加</string>
+    <string name="reader_filter_empty_tags_action">トピックを追加</string>
     <string name="reader_filter_empty_sites_action">サイトをフォロー</string>
+    <string name="reader_filter_empty_tags_list">トピックを追加すると、特定の内容に関する投稿をフォローできます</string>
     <string name="reader_filter_empty_sites_list">フォローしているサイトの最新の投稿を表示</string>
     <string name="reader_filter_main_title">フォロー中</string>
     <string name="reader_filter_cta">フィルター</string>
@@ -450,7 +482,6 @@ Language: ja_JP
     <string name="dialog_confirm_scheduled_post_sync_message">この投稿はすぐに同期されます。</string>
     <string name="dialog_confirm_scheduled_post_sync_title">同期しても良いですか ?</string>
     <string name="new_site_creation_unavailable_domain">このドメインは利用できません</string>
-    <string name="login_promo_viewpager_content_description">はじめに</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
     <string name="login_discovery_error_ssl">&lt;b>SSL 証明書&lt;/b>の問題により、サイトにアクセスできませんでした。ホストに問い合わせてこの問題を解決してください。</string>
@@ -465,6 +496,7 @@ Language: ja_JP
     <string name="reader_my_likes_display_name">いいね</string>
     <string name="reader_discover_display_name">ディスカバー</string>
     <string name="reader_save_for_later_display_name">保存しました</string>
+    <string name="reader_filter_tags_title">トピック</string>
     <string name="reader_filter_sites_title">サイト</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -1053,6 +1085,8 @@ Language: ja_JP
     <string name="quick_start_button_negative">後で</string>
     <string name="content_description_more">もっと見る</string>
     <string name="my_site_create_new_site_title">サイトがありません</string>
+    <string name="reader_empty_followed_tags_title">フォローしているトピックがありません</string>
+    <string name="reader_empty_followed_tags_subtitle">ここでトピックを追加して、お気に入りのトピックに関する投稿を検索します</string>
     <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
     <string name="install_jetpack_retry">再試行</string>
     <string name="install_jetpack_continue">設定</string>
@@ -1273,7 +1307,6 @@ Language: ja_JP
     <string name="edit_photo_screen_title">写真の編集</string>
     <string name="share_intent_screen_title">サイトの選択</string>
     <string name="signup_epilogue_screen_title">新しいアカウント</string>
-    <string name="login_prologue_screen_title">ログイン</string>
     <string name="login_epilogue_screen_title">現在のユーザーアカウント:</string>
     <string name="person_detail_screen_title">ユーザーの詳細</string>
     <string name="media_settings_screen_title">ファイルの詳細</string>
@@ -2135,6 +2168,7 @@ Language: ja_JP
     <string name="reader_short_like_count_one">1個の「いいね」</string>
     <string name="reader_short_like_count_none">いいね</string>
     <string name="reader_label_follow_count">%,d人のフォロワー</string>
+    <string name="reader_menu_tags">トピックとサイトを編集</string>
     <string name="reader_title_post_detail">Reader 投稿</string>
     <string name="notifications_push_summary">端末に表示される通知の設定。</string>
     <string name="notifications_email_summary">アカウントに結び付けられているメールに送信される通知の設定。</string>
@@ -2206,7 +2240,6 @@ Language: ja_JP
     <string name="logs_copied_to_clipboard">アプリケーションログをクリップボードにコピーしました</string>
     <string name="reader_empty_posts_in_blog">このサイトは空です</string>
     <string name="reader_label_new_posts">新規投稿</string>
-    <string name="reader_page_recommended_blogs">おすすめのサイト</string>
     <string name="error_copy_to_clipboard">テキストをクリップボードにコピーする際にエラーが発生しました</string>
     <string name="post_uploading">投稿をアップロード中</string>
     <string name="stats_followers_years">%1$d年</string>
@@ -2234,6 +2267,7 @@ Language: ja_JP
     <string name="cab_selected">%d件選択</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_empty_comments">コメントはまだありません</string>
+    <string name="reader_empty_posts_in_tag">このトピックには投稿がありません</string>
     <string name="reader_label_like">いいね</string>
     <string name="reader_label_view_original">元の記事を表示</string>
     <string name="reader_label_comments_closed">コメントは受け付けていません</string>
@@ -2264,7 +2298,9 @@ Language: ja_JP
     <string name="reader_toast_err_already_follow_blog">このサイトをすでにフォローしています</string>
     <string name="reader_toast_err_get_blog_info">このサイトを表示できません</string>
     <string name="reader_label_followed_blog">サイトをフォローしました</string>
+    <string name="reader_hint_add_tag_or_url">フォローする URL またはトピックを入力</string>
     <string name="reader_page_followed_blogs">フォロー中のサイト</string>
+    <string name="reader_page_followed_tags">フォローしているトピック</string>
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
@@ -2292,6 +2328,8 @@ Language: ja_JP
     <string name="blog_not_found">このブログにアクセスする際にエラーが発生しました</string>
     <string name="gallery_error">メディア項目を読み込めませんでした。</string>
     <string name="no_network_message">利用可能なネットワークがありません</string>
+    <string name="reader_toast_err_remove_tag">このトピックを削除できません</string>
+    <string name="reader_toast_err_add_tag">このトピックを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
     <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
     <string name="error_blog_hidden">このブログは非表示になっており読み込めません。設定画面から再有効化してもう一度お試しください。</string>
@@ -2361,6 +2399,8 @@ Language: ja_JP
     <string name="reader_toast_err_url_intent">%sを開けませんでした</string>
     <string name="reader_toast_err_view_image">画像を表示できません</string>
     <string name="reader_toast_err_share_intent">共有に失敗しました</string>
+    <string name="reader_toast_err_tag_invalid">有効なトピックではありません</string>
+    <string name="reader_toast_err_tag_exists">このトピックをすでにフォローしています</string>
     <string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
     <string name="reader_likes_only_you">「いいね」をつけました</string>
     <string name="reader_likes_one">1人がいいねをつけました</string>

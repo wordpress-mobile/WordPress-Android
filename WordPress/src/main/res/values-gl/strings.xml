@@ -277,7 +277,6 @@ Language: gl_ES
     <string name="dialog_confirm_scheduled_post_sync_message">Esta entrada sincronizarase inmediatamente.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Preparado para sincronizar?</string>
     <string name="new_site_creation_unavailable_domain">Este dominio non está dispoñible</string>
-    <string name="login_promo_viewpager_content_description">Introdución</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Non puidemos acceder ao teu sitio. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_discovery_error_ssl">Non puidemos acceder ao teu sitio debido a un problema co &lt;b>certificado SSL&lt;/b>. Terás que contactar co teu aloxamento para solucionalo.</string>
@@ -1095,7 +1094,6 @@ Language: gl_ES
     <string name="edit_photo_screen_title">Editar foto</string>
     <string name="share_intent_screen_title">Elixe o sitio</string>
     <string name="signup_epilogue_screen_title">Nova conta</string>
-    <string name="login_prologue_screen_title">Iniciar sesión</string>
     <string name="login_epilogue_screen_title">Conectado como</string>
     <string name="person_detail_screen_title">Detalle da persoa</string>
     <string name="media_settings_screen_title">Detalles do arquivo</string>
@@ -2020,7 +2018,6 @@ Language: gl_ES
     <string name="logs_copied_to_clipboard">Os rexistros da aplicación foron copiados no portapapeis</string>
     <string name="reader_empty_posts_in_blog">Este blogue está baleiro</string>
     <string name="reader_label_new_posts">Artigos novos</string>
-    <string name="reader_page_recommended_blogs">Sitios que poden gustarche</string>
     <string name="error_copy_to_clipboard">Houbo un erro ao copiar o texto no portapapeis</string>
     <string name="post_uploading">Cargando</string>
     <string name="stats_followers_years">%1$d anos</string>
