@@ -39,9 +39,9 @@ public class OkHttpStack extends BaseHttpStack {
         switch (request.getMethod()) {
             case Request.Method.DEPRECATED_GET_OR_POST:
                 // Ensure backwards compatibility.  Volley assumes a request with a null body is a GET.
-                byte[] postBody = request.getBody();
-                if (postBody != null) {
-                    builder.post(RequestBody.create(MediaType.parse(request.getBodyContentType()), postBody));
+                byte[] getOrPostBody = request.getBody();
+                if (getOrPostBody != null) {
+                    builder.post(RequestBody.create(MediaType.parse(request.getBodyContentType()), getOrPostBody));
                 }
                 break;
             case Request.Method.GET:
@@ -51,10 +51,16 @@ public class OkHttpStack extends BaseHttpStack {
                 builder.delete(createRequestBody(request));
                 break;
             case Request.Method.POST:
-                builder.post(createRequestBody(request));
+                RequestBody postBody = createRequestBody(request);
+                if (postBody != null) {
+                    builder.post(postBody);
+                }
                 break;
             case Request.Method.PUT:
-                builder.put(createRequestBody(request));
+                RequestBody putBody = createRequestBody(request);
+                if (putBody != null) {
+                    builder.put(putBody);
+                }
                 break;
             case Request.Method.HEAD:
                 builder.head();
@@ -66,7 +72,10 @@ public class OkHttpStack extends BaseHttpStack {
                 builder.method("TRACE", null);
                 break;
             case Request.Method.PATCH:
-                builder.patch(createRequestBody(request));
+                RequestBody patchBody = createRequestBody(request);
+                if (patchBody != null) {
+                    builder.patch(patchBody);
+                }
                 break;
             default:
                 throw new IllegalStateException("Unknown method type.");
@@ -95,10 +104,16 @@ public class OkHttpStack extends BaseHttpStack {
 
         Map<String, String> headers = request.getHeaders();
         for (final String name : headers.keySet()) {
-            okHttpRequestBuilder.addHeader(name, headers.get(name));
+            String value = headers.get(name);
+            if (value != null) {
+                okHttpRequestBuilder.addHeader(name, value);
+            }
         }
         for (final String name : additionalHeaders.keySet()) {
-            okHttpRequestBuilder.addHeader(name, additionalHeaders.get(name));
+            String value = additionalHeaders.get(name);
+            if (value != null) {
+                okHttpRequestBuilder.addHeader(name, value);
+            }
         }
 
         setConnectionParametersForRequest(okHttpRequestBuilder, request);
@@ -126,9 +141,7 @@ public class OkHttpStack extends BaseHttpStack {
         List<Header> headers = new ArrayList<>();
         for (int i = 0, len = responseHeaders.size(); i < len; i++) {
             final String name = responseHeaders.name(i), value = responseHeaders.value(i);
-            if (name != null) {
-                headers.add(new Header(name, value));
-            }
+            headers.add(new Header(name, value));
         }
         return headers;
     }
