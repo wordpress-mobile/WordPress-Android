@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model.scan
 
 data class ScanStateModel(
     val state: State,
+    val reason: String?,
     val threats: List<ThreatModel>?,
     val credentials: List<Credentials>?,
     val hasCloud: Boolean,
