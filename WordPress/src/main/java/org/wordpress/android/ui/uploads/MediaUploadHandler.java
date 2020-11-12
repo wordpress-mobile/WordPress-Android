@@ -196,6 +196,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("error_type", event.error.type.name());
+        properties.put("error_message", event.error.message);
+        properties.put("error_log", event.error.logMessage);
+        properties.put("error_status_code", event.error.statusCode);
         trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_ERROR, media, properties);
 
         completeUploadWithId(event.media.getId());
