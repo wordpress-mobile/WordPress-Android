@@ -743,7 +743,7 @@ public class WPSupportUtils {
         idleFor(1000);
     }
 
-    // Checks for screen width greater than 600dp
+    // Checks for screen having both width and height greater than 600dp
     public static boolean isTabletScreen() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
