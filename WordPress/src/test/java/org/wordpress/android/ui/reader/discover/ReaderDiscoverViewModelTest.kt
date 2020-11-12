@@ -41,7 +41,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -209,7 +209,7 @@ class ReaderDiscoverViewModelTest {
         viewModel.start(parentViewModel)
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ShowFollowInterestsEmptyUiState::class.java)
+        assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
     }
 
     @Test

@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -53,7 +53,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val INITIATE_LOAD_MORE_OFFSET = 3
-const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users's data
+const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users' data
 const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 class ReaderDiscoverViewModel @Inject constructor(
@@ -127,7 +127,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
-                    _uiState.value = ShowFollowInterestsEmptyUiState
+                    _uiState.value = ShowNoFollowedTagsUiState
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
                             _uiState.value = ContentUiState(
@@ -449,7 +449,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             )
         }
         sealed class EmptyUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenEmptyVisibility = true) {
-            object ShowFollowInterestsEmptyUiState : EmptyUiState(
+            object ShowNoFollowedTagsUiState : EmptyUiState(
                     titleResId = R.string.reader_discover_empty_title
             )
         }
