@@ -354,8 +354,10 @@ class MediaPickerViewModel @Inject constructor(
                     _domainModel.value = domainModel
                 }
             }
-            launch(bgDispatcher) {
-                loadActions.send(LoadAction.Start())
+            if (permissionsHandler.hasStoragePermission()) {
+                launch(bgDispatcher) {
+                    loadActions.send(LoadAction.Start())
+                }
             }
         }
         if (mediaPickerSetup.defaultSearchView) {
