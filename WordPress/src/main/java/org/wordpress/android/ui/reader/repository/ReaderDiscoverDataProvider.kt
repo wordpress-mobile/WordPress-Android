@@ -117,7 +117,9 @@ class ReaderDiscoverDataProvider @Inject constructor(
             val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
             if (forceReload || !existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
-                _discoverFeed.postValue(result)
+                if (result.cards.isNotEmpty()) {
+                    _discoverFeed.postValue(result)
+                }
             }
 
             if (refresh) {
