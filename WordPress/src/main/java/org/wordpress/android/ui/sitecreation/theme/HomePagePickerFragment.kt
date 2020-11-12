@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -38,11 +37,6 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
-
-    companion object {
-        const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
-        const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +62,7 @@ class HomePagePickerFragment : Fragment() {
         }
 
         setupUi()
-        setupViewModel(savedInstanceState)
+        setupViewModel()
         setupActionListeners()
     }
 
@@ -77,15 +71,7 @@ class HomePagePickerFragment : Fragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        (viewModel.uiState.value as? UiState.Content)?.let {
-            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(viewModel.layouts))
-            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
-        }
-        super.onSaveInstanceState(outState)
-    }
-
-    private fun setupViewModel(savedInstanceState: Bundle?) {
+    private fun setupViewModel() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
@@ -108,13 +94,7 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        savedInstanceState?.let {
-            val layouts = it.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
-            val selected = it.getString(SELECTED_LAYOUT)
-            viewModel.loadSavedState(layouts, selected)
-        } ?: run {
-            viewModel.start()
-        }
+        viewModel.start()
     }
 
     private fun setupUi() {

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
+import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,6 +23,9 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 const val defaultTemplateSlug = "default"
+
+private const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
+private const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -139,7 +143,10 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
-    fun loadSavedState(layouts: List<StarterDesignModel>?, selected: String?) {
+    fun loadSavedState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) return
+        val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
+        val selected = savedInstanceState.getString(SELECTED_LAYOUT)
         if (layouts == null || layouts.isEmpty()) {
             fetchLayouts()
             return
@@ -148,6 +155,13 @@ class HomePagePickerViewModel @Inject constructor(
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
         loadLayouts()
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        (uiState.value as? UiState.Content)?.let {
+            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
+            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+        }
     }
 
     private fun updateUiState(uiState: UiState) {
