@@ -20,6 +20,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadError
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadRequestTypes
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
@@ -112,6 +116,31 @@ constructor(
                         RewindErrorType.INVALID_RESPONSE,
                         RewindErrorType.AUTHORIZATION_REQUIRED), response.error.message)
                 ActivityLogStore.RewindResultPayload(error, rewindId, site)
+            }
+        }
+    }
+
+    suspend fun download(site: SiteModel, rewindId: String, types: DownloadRequestTypes): DownloadResultPayload {
+        val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.url
+        val request = mapOf("rewindId" to rewindId,
+                "types" to types)
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, null, request, DownloadResponse::class.java)
+        return when (response) {
+            is Success -> {
+                DownloadResultPayload(
+                        rewindId,
+                        response.data.downloadId,
+                        response.data.backupPoint,
+                        response.data.startedAt,
+                        response.data.progress,
+                        site)
+            }
+            is Error -> {
+                val error = DownloadError(genericToError(response.error,
+                        DownloadErrorType.GENERIC_ERROR,
+                        DownloadErrorType.INVALID_RESPONSE,
+                        DownloadErrorType.AUTHORIZATION_REQUIRED), response.error.message)
+                DownloadResultPayload(error, rewindId, site)
             }
         }
     }
@@ -308,4 +337,12 @@ constructor(
     }
 
     class RewindResponse(val restore_id: Long, val ok: Boolean?, val error: String?)
+
+    class DownloadResponse(
+        val downloadId: Long,
+        val rewindId: String,
+        val backupPoint: String,
+        val startedAt: String,
+        val progress: Int
+    )
 }
