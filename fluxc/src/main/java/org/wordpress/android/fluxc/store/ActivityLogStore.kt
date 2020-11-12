@@ -96,7 +96,7 @@ class ActivityLogStore
     }
 
     suspend fun rewind(rewindPayload: RewindPayload): OnRewind {
-        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
+        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId, rewindPayload.types)
         return emitRewindResult(payload, REWIND)
     }
 
@@ -176,7 +176,11 @@ class ActivityLogStore
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class RewindPayload(val site: SiteModel, val rewindId: String) : Payload<BaseRequest.BaseNetworkError>()
+    class RewindPayload(
+        val site: SiteModel,
+        val rewindId: String,
+        val types: RewindRequestTypes? = null
+    ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedActivityLogPayload(
         val activityLogModels: List<ActivityLogModel> = listOf(),
@@ -248,4 +252,13 @@ class ActivityLogStore
     }
 
     class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
+
+    data class RewindRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
 }
