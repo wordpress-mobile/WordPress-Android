@@ -52,7 +52,7 @@ class HomePagePickerViewModelTest {
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
         val response = if (isError) OnStarterDesignsFetched(emptyList(), ThemesError(ThemeErrorType.GENERIC_ERROR))
         else OnStarterDesignsFetched(
-                listOf(StarterDesignModel(0, "slug", "title", "site", "demo", "theme", "image")),
+                listOf(StarterDesignModel(0, "slug", "title", "site", "demo", "theme", null, "image")),
                 null
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
