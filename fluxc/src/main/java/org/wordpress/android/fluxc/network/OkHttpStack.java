@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Header;
 import com.android.volley.Request;
@@ -39,9 +41,9 @@ public class OkHttpStack extends BaseHttpStack {
         switch (request.getMethod()) {
             case Request.Method.DEPRECATED_GET_OR_POST:
                 // Ensure backwards compatibility.  Volley assumes a request with a null body is a GET.
-                byte[] getOrPostBody = request.getBody();
-                if (getOrPostBody != null) {
-                    builder.post(RequestBody.create(MediaType.parse(request.getBodyContentType()), getOrPostBody));
+                byte[] postBody = request.getBody();
+                if (postBody != null) {
+                    builder.post(RequestBody.create(MediaType.parse(request.getBodyContentType()), postBody));
                 }
                 break;
             case Request.Method.GET:
@@ -51,16 +53,10 @@ public class OkHttpStack extends BaseHttpStack {
                 builder.delete(createRequestBody(request));
                 break;
             case Request.Method.POST:
-                RequestBody postBody = createRequestBody(request);
-                if (postBody != null) {
-                    builder.post(postBody);
-                }
+                builder.post(createRequestBody(request));
                 break;
             case Request.Method.PUT:
-                RequestBody putBody = createRequestBody(request);
-                if (putBody != null) {
-                    builder.put(putBody);
-                }
+                builder.put(createRequestBody(request));
                 break;
             case Request.Method.HEAD:
                 builder.head();
@@ -72,20 +68,18 @@ public class OkHttpStack extends BaseHttpStack {
                 builder.method("TRACE", null);
                 break;
             case Request.Method.PATCH:
-                RequestBody patchBody = createRequestBody(request);
-                if (patchBody != null) {
-                    builder.patch(patchBody);
-                }
+                builder.patch(createRequestBody(request));
                 break;
             default:
                 throw new IllegalStateException("Unknown method type.");
         }
     }
 
+    @NonNull
     private static RequestBody createRequestBody(Request r) throws AuthFailureError {
         final byte[] body = r.getBody();
         if (body == null) {
-            return null;
+            return RequestBody.create(null, new byte[]{});
         }
         return RequestBody.create(MediaType.parse(r.getBodyContentType()), body);
     }
