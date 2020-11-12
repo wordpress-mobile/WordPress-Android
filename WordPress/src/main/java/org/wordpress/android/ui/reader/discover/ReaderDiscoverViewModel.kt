@@ -128,7 +128,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
-                    _uiState.value = ShowNoFollowedTagsUiState
+                    _uiState.value = ShowNoFollowedTagsUiState { parentViewModel.onShowReaderInterests() }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
                         _uiState.value = ContentUiState(
@@ -139,7 +139,9 @@ class ReaderDiscoverViewModel @Inject constructor(
                         )
                         swipeToRefreshTriggered = false
                     } else {
-                        _uiState.value = ShowNoPostsUiState
+                        _uiState.value = ShowNoPostsUiState {
+                            // TODO malinjir navigate to reader tag settings
+                        }
                     }
                 }
             }
@@ -423,10 +425,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    fun onEmptyActionClick() {
-        parentViewModel.onShowReaderInterests()
-    }
-
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
         val fullscreenProgressVisibility: Boolean = false,
@@ -451,13 +449,25 @@ class ReaderDiscoverViewModel @Inject constructor(
                     titleResId = R.string.reader_error_request_failed_title
             )
         }
-        sealed class EmptyUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenEmptyVisibility = true) {
-            object ShowNoFollowedTagsUiState : EmptyUiState(
-                    titleResId = R.string.reader_discover_empty_title
-            )
-            object ShowNoPostsUiState : EmptyUiState(
-                    titleResId = R.string.reader_discover_no_posts_title
-            )
+
+        sealed class EmptyUiState : DiscoverUiState(fullscreenEmptyVisibility = true) {
+            abstract val titleResId: Int
+            abstract val buttonResId: Int
+            open val subTitleRes: Int? = null
+            abstract val action: () -> Unit
+            open val illustrationResId: Int? = null
+
+            data class ShowNoFollowedTagsUiState(override val action: () -> Unit) : EmptyUiState() {
+                override val titleResId: Int = R.string.reader_discover_empty_title
+                override val buttonResId: Int = R.string.reader_discover_empty_button_text
+            }
+
+            data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
+                override val titleResId = R.string.reader_discover_no_posts_title
+                override val buttonResId: Int = R.string.reader_discover_no_posts_button_text
+                override val subTitleRes = R.string.reader_discover_no_posts_subtitle
+                override val illustrationResId: Int? = R.drawable.img_illustration_empty_results_216dp
+            }
         }
     }
 }

@@ -105,6 +105,12 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 }
                 is EmptyUiState -> {
                     uiHelpers.setTextOrHide(actionable_empty_view.title, it.titleResId)
+                    uiHelpers.setTextOrHide(actionable_empty_view.subtitle, it.subTitleRes)
+                    uiHelpers.setImageOrHide(actionable_empty_view.image, it.illustrationResId)
+                    uiHelpers.setTextOrHide(actionable_empty_view.button, it.buttonResId)
+                    actionable_empty_view.button.setOnClickListener {_ ->
+                        it.action.invoke()
+                    }
                 }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
