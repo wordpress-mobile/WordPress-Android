@@ -385,7 +385,7 @@ jobs:
           name: Build
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
+          command: ./gradlew WordPress:assembleVanillaDebug --stacktrace
       - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
@@ -393,7 +393,7 @@ jobs:
           key-file: .circleci/.firebase.secrets.json
           type: instrumentation
           apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
-          test-apk-path: WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk
+          test-apk-path: WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk
           test-targets: package org.wordpress.android.ui.screenshots
           # NOTE: When updating this list of devices, ensure to also update the `phone:` and `tenInch:` parameters in "Download Raw Screenshots from Google Storage"
           # List of devices currently available on FTL can be obtained via `gcloud firebase test android models list` – see https://firebase.google.com/docs/test-lab/android/available-testing-devices
