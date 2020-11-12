@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
@@ -167,7 +166,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         return posts.cards.map { card ->
             when (card) {
                 is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                        titleRes = string.reader_welcome_banner
+                        titleRes = R.string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                         post = card.post,
@@ -247,7 +246,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _snackbarEvents.postValue(
                             Event(
                                     SnackbarMessageHolder(
-                                            UiStringRes(string.reader_error_request_failed_title)
+                                            UiStringRes(R.string.reader_error_request_failed_title)
                                     )
                             )
                     )
