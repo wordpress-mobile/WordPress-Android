@@ -33,12 +33,15 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.perform
+import org.wordpress.android.util.throttle
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
+
+private const val DISCOVER_FEED_THROTTLE = 500L
 
 class ReaderDiscoverDataProvider @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -60,6 +63,11 @@ class ReaderDiscoverDataProvider @Inject constructor(
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
+            /* Since we listen to all updates of the database the feed is sometimes updated several times within a few
+            ms. For example, when we are about to insert posts, we delete them first. However, we don't need/want
+            to propagate this state to the VM. */
+            .throttle(this, offset = DISCOVER_FEED_THROTTLE)
+
     private var hasMoreCards = true
 
     private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
