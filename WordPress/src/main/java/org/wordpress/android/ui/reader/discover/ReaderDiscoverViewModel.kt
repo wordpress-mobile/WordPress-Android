@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -130,14 +131,16 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _uiState.value = ShowNoFollowedTagsUiState
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
-                            _uiState.value = ContentUiState(
-                                    convertCardsToUiStates(posts),
-                                    reloadProgressVisibility = false,
-                                    loadMoreProgressVisibility = false,
-                                    scrollToTop = swipeToRefreshTriggered
-                            )
-                            swipeToRefreshTriggered = false
-                        }
+                        _uiState.value = ContentUiState(
+                                convertCardsToUiStates(posts),
+                                reloadProgressVisibility = false,
+                                loadMoreProgressVisibility = false,
+                                scrollToTop = swipeToRefreshTriggered
+                        )
+                        swipeToRefreshTriggered = false
+                    } else {
+                        _uiState.value = ShowNoPostsUiState
+                    }
                 }
             }
         }
@@ -451,6 +454,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         sealed class EmptyUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenEmptyVisibility = true) {
             object ShowNoFollowedTagsUiState : EmptyUiState(
                     titleResId = R.string.reader_discover_empty_title
+            )
+            object ShowNoPostsUiState : EmptyUiState(
+                    titleResId = R.string.reader_discover_no_posts_title
             )
         }
     }
