@@ -524,9 +524,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         Bundle arguments = getArguments();
         FragmentActivity activity = getActivity();
-        if (activity == null || arguments == null) {
+        if (activity == null) {
             AppLog.e(T.EDITOR,
-                    "Failed to initialize other media options because the activity or getArguments() is null");
+                    "Failed to initialize other media options because the activity is null");
             return otherMediaOptions;
         }
 
