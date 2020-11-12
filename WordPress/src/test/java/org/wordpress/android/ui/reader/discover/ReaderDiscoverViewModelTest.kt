@@ -275,7 +275,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `if welcome card exists with other cards, it is present in ContentUiState`() = test {
+    fun `if welcome card exists then ReaderWelcomeBannerCardUiState will be present`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
@@ -286,17 +286,6 @@ class ReaderDiscoverViewModelTest {
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
         assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
-    }
-
-    @Test
-    fun `if welcome card exists as the only card in the feed then ContentUiState is not shown`() = test {
-        // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
-        // Act
-        fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
-        // Assert
-        assertThat(uiStates.size).isEqualTo(1)
-        assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
     }
 
     @Test

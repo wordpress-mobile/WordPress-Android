@@ -131,9 +131,6 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _uiState.value = ShowFollowInterestsEmptyUiState
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
-                        val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
-                                posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
-                        if (!discoverFeedContainsOnlyWelcomeCard) {
                             _uiState.value = ContentUiState(
                                     convertCardsToUiStates(posts),
                                     reloadProgressVisibility = false,
@@ -142,7 +139,6 @@ class ReaderDiscoverViewModel @Inject constructor(
                             )
                             swipeToRefreshTriggered = false
                         }
-                    }
                 }
             }
         }
