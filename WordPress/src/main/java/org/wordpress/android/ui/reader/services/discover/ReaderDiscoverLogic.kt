@@ -150,7 +150,9 @@ class ReaderDiscoverLogic(
         val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
         appPrefsWrapper.readerCardsPageHandle = nextPageHandle
 
-        if (cards.isNotEmpty()) {
+        if (cards.isEmpty()) {
+            readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
+        } else {
             readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
         }
 
