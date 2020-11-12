@@ -101,6 +101,13 @@
         "value": "2",
         "display_key": "_other_attribute",
         "display_value": "2"
+      },
+      {
+        "display_key": "emptyArray",
+        "display_value": []
+      },
+      {
+        "display_value": []
       }
     ],
     "sku":"woo-vneck-tee",
