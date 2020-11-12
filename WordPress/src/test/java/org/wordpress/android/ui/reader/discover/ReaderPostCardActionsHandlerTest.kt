@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
@@ -73,7 +72,6 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
-@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderPostCardActionsHandlerTest {

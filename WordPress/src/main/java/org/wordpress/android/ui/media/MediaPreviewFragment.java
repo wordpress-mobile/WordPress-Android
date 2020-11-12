@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.MediaController;
 import android.widget.TextView;
@@ -18,6 +17,9 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -37,8 +39,6 @@ import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
     public static final String TAG = "media_preview_fragment";
@@ -65,7 +65,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     private SiteModel mSite;
 
-    private ImageView mImageView;
+    private PhotoView mImageView;
     private VideoView mVideoView;
     private ViewGroup mVideoFrame;
     private ViewGroup mAudioFrame;
@@ -300,10 +300,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         if (isAdded()) {
-                            // assign the photo attacher to enable pinch/zoom - must come before
-                            // setImageBitmap
-                            // for it to be correctly resized upon loading
-                            PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+                            PhotoViewAttacher attacher = mImageView.getAttacher();
                             attacher.setOnViewTapListener((view, x, y) -> {
                                 if (mMediaTapListener != null) {
                                     mMediaTapListener.onMediaTapped();

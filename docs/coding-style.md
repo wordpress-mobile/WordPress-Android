@@ -25,7 +25,7 @@ You can install the CheckStyle-IDEA plugin in Android Studio here:
 
 Once installed, you can configure the plugin here:
 
-`Android Studio > Preferences... > Other Settings > Checkstyle`
+`Android Studio > Preferences... > Tools > Checkstyle`
 
 From there, add and enable the custom configuration file, located at [config/checkstyle.xml](https://github.com/wordpress-mobile/WordPress-Android/blob/develop/config/checkstyle.xml).
 

@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -107,11 +109,26 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         }
         setupMinimumHeightForFragmentContainer()
+        addWindowInsetToFragmentContainer()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         analyticsTrackerWrapper.track(Stat.PREPUBLISHING_BOTTOM_SHEET_DISMISSED)
         super.onDismiss(dialog)
+    }
+
+    /**
+     * On Android 10, the bottom sheet is not above the window inset so that leads to the publish button being cut
+     * off. To fix this, we add the bottom inset as the margin bottom of the fragment container.
+     */
+    private fun addWindowInsetToFragmentContainer() {
+        if (VERSION.SDK_INT == VERSION_CODES.Q) {
+            activity?.window?.decorView?.rootWindowInsets?.systemWindowInsetBottom?.let { bottomInset ->
+                val param = prepublishing_content_fragment.layoutParams as ViewGroup.MarginLayoutParams
+                param.setMargins(0, 0, 0, bottomInset)
+                prepublishing_content_fragment.layoutParams = param
+            }
+        }
     }
 
     private fun setupMinimumHeightForFragmentContainer() {

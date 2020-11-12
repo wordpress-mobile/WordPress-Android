@@ -93,17 +93,6 @@ class RemotePreviewLogicHelper @Inject constructor(
                     helperFunctions.notifyEmptyPost()
                     return PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST
                 }
-                // TODO: remove the following Jetpack exception when the API bug for Jetpack sites is fixed
-                // and previewing auto-saves are working. More informations about this on the following ticket:
-                // https://github.com/Automattic/wp-calypso/issues/20265
-                if (site.isJetpackConnected) {
-                    activityLauncherWrapper.showActionableEmptyView(
-                            activity,
-                            WPWebViewUsageCategory.REMOTE_PREVIEW_NOT_AVAILABLE,
-                            post.title
-                    )
-                    return PreviewLogicOperationResult.PREVIEW_NOT_AVAILABLE
-                }
                 helperFunctions.startUploading(true, post)
                 PreviewLogicOperationResult.GENERATING_PREVIEW
             }

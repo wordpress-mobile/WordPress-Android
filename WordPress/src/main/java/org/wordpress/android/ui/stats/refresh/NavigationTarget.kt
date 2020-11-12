@@ -36,4 +36,9 @@ sealed class NavigationTarget {
     object ViewRecentWeeksStats : NavigationTarget()
     object ViewAnnualStats : NavigationTarget()
     object ViewInsightsManagement : NavigationTarget()
+    data class ViewAttachment(
+        val postId: Long,
+        val postUrl: String,
+        val postType: String = StatsConstants.ITEM_TYPE_ATTACHMENT
+    ) : NavigationTarget()
 }

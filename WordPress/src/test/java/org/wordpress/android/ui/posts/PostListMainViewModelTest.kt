@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -39,7 +38,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListMainViewModel
 
     @InternalCoroutinesApi
-    @UseExperimental(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
         val prefs = mock<AppPrefsWrapper> {

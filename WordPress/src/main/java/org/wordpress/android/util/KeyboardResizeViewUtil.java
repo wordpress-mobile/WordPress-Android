@@ -35,30 +35,32 @@ public class KeyboardResizeViewUtil {
     ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            Rect r = new Rect();
-            // r will be populated with the coordinates of your view that area still visible.
-            mDecorView.getWindowVisibleDisplayFrame(r);
+            mContentView.post(() -> {
+                Rect r = new Rect();
+                // r will be populated with the coordinates of your view that area still visible.
+                mDecorView.getWindowVisibleDisplayFrame(r);
 
-            // get screen height and calculate the difference with the useable area from the r
-            int height = mDecorView.getContext().getResources().getDisplayMetrics().heightPixels;
-            int diff = height - r.bottom;
+                // get screen height and calculate the difference with the useable area from the r
+                int height = mDecorView.getContext().getResources().getDisplayMetrics().heightPixels;
+                int diff = height - r.bottom;
 
-            // if it could be a keyboard add the padding to the view
-            if (diff != 0) {
-                // if the use-able screen height differs from the total screen height we assume that it shows a
-                // keyboard now
-                // check if the padding is 0 (if yes set the padding for the keyboard)
-                if (mContentView.getPaddingBottom() != diff) {
-                    // set the padding of the contentView for the keyboard
-                    mContentView.setPadding(0, 0, 0, diff);
+                // if it could be a keyboard add the padding to the view
+                if (diff != 0) {
+                    // if the use-able screen height differs from the total screen height we assume that it shows a
+                    // keyboard now
+                    // check if the padding is 0 (if yes set the padding for the keyboard)
+                    if (mContentView.getPaddingBottom() != diff) {
+                        // set the padding of the contentView for the keyboard
+                        mContentView.setPadding(0, 0, 0, diff);
+                    }
+                } else {
+                    // check if the padding is != 0 (if yes reset the padding)
+                    if (mContentView.getPaddingBottom() != 0) {
+                        // reset the padding of the contentView
+                        mContentView.setPadding(0, 0, 0, 0);
+                    }
                 }
-            } else {
-                // check if the padding is != 0 (if yes reset the padding)
-                if (mContentView.getPaddingBottom() != 0) {
-                    // reset the padding of the contentView
-                    mContentView.setPadding(0, 0, 0, 0);
-                }
-            }
+            });
         }
     };
 }
