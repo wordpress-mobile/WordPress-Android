@@ -27,6 +27,11 @@ commands:
         - run:
             name: Update memory setting
             command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
+  update-gradle-memory-2:
+      steps:
+        - run:
+            name: Update memory setting
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1024m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -368,7 +373,7 @@ jobs:
           cache_key_prefix: v1-raw-screenshots
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - update-gradle-memory
+      - update-gradle-memory-2
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
