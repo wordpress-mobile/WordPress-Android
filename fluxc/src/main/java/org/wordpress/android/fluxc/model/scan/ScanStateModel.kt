@@ -5,7 +5,7 @@ data class ScanStateModel(
     val threats: List<ThreatModel>?,
     val credentials: List<Credentials>?,
     val hasCloud: Boolean,
-    val mostRecent: MostRecent?
+    val scanProgressStatus: ScanProgressStatus?
 ) {
     enum class State(val value: String) {
         IDLE("idle"),
@@ -27,7 +27,7 @@ data class ScanStateModel(
         val stillValid: Boolean
     )
 
-    data class MostRecent(
+    data class ScanProgressStatus(
         val timestamp: String?,
         val duration: Int,
         val progress: Int,
