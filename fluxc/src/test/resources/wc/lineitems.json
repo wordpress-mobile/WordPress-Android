@@ -48,7 +48,7 @@
         "key":"pa_size",
         "value":"medium",
         "display_key":"size",
-        "display_value":"Medium"
+        "display_value":"medium"
       }
     ],
     "sku":"blabla",
@@ -79,7 +79,7 @@
         "key":"pa_size",
         "value":"medium",
         "display_key":"size",
-        "display_value":"Medium"
+        "display_value":"medium"
       },
       {
         "id":45560,
