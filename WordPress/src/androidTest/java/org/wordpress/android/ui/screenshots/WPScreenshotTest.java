@@ -266,7 +266,6 @@ public class WPScreenshotTest extends BaseTest {
     }
 
     private void takeScreenshot(String screenshotName) {
-        idleFor(8000);
         try {
             if (runningInTestLab()) {
                 ScreenShotter.takeScreenshot(screenshotName, getCurrentActivity());
