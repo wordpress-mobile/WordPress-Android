@@ -8,8 +8,10 @@ data class ScanStateModel(
     val mostRecent: MostRecent?
 ) {
     enum class State(val value: String) {
-        SCANNING("scanning"),
         IDLE("idle"),
+        SCANNING("scanning"),
+        PROVISIONING("provisioning"),
+        UNAVAILABLE("unavailable"),
         UNKNOWN("unknown");
 
         companion object {
