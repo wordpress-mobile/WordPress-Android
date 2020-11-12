@@ -4,6 +4,7 @@
 
 /sites/$site/activity
 /sites/$site/rewind
+/sites/$site/rewind/downloads
 
 /sites/$site/gutenberg
 
