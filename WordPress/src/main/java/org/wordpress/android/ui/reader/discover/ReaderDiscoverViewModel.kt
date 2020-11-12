@@ -26,9 +26,9 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -240,7 +240,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             when (uiState) {
                 is LoadingUiState -> {
                     // show fullscreen error
-                    _uiState.value = RequestFailedErrorUiState
+                    _uiState.value = RequestFailedUiState{ onRetryButtonClick() }
                 }
                 is ContentUiState -> {
                     _uiState.value = uiState.copy(
@@ -428,7 +428,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
         val fullscreenProgressVisibility: Boolean = false,
-        open val fullscreenErrorVisibility: Boolean = false,
         val swipeToRefreshEnabled: Boolean = false,
         open val fullscreenEmptyVisibility: Boolean = false,
         open val scrollToTop: Boolean = false
@@ -444,11 +443,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
 
         object LoadingUiState : DiscoverUiState(fullscreenProgressVisibility = true)
-        sealed class ErrorUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenErrorVisibility = true) {
-            object RequestFailedErrorUiState : ErrorUiState(
-                    titleResId = R.string.reader_error_request_failed_title
-            )
-        }
 
         sealed class EmptyUiState : DiscoverUiState(fullscreenEmptyVisibility = true) {
             abstract val titleResId: Int
@@ -457,17 +451,23 @@ class ReaderDiscoverViewModel @Inject constructor(
             abstract val action: () -> Unit
             open val illustrationResId: Int? = null
 
+            data class RequestFailedUiState(override val action: () -> Unit) : EmptyUiState() {
+                override val titleResId = R.string.connection_error
+                override val subTitleRes = R.string.reader_error_request_failed_title
+                override val buttonResId = R.string.retry
+            }
+
             data class ShowNoFollowedTagsUiState(override val action: () -> Unit) : EmptyUiState() {
-                override val titleResId: Int = R.string.reader_discover_empty_title
+                override val titleResId = R.string.reader_discover_empty_title
                 override val subTitleRes = R.string.reader_discover_empty_subtitle
-                override val buttonResId: Int = R.string.reader_discover_empty_button_text
+                override val buttonResId = R.string.reader_discover_empty_button_text
             }
 
             data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.reader_discover_no_posts_title
-                override val buttonResId: Int = R.string.reader_discover_no_posts_button_text
+                override val buttonResId = R.string.reader_discover_no_posts_button_text
                 override val subTitleRes = R.string.reader_discover_no_posts_subtitle
-                override val illustrationResId: Int? = R.drawable.img_illustration_empty_results_216dp
+                override val illustrationResId = R.drawable.img_illustration_empty_results_216dp
             }
         }
     }
