@@ -266,8 +266,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override
                     public ArrayList<MediaOption> onGetOtherMediaFileOptions() {
-                        ArrayList<MediaOption> otherMediaDocumentOptions = initOtherMediaFileOptions();
-                        return otherMediaDocumentOptions;
+                        ArrayList<MediaOption> otherMediaFileOptionsOptions = initOtherMediaFileOptions();
+                        return otherMediaFileOptionsOptions;
                     }
 
                     @Override
