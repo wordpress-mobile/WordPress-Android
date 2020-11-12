@@ -55,14 +55,14 @@ class ScanRestClient(
     }
 
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
-        val scanStateModel = responseToScanStateModel(response)
+        val scanStateModel = mapResponseToScanStateModel(response)
         scanStateModel?.let {
             return FetchedScanStatePayload(scanStateModel, site)
         }
         return buildErrorPayload(site, ScanStateErrorType.INVALID_RESPONSE)
     }
 
-    private fun responseToScanStateModel(response: ScanStateResponse): ScanStateModel? {
+    private fun mapResponseToScanStateModel(response: ScanStateResponse): ScanStateModel? {
         val state = State.fromValue(response.state) ?: return null
 
         return ScanStateModel(
