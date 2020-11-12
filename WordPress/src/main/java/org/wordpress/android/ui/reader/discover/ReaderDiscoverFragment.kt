@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
-import kotlinx.android.synthetic.main.reader_fullscreen_empty_with_action.*
 import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -89,9 +87,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         error_retry.setOnClickListener {
             viewModel.onRetryButtonClick()
         }
-        empty_action.setOnClickListener {
-            viewModel.onEmptyActionClick()
-        }
     }
 
     private fun initViewModel() {
@@ -109,7 +104,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                     uiHelpers.setTextOrHide(error_title, it.titleResId)
                 }
                 is EmptyUiState -> {
-                    uiHelpers.setTextOrHide(empty_title, it.titleResId)
+                    uiHelpers.setTextOrHide(actionable_empty_view.title, it.titleResId)
                 }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
@@ -117,7 +112,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
             uiHelpers.updateVisibility(error_layout, it.fullscreenErrorVisibility)
             uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
-            uiHelpers.updateVisibility(empty_layout, it.fullscreenEmptyVisibility)
+            uiHelpers.updateVisibility(actionable_empty_view, it.fullscreenEmptyVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
             ptr_layout.isRefreshing = it.reloadProgressVisibility
         })
