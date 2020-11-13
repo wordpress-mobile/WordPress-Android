@@ -485,7 +485,6 @@ Language: es_CL
     <string name="comment_unspam_talkback">Comentario marcado como no spam</string>
     <string name="comment_spam_talkback">Comentario marcado como spam</string>
     <string name="signup_epilogue_screen_title">Cuenta nueva</string>
-    <string name="login_prologue_screen_title">Iniciar Sesión</string>
     <string name="comment_approved_talkback">Comentario aprobado</string>
     <string name="comment_delete_talkback">Comentario eliminado</string>
     <string name="comment_liked_talkback">Me gusta el comentario</string>
@@ -1421,7 +1420,6 @@ Language: es_CL
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
-    <string name="reader_page_recommended_blogs">Sitios que te podrían gustar</string>
     <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="themes_fetching">Obteniendo temas…</string>

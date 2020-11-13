@@ -30,8 +30,7 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
-    // TODO Update to the first version with the story block as a production and not a beta block
-    public static final String WP_STORIES_JETPACK_VERSION = "8.8";
+    public static final String WP_STORIES_JETPACK_VERSION = "9.1";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 

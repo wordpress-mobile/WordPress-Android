@@ -69,7 +69,7 @@
         android:layout_gravity="center|top"
         android:paddingStart="@dimen/hpp_card_padding"
         android:paddingEnd="0dp"
-        android:paddingBottom="@dimen/toolbar_height"
+        android:paddingBottom="@dimen/toolbar_content_offset"
         android:background="?attr/categoriesBackground"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"

@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-19 18:07:55+0000
+Translation-Revision-Date: 2020-11-09 09:06:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> responded to your post</string>
+    <string name="login_prologue_third_subtitle_two">You received &lt;b>50 likes&lt;/b> on your site today</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> liked your post</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollable block menu opened. Select a block.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Scrollable block menu closed.</string>
+    <string name="hpp_skip_button">Skip</string>
+    <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_subtitle">Pick your favourite homepage layout. You can customise or change it later.</string>
+    <string name="hpp_title">Choose a design</string>
+    <string name="mlp_network_error_subtitle">Tap retry when you\'re back online, or create a blank page using the button below.</string>
+    <string name="mlp_network_error_title">Layouts not available while offline</string>
+    <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
+    <string name="mlp_error_title">Layouts not available due to an error</string>
+    <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
+    <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="login_prologue_fifth_caption_three">Museums in London</string>
+    <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
+    <string name="login_prologue_fifth_caption_one">My Top Ten Cafés</string>
+    <string name="login_prologue_fifth_tag_six">Politics</string>
+    <string name="login_prologue_fifth_tag_five">Music</string>
+    <string name="login_prologue_fifth_tag_four">Gardening</string>
+    <string name="login_prologue_fifth_tag_three">Football</string>
+    <string name="login_prologue_fifth_tag_two">Cooking</string>
+    <string name="login_prologue_fifth_tag_one">Art</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock ‘n’ Roll Weekly</string>
+    <string name="login_prologue_fifth_subtitle_two">Web News</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten’s work. I will be trying these techniques on my next</string>
+    <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
+    <string name="login_prologue_title_fifth">Follow your favourite sites and discover new reads.</string>
+    <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
+    <string name="login_prologue_title_third">See comments and notifications in real time.</string>
+    <string name="login_prologue_title_second">With the powerful editor, you can post on the go.</string>
+    <string name="login_prologue_title_first">Welcome to the world’s most popular website builder.</string>
+    <string name="media_loading_failed">Media loading failed</string>
+    <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">We are working hard to add more blocks with each release.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' is not fully supported</string>
     <string name="gutenberg_native_help_button">Help button</string>
@@ -20,7 +59,6 @@ Language: en_GB
     <string name="stories_intro_image_caption_first">How to create a story post</string>
     <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
     <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="mlp_generic_error">An error occurred while fetching the layouts</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_notice_page_created">Page created</string>
     <string name="mlp_preview_title">Layout Preview</string>
@@ -158,8 +196,7 @@ Language: en_GB
     <string name="gutenberg_native_choose_image_or_video">Choose image or video</string>
     <string name="gutenberg_native_choose_image">Choose image</string>
     <string name="gutenberg_native_block_removed">Block removed</string>
-    <string name="content_description_logo">WordPress Logo</string>
-    <string name="enter_your_site_address">Enter your site address</string>
+    <string name="enter_your_site_address">Enter your existing site address</string>
     <string name="continue_with_wpcom">Continue with WordPress.com</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
@@ -181,8 +218,6 @@ Language: en_GB
     <string name="or_type_your_password">Or type your password</string>
     <string name="create_account">Create account</string>
     <string name="send_link_by_email">Send link by email</string>
-    <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
-    <string name="login_promo_title_37_percent">37\% of the web is built on WordPress.</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
@@ -487,7 +522,6 @@ Language: en_GB
     <string name="dialog_confirm_scheduled_post_sync_message">This post will be synced immediately.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
-    <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
@@ -1313,7 +1347,6 @@ Language: en_GB
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="share_intent_screen_title">Pick site</string>
     <string name="signup_epilogue_screen_title">New account</string>
-    <string name="login_prologue_screen_title">Login</string>
     <string name="login_epilogue_screen_title">Logged in as</string>
     <string name="person_detail_screen_title">Person detail</string>
     <string name="media_settings_screen_title">File details</string>
@@ -2247,7 +2280,6 @@ Language: en_GB
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_label_new_posts">New posts</string>
-    <string name="reader_page_recommended_blogs">Sites you may like</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="post_uploading">Uploading post</string>
     <string name="stats_followers_years">%1$d years</string>
