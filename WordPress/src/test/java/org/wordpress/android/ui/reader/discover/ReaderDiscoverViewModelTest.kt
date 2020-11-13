@@ -41,12 +41,14 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -357,7 +359,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenErrorVisibility).isTrue()
+        assertThat(uiStates.last()).isInstanceOf(RequestFailedUiState::class.java)
     }
 
     @Test
@@ -562,13 +564,38 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `OnEmptyActionClicked shows select interests screen`() = test {
+    fun `Action button on no tags empty screen opens reader interests screen`() = test {
         // Arrange
+        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         init()
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
         // Act
-        viewModel.onEmptyActionClick()
+        (viewModel.uiState.value as ShowNoFollowedTagsUiState).action.invoke()
         // Assert
         verify(parentViewModel).onShowReaderInterests()
+    }
+
+    @Test
+    fun `Action button on no posts empty screen opens subs screen`() = test {
+        // Arrange
+        val navigation = init().navigation
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
+        // Act
+        (viewModel.uiState.value as ShowNoPostsUiState).action.invoke()
+        // Assert
+        assertThat(navigation[0].peekContent()).isInstanceOf(ShowReaderSubs::class.java)
+    }
+
+    @Test
+    fun `Action button on error empty screen invokes refresh cards`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        viewModel.start(parentViewModel)
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Act
+        (viewModel.uiState.value as RequestFailedUiState).action.invoke()
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards()
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
