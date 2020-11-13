@@ -1407,7 +1407,6 @@
 
     <!-- location -->
     <string name="post_settings_location">Location</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Can\'t open the Location Picker, Google Play Services is not available</string>
     <string name="remove_location">Remove Location</string>
     <string name="change_location">Change Location</string>
 

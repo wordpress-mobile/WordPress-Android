@@ -303,7 +303,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
                 BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
-
         if (!Places.isInitialized()) {
             Places.initialize(this, BuildConfig.RES_COM_GOOGLE_ANDROID_GEO_API_KEY);
         }
