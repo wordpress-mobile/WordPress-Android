@@ -242,6 +242,12 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .clearOnDetach()
     }
 
+    /**
+     * Loads an [MShot] into an [ImageView] and attaches a [RequestListener].
+     *
+     * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
+     * The loading is handled by [org.wordpress.android.networking.GlideMShotsLoader]
+     */
     fun loadWithResultListener(view: ImageView, design: MShot, requestListener: RequestListener<Drawable>) {
         val context = view.context
         if (!context.isAvailable()) return
