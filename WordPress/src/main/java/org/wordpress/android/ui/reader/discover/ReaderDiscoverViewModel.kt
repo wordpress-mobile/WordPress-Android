@@ -241,7 +241,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             when (uiState) {
                 is LoadingUiState -> {
                     // show fullscreen error
-                    _uiState.value = RequestFailedUiState{ onRetryButtonClick() }
+                    _uiState.value = RequestFailedUiState { onRetryButtonClick() }
                 }
                 is ContentUiState -> {
                     _uiState.value = uiState.copy(
