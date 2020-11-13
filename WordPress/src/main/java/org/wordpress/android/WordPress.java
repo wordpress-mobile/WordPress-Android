@@ -38,6 +38,7 @@ import androidx.work.WorkManager;
 import com.android.volley.RequestQueue;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.libraries.places.api.Places;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.wordpress.stories.compose.NotificationTrackerProvider;
@@ -301,6 +302,11 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
         mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
                 BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
+
+
+        if (!Places.isInitialized()) {
+            Places.initialize(this, BuildConfig.RES_COM_GOOGLE_ANDROID_GEO_API_KEY);
+        }
 
         MemoryAndConfigChangeMonitor memoryAndConfigChangeMonitor = new MemoryAndConfigChangeMonitor();
         registerComponentCallbacks(memoryAndConfigChangeMonitor);
