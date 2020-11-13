@@ -23,7 +23,7 @@ class HomePagePickerViewHolder(view: View, val parent: ViewGroup) : RecyclerView
         uiState: LayoutGridItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.loadWithResultListener(preview, ImageType.THEME, uiState.preview, FIT_CENTER, null,
+        imageManager.loadWithResultListener(preview, ImageType.THEME, uiState.tweakedPreview, FIT_CENTER, null,
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                     }
