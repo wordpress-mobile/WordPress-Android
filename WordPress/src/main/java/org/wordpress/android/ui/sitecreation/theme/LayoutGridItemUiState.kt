@@ -2,8 +2,6 @@ package org.wordpress.android.ui.sitecreation.theme
 
 import org.wordpress.android.R
 
-private const val viewPortWidth = 200
-
 /**
  * The layout grid item
  */
@@ -20,11 +18,4 @@ data class LayoutGridItemUiState(
 
     val selectedOverlayVisible: Boolean
         get() = selected
-
-    val tweakedPreview: String
-        get() {
-            val ratio = 1200.0 / 1600.0
-            val viewPortHeight = (viewPortWidth / ratio).toInt()
-            return preview.replace("vpw=1200&vph=1600", "vpw=$viewPortWidth&vph=$viewPortHeight")
-        }
 }
