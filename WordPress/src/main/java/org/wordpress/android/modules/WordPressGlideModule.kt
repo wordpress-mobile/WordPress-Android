@@ -11,6 +11,8 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.AppGlideModule
 import org.wordpress.android.WordPress
 import org.wordpress.android.networking.GlideRequestFactory
+import org.wordpress.android.networking.MShot
+import org.wordpress.android.networking.MShotModelLoaderFactory
 import java.io.InputStream
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,5 +36,8 @@ class WordPressGlideModule : AppGlideModule() {
         (context as WordPress).component().inject(this)
         registry.replace(GlideUrl::class.java, InputStream::class.java,
                 VolleyUrlLoader.Factory(requestQueue, glideRequestFactory))
+        registry.prepend(MShot::class.java, InputStream::class.java,
+                MShotModelLoaderFactory(context, glideRequestFactory)
+        )
     }
 }
