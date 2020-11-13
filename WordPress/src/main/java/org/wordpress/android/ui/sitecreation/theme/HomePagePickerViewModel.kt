@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
+import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,9 +17,15 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
+
+const val defaultTemplateSlug = "default"
+
+private const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
+private const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -36,6 +43,17 @@ class HomePagePickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
+    val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
+
+    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
+    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+
+    sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
+        object Skip : DesignSelectionAction(defaultTemplateSlug, null)
+        class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
+    }
+
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
@@ -47,7 +65,9 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start() {
-        fetchLayouts()
+        if (uiState.value !is UiState.Content) {
+            fetchLayouts()
+        }
     }
 
     private fun fetchLayouts() {
@@ -98,15 +118,21 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onChooseTapped() {
-        // TODO
+        (uiState.value as? UiState.Content)?.let { state ->
+            layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
+                _onDesignActionPressed.value = DesignSelectionAction.Choose(layout.slug!!, layout.segmentId)
+                return
+            }
+        }
+        updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
     }
 
     fun onSkippedTapped() {
-        // TODO
+        _onDesignActionPressed.value = DesignSelectionAction.Skip
     }
 
     fun onBackPressed() {
-        // TODO
+        _onBackButtonPressed.call()
     }
 
     fun onRetryClicked() {
@@ -117,7 +143,10 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
-    fun loadSavedState(layouts: List<StarterDesignModel>?, selected: String?) {
+    fun loadSavedState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) return
+        val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
+        val selected = savedInstanceState.getString(SELECTED_LAYOUT)
         if (layouts == null || layouts.isEmpty()) {
             fetchLayouts()
             return
@@ -126,6 +155,13 @@ class HomePagePickerViewModel @Inject constructor(
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
         loadLayouts()
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        (uiState.value as? UiState.Content)?.let {
+            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
+            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+        }
     }
 
     private fun updateUiState(uiState: UiState) {
