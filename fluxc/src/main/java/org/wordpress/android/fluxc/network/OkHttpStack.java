@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Header;
 import com.android.volley.Request;
@@ -73,10 +75,11 @@ public class OkHttpStack extends BaseHttpStack {
         }
     }
 
+    @NonNull
     private static RequestBody createRequestBody(Request r) throws AuthFailureError {
         final byte[] body = r.getBody();
         if (body == null) {
-            return null;
+            return RequestBody.create(null, new byte[]{});
         }
         return RequestBody.create(MediaType.parse(r.getBodyContentType()), body);
     }
@@ -95,10 +98,16 @@ public class OkHttpStack extends BaseHttpStack {
 
         Map<String, String> headers = request.getHeaders();
         for (final String name : headers.keySet()) {
-            okHttpRequestBuilder.addHeader(name, headers.get(name));
+            String value = headers.get(name);
+            if (value != null) {
+                okHttpRequestBuilder.addHeader(name, value);
+            }
         }
         for (final String name : additionalHeaders.keySet()) {
-            okHttpRequestBuilder.addHeader(name, additionalHeaders.get(name));
+            String value = additionalHeaders.get(name);
+            if (value != null) {
+                okHttpRequestBuilder.addHeader(name, value);
+            }
         }
 
         setConnectionParametersForRequest(okHttpRequestBuilder, request);
@@ -126,9 +135,7 @@ public class OkHttpStack extends BaseHttpStack {
         List<Header> headers = new ArrayList<>();
         for (int i = 0, len = responseHeaders.size(); i < len; i++) {
             final String name = responseHeaders.name(i), value = responseHeaders.value(i);
-            if (name != null) {
-                headers.add(new Header(name, value));
-            }
+            headers.add(new Header(name, value));
         }
         return headers;
     }
