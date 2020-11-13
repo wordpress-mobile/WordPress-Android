@@ -32,6 +32,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
@@ -140,7 +141,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         swipeToRefreshTriggered = false
                     } else {
                         _uiState.value = ShowNoPostsUiState {
-                            // TODO malinjir navigate to reader tag settings
+                            _navigationEvents.value = Event(ShowReaderSubs)
                         }
                     }
                 }
