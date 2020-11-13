@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-02 16:54:09+0000
+Translation-Revision-Date: 2020-11-13 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollbares Block-Menü geöffnet. Wähle einen Block aus.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Scrollbares Block-Menü geschlossen.</string>
+    <string name="hpp_skip_button">Überspringen</string>
+    <string name="hpp_choose_button">Auswählen</string>
+    <string name="hpp_subtitle">Wähle ein Layout für deine Startseite aus, das dir gefällt. Du kannst es später jederzeit ändern oder anpassen.</string>
+    <string name="hpp_title">Wähle ein Design</string>
+    <string name="mlp_network_error_subtitle">Tippe auf „erneut versuchen“, wenn du wieder online bist oder erstelle über den Button unten eine leere Seite.</string>
+    <string name="mlp_network_error_title">Layouts sind offline nicht verfügbar</string>
+    <string name="mlp_error_subtitle">Tippe auf „erneut versuchen“ oder erstelle über den Button unten eine leere Seite.</string>
+    <string name="mlp_error_title">Layouts sind aufgrund eines Fehlers nicht verfügbar</string>
+    <string name="prepublishing_nudges_add_category_button">Kategorie hinzufügen</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Neue Kategorie erstellen</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorien</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Nicht festgelegt</string>
+    <string name="prepublishing_nudges_categories_action">Kategorien</string>
+    <string name="login_prologue_fifth_caption_three">Museen in London</string>
+    <string name="login_prologue_fifth_caption_two">Die weltbesten Fans</string>
+    <string name="login_prologue_fifth_caption_one">Meine Top 10 Cafés</string>
+    <string name="login_prologue_fifth_tag_six">Politik</string>
+    <string name="login_prologue_fifth_tag_five">Musik</string>
+    <string name="login_prologue_fifth_tag_four">Gärtnern</string>
+    <string name="login_prologue_fifth_tag_three">American Football</string>
+    <string name="login_prologue_fifth_tag_two">Kochen</string>
+    <string name="login_prologue_fifth_tag_one">Kunst</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock\'n\'Roll wöchentlich</string>
+    <string name="login_prologue_fifth_subtitle_two">Web-Nachrichten</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Ich finde die Arbeit von Fotograf Cameron Karsten sehr inspirierend. Das nächste Mal probiere ich diese Techniken auch aus</string>
+    <string name="login_prologue_second_subtitle_one">Inspiration</string>
+    <string name="login_prologue_title_fifth">Folge deinen Lieblingswebsites und entdecke neuen Lesestoff.</string>
+    <string name="login_prologue_title_fourth">Sieh mithilfe von umfassenden Analysen dabei zu, wie deine Zielgruppe wächst.</string>
+    <string name="login_prologue_title_second">Mit dem leistungsstarken Editor kannst du auch von unterwegs aus Beiträge veröffentlichen.</string>
+    <string name="login_prologue_title_first">Willkommen beim beliebtesten Website-Baukasten der Welt.</string>
+    <string name="media_loading_failed">Laden der Medien fehlgeschlagen</string>
+    <string name="reader_discover_recommended_blogs_header">Websites, denen du folgen möchtest</string>
     <string name="gutenberg_native_s_is_not_fully_supported">„%s“ wird nicht vollständig unterstützt</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Wir arbeiten hart daran, mit jeder Veröffentlichung weitere Blöcke hinzuzufügen.</string>
     <string name="gutenberg_native_help_button">Hilfe-Button</string>
@@ -157,6 +192,7 @@ Language: de
     <string name="continue_with_wpcom">Weiter mit WordPress.com</string>
     <string name="signup_confirmation_title">Registrierungsbestätigung</string>
     <string name="continue_with_google_terms_of_service_text">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
+    <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
     <string name="continue_terms_of_service_text">Wenn du fortfährst, stimmst du unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="signup_confirmation_magic_link_message">Wir senden dir einen Anmeldelink per E-Mail, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_confirmation_message">Wir werden diese E-Mail-Adresse verwenden, um dein neues WordPress.com-Konto zu erstellen.</string>
