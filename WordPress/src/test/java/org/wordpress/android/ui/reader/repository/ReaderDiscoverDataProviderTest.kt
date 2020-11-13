@@ -15,7 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
