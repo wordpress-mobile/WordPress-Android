@@ -73,7 +73,7 @@ public class EditorPage {
         waitForElementToBeDisplayed(onView(withText("WordPress media")));
         // wait for images to load before clicking
         idleFor(2000);
-        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
+        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
 
         // Click the confirm button
         clickOn(confirmButton);
@@ -107,7 +107,7 @@ public class EditorPage {
     public void setFeaturedImage() {
         clickOn(onView(withId(R.id.post_add_featured_image_button)));
         clickOn(onView(withId(R.id.icon_wpmedia)));
-        onView(withIndex(withId(R.id.media_grid_item_image), 0)).perform(click());
+        onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
     }
 
     public boolean publishPost() {

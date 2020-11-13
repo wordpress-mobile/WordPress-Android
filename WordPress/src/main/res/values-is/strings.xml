@@ -455,7 +455,6 @@ Language: is
     <string name="reader_empty_posts_request_failed">Gat ekki sótt færslur</string>
     <string name="logs_copied_to_clipboard">Atburðarskrá forritsins hefur verið afrituð í klemmuspjaldið</string>
     <string name="error_copy_to_clipboard">Villa kom upp við að afrita texta í klemmuspjaldið</string>
-    <string name="reader_page_recommended_blogs">Vefir sem þér gæti líkað við</string>
     <string name="reader_label_new_posts">Nýjar færslur</string>
     <string name="stats_followers_months">%1$d mánuðir</string>
     <string name="stats_followers_a_year">Á ári</string>

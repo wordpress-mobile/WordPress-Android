@@ -19,6 +19,7 @@
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
+    <dimen name="fab_margin_stories">64dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
@@ -547,6 +548,7 @@
     <!-- Common Picker resources -->
     <dimen name="picker_header_scroll_snap_threshold">-54dp</dimen>
     <dimen name="picker_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="picker_header_selection_overlay_width">2dp</dimen>
 
     <!-- Modal Layout Picker -->
     <dimen name="mlp_layouts_row_height">281dp</dimen>
