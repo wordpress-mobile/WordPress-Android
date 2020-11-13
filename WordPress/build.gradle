@@ -79,6 +79,7 @@ android {
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
         buildConfigField "boolean", "SCAN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
+        buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using

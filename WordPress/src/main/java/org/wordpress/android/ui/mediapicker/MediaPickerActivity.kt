@@ -24,7 +24,6 @@ import org.wordpress.android.ui.gif.GifPickerActivity
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.mediapicker.MediaItem.Identifier
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_CAMERA
-import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.ANDROID_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMediaSource.APP_PICKER
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
@@ -185,18 +184,9 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         val intent: Intent? = when (requestCode) {
             MEDIA_LIBRARY -> {
                 data?.let {
-                    val intent = Intent()
                     val uris = WPMediaUtils.retrieveMediaUris(data)
-                    if (mediaPickerSetup.queueResults) {
-                        intent.putQueuedUris(uris)
-                    } else {
-                        intent.putUris(uris)
-                    }
-                    intent.putExtra(
-                            EXTRA_MEDIA_SOURCE,
-                            ANDROID_PICKER.name
-                    )
-                    intent
+                    pickerFragment?.urisSelectedFromSystemPicker(uris)
+                    return
                 }
             }
             TAKE_PHOTO -> {
