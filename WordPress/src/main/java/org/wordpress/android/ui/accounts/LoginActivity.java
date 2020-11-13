@@ -932,6 +932,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         return mDispatchingAndroidInjector;
     }
 
+    @Override public void startOver() {
+        // Not used in WordPress app
+    }
+
     @Override
     public void showHelpFindingConnectedEmail() {
         // Not used in WordPress app
