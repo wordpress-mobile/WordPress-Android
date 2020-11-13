@@ -12,6 +12,7 @@ import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
@@ -45,6 +46,7 @@ private const val DISCOVER_FEED_THROTTLE = 500L
 
 class ReaderDiscoverDataProvider @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
     private val readerTagWrapper: ReaderTagWrapper,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
@@ -66,7 +68,12 @@ class ReaderDiscoverDataProvider @Inject constructor(
             /* Since we listen to all updates of the database the feed is sometimes updated several times within a few
             ms. For example, when we are about to insert posts, we delete them first. However, we don't need/want
             to propagate this state to the VM. */
-            .throttle(this, offset = DISCOVER_FEED_THROTTLE)
+            .throttle(
+                    this,
+                    offset = DISCOVER_FEED_THROTTLE,
+                    backgroundDispatcher = ioDispatcher,
+                    mainDispatcher = mainDispatcher
+            )
 
     private var hasMoreCards = true
 
