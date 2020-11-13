@@ -1,4 +1,0 @@
-16.0:
-Actualizaciones en el editor de bloques: Ahora es compatible con la alineación ancha y completa en los bloques de vídeo, galería y más. Hemos corregido un problema que afectaba al bloque clásico en los sitios Jetpack y resuelto un problema relacionado con blloques no compatibles en dispositivos rotados.
-
-Actualizaciones en el lector: Disfruta de una experiencia de lectura más limpia y de bonitas imágenes en el rediseñado lector. Puede acceder aunque no sigas ningún tema.

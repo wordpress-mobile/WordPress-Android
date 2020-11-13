@@ -1,0 +1,3 @@
+16.1:
+* Scegli tra svariati modelli di pagina predefiniti quando crei una nuova pagina su un sito abilitato Gutenberg.
+
