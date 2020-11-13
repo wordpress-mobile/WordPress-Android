@@ -28,7 +28,9 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
         return withContext(bgDispatcher) {
             uriList
                     .map { mediaUri ->
-                        if (!mediaUtilsWrapper.isInMediaStore(mediaUri)) {
+                        if (!mediaUtilsWrapper.isInMediaStore(mediaUri) &&
+                                // don't copy existing local files
+                                !mediaUtilsWrapper.isFile(mediaUri)) {
                             copyToAppStorage(mediaUri)
                         } else {
                             mediaUri
