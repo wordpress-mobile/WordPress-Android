@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-20 06:03:11+0000
+Translation-Revision-Date: 2020-11-09 09:03:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Juan Gómez&lt;/b> ha respondido en tu entrada</string>
+    <string name="login_prologue_third_subtitle_two">Hoy has recibido &lt;b>50 me gusta&lt;/b> en tu sitio</string>
+    <string name="login_prologue_third_subtitle_one">A &lt;b>Madison Ruíz&lt;/b> le ha gustado tu entrada</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Se ha abierto el menú de bloques desplazable. Selecciona un bloque.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
+    <string name="hpp_skip_button">Omitir</string>
+    <string name="hpp_choose_button">Elegir</string>
+    <string name="hpp_subtitle">Elige el diseño de página de inicio que prefieras. Puedes personalizarlo o cambiarlo más adelante.</string>
+    <string name="hpp_title">Elige un diseño</string>
+    <string name="mlp_network_error_subtitle">Toca «Reintentar» cuando vuelvas a estar en línea o crea una página en blanco usando el botón a continuación.</string>
+    <string name="mlp_network_error_title">Los diseños no están disponibles sin conexión</string>
+    <string name="mlp_error_subtitle">Toca «Reintentar» o crea una página en blanco usando el botón a continuación.</string>
+    <string name="mlp_error_title">Los diseños no están disponibles debido a un error</string>
+    <string name="prepublishing_nudges_add_category_button">Añadir una categoría</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Añadir una nueva categoría</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categorías</string>
+    <string name="prepublishing_nudges_home_categories_not_set">No establecido</string>
+    <string name="prepublishing_nudges_categories_action">Categorías</string>
+    <string name="login_prologue_fifth_caption_three">Museos en Londres</string>
+    <string name="login_prologue_fifth_caption_two">Los mejores fanáticos del mundo</string>
+    <string name="login_prologue_fifth_caption_one">Mis diez mejores cafés</string>
+    <string name="login_prologue_fifth_tag_six">Política</string>
+    <string name="login_prologue_fifth_tag_five">Música</string>
+    <string name="login_prologue_fifth_tag_four">Jardinería</string>
+    <string name="login_prologue_fifth_tag_three">Fútbol</string>
+    <string name="login_prologue_fifth_tag_two">Cocina</string>
+    <string name="login_prologue_fifth_tag_one">Arte</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock n\' roll semanal</string>
+    <string name="login_prologue_fifth_subtitle_two">Noticias web</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Estoy muy inspirado por el trabajo del fotógrafo Cameron Karsten. Probaré estas técnicas en mi próximo</string>
+    <string name="login_prologue_second_subtitle_one">Inspírate</string>
+    <string name="login_prologue_title_fifth">Sigue tus sitios favoritos y descubre nuevas lecturas.</string>
+    <string name="login_prologue_title_fourth">Observa cómo crece tu audiencia con analíticas avanzadas.</string>
+    <string name="login_prologue_title_third">Mira los comentarios y avisos en tiempo real.</string>
+    <string name="login_prologue_title_second">Con el potente editor puedes publicar sobre la marcha.</string>
+    <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
+    <string name="media_loading_failed">La carga del medio ha fallado</string>
+    <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
     <string name="gutenberg_native_help_button">Botón de ayuda</string>
@@ -20,7 +59,6 @@ Language: es
     <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
     <string name="stories_intro_main_subtitle">Tienes acceso anticipado a las entradas de historias y nos encantaría que las probaras.</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
-    <string name="mlp_generic_error">Ha ocurrido un error al obtener los diseños</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_preview_title">Vista previa del diseño</string>
@@ -158,8 +196,7 @@ Language: es
     <string name="gutenberg_native_choose_image_or_video">Elegir una imagen o vídeo</string>
     <string name="gutenberg_native_choose_image">Elegir una imagen</string>
     <string name="gutenberg_native_block_removed">Bloque eliminado</string>
-    <string name="content_description_logo">Logotipo de WordPress</string>
-    <string name="enter_your_site_address">Introduce la dirección de tu sitio</string>
+    <string name="enter_your_site_address">Introduce la dirección de tu sitio existente</string>
     <string name="continue_with_wpcom">Continuar con WordPress.com</string>
     <string name="signup_confirmation_title">Confirmación del registro</string>
     <string name="continue_with_google_terms_of_service_text">Si continúas con Google y aún no tienes una cuenta de WordPress.com, crearás una cuenta y aceptas nuestros %1$stérminos del servicio%2$s.</string>
@@ -181,8 +218,6 @@ Language: es
     <string name="or_type_your_password">O escribe tu contraseña</string>
     <string name="create_account">Crear una cuenta</string>
     <string name="send_link_by_email">Enviar el enlace por correo electrónico</string>
-    <string name="login_promo_text_unlock_the_power">Desbloquea el poder del creador de webs más flexible.</string>
-    <string name="login_promo_title_37_percent">El 37\% de la web está creada con WordPress.</string>
     <string name="reset_your_password">Restablecer tu contraseña</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dale a tu sitio un nombre que refleje su personalidad y temática. ¡Las primeras impresiones cuentan!</string>
@@ -487,7 +522,6 @@ Language: es
     <string name="dialog_confirm_scheduled_post_sync_message">Esta entrada se sincronizará inmediatamente.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">¿Preparado para sincronizar?</string>
     <string name="new_site_creation_unavailable_domain">Este dominio no está disponible</string>
-    <string name="login_promo_viewpager_content_description">Introducción</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">No hemos podido acceder a tu sitio. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
     <string name="login_discovery_error_ssl">No hemos podido acceder a tu sitio debido a un problema con el &lt;b>certificado SSL&lt;/b>. Tendrás que contactar con tu alojamiento para solucionarlo.</string>
@@ -1313,7 +1347,6 @@ Language: es
     <string name="edit_photo_screen_title">Editar foto</string>
     <string name="share_intent_screen_title">Elige el sitio</string>
     <string name="signup_epilogue_screen_title">Cuenta nueva</string>
-    <string name="login_prologue_screen_title">Iniciar sesión</string>
     <string name="login_epilogue_screen_title">Conectado como</string>
     <string name="person_detail_screen_title">Detalle de la persona</string>
     <string name="media_settings_screen_title">Detalles del archivo</string>
@@ -2247,7 +2280,6 @@ Language: es
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
-    <string name="reader_page_recommended_blogs">Sitios que te podrían gustar</string>
     <string name="error_copy_to_clipboard">Ha ocurrido un error al copiar el texto en el portapapeles</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="stats_followers_years">%1$d años</string>

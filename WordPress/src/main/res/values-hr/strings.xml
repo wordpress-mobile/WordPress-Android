@@ -309,7 +309,6 @@ Language: hr
     <string name="error_copy_to_clipboard">Došlo je do pogreške prilikom kopiranja teksta u međuspremnik</string>
     <string name="reader_label_new_posts">Nove objave</string>
     <string name="logs_copied_to_clipboard">Zapisi aplikacije su kopirani međuspremnik</string>
-    <string name="reader_page_recommended_blogs">Web-stranice koje bi vam se mogle sviđati</string>
     <string name="post_uploading">Objava se prenosi</string>
     <string name="reader_empty_posts_in_blog">Ova web-stranica je prazna</string>
     <string name="stats_followers_an_hour_ago">Prije sat vremena</string>

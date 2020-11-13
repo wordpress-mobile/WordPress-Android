@@ -1337,8 +1337,12 @@
     <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
-    <string name="reader_discover_empty_title">Follow topics to discover new blogs</string>
+    <string name="reader_discover_empty_title">Welcome!</string>
+    <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
+    <string name="reader_discover_no_posts_title">No recent posts</string>
+    <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
+    <string name="reader_discover_no_posts_button_text">Follow topics</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -2936,6 +2940,7 @@
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
+    <string name="hpp_choose_error">There was an error while selecting the design.</string>
 
     <!-- Stories -->
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>

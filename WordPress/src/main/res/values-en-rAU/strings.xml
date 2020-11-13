@@ -731,7 +731,6 @@ Language: en_AU
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="share_intent_screen_title">Pick site</string>
     <string name="signup_epilogue_screen_title">New account</string>
-    <string name="login_prologue_screen_title">Login</string>
     <string name="login_epilogue_screen_title">Logged in as</string>
     <string name="person_detail_screen_title">Person detail</string>
     <string name="media_settings_screen_title">File details</string>
@@ -1655,7 +1654,6 @@ Language: en_AU
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_label_new_posts">New posts</string>
-    <string name="reader_page_recommended_blogs">Sites you may like</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="post_uploading">Uploading post</string>
     <string name="stats_followers_years">%1$d years</string>
