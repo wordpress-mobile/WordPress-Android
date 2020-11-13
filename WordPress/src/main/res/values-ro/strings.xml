@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-21 08:41:13+0000
+Translation-Revision-Date: 2020-11-09 15:05:22+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> a răspuns la articolul tău</string>
+    <string name="login_prologue_third_subtitle_two">Azi ai primit &lt;b>50 de aprecieri&lt;/b> pe sit</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> ți-a apreciat articolul</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Meniul de blocuri care poate fi derulat este deschis. Selectează un bloc.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Meniul de blocuri care poate fi derulat este închis.</string>
+    <string name="hpp_skip_button">Sari</string>
+    <string name="hpp_choose_button">Alege</string>
+    <string name="hpp_subtitle">Alege aranjamentul preferat pentru prima pagină. Îl poți personaliza sau modifica mai târziu.</string>
+    <string name="hpp_title">Alege un design</string>
+    <string name="mlp_network_error_subtitle">Atinge reîncearcă când ești din nou online sau creează o pagină goală folosind butonul de mai jos.</string>
+    <string name="mlp_network_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
+    <string name="mlp_error_subtitle">Atinge reîncearcă sau creează o pagină goală folosind butonul de mai jos.</string>
+    <string name="mlp_error_title">Aranjamentele nu sunt disponibile din cauza unei erori</string>
+    <string name="prepublishing_nudges_add_category_button">Adaugă o categorie</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Adaugă o categorie nouă</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categorii</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Nesetată</string>
+    <string name="prepublishing_nudges_categories_action">Categorii</string>
+    <string name="login_prologue_fifth_caption_three">Muzee din Londra</string>
+    <string name="login_prologue_fifth_caption_two">Cei mai buni fani din lume</string>
+    <string name="login_prologue_fifth_caption_one">Primele zece cafenele, pe gustul meu</string>
+    <string name="login_prologue_fifth_tag_six">Politică</string>
+    <string name="login_prologue_fifth_tag_five">Muzică</string>
+    <string name="login_prologue_fifth_tag_four">Grădinărit</string>
+    <string name="login_prologue_fifth_tag_three">Fotbal</string>
+    <string name="login_prologue_fifth_tag_two">Bucătărie</string>
+    <string name="login_prologue_fifth_tag_one">Artă</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock and Roll în fiecare săptămână</string>
+    <string name="login_prologue_fifth_subtitle_two">Știri pe web</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">M-au inspirat foarte mult lucrările fotografului Cameron Karsten. Voi încerca aceste tehnici pe viitor</string>
+    <string name="login_prologue_second_subtitle_one">Inspiră-te</string>
+    <string name="login_prologue_title_fifth">Urmărește-ți siturile preferate și descoperi lecturi noi.</string>
+    <string name="login_prologue_title_fourth">Urmărești cum îți crește audiența cu analitice detaliate.</string>
+    <string name="login_prologue_title_third">Vezi comentariile și notificările în timp real.</string>
+    <string name="login_prologue_title_second">Cu acest editor puternic poți publica din mers.</string>
+    <string name="login_prologue_title_first">Bine ai venit la cel mai popular constructor de situri web din lume.</string>
+    <string name="media_loading_failed">Încărcarea media a eșuat</string>
+    <string name="reader_discover_recommended_blogs_header">Situri de urmărit</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Lucrăm continuu pentru a adăuga mai multe blocuri la fiecare lansare.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">„%s” nu este acceptat în totalitate</string>
     <string name="gutenberg_native_help_button">Buton pentru ajutor</string>
@@ -18,9 +57,8 @@ Language: ro
     <string name="stories_intro_title_first">Acum narațiunile sunt pentru toată lumea</string>
     <string name="stories_intro_image_caption_second">Exemplu de titlu narațiune</string>
     <string name="stories_intro_image_caption_first">Cum să creezi un articol narațiune</string>
-    <string name="stories_intro_main_subtitle">Acum ai acces Articole narațiune și ne-ar plăcea să le încerci.</string>
+    <string name="stories_intro_main_subtitle">Acum ai acces la Articole narațiune și ne-ar plăcea să le încerci.</string>
     <string name="stories_intro_main_title">Prezentăm Articole narațiune</string>
-    <string name="mlp_generic_error">A apărut o eroare în timpul aducerii aranjamentelor</string>
     <string name="mlp_notice_blank_page_created">A fost creată o pagină goală</string>
     <string name="mlp_notice_page_created">A fost creată o pagină</string>
     <string name="mlp_preview_title">Previzualizare aranjament</string>
@@ -158,8 +196,7 @@ Language: ro
     <string name="gutenberg_native_choose_image_or_video">Alege o imagine sau un video</string>
     <string name="gutenberg_native_choose_image">Alege o imagine</string>
     <string name="gutenberg_native_block_removed">Bloc înlăturat</string>
-    <string name="content_description_logo">Logo WordPress</string>
-    <string name="enter_your_site_address">Introdu adresa sitului tău</string>
+    <string name="enter_your_site_address">Introdu adresa sitului tău de acum</string>
     <string name="continue_with_wpcom">Continuă cu WordPress.com</string>
     <string name="signup_confirmation_title">Confirmare înregistrare</string>
     <string name="continue_with_google_terms_of_service_text">Dacă continui cu Google și nu ai deja un cont WordPress.com, îți creezi un cont și ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
@@ -181,8 +218,6 @@ Language: ro
     <string name="or_type_your_password">Sau tastează parola</string>
     <string name="create_account">Creează un cont</string>
     <string name="send_link_by_email">Trimite legătura prin email</string>
-    <string name="login_promo_text_unlock_the_power">Deblochează puterea celui mai flexibil constructor de situri web.</string>
-    <string name="login_promo_title_37_percent">37\% din web este construit cu WordPress.</string>
     <string name="reset_your_password">Resetează-ți parola</string>
     <string name="reader_error_request_failed_title">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dă-i sitului un nume care să-i reflecte personalitatea și subiectul (tema). Prima impresie este foarte importantă!</string>
@@ -487,7 +522,6 @@ Language: ro
     <string name="dialog_confirm_scheduled_post_sync_message">Acest articol va fi sincronizat imediat.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Ești gata pentru sincronizare?</string>
     <string name="new_site_creation_unavailable_domain">Acest domeniu nu este disponibil</string>
-    <string name="login_promo_viewpager_content_description">Introducere</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nu am putut să-ți accesăm situl. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
     <string name="login_discovery_error_ssl">Nu am putut să-ți accesăm situl din cauza unei probleme cu &lt;b>certificatul SSL&lt;/b>. Pentru a rezolva acest lucru, va trebui să contactezi serviciul tău de găzduire.</string>
@@ -1313,7 +1347,6 @@ Language: ro
     <string name="edit_photo_screen_title">Editează fotografia</string>
     <string name="share_intent_screen_title">Alege situl</string>
     <string name="signup_epilogue_screen_title">Cont nou</string>
-    <string name="login_prologue_screen_title">Autentificare</string>
     <string name="login_epilogue_screen_title">Autentificat ca</string>
     <string name="person_detail_screen_title">Detalii personale</string>
     <string name="media_settings_screen_title">Detalii fișier</string>
@@ -2247,7 +2280,6 @@ Language: ro
     <string name="logs_copied_to_clipboard">Jurnalele aplicației au fost copiate în clipbord</string>
     <string name="reader_empty_posts_in_blog">Acest sit este gol</string>
     <string name="reader_label_new_posts">Articole noi</string>
-    <string name="reader_page_recommended_blogs">Situri care s-ar putea să-ți placă</string>
     <string name="error_copy_to_clipboard">A apărut o eroare în timp ce copiam textul în clipbord</string>
     <string name="post_uploading">Încarc articolul</string>
     <string name="stats_followers_years">%1$d ani</string>

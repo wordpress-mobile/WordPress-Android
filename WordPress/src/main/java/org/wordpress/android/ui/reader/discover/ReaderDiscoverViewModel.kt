@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
@@ -27,11 +26,13 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
@@ -54,7 +55,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val INITIATE_LOAD_MORE_OFFSET = 3
-const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users's data
+const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users' data
 const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 class ReaderDiscoverViewModel @Inject constructor(
@@ -128,19 +129,19 @@ class ReaderDiscoverViewModel @Inject constructor(
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
-                    _uiState.value = ShowFollowInterestsEmptyUiState
+                    _uiState.value = ShowNoFollowedTagsUiState { parentViewModel.onShowReaderInterests() }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
-                        val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
-                                posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
-                        if (!discoverFeedContainsOnlyWelcomeCard) {
-                            _uiState.value = ContentUiState(
-                                    convertCardsToUiStates(posts),
-                                    reloadProgressVisibility = false,
-                                    loadMoreProgressVisibility = false,
-                                    scrollToTop = swipeToRefreshTriggered
-                            )
-                            swipeToRefreshTriggered = false
+                        _uiState.value = ContentUiState(
+                                convertCardsToUiStates(posts),
+                                reloadProgressVisibility = false,
+                                loadMoreProgressVisibility = false,
+                                scrollToTop = swipeToRefreshTriggered
+                        )
+                        swipeToRefreshTriggered = false
+                    } else {
+                        _uiState.value = ShowNoPostsUiState {
+                            _navigationEvents.value = Event(ShowReaderSubs)
                         }
                     }
                 }
@@ -171,7 +172,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         return posts.cards.map { card ->
             when (card) {
                 is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                        titleRes = string.reader_welcome_banner
+                        titleRes = R.string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                         post = card.post,
@@ -240,7 +241,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             when (uiState) {
                 is LoadingUiState -> {
                     // show fullscreen error
-                    _uiState.value = RequestFailedErrorUiState
+                    _uiState.value = RequestFailedUiState { onRetryButtonClick() }
                 }
                 is ContentUiState -> {
                     _uiState.value = uiState.copy(
@@ -251,7 +252,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _snackbarEvents.postValue(
                             Event(
                                     SnackbarMessageHolder(
-                                            UiStringRes(string.reader_error_request_failed_title)
+                                            UiStringRes(R.string.reader_error_request_failed_title)
                                     )
                             )
                     )
@@ -425,14 +426,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    fun onEmptyActionClick() {
-        parentViewModel.onShowReaderInterests()
-    }
-
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
         val fullscreenProgressVisibility: Boolean = false,
-        open val fullscreenErrorVisibility: Boolean = false,
         val swipeToRefreshEnabled: Boolean = false,
         open val fullscreenEmptyVisibility: Boolean = false,
         open val scrollToTop: Boolean = false
@@ -448,15 +444,32 @@ class ReaderDiscoverViewModel @Inject constructor(
         ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
 
         object LoadingUiState : DiscoverUiState(fullscreenProgressVisibility = true)
-        sealed class ErrorUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenErrorVisibility = true) {
-            object RequestFailedErrorUiState : ErrorUiState(
-                    titleResId = R.string.reader_error_request_failed_title
-            )
-        }
-        sealed class EmptyUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenEmptyVisibility = true) {
-            object ShowFollowInterestsEmptyUiState : EmptyUiState(
-                    titleResId = R.string.reader_discover_empty_title
-            )
+
+        sealed class EmptyUiState : DiscoverUiState(fullscreenEmptyVisibility = true) {
+            abstract val titleResId: Int
+            abstract val buttonResId: Int
+            open val subTitleRes: Int? = null
+            abstract val action: () -> Unit
+            open val illustrationResId: Int? = null
+
+            data class RequestFailedUiState(override val action: () -> Unit) : EmptyUiState() {
+                override val titleResId = R.string.connection_error
+                override val subTitleRes = R.string.reader_error_request_failed_title
+                override val buttonResId = R.string.retry
+            }
+
+            data class ShowNoFollowedTagsUiState(override val action: () -> Unit) : EmptyUiState() {
+                override val titleResId = R.string.reader_discover_empty_title
+                override val subTitleRes = R.string.reader_discover_empty_subtitle
+                override val buttonResId = R.string.reader_discover_empty_button_text
+            }
+
+            data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
+                override val titleResId = R.string.reader_discover_no_posts_title
+                override val buttonResId = R.string.reader_discover_no_posts_button_text
+                override val subTitleRes = R.string.reader_discover_no_posts_subtitle
+                override val illustrationResId = R.drawable.img_illustration_empty_results_216dp
+            }
         }
     }
 }

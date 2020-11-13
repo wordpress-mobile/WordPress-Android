@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-20 01:00:49+0000
+Translation-Revision-Date: 2020-11-10 01:29:13+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>요한 브란트&lt;/b>가 글에 답했습니다</string>
+    <string name="login_prologue_third_subtitle_two">오늘 사이트에서 &lt;b>50개의 좋아요&lt;/b>를 받았습니다</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>메디슨 루이즈&lt;/b>가 글을 좋아합니다</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">스크롤 할 수 있는 블록 메뉴가 열렸습니다. 블록을 선택하세요.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">스크롤 할 수 있는 블록 메뉴를 닫았습니다.</string>
+    <string name="hpp_skip_button">건너뛰기</string>
+    <string name="hpp_choose_button">선택하기</string>
+    <string name="hpp_subtitle">좋아하는 홈페이지 레이아웃을 고르세요. 사용자 정의하거나 나중에 바꿀 수 있습니다.</string>
+    <string name="hpp_title">디자인 선택하기</string>
+    <string name="mlp_network_error_subtitle">온라인으로 돌아가면 재시도를 누르거나 아래의 단추를 이용하여 빈 페이지를 만드세요.</string>
+    <string name="mlp_network_error_title">레이아웃은 오프라인 중에 사용할 수 없습니다</string>
+    <string name="mlp_error_subtitle">재시도를 누르거나 아래의 버튼을 이용하여 빈 페이지를 만드세요.</string>
+    <string name="mlp_error_title">오류가 있어 레이아웃을 사용할 수 없습니다</string>
+    <string name="prepublishing_nudges_add_category_button">카테고리 추가하기</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">새 카테고리 추가하기</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">카테고리</string>
+    <string name="prepublishing_nudges_home_categories_not_set">설정하지 않았습니다</string>
+    <string name="prepublishing_nudges_categories_action">카테고리</string>
+    <string name="login_prologue_fifth_caption_three">런던의 박물관</string>
+    <string name="login_prologue_fifth_caption_two">세계 최고의 팬</string>
+    <string name="login_prologue_fifth_caption_one">상위 10개 카페</string>
+    <string name="login_prologue_fifth_tag_six">정치</string>
+    <string name="login_prologue_fifth_tag_five">음악</string>
+    <string name="login_prologue_fifth_tag_four">원예</string>
+    <string name="login_prologue_fifth_tag_three">축구</string>
+    <string name="login_prologue_fifth_tag_two">요리</string>
+    <string name="login_prologue_fifth_tag_one">예술</string>
+    <string name="login_prologue_fifth_subtitle_three">주간 락앤롤</string>
+    <string name="login_prologue_fifth_subtitle_two">웹 뉴스</string>
+    <string name="login_prologue_fifth_subtitle_one">파멜라 응우옌</string>
+    <string name="login_prologue_second_subtitle_two">사진가 카메론 카르스텐의 작업에서 깊은 영감을 받았습니다. 다음 번에 이 기법을 시도할 것입니다</string>
+    <string name="login_prologue_second_subtitle_one">영감받기</string>
+    <string name="login_prologue_title_fifth">좋아하는 사이트를 팔로우하고 새 읽을 거리를 발견하세요.</string>
+    <string name="login_prologue_title_fourth">깊이 있는 분석으로 독자가 늘어나는 것을 확인하세요.</string>
+    <string name="login_prologue_title_third">댓글과 알림을 실시간으로 보세요.</string>
+    <string name="login_prologue_title_second">강력한 편집기로 이동 중에도 글을 쓸 수 있습니다.</string>
+    <string name="login_prologue_title_first">세계적으로 가장 잘 알려진 웹사이트 제작기에 오신 것을 환영합니다.</string>
+    <string name="media_loading_failed">미디어 로딩을 실패했습니다</string>
+    <string name="reader_discover_recommended_blogs_header">팔로우한 사이트</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">매 릴리즈마다 더 많은 블록을 추가하려고 열심히 일하고 있습니다.</string>
-    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\'을(를) 완전히 지원하지 않습니다</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">‘%s’을(를) 완전히 지원하지 않습니다</string>
     <string name="gutenberg_native_help_button">도움 버튼</string>
     <string name="gutenberg_native_edit_using_web_editor">웹 편집기를 이용하여 편집하기</string>
     <string name="gutenberg_native_choose_images">이미지 고르기</string>
@@ -20,7 +59,6 @@ Language: ko_KR
     <string name="stories_intro_image_caption_first">이야기 글을 만드는 방법</string>
     <string name="stories_intro_main_subtitle">이야기 글을 일찍 접근할 수 있게 되었으니 한 번 사용해 보시기 바랍니다.</string>
     <string name="stories_intro_main_title">이야기 글 소개</string>
-    <string name="mlp_generic_error">레이아웃을 가져오는 동안 오류가 생겼습니다</string>
     <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
     <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
     <string name="mlp_preview_title">레이아웃 미리보기</string>
@@ -158,8 +196,7 @@ Language: ko_KR
     <string name="gutenberg_native_choose_image_or_video">이미지나 비디오 고르기</string>
     <string name="gutenberg_native_choose_image">이미지 고르기</string>
     <string name="gutenberg_native_block_removed">블록을 제거했습니다</string>
-    <string name="content_description_logo">워드프레스 로고</string>
-    <string name="enter_your_site_address">새로 만들 사이트 주소 입력하기</string>
+    <string name="enter_your_site_address">이미 있는 사이트 주소 입력하기</string>
     <string name="continue_with_wpcom">워드프레스닷컴으로 계속하기</string>
     <string name="signup_confirmation_title">등록 확인</string>
     <string name="continue_with_google_terms_of_service_text">워드프레스닷컴 계정이 없는 상태에서 Google로 계속하기를 선택하는 경우, 계정을 만들고 %1$s서비스 약관%2$s에 동의하는 것으로 간주됩니다.</string>
@@ -181,8 +218,6 @@ Language: ko_KR
     <string name="or_type_your_password">또는 비밀번호 입력하기</string>
     <string name="create_account">계정 만들기</string>
     <string name="send_link_by_email">이메일로 링크 보내기</string>
-    <string name="login_promo_text_unlock_the_power">가장 유연한 웹사이트 제작 도구의 능력을 직접 경험해보세요.</string>
-    <string name="login_promo_title_37_percent">웹의 37\%가 워드프레스로 만들어졌습니다.</string>
     <string name="reset_your_password">비밀번호 재설정하기</string>
     <string name="reader_error_request_failed_title">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하시기 바랍니다.</string>
     <string name="quick_start_list_update_site_title_subtitle">개성과 주제를 반영할 사이트 이름을 주세요. 첫 인상이 중요합니다!</string>
@@ -487,7 +522,6 @@ Language: ko_KR
     <string name="dialog_confirm_scheduled_post_sync_message">이 글은 즉시 동기화됩니다.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">동기화할 준비가 되셨습니까?</string>
     <string name="new_site_creation_unavailable_domain">이 도메인을 사용할 수 없습니다.</string>
-    <string name="login_promo_viewpager_content_description">소개</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
     <string name="login_discovery_error_ssl">&lt;b>SSL 인증서&lt;/b> 문제로 인해 사이트에 액세스할 수 없습니다. 이 문제를 해결하려면 호스트에게 연락해야 합니다.</string>
@@ -1313,7 +1347,6 @@ Language: ko_KR
     <string name="edit_photo_screen_title">사진 편집</string>
     <string name="share_intent_screen_title">사이트 선택</string>
     <string name="signup_epilogue_screen_title">새 계정</string>
-    <string name="login_prologue_screen_title">로그인</string>
     <string name="login_epilogue_screen_title">다음 계정으로 로그인됨</string>
     <string name="person_detail_screen_title">사용자 세부정보</string>
     <string name="media_settings_screen_title">파일 세부정보</string>
@@ -2247,7 +2280,6 @@ Language: ko_KR
     <string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
     <string name="reader_empty_posts_in_blog">이 블로그는 비었습니다.</string>
     <string name="reader_label_new_posts">새 게시물</string>
-    <string name="reader_page_recommended_blogs">회원님이 좋아할 만한 블로그</string>
     <string name="error_copy_to_clipboard">텍스트를 클립보드에 복사하는 동안 오류가 발생했습니다.</string>
     <string name="post_uploading">업로드</string>
     <string name="stats_followers_years">%1$d년</string>
