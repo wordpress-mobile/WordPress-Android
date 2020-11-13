@@ -44,10 +44,12 @@ class FetchDomainsUseCase @Inject constructor(
                 includeVendorDot
         )
 
-        // Depending on the payload the server may override the following values
+        /**
+         * Depending on the payload the server may override the following values. Setting this values here to get
+         * reasonable results in case SKIP button is pressed ("default" template)
+         */
         payload.includeWordpressCom = true
         payload.onlyWordpressCom = true
-        payload.includeDotBlogSubdomain = true
 
         return suspendCancellableCoroutine { cont ->
             pair = Pair(payload.query, cont)
