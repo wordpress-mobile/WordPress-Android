@@ -575,6 +575,29 @@ class ReaderDiscoverViewModelTest {
         verify(parentViewModel).onShowReaderInterests()
     }
 
+    @Test
+    fun `Action button on no posts empty screen opens subs screen`() = test {
+        // Arrange
+        val navigation = init().navigation
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
+        // Act
+        (viewModel.uiState.value as ShowNoPostsUiState).action.invoke()
+        // Assert
+        assertThat(navigation[0].peekContent()).isInstanceOf(ShowReaderSubs::class.java)
+    }
+
+    @Test
+    fun `Action button on error empty screen invokes refresh cards`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        viewModel.start(parentViewModel)
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Act
+        (viewModel.uiState.value as RequestFailedUiState).action.invoke()
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards()
+    }
+
     private fun init(autoUpdateFeed: Boolean = true): Observers {
         val uiStates = mutableListOf<DiscoverUiState>()
         viewModel.uiState.observeForever {
