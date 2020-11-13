@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-23 15:04:37+0000
+Translation-Revision-Date: 2020-11-03 08:35:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="hpp_skip_button">Hopp over</string>
+    <string name="hpp_choose_button">Velg</string>
+    <string name="prepublishing_nudges_add_category_button">Legg til kategori</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Legg til ny kategori</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorier</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Ikke angitt</string>
+    <string name="prepublishing_nudges_categories_action">Kategorier</string>
+    <string name="login_prologue_fifth_caption_three">Museer i London</string>
+    <string name="login_prologue_fifth_tag_six">Politikk</string>
+    <string name="login_prologue_fifth_tag_five">Musikk</string>
+    <string name="login_prologue_fifth_tag_four">Hagestell</string>
+    <string name="login_prologue_fifth_tag_three">Fotball</string>
+    <string name="login_prologue_fifth_tag_two">Matlaging</string>
+    <string name="login_prologue_fifth_tag_one">Kunst</string>
+    <string name="reader_discover_recommended_blogs_header">Nettsteder å følge</string>
+    <string name="gutenberg_native_choose_images">Velg bilder</string>
+    <string name="mlp_notice_page_created">Side opprettet</string>
+    <string name="reader_label_toolbar_back">Tilbake</string>
+    <string name="reader_discover_empty_button_text">Kom i gang</string>
+    <string name="reader_discover_empty_title">Følg emner for å oppdage nye nettsteder</string>
+    <string name="reader_post_details_header_by_author_name">Av</string>
+    <string name="stats_referrer_popup_menu_open_website">Åpne nettstedet</string>
+    <string name="gutenberg_native_select_item">Velg element</string>
+    <string name="gutenberg_native_search_or_type_url">Søk eller skriv inn URL</string>
+    <string name="gutenberg_native_add_this_telephone_link">Legg til denne telefonlenken</string>
+    <string name="gutenberg_native_add_this_link">Legg til denne lenken</string>
+    <string name="gutenberg_native_add_this_email_link">Legg til denne e-postlenken</string>
     <string name="typeface_label_shrikhand">Fet</string>
     <string name="typeface_label_space_mono">Moderne</string>
     <string name="typeface_label_pacifico">Lekende</string>
@@ -15,10 +42,12 @@ Language: nb_NO
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s valgt</string>
     <string name="login_get_link_by_email">Få en innloggingslenke med e-post</string>
+    <string name="permission_microphone">Mikrofon</string>
     <string name="gutenberg_native_select_a_layout">Velg et oppsett</string>
     <string name="create_post_story_fab_tooltip">Lag et innlegg eller en fortelling</string>
     <string name="create_page_fab_tooltip">Lag en side</string>
     <string name="create_post_fab_tooltip">Lag et innlegg</string>
+    <string name="reader_discover_interests_header">Du liker kanskje</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Skjul</string>
     <string name="gutenberg_native_video_caption_empty">Videobildetekst. Tom.</string>
     <string name="gutenberg_native_updates_the_title">Oppdaterer tittelen.</string>
@@ -84,8 +113,7 @@ Language: nb_NO
     <string name="gutenberg_native_choose_image_or_video">Velg bilde eller video</string>
     <string name="gutenberg_native_choose_image">Velg bilde</string>
     <string name="gutenberg_native_block_removed">Blokk fjernet</string>
-    <string name="content_description_logo">WordPress-logo</string>
-    <string name="enter_your_site_address">Oppgi din nettstedsadresse</string>
+    <string name="enter_your_site_address">Oppgi din eksisterende nettstedsadresse</string>
     <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
     <string name="signup_confirmation_title">Registreringsbekreftelse</string>
     <string name="signup_confirmation_magic_link_message">Vi vil sende deg en registreringslenke for å opprette din nye WordPress.com-konto.</string>
@@ -102,8 +130,6 @@ Language: nb_NO
     <string name="or_type_your_password">Eller oppgi dit passord</string>
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
-    <string name="login_promo_text_unlock_the_power">Lås opp kraften til en mest fleksible nettstedsbyggeren.</string>
-    <string name="login_promo_title_37_percent">37\% av alle nettsteder er bygget på WordPress.</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
     <string name="quick_start_list_update_site_title_subtitle">Gi ditt nettsted et navn som reflekterer des personlighet og emne Førsteinntrykket teller!</string>
     <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
@@ -359,7 +385,6 @@ Language: nb_NO
     <string name="dialog_confirm_scheduled_post_sync_message">Dette innlegget vil synkroniseres straks.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Klar til å synkronisere?</string>
     <string name="new_site_creation_unavailable_domain">Dette domenet er ikke tilgengelig</string>
-    <string name="login_promo_viewpager_content_description">Introduksjon</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Vi klarte ikke å få tilgang til nettstedet ditt. Du må kontakte din nettvert for å løse dette.</string>
     <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b>%1$s&lt;/b></string>
@@ -1164,7 +1189,6 @@ Language: nb_NO
     <string name="edit_photo_screen_title">Rediger bilde</string>
     <string name="share_intent_screen_title">Velg nettsted</string>
     <string name="signup_epilogue_screen_title">Ny konto</string>
-    <string name="login_prologue_screen_title">Logg inn</string>
     <string name="login_epilogue_screen_title">Logget inn som</string>
     <string name="person_detail_screen_title">Persondetalj</string>
     <string name="media_settings_screen_title">Fildetaljer</string>
@@ -2086,7 +2110,6 @@ Language: nb_NO
     <string name="logs_copied_to_clipboard">App-loggbøker har blitt kopiert til utklippstavlen</string>
     <string name="reader_empty_posts_in_blog">Dette nettstedet er tomt</string>
     <string name="reader_label_new_posts">Nye innlegg</string>
-    <string name="reader_page_recommended_blogs">Du vil kanskje like</string>
     <string name="error_copy_to_clipboard">En feil oppstod under kopiering av tekst til utklippstavlen</string>
     <string name="post_uploading">Laster opp innlegg</string>
     <string name="stats_followers_years">%1$d år</string>
@@ -2241,6 +2264,7 @@ Language: nb_NO
     <string name="reader_likes_you_and_one">Du og en annen har likt dette</string>
     <string name="pick_video">Velg video</string>
     <string name="pick_photo">Velg bilde</string>
+    <string name="sign_up_label">Registrer deg</string>
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
     <string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
     <string name="reader_toast_err_share_intent">Klarte ikke å dele</string>
