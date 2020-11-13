@@ -325,8 +325,7 @@ class PhotoPickerFragment : Fragment() {
                             builder.setNegativeButton(
                                     R.string.cancel
                             ) { _, _ -> this.cancelAction() }
-                            builder.setOnCancelListener { this.cancelAction() }
-                            builder.setCancelable(true)
+                            builder.setCancelable(false)
                             progressDialog = builder.show()
                         }
                     }
