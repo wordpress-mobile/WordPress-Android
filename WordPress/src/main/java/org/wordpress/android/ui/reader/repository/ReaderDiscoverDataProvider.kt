@@ -210,10 +210,8 @@ class ReaderDiscoverDataProvider @Inject constructor(
 
     @Subscribe(threadMode = BACKGROUND)
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
-        if (event.didSucceed()) {
-            launch {
-                refreshCards()
-            }
+        launch {
+            refreshCards()
         }
     }
 }
