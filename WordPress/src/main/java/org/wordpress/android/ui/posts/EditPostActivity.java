@@ -2038,6 +2038,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AccountModel account = mAccountStore.getAccount();
             // prompt user to verify e-mail before publishing
             if (!account.getEmailVerified()) {
+                mViewModel.hideSavingDialog();
                 String message = TextUtils.isEmpty(account.getEmail())
                         ? getString(R.string.editor_confirm_email_prompt_message)
                         : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
@@ -2059,6 +2060,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return;
             }
             if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
+                mViewModel.hideSavingDialog();
                 // TODO we don't want to show "publish" message when the user clicked on eg. save
                 mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
                 EditPostActivity.this.runOnUiThread(() -> {
