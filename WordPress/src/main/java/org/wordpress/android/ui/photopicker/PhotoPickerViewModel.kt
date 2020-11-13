@@ -480,10 +480,11 @@ class PhotoPickerViewModel @Inject constructor(
     fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
         launch {
             _showProgressDialog.value = ProgressDialogUiModel.Visible(R.string.uploading_title) {
+                _showProgressDialog.postValue(ProgressDialogUiModel.Hidden)
                 cancel()
             }
             val localUris = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uris.map { it.uri })
-            _showProgressDialog.value = ProgressDialogUiModel.Hidden
+            _showProgressDialog.postValue(ProgressDialogUiModel.Hidden)
             if (isActive) {
                 _onInsert.value = Event(localUris.permanentlyAccessibleUris.map { UriWrapper(it) })
             }
