@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignSelectionAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -39,6 +40,7 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
     @Mock lateinit var uiStateObserver: Observer<UiState>
     @Mock lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
+    @Mock lateinit var analyticsTracker: SiteCreationTracker
 
     private lateinit var viewModel: HomePagePickerViewModel
 
@@ -48,6 +50,7 @@ class HomePagePickerViewModelTest {
                 networkUtils,
                 dispatcher,
                 fetchHomePageLayoutsUseCase,
+                analyticsTracker,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
