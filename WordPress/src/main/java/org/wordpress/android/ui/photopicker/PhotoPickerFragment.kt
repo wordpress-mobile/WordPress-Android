@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
 import org.wordpress.android.R
@@ -24,6 +27,8 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel.Visible
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
@@ -41,6 +46,7 @@ import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -197,6 +203,8 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
+        setupProgressDialog()
+
         viewModel.start(selectedIds, browserType, lastTappedIcon, site)
     }
 
@@ -302,6 +310,36 @@ class PhotoPickerFragment : Fragment() {
                 hideBottomBar(container_media_source_bar)
             }
         }
+    }
+
+    private fun setupProgressDialog() {
+        var progressDialog: AlertDialog? = null
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            it?.progressDialogUiModel?.apply {
+                when (this) {
+                    is Visible -> {
+                        if (progressDialog == null || progressDialog?.isShowing == false) {
+                            val builder: Builder = MaterialAlertDialogBuilder(requireContext())
+                            builder.setTitle(this.title)
+                            builder.setView(R.layout.media_picker_progress_dialog)
+                            builder.setNegativeButton(
+                                    R.string.cancel
+                            ) { _, _ -> this.cancelAction() }
+                            builder.setOnCancelListener { this.cancelAction() }
+                            builder.setCancelable(true)
+                            progressDialog = builder.show()
+                        }
+                    }
+                    ProgressDialogUiModel.Hidden -> {
+                        progressDialog?.let { dialog ->
+                            if (dialog.isShowing) {
+                                dialog.dismiss()
+                            }
+                        }
+                    }
+                }
+            }
+        })
     }
 
     private fun canShowMediaSourceBottomBar(
@@ -431,6 +469,10 @@ class PhotoPickerFragment : Fragment() {
 
     fun doIconClicked(wpMedia: PhotoPickerIcon) {
         viewModel.clickIcon(wpMedia)
+    }
+
+    fun urisSelectedFromSystemPicker(uris: List<Uri>) {
+        viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
     }
 
     companion object {
