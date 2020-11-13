@@ -3,7 +3,7 @@
 * [*] Posts List: fixed bug that prevented showing the Featured Image of a post for pure self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/13323]
 * [**] Media picker: New media picker is now used in all the places where the user selects any kind of file (featured image, site icon, gravatar, in posts or media library) except stories [https://github.com/wordpress-mobile/WordPress-Android/pull/13368]
 * [*] Reader: Fixes an infinite loading indicator on Discover tab in Reader.
-* [*] P2: Hide Activity Log, Themes and Plans for P2 sites.
+* [*] My Site: Hide Activity Log, Themes and Plans for P2 sites.
 
 16.1
 -----
