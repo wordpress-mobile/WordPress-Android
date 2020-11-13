@@ -422,7 +422,6 @@ Language: cy_GB
     <string name="logs_copied_to_clipboard">Cofnodion y rhaglen wedi\'u copïo i\'r clipfwrdd</string>
     <string name="reader_label_new_posts">Cofnodion newydd</string>
     <string name="error_copy_to_clipboard">Digwyddodd gwall wrth gopïo testun i\'r clipfwrdd</string>
-    <string name="reader_page_recommended_blogs">Gwefannau fyddech chi\'n eu hoffi</string>
     <string name="stats_followers_months">%1$d mis</string>
     <string name="stats_followers_a_year">Blwyddyn</string>
     <string name="stats_followers_years">%1$d blwyddyn</string>

@@ -15,7 +15,6 @@ Language: el_GR
     <string name="my_site_bottom_sheet_title">Προσθήκη νέου</string>
     <string name="post_settings_publish">Δημοσίευση</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_promo_viewpager_content_description">Εισαγωγή</string>
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
     <string name="reader_filter_sites_title">Ιστότοποι</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
@@ -260,7 +259,6 @@ Language: el_GR
     <string name="comment_spam_talkback">Το σχόλιο αυτό έχει σημειωθεί ως ανεπιθύμητο</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
-    <string name="login_prologue_screen_title">Είσοδος</string>
     <string name="signup_epilogue_screen_title">Νέος λογαριασμός</string>
     <string name="site_settings_quota_header">Εικόνες και Βίντεο</string>
     <string name="edit_photo_screen_title">Επεξεργασία φωτογραφίας</string>
@@ -999,7 +997,6 @@ Language: el_GR
     <string name="pages_fetching">Ανάκτηση σελίδων…</string>
     <string name="posts_fetching">Λήψη άρθρων…</string>
     <string name="media_fetching">Λήψη πολυμέσων…</string>
-    <string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
     <string name="logs_copied_to_clipboard">Τα αρχεία καταγραφής της εφαρμογής έχουν αντιγραφεί στο πρόχειρο</string>
     <string name="reader_label_new_posts">Νέα άρθρα</string>
     <string name="error_copy_to_clipboard">Προέκυψε σφάλμα κατά την αντιγραφή κειμένου στο πρόχειρο</string>

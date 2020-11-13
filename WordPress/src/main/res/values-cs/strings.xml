@@ -419,7 +419,6 @@ Language: cs_CZ
     <string name="edit_photo_screen_title">Upravit fotku</string>
     <string name="share_intent_screen_title">Vybrat stránku</string>
     <string name="signup_epilogue_screen_title">Nový účet</string>
-    <string name="login_prologue_screen_title">Přihlášení</string>
     <string name="login_epilogue_screen_title">Přihlášen jako</string>
     <string name="person_detail_screen_title">Osobní profil</string>
     <string name="media_settings_screen_title">Detail souboru</string>
@@ -1348,7 +1347,6 @@ Language: cs_CZ
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="reader_empty_posts_in_blog">Tento web je prázdný</string>
     <string name="reader_label_new_posts">Nové příspěvky</string>
-    <string name="reader_page_recommended_blogs">Stránky které by se vám mohly líbit</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
     <string name="stats_followers_years">%1$d roky</string>
