@@ -49,7 +49,6 @@ class ReaderDiscoverDataProviderTest {
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var dataProvider: ReaderDiscoverDataProvider
-    private lateinit var readerTag: ReaderTag
 
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
@@ -60,6 +59,7 @@ class ReaderDiscoverDataProviderTest {
     @Before
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
+                TEST_DISPATCHER,
                 TEST_DISPATCHER,
                 eventBusWrapper,
                 readerTagWrapper,
@@ -121,18 +121,41 @@ class ReaderDiscoverDataProviderTest {
     }
 
     @Test
-    fun `on cards updated has new the data gets posted to discover feed`() = test {
-        // Arrange
+    fun `when new observer added and db is empty, does NOT post anything to discover feed`() = test {
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
+        val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
+        dataProvider.discoverFeed.observeForever { }
+
+        Assertions.assertThat(dataProvider.discoverFeed.value).isNull()
+    }
+
+    @Test
+    fun `when new observer added and db is NOT empty, the data gets posted to discover feed`() = test {
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
+        dataProvider.discoverFeed.observeForever { }
+
+        Assertions.assertThat(dataProvider.discoverFeed.value).isNotNull
+    }
+
+    @Test
+    fun `when request first page finishes, the data gets posted to discover feed`() = test {
+        // Make sure the provider doesn't emit any values when a new observer is added
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+        dataProvider.discoverFeed.observeForever { }
+        // Make sure the db returns some data
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.onCardsUpdated(event)
 
         Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value))
                 .isInstanceOf(ReaderDiscoverCards::class.java)
-
         Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
                 .isEqualTo(NUMBER_OF_ITEMS)
     }
