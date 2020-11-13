@@ -1,6 +1,7 @@
 16.2
 -----
 * [*] Posts List: fixed bug that prevented showing the Featured Image of a post for pure self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/13323]
+* [*] Posts Settings: Replaced deprecated Place Picker widget with new Autocomplete widget [https://github.com/wordpress-mobile/WordPress-Android/pull/13378]
 
 16.1
 -----
