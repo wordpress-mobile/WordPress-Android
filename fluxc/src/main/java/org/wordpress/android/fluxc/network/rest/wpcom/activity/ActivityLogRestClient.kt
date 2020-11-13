@@ -122,8 +122,7 @@ constructor(
 
     suspend fun download(site: SiteModel, rewindId: String, types: DownloadRequestTypes): DownloadResultPayload {
         val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.url
-        val request = mapOf("rewindId" to rewindId,
-                "types" to types)
+        val request = mapOf("rewindId" to rewindId, "types" to types)
         val response = wpComGsonRequestBuilder.syncPostRequest(this, url, null, request, DownloadResponse::class.java)
         return when (response) {
             is Success -> {
