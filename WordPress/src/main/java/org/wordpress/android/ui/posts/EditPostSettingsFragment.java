@@ -31,13 +31,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
@@ -79,7 +79,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -518,9 +517,12 @@ public class EditPostSettingsFragment extends Fragment {
             switch (requestCode) {
                 case ACTIVITY_REQUEST_CODE_PICK_LOCATION:
                     if (isAdded() && resultCode == RESULT_OK) {
-                        Place place = PlacePicker.getPlace(getActivity(), data);
+                        Place place = Autocomplete.getPlaceFromIntent(data);
                         mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_LOCATION_CHANGED);
                         setLocation(place);
+                    } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                        Status status = Autocomplete.getStatusFromIntent(data);
+                        AppLog.e(T.EDITOR, status.getStatusMessage());
                     }
                     break;
                 case ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES:
@@ -1128,7 +1130,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         protected void onPostExecute(@Nullable Address address) {
-            if (address == null || address.getMaxAddressLineIndex() == 0) {
+            if (address == null || address.getMaxAddressLineIndex() == -1) {
                 // Do nothing (keep the "lat, long" format).
                 return;
             }
@@ -1150,8 +1152,10 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        // Pre-pick the previous selected location if any
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ADDRESS);
+        Autocomplete.IntentBuilder autocompleteIntent =
+                new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, placeFields);
+
         LatLng latLng = null;
         if (mPostLocation != null) {
             latLng = new LatLng(mPostLocation.getLatitude(), mPostLocation.getLongitude());
@@ -1160,17 +1164,13 @@ public class EditPostSettingsFragment extends Fragment {
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
         if (latLng != null) {
-            builder.setLatLngBounds(new LatLngBounds(latLng, latLng));
+            RectangularBounds bounds = RectangularBounds.newInstance(
+                    latLng,
+                    latLng);
+            autocompleteIntent.setLocationBias(bounds);
         }
         // Show the picker
-        try {
-            startActivityForResult(builder.build(getActivity()), ACTIVITY_REQUEST_CODE_PICK_LOCATION);
-        } catch (GooglePlayServicesNotAvailableException nae) {
-            ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
-        } catch (GooglePlayServicesRepairableException re) {
-            GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), re.getConnectionStatusCode(),
-                    ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
-        }
+        startActivityForResult(autocompleteIntent.build(getActivity()), ACTIVITY_REQUEST_CODE_PICK_LOCATION);
     }
 
     private void setLocation(@Nullable Place place) {
@@ -1182,7 +1182,7 @@ public class EditPostSettingsFragment extends Fragment {
             if (place == null) {
                 postModel.clearLocation();
                 mPostLocation = null;
-                return false;
+                return true;
             }
             mPostLocation = new PostLocation(place.getLatLng().latitude, place.getLatLng().longitude);
             postModel.setLocation(mPostLocation);
