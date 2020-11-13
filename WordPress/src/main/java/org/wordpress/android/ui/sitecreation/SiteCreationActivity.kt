@@ -60,6 +60,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteCreationMainVM::class.java)
         hppViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         mainViewModel.start(savedInstanceState)
+        hppViewModel.loadSavedState(savedInstanceState)
 
         observeVMState()
     }
@@ -67,6 +68,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         mainViewModel.writeToBundle(outState)
+        hppViewModel.writeToBundle(outState)
     }
 
     private fun observeVMState() {
