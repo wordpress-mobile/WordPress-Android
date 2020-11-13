@@ -128,7 +128,7 @@ constructor(
         return when (response) {
             is Success -> {
                 DownloadResultPayload(
-                        rewindId,
+                        response.data.rewindId,
                         response.data.downloadId,
                         response.data.backupPoint,
                         response.data.startedAt,
