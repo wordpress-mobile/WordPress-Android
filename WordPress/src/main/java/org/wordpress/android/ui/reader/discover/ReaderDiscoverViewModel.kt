@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
@@ -27,7 +26,8 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState.RequestFailedErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -54,7 +54,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val INITIATE_LOAD_MORE_OFFSET = 3
-const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users's data
+const val PHOTON_WIDTH_QUALITY_RATION = 0.5 // load images in 1/2 screen width to save users' data
 const val FEATURED_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 class ReaderDiscoverViewModel @Inject constructor(
@@ -128,20 +128,18 @@ class ReaderDiscoverViewModel @Inject constructor(
             launch {
                 val userTags = getFollowedTagsUseCase.get()
                 if (userTags.isEmpty()) {
-                    _uiState.value = ShowFollowInterestsEmptyUiState
+                    _uiState.value = ShowNoFollowedTagsUiState
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
-                        val discoverFeedContainsOnlyWelcomeCard = posts.cards.size == 1 &&
-                                posts.cards.filterIsInstance<WelcomeBannerCard>().isNotEmpty()
-                        if (!discoverFeedContainsOnlyWelcomeCard) {
-                            _uiState.value = ContentUiState(
-                                    convertCardsToUiStates(posts),
-                                    reloadProgressVisibility = false,
-                                    loadMoreProgressVisibility = false,
-                                    scrollToTop = swipeToRefreshTriggered
-                            )
-                            swipeToRefreshTriggered = false
-                        }
+                        _uiState.value = ContentUiState(
+                                convertCardsToUiStates(posts),
+                                reloadProgressVisibility = false,
+                                loadMoreProgressVisibility = false,
+                                scrollToTop = swipeToRefreshTriggered
+                        )
+                        swipeToRefreshTriggered = false
+                    } else {
+                        _uiState.value = ShowNoPostsUiState
                     }
                 }
             }
@@ -171,7 +169,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         return posts.cards.map { card ->
             when (card) {
                 is WelcomeBannerCard -> ReaderWelcomeBannerCardUiState(
-                        titleRes = string.reader_welcome_banner
+                        titleRes = R.string.reader_welcome_banner
                 )
                 is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                         post = card.post,
@@ -251,7 +249,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _snackbarEvents.postValue(
                             Event(
                                     SnackbarMessageHolder(
-                                            UiStringRes(string.reader_error_request_failed_title)
+                                            UiStringRes(R.string.reader_error_request_failed_title)
                                     )
                             )
                     )
@@ -454,8 +452,11 @@ class ReaderDiscoverViewModel @Inject constructor(
             )
         }
         sealed class EmptyUiState constructor(val titleResId: Int) : DiscoverUiState(fullscreenEmptyVisibility = true) {
-            object ShowFollowInterestsEmptyUiState : EmptyUiState(
+            object ShowNoFollowedTagsUiState : EmptyUiState(
                     titleResId = R.string.reader_discover_empty_title
+            )
+            object ShowNoPostsUiState : EmptyUiState(
+                    titleResId = R.string.reader_discover_no_posts_title
             )
         }
     }
