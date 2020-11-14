@@ -555,7 +555,7 @@ jobs:
               curl "$url" | jq '.base.ref' | tr -d '"'
             )
 
-            if [ -z "$target_branch" ] || [ "$target_branch" != 'develop' ]; then
+            if [ "$target_branch" != 'develop' ]; then
               echo "Not targeting develop branch. No need to run gutenberg submodule check."
               exit 0
             fi
