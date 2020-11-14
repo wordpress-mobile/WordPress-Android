@@ -8,7 +8,6 @@ import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 
 @Parcelize
 data class GutenbergPropsBuilder(
-    private val enableMediaFilesCollectionBlocks: Boolean,
     private val enableMentions: Boolean,
     private val enableUnsupportedBlockEditor: Boolean,
     private val unsupportedBlockEditorSwitch: Boolean,
@@ -19,7 +18,6 @@ data class GutenbergPropsBuilder(
     private val editorTheme: Bundle?
 ) : Parcelable {
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
-            enableMediaFilesCollectionBlocks = enableMediaFilesCollectionBlocks,
             enableMentions = enableMentions,
             enableUnsupportedBlockEditor = enableUnsupportedBlockEditor,
             canEnableUnsupportedBlockEditor = unsupportedBlockEditorSwitch,
