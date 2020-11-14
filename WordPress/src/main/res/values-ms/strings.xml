@@ -726,7 +726,6 @@ Language: ms
     <string name="error_copy_to_clipboard">Ralat berlaku semasa menyalin teks ke papan keratan</string>
     <string name="logs_copied_to_clipboard">Log aplikasi telah disalin ke papan keratan</string>
     <string name="reader_label_new_posts">Kiriman baharu</string>
-    <string name="reader_page_recommended_blogs">Laman yang anda mungkin suka</string>
     <string name="post_uploading">Memuat naik kiriman</string>
     <string name="stats_followers_days">%1$d hari</string>
     <string name="stats_followers_hours">%1$d jam</string>

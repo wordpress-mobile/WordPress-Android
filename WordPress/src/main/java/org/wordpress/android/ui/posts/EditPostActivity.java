@@ -830,7 +830,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(mEditPostRepository, mSite);
+            if (!mIsPreview) {
+                mViewModel.savePostToDb(mEditPostRepository, mSite);
+            }
             return null;
         }));
     }
@@ -3278,6 +3280,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Nullable
     private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
+        mViewModel.hideSavingDialog();
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             mViewModel.hideSavingDialog();

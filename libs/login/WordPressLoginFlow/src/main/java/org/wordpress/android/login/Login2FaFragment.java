@@ -379,7 +379,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         updateContinueButtonEnabledStatus();
     }
 
-    private void show2FaError(String message) {
+    private void show2FaError(@Nullable String message) {
         if (!TextUtils.isEmpty(message)) {
             mAnalyticsListener.trackFailure(message);
         }

@@ -2,11 +2,11 @@ package org.wordpress.android.ui.mlp
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.util.image.ImageManager
@@ -25,7 +25,7 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
                         false
                 )
         ) {
-    private val container: View = itemView.layout_container
+    private val container: MaterialCardView = itemView.layout_container
     private val preview: ImageView = itemView.preview
     private val selected: ImageView = itemView.selected_overlay
 
@@ -45,6 +45,10 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
 
         selected.setVisible(uiState.selectedOverlayVisible)
         preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
+        preview.context?.let { ctx ->
+            container.strokeWidth = if (uiState.selectedOverlayVisible)
+                ctx.resources.getDimensionPixelSize(R.dimen.picker_header_selection_overlay_width) else 0
+        }
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
         }

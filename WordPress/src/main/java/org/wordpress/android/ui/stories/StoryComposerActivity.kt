@@ -260,13 +260,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun showProvidedMediaPicker() {
-        // the ComposeLoopFrameActivity currently only knows about RequestCodes.PHOTO_PICKER and not about
-        // RequestCodes.STORIES_PHOTO_PICKER; as a temporary solution we are feeding the ComposeLoopFragmentActivity
-        // with the PHOTO_PICKER. We should add the STORIES_PHOTO_PICKER to the stories lib
         mediaPickerLauncher.showStoriesPhotoPickerForResult(
                 this,
-                site,
-                RequestCodes.PHOTO_PICKER
+                site
         )
     }
 
@@ -394,6 +390,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onStoryDiscarded() {
         viewModel.onStoryDiscarded()
+    }
+
+    override fun onFrameRemove(storyIndex: StoryIndex, storyFrameIndex: Int) {
+        // no op
+        // TODO this will be implemented after the Story block support lands in develop
     }
 
     private fun openPrepublishingBottomSheet() {
