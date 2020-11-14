@@ -3043,7 +3043,6 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
-    <string name="gutenberg_native_angle" tools:ignore="UnusedResources">Angle</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
@@ -3218,7 +3217,6 @@ translators: sample content for "Services" page template -->
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
     <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
-    <string name="gutenberg_native_size" tools:ignore="UnusedResources">Size</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_strategy" tools:ignore="UnusedResources">Strategy</string>
