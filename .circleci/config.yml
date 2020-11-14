@@ -1,6 +1,7 @@
 orbs:
   # Using 1.0 of the Orbs means it will use the latest 1.0.x version from https://github.com/wordpress-mobile/circleci-orbs
   android: wordpress-mobile/android@1.0
+  jq: circleci/jq@2.2.0
   git: wordpress-mobile/git@1.0
   bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@3.4.2
@@ -537,6 +538,35 @@ jobs:
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
+  gutenberg-submodule-change-check:
+    docker:
+      - image: circleci/ruby:2.6.4
+    steps:
+      - checkout
+#      - git/shallow-checkout:
+#          init-submodules: false
+      - jq/install
+      - run:
+          name: Validate that gutenberg submodule is not changed while gutenberg release is in progress
+          command: |
+            PR_NUMBER=$(echo "$CIRCLE_PULL_REQUEST" | sed 's/https:\/\/github.com\/wordpress-mobile\/WordPress-Android\/pull\///')
+            url="https://api.github.com/repos/wordpress-mobile/WordPress-Android/pulls/$PR_NUMBER"
+            target_branch=$(
+              curl "$url" | jq '.base.ref' | tr -d '"'
+            )
+            
+            if [ -z "$target_branch" ] || [ "$target_branch" != 'develop' ]; then
+              echo "Not targeting '$target_branch' branch. No need to run gutenberg submodule check."
+              exit 0
+            fi
+
+            set +e
+            gutenberg_mobile_changed=$(git diff origin/develop...HEAD --name-only | grep 'libs/gutenberg-mobile')
+            if [ ! -z "$gutenberg_mobile_changed" ]; then
+              echo "Gutenberg submodule hash cannot be changed when a Gutenberg-Mobile release is in testing."
+              exit 1
+            fi
+            exit 0
   translation-review-build:
     executor:
       name: android/default
@@ -592,36 +622,37 @@ workflows:
         - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
     jobs:
-      - gutenberg-bundle-build
-      - strings-check
-      - test:
-          requires:
-            - gutenberg-bundle-build
-      - lint:
-          requires:
-            - gutenberg-bundle-build
-      - Installable Build:
-          requires:
-            - gutenberg-bundle-build
-          filters:
-            branches:
-              ignore: /pull\/[0-9]+/
-      - WordPressUtils Connected Tests:
-          requires:
-            - gutenberg-bundle-build
-          filters:
-            branches:
-              ignore: /pull\/[0-9]+/
-      - Connected Tests:
-          requires:
-            - gutenberg-bundle-build
-          post-to-slack: true
-          # Always run connected tests on develop and release branches
-          filters:
-            branches:
-              only:
-                - develop
-                - /^release.*/
+      - gutenberg-submodule-change-check
+#      - gutenberg-bundle-build
+#      - strings-check
+#      - test:
+#          requires:
+#            - gutenberg-bundle-build
+#      - lint:
+#          requires:
+#            - gutenberg-bundle-build
+#      - Installable Build:
+#          requires:
+#            - gutenberg-bundle-build
+#          filters:
+#            branches:
+#              ignore: /pull\/[0-9]+/
+#      - WordPressUtils Connected Tests:
+#          requires:
+#            - gutenberg-bundle-build
+#          filters:
+#            branches:
+#              ignore: /pull\/[0-9]+/
+#      - Connected Tests:
+#          requires:
+#            - gutenberg-bundle-build
+#          post-to-slack: true
+#          # Always run connected tests on develop and release branches
+#          filters:
+#            branches:
+#              only:
+#                - develop
+#                - /^release.*/
   Optional Tests:
     unless:
       or:
