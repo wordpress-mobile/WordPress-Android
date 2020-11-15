@@ -24,6 +24,7 @@ import javax.inject.Named
 @GlideModule
 class WordPressGlideModule : AppGlideModule() {
     @Inject @field:Named("custom-ssl") lateinit var requestQueue: RequestQueue
+    @Inject @field:Named("noRedirects") lateinit var noRedirectsRequestQueue: RequestQueue
     @Inject lateinit var glideRequestFactory: GlideRequestFactory
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {}
@@ -36,6 +37,6 @@ class WordPressGlideModule : AppGlideModule() {
         (context as WordPress).component().inject(this)
         registry.replace(GlideUrl::class.java, InputStream::class.java,
                 VolleyUrlLoader.Factory(requestQueue, glideRequestFactory))
-        registry.prepend(MShot::class.java, InputStream::class.java, GlideMShotsLoader.Factory(context))
+        registry.prepend(MShot::class.java, InputStream::class.java, GlideMShotsLoader.Factory(noRedirectsRequestQueue))
     }
 }
