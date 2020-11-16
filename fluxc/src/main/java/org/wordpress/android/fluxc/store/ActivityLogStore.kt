@@ -9,11 +9,13 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.action.ActivityLogAction.DOWNLOAD
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.DownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
@@ -56,6 +58,11 @@ class ActivityLogStore
             DOWNLOAD -> {
                 coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On DOWNLOAD") {
                     emitChange(download(action.payload as DownloadPayload))
+                }
+            }
+            FETCH_DOWNLOAD_STATE -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_DOWNLOAD_STATE") {
+                    emitChange(fetchActivitiesDownload(action.payload as FetchDownloadStatePayload))
                 }
             }
         }
@@ -112,6 +119,13 @@ class ActivityLogStore
         return emitDownloadResult(payload, DOWNLOAD)
     }
 
+    suspend fun fetchActivitiesDownload(
+        fetchActivitiesDownloadPayload: FetchDownloadStatePayload
+    ): OnDownloadStatusFetched {
+        val payload = activityLogRestClient.fetchActivityDownload(fetchActivitiesDownloadPayload.site)
+        return storeDownloadState(payload, FETCH_DOWNLOAD_STATE)
+    }
+
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction): OnActivityLogFetched {
         return if (payload.error != null) {
             OnActivityLogFetched(payload.error, action)
@@ -136,6 +150,18 @@ class ActivityLogStore
                 activityLogSqlUtils.replaceRewindStatus(payload.site, payload.rewindStatusModelResponse)
             }
             OnRewindStatusFetched(action)
+        }
+    }
+
+    private fun storeDownloadState(payload: FetchedDownloadStatePayload, action: ActivityLogAction):
+            OnDownloadStatusFetched {
+        return if (payload.error != null) {
+            OnDownloadStatusFetched(payload.error, action)
+        } else {
+            if (payload.downloadStatusModelResponse != null) {
+                activityLogSqlUtils.replaceDownloadStatus(payload.site, payload.downloadStatusModelResponse)
+            }
+            OnDownloadStatusFetched(action)
         }
     }
 
@@ -205,6 +231,14 @@ class ActivityLogStore
         }
     }
 
+    data class OnDownloadStatusFetched(var causeOfChange: ActivityLogAction) :
+            Store.OnChanged<DownloadStatusError>() {
+        constructor(error: DownloadStatusError, causeOfChange: ActivityLogAction) :
+                this(causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
     // Payloads
     class FetchActivityLogPayload(
         val site: SiteModel,
@@ -259,15 +293,6 @@ class ActivityLogStore
         }
     }
 
-    data class RewindRequestTypes(
-        val themes: Boolean,
-        val plugins: Boolean,
-        val uploads: Boolean,
-        val sqls: Boolean,
-        val roots: Boolean,
-        val contents: Boolean
-    )
-
     class DownloadPayload(
         val site: SiteModel,
         val rewindId: String,
@@ -286,6 +311,26 @@ class ActivityLogStore
             this.error = error
         }
     }
+
+    class FetchDownloadStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
+
+    class FetchedDownloadStatePayload(
+        val downloadStatusModelResponse: DownloadStatusModel? = null,
+        val site: SiteModel
+    ) : Payload<DownloadStatusError>() {
+        constructor(error: DownloadStatusError, site: SiteModel) : this(site = site) {
+            this.error = error
+        }
+    }
+
+    data class RewindRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
 
     data class DownloadRequestTypes(
         val themes: Boolean,
@@ -307,7 +352,7 @@ class ActivityLogStore
         MISSING_PUBLISHED_DATE
     }
 
-    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : Store.OnChangedError
+    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : OnChangedError
 
     enum class RewindStatusErrorType {
         GENERIC_ERROR,
@@ -318,7 +363,7 @@ class ActivityLogStore
         MISSING_RESTORE_ID
     }
 
-    class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
+    class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : OnChangedError
 
     enum class RewindErrorType {
         GENERIC_ERROR,
@@ -328,7 +373,7 @@ class ActivityLogStore
         MISSING_STATE
     }
 
-    class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
+    class RewindError(var type: RewindErrorType, var message: String? = null) : OnChangedError
 
     enum class DownloadErrorType {
         GENERIC_ERROR,
@@ -337,5 +382,14 @@ class ActivityLogStore
         INVALID_RESPONSE
     }
 
-    class DownloadError(var type: DownloadErrorType, var message: String? = null) : Store.OnChangedError
+    class DownloadError(var type: DownloadErrorType, var message: String? = null) : OnChangedError
+
+    enum class DownloadStatusErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class DownloadStatusError(var type: DownloadStatusErrorType, var message: String? = null) :
+            OnChangedError
 }
