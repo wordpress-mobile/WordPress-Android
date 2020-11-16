@@ -11,7 +11,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.inOrder
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.AssignmentsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient
@@ -31,7 +30,6 @@ class ExperimentStoreTest {
     @Mock private lateinit var preferenceUtils: PreferenceUtilsWrapper
     @Mock private lateinit var sharedPreferences: SharedPreferences
     @Mock private lateinit var sharedPreferencesEditor: SharedPreferences.Editor
-    @Mock private lateinit var dispatcher: Dispatcher
 
     private lateinit var experimentStore: ExperimentStore
 
@@ -41,7 +39,7 @@ class ExperimentStoreTest {
         whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
         whenever(sharedPreferencesEditor.putString(any(), any())).thenReturn(sharedPreferencesEditor)
 
-        experimentStore = ExperimentStore(experimentRestClient, preferenceUtils, initCoroutineEngine(), dispatcher)
+        experimentStore = ExperimentStore(experimentRestClient, preferenceUtils, initCoroutineEngine())
     }
 
     @Test
