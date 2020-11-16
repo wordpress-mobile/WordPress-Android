@@ -104,10 +104,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
+    private static final int SAVE_DIALOG_TIMEOUT_DURATION = 15000;
+
     private boolean mHtmlModeEnabled;
 
     private Handler mInvalidateOptionsHandler;
     private Runnable mInvalidateOptionsRunnable;
+
+    @Nullable private GutenbergExternalLogger mExternalLogger;
+
+    private final Handler mProgressDialogTimeoutHandler = new Handler(Looper.getMainLooper());
+    private final Runnable mProgressDialogTimeoutRunnable = () -> {
+        // This timeout only fires when the dialog has been stuck open for a long time, so
+        // let Sentry know something went wrong
+        if (mExternalLogger != null) {
+            SaveDialogTimeoutException exception = new SaveDialogTimeoutException(SAVE_DIALOG_TIMEOUT_DURATION);
+            mExternalLogger.reportException(exception);
+        }
+
+        hideSavingProgressDialog();
+    };
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
     private int mStoryBlockEditRequestCode;
@@ -1064,11 +1080,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mSavingContentProgressDialog.setIndeterminate(true);
             mSavingContentProgressDialog.setMessage(getActivity().getString(R.string.long_post_dlg_saving));
         }
+        mProgressDialogTimeoutHandler.postDelayed(mProgressDialogTimeoutRunnable, SAVE_DIALOG_TIMEOUT_DURATION);
         mSavingContentProgressDialog.show();
         return true;
     }
 
     private boolean hideSavingProgressDialog() {
+        mProgressDialogTimeoutHandler.removeCallbacks(mProgressDialogTimeoutRunnable);
         if (mSavingContentProgressDialog != null && mSavingContentProgressDialog.isShowing()) {
             mSavingContentProgressDialog.dismiss();
             return true;
@@ -1176,5 +1194,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void showNotice(String message) {
         getGutenbergContainerFragment().showNotice(message);
+    }
+
+    public void setExternalLogger(@NonNull GutenbergExternalLogger externalLogger) {
+        this.mExternalLogger = externalLogger;
     }
 }

@@ -1883,6 +1883,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     AppLog.e(T.EDITOR, s);
                 }
             });
+        } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+            GutenbergEditorFragment gutenbergEditorFragment = (GutenbergEditorFragment) mEditorFragment;
+            gutenbergEditorFragment.setExternalLogger(e -> mCrashLogging.reportException(e));
         }
     }
 
