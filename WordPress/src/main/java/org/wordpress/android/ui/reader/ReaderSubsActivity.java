@@ -60,8 +60,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, followed blogs, and recommended blogs
+ * activity which shows the user's subscriptions - includes
+ * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
         implements ReaderTagAdapter.TagDeletedListener {
@@ -79,7 +79,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
     public static final int TAB_IDX_FOLLOWED_TAGS = 0;
     public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
-    public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Inject AccountStore mAccountStore;
 
@@ -191,18 +190,10 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.RecommendedBlogsChanged event) {
-        AppLog.d(AppLog.T.READER, "reader subs > recommended blogs changed");
-        getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-    }
-
     private void performUpdate() {
         performUpdate(EnumSet.of(
                 UpdateTask.TAGS,
-                UpdateTask.FOLLOWED_BLOGS,
-                UpdateTask.RECOMMENDED_BLOGS));
+                UpdateTask.FOLLOWED_BLOGS));
     }
 
     private void performUpdate(EnumSet<UpdateTask> tasks) {
@@ -227,7 +218,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
             fragments.add(ReaderTagFragment.newInstance());
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
-            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
             FragmentManager fm = getSupportFragmentManager();
             mPageAdapter = new SubsPageAdapter(fm, fragments);
@@ -528,8 +518,6 @@ public class ReaderSubsActivity extends LocaleAwareActivity
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
                     return getString(R.string.reader_page_followed_tags);
-                case TAB_IDX_RECOMMENDED_BLOGS:
-                    return getString(R.string.reader_page_recommended_blogs);
                 case TAB_IDX_FOLLOWED_BLOGS:
                     return getString(R.string.reader_page_followed_blogs);
                 default:

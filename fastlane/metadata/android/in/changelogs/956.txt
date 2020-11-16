@@ -1,0 +1,3 @@
+16.1:
+* Pilih dari beragam templat desain halaman saat Anda membuat halaman baru pada situs yang fungsi Gutenberg-nya diaktifkan.
+

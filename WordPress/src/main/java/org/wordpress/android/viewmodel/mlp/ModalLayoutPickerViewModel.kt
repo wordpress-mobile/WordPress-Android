@@ -26,6 +26,7 @@ import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -107,11 +108,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBlockLayoutsFetched(event: OnBlockLayoutsFetched) {
         if (event.isError) {
-            if (networkUtils.isNetworkAvailable()) {
-                updateUiState(ErrorUiState(string.mlp_generic_error))
-            } else {
-                updateUiState(ErrorUiState(string.no_network_message))
-            }
+            setErrorState()
         } else {
             handleBlockLayoutsResponse(GutenbergPageLayouts(event.layouts, event.categories))
         }
@@ -122,6 +119,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun handleBlockLayoutsResponse(response: GutenbergPageLayouts) {
         layouts = response
         loadCategories()
+    }
+
+    private fun setErrorState() {
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiState(ErrorUiState(string.mlp_error_title, string.mlp_error_subtitle))
+        } else {
+            updateUiState(ErrorUiState(string.mlp_network_error_title, string.mlp_network_error_subtitle))
+        }
     }
 
     private fun loadLayouts() {
@@ -176,11 +181,31 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     /**
+     * Checks if the Modal Layout Picker can be shown
+     * at this point the only requirement is to have the block editor enabled
+     * @return true if the Modal Layout Picker can be shown
+     */
+    fun canShowModalLayoutPicker(): Boolean {
+        val siteId = appPrefsWrapper.getSelectedSite()
+        val site = siteStore.getSiteByLocalId(siteId)
+        return SiteUtils.isBlockEditorDefaultForNewPost(site)
+    }
+
+    /**
      * Triggers the create page flow and shows the MLP
      */
     fun createPageFlowTriggered() {
         _isModalLayoutPickerShowing.value = Event(true)
         fetchLayouts()
+    }
+
+    /**
+     * Retries data fetching
+     */
+    fun onRetryClicked() {
+        if (networkUtils.isNetworkAvailable()) {
+            fetchLayouts()
+        }
     }
 
     /**
@@ -308,11 +333,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     }
 
     fun loadSavedState(layouts: GutenbergPageLayouts?, selectedLayout: String?, selectedCategories: List<String>?) {
-        if (layouts == null) {
+        if (layouts == null || layouts.isEmpty) {
+            setErrorState()
             return
         }
-        val categories = ArrayList(selectedCategories ?: listOf())
         val state = uiState.value as? ContentUiState ?: ContentUiState()
+        val categories = ArrayList(selectedCategories ?: listOf())
         updateUiState(state.copy(selectedLayoutSlug = selectedLayout, selectedCategoriesSlugs = categories))
         updateButtonsUiState()
         handleBlockLayoutsResponse(layouts)
@@ -320,8 +346,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     sealed class UiState(
         open val isHeaderVisible: Boolean = false,
+        val isDescriptionVisible: Boolean = true,
         val loadingSkeletonVisible: Boolean = false,
-        open val errorViewVisible: Boolean = false
+        val errorViewVisible: Boolean = false,
+        open val buttonsUiState: ButtonsUiState = ButtonsUiState()
     ) {
         object LoadingUiState : UiState(loadingSkeletonVisible = true)
 
@@ -332,13 +360,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
             val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
             val layoutCategories: List<LayoutCategoryUiState> = listOf(),
-            val buttonsUiState: ButtonsUiState = ButtonsUiState(
-                    createBlankPageVisible = true,
-                    previewVisible = false,
-                    createPageVisible = false
-            )
+            override val buttonsUiState: ButtonsUiState = ButtonsUiState()
         ) : UiState()
 
-        data class ErrorUiState(@StringRes val message: Int) : UiState(errorViewVisible = true)
+        data class ErrorUiState(@StringRes val title: Int, @StringRes val subtitle: Int) : UiState(
+                errorViewVisible = true,
+                isHeaderVisible = true,
+                isDescriptionVisible = false,
+                buttonsUiState = ButtonsUiState(retryVisible = true)
+        )
     }
 }

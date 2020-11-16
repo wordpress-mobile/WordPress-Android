@@ -124,8 +124,6 @@ Language: en_CA
     <string name="gutenberg_native_choose_image_or_video">Choose image or video</string>
     <string name="gutenberg_native_choose_image">Choose image</string>
     <string name="gutenberg_native_block_removed">Block removed</string>
-    <string name="content_description_logo">WordPress Logo</string>
-    <string name="enter_your_site_address">Enter your site address</string>
     <string name="continue_with_wpcom">Continue with WordPress.com</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
@@ -147,8 +145,6 @@ Language: en_CA
     <string name="or_type_your_password">Or type your password</string>
     <string name="create_account">Create account</string>
     <string name="send_link_by_email">Send link by email</string>
-    <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
-    <string name="login_promo_title_37_percent">37\% of the web is built on WordPress.</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
@@ -449,7 +445,6 @@ Language: en_CA
     <string name="dialog_confirm_scheduled_post_sync_message">This post will be synced immediately.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
-    <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
@@ -1272,7 +1267,6 @@ Language: en_CA
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="share_intent_screen_title">Pick site</string>
     <string name="signup_epilogue_screen_title">New account</string>
-    <string name="login_prologue_screen_title">Login</string>
     <string name="login_epilogue_screen_title">Logged in as</string>
     <string name="person_detail_screen_title">Person detail</string>
     <string name="media_settings_screen_title">File details</string>
@@ -2205,7 +2199,6 @@ Language: en_CA
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
     <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="reader_label_new_posts">New posts</string>
-    <string name="reader_page_recommended_blogs">Sites you may like</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="post_uploading">Uploading post</string>
     <string name="stats_followers_years">%1$d years</string>

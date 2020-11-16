@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-23 08:38:08+0000
+Translation-Revision-Date: 2020-11-08 21:15:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="hpp_skip_button">Pomiń</string>
+    <string name="hpp_choose_button">Wybierz</string>
+    <string name="hpp_title">Wybierz wzór</string>
+    <string name="prepublishing_nudges_add_category_button">Dodaj kategorię</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Nie ustawiono</string>
+    <string name="prepublishing_nudges_categories_action">Kategorie</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Dodaj nową kategorię</string>
+    <string name="mlp_error_title">Szablony nie są dostępne z powodu błędu</string>
+    <string name="mlp_network_error_title">Szablony nie są dostępne w trybie offline</string>
+    <string name="login_prologue_fifth_tag_six">Polityka</string>
+    <string name="login_prologue_fifth_tag_five">Muzyka</string>
+    <string name="login_prologue_fifth_tag_four">Ogrodnictwo</string>
+    <string name="login_prologue_fifth_tag_three">Piłka nożna</string>
+    <string name="login_prologue_fifth_tag_two">Gotowanie</string>
+    <string name="login_prologue_fifth_tag_one">Sztuka</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_fifth_caption_three">Muzea w Londynie</string>
+    <string name="login_prologue_fifth_caption_two">Najlepsi na świecie fani</string>
+    <string name="login_prologue_fifth_caption_one">Moje dziesięć ulubionych kawiarni</string>
+    <string name="login_prologue_fifth_subtitle_two">Wiadomości Web</string>
+    <string name="login_prologue_title_second">Dzięki potężnemu edytorowi możesz w locie dodawać nowe wpisy.</string>
+    <string name="login_prologue_title_first">Witaj na najbardziej popularnej platformie do tworzenia witryny internetowej</string>
+    <string name="login_prologue_title_fourth">Obserwuj jak rośnie twoja publiczność dzięki zaawansowanej analityce.</string>
+    <string name="media_loading_failed">Nie udało się wczytać plików mediów</string>
+    <string name="reader_discover_recommended_blogs_header">Witryny do obserwacji</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nie jest w pełni wspierana</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Z każdym wydaniem pracujemy nad dodawaniem większej ilości bloków.</string>
     <string name="stories_intro_create_story_post_label">Utwórz wpis z relacją</string>
@@ -20,7 +46,6 @@ Language: pl
     <string name="stories_intro_main_subtitle">Uzyskałeś/aś wczesny dostęp do wpisów z relacjami. Zachęcamy ciebie do wypróbowania tej funkcji.</string>
     <string name="stories_intro_main_title">Wprowadzamy wpisy z relacjami</string>
     <string name="stories_intro_title_first">Nowe relacje są dla każdego</string>
-    <string name="mlp_generic_error">Wystąpił błąd podczas pobierania układów</string>
     <string name="mlp_notice_blank_page_created">Utworzono pustą stronę</string>
     <string name="mlp_notice_page_created">Utworzono stronę</string>
     <string name="mlp_preview_title">Podgląd układu</string>
@@ -158,11 +183,10 @@ Language: pl
     <string name="gutenberg_native_choose_image_or_video">Wybierz zdjęcie lub film</string>
     <string name="gutenberg_native_choose_image">Wybierz obrazek</string>
     <string name="gutenberg_native_block_removed">Blok usunięto</string>
-    <string name="content_description_logo">Logo WordPressa</string>
-    <string name="enter_your_site_address">Wprowadź adres witryny</string>
     <string name="continue_with_wpcom">Kontynuuj z WordPress.com</string>
     <string name="signup_confirmation_title">Potwierdzenie rejestracji</string>
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
+    <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
     <string name="continue_terms_of_service_text">Kontynuując, zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="signup_confirmation_magic_link_message">Prześlemy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com.</string>
     <string name="signup_confirmation_message">Twój adres email będzie użyty to utworzenia twojego nowego konta na WordPress.com.</string>
@@ -181,8 +205,6 @@ Language: pl
     <string name="or_type_your_password">Lub wprowadź hasło</string>
     <string name="create_account">Utwórz konto</string>
     <string name="send_link_by_email">Wyślij odnośnik przez email</string>
-    <string name="login_promo_text_unlock_the_power">Wykorzystaj możliwości najbardziej elastycznego kreatora witryny.</string>
-    <string name="login_promo_title_37_percent">37\% internetu jest oparte na WordPressie.</string>
     <string name="reset_your_password">Zresetuj hasło</string>
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
@@ -487,7 +509,6 @@ Language: pl
     <string name="dialog_confirm_scheduled_post_sync_message">Ten wpis będzie natychmiast zsynchronizowany.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Gotowe do synchronizacji?</string>
     <string name="new_site_creation_unavailable_domain">Domena nie jest dostępna</string>
-    <string name="login_promo_viewpager_content_description">Wprowadzenie</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nie byliśmy w stanie uzyskać dostępu do twojej witryny. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
     <string name="login_discovery_error_ssl">Nie byliśmy w stanie uzyskać dostępu do twojej witryny z powodu problemu z &lt;b>SSL Certificatem&lt;/b>. Aby rozwiązać ten problem, sprawdź dostęp do hosta.</string>
@@ -1309,7 +1330,6 @@ Language: pl
     <string name="edit_photo_screen_title">Edytuj zdjęcie</string>
     <string name="share_intent_screen_title">Wybierz witrynę</string>
     <string name="signup_epilogue_screen_title">Nowe konto</string>
-    <string name="login_prologue_screen_title">Zaloguj się</string>
     <string name="site_settings_quota_space_hint">Jeśli potrzebujesz więcej przestrzeni, rozważ rozszerzenie subskrypcji WordPress.</string>
     <string name="comment_unliked_talkback"> Cofnięto dodanie polubienia</string>
     <string name="notif_detail_screen_title">Szczegóły powiadomienia %s</string>
@@ -2247,7 +2267,6 @@ Language: pl
     <string name="error_copy_to_clipboard">Wystąpił błąd podczas kopiowania tekstu do schowka</string>
     <string name="logs_copied_to_clipboard">Dziennik aplikacji został skopiowany do schowka</string>
     <string name="reader_label_new_posts">Nowe wpisy</string>
-    <string name="reader_page_recommended_blogs">Blogi, które mogą ciebie zainteresować</string>
     <string name="post_uploading">Przesyłanie wpisu</string>
     <string name="reader_empty_posts_in_blog">Ta witryna jest pusta</string>
     <string name="stats_followers_minutes">%1$d minut</string>

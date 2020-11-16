@@ -12,11 +12,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
+import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.mediapicker.loader.DeviceListBuilder.DeviceListBuilderFactory
 import org.wordpress.android.ui.mediapicker.loader.MediaLibraryDataSource.MediaLibraryDataSourceFactory
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class MediaLoaderFactoryTest {
@@ -27,6 +29,7 @@ class MediaLoaderFactoryTest {
     @Mock lateinit var stockMediaDataSource: StockMediaDataSource
     @Mock lateinit var gifMediaDataSource: GifMediaDataSource
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var site: SiteModel
     private lateinit var mediaLoaderFactory: MediaLoaderFactory
 
@@ -37,7 +40,8 @@ class MediaLoaderFactoryTest {
                 mediaLibraryDataSourceFactory,
                 stockMediaDataSource,
                 gifMediaDataSource,
-                localeManagerWrapper
+                localeManagerWrapper,
+                networkUtilsWrapper
         )
     }
 
@@ -62,7 +66,8 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         deviceListBuilder,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }
@@ -89,7 +94,8 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         mediaLibraryDataSource,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }
@@ -115,7 +121,35 @@ class MediaLoaderFactoryTest {
         assertThat(mediaLoader).isEqualTo(
                 MediaLoader(
                         stockMediaDataSource,
-                        localeManagerWrapper
+                        localeManagerWrapper,
+                        networkUtilsWrapper
+                )
+        )
+    }
+
+    @Test
+    fun `returns gif media source on GIF_LIBRARY source`() {
+        val mediaPickerSetup = MediaPickerSetup(
+                GIF_LIBRARY,
+                availableDataSources = setOf(),
+                canMultiselect = true,
+                requiresStoragePermissions = false,
+                allowedTypes = setOf(),
+                cameraSetup = HIDDEN,
+                systemPickerEnabled = false,
+                editingEnabled = false,
+                queueResults = false,
+                defaultSearchView = true,
+                title = string.photo_picker_gif
+        )
+
+        val mediaLoader = mediaLoaderFactory.build(mediaPickerSetup, site)
+
+        assertThat(mediaLoader).isEqualTo(
+                MediaLoader(
+                        gifMediaDataSource,
+                        localeManagerWrapper,
+                        networkUtilsWrapper
                 )
         )
     }

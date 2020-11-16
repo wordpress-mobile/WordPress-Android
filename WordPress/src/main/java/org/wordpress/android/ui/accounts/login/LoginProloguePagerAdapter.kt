@@ -1,33 +1,52 @@
 package org.wordpress.android.ui.accounts.login
 
-import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import org.wordpress.android.R
 
-class LoginProloguePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class LoginProloguePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     private val pages = listOf(
             Page(
-                    R.string.login_promo_title_37_percent,
-                    R.string.login_promo_text_unlock_the_power,
-                    R.drawable.img_illustration_promo
+                    R.string.login_prologue_title_first,
+                    R.layout.login_prologue_first,
+                    R.layout.login_prologue_background_first
+            ),
+            Page(
+                    R.string.login_prologue_title_second,
+                    R.layout.login_prologue_second,
+                    R.layout.login_prologue_background_second
+            ),
+            Page(
+                    R.string.login_prologue_title_third,
+                    R.layout.login_prologue_third,
+                    R.layout.login_prologue_background_third
+            ),
+            Page(
+                    R.string.login_prologue_title_fourth,
+                    R.layout.login_prologue_fourth,
+                    R.layout.login_prologue_background_fourth
+            ),
+            Page(
+                    R.string.login_prologue_title_fifth,
+                    R.layout.login_prologue_fifth,
+                    R.layout.login_prologue_background_fifth
             )
     )
 
-    override fun getItem(position: Int): Fragment {
-        val page = pages[position]
-        return LoginProloguePageFragment.newInstance(page.promoTitle, page.promoText, page.promoImage)
-    }
+    private data class Page(
+        @StringRes val promoTitle: Int = 0,
+        @LayoutRes val promoLayoutId: Int = 0,
+        @LayoutRes val promoBackgroundId: Int = 0
+    )
 
-    override fun getCount(): Int {
+    override fun getItemCount(): Int {
         return pages.size
     }
 
-    private data class Page(
-        @StringRes val promoTitle: Int = 0,
-        @StringRes val promoText: Int = 0,
-        @DrawableRes val promoImage: Int = 0
-    )
+    override fun createFragment(position: Int): Fragment {
+        val page = pages[position]
+        return LoginProloguePageFragment.newInstance(page.promoTitle, page.promoLayoutId, page.promoBackgroundId)
+    }
 }

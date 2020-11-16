@@ -663,7 +663,6 @@ Language: bg
     <string name="reader_label_new_posts">Нови публикации</string>
     <string name="post_uploading">Качване</string>
     <string name="error_copy_to_clipboard">Възникна грешка при копиране на текста в clipboard-а</string>
-    <string name="reader_page_recommended_blogs">Блогове които бихте харесали</string>
     <string name="logs_copied_to_clipboard">Логовете на приложението бяха копирани в буфера за обмен на данни</string>
     <string name="stats_view_videos">Видеа</string>
     <string name="stats_followers_a_day">Ден</string>

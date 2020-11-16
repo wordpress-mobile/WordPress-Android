@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-19 18:27:42+0000
+Translation-Revision-Date: 2020-11-09 09:06:43+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Вася Пупкин&lt;/b> ответил на вашу запись</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Юля Петрова&lt;/b> отмечает вашу запись как понравившуюся</string>
+    <string name="login_prologue_third_subtitle_two">Вы сегодня получили &lt;b>50 отметок \"нравится\"&lt;/b> на сайте</string>
+    <string name="hpp_subtitle">Выберите макет главной страницы. Его можно настроить или изменить позже.</string>
+    <string name="hpp_choose_button">Выбрать</string>
+    <string name="hpp_skip_button">Пропустить</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Прокручиваемое меню блоков закрыто.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Прокручиваемое меню блоков открыто. Выберите блок.</string>
+    <string name="prepublishing_nudges_categories_action">Рубрики</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Не указано</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Рубрики</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Добавить новую рубрику</string>
+    <string name="prepublishing_nudges_add_category_button">Добавить рубрику</string>
+    <string name="mlp_error_title">Макеты недоступны из-за ошибки</string>
+    <string name="mlp_error_subtitle">Нажмите повторить или создайте пустую страницу нажав на кнопку ниже.</string>
+    <string name="mlp_network_error_title">Макеты недоступны при отсутствии подключения к сети</string>
+    <string name="mlp_network_error_subtitle">Нажмите повторить при восстановлении подключения к сети или создайте пустую страницу нажав на кнопку ниже.</string>
+    <string name="hpp_title">Выбрать оформление</string>
+    <string name="login_prologue_second_subtitle_two">Меня восхищают работы фотографа Кэмерона Карстена. Я попробую его техники в будущем</string>
+    <string name="login_prologue_fifth_subtitle_one">Памела Нгуен</string>
+    <string name="login_prologue_fifth_subtitle_two">Новости веб</string>
+    <string name="login_prologue_fifth_subtitle_three">Еженедельный рок-н-ролл</string>
+    <string name="login_prologue_fifth_tag_one">Искусство</string>
+    <string name="login_prologue_fifth_tag_two">Кулинария</string>
+    <string name="login_prologue_fifth_tag_three">Футбол</string>
+    <string name="login_prologue_fifth_tag_four">Садоводство</string>
+    <string name="login_prologue_fifth_tag_five">Музыка</string>
+    <string name="login_prologue_fifth_tag_six">Политика</string>
+    <string name="login_prologue_fifth_caption_one">Мой выбор лучших 10 кафе</string>
+    <string name="login_prologue_fifth_caption_two">Лучшие мировые фанаты</string>
+    <string name="login_prologue_fifth_caption_three">Музеи Лондона</string>
+    <string name="login_prologue_title_first">Добро пожаловать в самый популярный в мире конструктор сайтов.</string>
+    <string name="login_prologue_title_second">С настолько мощным редактором вы можете создавать публикации на ходу.</string>
+    <string name="login_prologue_title_third">Следите в реальном времени за комментариями и уведомлениями.</string>
+    <string name="login_prologue_title_fourth">Следите за ростом вашей аудитории с глубокой аналитикой.</string>
+    <string name="login_prologue_title_fifth">Подписывайтесь на избранные сайты и находите новое чтиво.</string>
+    <string name="login_prologue_second_subtitle_one">Вдохновляйтесь</string>
+    <string name="reader_discover_recommended_blogs_header">Сайты для подписки</string>
+    <string name="media_loading_failed">Загрузка медиафайла неудалась</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' полностью не поддерживается</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Мы стараемся добавить как можно больше блоков в каждом выпуске.</string>
     <string name="stories_intro_description_second">Они публикуются как новые записи блога на вашем сайте, ваша аудитория их не пропустит, это точно!</string>
@@ -19,7 +58,6 @@ Language: ru
     <string name="mlp_preview_title">Просмотр макета</string>
     <string name="mlp_notice_page_created">Страница создана</string>
     <string name="mlp_notice_blank_page_created">Создана пустая страница</string>
-    <string name="mlp_generic_error">Произошла ошибка при получении макетов</string>
     <string name="stories_intro_main_subtitle">Вам предоставлен ранний доступ к Историям, и мы хотим чтобы вы их попробовали.</string>
     <string name="stories_intro_main_title">Представляем записи-истории</string>
     <string name="stories_intro_image_caption_second">Пример названия истории</string>
@@ -157,12 +195,11 @@ Language: ru
     <string name="continue_with_google_terms_of_service_text">Если вы продолжите работу с учетной записью Google, не имея учётной записи WordPress.com, вы создадите учётную запись и примете наши %1$sУсловия обслуживания%2$s.</string>
     <string name="signup_confirmation_title">Подтверждение регистрации</string>
     <string name="continue_with_wpcom">Продолжить с WordPress.com</string>
-    <string name="enter_your_site_address">Введите адрес вашего сайта</string>
-    <string name="content_description_logo">Логотип WordPress</string>
     <string name="gutenberg_native_block_removed">Блок удалён</string>
     <string name="gutenberg_native_choose_image">Выбор изображения</string>
     <string name="gutenberg_native_choose_image_or_video">Выбор изображения или видео</string>
     <string name="gutenberg_native_choose_video">Выбор видео</string>
+    <string name="enter_your_site_address">Введите адрес вашего сайта</string>
     <string name="continue_terms_of_service_text">Продолжив, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
     <string name="signup_confirmation_magic_link_message">Мы пришлём вам ссылку для создания учётной записи WordPress.com.</string>
     <string name="signup_confirmation_message">Этот адрес эл.почты будет использован при создании вашей новой учётной записи WordPress.com.</string>
@@ -176,8 +213,6 @@ Language: ru
     <string name="login_or">или</string>
     <string name="login_magic_links_label">Мы пришлём вам ссылку для входа, которая позволит вам сразу войти без пароля.</string>
     <string name="reset_your_password">Сбросить пароль</string>
-    <string name="login_promo_title_37_percent">37\% всех сайтов сети основаны на WordPress.</string>
-    <string name="login_promo_text_unlock_the_power">Раскройте потенциал самой гибкой платформы для создания сайтов.</string>
     <string name="send_link_by_email">Прислать ссылку по электронной почте</string>
     <string name="create_account">Создать учётную запись</string>
     <string name="or_type_your_password">или введите ваш пароль</string>
@@ -486,7 +521,6 @@ Language: ru
     <string name="dialog_confirm_scheduled_post_sync_yes">Синхронизировать сейчас</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Эта запись будет синхронизирована прямо сейчас.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Готовы начать синхронизацию?</string>
-    <string name="login_promo_viewpager_content_description">Вступление</string>
     <string name="negative_prefix">-%s</string>
     <string name="new_site_creation_unavailable_domain">Этот домен недоступен</string>
     <string name="login_discovery_error_http_auth">Мы не смогли подключиться к сайту, поскольку он требует &lt;b>HTTP авторизации&lt;/b>. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
@@ -1292,7 +1326,6 @@ Language: ru
     <string name="menu_visual_mode">Визуальный режим</string>
     <string name="menu_visual_mode_done_snackbar">Переход в визуальный режим.</string>
     <string name="menu_undo_snackbar_action">ОТМЕНИТЬ</string>
-    <string name="login_prologue_screen_title">Войти</string>
     <string name="signup_epilogue_screen_title">Новая учетная запись</string>
     <string name="share_intent_screen_title">Выберите сайт</string>
     <string name="edit_photo_screen_title">Изменить фото</string>
@@ -2248,7 +2281,6 @@ Language: ru
     <string name="logs_copied_to_clipboard">Журналы приложения скопированы в буфер обмена.</string>
     <string name="reader_label_new_posts">Новые записи</string>
     <string name="error_copy_to_clipboard">Произошла ошибка при копировании текста в буфер обмена.</string>
-    <string name="reader_page_recommended_blogs">Сайты, подобранные для вас</string>
     <string name="reader_empty_posts_in_blog">Этот сайт пуст.</string>
     <string name="themes_fetching">Получение тем…</string>
     <string name="stats_followers_months">%1$d месяцев</string>

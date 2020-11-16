@@ -830,7 +830,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(mEditPostRepository, mSite);
+            if (!mIsPreview) {
+                mViewModel.savePostToDb(mEditPostRepository, mSite);
+            }
             return null;
         }));
     }
@@ -1986,6 +1988,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             AccountModel account = mAccountStore.getAccount();
             // prompt user to verify e-mail before publishing
             if (!account.getEmailVerified()) {
+                mViewModel.hideSavingDialog();
                 String message = TextUtils.isEmpty(account.getEmail())
                         ? getString(R.string.editor_confirm_email_prompt_message)
                         : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
@@ -2007,6 +2010,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return;
             }
             if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
+                mViewModel.hideSavingDialog();
                 // TODO we don't want to show "publish" message when the user clicked on eg. save
                 mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
                 EditPostActivity.this.runOnUiThread(() -> {
@@ -2535,10 +2539,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
                         setFeaturedImageId(mediaId, true);
-                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED)) {
+                    } else if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS)) {
                         if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
                             List<Uri> uris = convertStringArrayIntoUrisList(
-                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS));
+                                    data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS));
                             int postId = getImmutablePost().getId();
                             mFeaturedImageHelper.trackFeaturedImageEvent(
                                     FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
@@ -2615,11 +2619,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
-                    if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
-                        String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
-                        if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
-                            key = MediaBrowserActivity.RESULT_IDS;
-                        }
+                    String key = StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS;
+                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                        key = MediaBrowserActivity.RESULT_IDS;
+                    }
+                    if (data.hasExtra(key)) {
                         long[] mediaIds = data.getLongArrayExtra(key);
                         mEditorMedia
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
@@ -2695,7 +2699,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // TODO move this to EditorMedia
         ArrayList<Long> ids = ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
         if (ids == null || ids.size() == 0) {
-            return;
+            if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
+                    long mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0);
+                    ids = new ArrayList<>();
+                    ids.add(mediaId);
+                } else {
+                    return;
+                }
+            } else {
+                return;
+            }
         }
 
         boolean allAreImages = true;

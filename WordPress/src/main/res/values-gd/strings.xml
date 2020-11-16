@@ -76,7 +76,6 @@ Language: gd_GB
     <string name="logs_copied_to_clipboard">Chaidh lethbhreac de logaichean na h-aplacaid a chur air an stòr-bhòrd</string>
     <string name="reader_label_new_posts">Puist ùra</string>
     <string name="error_copy_to_clipboard">Thachair mearachd nuair a chaidh lethbhreac dha na faidhlichean a chur air an stòr-bhòrd</string>
-    <string name="reader_page_recommended_blogs">Bidh ùidh agad sna leanas is dòcha</string>
     <string name="themes_fetching">A’ faighinn nan ùrlaran…</string>
     <string name="stats_followers_months">%1$d mìos(an)</string>
     <string name="stats_followers_a_year">Bliadhna</string>
