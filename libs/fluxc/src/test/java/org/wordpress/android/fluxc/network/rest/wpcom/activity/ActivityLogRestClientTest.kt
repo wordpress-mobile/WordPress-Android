@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import com.android.volley.RequestQueue
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
+import com.nhaarman.mockitokotlin2.after
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
@@ -33,17 +34,22 @@ import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.util.DateTimeUtils
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var requestPayload: FetchActivityLogPayload
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
@@ -64,18 +70,52 @@ class ActivityLogRestClientTest {
                 requestQueue,
                 accessToken,
                 userAgent)
+        whenever(requestPayload.site).thenReturn(site)
     }
 
     @Test
     fun fetchActivity_passesCorrectParamToBuildRequest() = test {
         initFetchActivity()
+        val afterMillis = 1603860428000
+        val beforeMillis = 1603961628000
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                Date(afterMillis),
+                Date(beforeMillis),
+                listOf("post", "attachment")
+        )
 
-        activityRestClient.fetchActivity(site, number, offset)
+        activityRestClient.fetchActivity(payload, number, offset)
 
         assertEquals(urlCaptor.firstValue, "https://public-api.wordpress.com/wpcom/v2/sites/$siteId/activity/")
         with(paramsCaptor.firstValue) {
-            assertEquals(this["page"], "1")
-            assertEquals(this["number"], "$number")
+            assertEquals("1", this["page"])
+            assertEquals("$number", this["number"])
+            assertEquals(DateTimeUtils.iso8601FromDate(Date(afterMillis)), this["after"])
+            assertEquals(DateTimeUtils.iso8601FromDate(Date(beforeMillis)), this["before"])
+            assertEquals("post", this["group[0]"])
+            assertEquals("attachment", this["group[1]"])
+        }
+    }
+
+    @Test
+    fun fetchActivity_passesOnlyNonEmptyParamsToBuildRequest() = test {
+        initFetchActivity()
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                after = null,
+                before = null,
+                groups = listOf()
+        )
+        activityRestClient.fetchActivity(payload, number, offset)
+
+        assertEquals(urlCaptor.firstValue, "https://public-api.wordpress.com/wpcom/v2/sites/$siteId/activity/")
+        with(paramsCaptor.firstValue) {
+            assertEquals("1", this["page"])
+            assertEquals("$number", this["number"])
+            assertEquals(2, this.size)
         }
     }
 
@@ -84,7 +124,7 @@ class ActivityLogRestClientTest {
         val response = ActivitiesResponse(1, "response", ACTIVITY_RESPONSE_PAGE)
         initFetchActivity(response)
 
-        val payload = activityRestClient.fetchActivity(site, number, offset)
+        val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         with(payload) {
             assertEquals(this.number, number)
@@ -113,7 +153,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
 
-        val payload = activityRestClient.fetchActivity(site, number, offset)
+        val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         assertEmittedActivityError(payload, ActivityLogErrorType.MISSING_ACTIVITY_ID)
     }
@@ -124,7 +164,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
 
-        val payload = activityRestClient.fetchActivity(site, number, offset)
+        val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         assertEmittedActivityError(payload, ActivityLogErrorType.MISSING_SUMMARY)
     }
@@ -136,7 +176,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
 
-        val payload = activityRestClient.fetchActivity(site, number, offset)
+        val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         assertEmittedActivityError(payload, ActivityLogErrorType.MISSING_CONTENT_TEXT)
     }
@@ -147,7 +187,7 @@ class ActivityLogRestClientTest {
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)
 
-        val payload = activityRestClient.fetchActivity(site, number, offset)
+        val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         assertEmittedActivityError(payload, ActivityLogErrorType.MISSING_PUBLISHED_DATE)
     }
@@ -156,7 +196,7 @@ class ActivityLogRestClientTest {
     fun fetchActivity_dispatchesErrorOnFailure() = test {
         initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
 
-        val payload = activityRestClient.fetchActivity(site, number, offset)
+        val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         assertEmittedActivityError(payload, ActivityLogErrorType.GENERIC_ERROR)
     }
@@ -322,5 +362,72 @@ class ActivityLogRestClientTest {
         )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
+    }
+
+    private suspend fun initPostRewindWithTypes(
+        data: RewindResponse? = null,
+        error: WPComGsonNetworkError? = null,
+        requestTypes: RewindRequestTypes
+    ): Response<RewindResponse> {
+        val nonNullData = data ?: mock()
+        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(nonNullData)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf("types" to requestTypes)),
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    @Test
+    fun postRewindOperationWithTypes() = test {
+        val restoreId = 10L
+        val response = RewindResponse(restoreId, true, null)
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(data = response, requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertEquals(restoreId, payload.restoreId)
+    }
+
+    @Test
+    fun postRewindOperationErrorWithTypes() = test {
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)), requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertTrue(payload.isError)
+    }
+
+    @Test
+    fun postRewindApiErrorWithTypes() = test {
+        val restoreId = 10L
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(data = RewindResponse(restoreId, false, "error"), requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertTrue(payload.isError)
     }
 }
