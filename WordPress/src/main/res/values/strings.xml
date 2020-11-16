@@ -3269,4 +3269,12 @@ translators: sample content for "Services" page template -->
     <string name="typeface_label_pacifico">Playful</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_shrikhand">Bold</string>
+    <string name="delete_button_alt">Delete</string>
+    <string name="label_next_button">Next</string>
+    <string name="label_done_button">Done</string>
+    <string name="dialog_discard_story_title_edit">Discard changes?</string>
+    <string name="dialog_discard_story_message_edit">Any changes made will not be saved.</string>
+    <string name="dialog_discard_story_ok_button_edit">Discard</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="color_picker_label_background">Background</string>
 </resources>
