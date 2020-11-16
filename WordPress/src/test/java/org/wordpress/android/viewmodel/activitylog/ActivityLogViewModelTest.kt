@@ -327,21 +327,28 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun dateRangePickerIsNotVisibleWhenFiltersFeatureFlagIsDisabled() = runBlocking {
+    fun filtersAreNotVisibleWhenFiltersFeatureFlagIsDisabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(false)
 
         viewModel.start(site)
 
-        assertEquals(false, viewModel.dateRangePickerVisibility.value)
+        assertEquals(false, viewModel.filtersVisibility.value)
     }
 
     @Test
-    fun dateRangePickerIsVisibleWhenFiltersFeatureFlagIsEnabled() = runBlocking {
+    fun filtersAreVisibleWhenFiltersFeatureFlagIsEnabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
 
         viewModel.start(site)
 
-        assertEquals(true, viewModel.dateRangePickerVisibility.value)
+        assertEquals(true, viewModel.filtersVisibility.value)
+    }
+
+    @Test
+    fun onActivityTypeFilterClickShowsActivityTypeFilter() {
+        viewModel.onActivityTypeFilterClicked()
+
+        assertEquals(Unit, viewModel.showActivityTypeFilterDialog.value)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
