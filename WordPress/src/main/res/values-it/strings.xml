@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-03 10:54:08+0000
+Translation-Revision-Date: 2020-11-13 14:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu del blocco a scorrimento aperto. Seleziona un blocco.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Menu del blocco a scorrimento chiuso.</string>
+    <string name="hpp_skip_button">Salta</string>
+    <string name="hpp_choose_button">Scegli</string>
+    <string name="hpp_subtitle">Scegli il layout che preferisci per la tua homepage. Puoi personalizzarlo o modificarlo in un secondo momento.</string>
+    <string name="hpp_title">Scegli un design</string>
+    <string name="mlp_network_error_subtitle">Tocca Riprova quando sei di nuovo online o crea una pagina vuota utilizzando il pulsante sottostante.</string>
+    <string name="mlp_network_error_title">Layout non disponibili in modalità offline</string>
+    <string name="mlp_error_subtitle">Tocca Riprova o crea una pagina vuota utilizzando il pulsante sottostante.</string>
+    <string name="mlp_error_title">Layout non disponibili a causa di un errore</string>
+    <string name="prepublishing_nudges_add_category_button">Aggiungi categoria</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Aggiungi nuova categoria</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categorie</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Non impostato</string>
+    <string name="prepublishing_nudges_categories_action">Categorie</string>
+    <string name="login_prologue_fifth_caption_three">Musei di Londra</string>
+    <string name="login_prologue_fifth_caption_two">World\'s Best Fans</string>
+    <string name="login_prologue_fifth_caption_one">La Top Ten dei bar</string>
+    <string name="login_prologue_fifth_tag_six">Politica</string>
+    <string name="login_prologue_fifth_tag_five">Musica</string>
+    <string name="login_prologue_fifth_tag_four">Giardinaggio</string>
+    <string name="login_prologue_fifth_tag_three">Calcio</string>
+    <string name="login_prologue_fifth_tag_two">Cucina</string>
+    <string name="login_prologue_fifth_tag_one">Arte</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock \'n\' Roll di questa settimana</string>
+    <string name="login_prologue_fifth_subtitle_two">Web News</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Sono ispirato dal lavoro del fotografo Cameron Karsten. Proverò queste tecniche durante il mio prossimo</string>
+    <string name="login_prologue_second_subtitle_one">Lasciati ispirare</string>
+    <string name="login_prologue_title_fifth">Segui i tuoi siti preferiti e scopri nuove letture.</string>
+    <string name="login_prologue_title_fourth">Guarda il tuo pubblico crescere con analisi approfondite.</string>
+    <string name="login_prologue_title_second">Con l\'editor potente puoi pubblicare anche durante i tuoi spostamenti.</string>
+    <string name="login_prologue_title_first">Benvenuto nel costruttore di siti web più popolare del mondo.</string>
+    <string name="media_loading_failed">Caricamento dei file multimediali non riuscito</string>
+    <string name="reader_discover_recommended_blogs_header">Siti da seguire</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" non è pienamente supportato</string>
     <string name="gutenberg_native_help_button">Pulsante di assistenza</string>
@@ -156,6 +191,7 @@ Language: it
     <string name="gutenberg_native_choose_image_or_video">Scegli immagine o video</string>
     <string name="gutenberg_native_choose_image">Scegli immagine</string>
     <string name="gutenberg_native_block_removed">Blocco rimosso</string>
+    <string name="enter_your_site_address">Immetti l\'indirizzo del sito esistente</string>
     <string name="continue_with_wpcom">Continua con WordPress.com</string>
     <string name="signup_confirmation_title">Conferma dell\'iscrizione</string>
     <string name="continue_with_google_terms_of_service_text">Se continui con Google e non hai già un account WordPress.com, crei un account e accetti i nostri %1$sTermini di servizio%2$s.</string>
