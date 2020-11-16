@@ -178,7 +178,7 @@ class StorePostViewModel
         _savingProgressDialogVisibility.postValue(Showing)
     }
 
-    private fun hideSavingProgressDialog() {
+    fun hideSavingProgressDialog() {
         _savingProgressDialogVisibility.postValue(Hidden)
     }
 
