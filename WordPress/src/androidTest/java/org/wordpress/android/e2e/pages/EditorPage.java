@@ -108,7 +108,9 @@ public class EditorPage {
         clickOn(onView(withId(R.id.post_add_featured_image_button)));
         openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
         clickOn(onView(withText(R.string.photo_picker_wordpress_media_library)));
+        idleFor(2000);
         onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
+        clickOn(confirmButton);
     }
 
     public boolean publishPost() {
