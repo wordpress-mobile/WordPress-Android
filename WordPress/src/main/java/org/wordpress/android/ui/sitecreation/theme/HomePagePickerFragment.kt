@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -75,7 +76,7 @@ class HomePagePickerFragment : Fragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             setTitleVisibility(uiState.isHeaderVisible)
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
             loadingIndicator.setVisible(uiState.loadingIndicatorVisible)
@@ -92,6 +93,10 @@ class HomePagePickerFragment : Fragment() {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
+        })
+
+        viewModel.onPreviewButtonPressed.observe(viewLifecycleOwner, { preview ->
+            WPWebViewActivity.openURL(requireContext(), preview.demoUrl)// TODO
         })
 
         viewModel.start()

@@ -51,6 +51,9 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
+    private val _onPreviewButtonPressed = SingleLiveEvent<DesignPreviewAction>()
+    val onPreviewButtonPressed: LiveData<DesignPreviewAction> = _onPreviewButtonPressed
+
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
@@ -58,6 +61,8 @@ class HomePagePickerViewModel @Inject constructor(
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
     }
+
+    class DesignPreviewAction(val template: String, val demoUrl: String)
 
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -121,7 +126,18 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onPreviewTapped() {
-        // TODO
+        (uiState.value as? UiState.Content)?.let { state ->
+            layouts.firstOrNull {
+                it.slug != null && it.slug == state.selectedLayoutSlug && it.demoUrl != null
+            }?.let { layout ->
+                val template = layout.slug!!
+                analyticsTracker.trackSiteDesignPreviewViewed(template)
+                _onPreviewButtonPressed.value = DesignPreviewAction(template, layout.demoUrl!!)
+                return
+            }
+        }
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error previewing design")
+        updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
     }
 
     fun onChooseTapped() {

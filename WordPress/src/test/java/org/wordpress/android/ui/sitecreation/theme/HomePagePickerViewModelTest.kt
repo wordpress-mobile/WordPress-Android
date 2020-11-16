@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignSelectionAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -29,6 +30,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
 private const val mockedDesignSlug = "mockedDesignSlug"
 private const val mockedDesignSegmentId = 1L
+private const val mockedDesignDemoUrl = "mockedDemoUrl"
 
 @RunWith(MockitoJUnitRunner::class)
 class HomePagePickerViewModelTest {
@@ -40,6 +42,7 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
     @Mock lateinit var uiStateObserver: Observer<UiState>
     @Mock lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
+    @Mock lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
     @Mock lateinit var analyticsTracker: SiteCreationTracker
 
     private lateinit var viewModel: HomePagePickerViewModel
@@ -56,6 +59,7 @@ class HomePagePickerViewModelTest {
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
+        viewModel.onPreviewButtonPressed.observeForever(onPreviewActionObserver)
     }
 
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
@@ -67,7 +71,7 @@ class HomePagePickerViewModelTest {
                                 mockedDesignSlug,
                                 "title",
                                 "site",
-                                "demo",
+                                mockedDesignDemoUrl,
                                 "theme",
                                 mockedDesignSegmentId,
                                 "image"
@@ -175,5 +179,17 @@ class HomePagePickerViewModelTest {
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
         assertThat(captor.value.segmentId).isEqualTo(mockedDesignSegmentId)
+    }
+
+    @Test
+    fun `when the user selects a design and presses preview the preview flow is triggered`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailReady(mockedDesignSlug)
+        viewModel.onLayoutTapped(mockedDesignSlug)
+        viewModel.onPreviewTapped()
+        val captor = ArgumentCaptor.forClass(DesignPreviewAction::class.java)
+        verify(onPreviewActionObserver).onChanged(captor.capture())
+        assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
+        assertThat(captor.value.demoUrl).isEqualTo(mockedDesignDemoUrl)
     }
 }
