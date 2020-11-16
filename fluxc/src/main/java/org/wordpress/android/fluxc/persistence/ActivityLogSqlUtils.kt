@@ -103,6 +103,11 @@ class ActivityLogSqlUtils
         return rewindStatusBuilder?.build(credentials?.map { it.build() })
     }
 
+    fun getDownloadStatusForSite(site: SiteModel): DownloadStatusModel? {
+        val downloadStatusBuilder = getDownloadStatusBuilder(site)
+        return downloadStatusBuilder?.build()
+    }
+
     fun replaceDownloadStatus(site: SiteModel, downloadStatusModel: DownloadStatusModel) {
         val downloadStatusBuilder = downloadStatusModel.toBuilder(site)
         WellSql.delete(DownloadStatusBuilder::class.java)
@@ -128,6 +133,15 @@ class ActivityLogSqlUtils
                 .equals(RewindStatusCredentialsTable.REWIND_STATE_ID, rewindId)
                 .endWhere()
                 .asModel
+    }
+
+    private fun getDownloadStatusBuilder(site: SiteModel): DownloadStatusBuilder? {
+        return WellSql.select(DownloadStatusBuilder::class.java)
+                .where()
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .asModel
+                .firstOrNull()
     }
 
     private fun ActivityLogModel.toBuilder(site: SiteModel): ActivityLogBuilder {
