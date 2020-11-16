@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,10 @@ import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.errorVie
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
-import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Error
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loaded
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loading
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
@@ -25,7 +27,6 @@ import javax.inject.Inject
  * Implements the Home Page Picker Design Preview UI
  */
 class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
-    @Inject internal lateinit var networkUtils: NetworkUtilsWrapper
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
 
@@ -61,16 +62,27 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
+        viewModel.previewState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is Loading -> {
+                    showError(false)
+                    webView.loadUrl(url)
+                }
+                is Loaded -> {
+                    showError(false)
+                }
+                is Error -> {
+                    showError(true)
+                    state.toast?.let { ToastUtils.showToast(requireContext(), it) }
+                }
+            }
+        }
+
         backButton.setOnClickListener { closeModal() }
 
         chooseButton.setOnClickListener { viewModel.onPreviewChooseTapped() }
 
         webView.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                viewModel.onPreviewLoading(template)
-            }
-
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 viewModel.onPreviewLoaded(template)
@@ -78,7 +90,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
-                showError(true)
+                viewModel.onPreviewError()
             }
         }
 
@@ -91,24 +103,12 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun closeModal() {
-        viewModel.onDismissPreview()
-    }
+    override fun closeModal() = viewModel.onDismissPreview()
 
-    private fun load() {
-        if (networkUtils.isNetworkAvailable()) {
-            showError(false)
-            webView.loadUrl(url)
-        } else {
-            showError(true)
-        }
-    }
+    private fun load() = viewModel.onPreviewLoading(template)
 
-    private fun showError(error: Boolean) {
-        webView.setVisible(!error)
-        errorView.setVisible(error)
-        if (error) {
-            viewModel.onPreviewError()
-        }
+    private fun showError(hasError: Boolean) {
+        webView.setVisible(!hasError)
+        errorView.setVisible(hasError)
     }
 }
