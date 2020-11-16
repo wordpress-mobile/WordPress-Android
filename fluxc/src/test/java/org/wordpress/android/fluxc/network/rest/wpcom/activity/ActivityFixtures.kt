@@ -47,4 +47,3 @@ val DOWNLOAD_STATUS_RESPONSE = ActivityLogRestClient.DownloadStatusResponse(
         downloadCount = null,
         validUntil = null,
         url = null)
-

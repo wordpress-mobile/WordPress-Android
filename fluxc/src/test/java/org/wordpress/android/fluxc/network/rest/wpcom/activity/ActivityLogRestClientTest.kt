@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -198,7 +197,7 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivity_dispatchesErrorOnFailure() = test {
-        initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
+        initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
@@ -407,7 +406,10 @@ class ActivityLogRestClientTest {
         assertEmittedDownloadStatusError(payload, DownloadStatusErrorType.GENERIC_ERROR)
     }
 
-    private fun assertEmittedDownloadStatusError(payload: FetchedDownloadStatePayload, errorType: DownloadStatusErrorType) {
+    private fun assertEmittedDownloadStatusError(
+        payload: FetchedDownloadStatePayload,
+        errorType: DownloadStatusErrorType
+    ) {
         with(payload) {
             assertEquals(this.site, site)
             assertTrue(this.isError)
