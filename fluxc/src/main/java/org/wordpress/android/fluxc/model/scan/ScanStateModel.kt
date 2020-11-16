@@ -8,7 +8,8 @@ data class ScanStateModel(
     val threats: List<ThreatModel>?,
     val credentials: List<Credentials>?,
     val hasCloud: Boolean,
-    val scanProgressStatus: ScanProgressStatus?
+    val mostRecentStatus: ScanProgressStatus?,
+    val currentStatus: ScanProgressStatus?
 ) {
     enum class State(val value: String) {
         IDLE("idle"),
@@ -32,9 +33,9 @@ data class ScanStateModel(
 
     data class ScanProgressStatus(
         val startDate: Date,
-        val duration: Int,
+        val duration: Int = 0,
         val progress: Int,
-        val error: Boolean,
+        val error: Boolean = false,
         val isInitial: Boolean
     )
 }

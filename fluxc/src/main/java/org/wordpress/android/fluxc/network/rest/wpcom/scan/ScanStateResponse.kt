@@ -10,7 +10,8 @@ data class ScanStateResponse(
     val credentials: List<Credentials>?,
     val reason: String?,
     @SerializedName("has_cloud") val hasCloud: Boolean,
-    @SerializedName(value = "most_recent", alternate = ["current"]) val scanProgressStatus: ScanProgressStatus?
+    @SerializedName("most_recent") val mostRecentStatus: ScanProgressStatus?,
+    @SerializedName("current") val currentStatus: ScanProgressStatus?
 ) : Response {
     data class Threat(
         val id: Int,
