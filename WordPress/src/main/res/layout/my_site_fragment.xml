@@ -372,6 +372,11 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!--Jetpack-->
+                    <org.wordpress.android.widgets.WPTextView
+                        style="@style/MySiteListHeader"
+                        android:text="@string/my_site_header_jetpack" />
+
                     <!--Stats-->
                     <LinearLayout
                         android:id="@+id/row_stats"
