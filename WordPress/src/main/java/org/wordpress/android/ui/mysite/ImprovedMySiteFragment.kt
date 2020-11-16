@@ -70,7 +70,7 @@ class ImprovedMySiteFragment : Fragment() {
     }
 
     companion object {
-        private const val  KEY_LIST_STATE = "key_list_state"
+        private const val KEY_LIST_STATE = "key_list_state"
         fun newInstance(): ImprovedMySiteFragment {
             return ImprovedMySiteFragment()
         }
