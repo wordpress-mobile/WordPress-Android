@@ -345,41 +345,6 @@ class ActivityLogRestClientTest {
         return response
     }
 
-    private suspend fun initPostRewind(
-        data: RewindResponse = mock(),
-        error: WPComGsonNetworkError? = null
-    ): Response<RewindResponse> {
-        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(data)
-
-        whenever(wpComGsonRequestBuilder.syncPostRequest(
-                eq(activityRestClient),
-                urlCaptor.capture(),
-                eq(null),
-                eq(mapOf()),
-                eq(RewindResponse::class.java)
-        )).thenReturn(response)
-        whenever(site.siteId).thenReturn(siteId)
-        return response
-    }
-
-    private suspend fun initPostRewindWithTypes(
-        data: RewindResponse = mock(),
-        error: WPComGsonNetworkError? = null,
-        requestTypes: RewindRequestTypes
-    ): Response<RewindResponse> {
-        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(data)
-
-        whenever(wpComGsonRequestBuilder.syncPostRequest(
-                eq(activityRestClient),
-                urlCaptor.capture(),
-                eq(null),
-                eq(mapOf("types" to requestTypes)),
-                eq(RewindResponse::class.java)
-        )).thenReturn(response)
-        whenever(site.siteId).thenReturn(siteId)
-        return response
-    }
-
     @Test
     fun postRewindOperationWithTypes() = test {
         val restoreId = 10L
@@ -464,6 +429,41 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.download(site, rewindId, types)
 
         assertTrue(payload.isError)
+    }
+
+    private suspend fun initPostRewind(
+        data: RewindResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ): Response<RewindResponse> {
+        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(data)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf()),
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initPostRewindWithTypes(
+        data: RewindResponse = mock(),
+        error: WPComGsonNetworkError? = null,
+        requestTypes: RewindRequestTypes
+    ): Response<RewindResponse> {
+        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(data)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf("types" to requestTypes)),
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
     }
 
     private suspend fun initPostDownload(
