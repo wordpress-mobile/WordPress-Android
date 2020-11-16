@@ -65,7 +65,7 @@ class ExperimentStore @Inject constructor(
 
     fun getCachedAssignments(): Assignments? {
         val json = preferenceUtils.getFluxCPreferences().getString(EXPERIMENT_ASSIGNMENTS_KEY, null)
-        val model = gson.fromJson<AssignmentsModel?>(json, AssignmentsModel::class.java)
+        val model = gson.fromJson(json, AssignmentsModel::class.java)
         return model?.let { Assignments.fromModel(it) }
     }
 
