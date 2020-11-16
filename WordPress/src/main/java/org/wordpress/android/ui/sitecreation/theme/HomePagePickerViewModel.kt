@@ -51,8 +51,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
 
-    private val _onPreviewButtonPressed = SingleLiveEvent<DesignPreviewAction>()
-    val onPreviewButtonPressed: LiveData<DesignPreviewAction> = _onPreviewButtonPressed
+    private val _onPreviewActionPressed = SingleLiveEvent<DesignPreviewAction>()
+    val onPreviewActionPressed: LiveData<DesignPreviewAction> = _onPreviewActionPressed
 
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
@@ -62,7 +62,10 @@ class HomePagePickerViewModel @Inject constructor(
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
     }
 
-    class DesignPreviewAction(val template: String, val demoUrl: String)
+    sealed class DesignPreviewAction {
+        object Dismiss : DesignPreviewAction()
+        class Show(val template: String, val demoUrl: String) : DesignPreviewAction()
+    }
 
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
@@ -132,12 +135,29 @@ class HomePagePickerViewModel @Inject constructor(
             }?.let { layout ->
                 val template = layout.slug!!
                 analyticsTracker.trackSiteDesignPreviewViewed(template)
-                _onPreviewButtonPressed.value = DesignPreviewAction(template, layout.demoUrl!!)
+                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl!!)
                 return
             }
         }
         analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error previewing design")
         updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
+    }
+
+    fun onDismissPreview() {
+        _onPreviewActionPressed.value = DesignPreviewAction.Dismiss
+    }
+
+    fun onPreviewChooseTapped() {
+        onDismissPreview()
+        onChooseTapped()
+    }
+
+    fun onPreviewLoading(template: String) {
+        analyticsTracker.trackSiteDesignPreviewLoading(template)
+    }
+
+    fun onPreviewLoaded(template: String) {
+        analyticsTracker.trackSiteDesignPreviewLoaded(template)
     }
 
     fun onChooseTapped() {

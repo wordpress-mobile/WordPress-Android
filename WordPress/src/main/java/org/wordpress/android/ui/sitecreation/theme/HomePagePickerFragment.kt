@@ -18,7 +18,9 @@ import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -94,9 +96,19 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onPreviewButtonPressed.observe(viewLifecycleOwner, { preview ->
-            WPWebViewActivity.openURL(requireContext(), preview.demoUrl) // TODO
-        })
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner) { action ->
+            activity?.supportFragmentManager?.let { fm ->
+                when (action) {
+                    is Show -> {
+                        val previewFragment = DesignPreviewFragment.newInstance(action.template, action.demoUrl)
+                        previewFragment.show(fm, DESIGN_PREVIEW_TAG)
+                    }
+                    is Dismiss -> {
+                        (fm.findFragmentByTag(DESIGN_PREVIEW_TAG) as? DesignPreviewFragment)?.dismiss()
+                    }
+                }
+            }
+        }
 
         viewModel.start()
     }

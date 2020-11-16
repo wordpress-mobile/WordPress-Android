@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignSelectionAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
@@ -59,7 +60,7 @@ class HomePagePickerViewModelTest {
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
-        viewModel.onPreviewButtonPressed.observeForever(onPreviewActionObserver)
+        viewModel.onPreviewActionPressed.observeForever(onPreviewActionObserver)
     }
 
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
@@ -189,7 +190,7 @@ class HomePagePickerViewModelTest {
         viewModel.onPreviewTapped()
         val captor = ArgumentCaptor.forClass(DesignPreviewAction::class.java)
         verify(onPreviewActionObserver).onChanged(captor.capture())
-        assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
-        assertThat(captor.value.demoUrl).isEqualTo(mockedDesignDemoUrl)
+        assertThat(requireNotNull(captor.value as Show).template).isEqualTo(mockedDesignSlug)
+        assertThat(requireNotNull(captor.value as Show).demoUrl).isEqualTo(mockedDesignDemoUrl)
     }
 }
