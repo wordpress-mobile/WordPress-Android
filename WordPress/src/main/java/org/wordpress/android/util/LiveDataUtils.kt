@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -376,9 +378,16 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
 fun <T> LiveData<T>.throttle(
     coroutineScope: CoroutineScope,
     distinct: Boolean = false,
-    offset: Long = 100
+    offset: Long = 100,
+    backgroundDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): ThrottleLiveData<T> {
-    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope, offset = offset)
+    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(
+            coroutineScope = coroutineScope,
+            offset = offset,
+            backgroundDispatcher = backgroundDispatcher,
+            mainDispatcher = mainDispatcher
+    )
     mediatorLiveData.addSource(this) {
         if ((it != mediatorLiveData.value || !distinct) && it != null) {
             mediatorLiveData.postValue(it)

@@ -410,7 +410,6 @@ Language: sk
     <string name="edit_photo_screen_title">Upraviť fotku</string>
     <string name="share_intent_screen_title">Vybrať webovú stránku</string>
     <string name="signup_epilogue_screen_title">Nový účet</string>
-    <string name="login_prologue_screen_title">Prihlásenie</string>
     <string name="login_epilogue_screen_title">Prihlásený ako</string>
     <string name="person_detail_screen_title">Detail osoby</string>
     <string name="media_settings_screen_title">Detaily súboru</string>
@@ -1340,7 +1339,6 @@ Language: sk
     <string name="logs_copied_to_clipboard">Záznamy aplikácie boli skopírované do schránky</string>
     <string name="reader_empty_posts_in_blog">Táto webová stránka je prázdna</string>
     <string name="reader_label_new_posts">Nové príspevky</string>
-    <string name="reader_page_recommended_blogs">Webové stránky, ktoré sa vám možno páčia</string>
     <string name="error_copy_to_clipboard">Pri kopírovaní textu do schránky nastala chyba </string>
     <string name="post_uploading">Nahrávanie príspevku</string>
     <string name="stats_followers_years">počet rokov: %1$d</string>

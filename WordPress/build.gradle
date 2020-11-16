@@ -54,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-256"
+            versionName "alpha-258"
         }
-        versionCode 953
+        versionCode 958
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -79,6 +79,7 @@ android {
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
         buildConfigField "boolean", "SCAN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
+        buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -95,9 +96,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.1-rc-3"
+                versionName "16.2-rc-1"
             }
-            versionCode 952
+            versionCode 957
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -187,7 +188,6 @@ androidExtensions {
 
 dependencies {
     implementation project(path:':libs:stories-android:stories')
-    testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 

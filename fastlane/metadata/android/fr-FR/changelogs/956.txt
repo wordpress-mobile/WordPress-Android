@@ -1,0 +1,2 @@
+16.1 :
+* Choisissez parmi une variété de modèles de pages prédéfinis lors de la création d’une nouvelle page sur un site conçu avec Gutenberg.

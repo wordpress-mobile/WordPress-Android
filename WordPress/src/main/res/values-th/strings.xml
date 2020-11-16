@@ -191,7 +191,6 @@ Language: th
     <string name="reader_label_new_posts">เรื่องใหม่</string>
     <string name="error_copy_to_clipboard">มีความผิดพลาดเกิดขึ้นขณะกำลังคัดลอกข้อความไปยังคลิปบอร์ด</string>
     <string name="logs_copied_to_clipboard">ปูมแอพพลิเคชั่นถูกคัดลอกลงคลิปบอร์ด</string>
-    <string name="reader_page_recommended_blogs">เว็บที่คุณอาจจะชอบ</string>
     <string name="stats_view_top_posts_and_pages">เรื่องและหน้า</string>
     <string name="stats_view_videos">วีดีโอ</string>
     <string name="stats_view_followers">ผู้ติดตาม</string>

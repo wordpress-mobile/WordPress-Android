@@ -39,10 +39,6 @@ class GetDiscoverCardsUseCase @Inject constructor(
                     cardJsonList
             )
 
-            if (!appPrefsWrapper.readerDiscoverWelcomeBannerShown) {
-                cards.add(WelcomeBannerCard)
-            }
-
             forLoop@ for (i in 0 until jsonObjects.length()) {
                 val cardJson = jsonObjects.getJSONObject(i)
                 when (cardJson.getString(ReaderConstants.JSON_CARD_TYPE)) {
@@ -71,6 +67,10 @@ class GetDiscoverCardsUseCase @Inject constructor(
                         }
                     }
                 }
+            }
+
+            if (cards.isNotEmpty() && !appPrefsWrapper.readerDiscoverWelcomeBannerShown) {
+                cards.add(0, WelcomeBannerCard)
             }
         }
         return@withContext ReaderDiscoverCards(cards)

@@ -242,7 +242,7 @@ class MySiteFragment : Fragment(),
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
                     site
             ) && !site.isJetpackConnected
-            if (isNotAdmin || isSelfHostedWithoutJetpack) {
+            if (isNotAdmin || isSelfHostedWithoutJetpack || site.isWpForTeamsSite) {
                 row_activity_log.visibility = View.GONE
             } else {
                 row_activity_log.visibility = View.VISIBLE
@@ -784,12 +784,7 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (consolidatedMediaPickerFeatureConfig.isEnabled() ||
-                        !storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                                data,
-                                activity,
-                                selectedSite
-                        )) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
@@ -1024,7 +1019,7 @@ class MySiteFragment : Fragment(),
 
         // Hide the Plan item if the Plans feature is not available for this blog
         val planShortName = site.planShortName
-        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions) {
+        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions && !site.isWpForTeamsSite) {
             if (site.isWPCom || site.isAutomatedTransfer) {
                 my_site_current_plan_text_view.text = planShortName
                 row_plan.visibility = View.VISIBLE

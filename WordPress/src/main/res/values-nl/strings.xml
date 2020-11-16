@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-19 19:17:59+0000
+Translation-Revision-Date: 2020-11-11 09:43:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="hpp_choose_button">Kies</string>
+    <string name="hpp_skip_button">Overslaan</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Niet ingesteld</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Nieuwe categorie toevoegen</string>
+    <string name="prepublishing_nudges_add_category_button">Categorie toevoegen</string>
+    <string name="mlp_error_title">Lay-outs niet beschikbaar vanwege een fout</string>
+    <string name="mlp_network_error_title">Lay-outs niet beschikbaar indien offline</string>
+    <string name="hpp_title">Kies een ontwerp</string>
+    <string name="login_prologue_fifth_tag_one">Kunst</string>
+    <string name="login_prologue_fifth_tag_two">Koken</string>
+    <string name="login_prologue_fifth_tag_three">Voetbal</string>
+    <string name="login_prologue_fifth_tag_four">Tuinieren</string>
+    <string name="login_prologue_fifth_tag_five">Muziek</string>
+    <string name="login_prologue_fifth_tag_six">Politiek</string>
+    <string name="login_prologue_fifth_caption_one">Mijn toptien café\'s</string>
+    <string name="login_prologue_fifth_caption_three">Museums in Londen</string>
+    <string name="login_prologue_title_first">Welkom bij de wereld\'s meest populaire sitebouwer.</string>
+    <string name="login_prologue_title_second">Met deze krachtige editor kun je onderweg publiceren.</string>
+    <string name="login_prologue_title_third">Bekijk reacties en berichten in real time.</string>
+    <string name="login_prologue_title_fourth">Bekijk hoe je publiek groeit met in-dept analytics.</string>
+    <string name="login_prologue_title_fifth">Volg je favoriete sites en ontdek nieuwe reads.</string>
+    <string name="reader_discover_recommended_blogs_header">Sites om te volgen</string>
+    <string name="media_loading_failed">Media laden is mislukt</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' wordt niet volledig ondersteund</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">We werken hard om meer blokken toe te voegen bij elke release.</string>
     <string name="stories_intro_description_second">Ze worden als een nieuw blogbericht op je site gepubliceerd, zodat je publiek nooit iets mist.</string>
@@ -19,7 +42,6 @@ Language: nl
     <string name="mlp_preview_title">Lay-out voorbeeld</string>
     <string name="mlp_notice_page_created">Pagina aangemaakt</string>
     <string name="mlp_notice_blank_page_created">Blanco pagina aangemaakt</string>
-    <string name="mlp_generic_error">Er is een fout ontstaan bij het ophalen van de lay-outs</string>
     <string name="stories_intro_image_caption_first">Hoe maak je een verhaal bericht</string>
     <string name="stories_intro_main_subtitle">Je hebt vroege toegang tot verhaal berichten en we zouden het heel leuk vinden als je het eens probeert.</string>
     <string name="stories_intro_main_title">Verhaal berichten introductie</string>
@@ -157,12 +179,11 @@ Language: nl
     <string name="continue_with_google_terms_of_service_text">Als je doorgaat met Google en nog geen WordPress.com account hebt, maakt je een account aan en gaat je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
     <string name="signup_confirmation_title">Inschrijfbevestiging</string>
     <string name="continue_with_wpcom">Ga verder met WordPress.com</string>
-    <string name="enter_your_site_address">Voer je site adres in</string>
-    <string name="content_description_logo">WordPress logo</string>
     <string name="gutenberg_native_block_removed">Blok verwijderd</string>
     <string name="gutenberg_native_choose_image">Kies afbeelding</string>
     <string name="gutenberg_native_choose_image_or_video">Kies afbeelding of video</string>
     <string name="gutenberg_native_choose_video">Video kiezen</string>
+    <string name="enter_your_site_address">Voer je bestaande site adres in</string>
     <string name="continue_terms_of_service_text">Als je doorgaat, ga je akkoord met onze %1$sServicevoorwaarden%2$s.</string>
     <string name="signup_confirmation_magic_link_message">We sturen je een link per e-mail om je nieuwe WordPress.com account aan te maken.</string>
     <string name="signup_confirmation_message">We gebruiken dit e-mailadres om je nieuwe WordPress.com account aan te maken.</string>
@@ -176,8 +197,6 @@ Language: nl
     <string name="login_or">of</string>
     <string name="login_magic_links_label">We e-mailen je een link waarmee je direct kan inloggen, geen wachtwoord nodig.</string>
     <string name="reset_your_password">Stel je wachtwoord opnieuw in</string>
-    <string name="login_promo_title_37_percent">37\% van het web is gebouwd op WordPress.</string>
-    <string name="login_promo_text_unlock_the_power">Ontgrendel de kracht van de meest flexibele sitebouwer.</string>
     <string name="send_link_by_email">Link per e-mail verzenden</string>
     <string name="create_account">Account aanmaken</string>
     <string name="or_type_your_password">Of typ je wachtwoord</string>
@@ -487,7 +506,6 @@ Language: nl
     <string name="dialog_confirm_scheduled_post_sync_message">Dit bericht wordt onmiddellijk gesynchroniseerd.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Klaar om te synchroniseren?</string>
     <string name="new_site_creation_unavailable_domain">Dit domein is niet beschikbaar</string>
-    <string name="login_promo_viewpager_content_description">Inleiding</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">We konden geen toegang krijgen tot je site. Neem contact op met je host om dit probleem te verhelpen.</string>
     <string name="login_discovery_error_ssl">We konden geen toegang krijgen tot je site vanwege een probleem met het &lt;b>SSL-certificaat&lt;/b>. Neem contact op met je host om dit probleem te verhelpen.</string>
@@ -1313,7 +1331,6 @@ Language: nl
     <string name="edit_photo_screen_title">Foto bewerken</string>
     <string name="share_intent_screen_title">Site kiezen</string>
     <string name="signup_epilogue_screen_title">Nieuw account</string>
-    <string name="login_prologue_screen_title">Inloggen</string>
     <string name="login_epilogue_screen_title">Ingelogd als</string>
     <string name="person_detail_screen_title">Persoonsgegevens</string>
     <string name="media_settings_screen_title">Bestandsgegevens</string>
@@ -2247,7 +2264,6 @@ Language: nl
     <string name="logs_copied_to_clipboard">Applicatielogs zijn gekopieerd naar het klembord</string>
     <string name="reader_label_new_posts">Nieuwe berichten</string>
     <string name="error_copy_to_clipboard">Er is een fout opgetreden tijdens het kopiëren van de tekst naar het klembord</string>
-    <string name="reader_page_recommended_blogs">Sites die je misschien ook leuk vindt</string>
     <string name="post_uploading">Uploaden bericht</string>
     <string name="reader_empty_posts_in_blog">Deze site is leeg</string>
     <string name="themes_fetching">Thema\'s ophalen …</string>
