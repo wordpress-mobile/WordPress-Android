@@ -107,7 +107,7 @@ public class EditorPage {
     public void setFeaturedImage() {
         clickOn(onView(withId(R.id.post_add_featured_image_button)));
         openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext());
-        clickOn(onView(withId(R.id.mnu_choose_from_media_library)));
+        clickOn(onView(withText(R.string.photo_picker_wordpress_media_library)));
         onView(withIndex(withId(R.id.image_thumbnail), 0)).perform(click());
     }
 
