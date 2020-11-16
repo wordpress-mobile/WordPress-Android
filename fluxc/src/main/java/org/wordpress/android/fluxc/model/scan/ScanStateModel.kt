@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model.scan
 
+import java.util.Date
+
 data class ScanStateModel(
     val state: State,
     val reason: String?,
@@ -29,7 +31,7 @@ data class ScanStateModel(
     )
 
     data class ScanProgressStatus(
-        val timestamp: String?,
+        val startDate: Date,
         val duration: Int,
         val progress: Int,
         val error: Boolean,

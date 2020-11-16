@@ -94,7 +94,7 @@ class ScanRestClient(
                 },
                 scanProgressStatus = response.scanProgressStatus?.let {
                     ScanProgressStatus(
-                            timestamp = it.timestamp,
+                            startDate = it.startDate,
                             duration = it.duration,
                             progress = it.progress,
                             error = it.error,

@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.scan
 
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.network.Response
+import java.util.Date
 
 data class ScanStateResponse(
     val state: String,
@@ -41,10 +42,10 @@ data class ScanStateResponse(
     )
 
     data class ScanProgressStatus(
-        val timestamp: String,
         val duration: Int,
         val progress: Int,
         val error: Boolean,
+        @SerializedName("timestamp") val startDate: Date,
         @SerializedName("is_initial") val isInitial: Boolean
     )
 }
