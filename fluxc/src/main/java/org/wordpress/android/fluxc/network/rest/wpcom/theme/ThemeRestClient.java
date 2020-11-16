@@ -7,11 +7,13 @@ import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.StarterDesignModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
@@ -24,15 +26,18 @@ import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.W
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMobileFriendlyTaxonomy;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.FetchedStarterDesignsPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -148,6 +153,35 @@ public class ThemeRestClient extends BaseWPComRestClient {
                                 error.apiError, error.message);
                         FetchedWpComThemesPayload payload = new FetchedWpComThemesPayload(themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
+                    }
+                }));
+    }
+
+    public void fetchStarterDesigns(Float previewWidth, Float scale) {
+        Map<String, String> params = new HashMap<>();
+        params.put("type", "mobile");
+        params.put("language", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+        if (previewWidth != null) {
+            params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
+        }
+        if (scale != null) {
+            params.put("scale", String.format(Locale.US, "%.1f", scale));
+        }
+        String url = WPCOMREST.nux.starter_designs.getUrlV1_1();
+        add(WPComGsonRequest.buildGetRequest(url, params, new TypeToken<List<StarterDesignModel>>() {}.getType(),
+                new Response.Listener<List<StarterDesignModel>>() {
+                    @Override public void onResponse(List<StarterDesignModel> response) {
+                        AppLog.d(AppLog.T.API, "Received response to WP.com starter designs fetch request.");
+                        FetchedStarterDesignsPayload payload = new FetchedStarterDesignsPayload(response);
+                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedStarterDesignsAction(payload));
+                    }
+                }, new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        AppLog.e(AppLog.T.API, "Received error response to WP.com starter designs fetch request.");
+                        ThemesError themeError = new ThemesError(error.apiError, error.message);
+                        FetchedStarterDesignsPayload payload = new FetchedStarterDesignsPayload(themeError);
+                        mDispatcher.dispatch(ThemeActionBuilder.newFetchedStarterDesignsAction(payload));
                     }
                 }));
     }
