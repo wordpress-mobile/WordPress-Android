@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadRequestTypes
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
@@ -294,6 +297,71 @@ class ActivityLogStoreTest {
         activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId, types)))
 
         val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun onDownloadActionCallRestClient() = test {
+        whenever(activityLogRestClient.download(eq(siteModel), any(), any())).thenReturn(
+                DownloadResultPayload(
+                        "rewindId",
+                        10L,
+                        "backupPoint",
+                        "startedAt",
+                        50,
+                        siteModel
+                )
+        )
+
+        val types = DownloadRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        val rewindId = "rewindId"
+        val payload = DownloadPayload(siteModel, rewindId, types)
+        val action = ActivityLogActionBuilder.newDownloadAction(payload)
+        activityLogStore.onAction(action)
+
+        verify(activityLogRestClient).download(siteModel, rewindId, types)
+    }
+
+    @Test
+    fun emitsDownloadResult() = test {
+        val rewindId = "rewindId"
+        val downloadId = 10L
+        val backupPoint = "backup_point"
+        val startedAt = "started_at"
+        val progress = 50
+        val types = DownloadRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+
+        val payload = ActivityLogStore.DownloadResultPayload(
+                rewindId,
+                downloadId,
+                backupPoint,
+                startedAt,
+                progress,
+                siteModel)
+        whenever(activityLogRestClient.download(siteModel, rewindId, types)).thenReturn(payload)
+
+        activityLogStore.onAction(ActivityLogActionBuilder.newDownloadAction(DownloadPayload(
+                siteModel,
+                rewindId,
+                types)))
+
+        val expectedChangeEvent = ActivityLogStore.OnDownload(
+                rewindId,
+                downloadId,
+                backupPoint,
+                startedAt,
+                progress,
+                ActivityLogAction.DOWNLOAD)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
