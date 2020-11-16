@@ -65,14 +65,20 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
         viewModel.previewState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Loading -> {
-                    showError(false)
+                    progressBar.setVisible(true)
+                    webView.setVisible(true)
+                    errorView.setVisible(false)
                     webView.loadUrl(url)
                 }
                 is Loaded -> {
-                    showError(false)
+                    progressBar.setVisible(false)
+                    webView.setVisible(true)
+                    errorView.setVisible(false)
                 }
                 is Error -> {
-                    showError(true)
+                    progressBar.setVisible(false)
+                    webView.setVisible(false)
+                    errorView.setVisible(true)
                     state.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
@@ -106,9 +112,4 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
     override fun closeModal() = viewModel.onDismissPreview()
 
     private fun load() = viewModel.onPreviewLoading(template)
-
-    private fun showError(hasError: Boolean) {
-        webView.setVisible(!hasError)
-        errorView.setVisible(hasError)
-    }
 }
