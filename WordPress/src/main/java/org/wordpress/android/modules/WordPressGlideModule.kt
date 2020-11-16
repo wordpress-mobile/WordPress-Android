@@ -23,8 +23,8 @@ import javax.inject.Named
  */
 @GlideModule
 class WordPressGlideModule : AppGlideModule() {
-    @Inject @field:Named("custom-ssl") lateinit var requestQueue: RequestQueue
-    @Inject @field:Named("noRedirects") lateinit var noRedirectsRequestQueue: RequestQueue
+    @Inject @Named("custom-ssl") lateinit var requestQueue: RequestQueue
+    @Inject @Named("noRedirects") lateinit var noRedirectsRequestQueue: RequestQueue
     @Inject lateinit var glideRequestFactory: GlideRequestFactory
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {}
