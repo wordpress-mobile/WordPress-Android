@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestCl
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -85,7 +86,7 @@ class ActivityLogStore
                     SelectQuery.ORDER_ASCENDING
             ).size
         }
-        val payload = activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
+        val payload = activityLogRestClient.fetchActivity(fetchActivityLogPayload, ACTIVITY_LOG_PAGE_SIZE, offset)
         return storeActivityLog(payload, FETCH_ACTIVITIES)
     }
 
@@ -95,7 +96,7 @@ class ActivityLogStore
     }
 
     suspend fun rewind(rewindPayload: RewindPayload): OnRewind {
-        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
+        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId, rewindPayload.types)
         return emitRewindResult(payload, REWIND)
     }
 
@@ -167,12 +168,19 @@ class ActivityLogStore
     // Payloads
     class FetchActivityLogPayload(
         val site: SiteModel,
-        val loadMore: Boolean = false
+        val loadMore: Boolean = false,
+        val after: Date? = null,
+        val before: Date? = null,
+        val groups: List<String> = listOf()
     ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class RewindPayload(val site: SiteModel, val rewindId: String) : Payload<BaseRequest.BaseNetworkError>()
+    class RewindPayload(
+        val site: SiteModel,
+        val rewindId: String,
+        val types: RewindRequestTypes? = null
+    ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedActivityLogPayload(
         val activityLogModels: List<ActivityLogModel> = listOf(),
@@ -244,4 +252,13 @@ class ActivityLogStore
     }
 
     class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
+
+    data class RewindRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
 }

@@ -16,6 +16,7 @@ public class SiteWPComRestResponse implements Response {
         public boolean is_wpcom_atomic;
         public boolean is_wpcom_store;
         public boolean woocommerce_is_active;
+        public boolean is_wpforteams_site;
         public String admin_url;
         public String login_url;
         public String gmt_offset;

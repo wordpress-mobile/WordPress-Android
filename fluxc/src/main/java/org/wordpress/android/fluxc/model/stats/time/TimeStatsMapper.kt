@@ -38,6 +38,7 @@ class TimeStatsMapper
                 "post" -> ViewsType.POST
                 "page" -> ViewsType.PAGE
                 "homepage" -> ViewsType.HOMEPAGE
+                "attachment" -> ViewsType.ATTACHMENT
                 else -> {
                     ViewsType.OTHER
                 }

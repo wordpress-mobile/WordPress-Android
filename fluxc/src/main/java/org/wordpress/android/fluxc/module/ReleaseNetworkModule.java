@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestC
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient;
@@ -192,6 +193,16 @@ public class ReleaseNetworkModule {
                                                               AccessToken token, UserAgent userAgent,
                                                               WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
+                                                       @Named("regular") RequestQueue requestQueue,
+                                                       AccessToken token, UserAgent userAgent,
+                                                       WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
                 userAgent);
     }
 
@@ -385,7 +396,7 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public MemorizingTrustManager provideMemorizingTrustManager(Context appContext) {
-        return new MemorizingTrustManager(appContext);
+        return new MemorizingTrustManager();
     }
 
     @Singleton
