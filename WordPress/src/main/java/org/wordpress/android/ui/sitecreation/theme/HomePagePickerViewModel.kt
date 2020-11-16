@@ -160,6 +160,10 @@ class HomePagePickerViewModel @Inject constructor(
         analyticsTracker.trackSiteDesignPreviewLoaded(template)
     }
 
+    fun onPreviewError() {
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Preview error")
+    }
+
     fun onChooseTapped() {
         (uiState.value as? UiState.Content)?.let { state ->
             layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
