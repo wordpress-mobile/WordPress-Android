@@ -4,6 +4,7 @@ import android.Manifest.permission
 import android.app.Activity
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.Intent.ACTION_OPEN_DOCUMENT
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
@@ -68,6 +69,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
@@ -382,6 +384,10 @@ class MediaPickerFragment : Fragment() {
             }
         }
         return true
+    }
+
+    fun urisSelectedFromSystemPicker(uris: List<Uri>) {
+        viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
     }
 
     private fun initializeSearchView(actionMenuItem: MenuItem) {

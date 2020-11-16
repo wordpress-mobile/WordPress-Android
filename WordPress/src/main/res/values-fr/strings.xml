@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-30 14:54:10+0000
+Translation-Revision-Date: 2020-11-11 22:25:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> a répondu à votre article</string>
+    <string name="login_prologue_third_subtitle_two">Vous avez reçu &lt;b>50 « J’aime »&lt;/b> sur votre site aujourd\'hui</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> a aimé votre article</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu de bloc déroulant ouvert. Sélectionner un bloc.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Menu de bloc déroulant fermé.</string>
+    <string name="hpp_skip_button">Passer</string>
+    <string name="hpp_choose_button">Choisir</string>
+    <string name="hpp_subtitle">Sélectionnez votre mise en page de la page d’accueil préférée. Vous pourrez la personnaliser ou la modifier ultérieurement.</string>
+    <string name="hpp_title">Choisir un design</string>
+    <string name="mlp_network_error_subtitle">Touchez réessayer quand vous serez de nouveau en ligne ou créer un page blanche en utilisant le bouton ci-dessous.</string>
+    <string name="mlp_network_error_title">Les mises en page ne sont pas disponibles hors connexion</string>
+    <string name="mlp_error_subtitle">Touchez réessayer ou créez une page blanche en utilisant le bouton ci-dessous.</string>
+    <string name="mlp_error_title">Les mises en page ne sont pas disponibles suite à une erreur.</string>
+    <string name="prepublishing_nudges_add_category_button">Ajouter une catégorie</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Ajouter une nouvelle catégorie</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Catégories</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Non définie</string>
+    <string name="prepublishing_nudges_categories_action">Catégories</string>
+    <string name="login_prologue_fifth_caption_three">Musées à Londres</string>
+    <string name="login_prologue_fifth_caption_two">Les meilleurs fans du monde</string>
+    <string name="login_prologue_fifth_caption_one">Mon top 10 des cafés</string>
+    <string name="login_prologue_fifth_tag_six">Politique</string>
+    <string name="login_prologue_fifth_tag_five">Musique</string>
+    <string name="login_prologue_fifth_tag_four">Jardinage</string>
+    <string name="login_prologue_fifth_tag_three">Football</string>
+    <string name="login_prologue_fifth_tag_two">Cuisine</string>
+    <string name="login_prologue_fifth_tag_one">Art</string>
+    <string name="login_prologue_fifth_subtitle_three">Semaine du Rock n’ Roll</string>
+    <string name="login_prologue_fifth_subtitle_two">Infos du web</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">J’apprécie le travail du photographe Cameron Karsten. J’essaierai ses techniques sur mes prochaines photos.</string>
+    <string name="login_prologue_second_subtitle_one">Inspiration</string>
+    <string name="login_prologue_title_fifth">Suivez vos sites préférés et découvrez de nouvelles lectures.</string>
+    <string name="login_prologue_title_fourth">Regardez votre audience grossir avec les statistiques approfondies.</string>
+    <string name="login_prologue_title_third">Voir les commentaires et notifications en temps réel.</string>
+    <string name="login_prologue_title_second">Avec cet éditeur puissant, vous pouvez publier de n’importe où.</string>
+    <string name="login_prologue_title_first">Bienvenue sur le constructeur de site le plus populaire au monde.</string>
+    <string name="media_loading_failed">Échec du chargement du média</string>
+    <string name="reader_discover_recommended_blogs_header">Sites à suivre</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Nous travaillons dur pour ajouter plus de blocs à chaque version.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">« %s » n’est pas entièrement pris en charge</string>
     <string name="gutenberg_native_help_button">Bouton d’aide</string>
@@ -20,7 +59,6 @@ Language: fr
     <string name="stories_intro_image_caption_first">Comment créer une publication de story</string>
     <string name="stories_intro_main_subtitle">Vous avez un accès anticipé aux publications de story et nous aimerions que vous l’essayiez.</string>
     <string name="stories_intro_main_title">Présentation des publications de story</string>
-    <string name="mlp_generic_error">Une erreur est survenue lors de l’extraction des mises en page</string>
     <string name="mlp_notice_blank_page_created">Page vide créée</string>
     <string name="mlp_notice_page_created">Page créée</string>
     <string name="mlp_preview_title">Aperçu de la mise en page</string>
@@ -29,7 +67,7 @@ Language: fr
     <string name="media_insert_failed_with_reason">L’insertion du média a échoué : %s</string>
     <string name="photo_picker_wordpress_media_library">Choisir dans la bibliothèque des médias WordPress</string>
     <string name="reader_label_toolbar_back">Retour</string>
-    <string name="reader_discover_empty_button_text">Commencer</string>
+    <string name="reader_discover_empty_button_text">Premiers pas</string>
     <string name="reader_discover_empty_title">Suivre des thèmes pour découvrir de nouveaux blogs</string>
     <string name="reader_post_details_header_by_author_name">Par</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ce référent ne peut pas être marqué comme indésirable</string>
@@ -158,8 +196,7 @@ Language: fr
     <string name="gutenberg_native_choose_image_or_video">Choisir une image ou une vidéo</string>
     <string name="gutenberg_native_choose_image">Choisir une image</string>
     <string name="gutenberg_native_block_removed">Bloc supprimé</string>
-    <string name="content_description_logo">Logo WordPress</string>
-    <string name="enter_your_site_address">Saisissez l’adresse de votre site</string>
+    <string name="enter_your_site_address">Saisissez l’adresse de votre site actuel</string>
     <string name="continue_with_wpcom">Continuer avec WordPress.com</string>
     <string name="signup_confirmation_title">Confirmation de l’inscription</string>
     <string name="continue_with_google_terms_of_service_text">Si vous continuez avec Google sans disposer au préalable d’un compte WordPress.com, vous créez un compte et acceptez nos %1$sconditions d’utilisation%2$s.</string>
@@ -176,13 +213,11 @@ Language: fr
     <string name="login_magic_links_sent_label">Consultez vos e-mails sur cet appareil et appuyez sur le lien dans l’e-mail que vous avez reçu de WordPress.com.</string>
     <string name="login_magic_links_label">Nous vous enverrons par e-mail un lien qui vous connectera instantanément, sans mot de passe.</string>
     <string name="check_email">Vérifier les e-mails</string>
-    <string name="get_started">Commencer</string>
+    <string name="get_started">Premiers pas</string>
     <string name="enter_email_to_continue_wordpress_com">Entrez votre adresse e-mail pour vous connecter ou créez un compte WordPress.com.</string>
     <string name="or_type_your_password">Vous pouvez également saisir votre mot de passe</string>
     <string name="create_account">Créer un compte</string>
     <string name="send_link_by_email">Envoyer un lien par e-mail</string>
-    <string name="login_promo_text_unlock_the_power">Libérez la puissance de l’outil de création de sites Web le plus flexible.</string>
-    <string name="login_promo_title_37_percent">37\% du Web est intégré à WordPress.</string>
     <string name="reset_your_password">Réinitialiser votre mot de passe</string>
     <string name="reader_error_request_failed_title">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
     <string name="quick_start_list_update_site_title_subtitle">Donnez à votre site un nom qui reflète sa personnalité et son thème. La première impression est importante !</string>
@@ -487,7 +522,6 @@ Language: fr
     <string name="dialog_confirm_scheduled_post_sync_message">Cet article sera synchronisé immédiatement.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Prêt à synchroniser ?</string>
     <string name="new_site_creation_unavailable_domain">Ce domaine n’est pas disponible</string>
-    <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Nous n’avons pas pu accéder à votre site. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
     <string name="login_discovery_error_ssl">Nous n’avons pas pu accéder à votre site à cause d’un problème avec le &lt;b>certificat SSL&lt;/b>. Vous devrez contacter votre hébergeur pour résoudre ce problème.</string>
@@ -1313,7 +1347,6 @@ Language: fr
     <string name="edit_photo_screen_title">Éditer photo</string>
     <string name="share_intent_screen_title">Sélectionner le site</string>
     <string name="signup_epilogue_screen_title">Nouveau compte</string>
-    <string name="login_prologue_screen_title">Connexion</string>
     <string name="login_epilogue_screen_title">Connecté en tant que</string>
     <string name="person_detail_screen_title">Détail sur la personne</string>
     <string name="media_settings_screen_title">Détails sur le fichier</string>
@@ -2247,7 +2280,6 @@ Language: fr
     <string name="logs_copied_to_clipboard">Les logs de l\'application ont été copiés dans le presse papier</string>
     <string name="reader_empty_posts_in_blog">Ce site est vide</string>
     <string name="reader_label_new_posts">Nouveaux articles</string>
-    <string name="reader_page_recommended_blogs">Sites que vous aimerez</string>
     <string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
     <string name="post_uploading">Article en cours de téléversement</string>
     <string name="stats_followers_years">%1$d années</string>

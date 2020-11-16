@@ -1,20 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-22 19:18:40+0000
+Translation-Revision-Date: 2020-11-13 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollbares Block-Menü geöffnet. Wähle einen Block aus.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Scrollbares Block-Menü geschlossen.</string>
+    <string name="hpp_skip_button">Überspringen</string>
+    <string name="hpp_choose_button">Auswählen</string>
+    <string name="hpp_subtitle">Wähle ein Layout für deine Startseite aus, das dir gefällt. Du kannst es später jederzeit ändern oder anpassen.</string>
+    <string name="hpp_title">Wähle ein Design</string>
+    <string name="mlp_network_error_subtitle">Tippe auf „erneut versuchen“, wenn du wieder online bist oder erstelle über den Button unten eine leere Seite.</string>
+    <string name="mlp_network_error_title">Layouts sind offline nicht verfügbar</string>
+    <string name="mlp_error_subtitle">Tippe auf „erneut versuchen“ oder erstelle über den Button unten eine leere Seite.</string>
+    <string name="mlp_error_title">Layouts sind aufgrund eines Fehlers nicht verfügbar</string>
+    <string name="prepublishing_nudges_add_category_button">Kategorie hinzufügen</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Neue Kategorie erstellen</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorien</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Nicht festgelegt</string>
+    <string name="prepublishing_nudges_categories_action">Kategorien</string>
+    <string name="login_prologue_fifth_caption_three">Museen in London</string>
+    <string name="login_prologue_fifth_caption_two">Die weltbesten Fans</string>
+    <string name="login_prologue_fifth_caption_one">Meine Top 10 Cafés</string>
+    <string name="login_prologue_fifth_tag_six">Politik</string>
+    <string name="login_prologue_fifth_tag_five">Musik</string>
+    <string name="login_prologue_fifth_tag_four">Gärtnern</string>
+    <string name="login_prologue_fifth_tag_three">American Football</string>
+    <string name="login_prologue_fifth_tag_two">Kochen</string>
+    <string name="login_prologue_fifth_tag_one">Kunst</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock\'n\'Roll wöchentlich</string>
+    <string name="login_prologue_fifth_subtitle_two">Web-Nachrichten</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Ich finde die Arbeit von Fotograf Cameron Karsten sehr inspirierend. Das nächste Mal probiere ich diese Techniken auch aus</string>
+    <string name="login_prologue_second_subtitle_one">Inspiration</string>
+    <string name="login_prologue_title_fifth">Folge deinen Lieblingswebsites und entdecke neuen Lesestoff.</string>
+    <string name="login_prologue_title_fourth">Sieh mithilfe von umfassenden Analysen dabei zu, wie deine Zielgruppe wächst.</string>
+    <string name="login_prologue_title_second">Mit dem leistungsstarken Editor kannst du auch von unterwegs aus Beiträge veröffentlichen.</string>
+    <string name="login_prologue_title_first">Willkommen beim beliebtesten Website-Baukasten der Welt.</string>
+    <string name="media_loading_failed">Laden der Medien fehlgeschlagen</string>
+    <string name="reader_discover_recommended_blogs_header">Websites, denen du folgen möchtest</string>
     <string name="gutenberg_native_s_is_not_fully_supported">„%s“ wird nicht vollständig unterstützt</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Wir arbeiten hart daran, mit jeder Veröffentlichung weitere Blöcke hinzuzufügen.</string>
     <string name="gutenberg_native_help_button">Hilfe-Button</string>
     <string name="gutenberg_native_choose_images">Bilder auswählen</string>
+    <string name="gutenberg_native_edit_using_web_editor">Mit dem Webeditor bearbeiten</string>
+    <string name="stories_intro_create_story_post_label">Story-Beitrag erstellen</string>
+    <string name="stories_intro_description_second">Sie werden auf deiner Website als ein neuer Blogbeitrag veröffentlicht, damit deine Leserschaft nie etwas verpasst.</string>
+    <string name="stories_intro_title_second">Story-Beiträge verschwinden nicht</string>
+    <string name="stories_intro_description_first">Kombiniere Fotos, Videos und Text, um ansprechende und antippbare Story-Beiträge zu erstellen, die deine Besucher begeistern.</string>
     <string name="mlp_preview_title">Layout-Vorschau</string>
+    <string name="stories_intro_title_first">Storys sind jetzt für alle verfügbar</string>
+    <string name="stories_intro_image_caption_second">Beispieltitel für Story</string>
+    <string name="stories_intro_image_caption_first">So erstellst du einen Story-Beitrag</string>
+    <string name="stories_intro_main_subtitle">Du hast frühzeitig Zugriff auf Story-Beiträge und wir würden uns freuen, wenn du sie ausprobierst.</string>
+    <string name="stories_intro_main_title">Neu: Story-Beiträge</string>
+    <string name="mlp_notice_blank_page_created">Leere Seite erstellt</string>
+    <string name="mlp_notice_page_created">Seite erstellt</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s wurde der Zugriff auf deine Fotos verweigert. Um das zu korrigieren, bearbeite deine Rechte und aktiviere %2$s und %3$s.</string>
+    <string name="media_insert_failed">Fehler beim Einfügen von Medien.</string>
+    <string name="media_insert_failed_with_reason">Fehler beim Einfügen von Medien: %s</string>
+    <string name="photo_picker_wordpress_media_library">Wähle aus der WordPress-Mediathek</string>
     <string name="reader_label_toolbar_back">Zurück</string>
     <string name="reader_discover_empty_button_text">Erste Schritte</string>
     <string name="reader_post_details_header_by_author_name">Von</string>
+    <string name="reader_discover_empty_title">Folge Themen, um neue Blogs zu entdecken</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Als Spam markieren</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">Dieser Referrer kann nicht als Spam markiert werden</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Spam-Markierung aufheben</string>
+    <string name="stats_referrer_popup_menu_open_website">Website öffnen</string>
+    <string name="media_uploading_gif_library_photo">Gif-Medien werden hochgeladen</string>
+    <string name="media_uploading_stock_library_photo">Archivmedien werden hochgeladen</string>
+    <string name="media_uploading_default">Medien werden hochgeladen …</string>
     <string name="gutenberg_native_select_item">Artikel auswählen</string>
     <string name="gutenberg_native_search_or_type_url">URL suchen oder eingeben</string>
     <string name="gutenberg_native_add_this_telephone_link">Diesen Telefonlink hinzufügen</string>
@@ -131,11 +189,10 @@ Language: de
     <string name="gutenberg_native_choose_image_or_video">Bild oder Video auswählen</string>
     <string name="gutenberg_native_choose_image">Bild wählen</string>
     <string name="gutenberg_native_block_removed">Block entfernt</string>
-    <string name="content_description_logo">WordPress-Logo</string>
-    <string name="enter_your_site_address">Gib deine Website-Adresse ein</string>
     <string name="continue_with_wpcom">Weiter mit WordPress.com</string>
     <string name="signup_confirmation_title">Registrierungsbestätigung</string>
     <string name="continue_with_google_terms_of_service_text">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
+    <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
     <string name="continue_terms_of_service_text">Wenn du fortfährst, stimmst du unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="signup_confirmation_magic_link_message">Wir senden dir einen Anmeldelink per E-Mail, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_confirmation_message">Wir werden diese E-Mail-Adresse verwenden, um dein neues WordPress.com-Konto zu erstellen.</string>
@@ -154,9 +211,7 @@ Language: de
     <string name="or_type_your_password">Oder gib dein Passwort ein</string>
     <string name="create_account">Konto erstellen</string>
     <string name="send_link_by_email">Link per E-Mail senden</string>
-    <string name="login_promo_text_unlock_the_power">Nutze alle Vorteile des flexibelsten Website-Baukastens.</string>
     <string name="reset_your_password">Dein Passwort zurücksetzen</string>
-    <string name="login_promo_title_37_percent">37\% des Webs wurde mit WordPress erstellt.</string>
     <string name="reader_error_request_failed_title">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt. Erste Eindrücke zählen!</string>
     <string name="quick_start_list_update_site_title_title">Lege deinen Website-Titel fest</string>
@@ -459,7 +514,6 @@ Language: de
     <string name="dialog_confirm_scheduled_post_sync_yes">Jetzt synchronisieren</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Bereit für die Synchronisation?</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Dieser Beitrag wird umgehend synchronisiert.</string>
-    <string name="login_promo_viewpager_content_description">Einführung</string>
     <string name="negative_prefix">-%s</string>
     <string name="new_site_creation_unavailable_domain">Diese Domain ist nicht verfügbar</string>
     <string name="login_discovery_error_generic">Wir konnten nicht auf deine Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
@@ -1286,7 +1340,6 @@ Language: de
     <string name="edit_photo_screen_title">Foto bearbeiten</string>
     <string name="share_intent_screen_title">Website auswählen</string>
     <string name="signup_epilogue_screen_title">Neues Konto</string>
-    <string name="login_prologue_screen_title">Anmeldung</string>
     <string name="login_epilogue_screen_title">Angemeldet als</string>
     <string name="person_detail_screen_title">Persönliches Detail</string>
     <string name="media_settings_screen_title">Datei-Details</string>
@@ -2218,7 +2271,6 @@ Language: de
     <string name="logs_copied_to_clipboard">Anwendungsprotokolle wurden in die Zwischenablage kopiert</string>
     <string name="reader_label_new_posts">Neue Beiträge</string>
     <string name="error_copy_to_clipboard">Beim Kopieren von Text in die Zwischenablage ist ein Fehler aufgetreten</string>
-    <string name="reader_page_recommended_blogs">Websites, die dir gefallen könnten</string>
     <string name="post_uploading">Beitrag wird hochgeladen</string>
     <string name="reader_empty_posts_in_blog">Diese Website ist leer</string>
     <string name="themes_fetching">Themes werden abgerufen…</string>
@@ -2280,6 +2332,7 @@ Language: de
     <string name="reader_label_followed_blog">Website wird verfolgt</string>
     <string name="reader_title_blog_preview">Reader-Website</string>
     <string name="reader_page_followed_tags">Abonnierte Themen</string>
+    <string name="reader_hint_add_tag_or_url">Gib eine URL oder ein Thema ein, der/dem du folgen möchtest</string>
     <string name="help">Hilfe</string>
     <string name="forgot_password">Passwort vergessen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>

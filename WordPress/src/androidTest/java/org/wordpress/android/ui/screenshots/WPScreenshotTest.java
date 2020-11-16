@@ -146,7 +146,7 @@ public class WPScreenshotTest extends BaseTest {
         clickOn(R.id.nav_sites);
         clickOn(R.id.quick_action_media_button);
 
-        waitForElementToBeDisplayedWithoutFailure(R.id.media_grid_item_image);
+        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 
         takeScreenshot("5-share-from-anywhere");
 

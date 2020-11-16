@@ -366,7 +366,6 @@
 
     <!-- login -->
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
-    <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
@@ -548,6 +547,7 @@
     <!-- Common Picker resources -->
     <dimen name="picker_header_scroll_snap_threshold">-54dp</dimen>
     <dimen name="picker_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="picker_header_selection_overlay_width">2dp</dimen>
 
     <!-- Modal Layout Picker -->
     <dimen name="mlp_layouts_row_height">281dp</dimen>

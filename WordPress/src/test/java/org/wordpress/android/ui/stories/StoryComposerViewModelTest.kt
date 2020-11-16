@@ -192,23 +192,13 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `If onStoryDiscarded is called then the post is removed with the dispatcher when deleteDiscardedPost true `() {
+    fun `If onStoryDiscarded is called then the post is removed with the dispatcher`() {
         // act
         viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
-        viewModel.onStoryDiscarded(deleteDiscardedPost = true)
+        viewModel.onStoryDiscarded()
 
         // assert
         verify(dispatcher, times(1)).dispatch(any<Action<PostModel>>())
-    }
-
-    @Test
-    fun `If onStoryDiscarded is called then the post is not removed when deleteDiscardedPost false `() {
-        // act
-        viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
-        viewModel.onStoryDiscarded(deleteDiscardedPost = false)
-
-        // assert
-        verify(dispatcher, times(0)).dispatch(any<Action<PostModel>>())
     }
 
     @Test
