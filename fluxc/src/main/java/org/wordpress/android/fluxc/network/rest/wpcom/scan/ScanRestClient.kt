@@ -92,12 +92,19 @@ class ScanRestClient(
                 credentials = response.credentials?.map {
                     Credentials(it.type, it.role, it.stillValid)
                 },
-                scanProgressStatus = response.scanProgressStatus?.let {
+                mostRecentStatus = response.mostRecentStatus?.let {
                     ScanProgressStatus(
                             startDate = it.startDate,
                             duration = it.duration,
                             progress = it.progress,
                             error = it.error,
+                            isInitial = it.isInitial
+                    )
+                },
+                currentStatus = response.currentStatus?.let {
+                    ScanProgressStatus(
+                            startDate = it.startDate,
+                            progress = it.progress,
                             isInitial = it.isInitial
                     )
                 }
