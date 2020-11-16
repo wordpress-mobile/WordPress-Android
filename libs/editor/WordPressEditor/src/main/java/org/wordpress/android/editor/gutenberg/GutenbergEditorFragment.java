@@ -104,7 +104,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
-    private static final int SAVE_DIALOG_TIMEOUT_DURATION = 15000;
+    private static final int SAVE_DIALOG_TIMEOUT_DURATION = 20000;
 
     private boolean mHtmlModeEnabled;
 
