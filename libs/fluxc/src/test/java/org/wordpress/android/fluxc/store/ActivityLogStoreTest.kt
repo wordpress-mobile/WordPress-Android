@@ -223,7 +223,7 @@ class ActivityLogStoreTest {
         val rewindId = "rewindId"
         val restoreId = 10L
 
-        val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
+        val payload = RewindResultPayload(rewindId, restoreId, siteModel)
         whenever(activityLogRestClient.rewind(siteModel, rewindId)).thenReturn(payload)
 
         activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(
@@ -294,7 +294,7 @@ class ActivityLogStoreTest {
                     roots = true,
                     contents = true)
 
-        val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
+        val payload = RewindResultPayload(rewindId, restoreId, siteModel)
         whenever(activityLogRestClient.rewind(siteModel, rewindId, types)).thenReturn(payload)
 
         activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId, types)))
@@ -344,7 +344,7 @@ class ActivityLogStoreTest {
                 roots = true,
                 contents = true)
 
-        val payload = ActivityLogStore.DownloadResultPayload(
+        val payload = DownloadResultPayload(
                 rewindId,
                 downloadId,
                 backupPoint,
@@ -395,6 +395,18 @@ class ActivityLogStoreTest {
         verify(activityLogSqlUtils).replaceDownloadStatus(siteModel, downloadStatusModel)
         val expectedChangeEvent = ActivityLogStore.OnDownloadStatusFetched(ActivityLogAction.FETCH_DOWNLOAD_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun returnDownloadStatusFromDb() {
+        val downloadStatusModel = mock<DownloadStatusModel>()
+        whenever(activityLogSqlUtils.getDownloadStatusForSite(siteModel))
+                .thenReturn(downloadStatusModel)
+
+        val downloadStatusFromDb = activityLogStore.getDownloadStatusForSite(siteModel)
+
+        verify(activityLogSqlUtils).getDownloadStatusForSite(siteModel)
+        assertEquals(downloadStatusModel, downloadStatusFromDb)
     }
 
     private suspend fun initRestClient(

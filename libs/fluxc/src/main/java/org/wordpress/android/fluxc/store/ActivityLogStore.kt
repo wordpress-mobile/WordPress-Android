@@ -86,6 +86,10 @@ class ActivityLogStore
         return activityLogSqlUtils.getRewindStatusForSite(site)
     }
 
+    fun getDownloadStatusForSite(site: SiteModel): DownloadStatusModel? {
+        return activityLogSqlUtils.getDownloadStatusForSite(site)
+    }
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
