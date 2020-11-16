@@ -965,6 +965,12 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void viewJetpackSecuritySettings(Activity activity, SiteModel site) {
+        Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
     public static void viewJetpackSecuritySettingsForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);

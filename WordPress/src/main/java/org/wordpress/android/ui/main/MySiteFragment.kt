@@ -363,6 +363,7 @@ class MySiteFragment : Fragment(),
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
+        row_jetpack_settings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
         quick_action_posts_button.setOnClickListener {
             AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
             viewPosts()
@@ -1029,6 +1030,14 @@ class MySiteFragment : Fragment(),
             }
         } else {
             row_plan.visibility = View.GONE
+        }
+
+        if (site.isJetpackConnected) {
+            row_jetpack_settings.visibility = View.VISIBLE
+            row_label_jetpack.visibility = View.VISIBLE
+        } else {
+            row_jetpack_settings.visibility = View.GONE
+            row_label_jetpack.visibility = View.GONE
         }
 
         // Do not show pages menu item to Collaborators.
