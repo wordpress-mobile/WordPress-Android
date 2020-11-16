@@ -66,9 +66,7 @@ class ImprovedMySiteFragment : Fragment() {
             recycler_view.adapter = MySiteAdapter()
         }
         val adapter = recycler_view.adapter as MySiteAdapter
-        val recyclerViewState = recycler_view.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
-        recycler_view.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     companion object {
