@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-26 16:21:19+0000
+Translation-Revision-Date: 2020-11-09 09:31:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_two">Du har fått &lt;b>50 gilla-markeringar&lt;/b> på webbplatsen i dag</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Erik S&lt;/b> har svarat på ditt inlägg</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Anna S&lt;/b> gillade ditt inlägg</string>
+    <string name="hpp_skip_button">Hoppa över</string>
+    <string name="hpp_choose_button">Välj</string>
+    <string name="hpp_subtitle">Välj favoritlayout på din startsida Du kan anpassa eller ändra det senare.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Den rullningsbara blockmenyn har stängts.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Den rullningsbara blockmenyn har öppnats. Välj ett block.</string>
+    <string name="hpp_title">Välj en design</string>
+    <string name="prepublishing_nudges_add_category_button">Lägg till kategori</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Lägg till ny kategori</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorier</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Inte inställd</string>
+    <string name="prepublishing_nudges_categories_action">Kategorier</string>
+    <string name="mlp_error_title">Layouter är inte tillgängliga på grund av ett fel</string>
+    <string name="mlp_error_subtitle">Tryck på ”Försök igen” eller skapa en tom sida med hjälp av knappen nedan.</string>
+    <string name="mlp_network_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
+    <string name="mlp_network_error_subtitle">Tryck på ”Försök igen” när du har internetuppkoppling igen eller skapa en tom sida med knappen nedan.</string>
+    <string name="login_prologue_fifth_tag_five">Musik</string>
+    <string name="login_prologue_fifth_tag_two">Matlagning</string>
+    <string name="login_prologue_fifth_tag_one">Konst</string>
+    <string name="login_prologue_fifth_subtitle_two">Webbnyheter</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Jag inspireras verkligen av fotografen Cameron Karstens verk. Jag tänker prova mig på dessa tekniker snart</string>
+    <string name="login_prologue_fifth_subtitle_three">Veckans nytt om rock’n roll</string>
+    <string name="login_prologue_fifth_tag_three">Fotboll</string>
+    <string name="login_prologue_fifth_tag_four">Trädgårdsskötsel</string>
+    <string name="login_prologue_fifth_tag_six">Politik</string>
+    <string name="login_prologue_fifth_caption_one">Mina tio favoritcaféer</string>
+    <string name="login_prologue_fifth_caption_two">Världens bästa fans</string>
+    <string name="login_prologue_fifth_caption_three">Muséer i London</string>
+    <string name="login_prologue_title_first">Välkommen till världens populäraste webbplatsbyggare.</string>
+    <string name="login_prologue_title_second">Med den kraftfulla redigeringsmiljön kan du skapa inlägg på rörlig fot.</string>
+    <string name="login_prologue_title_fourth">Se hur din publik växer med hjälp av detaljerad statistik.</string>
+    <string name="login_prologue_title_fifth">Följ dina favoritwebbplatser och hitta nya saker att läsa.</string>
+    <string name="login_prologue_second_subtitle_one">Låt dig inspireras</string>
+    <string name="login_prologue_title_third">Se kommentarer och aviseringar i realtid.</string>
+    <string name="reader_discover_recommended_blogs_header">Webbplatser att följa</string>
+    <string name="media_loading_failed">Hämtningen av mediafiler misslyckades</string>
     <string name="gutenberg_native_s_is_not_fully_supported">”%s” stöds inte fullt ut</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Vi arbetar för fullt med att lägga till fler block i varje utgåva.</string>
     <string name="gutenberg_native_choose_images">Välj bilder</string>
@@ -19,7 +58,6 @@ Language: sv_SE
     <string name="media_picker_soft_ask_permissions_denied">%1$s nekades åtkomst till dina bilder. Korrigera genom att redigera dina rättigheter och aktivera %2$s och %3$s.</string>
     <string name="mlp_notice_page_created">Sidan har skapats</string>
     <string name="mlp_notice_blank_page_created">En blank sida har skapats</string>
-    <string name="mlp_generic_error">Ett fel inträffade när layouterna skulle hämtas</string>
     <string name="stories_intro_main_title">Lär känna berättelseinlägg</string>
     <string name="stories_intro_main_subtitle">Du har fått förhandsåtkomst till berättelseinlägg och det vore härligt om du ville prova dem.</string>
     <string name="stories_intro_image_caption_first">Du kanske vill skapa ett berättelseinlägg</string>
@@ -155,14 +193,13 @@ Language: sv_SE
     <string name="gutenberg_native_replace_video">Byt video</string>
     <string name="gutenberg_native_replace_image_or_video">Ersätt en bild eller ett videoklipp</string>
     <string name="continue_with_wpcom">Fortsätt med WordPress.com</string>
-    <string name="enter_your_site_address">Ange din webbplatsadress</string>
     <string name="gutenberg_native_choose_image">Välj bild</string>
     <string name="gutenberg_native_choose_video">Välj video</string>
     <string name="gutenberg_native_choose_image_or_video">Välj bild eller video</string>
     <string name="continue_with_google_terms_of_service_text">Om du fortsätter med Google och inte redan har ett WordPress.com-konto, skapar du ett konto och samtycker till våra %1$sanvändarvillkor%2$s.</string>
     <string name="signup_confirmation_title">Bekräftelse av registrering</string>
-    <string name="content_description_logo">WordPress-logga</string>
     <string name="gutenberg_native_block_removed">Blocket har tagits bort</string>
+    <string name="enter_your_site_address">Ange din befintliga webbplatsadress</string>
     <string name="continue_terms_of_service_text">Genom att gå vidare accepterar du våra %1$sanvändarvillkor%2$s.</string>
     <string name="signup_confirmation_magic_link_message">Vi kommer att skicka e-post med en registreringslänk som låter dig skapa ett nytt WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi kommer att använda den här e-postadressen för att skapa ditt nya WordPress.com-konto.</string>
@@ -181,9 +218,7 @@ Language: sv_SE
     <string name="get_started">Kom igång</string>
     <string name="enter_email_to_continue_wordpress_com">Ange din e-postadress för att logga in eller skapa ett WordPress.com-konto.</string>
     <string name="send_link_by_email">Skicka länk via e-post</string>
-    <string name="login_promo_text_unlock_the_power">Ta vara på kraften hos den mest flexibla webbplatsskaparen.</string>
     <string name="check_email">Kolla din e-post</string>
-    <string name="login_promo_title_37_percent">37\% av webben är byggd på WordPress.</string>
     <string name="reader_error_request_failed_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämne. Första intrycket har betydelse!</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b>%1$s&lt;/b> för att ange en ny rubrik</string>
@@ -487,7 +522,6 @@ Language: sv_SE
     <string name="dialog_confirm_scheduled_post_sync_message">Inlägget kommer att synkroniseras direkt.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Är du klar att synkronisera?</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_promo_viewpager_content_description">Inledning</string>
     <string name="new_site_creation_unavailable_domain">Denna domän är inte tillgänglig</string>
     <string name="login_discovery_error_http_auth">Vi kunde inte nå din webbplats eftersom den kräver &lt;b>HTTP-autentisering&lt;/b>. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="login_discovery_error_ssl">Vi kunde inte nå din webbplats på grund av ett problem med &lt;b>SSL-certifikatet&lt;/b>. För att lösa detta behöver du kontakta ditt webbhotell.</string>
@@ -1301,7 +1335,6 @@ Language: sv_SE
     <string name="site_settings_quota_space_title">Använt utrymme</string>
     <string name="site_settings_quota_header">Media</string>
     <string name="comment_unspam_talkback">Kommentaren är markerad som ”inte skräppost”</string>
-    <string name="login_prologue_screen_title">Inloggning</string>
     <string name="signup_epilogue_screen_title">Nytt konto</string>
     <string name="share_intent_screen_title">Välj webbplats</string>
     <string name="edit_photo_screen_title">Redigera foto</string>
@@ -2247,7 +2280,6 @@ Language: sv_SE
     <string name="logs_copied_to_clipboard">App-loggar har kopierats till urklipp</string>
     <string name="reader_label_new_posts">Nya inlägg</string>
     <string name="error_copy_to_clipboard">Ett fel uppstod när text skulle kopieras till urklipp</string>
-    <string name="reader_page_recommended_blogs">Webbplatser du kanske gillar</string>
     <string name="post_uploading">Laddar upp inlägg</string>
     <string name="reader_empty_posts_in_blog">Denna webbplats är tom</string>
     <string name="themes_fetching">Hämtar teman…</string>

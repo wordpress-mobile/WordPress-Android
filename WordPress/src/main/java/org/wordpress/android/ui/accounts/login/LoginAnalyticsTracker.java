@@ -375,4 +375,24 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     public void trackCreateAccountClick() {
         mUnifiedLoginTracker.trackClick(Click.CREATE_ACCOUNT);
     }
+
+    @Override public void emailPasswordFormScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.START);
+    }
+
+    @Override public void siteAddressFormScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.START);
+    }
+
+    @Override public void magicLinkRequestScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.START);
+    }
+
+    @Override public void magicLinkSentScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.MAGIC_LINK_REQUESTED);
+    }
+
+    @Override public void usernamePasswordScreenResumed() {
+        mUnifiedLoginTracker.setStep(Step.USERNAME_PASSWORD);
+    }
 }

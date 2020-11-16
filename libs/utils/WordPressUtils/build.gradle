@@ -111,6 +111,7 @@ project.afterEvaluate {
     publishing {
         publications {
             UtilsPublication(MavenPublication) {
+                from components.release
                 groupId 'org.wordpress'
                 artifactId 'utils'
                 version android.defaultConfig.versionName
