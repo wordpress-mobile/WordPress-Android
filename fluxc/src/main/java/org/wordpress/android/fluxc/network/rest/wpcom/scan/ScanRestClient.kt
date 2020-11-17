@@ -27,7 +27,6 @@ import javax.inject.Singleton
 @Singleton
 class ScanRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
-    private val networkErrorMapper: NetworkErrorMapper,
     dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
@@ -42,7 +41,7 @@ class ScanRestClient(
                 buildScanStatePayload(response.data, site)
             }
             is Error -> {
-                val errorType = networkErrorMapper.map(
+                val errorType = NetworkErrorMapper.map(
                         response.error,
                         ScanStateErrorType.GENERIC_ERROR,
                         ScanStateErrorType.INVALID_RESPONSE,
