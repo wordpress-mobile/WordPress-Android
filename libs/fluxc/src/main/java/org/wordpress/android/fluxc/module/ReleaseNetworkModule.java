@@ -60,6 +60,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
+import org.wordpress.android.fluxc.utils.NetworkErrorMapper;
 
 import java.io.File;
 
@@ -191,19 +192,21 @@ public class ReleaseNetworkModule {
     public ActivityLogRestClient provideActivityLogRestClient(Context appContext, Dispatcher dispatcher,
                                                               @Named("regular") RequestQueue requestQueue,
                                                               AccessToken token, UserAgent userAgent,
-                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
+                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                              NetworkErrorMapper networkErrorMapper) {
+        return new ActivityLogRestClient(wpComGsonRequestBuilder, networkErrorMapper, dispatcher, appContext,
+                requestQueue, token, userAgent);
     }
 
     @Singleton
     @Provides
     public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
-                                                       @Named("regular") RequestQueue requestQueue,
-                                                       AccessToken token, UserAgent userAgent,
-                                                       WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
-                userAgent);
+                                                @Named("regular") RequestQueue requestQueue,
+                                                AccessToken token, UserAgent userAgent,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                NetworkErrorMapper networkErrorMapper) {
+        return new ScanRestClient(wpComGsonRequestBuilder, networkErrorMapper, dispatcher, appContext, requestQueue,
+                token, userAgent);
     }
 
     @Singleton
