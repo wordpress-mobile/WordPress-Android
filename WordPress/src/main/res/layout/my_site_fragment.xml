@@ -372,6 +372,12 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!--Jetpack-->
+                    <org.wordpress.android.widgets.WPTextView
+                        android:id="@+id/row_label_jetpack"
+                        style="@style/MySiteListHeader"
+                        android:text="@string/my_site_header_jetpack" />
+
                     <!--Stats-->
                     <LinearLayout
                         android:id="@+id/row_stats"
@@ -423,6 +429,24 @@
                             android:id="@+id/my_site_scan_text_view"
                             style="@style/MySiteListRowTextView"
                             android:text="@string/scan" />
+
+                    </LinearLayout>
+
+                    <!--Jetpack Settings-->
+                    <LinearLayout
+                        android:id="@+id/row_jetpack_settings"
+                        style="@style/MySiteListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/my_site_jetpack_settings_icon"
+                            style="@style/MySiteListRowIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_cog_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_jetpack_settings_text_view"
+                            style="@style/MySiteListRowTextView"
+                            android:text="@string/my_site_btn_jetpack_settings" />
 
                     </LinearLayout>
 

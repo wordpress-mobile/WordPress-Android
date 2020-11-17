@@ -3456,9 +3456,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void showJetpackSettings() {
-        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
-        startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
+        ActivityLauncher.viewJetpackSecuritySettingsForResult(this, mSite);
     }
 
     @Override
