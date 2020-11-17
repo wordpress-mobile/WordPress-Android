@@ -70,6 +70,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.support.ZendeskHelper;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.plans.PlansConstants;
@@ -496,7 +497,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             return setupMorePreferenceScreen();
         } else if (preference == mJpSecuritySettings) {
-            setupJetpackSecurityScreen();
+            ActivityLauncher.viewJetpackSecuritySettings(getActivity(), mSite);
         } else if (preference == mSiteAcceleratorSettings) {
             setupSiteAcceleratorScreen();
         } else if (preference == mSiteAcceleratorSettingsNested) {
