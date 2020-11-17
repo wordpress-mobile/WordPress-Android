@@ -12,10 +12,8 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.ThreatModel
 import org.wordpress.android.fluxc.model.scan.ThreatModel.Extension
 import org.wordpress.android.fluxc.model.scan.ThreatModel.Fixable
-import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
@@ -23,11 +21,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
+import org.wordpress.android.fluxc.utils.NetworkErrorMapper
 import javax.inject.Singleton
 
 @Singleton
 class ScanRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    private val networkErrorMapper: NetworkErrorMapper,
     dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
@@ -42,7 +42,7 @@ class ScanRestClient(
                 buildScanStatePayload(response.data, site)
             }
             is Error -> {
-                val errorType = genericToError(
+                val errorType = networkErrorMapper.map(
                         response.error,
                         ScanStateErrorType.GENERIC_ERROR,
                         ScanStateErrorType.INVALID_RESPONSE,
@@ -113,20 +113,4 @@ class ScanRestClient(
 
     private fun buildErrorPayload(site: SiteModel, errorType: ScanStateErrorType) =
             FetchedScanStatePayload(ScanStateError(errorType), site)
-
-    private fun <T> genericToError(
-        error: WPComGsonNetworkError,
-        genericError: T,
-        invalidResponse: T,
-        authorizationRequired: T
-    ): T {
-        var errorType = genericError
-        if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
-            errorType = invalidResponse
-        }
-        if ("unauthorized" == error.apiError) {
-            errorType = authorizationRequired
-        }
-        return errorType
-    }
 }

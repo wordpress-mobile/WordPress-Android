@@ -9,15 +9,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
-import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
@@ -30,6 +27,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.utils.NetworkErrorMapper
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Singleton
@@ -37,8 +35,9 @@ import javax.inject.Singleton
 @Singleton
 class ActivityLogRestClient
 constructor(
-    dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    private val networkErrorMapper: NetworkErrorMapper,
+    dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
     accessToken: AccessToken,
@@ -56,7 +55,7 @@ constructor(
                 buildActivityPayload(activities, payload.site, totalItems, number, offset)
             }
             is Error -> {
-                val errorType = genericToError(
+                val errorType = networkErrorMapper.map(
                         response.error,
                         ActivityLogErrorType.GENERIC_ERROR,
                         ActivityLogErrorType.INVALID_RESPONSE,
@@ -76,7 +75,7 @@ constructor(
                 buildRewindStatusPayload(response.data, site)
             }
             is Error -> {
-                val errorType = genericToError(
+                val errorType = networkErrorMapper.map(
                         response.error,
                         RewindStatusErrorType.GENERIC_ERROR,
                         RewindStatusErrorType.INVALID_RESPONSE,
@@ -96,15 +95,15 @@ constructor(
                 if (response.data.ok != true && (response.data.error != null && response.data.error.isNotEmpty())) {
                     RewindResultPayload(RewindError(API_ERROR, response.data.error), rewindId, site)
                 } else {
-                    ActivityLogStore.RewindResultPayload(rewindId, response.data.restore_id, site)
+                    RewindResultPayload(rewindId, response.data.restore_id, site)
                 }
             }
             is Error -> {
-                val error = ActivityLogStore.RewindError(genericToError(response.error,
+                val error = RewindError(networkErrorMapper.map(response.error,
                         RewindErrorType.GENERIC_ERROR,
                         RewindErrorType.INVALID_RESPONSE,
                         RewindErrorType.AUTHORIZATION_REQUIRED), response.error.message)
-                ActivityLogStore.RewindResultPayload(error, rewindId, site)
+                RewindResultPayload(error, rewindId, site)
             }
         }
     }
@@ -223,22 +222,6 @@ constructor(
 
     private fun buildErrorPayload(site: SiteModel, errorType: RewindStatusErrorType) =
             FetchedRewindStatePayload(RewindStatusError(errorType), site)
-
-    private fun <T> genericToError(
-        error: WPComGsonNetworkError,
-        genericError: T,
-        invalidResponse: T,
-        authorizationRequired: T
-    ): T {
-        var errorType = genericError
-        if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
-            errorType = invalidResponse
-        }
-        if ("unauthorized" == error.apiError) {
-            errorType = authorizationRequired
-        }
-        return errorType
-    }
 
     class ActivitiesResponse(
         val totalItems: Int?,
