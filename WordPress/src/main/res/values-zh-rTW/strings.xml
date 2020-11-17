@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-02 10:54:09+0000
+Translation-Revision-Date: 2020-11-13 14:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
+    <string name="hpp_skip_button">跳過</string>
+    <string name="hpp_choose_button">選擇</string>
+    <string name="hpp_subtitle">選擇你喜愛的首頁版面配置。 你之後可以隨時自訂或變更。</string>
+    <string name="hpp_title">選擇一款設計</string>
+    <string name="mlp_network_error_subtitle">請在重新上線時點選重試，或是使用下方按鈕建立空白頁面。</string>
+    <string name="mlp_network_error_title">版面配置在離線時無法使用</string>
+    <string name="mlp_error_subtitle">請點選重試或使用下方按鈕建立空白頁面。</string>
+    <string name="mlp_error_title">發生錯誤導致版面配置無法使用</string>
+    <string name="prepublishing_nudges_add_category_button">新增類別</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">新增類別</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">類別</string>
+    <string name="prepublishing_nudges_home_categories_not_set">未設定</string>
+    <string name="prepublishing_nudges_categories_action">類別</string>
+    <string name="login_prologue_fifth_caption_three">倫敦的博物館</string>
+    <string name="login_prologue_fifth_caption_two">全球最棒的粉絲</string>
+    <string name="login_prologue_fifth_caption_one">我最愛的十家咖啡館</string>
+    <string name="login_prologue_fifth_tag_six">政治</string>
+    <string name="login_prologue_fifth_tag_five">音樂</string>
+    <string name="login_prologue_fifth_tag_four">園藝</string>
+    <string name="login_prologue_fifth_tag_three">橄欖球</string>
+    <string name="login_prologue_fifth_tag_two">烹飪</string>
+    <string name="login_prologue_fifth_tag_one">藝術</string>
+    <string name="login_prologue_fifth_subtitle_three">每週搖滾</string>
+    <string name="login_prologue_fifth_subtitle_two">網路新聞</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">攝影師 Cameron Karsten 的作品讓我深受啟發。 我下次會嘗試這些技巧</string>
+    <string name="login_prologue_second_subtitle_one">激發靈感</string>
+    <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新讀物。</string>
+    <string name="login_prologue_title_fourth">透過深入分析資料拓展讀者群。</string>
+    <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
+    <string name="login_prologue_title_first">歡迎使用全球最受歡迎的網站建置工具。</string>
+    <string name="media_loading_failed">媒體載入失敗</string>
+    <string name="reader_discover_recommended_blogs_header">值得關注的網站</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
     <string name="gutenberg_native_s_is_not_fully_supported">無法完全支援「%s」</string>
     <string name="gutenberg_native_help_button">「協助」按鈕</string>
@@ -154,6 +189,7 @@ Language: zh_TW
     <string name="gutenberg_native_choose_image_or_video">選擇圖片或視訊</string>
     <string name="gutenberg_native_choose_image">選擇圖片</string>
     <string name="gutenberg_native_block_removed">已移除區塊</string>
+    <string name="enter_your_site_address">輸入你現有的網址</string>
     <string name="continue_with_wpcom">繼續使用 WordPress.com</string>
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>

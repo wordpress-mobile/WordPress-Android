@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-03 10:54:09+0000
+Translation-Revision-Date: 2020-11-13 14:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
+    <string name="hpp_skip_button">Atla</string>
+    <string name="hpp_choose_button">Seç</string>
+    <string name="hpp_subtitle">Favori ana sayfa düzeninizi seçin. Daha sonra özelleştirebilir ya da değiştirebilirsiniz.</string>
+    <string name="hpp_title">Bir tasarım seçin</string>
+    <string name="mlp_network_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
+    <string name="mlp_network_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
+    <string name="mlp_error_subtitle">Yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
+    <string name="mlp_error_title">Bir hata nedeniyle düzenler kullanılamıyor</string>
+    <string name="prepublishing_nudges_add_category_button">Kategori Ekle</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Yeni Kategori Ekle</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategoriler</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Ayarlanmadı</string>
+    <string name="prepublishing_nudges_categories_action">Kategoriler</string>
+    <string name="login_prologue_fifth_caption_three">Londra\'daki müzeler</string>
+    <string name="login_prologue_fifth_caption_two">Dünyanın En İyi Hayranları</string>
+    <string name="login_prologue_fifth_caption_one">En Sevdiğim On Kafe</string>
+    <string name="login_prologue_fifth_tag_six">Politika</string>
+    <string name="login_prologue_fifth_tag_five">Müzik</string>
+    <string name="login_prologue_fifth_tag_four">Bahçe İşçiliği</string>
+    <string name="login_prologue_fifth_tag_three">Futbol</string>
+    <string name="login_prologue_fifth_tag_two">Yemek pişirme</string>
+    <string name="login_prologue_fifth_tag_one">Sanat</string>
+    <string name="login_prologue_fifth_subtitle_three">Haftalık Rock n\' Roll</string>
+    <string name="login_prologue_fifth_subtitle_two">Web Haberleri</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Fotoğrafçı Cameron Karsten\'in çalışmalarından çok ilham alıyorum. Bu teknikleri bir sonraki adımda deneyeceğim</string>
+    <string name="login_prologue_second_subtitle_one">İlham Alma</string>
+    <string name="login_prologue_title_fifth">Favori sitelerinizi takip edin ve yeni yazılar keşfedin.</string>
+    <string name="login_prologue_title_fourth">Kapsamlı analizlerle kitlenizin nasıl büyüdüğünü izleyin.</string>
+    <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
+    <string name="login_prologue_title_first">Dünyanın en popüler web sitesi oluşturucusuna hoş geldiniz.</string>
+    <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
+    <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" tamamen desteklenmiyor</string>
     <string name="gutenberg_native_help_button">Yardım düğmesi</string>
@@ -160,6 +195,7 @@ Language: tr
     <string name="gutenberg_native_choose_video">Video seç</string>
     <string name="continue_with_google_terms_of_service_text">Google ile devam ederseniz ve WordPress.com hesabınız yoksa, bir hesap oluşturup %1$shizmet şartlarımızı%2$s kabul etmiş olursunuz.</string>
     <string name="signup_confirmation_title">Kayıt onayı</string>
+    <string name="enter_your_site_address">Mevcut site adresinizi girin</string>
     <string name="continue_terms_of_service_text">Devam etmekle, %1$shizmet koşullarını%2$s kabul etmiş olursunuz.</string>
     <string name="signup_confirmation_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size e-postayla bir kayıt bağlantısı göndereceğiz.</string>
     <string name="signup_confirmation_message">Bu e-posta adresini, yeni WordPress.com hesabınızı oluşturmak için kullanacağız.</string>

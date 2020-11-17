@@ -1,2 +1,7 @@
-* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
+* [***] Block Editor: Faster editor start and overall operation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2780]
+* [*] Block Editor: Enable multiple upload support for Image block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2530]
+* [*] Posts List: fixed bug that prevented showing the Featured Image of a post for pure self-hosted sites [https://github.com/wordpress-mobile/WordPress-Android/pull/13323]
+* [**] Media picker: New media picker is now used in all the places where the user selects any kind of file (featured image, site icon, gravatar, in posts or media library) except stories [https://github.com/wordpress-mobile/WordPress-Android/pull/13368]
+* [*] Reader: Fixes an infinite loading indicator on Discover tab in Reader.
+* [*] My Site: Hide Activity Log, Themes and Plans for P2 sites.
 
