@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ActivityLogAction
+import org.wordpress.android.fluxc.action.ActivityLogAction.DOWNLOAD
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
@@ -50,6 +51,11 @@ class ActivityLogStore
             REWIND -> {
                 coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On REWIND") {
                     emitChange(rewind(action.payload as RewindPayload))
+                }
+            }
+            DOWNLOAD -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On DOWNLOAD") {
+                    emitChange(download(action.payload as DownloadPayload))
                 }
             }
         }
@@ -96,8 +102,14 @@ class ActivityLogStore
     }
 
     suspend fun rewind(rewindPayload: RewindPayload): OnRewind {
-        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
+        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId, rewindPayload.types)
         return emitRewindResult(payload, REWIND)
+    }
+
+    suspend fun download(downloadPayload: DownloadPayload): OnDownload {
+        val payload =
+                activityLogRestClient.download(downloadPayload.site, downloadPayload.rewindId, downloadPayload.types)
+        return emitDownloadResult(payload, DOWNLOAD)
     }
 
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction): OnActivityLogFetched {
@@ -135,6 +147,20 @@ class ActivityLogStore
         }
     }
 
+    private fun emitDownloadResult(payload: DownloadResultPayload, action: ActivityLogAction): OnDownload {
+        return if (payload.error != null) {
+            OnDownload(payload.rewindId, payload.error, action)
+        } else {
+            OnDownload(
+                    rewindId = payload.rewindId,
+                    downloadId = payload.downloadId,
+                    backupPoint = payload.backupPoint,
+                    startedAt = payload.startedAt,
+                    progress = payload.progress,
+                    causeOfChange = action)
+        }
+    }
+
     // Actions
     data class OnActivityLogFetched(
         val rowsAffected: Int,
@@ -165,6 +191,20 @@ class ActivityLogStore
         }
     }
 
+    data class OnDownload(
+        val rewindId: String,
+        val downloadId: Long? = null,
+        val backupPoint: String? = null,
+        val startedAt: String? = null,
+        val progress: Int = 0,
+        var causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<DownloadError>() {
+        constructor(rewindId: String, error: DownloadError, causeOfChange: ActivityLogAction) :
+                this(rewindId = rewindId, downloadId = null, causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
     // Payloads
     class FetchActivityLogPayload(
         val site: SiteModel,
@@ -176,7 +216,11 @@ class ActivityLogStore
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class RewindPayload(val site: SiteModel, val rewindId: String) : Payload<BaseRequest.BaseNetworkError>()
+    class RewindPayload(
+        val site: SiteModel,
+        val rewindId: String,
+        val types: RewindRequestTypes? = null
+    ) : Payload<BaseRequest.BaseNetworkError>()
 
     class FetchedActivityLogPayload(
         val activityLogModels: List<ActivityLogModel> = listOf(),
@@ -215,6 +259,43 @@ class ActivityLogStore
         }
     }
 
+    data class RewindRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
+
+    class DownloadPayload(
+        val site: SiteModel,
+        val rewindId: String,
+        val types: DownloadRequestTypes
+    ) : Payload<BaseRequest.BaseNetworkError>()
+
+    class DownloadResultPayload(
+        val rewindId: String,
+        val downloadId: Long? = null,
+        val backupPoint: String? = null,
+        val startedAt: String? = null,
+        val progress: Int = 0,
+        val site: SiteModel
+    ) : Payload<DownloadError>() {
+        constructor(error: DownloadError, rewindId: String, site: SiteModel) : this(rewindId = rewindId, site = site) {
+            this.error = error
+        }
+    }
+
+    data class DownloadRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
+
     // Errors
     enum class ActivityLogErrorType {
         GENERIC_ERROR,
@@ -248,4 +329,13 @@ class ActivityLogStore
     }
 
     class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
+
+    enum class DownloadErrorType {
+        GENERIC_ERROR,
+        API_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class DownloadError(var type: DownloadErrorType, var message: String? = null) : Store.OnChangedError
 }
