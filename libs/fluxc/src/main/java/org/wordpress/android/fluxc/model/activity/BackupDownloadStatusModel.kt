@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.activity
 
 import java.util.Date
 
-data class DownloadStatusModel(
+data class BackupDownloadStatusModel(
     val downloadId: Long,
     val rewindId: String,
     val backupPoint: Date,
