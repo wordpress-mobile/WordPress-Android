@@ -36,7 +36,6 @@
     <dimen name="margin_text_input_layout_baseline">20dp</dimen>
     <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
-    <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
     <dimen name="google_button_icon_sz">24dp</dimen>
     <dimen name="textinputlayout_correction_padding_right">9dp</dimen>
 

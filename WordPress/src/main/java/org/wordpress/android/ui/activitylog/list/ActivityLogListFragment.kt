@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
@@ -31,6 +32,7 @@ import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
+private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 
 class ActivityLogListFragment : Fragment() {
@@ -78,6 +80,7 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
+        activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
         date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
 
         setupObservers()
@@ -115,8 +118,13 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.dateRangePickerVisibility.observe(viewLifecycleOwner, Observer { visibility ->
+        viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
             uiHelpers.updateVisibility(date_range_picker, visibility)
+            uiHelpers.updateVisibility(activity_type_filter, visibility)
+        })
+
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { _ ->
+            showActivityTypeFilterDialog()
         })
 
         viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
@@ -170,6 +178,10 @@ class ActivityLogListFragment : Fragment() {
 
     private fun initDateRangePickerButtonClickListener(picker: MaterialDatePicker<Pair<Long, Long>>) {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
+    }
+
+    private fun showActivityTypeFilterDialog() {
+        ActivityLogTypeFilterFragment().show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {

@@ -1,0 +1,3 @@
+16.1:
+* Gutenberg özellikli bir sitede yeni bir sayfa oluştururken, önceden tasarlanmış çeşitli sayfa şablonlarından seçim yapın.
+

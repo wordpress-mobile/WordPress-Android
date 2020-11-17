@@ -19,7 +19,9 @@ import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.StarterDesignModel
+import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -38,11 +40,6 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
-
-    companion object {
-        const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
-        const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,8 +65,8 @@ class HomePagePickerFragment : Fragment() {
         }
 
         setupUi()
+        setupViewModel()
         setupActionListeners()
-        setupViewModel(savedInstanceState)
     }
 
     override fun onAttach(context: Context) {
@@ -77,15 +74,7 @@ class HomePagePickerFragment : Fragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        (viewModel.uiState.value as? UiState.Content)?.let {
-            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(viewModel.layouts))
-            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
-        }
-        super.onSaveInstanceState(outState)
-    }
-
-    private fun setupViewModel(savedInstanceState: Bundle?) {
+    private fun setupViewModel() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
@@ -97,7 +86,8 @@ class HomePagePickerFragment : Fragment() {
             layoutsRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
-                is UiState.Loading -> {}
+                is UiState.Loading -> { // Nothing more to do here
+                }
                 is UiState.Content -> {
                     (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
@@ -107,13 +97,21 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        savedInstanceState?.let {
-            val layouts = it.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
-            val selected = it.getString(SELECTED_LAYOUT)
-            viewModel.loadSavedState(layouts, selected)
-        } ?: run {
-            viewModel.start()
-        }
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, Observer { action ->
+            activity?.supportFragmentManager?.let { fm ->
+                when (action) {
+                    is Show -> {
+                        val previewFragment = DesignPreviewFragment.newInstance(action.template, action.demoUrl)
+                        previewFragment.show(fm, DESIGN_PREVIEW_TAG)
+                    }
+                    is Dismiss -> {
+                        (fm.findFragmentByTag(DESIGN_PREVIEW_TAG) as? DesignPreviewFragment)?.dismiss()
+                    }
+                }
+            }
+        })
+
+        viewModel.start()
     }
 
     private fun setupUi() {
@@ -127,10 +125,7 @@ class HomePagePickerFragment : Fragment() {
         chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
-        backButton.setOnClickListener {
-            requireActivity().onBackPressed() // FIXME: This is temporary for PR #13192
-            viewModel.onBackPressed()
-        }
+        backButton.setOnClickListener { viewModel.onBackPressed() }
         setScrollListener()
     }
 
@@ -140,6 +135,7 @@ class HomePagePickerFragment : Fragment() {
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
+        viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
 
     private fun setTitleVisibility(visible: Boolean) {

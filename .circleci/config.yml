@@ -23,10 +23,14 @@ commands:
           name: Setup gradle.properties
           command: cp gradle.properties-example gradle.properties && cp libs/utils/WordPressUtils/gradle.properties-example libs/utils/WordPressUtils/gradle.properties
   update-gradle-memory:
+      parameters:
+        jvmargs:
+          type: string
+          default: "Xmx2048m"
       steps:
         - run:
             name: Update memory setting
-            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-<< parameters.jvmargs >> -XX:+HeapDumpOnOutOfMemoryError -Dkotlin.compiler.execution.strategy=in-process -Dkotlin.incremental=false /" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -320,7 +324,8 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - update-gradle-memory
+      - update-gradle-memory:
+          jvmargs: "Xmx1024m"
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
@@ -331,7 +336,12 @@ jobs:
           name: Build
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
+          command: ./gradlew WordPress:assembleVanillaDebug --stacktrace
+      - run:
+          name: Build Tests
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
@@ -368,7 +378,8 @@ jobs:
           cache_key_prefix: v1-raw-screenshots
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - update-gradle-memory
+      - update-gradle-memory:
+          jvmargs: "Xmx1024m"
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
@@ -385,7 +396,12 @@ jobs:
           name: Build
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
+          command: ./gradlew WordPress:assembleVanillaDebug --stacktrace
+      - run:
+          name: Build Tests
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: ./gradlew WordPress:assembleVanillaDebugAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
           command: openssl aes-256-cbc -md sha256 -d -in .circleci/.firebase.secrets.json.enc -out .circleci/.firebase.secrets.json -k "${FIREBASE_SECRETS_ENCRYPTION_KEY}"
@@ -635,28 +651,28 @@ workflows:
           requires: [gutenberg-bundle-build]
       - promo-screenshots:
           requires: [raw-screenshots]
-#  Release Build:
-#    unless: << pipeline.parameters.translation_review_build >>
-#    jobs:
-#      - gutenberg-bundle-build:
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+(\.\d+)*(-rc-\d)?$/
-#      - lint:
-#          requires:
-#            - gutenberg-bundle-build
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+(\.\d+)*(-rc-\d)?$/
-#      - Release Build:
-#          requires:
-#            - lint 
-#          filters:
-#            branches:
-#              ignore: /.*/
-#            tags:
-#              only: /^\d+(\.\d+)*(-rc-\d)?$/
+  Release Build:
+    unless: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - gutenberg-bundle-build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - lint:
+          requires:
+            - gutenberg-bundle-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/
+      - Release Build:
+          requires:
+            - lint 
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^\d+(\.\d+)*(-rc-\d)?$/

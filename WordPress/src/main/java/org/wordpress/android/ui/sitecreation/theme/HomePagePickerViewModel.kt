@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
+import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,16 +15,27 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
+
+const val defaultTemplateSlug = "default"
+
+private const val ERROR_CONTEXT = "design"
+private const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
+private const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase,
+    private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -36,6 +48,28 @@ class HomePagePickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    private val _previewState: MutableLiveData<PreviewUiState> = MutableLiveData()
+    val previewState: LiveData<PreviewUiState> = _previewState
+
+    private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
+    val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
+
+    private val _onPreviewActionPressed = SingleLiveEvent<DesignPreviewAction>()
+    val onPreviewActionPressed: LiveData<DesignPreviewAction> = _onPreviewActionPressed
+
+    private val _onBackButtonPressed = SingleLiveEvent<Unit>()
+    val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
+
+    sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
+        object Skip : DesignSelectionAction(defaultTemplateSlug, null)
+        class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
+    }
+
+    sealed class DesignPreviewAction {
+        object Dismiss : DesignPreviewAction()
+        class Show(val template: String, val demoUrl: String) : DesignPreviewAction()
+    }
+
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
@@ -47,7 +81,10 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start() {
-        fetchLayouts()
+        if (uiState.value !is UiState.Content) {
+            analyticsTracker.trackSiteDesignViewed()
+            fetchLayouts()
+        }
     }
 
     private fun fetchLayouts() {
@@ -56,6 +93,7 @@ class HomePagePickerViewModel @Inject constructor(
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
             withContext(mainDispatcher) {
                 if (event.isError) {
+                    analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(UiState.Error())
                 } else {
                     layouts = event.designs
@@ -94,30 +132,84 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onPreviewTapped() {
-        // TODO
+        (uiState.value as? UiState.Content)?.let { state ->
+            layouts.firstOrNull {
+                it.slug != null && it.slug == state.selectedLayoutSlug && it.demoUrl != null
+            }?.let { layout ->
+                val template = layout.slug!!
+                analyticsTracker.trackSiteDesignPreviewViewed(template)
+                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl!!)
+                return
+            }
+        }
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error previewing design")
+        updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
+    }
+
+    fun onDismissPreview() {
+        _onPreviewActionPressed.value = DesignPreviewAction.Dismiss
+    }
+
+    fun onPreviewChooseTapped() {
+        onDismissPreview()
+        onChooseTapped()
+    }
+
+    fun onPreviewLoading(template: String) {
+        if (networkUtils.isNetworkAvailable()) {
+            _previewState.value = PreviewUiState.Loading
+            analyticsTracker.trackSiteDesignPreviewLoading(template)
+        } else {
+            _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
+            analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Preview error")
+        }
+    }
+
+    fun onPreviewLoaded(template: String) {
+        _previewState.value = PreviewUiState.Loaded
+        analyticsTracker.trackSiteDesignPreviewLoaded(template)
+    }
+
+    fun onPreviewError() {
+        _previewState.value = PreviewUiState.Error()
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Preview error")
     }
 
     fun onChooseTapped() {
-        // TODO
+        (uiState.value as? UiState.Content)?.let { state ->
+            layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val template = layout.slug!!
+                analyticsTracker.trackSiteDesignSelected(template)
+                _onDesignActionPressed.value = DesignSelectionAction.Choose(template, layout.segmentId)
+                return
+            }
+        }
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error choosing design")
+        updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
     }
 
     fun onSkippedTapped() {
-        // TODO
+        analyticsTracker.trackSiteDesignSkipped()
+        _onDesignActionPressed.value = DesignSelectionAction.Skip
     }
 
     fun onBackPressed() {
-        // TODO
+        _onBackButtonPressed.call()
     }
 
     fun onRetryClicked() {
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
         } else {
+            analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Retry error")
             updateUiState(UiState.Error(toast = R.string.hpp_retry_error))
         }
     }
 
-    fun loadSavedState(layouts: List<StarterDesignModel>?, selected: String?) {
+    fun loadSavedState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) return
+        val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
+        val selected = savedInstanceState.getString(SELECTED_LAYOUT)
         if (layouts == null || layouts.isEmpty()) {
             fetchLayouts()
             return
@@ -126,6 +218,13 @@ class HomePagePickerViewModel @Inject constructor(
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
         loadLayouts()
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        (uiState.value as? UiState.Content)?.let {
+            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
+            outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+        }
     }
 
     private fun updateUiState(uiState: UiState) {
@@ -184,5 +283,11 @@ class HomePagePickerViewModel @Inject constructor(
 
         class Error(@StringRes val toast: Int? = null) :
                 UiState(errorViewVisible = true, isHeaderVisible = true, isDescriptionVisible = false)
+    }
+
+    sealed class PreviewUiState {
+        object Loading : PreviewUiState()
+        object Loaded : PreviewUiState()
+        class Error(@StringRes val toast: Int? = null) : PreviewUiState()
     }
 }

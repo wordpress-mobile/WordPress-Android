@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-17 00:56:33+0000
+Translation-Revision-Date: 2020-11-13 14:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
+    <string name="hpp_skip_button">Atla</string>
+    <string name="hpp_choose_button">Seç</string>
+    <string name="hpp_subtitle">Favori ana sayfa düzeninizi seçin. Daha sonra özelleştirebilir ya da değiştirebilirsiniz.</string>
+    <string name="hpp_title">Bir tasarım seçin</string>
+    <string name="mlp_network_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
+    <string name="mlp_network_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
+    <string name="mlp_error_subtitle">Yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
+    <string name="mlp_error_title">Bir hata nedeniyle düzenler kullanılamıyor</string>
+    <string name="prepublishing_nudges_add_category_button">Kategori Ekle</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Yeni Kategori Ekle</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategoriler</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Ayarlanmadı</string>
+    <string name="prepublishing_nudges_categories_action">Kategoriler</string>
+    <string name="login_prologue_fifth_caption_three">Londra\'daki müzeler</string>
+    <string name="login_prologue_fifth_caption_two">Dünyanın En İyi Hayranları</string>
+    <string name="login_prologue_fifth_caption_one">En Sevdiğim On Kafe</string>
+    <string name="login_prologue_fifth_tag_six">Politika</string>
+    <string name="login_prologue_fifth_tag_five">Müzik</string>
+    <string name="login_prologue_fifth_tag_four">Bahçe İşçiliği</string>
+    <string name="login_prologue_fifth_tag_three">Futbol</string>
+    <string name="login_prologue_fifth_tag_two">Yemek pişirme</string>
+    <string name="login_prologue_fifth_tag_one">Sanat</string>
+    <string name="login_prologue_fifth_subtitle_three">Haftalık Rock n\' Roll</string>
+    <string name="login_prologue_fifth_subtitle_two">Web Haberleri</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Fotoğrafçı Cameron Karsten\'in çalışmalarından çok ilham alıyorum. Bu teknikleri bir sonraki adımda deneyeceğim</string>
+    <string name="login_prologue_second_subtitle_one">İlham Alma</string>
+    <string name="login_prologue_title_fifth">Favori sitelerinizi takip edin ve yeni yazılar keşfedin.</string>
+    <string name="login_prologue_title_fourth">Kapsamlı analizlerle kitlenizin nasıl büyüdüğünü izleyin.</string>
+    <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
+    <string name="login_prologue_title_first">Dünyanın en popüler web sitesi oluşturucusuna hoş geldiniz.</string>
+    <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
+    <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" tamamen desteklenmiyor</string>
+    <string name="gutenberg_native_help_button">Yardım düğmesi</string>
+    <string name="gutenberg_native_edit_using_web_editor">Web düzenleyicisini kullanarak düzenle</string>
+    <string name="gutenberg_native_choose_images">Görsel seç</string>
+    <string name="stories_intro_create_story_post_label">Öykü Yayını Oluştur</string>
+    <string name="stories_intro_description_second">Sitenizde yeni bir blog yazısı olarak yayınlanırlar, böylece kitleniz hiçbir şeyi kaçırmaz.</string>
+    <string name="stories_intro_title_second">Öykü yayınları kaybolmaz</string>
+    <string name="stories_intro_description_first">Ziyaretçilerinizin seveceği ilgi çekici ve dokunulabilir öykü yayınları oluşturmak için fotoğrafları, videoları ve metinleri birleştirin.</string>
+    <string name="stories_intro_title_first">Artık herkes öykülere erişebilir</string>
+    <string name="stories_intro_image_caption_second">Öykü başlığı örneği</string>
+    <string name="stories_intro_image_caption_first">Öykü yayını nasıl oluşturulur?</string>
+    <string name="stories_intro_main_subtitle">Öykü yayınlarına erken erişiminiz var ve denemenizi çok isteriz.</string>
+    <string name="stories_intro_main_title">Öykü Yayınlarına Giriş</string>
+    <string name="mlp_notice_blank_page_created">Boş sayfa oluşturuldu</string>
+    <string name="mlp_notice_page_created">Sayfa oluşturuldu</string>
+    <string name="mlp_preview_title">Düzen Önizlemesi</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s fotoğraflarınıza erişimi reddedildi. Bunu düzeltmek için izinlerinizi düzenleyip %2$s ve %3$s özelliklerini açın.</string>
+    <string name="media_insert_failed">Medya eklenemedi.</string>
+    <string name="media_insert_failed_with_reason">Medya eklenemedi: %s</string>
+    <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
+    <string name="reader_label_toolbar_back">Geri</string>
+    <string name="reader_discover_empty_button_text">Başlayın</string>
+    <string name="reader_discover_empty_title">Yeni bloglar keşfetmek için konular takip edin</string>
+    <string name="reader_post_details_header_by_author_name">gönderen:</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
+    <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen posta işaretini kaldır</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Spam Olarak İşaretle</string>
+    <string name="stats_referrer_popup_menu_open_website">Web Sitesini Aç</string>
+    <string name="media_uploading_gif_library_photo">Gif medyası yükleme</string>
+    <string name="media_uploading_stock_library_photo">Stok medya yükleme</string>
+    <string name="media_uploading_default">Ortam dosyası yükleniyor</string>
     <string name="gutenberg_native_search_or_type_url">URL arayın veya yazın</string>
     <string name="gutenberg_native_select_item">Öğeyi seç</string>
     <string name="gutenberg_native_add_this_telephone_link">Bu telefon bağlantısını ekle</string>
@@ -122,14 +189,13 @@ Language: tr
     <string name="gutenberg_native_replace_image_or_video">Video veya görseli değiştir</string>
     <string name="gutenberg_native_replace_video">Videoyu değiştir</string>
     <string name="continue_with_wpcom">WordPress.com ile devam et</string>
-    <string name="enter_your_site_address">Site adresinizi girin</string>
-    <string name="content_description_logo">WordPress logosu</string>
     <string name="gutenberg_native_block_removed">Blok kaldırıldı</string>
     <string name="gutenberg_native_choose_image">Görsel seç</string>
     <string name="gutenberg_native_choose_image_or_video">Görsel veya video seç</string>
     <string name="gutenberg_native_choose_video">Video seç</string>
     <string name="continue_with_google_terms_of_service_text">Google ile devam ederseniz ve WordPress.com hesabınız yoksa, bir hesap oluşturup %1$shizmet şartlarımızı%2$s kabul etmiş olursunuz.</string>
     <string name="signup_confirmation_title">Kayıt onayı</string>
+    <string name="enter_your_site_address">Mevcut site adresinizi girin</string>
     <string name="continue_terms_of_service_text">Devam etmekle, %1$shizmet koşullarını%2$s kabul etmiş olursunuz.</string>
     <string name="signup_confirmation_magic_link_message">Yeni WordPress.com hesabınızı oluşturmak için size e-postayla bir kayıt bağlantısı göndereceğiz.</string>
     <string name="signup_confirmation_message">Bu e-posta adresini, yeni WordPress.com hesabınızı oluşturmak için kullanacağız.</string>
@@ -143,11 +209,9 @@ Language: tr
     <string name="magic_link_not_seeing_email_message">E-postayı görmüyor musunuz? İstenmeyen posta klasörünüzü kontrol edin.</string>
     <string name="login_magic_links_label">Size anında giriş yapacağınız bir bağlantıyı e-posta ile göndereceğiz, hiç bir parolaya gerek yok.</string>
     <string name="reset_your_password">Parolanızı sıfırlayın</string>
-    <string name="login_promo_text_unlock_the_power">En esnek web sitesi oluşturma platformunun gücünü açığa çıkarın.</string>
     <string name="create_account">Hesap oluştur</string>
     <string name="get_started">Başlayın</string>
     <string name="check_email">E-postayı kontrol et</string>
-    <string name="login_promo_title_37_percent">Web\'in %37\'si WordPress üzerine kurulmuştur.</string>
     <string name="send_link_by_email">Bağlantıyı e-postayla gönder</string>
     <string name="or_type_your_password">Veya parolanızı yazın</string>
     <string name="enter_email_to_continue_wordpress_com">Giriş yapmak veya bir WordPress.com hesabı oluşturmak için e-posta adresinizi girin.</string>
@@ -400,7 +464,9 @@ Language: tr
     <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
+    <string name="reader_title_subs">Konuları ve Siteleri Yönetme</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Takip ettiğiniz konulardaki en yeni yazıları görmek için WordPress.com\'da oturum açın</string>
     <string name="reader_filter_empty_sites_action">Bir siteyi takip et</string>
     <string name="gutenberg_native_add_block_after">Blok sonrasına ekle</string>
     <string name="gutenberg_native_add_block_before">Blok öncesine ekle</string>
@@ -409,6 +475,8 @@ Language: tr
     <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
     <string name="gutenberg_native_template_preview">Şablon ön izlemesi</string>
     <string name="reader_filter_empty_sites_list">Takip ettiğiniz sitelerdeki en yeni yazıları görün</string>
+    <string name="reader_filter_empty_tags_action">Bir konu ekle</string>
+    <string name="reader_filter_empty_tags_list">Bir konu ekleyerek o konudaki yazıları takip edebilirsiniz</string>
     <string name="reader_filter_cta">Filtrele</string>
     <string name="reader_filter_main_title">Takip edilen</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
@@ -450,7 +518,6 @@ Language: tr
     <string name="dialog_confirm_scheduled_post_sync_title">Senkronize etmeye hazır mısınız?</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Şimdi senkronize et</string>
     <string name="negative_prefix">-%s</string>
-    <string name="login_promo_viewpager_content_description">Önsöz</string>
     <string name="new_site_creation_unavailable_domain">Bu alan adı kullanılamaz.</string>
     <string name="login_discovery_error_generic">Sitenize erişimi başaramadık. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
     <string name="login_discovery_error_ssl">&lt;b>SSL Sertifikası&lt;/b> ile ilgili bir sorun nedeniyle sitenize erişemedik. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
@@ -474,6 +541,7 @@ Language: tr
     <string name="reader_discover_display_name">Keşfet</string>
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="site_cannot_be_loaded">Şu anda siteniz için veri yüklemesi yapamıyoruz. Lütfen daha sonra tekrar deneyin</string>
+    <string name="reader_filter_tags_title">Konular</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
     <string name="gutenberg_native_take_a_photo">Fotoğraf Çek</string>
     <string name="gutenberg_native_start_writing">Yazmaya başlayın…</string>
@@ -1053,6 +1121,8 @@ Language: tr
     <string name="quick_start_dialog_choose_theme_title">Bir tema seç</string>
     <string name="quick_start_dialog_browse_themes_message_short">Yeni temalar keşfetmek için %1$s Temalar %2$s seçeneğine dokunun</string>
     <string name="content_description_more">Daha fazlası</string>
+    <string name="reader_empty_followed_tags_title">Takip edilen konu yok</string>
+    <string name="reader_empty_followed_tags_subtitle">En sevdiğiniz konularla ilgili yazıları bulmak için buraya konu ekleyin</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Jetpack\'i kur</string>
@@ -1271,7 +1341,6 @@ Language: tr
     <string name="notif_detail_screen_title">Bildirim ayrıntısı %s</string>
     <string name="share_intent_screen_title">Site seç</string>
     <string name="signup_epilogue_screen_title">Yeni hesap</string>
-    <string name="login_prologue_screen_title">Oturum aç</string>
     <string name="edit_photo_screen_title">Fotoğrafı düzenle</string>
     <string name="site_settings_quota_space_title">Kullanılan alan</string>
     <string name="login_epilogue_screen_title">Oturum açmak için kullanılan hesap:</string>
@@ -2135,6 +2204,7 @@ Language: tr
     <string name="reader_short_like_count_none">Beğen</string>
     <string name="reader_short_like_count_one">1 beğeni</string>
     <string name="reader_label_follow_count">%,d takipçi</string>
+    <string name="reader_menu_tags">Konu ve site düzenleme</string>
     <string name="reader_title_post_detail">Okuyucu yazısı</string>
     <string name="notifications_push_summary">Cihazınızda görünen bildirimlerin ayarları.</string>
     <string name="notifications_email_summary">Hesabınıza bağlı e-posta adresine gönderilen bildirimlerin ayarları.</string>
@@ -2205,7 +2275,6 @@ Language: tr
     <string name="posts_fetching">Yazılar alınıyor…</string>
     <string name="logs_copied_to_clipboard">Uygulama günlükleri panoya kopyalandı</string>
     <string name="error_copy_to_clipboard">Metin panoya kopyalanırken bir hata oluştu</string>
-    <string name="reader_page_recommended_blogs">Hoşunuza gidebilecek siteler</string>
     <string name="post_uploading">Yazı yükleniyor</string>
     <string name="reader_empty_posts_in_blog">Bu site boş</string>
     <string name="reader_label_new_posts">Yeni yazılar</string>
@@ -2252,6 +2321,7 @@ Language: tr
     <string name="comment_reply_to_user">Şunu cevapla: %s</string>
     <string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
     <string name="comment">Yorum yap</string>
+    <string name="reader_empty_posts_in_tag">Bu konuyla ilgili hiç yazı yok</string>
     <string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
     <string name="reader_toast_err_block_blog">Bu site engellenemiyor</string>
     <string name="reader_toast_blog_blocked">Bu siteden yazılar artık gösterilmeyecek</string>
@@ -2266,6 +2336,8 @@ Language: tr
     <string name="reader_toast_err_unfollow_blog">Bu sitenin takibi bırakılamıyor</string>
     <string name="reader_empty_recommended_blogs">Önerilen site yok</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
+    <string name="reader_page_followed_tags">Takip edilen konular</string>
+    <string name="reader_hint_add_tag_or_url">Bir URL veya takip etmek istediğiniz konuyu girin</string>
     <string name="help">Yardım</string>
     <string name="forgot_password">Parolanızı mı kaybettiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
@@ -2346,6 +2418,8 @@ Language: tr
     <string name="delete_post">Yazıyı silinsin mi?</string>
     <string name="post_not_found">Yazı yüklenirken hata oluştu. Yazıyı yenileyin ve tekrar deneyin</string>
     <string name="link_enter_url_text">Bağlantı yazısı (opsiyonel)</string>
+    <string name="reader_toast_err_add_tag">Bu konu eklenemiyor</string>
+    <string name="reader_toast_err_remove_tag">Bu konu silinemiyor</string>
     <string name="share_link">Bağlantıyı paylaş</string>
     <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor…</string>
     <string name="reader_label_reply">Yanıtla</string>
@@ -2374,6 +2448,8 @@ Language: tr
     <string name="comments_empty_list">Henüz yorum yok</string>
     <string name="reader_toast_err_view_image">Görsel görüntülenemedi</string>
     <string name="sign_up_label">Üye ol</string>
+    <string name="reader_toast_err_tag_exists">Bu konuyu zaten takip ediyorsunuz</string>
+    <string name="reader_toast_err_tag_invalid">Bu geçerli bir konu değil</string>
     <string name="themes">Temalar</string>
     <string name="media_edit_title_text">Başlık</string>
     <string name="media_edit_caption_text">Manşet</string>

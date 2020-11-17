@@ -1026,6 +1026,9 @@
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
 
+    <!-- scan -->
+    <string name="scan">Scan</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
@@ -1333,8 +1336,12 @@
     <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
-    <string name="reader_discover_empty_title">Follow topics to discover new blogs</string>
+    <string name="reader_discover_empty_title">Welcome!</string>
+    <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
+    <string name="reader_discover_no_posts_title">No recent posts</string>
+    <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
+    <string name="reader_discover_no_posts_button_text">Follow topics</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -2403,14 +2410,14 @@
     <string name="log_in">Log In</string>
     <string name="login_prologue_title_first">Welcome to the world\’s most popular website builder.</string>
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
-    <string name="login_prologue_title_third">See comments and notification in real time.</string>
+    <string name="login_prologue_title_third">See comments and notifications in real time.</string>
     <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
     <string name="login_prologue_title_fifth">Follow your favorite sites and discover new reads.</string>
     <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
-    <string name="login_prologue_third_subtitle_one"><b>Madison Ruiz</b> liked your post</string>
-    <string name="login_prologue_third_subtitle_two">You received <b>50 likes</b> on your site today</string>
-    <string name="login_prologue_third_subtitle_three"><b>Johan Brandt</b> responded to your post</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
+    <string name="login_prologue_third_subtitle_two">You received &lt;b&gt;50 likes&lt;/b&gt; on your site today</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; responded to your post</string>
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_fifth_subtitle_two">Web News</string>
     <string name="login_prologue_fifth_subtitle_three">Rock n\' Roll Weekly</string>
@@ -2466,6 +2473,7 @@
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
     <string name="login_find_your_site_adress">Find your site address</string>
+    <string name="login_find_your_connected_email">Find your connected email</string>
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
@@ -2480,6 +2488,7 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
+    <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
@@ -2490,7 +2499,6 @@
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
-    <string name="send_verification_email">Send verification email</string>
     <string name="enter_credentials_for_site" tools:ignore="UnusedResources">Log in with your %1$s site credentials</string>
     <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
     <string name="enter_site_credentials_instead">Log in with site credentials.</string>
@@ -2929,12 +2937,15 @@
     <string name="hpp_subtitle">Pick your favorite homepage layout. You can customize or change it later.</string>
     <string name="hpp_choose_button">Choose</string>
     <string name="hpp_skip_button">Skip</string>
+    <string name="hpp_error_title">Layouts not available while offline</string>
+    <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
+    <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
+    <string name="hpp_choose_error">There was an error while selecting the design.</string>
 
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>
     <string name="stickers_button_alt">Stickers</string>
-    <string name="more_button_alt">More</string>
     <string name="text_button_alt">Text</string>
     <string name="sound_button_alt">Sound</string>
     <string name="label_control_flip_camera">Flip</string>
@@ -2945,8 +2956,6 @@
     <string name="label_snackbar_loop_frame_saved">Saved to photos</string>
     <string name="label_snackbar_share">SHARE</string>
     <string name="label_share_to">Share to</string>
-    <string name="label_done">Done</string>
-    <string name="label_control_publish">Next</string>
     <string name="label_close_button">Close</string>
     <string name="label_saved_icon">Saved</string>
     <string name="label_retry_icon">Retry</string>
@@ -2956,7 +2965,6 @@
     <string name="label_frame_errored">errored</string>
     <string name="label_text_alignment_button">Change text alignment</string>
     <string name="label_text_color_button">Change text color</string>
-    <string name="menu_delete_page">Delete slide</string>
     <string name="dialog_discard_page_title">Delete story slide?</string>
     <string name="dialog_discard_page_message">This slide will be removed from your story.</string>
     <string name="dialog_discard_errored_page_message">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
@@ -3035,7 +3043,6 @@
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
-    <string name="gutenberg_native_angle" tools:ignore="UnusedResources">Angle</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
@@ -3210,7 +3217,6 @@ translators: sample content for "Services" page template -->
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
     <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
-    <string name="gutenberg_native_size" tools:ignore="UnusedResources">Size</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_strategy" tools:ignore="UnusedResources">Strategy</string>
@@ -3263,4 +3269,12 @@ translators: sample content for "Services" page template -->
     <string name="typeface_label_pacifico">Playful</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_shrikhand">Bold</string>
+    <string name="delete_button_alt">Delete</string>
+    <string name="label_next_button">Next</string>
+    <string name="label_done_button">Done</string>
+    <string name="dialog_discard_story_title_edit">Discard changes?</string>
+    <string name="dialog_discard_story_message_edit">Any changes made will not be saved.</string>
+    <string name="dialog_discard_story_ok_button_edit">Discard</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="color_picker_label_background">Background</string>
 </resources>
