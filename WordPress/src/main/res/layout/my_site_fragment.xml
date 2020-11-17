@@ -372,6 +372,33 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
+                    <!--Plan-->
+                    <LinearLayout
+                        android:id="@+id/row_plan"
+                        style="@style/MySiteListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/my_site_plan_icon"
+                            style="@style/MySiteListRowIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_plans_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_plan_text_view"
+                            style="@style/MySiteListRowTextView"
+                            android:text="@string/plan" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_current_plan_text_view"
+                            style="@style/MySiteListRowSecondaryTextView"
+                            android:gravity="end"
+                            android:paddingStart="0dp"
+                            android:text="@string/plan"
+                            android:textAlignment="viewEnd"
+                            tools:ignore="RtlSymmetry" />
+
+                    </LinearLayout>
+
                     <!--Jetpack-->
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/row_label_jetpack"
@@ -447,33 +474,6 @@
                             android:id="@+id/my_site_jetpack_settings_text_view"
                             style="@style/MySiteListRowTextView"
                             android:text="@string/my_site_btn_jetpack_settings" />
-
-                    </LinearLayout>
-
-                    <!--Plan-->
-                    <LinearLayout
-                        android:id="@+id/row_plan"
-                        style="@style/MySiteListRowLayout">
-
-                        <ImageView
-                            android:id="@+id/my_site_plan_icon"
-                            style="@style/MySiteListRowIcon"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_plans_white_24dp" />
-
-                        <org.wordpress.android.widgets.WPTextView
-                            android:id="@+id/my_site_plan_text_view"
-                            style="@style/MySiteListRowTextView"
-                            android:text="@string/plan" />
-
-                        <org.wordpress.android.widgets.WPTextView
-                            android:id="@+id/my_site_current_plan_text_view"
-                            style="@style/MySiteListRowSecondaryTextView"
-                            android:gravity="end"
-                            android:paddingStart="0dp"
-                            android:text="@string/plan"
-                            android:textAlignment="viewEnd"
-                            tools:ignore="RtlSymmetry" />
 
                     </LinearLayout>
 
