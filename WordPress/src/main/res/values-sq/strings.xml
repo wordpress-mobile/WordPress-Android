@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-03 12:03:53+0000
+Translation-Revision-Date: 2020-11-13 09:16:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Durim Cerova&lt;/b> iu përgjigj postimit tuaj</string>
+    <string name="login_prologue_third_subtitle_two">Sot në sajtin tuaj patët &lt;b>50 pëlqeim&lt;/b></string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Maqo Senko&lt;/b> pëlqeu postimin tuaj</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">U hap me blloqesh. Përzgjidhni një bllok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuja e blloqeve u mbyll.</string>
     <string name="hpp_skip_button">Anashkaloje</string>
@@ -37,6 +40,7 @@ Language: sq_AL
     <string name="login_prologue_second_subtitle_one">Frymëzohuni</string>
     <string name="login_prologue_title_fifth">Ndiqni sajtet tuaj të parapëlqyer dhe zbuloni gjëra të reja për të lexuar.</string>
     <string name="login_prologue_title_fourth">Vëzhgoni shtimin e publikut tuaj, me mjete analizimi në thellësi.</string>
+    <string name="login_prologue_title_third">Shihni aty për aty komente  dhe njoftime.</string>
     <string name="login_prologue_title_second">Me fuqinë e përpunuesit mund të postoni kudo që ndodheni.</string>
     <string name="login_prologue_title_first">Mirë se vini te krijuesi më popullor në botë i sajteve.</string>
     <string name="media_loading_failed">Dështoi ngarkimi i medias</string>
