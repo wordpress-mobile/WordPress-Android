@@ -91,11 +91,18 @@ class SuggestionViewModel @Inject constructor(
         return if (onlyDisplayedSuggestion != null) {
             OnlyOneAvailable(onlyDisplayedSuggestion.value)
         } else {
-            val message = resourceProvider.getString(
-                    R.string.suggestion_invalid,
-                    currentUserInput,
-                    suggestionTypeString
-            )
+            // Provide different message depending on whether the user has tried to "submit" a suggestion
+            // based on no filter text versus tried to submit a suggestion based on text that just doesn't
+            // match a single suggestion.
+            val message = if (currentUserInput == suggestionPrefix.toString()) {
+                resourceProvider.getString(R.string.suggestion_selection_needed)
+            } else {
+                resourceProvider.getString(
+                        R.string.suggestion_invalid,
+                        currentUserInput,
+                        suggestionTypeString
+                )
+            }
             NotExactlyOneAvailable(message)
         }
     }

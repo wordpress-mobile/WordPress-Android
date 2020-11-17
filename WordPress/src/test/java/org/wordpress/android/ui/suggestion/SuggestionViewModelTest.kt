@@ -166,6 +166,21 @@ class SuggestionViewModelTest {
     }
 
     @Test
+    fun `onAttemptToFinish no filter text from user`() {
+        initViewModel(XPosts)
+        val emptyUserInput = "+"
+        val expectedMesage = "expected_message"
+        whenever(mockResourceProvider.getString(R.string.suggestion_selection_needed))
+                .thenReturn(expectedMesage)
+
+        val listWithMoreThanOne = listOf<Suggestion>(mock(), mock())
+        val actual = viewModel.onAttemptToFinish(listWithMoreThanOne, emptyUserInput)
+
+        val expected = NotExactlyOneAvailable(expectedMesage)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun `onAttemptToFinish multiple displayed suggestions`() {
         initViewModel()
         val userInput = "user_input"
