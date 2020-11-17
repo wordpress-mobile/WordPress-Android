@@ -38,10 +38,8 @@ import java.util.Date
 import javax.inject.Singleton
 
 @Singleton
-class ActivityLogRestClient
-constructor(
+class ActivityLogRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
-    private val networkErrorMapper: NetworkErrorMapper,
     dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
@@ -60,7 +58,7 @@ constructor(
                 buildActivityPayload(activities, payload.site, totalItems, number, offset)
             }
             is Error -> {
-                val errorType = networkErrorMapper.map(
+                val errorType = NetworkErrorMapper.map(
                         response.error,
                         ActivityLogErrorType.GENERIC_ERROR,
                         ActivityLogErrorType.INVALID_RESPONSE,
@@ -80,7 +78,7 @@ constructor(
                 buildRewindStatusPayload(response.data, site)
             }
             is Error -> {
-                val errorType = networkErrorMapper.map(
+                val errorType = NetworkErrorMapper.map(
                         response.error,
                         RewindStatusErrorType.GENERIC_ERROR,
                         RewindStatusErrorType.INVALID_RESPONSE,
@@ -110,7 +108,7 @@ constructor(
                 }
             }
             is Error -> {
-                val error = RewindError(networkErrorMapper.map(response.error,
+                val error = RewindError(NetworkErrorMapper.map(response.error,
                         RewindErrorType.GENERIC_ERROR,
                         RewindErrorType.INVALID_RESPONSE,
                         RewindErrorType.AUTHORIZATION_REQUIRED), response.error.message)
@@ -134,7 +132,7 @@ constructor(
                         site)
             }
             is Error -> {
-                val error = DownloadError(genericToError(response.error,
+                val error = DownloadError(NetworkErrorMapper.map(response.error,
                         DownloadErrorType.GENERIC_ERROR,
                         DownloadErrorType.INVALID_RESPONSE,
                         DownloadErrorType.AUTHORIZATION_REQUIRED), response.error.message)

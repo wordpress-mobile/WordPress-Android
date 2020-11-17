@@ -192,10 +192,9 @@ public class ReleaseNetworkModule {
     public ActivityLogRestClient provideActivityLogRestClient(Context appContext, Dispatcher dispatcher,
                                                               @Named("regular") RequestQueue requestQueue,
                                                               AccessToken token, UserAgent userAgent,
-                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder,
-                                                              NetworkErrorMapper networkErrorMapper) {
-        return new ActivityLogRestClient(wpComGsonRequestBuilder, networkErrorMapper, dispatcher, appContext,
-                requestQueue, token, userAgent);
+                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ActivityLogRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                token, userAgent);
     }
 
     @Singleton
@@ -203,9 +202,8 @@ public class ReleaseNetworkModule {
     public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AccessToken token, UserAgent userAgent,
-                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
-                                                NetworkErrorMapper networkErrorMapper) {
-        return new ScanRestClient(wpComGsonRequestBuilder, networkErrorMapper, dispatcher, appContext, requestQueue,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
                 token, userAgent);
     }
 
