@@ -65,8 +65,9 @@ class ActivityLogRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        activityRestClient = ActivityLogRestClient(dispatcher,
+        activityRestClient = ActivityLogRestClient(
                 wpComGsonRequestBuilder,
+                dispatcher,
                 null,
                 requestQueue,
                 accessToken,

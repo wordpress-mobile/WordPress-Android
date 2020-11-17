@@ -3,10 +3,8 @@ package org.wordpress.android.fluxc.utils
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import javax.inject.Inject
 
-class NetworkErrorMapper
-@Inject constructor() {
+object NetworkErrorMapper {
     fun <T> map(
         error: WPComGsonNetworkError,
         genericError: T,
