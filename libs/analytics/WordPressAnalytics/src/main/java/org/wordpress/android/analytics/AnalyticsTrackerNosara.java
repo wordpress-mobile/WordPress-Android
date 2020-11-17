@@ -1377,6 +1377,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_error_shown";
             case ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED:
                 return "enhanced_site_creation_background_service_updated";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED:
+                return "enhanced_site_creation_site_design_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED:
+                return "enhanced_site_creation_site_design_selected";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED:
+                return "enhanced_site_creation_site_design_skipped";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED:
+                return "enhanced_site_creation_site_design_preview_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING:
+                return "enhanced_site_creation_site_design_preview_loading";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
+                return "enhanced_site_creation_site_design_preview_loaded";
             case SITE_CREATED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2

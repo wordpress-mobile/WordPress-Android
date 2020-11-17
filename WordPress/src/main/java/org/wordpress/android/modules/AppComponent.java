@@ -32,6 +32,7 @@ import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -62,6 +63,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -187,7 +189,6 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
-import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -596,11 +597,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(MediaPickerFragment object);
 
-    void inject(MediaUploadReadyProcessor object);
-
     void inject(PrepublishingCategoriesFragment object);
 
     void inject(PrepublishingAddCategoryFragment object);
+
+    void inject(ActivityLogTypeFilterFragment object);
+
+    void inject(ImprovedMySiteFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

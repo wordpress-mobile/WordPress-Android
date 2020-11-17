@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-16 11:54:09+0000
+Translation-Revision-Date: 2020-11-13 14:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
+    <string name="hpp_skip_button">跳過</string>
+    <string name="hpp_choose_button">選擇</string>
+    <string name="hpp_subtitle">選擇你喜愛的首頁版面配置。 你之後可以隨時自訂或變更。</string>
+    <string name="hpp_title">選擇一款設計</string>
+    <string name="mlp_network_error_subtitle">請在重新上線時點選重試，或是使用下方按鈕建立空白頁面。</string>
+    <string name="mlp_network_error_title">版面配置在離線時無法使用</string>
+    <string name="mlp_error_subtitle">請點選重試或使用下方按鈕建立空白頁面。</string>
+    <string name="mlp_error_title">發生錯誤導致版面配置無法使用</string>
+    <string name="prepublishing_nudges_add_category_button">新增類別</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">新增類別</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">類別</string>
+    <string name="prepublishing_nudges_home_categories_not_set">未設定</string>
+    <string name="prepublishing_nudges_categories_action">類別</string>
+    <string name="login_prologue_fifth_caption_three">倫敦的博物館</string>
+    <string name="login_prologue_fifth_caption_two">全球最棒的粉絲</string>
+    <string name="login_prologue_fifth_caption_one">我最愛的十家咖啡館</string>
+    <string name="login_prologue_fifth_tag_six">政治</string>
+    <string name="login_prologue_fifth_tag_five">音樂</string>
+    <string name="login_prologue_fifth_tag_four">園藝</string>
+    <string name="login_prologue_fifth_tag_three">橄欖球</string>
+    <string name="login_prologue_fifth_tag_two">烹飪</string>
+    <string name="login_prologue_fifth_tag_one">藝術</string>
+    <string name="login_prologue_fifth_subtitle_three">每週搖滾</string>
+    <string name="login_prologue_fifth_subtitle_two">網路新聞</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">攝影師 Cameron Karsten 的作品讓我深受啟發。 我下次會嘗試這些技巧</string>
+    <string name="login_prologue_second_subtitle_one">激發靈感</string>
+    <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新讀物。</string>
+    <string name="login_prologue_title_fourth">透過深入分析資料拓展讀者群。</string>
+    <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
+    <string name="login_prologue_title_first">歡迎使用全球最受歡迎的網站建置工具。</string>
+    <string name="media_loading_failed">媒體載入失敗</string>
+    <string name="reader_discover_recommended_blogs_header">值得關注的網站</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我們正在努力開發，讓每次版本更新都可以新增更多區塊。</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">無法完全支援「%s」</string>
+    <string name="gutenberg_native_help_button">「協助」按鈕</string>
+    <string name="gutenberg_native_edit_using_web_editor">使用網頁編輯器編輯</string>
+    <string name="gutenberg_native_choose_images">選擇圖片</string>
+    <string name="stories_intro_create_story_post_label">建立限時動態文章</string>
+    <string name="stories_intro_description_second">它們會以新網誌文章的形式發佈在你的網站上，這樣你的讀者群永遠不會錯過任何精彩內容。</string>
+    <string name="stories_intro_title_second">故事文章不會消失</string>
+    <string name="stories_intro_description_first">結合相片、視訊和文字，建立吸睛又可點按的故事，你的訪客一定會喜歡。</string>
+    <string name="stories_intro_title_first">現在人人都可以發佈限時動態</string>
+    <string name="stories_intro_image_caption_second">限時動態標題例子</string>
+    <string name="stories_intro_image_caption_first">如何建立限時動態文章</string>
+    <string name="stories_intro_main_subtitle">你可以搶先使用「限時動態文章」 (Story Posts)，我們很樂意為你開放試用。</string>
+    <string name="stories_intro_main_title">限時動態文章介紹</string>
+    <string name="mlp_notice_blank_page_created">已建立空白頁面</string>
+    <string name="mlp_notice_page_created">已建立頁面</string>
+    <string name="mlp_preview_title">版面配置預覽</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s 存取你的相片時遭拒絕。 若要解決此問題，請編輯存取權限並開啟 %2$s 和 %3$s。</string>
+    <string name="media_insert_failed">媒體插入失敗。</string>
+    <string name="media_insert_failed_with_reason">媒體插入失敗：%s</string>
+    <string name="photo_picker_wordpress_media_library">從 WordPress 媒體庫選擇</string>
+    <string name="reader_label_toolbar_back">返回</string>
+    <string name="reader_discover_empty_button_text">開始使用</string>
+    <string name="reader_discover_empty_title">關注主題以探索新網誌</string>
+    <string name="reader_post_details_header_by_author_name">發表者：</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">此推薦連結不能被標記為垃圾郵件</string>
+    <string name="stats_referrer_popup_unmark_as_spam">取消標記為垃圾郵件</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">標記為垃圾</string>
+    <string name="stats_referrer_popup_menu_open_website">開啟網站</string>
+    <string name="media_uploading_gif_library_photo">正在上傳 GIF 媒體</string>
+    <string name="media_uploading_stock_library_photo">正在上傳庫存媒體</string>
+    <string name="media_uploading_default">正在上傳媒體</string>
     <string name="gutenberg_native_select_item">選取項目</string>
     <string name="gutenberg_native_search_or_type_url">搜尋或輸入 URL</string>
     <string name="gutenberg_native_add_this_telephone_link">新增此電話連結</string>
@@ -122,8 +189,7 @@ Language: zh_TW
     <string name="gutenberg_native_choose_image_or_video">選擇圖片或視訊</string>
     <string name="gutenberg_native_choose_image">選擇圖片</string>
     <string name="gutenberg_native_block_removed">已移除區塊</string>
-    <string name="content_description_logo">WordPress 標誌</string>
-    <string name="enter_your_site_address">請輸入你的網站位址</string>
+    <string name="enter_your_site_address">輸入你現有的網址</string>
     <string name="continue_with_wpcom">繼續使用 WordPress.com</string>
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
@@ -145,7 +211,6 @@ Language: zh_TW
     <string name="or_type_your_password">或輸入你的密碼</string>
     <string name="create_account">建立帳號</string>
     <string name="send_link_by_email">以電子郵件傳送連結</string>
-    <string name="login_promo_text_unlock_the_power">最具彈性、功能最強大的網站建置系統，釋放無限可能。</string>
     <string name="reset_your_password">重設密碼</string>
     <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">設定你的網站標題</string>
@@ -394,7 +459,9 @@ Language: zh_TW
     <string name="reader_btn_selected_filter_tick_content_description">已選取</string>
     <string name="reader_btn_select_filter_content_description">選擇網站或標籤以篩選文章</string>
     <string name="reader_btn_remove_filter_content_description">移除目前的篩選條件</string>
+    <string name="reader_title_subs">管理主題和網站</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登入 WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">登入 WordPress.com，查看你關注主題的最新文章</string>
     <string name="reader_filter_self_hosted_empty_sites_list">登入 WordPress.com，查看關注網站的最新文章</string>
     <string name="gutenberg_native_template_preview">範例預覽</string>
     <string name="gutenberg_native_replace_current_block">取代目前區塊</string>
@@ -402,7 +469,9 @@ Language: zh_TW
     <string name="gutenberg_native_add_to_beginning">新增至「開始」</string>
     <string name="gutenberg_native_add_block_before">在之前新增區塊</string>
     <string name="gutenberg_native_add_block_after">在之後新增區塊</string>
+    <string name="reader_filter_empty_tags_action">新增主題</string>
     <string name="reader_filter_empty_sites_action">關注網站</string>
+    <string name="reader_filter_empty_tags_list">你可以新增主題以關注特定主題的文章</string>
     <string name="reader_filter_empty_sites_list">查看你關注網站的最新聞張</string>
     <string name="reader_filter_main_title">關注中</string>
     <string name="reader_filter_cta">篩選</string>
@@ -445,7 +514,6 @@ Language: zh_TW
     <string name="dialog_confirm_scheduled_post_sync_message">此文章會立即同步。</string>
     <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
     <string name="new_site_creation_unavailable_domain">此網域不可使用</string>
-    <string name="login_promo_viewpager_content_description">簡介</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_ssl">由於 &lt;b>SSL 憑證&lt;/b>發生問題，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
@@ -460,6 +528,7 @@ Language: zh_TW
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="reader_discover_display_name">探索</string>
     <string name="reader_save_for_later_display_name">已儲存</string>
+    <string name="reader_filter_tags_title">主題</string>
     <string name="reader_filter_sites_title">網站</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -1037,6 +1106,8 @@ Language: zh_TW
     <string name="quick_start_button_negative">現在不要</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
+    <string name="reader_empty_followed_tags_title">沒有關注任何主題</string>
+    <string name="reader_empty_followed_tags_subtitle">請在此處新增主題，以尋找你最愛的主題文章</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="install_jetpack_retry">重試</string>
     <string name="install_jetpack_continue">設定</string>
@@ -1255,7 +1326,6 @@ Language: zh_TW
     <string name="edit_photo_screen_title">編輯照片</string>
     <string name="share_intent_screen_title">挑選網站</string>
     <string name="signup_epilogue_screen_title">新增帳號</string>
-    <string name="login_prologue_screen_title">登入</string>
     <string name="login_epilogue_screen_title">已登入為</string>
     <string name="person_detail_screen_title">個人詳細資料</string>
     <string name="media_settings_screen_title">檔案詳細資料</string>
@@ -2106,6 +2176,7 @@ Language: zh_TW
     <string name="reader_short_like_count_multi">%s 個讚</string>
     <string name="reader_short_like_count_one">1 個讚</string>
     <string name="reader_short_like_count_none">讚</string>
+    <string name="reader_menu_tags">編輯主題和網站</string>
     <string name="reader_title_post_detail">讀者文章</string>
     <string name="notifications_push_summary">在裝置上顯示通知的相關設定。</string>
     <string name="notifications_email_summary">將通知傳送至帳號所繫結之電子郵件地址的相關設定。</string>
@@ -2174,7 +2245,6 @@ Language: zh_TW
     <string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
     <string name="reader_empty_posts_in_blog">這個網站沒有內容</string>
     <string name="reader_label_new_posts">新文章</string>
-    <string name="reader_page_recommended_blogs">你或許也會喜歡以下網站：</string>
     <string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
     <string name="post_uploading">正在上傳文章</string>
     <string name="stats_followers_years">%1$d 年</string>
@@ -2202,6 +2272,7 @@ Language: zh_TW
     <string name="cab_selected">已選取：%d</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
     <string name="reader_empty_comments">尚未有留言</string>
+    <string name="reader_empty_posts_in_tag">沒有任何與此主題相關的文章</string>
     <string name="reader_label_like">按讚</string>
     <string name="reader_label_view_original">查看原始文章</string>
     <string name="reader_label_comments_closed">留言已關閉</string>
@@ -2232,7 +2303,9 @@ Language: zh_TW
     <string name="reader_toast_err_already_follow_blog">你已經關注此網站</string>
     <string name="reader_toast_err_get_blog_info">無法顯示此網站</string>
     <string name="reader_label_followed_blog">已關注的網站</string>
+    <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或主題</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
+    <string name="reader_page_followed_tags">已關注的主題</string>
     <string name="reader_title_blog_preview">讀者網站</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
@@ -2260,6 +2333,8 @@ Language: zh_TW
     <string name="blog_not_found">存取此網誌時發生錯誤</string>
     <string name="gallery_error">無法擷取媒體項目</string>
     <string name="no_network_message">沒有可用的網路</string>
+    <string name="reader_toast_err_remove_tag">無法移除此主題</string>
+    <string name="reader_toast_err_add_tag">無法新增此主題</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
@@ -2329,6 +2404,8 @@ Language: zh_TW
     <string name="reader_toast_err_url_intent">無法開啟 %s</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
+    <string name="reader_toast_err_tag_invalid">這不是有效的主題</string>
+    <string name="reader_toast_err_tag_exists">你已經關注了此主題</string>
     <string name="reader_toast_err_comment_failed">無法張貼你的回應</string>
     <string name="reader_likes_only_you">你說這個讚</string>
     <string name="reader_likes_one">1 人說這個讚</string>

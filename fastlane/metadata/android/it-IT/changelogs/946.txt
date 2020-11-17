@@ -1,4 +1,0 @@
-16.0:
-Aggiornamenti editor a blocchi: ora è disponibile il supporto per l'allineamento Wide e Full width per i blocchi Video, Galleria e molti altri. Abbiamo corretto un problema che influenzava il blocco Classico sui siti Jetpack e abbiamo risolto un problema relativo a blocchi non supportati su dispositivi ruotati.
-
-Aggiornamenti Reader: Goditi un'esperienza di lettura più pulita e con immagini più belle nel Reader riprogettato. Puoi accedervi anche se non segui altri argomenti.

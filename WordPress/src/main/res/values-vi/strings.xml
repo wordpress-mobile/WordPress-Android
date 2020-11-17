@@ -435,7 +435,6 @@ Language: vi_VN
     <string name="publisher">Người xuất bản:</string>
     <string name="stats_search_terms_unknown_search_terms">Không biết Điều kiện tìm kiếm</string>
     <string name="error_copy_to_clipboard">Một lỗi đã xảy ra trong khi sao chép văn bản vào bộ nhớ tạm</string>
-    <string name="reader_page_recommended_blogs">Các site bạn có thể thích</string>
     <string name="reader_label_new_posts">Bài viết mới</string>
     <string name="logs_copied_to_clipboard">Bản ghi ứng dụng đã được sao chép vào clipboard</string>
     <string name="reader_empty_posts_in_blog">Site này không có gì</string>

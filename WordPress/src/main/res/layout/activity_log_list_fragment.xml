@@ -13,6 +13,15 @@
         android:text="Date Range - hardcoded"
         tools:ignore="HardcodedText" />
 
+    <com.google.android.material.chip.Chip
+        android:id="@+id/activity_type_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/date_range_picker"
+        android:visibility="gone"
+        android:text="Activity type - hardcoded"
+        tools:ignore="HardcodedText" />
+
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
         android:layout_width="match_parent"
