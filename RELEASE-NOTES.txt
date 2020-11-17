@@ -1,6 +1,7 @@
 16.3
 -----
- 
+* [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
+
 16.2
 -----
 * [***] Block Editor: Faster editor start and overall operation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2780]
