@@ -577,6 +577,14 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
         if (quickStartEvent?.task == QuickStartTask.CREATE_NEW_PAGE) {
             view?.post {
+                val marginOffset = resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        fab_container,
+                        newPageButton,
+                        -marginOffset,
+                        -marginOffset
+                )
+
                 val title = QuickStartUtils.stylizeQuickStartPrompt(
                         requireActivity(),
                         R.string.quick_start_dialog_create_new_page_message_short_pages,
