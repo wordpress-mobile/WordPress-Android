@@ -2,13 +2,11 @@ package org.wordpress.android.ui.mlp
 
 import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,9 +14,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_error.*
@@ -30,6 +25,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -43,9 +39,9 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.Lo
 import javax.inject.Inject
 
 /**
- * Implements the Modal Layout Picker UI based on the [BottomSheetDialogFragment] to inherit the container behavior
+ * Implements the Modal Layout Picker UI
  */
-class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
+class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
@@ -137,22 +133,12 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         description?.visibility = if (visible) View.VISIBLE else View.INVISIBLE
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
-        fillTheScreen(this)
-        window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        closeModal()
-    }
-
-    private fun closeModal() {
+    override fun closeModal() {
         viewModel.dismiss()
     }
 
@@ -225,23 +211,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         previewButton.setVisible(uiState.previewVisible)
         retryButton.setVisible(uiState.retryVisible)
         createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
-    }
-
-    private fun fillTheScreen(dialog: BottomSheetDialog) {
-        dialog.setOnShowListener {
-            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let {
-                val behaviour = BottomSheetBehavior.from(it)
-                setupFullHeight(it)
-                behaviour.skipCollapsed = true
-                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        }
-    }
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
