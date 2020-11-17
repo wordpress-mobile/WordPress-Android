@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-30 11:54:09+0000
+Translation-Revision-Date: 2020-11-13 14:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">滚动区块菜单打开。 选择区块。</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">滚动区块菜单关闭。</string>
+    <string name="hpp_skip_button">跳过</string>
+    <string name="hpp_choose_button">选择</string>
+    <string name="hpp_subtitle">选择您喜欢的主页布局。 您以后可以随时定制或更改。</string>
+    <string name="hpp_title">选择设计</string>
+    <string name="mlp_network_error_subtitle">重新上线后，点击“重试”，或使用下面的按钮创建空白页。</string>
+    <string name="mlp_network_error_title">离线时布局不可用</string>
+    <string name="mlp_error_subtitle">点击“重试”或使用下面的按钮创建空白页。</string>
+    <string name="mlp_error_title">由于发生错误，布局不可用</string>
+    <string name="prepublishing_nudges_add_category_button">添加类别</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">添加新分类目录</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">类别</string>
+    <string name="prepublishing_nudges_home_categories_not_set">未设置</string>
+    <string name="prepublishing_nudges_categories_action">类别</string>
+    <string name="login_prologue_fifth_caption_three">伦敦的博物馆</string>
+    <string name="login_prologue_fifth_caption_two">世界最佳粉丝</string>
+    <string name="login_prologue_fifth_caption_one">我的十大咖啡馆</string>
+    <string name="login_prologue_fifth_tag_six">政治</string>
+    <string name="login_prologue_fifth_tag_five">音乐</string>
+    <string name="login_prologue_fifth_tag_four">园艺</string>
+    <string name="login_prologue_fifth_tag_three">足球</string>
+    <string name="login_prologue_fifth_tag_two">烹饪</string>
+    <string name="login_prologue_fifth_tag_one">艺术</string>
+    <string name="login_prologue_fifth_subtitle_three">摇滚周刊</string>
+    <string name="login_prologue_fifth_subtitle_two">网络新闻</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">我受到摄影师 Cameron Karsten 的作品启发很大。 我会在下次尝试这些技术</string>
+    <string name="login_prologue_second_subtitle_one">受到启发</string>
+    <string name="login_prologue_title_fifth">关注您喜欢的站点，发现新的阅读内容。</string>
+    <string name="login_prologue_title_fourth">通过深入分析观察您的受众增长。</string>
+    <string name="login_prologue_title_second">有了这个功能强大的编辑器，您可以随时随地发表内容。</string>
+    <string name="login_prologue_title_first">欢迎使用全球最热门的网站生成器。</string>
+    <string name="media_loading_failed">媒体加载失败</string>
+    <string name="reader_discover_recommended_blogs_header">关注的站点</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">我们正在努力在每个版本中添加更多区块。</string>
     <string name="gutenberg_native_s_is_not_fully_supported">不完全支持“%s”</string>
     <string name="gutenberg_native_help_button">“帮助”按钮</string>
@@ -154,6 +189,7 @@ Language: zh_CN
     <string name="continue_with_wpcom">继续使用 WordPress.com</string>
     <string name="signup_confirmation_title">注册确认</string>
     <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
+    <string name="enter_your_site_address">输入您的现有站点地址</string>
     <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
     <string name="signup_confirmation_magic_link_message">我们将通过电子邮件向您发送注册链接，供您创建新的 WordPress.com 帐户。</string>
     <string name="signup_confirmation_message">我们将使用此电子邮件地址为您创建新 WordPress.com 帐户。</string>

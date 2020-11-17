@@ -32,6 +32,7 @@ import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
@@ -62,6 +63,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -166,6 +168,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
+import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
@@ -536,6 +539,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(HomePagePickerFragment object);
 
+    void inject(DesignPreviewFragment object);
+
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
@@ -601,6 +606,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PrepublishingCategoriesFragment object);
 
     void inject(PrepublishingAddCategoryFragment object);
+
+    void inject(ActivityLogTypeFilterFragment object);
+
+    void inject(ImprovedMySiteFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

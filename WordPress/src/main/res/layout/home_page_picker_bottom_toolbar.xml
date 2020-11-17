@@ -27,7 +27,6 @@
             android:layout_marginEnd="@dimen/mlp_bottom_button_horizontal_central_margin"
             android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin"
             android:layout_weight="1"
-            android:visibility="gone"
             android:text="@string/mlp_preview_page" />
 
         <com.google.android.material.button.MaterialButton
@@ -35,7 +34,6 @@
             style="@style/Widget.ModalLayoutPicker.Button.Primary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin"
             android:layout_marginEnd="@dimen/mlp_bottom_button_horizontal_margin"
             android:layout_weight="1"
             android:text="@string/hpp_choose_button" />

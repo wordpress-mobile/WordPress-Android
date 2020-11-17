@@ -16,7 +16,7 @@ import org.wordpress.android.test
 import org.wordpress.android.util.MediaUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-@UseExperimental(InternalCoroutinesApi::class)
+@InternalCoroutinesApi
 class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     @Test
     fun `do NOT copy files which are present in media store`() = test {
@@ -88,6 +88,7 @@ class CopyMediaToAppStorageUseCaseTest : BaseUnitTest() {
     }
 
     private companion object Fixtures {
+        @InternalCoroutinesApi
         fun createCopyMediaToAppStorageUseCase(mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper()) =
                 CopyMediaToAppStorageUseCase(mediaUtilsWrapper, TEST_DISPATCHER)
 

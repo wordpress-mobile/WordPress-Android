@@ -187,7 +187,8 @@ public class PhotoPickerActivity extends LocaleAwareActivity
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
                 if (data != null) {
-                    doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
+                    List<Uri> mediaUris = WPMediaUtils.retrieveMediaUris(data);
+                    getPickerFragment().urisSelectedFromSystemPicker(mediaUris);
                 }
                 break;
             case RequestCodes.TAKE_PHOTO:

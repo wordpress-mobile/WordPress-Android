@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
+import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
@@ -413,6 +415,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PrepublishingAddCategoryViewModel.class)
     abstract ViewModel prepublishingAddCategoryViewModel(PrepublishingAddCategoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ActivityLogTypeFilterViewModel.class)
+    abstract ViewModel activityLogTypeFilterViewModel(ActivityLogTypeFilterViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MySiteViewModel.class)
+    abstract ViewModel mySiteViewModel(MySiteViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

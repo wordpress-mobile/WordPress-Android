@@ -1,0 +1,3 @@
+16.1:
+* Kies uit een aantal voorontworpen paginasjablonen op het moment dat je een nieuwe pagina maakt op een website met Gutenberg.
+

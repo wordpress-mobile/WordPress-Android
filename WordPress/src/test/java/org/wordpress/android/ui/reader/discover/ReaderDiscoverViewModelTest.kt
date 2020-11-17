@@ -41,11 +41,14 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowFollowInterestsEmptyUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.ShowNoPostsUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
@@ -201,7 +204,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags `() = test {
+    fun `ShowFollowInterestsEmptyUiState is shown when the user does NOT follow any tags`() = test {
         // Arrange
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         val uiStates = init().uiStates
@@ -209,7 +212,17 @@ class ReaderDiscoverViewModelTest {
         viewModel.start(parentViewModel)
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
-        assertThat(uiStates[1]).isInstanceOf(ShowFollowInterestsEmptyUiState::class.java)
+        assertThat(uiStates[1]).isInstanceOf(ShowNoFollowedTagsUiState::class.java)
+    }
+
+    @Test
+    fun `ShowNoPostsUiState is shown when the discoverFeed does not contain any posts`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList(numberOfItems = 0)
+        // Assert
+        assertThat(uiStates[1]).isInstanceOf(ShowNoPostsUiState::class.java)
     }
 
     @Test
@@ -275,7 +288,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `if welcome card exists with other cards, it is present in ContentUiState`() = test {
+    fun `if welcome card exists then ReaderWelcomeBannerCardUiState will be present`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
@@ -286,17 +299,6 @@ class ReaderDiscoverViewModelTest {
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
         assertThat(contentUiState.cards.first()).isInstanceOf(ReaderWelcomeBannerCardUiState::class.java)
-    }
-
-    @Test
-    fun `if welcome card exists as the only card in the feed then ContentUiState is not shown`() = test {
-        // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
-        // Act
-        fakeDiscoverFeed.value = ReaderDiscoverCards(createWelcomeBannerCard())
-        // Assert
-        assertThat(uiStates.size).isEqualTo(1)
-        assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
     }
 
     @Test
@@ -357,7 +359,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        assertThat(uiStates.last().fullscreenErrorVisibility).isTrue()
+        assertThat(uiStates.last()).isInstanceOf(RequestFailedUiState::class.java)
     }
 
     @Test
@@ -562,13 +564,38 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `OnEmptyActionClicked shows select interests screen`() = test {
+    fun `Action button on no tags empty screen opens reader interests screen`() = test {
         // Arrange
+        whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList())
         init()
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
         // Act
-        viewModel.onEmptyActionClick()
+        (viewModel.uiState.value as ShowNoFollowedTagsUiState).action.invoke()
         // Assert
         verify(parentViewModel).onShowReaderInterests()
+    }
+
+    @Test
+    fun `Action button on no posts empty screen opens subs screen`() = test {
+        // Arrange
+        val navigation = init().navigation
+        fakeDiscoverFeed.value = ReaderDiscoverCards(listOf())
+        // Act
+        (viewModel.uiState.value as ShowNoPostsUiState).action.invoke()
+        // Assert
+        assertThat(navigation[0].peekContent()).isInstanceOf(ShowReaderSubs::class.java)
+    }
+
+    @Test
+    fun `Action button on error empty screen invokes refresh cards`() = test {
+        // Arrange
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        viewModel.start(parentViewModel)
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Act
+        (viewModel.uiState.value as RequestFailedUiState).action.invoke()
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards()
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
@@ -594,8 +621,12 @@ class ReaderDiscoverViewModelTest {
     // since we are adding an InterestsYouMayLikeCard we remove one item from the numberOfItems since it counts as 1.
     private fun createDummyReaderCardsList(numberOfItems: Long = NUMBER_OF_ITEMS): ReaderDiscoverCards {
         return ReaderDiscoverCards(
-                createInterestsYouMayLikeCardList()
-                        .plus(createDummyReaderPostCardList(numberOfItems - 1))
+                if (numberOfItems != 0L) {
+                    createInterestsYouMayLikeCardList()
+                            .plus(createDummyReaderPostCardList(numberOfItems - 1))
+                } else {
+                    listOf()
+                }
         )
     }
 
