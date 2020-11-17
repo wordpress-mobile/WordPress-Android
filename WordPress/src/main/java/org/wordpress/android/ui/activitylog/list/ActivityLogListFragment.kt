@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -84,6 +85,18 @@ class ActivityLogListFragment : Fragment() {
         viewModel.start(site)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        restoreDateRangePickerListeners()
+    }
+
+    private fun restoreDateRangePickerListeners() {
+        (parentFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Pair<Long, Long>>)
+                ?.let { picker ->
+                    initDateRangePickerButtonClickListener(picker)
+                }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
@@ -151,8 +164,12 @@ class ActivityLogListFragment : Fragment() {
                 .dateRangePicker()
                 .setSelection(initialDateRange)
                 .build()
+        initDateRangePickerButtonClickListener(picker)
+        picker.show(childFragmentManager, DATE_PICKER_TAG)
+    }
+
+    private fun initDateRangePickerButtonClickListener(picker: MaterialDatePicker<Pair<Long, Long>>) {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
-        picker.show(parentFragmentManager, DATE_PICKER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
