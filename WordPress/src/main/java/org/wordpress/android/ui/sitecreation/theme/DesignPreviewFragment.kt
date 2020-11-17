@@ -9,6 +9,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
@@ -62,7 +63,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
-        viewModel.previewState.observe(viewLifecycleOwner) { state ->
+        viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
             when (state) {
                 is Loading -> {
                     progressBar.setVisible(true)
@@ -82,7 +83,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     state.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
-        }
+        })
 
         backButton.setOnClickListener { closeModal() }
 
