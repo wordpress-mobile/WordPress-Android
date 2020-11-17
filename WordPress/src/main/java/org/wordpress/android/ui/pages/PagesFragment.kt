@@ -186,6 +186,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         }
 
         newPageButton.setOnClickListener {
+            QuickStartUtils.removeQuickStartFocusPoint(fab_container)
             viewModel.onNewPageButtonTapped()
         }
 
