@@ -91,7 +91,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun restoreDateRangePickerListeners() {
-        (parentFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Pair<Long, Long>>)
+        (childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Pair<Long, Long>>)
                 ?.let { picker ->
                     initDateRangePickerButtonClickListener(picker)
                 }
