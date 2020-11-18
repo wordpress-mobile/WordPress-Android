@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 143;
+    private static final int DB_VERSION = 144;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -102,6 +102,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 141 - added tbl_posts.tags
      * 142 - remove followed tags from tbl_tags
      * 143 - drop tbl_recommended_blogs
+     * 141 - added tbl_posts.is_wpforteams_site
      */
 
     /*
@@ -209,6 +210,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 currentVersion++;
             case 142:
                 db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs;");
+                currentVersion++;
+            case 143:
+                db.execSQL("ALTER TABLE tbl_posts ADD is_wpforteams_site BOOLEAN;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
