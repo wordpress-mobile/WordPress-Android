@@ -10,6 +10,7 @@ import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 data class GutenbergPropsBuilder(
     private val enableMediaFilesCollectionBlocks: Boolean,
     private val enableMentions: Boolean,
+    private val enableXPosts: Boolean,
     private val enableUnsupportedBlockEditor: Boolean,
     private val unsupportedBlockEditorSwitch: Boolean,
     private val enablePreviewMode: Boolean,
@@ -21,6 +22,7 @@ data class GutenbergPropsBuilder(
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
             enableMediaFilesCollectionBlocks = enableMediaFilesCollectionBlocks,
             enableMentions = enableMentions,
+            enableXPosts = enableXPosts,
             enableUnsupportedBlockEditor = enableUnsupportedBlockEditor,
             canEnableUnsupportedBlockEditor = unsupportedBlockEditorSwitch,
             localeSlug = localeSlug,
