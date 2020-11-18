@@ -102,7 +102,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 141 - added tbl_posts.tags
      * 142 - remove followed tags from tbl_tags
      * 143 - drop tbl_recommended_blogs
-     * 141 - added tbl_posts.is_wpforteams_site
+     * 144 - added tbl_posts.is_wpforteams_site
      */
 
     /*
