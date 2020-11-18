@@ -22,7 +22,6 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.util.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -138,13 +137,11 @@ class ReaderPostViewHolder(
             )
         }
 
-        uiHelpers.updateVisibility(
-                p2_author_avatar, state.blogSection.avatarOrBlavatarUrl != null && state.blogSection.isAuthorAvatarVisible
-        )
-        if (state.blogSection.isAuthorAvatarVisible && state.blogSection.authorAvatarUrl != null) {
-            imageManager.loadIntoCircle(p2_author_avatar, BLAVATAR_CIRCULAR, state.blogSection.authorAvatarUrl)
+        uiHelpers.updateVisibility(authors_avatar, state.blogSection.isAuthorAvatarVisible)
+        if (state.blogSection.authorAvatarUrl == null) {
+            imageManager.cancelRequestAndClearImageView(authors_avatar)
         } else {
-            imageManager.cancelRequestAndClearImageView(p2_author_avatar)
+            imageManager.loadIntoCircle(authors_avatar, BLAVATAR_CIRCULAR, state.blogSection.authorAvatarUrl)
         }
     }
 

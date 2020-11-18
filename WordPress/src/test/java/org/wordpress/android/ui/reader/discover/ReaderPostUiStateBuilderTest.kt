@@ -531,18 +531,20 @@ class ReaderPostUiStateBuilderTest {
                 authorName = "John Smith"
         )
         // Act
-        val postWithFirstNameUiState = mapPostToUiState(postWithFirstName)
-        val postWithoutFirstNameUiState = mapPostToUiState(postWithoutFirstName)
+        val firstNameUiState = mapPostToUiState(postWithFirstName)
+        val fullNameUiState = mapPostToUiState(postWithoutFirstName)
         // Assert
-        assertThat((postWithFirstNameUiState.blogSection.blogName as UiStringResWithParams).stringRes).isEqualTo(R.string.reader_author_with_blog_name)
-        assertThat((postWithFirstNameUiState.blogSection.blogName as UiStringResWithParams).params.size).isEqualTo(2)
-        assertThat(((postWithFirstNameUiState.blogSection.blogName as UiStringResWithParams).params[0] as UiStringText).text).isEqualTo("John")
-        assertThat(((postWithFirstNameUiState.blogSection.blogName as UiStringResWithParams).params[1] as UiStringText).text).isEqualTo("Fancy Blog")
+        val firstNameBlog = firstNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(firstNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(firstNameBlog.params.size).isEqualTo(2)
+        assertThat((firstNameBlog.params[0] as UiStringText).text).isEqualTo("John")
+        assertThat((firstNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
 
-        assertThat((postWithoutFirstNameUiState.blogSection.blogName as UiStringResWithParams).stringRes).isEqualTo(R.string.reader_author_with_blog_name)
-        assertThat((postWithoutFirstNameUiState.blogSection.blogName as UiStringResWithParams).params.size).isEqualTo(2)
-        assertThat(((postWithoutFirstNameUiState.blogSection.blogName as UiStringResWithParams).params[0] as UiStringText).text).isEqualTo("John Smith")
-        assertThat(((postWithoutFirstNameUiState.blogSection.blogName as UiStringResWithParams).params[1] as UiStringText).text).isEqualTo("Fancy Blog")
+        val fullNameBlog = fullNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(fullNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(fullNameBlog.params.size).isEqualTo(2)
+        assertThat((fullNameBlog.params[0] as UiStringText).text).isEqualTo("John Smith")
+        assertThat((fullNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
     }
     // endregion
 
@@ -943,7 +945,7 @@ class ReaderPostUiStateBuilderTest {
         isp2Post: Boolean = false,
         blogName: String = "",
         authorFirstName: String = "",
-        authorName: String = "",
+        authorName: String = ""
     ): ReaderPost {
         val post = spy(ReaderPost().apply {
             this.blogUrl = blogUrl

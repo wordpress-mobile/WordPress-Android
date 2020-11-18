@@ -216,14 +216,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType? = null,
-        showP2SpecificLayout: Boolean = false,
+        showP2SpecificLayout: Boolean = false
     ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, showP2SpecificLayout)
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType?,
-        showP2SpecificLayout: Boolean = false,
+        showP2SpecificLayout: Boolean = false
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
                 postId = post.postId,
@@ -326,7 +326,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             UiStringText(post.authorName)
         }
 
-        return UiStringResWithParams(R.string.reader_author_with_blog_name, listOf(authorName, blogName))
+        return UiStringResWithParams(R.string.reader_author_with_blog_name, listOf(authorName, UiStringText("Very Very Very Very Long and Complicated Blog Name")))
     }
 
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =

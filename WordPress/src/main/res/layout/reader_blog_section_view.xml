@@ -24,7 +24,7 @@
             tools:ignore="RtlSymmetry" />
 
         <ImageView
-            android:id="@+id/p2_author_avatar"
+            android:id="@+id/authors_avatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_marginStart="20dp"
             android:background="@drawable/bg_oval_stroke_placeholder_1dp"
