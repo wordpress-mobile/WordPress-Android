@@ -10,6 +10,8 @@ data class ReaderBlogSectionUiState(
     val blogName: UiString,
     val blogUrl: String?,
     val avatarOrBlavatarUrl: String?,
+    val authorAvatarUrl: String?,
+    val isAuthorAvatarVisible: Boolean,
     val blogSectionClickData: ReaderBlogSectionClickData?
 ) {
     data class ReaderBlogSectionClickData(
