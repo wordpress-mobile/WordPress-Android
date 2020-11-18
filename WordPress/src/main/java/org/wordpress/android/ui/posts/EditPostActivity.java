@@ -2926,6 +2926,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    @Override public void onAddLibraryFileClicked(boolean allowMultipleSelection) {
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
+        mMediaPickerLauncher.viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
+    }
+
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
