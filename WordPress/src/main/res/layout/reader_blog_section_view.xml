@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_marginEnd="@dimen/margin_medium"
         android:id="@+id/author_and_site_imagery_container"
         android:layout_width="wrap_content"
@@ -21,17 +21,29 @@
             android:background="@drawable/bg_oval_stroke_placeholder_1dp"
             android:importantForAccessibility="no"
             android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry" />
+
+        <ViewStub
+            android:id="@+id/dynamic_center_point"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_avatar_or_blavatar"
+            app:layout_constraintLeft_toLeftOf="@+id/image_avatar_or_blavatar"
+            app:layout_constraintRight_toRightOf="@+id/image_avatar_or_blavatar"
+            app:layout_constraintTop_toTopOf="@+id/image_avatar_or_blavatar" />
 
         <ImageView
             android:id="@+id/authors_avatar"
             style="@style/ReaderImageView.Avatar"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/bg_oval_stroke_placeholder_1dp"
+            android:background="@drawable/bg_oval_stroke_p2_author_1dp"
             android:importantForAccessibility="no"
             android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            app:layout_constraintStart_toEndOf="@+id/dynamic_center_point"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry" />
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_author_and_blog_name"

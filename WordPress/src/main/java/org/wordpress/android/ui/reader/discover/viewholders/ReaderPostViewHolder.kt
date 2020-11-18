@@ -137,11 +137,13 @@ class ReaderPostViewHolder(
             )
         }
 
-        uiHelpers.updateVisibility(authors_avatar, state.blogSection.isAuthorAvatarVisible)
-        if (state.blogSection.authorAvatarUrl == null) {
+        val canShowAuthorsAvatar = state.blogSection.authorAvatarUrl != null && state.blogSection.isAuthorAvatarVisible
+        uiHelpers.updateVisibility(authors_avatar, canShowAuthorsAvatar)
+
+        if (!canShowAuthorsAvatar) {
             imageManager.cancelRequestAndClearImageView(authors_avatar)
         } else {
-            imageManager.loadIntoCircle(authors_avatar, BLAVATAR_CIRCULAR, state.blogSection.authorAvatarUrl)
+            imageManager.loadIntoCircle(authors_avatar, BLAVATAR_CIRCULAR, state.blogSection.authorAvatarUrl!!)
         }
     }
 
