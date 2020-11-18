@@ -129,6 +129,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private boolean mEditorDidMount;
     private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
+    private boolean mUpdateCapabilitiesOnCreate = false;
 
     private ProgressDialog mSavingContentProgressDialog;
 
@@ -178,6 +179,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             fragment.setRetainInstance(true);
             fragmentTransaction.add(fragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
+        }
+
+        if (mUpdateCapabilitiesOnCreate) {
+            getGutenbergContainerFragment().updateCapabilities(mCurrentGutenbergPropsBuilder);
         }
 
         ProfilingUtils.start("Visual Editor Startup");
@@ -887,10 +892,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().setContent(postContent);
     }
 
-    public void updateCapabilities(boolean isJetpackSsoEnabled, GutenbergPropsBuilder gutenbergPropsBuilder) {
-        mIsJetpackSsoEnabled = isJetpackSsoEnabled;
+    public void setJetpackSsoEnabled(boolean jetpackSsoEnabled) {
+        mIsJetpackSsoEnabled = jetpackSsoEnabled;
+    }
+
+    public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
-        getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
+        if (isAdded()) {
+            getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
+        } else {
+            mUpdateCapabilitiesOnCreate = true;
+        }
     }
 
     public void onToggleHtmlMode() {
