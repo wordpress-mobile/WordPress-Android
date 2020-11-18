@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/mlp_bottom_button_horizontal_margin"
             android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin"
-            android:text="@string/hpp_choose_button" />
+            android:text="@string/new_site_creation_create_site_button" />
     </FrameLayout>
 
     <FrameLayout
