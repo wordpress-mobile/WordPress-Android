@@ -9,8 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.appbar.MaterialToolbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.getColorResIdFromAttribute
 import javax.inject.Inject
 
 class ActivityLogTypeFilterFragment : DialogFragment() {
@@ -31,10 +34,23 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
+        val view = inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
+        initToolbar(view)
+        return view
     }
 
     override fun getTheme(): Int {
         return R.style.WordPress_FullscreenDialog
+    }
+
+    private fun initToolbar(view: View) {
+        val toolbar = view.findViewById(R.id.toolbar_main) as MaterialToolbar
+        toolbar.title = "Ahoj"
+        toolbar.navigationIcon = ColorUtils.applyTintToDrawable(
+                toolbar.context, R.drawable.ic_close_white_24dp,
+                toolbar.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+        )
+        toolbar.setNavigationContentDescription(R.string.close_dialog_button_desc)
+        toolbar.setNavigationOnClickListener { dismiss() }
     }
 }
