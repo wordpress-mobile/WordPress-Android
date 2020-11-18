@@ -411,9 +411,9 @@ class ActivityLogRestClientTest {
         errorType: DownloadStatusErrorType
     ) {
         with(payload) {
-            assertEquals(this.site, site)
-            assertTrue(this.isError)
-            assertEquals(errorType, this.error.type)
+            assertEquals(site, site)
+            assertTrue(isError)
+            assertEquals(errorType, error.type)
         }
     }
 
@@ -426,8 +426,8 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchActivityDownload(site)
 
         with(payload) {
-            assertEquals(this.site, site)
-            assertNull(this.error)
+            assertEquals(site, site)
+            assertNull(error)
             assertNotNull(this.downloadStatusModelResponse)
             this.downloadStatusModelResponse?.apply {
                 assertEquals(this.downloadId, DOWNLOAD_STATUS_RESPONSE.downloadId)
