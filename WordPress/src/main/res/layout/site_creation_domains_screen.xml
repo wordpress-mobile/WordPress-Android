@@ -44,6 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/search_input_layout" />
 
     <View
+        android:id="@+id/create_site_button_shaddow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/mlp_bottom_shadow_height"
         android:background="@drawable/modal_layout_picker_bottom_shadow"
