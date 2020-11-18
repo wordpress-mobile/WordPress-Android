@@ -1837,6 +1837,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_intro_dismissed";
             case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
                 return "story_intro_create_story_button_tapped";
+            case STORY_BLOCK_ADD_MEDIA_TAPPED:
+                return "story_block_add_media_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
