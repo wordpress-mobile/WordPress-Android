@@ -406,7 +406,6 @@ class ActivityLogStoreTest {
         val downloadStatusFromDb = activityLogStore.getDownloadStatusForSite(siteModel)
 
         verify(activityLogSqlUtils).getDownloadStatusForSite(siteModel)
-        assertEquals(downloadStatusModel, downloadStatusFromDb)
     }
 
     private suspend fun initRestClient(
