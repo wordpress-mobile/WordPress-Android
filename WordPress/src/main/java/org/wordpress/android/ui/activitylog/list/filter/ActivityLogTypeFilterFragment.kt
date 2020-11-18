@@ -39,14 +39,17 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
-        initToolbar(view)
-        initRecyclerView()
-        return view
+        return inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
     }
 
     override fun getTheme(): Int {
         return R.style.WordPress_FullscreenDialog
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initToolbar(view)
+        initRecyclerView()
     }
 
     private fun initToolbar(view: View) {
