@@ -1038,6 +1038,12 @@ class MySiteFragment : Fragment(),
             row_jetpack_settings.visibility = View.GONE
         }
 
+        if (site.isUsingWpComRestApi) {
+            row_label_jetpack.visibility = View.VISIBLE
+        } else {
+            row_label_jetpack.visibility = View.GONE
+        }
+
         // Do not show pages menu item to Collaborators.
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
         row_pages.visibility = pageVisibility
