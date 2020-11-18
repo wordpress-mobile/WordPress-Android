@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.R
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -121,7 +122,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType),
+                blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isWpForTeams),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
                 tagItems = buildTagItems(post, onTagItemClicked),
@@ -214,21 +215,28 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildBlogSection(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType? = null
-    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType)
+        postListType: ReaderPostListType? = null,
+        showP2SpecificLayout: Boolean = false,
+    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, showP2SpecificLayout)
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
-        postListType: ReaderPostListType?
+        postListType: ReaderPostListType?,
+        showP2SpecificLayout: Boolean = false,
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogName = buildBlogName(post),
+                blogName = buildBlogName(post, showP2SpecificLayout),
                 blogUrl = buildBlogUrl(post),
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+                isAuthorAvatarVisible = showP2SpecificLayout,
+                authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+                        post.postAvatar,
+                        R.dimen.avatar_sz_medium
+                ),
                 blogSectionClickData = buildOnBlogSectionClicked(onBlogSectionClicked, postListType)
         )
     }
@@ -304,8 +312,22 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildExcerpt(post: ReaderPost) =
             post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
 
-    private fun buildBlogName(post: ReaderPost) = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
-            ?: UiStringRes(R.string.untitled_in_parentheses)
+    private fun buildBlogName(post: ReaderPost, showP2SpecificLayout: Boolean = false): UiString {
+        val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
+                ?: UiStringRes(R.string.untitled_in_parentheses)
+
+        if (!showP2SpecificLayout) {
+            return blogName
+        }
+
+        val authorName = if (post.hasAuthorFirstName()) {
+            UiStringText(post.authorFirstName)
+        } else {
+            UiStringText(post.authorName)
+        }
+
+        return UiStringResWithParams(R.string.reader_author_with_blog_name, listOf(authorName, blogName))
+    }
 
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
             post.takeIf { it.hasBlogImageUrl() }

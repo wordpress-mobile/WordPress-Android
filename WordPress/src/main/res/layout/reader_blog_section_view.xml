@@ -5,17 +5,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image_avatar_or_blavatar"
-        style="@style/ReaderImageView.Avatar"
-        android:importantForAccessibility="no"
-        android:background="@drawable/bg_oval_stroke_placeholder_1dp"
-        android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+
+    <FrameLayout
         android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/author_and_site_imagery_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@id/text_author_and_blog_name"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/image_avatar_or_blavatar"
+            style="@style/ReaderImageView.Avatar"
+            android:background="@drawable/bg_oval_stroke_placeholder_1dp"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageView
+            android:id="@+id/p2_author_avatar"
+            style="@style/ReaderImageView.Avatar"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/bg_oval_stroke_placeholder_1dp"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            tools:ignore="RtlSymmetry" />
+    </FrameLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_author_and_blog_name"
@@ -25,7 +41,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:layout_marginEnd="@dimen/margin_medium"
         android:includeFontPadding="false"
-        app:layout_constraintStart_toEndOf="@id/image_avatar_or_blavatar"
+        app:layout_constraintStart_toEndOf="@id/author_and_site_imagery_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="text_blog_nametext_blog_name text_blog_name" />
