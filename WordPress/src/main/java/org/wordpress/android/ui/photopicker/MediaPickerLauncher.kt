@@ -313,6 +313,15 @@ class MediaPickerLauncher @Inject constructor(
         if (browserType.isVideoPicker) {
             allowedTypes.add(VIDEO)
         }
+
+        if (browserType.isAudioPicker) {
+            allowedTypes.add(AUDIO)
+        }
+
+        if (browserType.isDocumentPicker) {
+            allowedTypes.add(DOCUMENT)
+        }
+
         return MediaPickerSetup(
                 primaryDataSource = WP_LIBRARY,
                 availableDataSources = setOf(),
