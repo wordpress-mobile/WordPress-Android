@@ -27,6 +27,18 @@ msgid ""
 "\n"
 msgstr ""
 
+msgctxt "release_note_short_162"
+msgid ""
+"16.2:\n"
+"Block editor: We’ve improved the overall performance, which you may notice when you start a new post. The Image block now has better support for uploading multiple images.\n"
+"\n"
+"More updates: Your app uses a new Media Picker when you select files. We also fixed a bug on pure self-hosted sites on HTTP that affected featured images in the Posts List.\n"
+msgstr ""
+
+msgctxt "release_note_short_161"
+msgid ""
+msgstr ""
+
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "sample_post_content"
