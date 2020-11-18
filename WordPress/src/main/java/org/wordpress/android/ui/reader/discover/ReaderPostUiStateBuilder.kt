@@ -326,7 +326,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             UiStringText(post.authorName)
         }
 
-        return UiStringResWithParams(R.string.reader_author_with_blog_name, listOf(authorName, UiStringText("Very Very Very Very Long and Complicated Blog Name")))
+        return UiStringResWithParams(R.string.reader_author_with_blog_name, listOf(authorName, blogName))
     }
 
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
