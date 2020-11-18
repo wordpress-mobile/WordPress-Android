@@ -76,7 +76,7 @@ class BackupDownloadProgressCheckerTest {
     }
 
     @Test
-    fun `on start triggers fetch if backup dwnload in progress`() = runBlocking {
+    fun `on start triggers fetch if backup download in progress`() = runBlocking {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
                 backupDownloadStatusModel,
                 finishedBackupDownloadStatus
