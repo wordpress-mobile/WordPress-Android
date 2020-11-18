@@ -15,4 +15,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
     }
+
+    object ItemUiState
 }
