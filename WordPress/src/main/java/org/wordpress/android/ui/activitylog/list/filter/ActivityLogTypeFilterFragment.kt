@@ -15,12 +15,14 @@ import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.site_creation_segments_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
 import javax.inject.Inject
 
 class ActivityLogTypeFilterFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
 
@@ -64,6 +66,6 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun initAdapter() {
-        // TODO malinjir init adapter
+        recycler_view.adapter = ActivityLogTypeFilterAdapter(uiHelpers)
     }
 }
