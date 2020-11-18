@@ -381,7 +381,7 @@ class ActivityLogRestClientTest {
     }
 
     @Test
-    fun postDownloadOperationError() = test {
+    fun postBackupDownloadOperationError() = test {
         val rewindId = "rewind_id"
         val types = BackupDownloadRequestTypes(themes = true,
                 plugins = true,
@@ -411,32 +411,32 @@ class ActivityLogRestClientTest {
         errorType: BackupDownloadStatusErrorType
     ) {
         with(payload) {
-            assertEquals(this.site, site)
-            assertTrue(this.isError)
-            assertEquals(errorType, this.error.type)
+            assertEquals(site, site)
+            assertTrue(isError)
+            assertEquals(errorType, error.type)
         }
     }
 
     @Test
     fun fetchActivityBackupDownload_dispatchesResponseOnSuccess() = test {
         val progress = 55
-        val downloadResponse = DOWNLOAD_STATUS_RESPONSE.copy(progress = progress)
+        val downloadResponse = BACKUP_DOWNLOAD_STATUS_RESPONSE.copy(progress = progress)
         initFetchBackupDownloadStatus(downloadResponse)
 
         val payload = activityRestClient.fetchActivityBackupDownload(site)
 
         with(payload) {
-            assertEquals(this.site, site)
-            assertNull(this.error)
+            assertEquals(site, site)
+            assertNull(error)
             assertNotNull(this.backupDownloadStatusModelResponse)
             this.backupDownloadStatusModelResponse?.apply {
-                assertEquals(this.downloadId, DOWNLOAD_STATUS_RESPONSE.downloadId)
-                assertEquals(this.rewindId, DOWNLOAD_STATUS_RESPONSE.rewindId)
-                assertEquals(this.backupPoint, DOWNLOAD_STATUS_RESPONSE.backupPoint)
-                assertEquals(this.startedAt, DOWNLOAD_STATUS_RESPONSE.startedAt)
-                assertEquals(this.downloadCount, DOWNLOAD_STATUS_RESPONSE.downloadCount)
-                assertEquals(this.validUntil, DOWNLOAD_STATUS_RESPONSE.validUntil)
-                assertEquals(this.url, DOWNLOAD_STATUS_RESPONSE.url)
+                assertEquals(this.downloadId, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadId)
+                assertEquals(this.rewindId, BACKUP_DOWNLOAD_STATUS_RESPONSE.rewindId)
+                assertEquals(this.backupPoint, BACKUP_DOWNLOAD_STATUS_RESPONSE.backupPoint)
+                assertEquals(this.startedAt, BACKUP_DOWNLOAD_STATUS_RESPONSE.startedAt)
+                assertEquals(this.downloadCount, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadCount)
+                assertEquals(this.validUntil, BACKUP_DOWNLOAD_STATUS_RESPONSE.validUntil)
+                assertEquals(this.url, BACKUP_DOWNLOAD_STATUS_RESPONSE.url)
                 assertEquals(this.progress, progress)
             }
         }

@@ -56,13 +56,13 @@ class ActivityLogStore
                 }
             }
             BACKUP_DOWNLOAD -> {
-                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On DOWNLOAD") {
-                    emitChange(download(action.payload as BackupDownloadPayload))
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On BACKUP_DOWNLOAD") {
+                    emitChange(backupDownload(action.payload as BackupDownloadPayload))
                 }
             }
             FETCH_BACKUP_DOWNLOAD_STATE -> {
-                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_DOWNLOAD_STATE") {
-                    emitChange(fetchActivitiesDownload(action.payload as FetchBackupDownloadStatePayload))
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_BACKUP_DOWNLOAD_STATE") {
+                    emitChange(fetchActivitiesBackupDownload(action.payload as FetchBackupDownloadStatePayload))
                 }
             }
         }
@@ -117,19 +117,19 @@ class ActivityLogStore
         return emitRewindResult(payload, REWIND)
     }
 
-    suspend fun download(backupDownloadPayload: BackupDownloadPayload): OnDownload {
+    suspend fun backupDownload(backupDownloadPayload: BackupDownloadPayload): OnDownload {
         val payload = activityLogRestClient.backupDownload(
                 backupDownloadPayload.site,
                 backupDownloadPayload.rewindId,
                 backupDownloadPayload.types)
-        return emitDownloadResult(payload, BACKUP_DOWNLOAD)
+        return emitBackupDownloadResult(payload, BACKUP_DOWNLOAD)
     }
 
-    suspend fun fetchActivitiesDownload(
+    suspend fun fetchActivitiesBackupDownload(
         fetchActivitiesBackupDownloadPayload: FetchBackupDownloadStatePayload
-    ): OnDownloadStatusFetched {
+    ): OnBackupDownloadStatusFetched {
         val payload = activityLogRestClient.fetchActivityBackupDownload(fetchActivitiesBackupDownloadPayload.site)
-        return storeDownloadState(payload, FETCH_BACKUP_DOWNLOAD_STATE)
+        return storeBackupDownloadState(payload, FETCH_BACKUP_DOWNLOAD_STATE)
     }
 
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction): OnActivityLogFetched {
@@ -159,15 +159,15 @@ class ActivityLogStore
         }
     }
 
-    private fun storeDownloadState(payload: FetchedBackupDownloadStatePayload, action: ActivityLogAction):
-            OnDownloadStatusFetched {
+    private fun storeBackupDownloadState(payload: FetchedBackupDownloadStatePayload, action: ActivityLogAction):
+            OnBackupDownloadStatusFetched {
         return if (payload.error != null) {
-            OnDownloadStatusFetched(payload.error, action)
+            OnBackupDownloadStatusFetched(payload.error, action)
         } else {
             if (payload.backupDownloadStatusModelResponse != null) {
                 activityLogSqlUtils.replaceBackupDownloadStatus(payload.site, payload.backupDownloadStatusModelResponse)
             }
-            OnDownloadStatusFetched(action)
+            OnBackupDownloadStatusFetched(action)
         }
     }
 
@@ -179,7 +179,7 @@ class ActivityLogStore
         }
     }
 
-    private fun emitDownloadResult(payload: BackupDownloadResultPayload, action: ActivityLogAction): OnDownload {
+    private fun emitBackupDownloadResult(payload: BackupDownloadResultPayload, action: ActivityLogAction): OnDownload {
         return if (payload.error != null) {
             OnDownload(payload.rewindId, payload.error, action)
         } else {
@@ -237,7 +237,7 @@ class ActivityLogStore
         }
     }
 
-    data class OnDownloadStatusFetched(var causeOfChange: ActivityLogAction) :
+    data class OnBackupDownloadStatusFetched(var causeOfChange: ActivityLogAction) :
             Store.OnChanged<BackupDownloadStatusError>() {
         constructor(error: BackupDownloadStatusError, causeOfChange: ActivityLogAction) :
                 this(causeOfChange = causeOfChange) {

@@ -304,7 +304,7 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onDownloadActionCallRestClient() = test {
+    fun onBackupDownloadActionCallRestClient() = test {
         whenever(activityLogRestClient.backupDownload(eq(siteModel), any(), any())).thenReturn(
                 BackupDownloadResultPayload(
                         "rewindId",
@@ -395,7 +395,7 @@ class ActivityLogStoreTest {
 
         verify(activityLogSqlUtils).replaceBackupDownloadStatus(siteModel, backupDownloadStatusModel)
         val expectedChangeEvent =
-                ActivityLogStore.OnDownloadStatusFetched(ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE)
+                ActivityLogStore.OnBackupDownloadStatusFetched(ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
