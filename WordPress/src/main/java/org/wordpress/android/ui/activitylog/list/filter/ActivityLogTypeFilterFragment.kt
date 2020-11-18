@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
@@ -31,6 +31,10 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layout.activity_log_type_filter_fragment, container, false)
+        return inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
+    }
+
+    override fun getTheme(): Int {
+        return R.style.WordPress_FullscreenDialog
     }
 }
