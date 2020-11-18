@@ -54,7 +54,6 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     private fun initToolbar(view: View) {
         val toolbar = view.findViewById(R.id.toolbar_main) as MaterialToolbar
-        toolbar.title = "Ahoj"
         toolbar.navigationIcon = ColorUtils.applyTintToDrawable(
                 toolbar.context, R.drawable.ic_close_white_24dp,
                 toolbar.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
