@@ -11,8 +11,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerTitle"
-        app:fixWidowWords="true"
-        tools:text="What's the focus of your business?" />
+        android:visibility="gone" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/subtitle"

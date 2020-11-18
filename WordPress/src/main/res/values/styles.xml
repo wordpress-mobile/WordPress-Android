@@ -1009,16 +1009,13 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderTitle">
+    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:text">@string/new_site_creation_preview_title</item>
     </style>
