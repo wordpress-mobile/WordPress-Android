@@ -124,7 +124,7 @@ class SiteCreationDomainsViewModelTest {
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.secondValue, showProgress = true, showClearButton = true)
     }
 
@@ -153,8 +153,8 @@ class SiteCreationDomainsViewModelTest {
                 viewModel.start(SEGMENT_ID)
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(2)).onChanged(captor.capture())
-                verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true)
+                verify(uiStateObserver, times(3)).onChanged(captor.capture())
+                verifyVisibleItemsContentUiState(captor.thirdValue, showClearButton = true)
             }
 
     /**
@@ -167,8 +167,10 @@ class SiteCreationDomainsViewModelTest {
                 viewModel.start(SEGMENT_ID)
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(2)).onChanged(captor.capture())
-                verifyContentAndDomainValidityUiStatesAreVisible(captor.secondValue)
+                verify(uiStateObserver, times(3)).onChanged(captor.capture())
+                verifyContentAndDomainValidityUiStatesAreVisible(
+                        captor.thirdValue
+                )
             }
 
     /**
@@ -201,7 +203,7 @@ class SiteCreationDomainsViewModelTest {
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         viewModel.updateQuery("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        verify(uiStateObserver, times(4)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.lastValue)
     }
 
