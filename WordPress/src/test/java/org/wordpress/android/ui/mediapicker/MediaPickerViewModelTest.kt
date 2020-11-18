@@ -646,7 +646,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `does not start loading without storage permissions`() = test{
+    fun `does not start loading without storage permissions`() = test {
         setupViewModel(
                 listOf(firstItem),
                 singleSelectMediaPickerSetup.copy(requiresStoragePermissions = true),
@@ -657,7 +657,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `starts loading with storage permissions`() = test{
+    fun `starts loading with storage permissions`() = test {
         setupViewModel(
                 listOf(firstItem),
                 singleSelectMediaPickerSetup.copy(requiresStoragePermissions = true),
@@ -668,7 +668,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `starts loading when storage permissions not necessary`() = test{
+    fun `starts loading when storage permissions not necessary`() = test {
         setupViewModel(
                 listOf(firstItem),
                 singleSelectMediaPickerSetup.copy(requiresStoragePermissions = false),
