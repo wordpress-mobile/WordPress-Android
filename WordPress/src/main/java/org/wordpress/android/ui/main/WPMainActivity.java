@@ -448,7 +448,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case CREATE_NEW_STORY:
-                    handleNewStoryAction(PagePostCreationSourcesDetail.STORY_FROM_MY_SITE);
+                    handleNewStoryAction();
                     break;
             }
         });
@@ -909,7 +909,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
     }
 
-    private void handleNewStoryAction(PagePostCreationSourcesDetail source) {
+    private void handleNewStoryAction() {
         if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);

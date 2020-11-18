@@ -95,6 +95,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
@@ -784,7 +785,8 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                                data, activity, selectedSite, STORY_FROM_MY_SITE)) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
@@ -828,7 +830,8 @@ class MySiteFragment : Fragment(),
                 storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
                         data,
                         activity,
-                        selectedSite
+                        selectedSite,
+                        STORY_FROM_MY_SITE
                 )
             }
             UCrop.REQUEST_CROP -> if (resultCode == Activity.RESULT_OK) {
