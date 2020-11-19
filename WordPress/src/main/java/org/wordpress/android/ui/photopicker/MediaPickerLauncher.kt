@@ -162,13 +162,13 @@ class MediaPickerLauncher @Inject constructor(
         fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
-    fun showFilePicker(activity: Activity) {
+    fun showFilePicker(activity: Activity, canMultiselect: Boolean = true) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
                     availableDataSources = setOf(),
-                    canMultiselect = true,
+                    canMultiselect = canMultiselect,
                     requiresStoragePermissions = true,
                     allowedTypes = allowedTypes,
                     cameraSetup = HIDDEN,
@@ -187,7 +187,7 @@ class MediaPickerLauncher @Inject constructor(
                     RequestCodes.FILE_LIBRARY
             )
         } else {
-            WPMediaUtils.launchFileLibrary(activity, true)
+            WPMediaUtils.launchFileLibrary(activity, canMultiselect)
         }
     }
 
