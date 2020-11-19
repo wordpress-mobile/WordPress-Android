@@ -1,7 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.ActivityLogTable
-import com.wellsql.generated.DownloadStatusTable
+import com.wellsql.generated.BackupDownloadStatusTable
 import com.wellsql.generated.RewindStatusCredentialsTable
 import com.wellsql.generated.RewindStatusTable
 import com.yarolegovich.wellsql.SelectQuery
@@ -12,7 +12,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.model.activity.DownloadStatusModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
@@ -103,19 +103,19 @@ class ActivityLogSqlUtils
         return rewindStatusBuilder?.build(credentials?.map { it.build() })
     }
 
-    fun getDownloadStatusForSite(site: SiteModel): DownloadStatusModel? {
-        val downloadStatusBuilder = getDownloadStatusBuilder(site)
+    fun getBackupDownloadStatusForSite(site: SiteModel): BackupDownloadStatusModel? {
+        val downloadStatusBuilder = getBackupDownloadStatusBuilder(site)
         return downloadStatusBuilder?.build()
     }
 
-    fun replaceDownloadStatus(site: SiteModel, downloadStatusModel: DownloadStatusModel) {
-        val downloadStatusBuilder = downloadStatusModel.toBuilder(site)
-        WellSql.delete(DownloadStatusBuilder::class.java)
+    fun replaceBackupDownloadStatus(site: SiteModel, backupDownloadStatusModel: BackupDownloadStatusModel) {
+        val backupDownloadStatusBuilder = backupDownloadStatusModel.toBuilder(site)
+        WellSql.delete(BackupDownloadStatusBuilder::class.java)
                 .where()
-                .equals(DownloadStatusTable.LOCAL_SITE_ID, site.id)
+                .equals(BackupDownloadStatusTable.LOCAL_SITE_ID, site.id)
                 .endWhere()
                 .execute()
-        WellSql.insert(downloadStatusBuilder).execute()
+        WellSql.insert(backupDownloadStatusBuilder).execute()
     }
 
     private fun getRewindStatusBuilder(site: SiteModel): RewindStatusBuilder? {
@@ -135,8 +135,8 @@ class ActivityLogSqlUtils
                 .asModel
     }
 
-    private fun getDownloadStatusBuilder(site: SiteModel): DownloadStatusBuilder? {
-        return WellSql.select(DownloadStatusBuilder::class.java)
+    private fun getBackupDownloadStatusBuilder(site: SiteModel): BackupDownloadStatusBuilder? {
+        return WellSql.select(BackupDownloadStatusBuilder::class.java)
                 .where()
                 .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
                 .endWhere()
@@ -196,8 +196,8 @@ class ActivityLogSqlUtils
         )
     }
 
-    private fun DownloadStatusModel.toBuilder(site: SiteModel): DownloadStatusBuilder {
-        return DownloadStatusBuilder(
+    private fun BackupDownloadStatusModel.toBuilder(site: SiteModel): BackupDownloadStatusBuilder {
+        return BackupDownloadStatusBuilder(
                 localSiteId = site.id,
                 remoteSiteId = site.siteId,
                 downloadId = this.downloadId,
@@ -331,8 +331,8 @@ class ActivityLogSqlUtils
         }
     }
 
-    @Table(name = "DownloadStatus")
-    data class DownloadStatusBuilder(
+    @Table(name = "BackupDownloadStatus")
+    data class BackupDownloadStatusBuilder(
         @PrimaryKey
         @Column private var mId: Int = -1,
         @Column var localSiteId: Int,
@@ -354,8 +354,8 @@ class ActivityLogSqlUtils
 
         override fun getId() = mId
 
-        fun build(): DownloadStatusModel {
-            return DownloadStatusModel(
+        fun build(): BackupDownloadStatusModel {
+            return BackupDownloadStatusModel(
                     downloadId,
                     rewindId,
                     Date(backupPoint),
