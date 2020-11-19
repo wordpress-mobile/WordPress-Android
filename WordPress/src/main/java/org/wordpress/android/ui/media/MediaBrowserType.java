@@ -72,7 +72,6 @@ public enum MediaBrowserType {
                || this == GUTENBERG_SINGLE_MEDIA_PICKER
                || this == GUTENBERG_MEDIA_PICKER
                || this == GUTENBERG_SINGLE_FILE_PICKER;
-
     }
 
     public boolean isWPStoriesPicker() {
