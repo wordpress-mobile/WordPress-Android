@@ -1010,7 +1010,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 WPMediaUtils.launchVideoLibrary(this, true);
                 break;
             case ITEM_CHOOSE_FILE:
-                mMediaPickerLauncher.showFilePicker(this);
+                mMediaPickerLauncher.showFilePicker(this, true);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
                 mMediaPickerLauncher.showStockMediaPickerForResult(this,
