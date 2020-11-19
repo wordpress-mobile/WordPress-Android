@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.network.Response
 import java.util.Date
 
 data class ScanStateResponse(
-    @SerializedName("state")  val state: String,
+    @SerializedName("state") val state: String,
     @SerializedName("threats") val threats: List<Threat>?,
     @SerializedName("credentials") val credentials: List<Credentials>?,
     @SerializedName("reason") val reason: String?,
