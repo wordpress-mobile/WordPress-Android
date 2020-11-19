@@ -371,17 +371,7 @@ ENV["validate_translations"]="lintVanillaRelease"
     aab_file_path = bundle_file_path(options[:version])
 
     if File.exists? aab_file_path then
-      upload_to_play_store(
-        package_name: 'org.wordpress.android',
-        aab: aab_file_path,
-        track: options[:track],
-        release_status: 'draft',
-        skip_upload_metadata: true,
-        skip_upload_changelogs: true,
-        skip_upload_images: true,
-        skip_upload_screenshots: true,
-        json_key: './google-upload-credentials.json',
-      )
+      UI.message("Skipped")
     else
       UI.error("Unable to find a build artifact at #{aab_file_path}")
     end
@@ -709,16 +699,7 @@ ENV["validate_translations"]="lintVanillaRelease"
   end
 
   private_lane :create_gh_release do | options |
-    set_prerelease_flag = options[:prerelease].nil? ? false : options[:prerelease]
-    version = options[:version]
-    apk_file_path = universal_apk_file_path(version)
-    aab_file_path = bundle_file_path(version)
-    create_release(repository:GHHELPER_REPO, 
-      version: version["name"], 
-      release_notes_file_path:release_notes_path,
-      prerelease: set_prerelease_flag,
-      release_assets:"#{apk_file_path},#{aab_file_path}"
-    )
+    UI.message("Skipped")
   end
 
   private_lane :cleanup_release_files do | options |
