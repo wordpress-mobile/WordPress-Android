@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import android.annotation.SuppressLint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -41,7 +40,6 @@ class ScanStore @Inject constructor(
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
 
-    @SuppressLint("WrongConstant")
     suspend fun fetchScanState(fetchScanStatePayload: FetchScanStatePayload): OnScanStateFetched {
         val payload = scanRestClient.fetchScanState(fetchScanStatePayload.site)
         return storeScanState(payload)
