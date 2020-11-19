@@ -14,16 +14,12 @@ import javax.inject.Inject
 
 class BasicDialogViewModel
 @Inject constructor() : ViewModel() {
-    private val _showDialog = MutableLiveData<Event<((FragmentManager) -> Unit)>>()
     private val _onInteraction = MutableLiveData<Event<DialogInteraction>>()
-    val showDialog = _showDialog as LiveData<Event<((FragmentManager) -> Unit)>>
     val onInteraction = _onInteraction as LiveData<Event<DialogInteraction>>
-    fun showDialog(model: BasicDialogModel) {
-        _showDialog.value = Event { manager ->
-            val dialog = BasicDialog()
-            dialog.initialize(model)
-            dialog.show(manager, model.tag)
-        }
+    fun showDialog(manager: FragmentManager, model: BasicDialogModel) {
+        val dialog = BasicDialog()
+        dialog.initialize(model)
+        dialog.show(manager, model.tag)
     }
 
     fun onPositiveClicked(tag: String) {

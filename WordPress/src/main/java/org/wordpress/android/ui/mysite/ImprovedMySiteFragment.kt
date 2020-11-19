@@ -75,14 +75,15 @@ class ImprovedMySiteFragment : Fragment(),
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { model ->
-                dialogViewModel.showDialog(BasicDialogModel(
-                        model.tag,
-                        getString(model.title),
-                        getString(model.message),
-                        getString(model.positiveButtonLabel),
-                        model.negativeButtonLabel?.let { label -> getString(label) },
-                        model.cancelButtonLabel?.let { label -> getString(label) }
-                ))
+                dialogViewModel.showDialog(requireActivity().supportFragmentManager,
+                        BasicDialogModel(
+                                model.tag,
+                                getString(model.title),
+                                getString(model.message),
+                                getString(model.positiveButtonLabel),
+                                model.negativeButtonLabel?.let { label -> getString(label) },
+                                model.cancelButtonLabel?.let { label -> getString(label) }
+                        ))
             }
         })
         viewModel.onTextInputDialogShown.observe(viewLifecycleOwner, {
