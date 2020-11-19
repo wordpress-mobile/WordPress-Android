@@ -2721,10 +2721,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.FILE_LIBRARY:
-                    uris = WPMediaUtils.retrieveMediaUris(data);
-                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
-                    for (Uri item : uris) {
-                        mEditorMedia.addNewMediaToEditorAsync(item, false);
+                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                            List<Uri> uriResults = convertStringArrayIntoUrisList(
+                                    Objects.requireNonNull(
+                                            data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)));
+                            for (Uri uri : uriResults) {
+                                mEditorMedia.addNewMediaToEditorAsync(uri, false);
+                            }
+                        }
+                    } else {
+                        uris = WPMediaUtils.retrieveMediaUris(data);
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
+                        for (Uri item : uris) {
+                            mEditorMedia.addNewMediaToEditorAsync(item, false);
+                        }
                     }
                     break;
             }
@@ -2981,7 +2992,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
-        WPMediaUtils.launchFileLibrary(this, allowMultipleSelection);
+        mMediaPickerLauncher.showFilePicker(this);
     }
 
     @Override
