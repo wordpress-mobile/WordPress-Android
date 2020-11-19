@@ -358,7 +358,7 @@ class ActivityLogStoreTest {
                 rewindId,
                 types)))
 
-        val expectedChangeEvent = ActivityLogStore.OnDownload(
+        val expectedChangeEvent = ActivityLogStore.OnBackupDownload(
                 rewindId,
                 downloadId,
                 backupPoint,
@@ -369,9 +369,9 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onFetchDownloadStatusActionCallRestClient() = test {
+    fun onFetchBackupDownloadStatusActionCallRestClient() = test {
         val payload = FetchBackupDownloadStatePayload(siteModel)
-        whenever(activityLogRestClient.fetchActivityBackupDownload(siteModel)).thenReturn(
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel)).thenReturn(
                 FetchedBackupDownloadStatePayload(
                         null,
                         siteModel
@@ -380,14 +380,14 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchBackupDownloadStateAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivityBackupDownload(siteModel)
+        verify(activityLogRestClient).fetchBackupDownloadState(siteModel)
     }
 
     @Test
     fun storeFetchedBackupDownloadStatusToDb() = test {
         val backupDownloadStatusModel = mock<BackupDownloadStatusModel>()
         val payload = FetchedBackupDownloadStatePayload(backupDownloadStatusModel, siteModel)
-        whenever(activityLogRestClient.fetchActivityBackupDownload(siteModel)).thenReturn(payload)
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel)).thenReturn(payload)
 
         val fetchAction =
                 ActivityLogActionBuilder.newFetchBackupDownloadStateAction(FetchBackupDownloadStatePayload(siteModel))

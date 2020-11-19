@@ -152,7 +152,7 @@ constructor(
         }
     }
 
-    suspend fun fetchActivityBackupDownload(site: SiteModel): FetchedBackupDownloadStatePayload {
+    suspend fun fetchBackupDownloadState(site: SiteModel): FetchedBackupDownloadStatePayload {
         val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.url
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
