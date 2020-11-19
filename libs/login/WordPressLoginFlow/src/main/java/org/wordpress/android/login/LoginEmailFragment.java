@@ -84,8 +84,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
     private static final String ARG_SITE_LOGIN_ENABLED = "ARG_SITE_LOGIN_ENABLED";
     private static final String ARG_SHOULD_USE_NEW_LAYOUT = "ARG_SHOULD_USE_NEW_LAYOUT";
+    private static final String ARG_OPTIONAL_SITE_CREDS_LAYOUT = "ARG_OPTIONAL_SITE_CREDS_LAYOUT";
+    private static final String ARG_HIDE_TOS = "ARG_HIDE_TOS";
 
     public static final String TAG = "login_email_fragment_tag";
+    public static final String TAG_SITE_CREDS_LAYOUT = "login_email_fragment_site_creds_layout_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
 
     private ArrayList<Integer> mOldSitesIDs = new ArrayList<>();
@@ -97,6 +100,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private boolean mIsSignupFromLoginEnabled;
     private boolean mIsSiteLoginEnabled;
     private boolean mShouldUseNewLayout;
+    private boolean mOptionalSiteCredsLayout;
+    private boolean mHideTos;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -111,18 +116,47 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
-                                                 boolean shouldUseNewLayout) {
-        return newInstance(isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, null);
+    public static LoginEmailFragment newInstance(String url, boolean optionalSiteCredsLayout) {
+        LoginEmailFragment fragment = new LoginEmailFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_LOGIN_SITE_URL, url);
+        args.putBoolean(ARG_OPTIONAL_SITE_CREDS_LAYOUT, optionalSiteCredsLayout);
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
-                                                 boolean shouldUseNewLayout, String url) {
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
+                                                 boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout) {
+        return newInstance(
+                isSignupFromLoginEnabled, isSiteLoginEnabled, shouldUseNewLayout, null);
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
+                                                 boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout,
+                                                 boolean hideTos) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
         args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
+        args.putBoolean(ARG_HIDE_TOS, hideTos);
+        args.putString(ARG_LOGIN_SITE_URL, null);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled,
+                                                 boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout,
+                                                 String url) {
+        LoginEmailFragment fragment = new LoginEmailFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
+        args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
+        args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
+        args.putBoolean(ARG_HIDE_TOS, false);
         args.putString(ARG_LOGIN_SITE_URL, url);
         fragment.setArguments(args);
         return fragment;
@@ -130,7 +164,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return mShouldUseNewLayout ? R.layout.login_email_screen : R.layout.login_email_screen_old;
+        if (mShouldUseNewLayout) {
+           return R.layout.login_email_screen;
+        } else if (mOptionalSiteCredsLayout) {
+            return R.layout.login_email_optional_site_creds_screen;
+        } else {
+            return R.layout.login_email_screen_old;
+        }
     }
 
     @Override
@@ -159,7 +199,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 }
                 break;
             case WOO_LOGIN_MODE:
-                label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                if (mOptionalSiteCredsLayout) {
+                    label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                } else {
+                    label.setText(getString(R.string.enter_email_wordpress_com));
+                }
                 break;
             case JETPACK_STATS:
                 label.setText(R.string.login_to_to_connect_jetpack);
@@ -183,6 +227,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     (Button) rootView.findViewById(R.id.continue_tos),
                     (Button) rootView.findViewById(R.id.continue_with_google_tos));
             setupSocialButtons((Button) rootView.findViewById(R.id.continue_with_google));
+        } else if (mOptionalSiteCredsLayout) {
+            setupContinueButton((Button) rootView.findViewById(R.id.login_continue_button));
+            setupSiteCredsButton((Button) rootView.findViewById(R.id.login_site_creds));
+            setupFindEmailHelpButton(
+                    (Button) rootView.findViewById(R.id.login_find_connected_email));
         } else {
             setupAlternativeButtons(
                     (LinearLayout) rootView.findViewById(R.id.login_google_button),
@@ -240,21 +289,38 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
     }
 
+    @Override public void onDestroyView() {
+        mEmailInput = null;
+
+        super.onDestroyView();
+    }
+
     private void setupTosButtons(Button continueTosButton, Button continueWithGoogleTosButton) {
-        OnClickListener onClickListener = new OnClickListener() {
-            public void onClick(View view) {
-                Context context = getContext();
-                if ((context instanceof SignupSheetListener)) {
-                    ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
+        if (mHideTos) {
+            // Hide the TOS buttons
+            continueTosButton.setVisibility(View.GONE);
+            continueWithGoogleTosButton.setVisibility(View.GONE);
+        } else {
+            // Show the TOS buttons
+            continueTosButton.setVisibility(View.VISIBLE);
+            continueWithGoogleTosButton.setVisibility(View.VISIBLE);
+
+            OnClickListener onClickListener = new OnClickListener() {
+                public void onClick(View view) {
+                    Context context = getContext();
+                    if ((context instanceof SignupSheetListener)) {
+                        ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
+                    }
                 }
-            }
-        };
+            };
 
-        continueTosButton.setOnClickListener(onClickListener);
-        continueTosButton.setText(formatTosText(R.string.continue_terms_of_service_text));
+            continueTosButton.setOnClickListener(onClickListener);
+            continueTosButton.setText(formatTosText(R.string.continue_terms_of_service_text));
 
-        continueWithGoogleTosButton.setOnClickListener(onClickListener);
-        continueWithGoogleTosButton.setText(formatTosText(R.string.continue_with_google_terms_of_service_text));
+            continueWithGoogleTosButton.setOnClickListener(onClickListener);
+            continueWithGoogleTosButton
+                    .setText(formatTosText(R.string.continue_with_google_terms_of_service_text));
+        }
     }
 
     private void setupSocialButtons(Button continueWithGoogleButton) {
@@ -262,6 +328,22 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 onGoogleSigninClicked();
+            }
+        });
+    }
+
+    private void setupSiteCredsButton(Button continueWithSiteCreds) {
+        continueWithSiteCreds.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mLoginListener.loginViaSiteCredentials(mLoginSiteUrl);
+            }
+        });
+    }
+
+    private void setupFindEmailHelpButton(Button findConnectedEmail) {
+        findConnectedEmail.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View v) {
+                mLoginListener.showHelpFindingConnectedEmail();
             }
         });
     }
@@ -318,7 +400,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        if (mShouldUseNewLayout) {
+        if (mShouldUseNewLayout || mOptionalSiteCredsLayout) {
             secondaryButton.setVisibility(View.GONE);
             primaryButton.setVisibility(View.GONE);
         } else {
@@ -420,6 +502,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
             mIsSiteLoginEnabled = args.getBoolean(ARG_SITE_LOGIN_ENABLED, true);
             mShouldUseNewLayout = args.getBoolean(ARG_SHOULD_USE_NEW_LAYOUT, false);
+            mOptionalSiteCredsLayout = args.getBoolean(ARG_OPTIONAL_SITE_CREDS_LAYOUT, false);
+            mHideTos = args.getBoolean(ARG_HIDE_TOS, false);
         }
     }
 
@@ -468,7 +552,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onResume() {
         super.onResume();
         mAnalyticsListener.emailFormScreenResumed();
-        if (mShouldUseNewLayout) {
+        if (mShouldUseNewLayout || mOptionalSiteCredsLayout) {
             updateContinueButtonEnabledStatus();
         }
     }
@@ -491,6 +575,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
         if (mShouldUseNewLayout) {
             actionBar.setTitle(R.string.get_started);
+        } else if (mOptionalSiteCredsLayout) {
+            actionBar.setTitle(R.string.log_in);
         } else {
             super.buildToolbar(toolbar, actionBar);
         }
@@ -561,7 +647,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.setError(null);
         mIsSocialLogin = false;
         clearEmailError();
-        if (mShouldUseNewLayout) {
+        if (mShouldUseNewLayout || mOptionalSiteCredsLayout) {
             updateContinueButtonEnabledStatus();
         }
     }
@@ -613,7 +699,18 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             switch (event.error.type) {
                 case UNKNOWN_USER:
                     // This email does not correspond to an existing account
-                    if (mIsSignupFromLoginEnabled) {
+
+                    // Will be true if in the Woo app and currently in the WPcom login
+                    // flow. We need to check this to know if we should display the
+                    // 'No WPcom account found' error screen.
+                    boolean isWooWPcomLoginFlow = false;
+                    if (mLoginListener != null
+                        && mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE
+                        && !mOptionalSiteCredsLayout) {
+                        isWooWPcomLoginFlow = true;
+                    }
+
+                    if (mIsSignupFromLoginEnabled || isWooWPcomLoginFlow) {
                         if (mLoginListener != null) {
                             mLoginListener.gotUnregisteredEmail(email);
                         }

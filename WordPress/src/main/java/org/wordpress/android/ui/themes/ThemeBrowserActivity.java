@@ -48,7 +48,8 @@ import javax.inject.Inject;
 public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBrowserFragmentCallback {
     public static boolean isAccessible(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
-        return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions();
+        return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions()
+                && !site.isWpForTeamsSite();
     }
 
     public static final int ACTIVATE_THEME = 1;

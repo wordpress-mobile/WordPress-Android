@@ -188,8 +188,7 @@ public class WPScreenshotTest extends BaseTest {
         clickOn(R.id.nav_sites);
         clickOn(R.id.row_stats);
 
-        // Show the months view
-        selectItemWithTitleInTabLayout(getTranslatedString(R.string.stats_timeframe_months), R.id.tabLayout);
+        waitForElementToBeDisplayedWithoutFailure(R.id.image_thumbnail);
 
         // Wait for the stats to load
         idleFor(8000);

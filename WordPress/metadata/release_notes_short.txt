@@ -1,0 +1,3 @@
+Block editor: We’ve improved the overall performance, which you may notice when you start a new post. The Image block now has better support for uploading multiple images.
+
+More updates: Your app uses a new Media Picker when you select files. We also fixed a bug on pure self-hosted sites on HTTP that affected featured images in the Posts List.

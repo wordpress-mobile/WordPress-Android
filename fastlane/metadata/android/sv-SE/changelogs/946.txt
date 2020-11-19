@@ -1,4 +1,0 @@
-16.0:
-Nytt i blockredigereran: Nu finns det stöd för fullbredd och bredd layout av video-, galleri- m.fl. block. Vi har korrigerat ett problem med det klassiska blocket på webbplatser med Jetpack och löst ett bekymmer med ej stödda block vid rotering av mobila enheter.
-
-Uppdateringar i läsaren: Njut av en snyggare läsupplevelse och vackra bilder med den nya designen av läsaren. Du kommer åt den även om du inte har följt några ämnen.
