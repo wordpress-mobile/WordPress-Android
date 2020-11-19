@@ -62,7 +62,7 @@ class ActivityLogStore
             }
             FETCH_BACKUP_DOWNLOAD_STATE -> {
                 coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_BACKUP_DOWNLOAD_STATE") {
-                    emitChange(fetchActivitiesBackupDownload(action.payload as FetchBackupDownloadStatePayload))
+                    emitChange(fetchBackupDownloadState(action.payload as FetchBackupDownloadStatePayload))
                 }
             }
         }
@@ -117,7 +117,7 @@ class ActivityLogStore
         return emitRewindResult(payload, REWIND)
     }
 
-    suspend fun backupDownload(backupDownloadPayload: BackupDownloadPayload): OnDownload {
+    suspend fun backupDownload(backupDownloadPayload: BackupDownloadPayload): OnBackupDownload {
         val payload = activityLogRestClient.backupDownload(
                 backupDownloadPayload.site,
                 backupDownloadPayload.rewindId,
@@ -125,10 +125,10 @@ class ActivityLogStore
         return emitBackupDownloadResult(payload, BACKUP_DOWNLOAD)
     }
 
-    suspend fun fetchActivitiesBackupDownload(
-        fetchActivitiesBackupDownloadPayload: FetchBackupDownloadStatePayload
+    suspend fun fetchBackupDownloadState(
+        fetchBackupDownloadPayload: FetchBackupDownloadStatePayload
     ): OnBackupDownloadStatusFetched {
-        val payload = activityLogRestClient.fetchActivityBackupDownload(fetchActivitiesBackupDownloadPayload.site)
+        val payload = activityLogRestClient.fetchBackupDownloadState(fetchBackupDownloadPayload.site)
         return storeBackupDownloadState(payload, FETCH_BACKUP_DOWNLOAD_STATE)
     }
 
@@ -179,11 +179,14 @@ class ActivityLogStore
         }
     }
 
-    private fun emitBackupDownloadResult(payload: BackupDownloadResultPayload, action: ActivityLogAction): OnDownload {
+    private fun emitBackupDownloadResult(
+        payload: BackupDownloadResultPayload,
+        action: ActivityLogAction
+    ): OnBackupDownload {
         return if (payload.error != null) {
-            OnDownload(payload.rewindId, payload.error, action)
+            OnBackupDownload(payload.rewindId, payload.error, action)
         } else {
-            OnDownload(
+            OnBackupDownload(
                     rewindId = payload.rewindId,
                     downloadId = payload.downloadId,
                     backupPoint = payload.backupPoint,
@@ -223,7 +226,7 @@ class ActivityLogStore
         }
     }
 
-    data class OnDownload(
+    data class OnBackupDownload(
         val rewindId: String,
         val downloadId: Long? = null,
         val backupPoint: String? = null,
