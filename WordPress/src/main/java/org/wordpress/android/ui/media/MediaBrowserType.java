@@ -43,7 +43,6 @@ public enum MediaBrowserType {
                || this == GUTENBERG_MEDIA_PICKER
                || this == WP_STORIES_MEDIA_PICKER
                || this == GUTENBERG_SINGLE_FILE_PICKER;
-
     }
 
     public boolean isVideoPicker() {
@@ -86,10 +85,10 @@ public enum MediaBrowserType {
 
     public boolean canMultiselect() {
         return this == EDITOR_PICKER
-                || this == AZTEC_EDITOR_PICKER
-                || this == GUTENBERG_IMAGE_PICKER
-                || this == GUTENBERG_VIDEO_PICKER
-                || this == WP_STORIES_MEDIA_PICKER;
+               || this == AZTEC_EDITOR_PICKER
+               || this == GUTENBERG_IMAGE_PICKER
+               || this == GUTENBERG_VIDEO_PICKER
+               || this == WP_STORIES_MEDIA_PICKER;
     }
 
     public boolean canFilter() {
