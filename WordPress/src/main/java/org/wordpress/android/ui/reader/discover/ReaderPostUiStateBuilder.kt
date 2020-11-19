@@ -216,23 +216,23 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType? = null,
-        showP2SpecificLayout: Boolean = false
-    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, showP2SpecificLayout)
+        isP2Post: Boolean = false
+    ) = buildBlogSectionUiState(post, onBlogSectionClicked, postListType, isP2Post)
 
     private fun buildBlogSectionUiState(
         post: ReaderPost,
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType?,
-        showP2SpecificLayout: Boolean = false
+        isP2Post: Boolean = false
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogName = buildBlogName(post, showP2SpecificLayout),
+                blogName = buildBlogName(post, isP2Post),
                 blogUrl = buildBlogUrl(post),
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-                isAuthorAvatarVisible = showP2SpecificLayout,
+                isAuthorAvatarVisible = isP2Post,
                 authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                         post.postAvatar,
                         R.dimen.avatar_sz_medium
@@ -312,11 +312,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildExcerpt(post: ReaderPost) =
             post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
 
-    private fun buildBlogName(post: ReaderPost, showP2SpecificLayout: Boolean = false): UiString {
+    private fun buildBlogName(post: ReaderPost, isP2Post: Boolean = false): UiString {
         val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
                 ?: UiStringRes(R.string.untitled_in_parentheses)
 
-        if (!showP2SpecificLayout) {
+        if (!isP2Post) {
             return blogName
         }
 

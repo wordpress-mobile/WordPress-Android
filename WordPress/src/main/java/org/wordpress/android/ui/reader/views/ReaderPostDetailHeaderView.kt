@@ -78,7 +78,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
     private fun updateBlavatar(state: ReaderBlogSectionUiState) {
         uiHelpers.updateVisibility(image_avatar_or_blavatar, state.avatarOrBlavatarUrl != null)
-        uiHelpers.updateVisibility(authors_avatar, state.isAuthorAvatarVisible)
         if (state.avatarOrBlavatarUrl == null) {
             imageManager.cancelRequestAndClearImageView(image_avatar_or_blavatar)
         } else {
@@ -87,6 +86,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                     BLAVATAR_CIRCULAR, state.avatarOrBlavatarUrl
             )
         }
+        // we don't show the p2 style of header in post details yet
+        uiHelpers.updateVisibility(authors_avatar, state.isAuthorAvatarVisible)
     }
 
     private fun updateFollowButton(followButtonUiState: FollowButtonUiState) {
