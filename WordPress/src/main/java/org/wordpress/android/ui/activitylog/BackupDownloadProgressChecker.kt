@@ -14,16 +14,13 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+const val CHECK_DELAY_MILLIS = 10000L
+
 @Singleton
-class BackupDownloadProgressChecker
-@Inject constructor(
+class BackupDownloadProgressChecker @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     @param:Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
-    companion object {
-        const val CHECK_DELAY_MILLIS = 10000L
-    }
-
     suspend fun startNow(site: SiteModel, restoreId: Long): OnBackupDownloadStatusFetched? {
         return start(site, restoreId, true)
     }
@@ -46,7 +43,7 @@ class BackupDownloadProgressChecker
                     break
                 }
             }
-            result = activityLogStore.fetchActivitiesBackupDownload(
+            result = activityLogStore.fetchBackupDownloadState(
                     FetchBackupDownloadStatePayload(
                             site
                     )

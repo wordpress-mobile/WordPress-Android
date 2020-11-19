@@ -34,7 +34,7 @@ class BackupDownloadProgressCheckerTest {
         backupDownloadProgressChecker = BackupDownloadProgressChecker(activityLogStore, TEST_SCOPE)
     }
 
-    private val finishedBackupDownload = BackupDownloadStatusModel(
+    private val finishedBackupDownloadStatusModel = BackupDownloadStatusModel(
             downloadId = 1L,
             rewindId = "rewindId",
             backupPoint = Date(),
@@ -45,7 +45,7 @@ class BackupDownloadProgressCheckerTest {
             url = "url"
     )
 
-    private val backupDownloadStatusModel = BackupDownloadStatusModel(
+    private val runningBackupDownloadStatusModel = BackupDownloadStatusModel(
             downloadId = 1L,
             rewindId = "rewindId",
             backupPoint = Date(),
@@ -55,12 +55,11 @@ class BackupDownloadProgressCheckerTest {
             validUntil = null,
             url = null
     )
-    private val finishedBackupDownloadStatus = finishedBackupDownload.copy()
 
     @Test
     fun `on start checks current value and finishes if backup download is done`() = runBlocking {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
-                finishedBackupDownloadStatus
+                finishedBackupDownloadStatusModel
         )
 
         val onBackupDownloadStatusFetched = backupDownloadProgressChecker.start(
@@ -78,10 +77,11 @@ class BackupDownloadProgressCheckerTest {
     @Test
     fun `on start triggers fetch if backup download in progress`() = runBlocking {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
-                backupDownloadStatusModel,
-                finishedBackupDownloadStatus
+                runningBackupDownloadStatusModel,
+                runningBackupDownloadStatusModel.copy(progress = 85),
+                finishedBackupDownloadStatusModel
         )
-        whenever(activityLogStore.fetchActivitiesBackupDownload(any())).thenReturn(
+        whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
                 OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
         )
 
@@ -93,7 +93,9 @@ class BackupDownloadProgressCheckerTest {
 
         with(inOrder(activityLogStore)) {
             verify(activityLogStore).getBackupDownloadStatusForSite(site)
-            verify(activityLogStore).fetchActivitiesBackupDownload(any())
+            verify(activityLogStore).fetchBackupDownloadState(any())
+            verify(activityLogStore).getBackupDownloadStatusForSite(site)
+            verify(activityLogStore).fetchBackupDownloadState(any())
             verify(activityLogStore).getBackupDownloadStatusForSite(site)
         }
 
@@ -106,7 +108,7 @@ class BackupDownloadProgressCheckerTest {
     @Test
     fun `on fetch fail return error`() = runBlocking {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
-                backupDownloadStatusModel
+                runningBackupDownloadStatusModel
         )
         val errorStatus = OnBackupDownloadStatusFetched(
                 BackupDownloadStatusError(
@@ -114,7 +116,7 @@ class BackupDownloadProgressCheckerTest {
                         "generic error"
                 ), FETCH_BACKUP_DOWNLOAD_STATE
         )
-        whenever(activityLogStore.fetchActivitiesBackupDownload(any())).thenReturn(errorStatus)
+        whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(errorStatus)
 
         val onBackupDownloadStatusFetched = backupDownloadProgressChecker.start(
                 site,
@@ -124,7 +126,7 @@ class BackupDownloadProgressCheckerTest {
 
         with(inOrder(activityLogStore)) {
             verify(activityLogStore).getBackupDownloadStatusForSite(site)
-            verify(activityLogStore).fetchActivitiesBackupDownload(any())
+            verify(activityLogStore).fetchBackupDownloadState(any())
             verifyNoMoreInteractions()
         }
 
@@ -140,5 +142,28 @@ class BackupDownloadProgressCheckerTest {
         onBackupDownloadStatusFetched.cancel()
 
         verifyZeroInteractions(activityLogStore)
+    }
+
+    @Test
+    fun `on start does not trigger fetch if backup download is not in progress`() = runBlocking {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
+                finishedBackupDownloadStatusModel
+        )
+
+        val onBackupDownloadStatusFetched = backupDownloadProgressChecker.start(
+                site,
+                restoreId,
+                checkDelay = -1
+        )
+
+        with(inOrder(activityLogStore)) {
+            verify(activityLogStore).getBackupDownloadStatusForSite(site)
+            verifyNoMoreInteractions()
+        }
+
+        assertEquals(
+                OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE),
+                onBackupDownloadStatusFetched
+        )
     }
 }
