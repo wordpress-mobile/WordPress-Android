@@ -81,7 +81,7 @@ public enum MediaBrowserType {
     }
 
     public boolean isSingleMediaPicker() {
-        return this == GUTENBERG_SINGLE_MEDIA_PICKER;
+        return this == GUTENBERG_SINGLE_MEDIA_PICKER || this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean canMultiselect() {
