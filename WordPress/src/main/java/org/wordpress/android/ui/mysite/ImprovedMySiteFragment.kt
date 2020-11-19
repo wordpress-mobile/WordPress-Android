@@ -76,7 +76,7 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { model ->
                 dialogViewModel.showDialog(BasicDialogModel(
-                        model.type.tag,
+                        model.tag,
                         getString(model.title),
                         getString(model.message),
                         getString(model.positiveButtonLabel),
@@ -85,7 +85,7 @@ class ImprovedMySiteFragment : Fragment(),
                 ))
             }
         })
-        viewModel.onTechInputDialogShown.observe(viewLifecycleOwner, {
+        viewModel.onTextInputDialogShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { model ->
                 val inputDialog = TextInputDialogFragment.newInstance(
                         getString(model.title),
@@ -93,7 +93,7 @@ class ImprovedMySiteFragment : Fragment(),
                         getString(model.hint),
                         model.isMultiline,
                         model.isInputEnabled,
-                        model.type.callbackId
+                        model.callbackId
                 )
                 inputDialog.setTargetFragment(this, 0)
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
