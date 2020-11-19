@@ -7,10 +7,13 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.DownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
+import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
@@ -21,8 +24,11 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadError
 import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadResultPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadStatusError
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
@@ -108,7 +114,8 @@ class ActivityLogRestClient(
                 }
             }
             is Error -> {
-                val error = RewindError(NetworkErrorMapper.map(response.error,
+                val error = RewindError(NetworkErrorMapper.map(
+                        response.error,
                         RewindErrorType.GENERIC_ERROR,
                         RewindErrorType.INVALID_RESPONSE,
                         RewindErrorType.AUTHORIZATION_REQUIRED), response.error.message)
@@ -137,6 +144,31 @@ class ActivityLogRestClient(
                         DownloadErrorType.INVALID_RESPONSE,
                         DownloadErrorType.AUTHORIZATION_REQUIRED), response.error.message)
                 DownloadResultPayload(error, rewindId, site)
+            }
+        }
+    }
+
+    suspend fun fetchActivityDownload(site: SiteModel): FetchedDownloadStatePayload {
+        val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.url
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                mapOf(),
+                DownloadStatusResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                buildDownloadStatusPayload(response.data, site)
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                        response.error,
+                        DownloadStatusErrorType.GENERIC_ERROR,
+                        DownloadStatusErrorType.INVALID_RESPONSE,
+                        DownloadStatusErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = DownloadStatusError(errorType, response.error.message)
+                FetchedDownloadStatePayload(error, site)
             }
         }
     }
@@ -256,6 +288,37 @@ class ActivityLogRestClient(
     private fun buildErrorPayload(site: SiteModel, errorType: RewindStatusErrorType) =
             FetchedRewindStatePayload(RewindStatusError(errorType), site)
 
+    private fun buildDownloadStatusPayload(response: DownloadStatusResponse, site: SiteModel):
+            FetchedDownloadStatePayload {
+        val downloadStatusModel = DownloadStatusModel(
+                rewindId = response.rewindId,
+                downloadId = response.downloadId,
+                backupPoint = response.backupPoint,
+                startedAt = response.startedAt,
+                progress = response.progress,
+                downloadCount = response.downloadCount,
+                validUntil = response.validUntil,
+                url = response.url
+        )
+        return FetchedDownloadStatePayload(downloadStatusModel, site)
+    }
+
+    private fun <T> genericToError(
+        error: WPComGsonNetworkError,
+        genericError: T,
+        invalidResponse: T,
+        authorizationRequired: T
+    ): T {
+        var errorType = genericError
+        if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
+            errorType = invalidResponse
+        }
+        if ("unauthorized" == error.apiError) {
+            errorType = authorizationRequired
+        }
+        return errorType
+    }
+
     class ActivitiesResponse(
         val totalItems: Int?,
         val summary: String?,
@@ -324,5 +387,16 @@ class ActivityLogRestClient(
         val backupPoint: String,
         val startedAt: String,
         val progress: Int
+    )
+
+    data class DownloadStatusResponse(
+        val downloadId: Long,
+        val rewindId: String,
+        val backupPoint: Date,
+        val startedAt: Date,
+        val progress: Int?,
+        val downloadCount: Int?,
+        val validUntil: Date?,
+        val url: String?
     )
 }

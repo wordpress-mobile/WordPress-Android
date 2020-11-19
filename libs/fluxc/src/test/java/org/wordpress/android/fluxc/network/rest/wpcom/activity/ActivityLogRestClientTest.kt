@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -30,13 +29,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.DownloadResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.DownloadStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadRequestTypes
+import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
@@ -196,7 +198,7 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivity_dispatchesErrorOnFailure() = test {
-        initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
+        initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
@@ -396,6 +398,51 @@ class ActivityLogRestClientTest {
         assertTrue(payload.isError)
     }
 
+    @Test
+    fun fetchActivityDownload_dispatchesGenericErrorOnFailure() = test {
+        initFetchDownloadStatus(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+
+        val payload = activityRestClient.fetchActivityDownload(site)
+
+        assertEmittedDownloadStatusError(payload, DownloadStatusErrorType.GENERIC_ERROR)
+    }
+
+    private fun assertEmittedDownloadStatusError(
+        payload: FetchedDownloadStatePayload,
+        errorType: DownloadStatusErrorType
+    ) {
+        with(payload) {
+            assertEquals(site, site)
+            assertTrue(isError)
+            assertEquals(errorType, error.type)
+        }
+    }
+
+    @Test
+    fun fetchActivityDownload_dispatchesResponseOnSuccess() = test {
+        val progress = 55
+        val downloadResponse = DOWNLOAD_STATUS_RESPONSE.copy(progress = progress)
+        initFetchDownloadStatus(downloadResponse)
+
+        val payload = activityRestClient.fetchActivityDownload(site)
+
+        with(payload) {
+            assertEquals(site, site)
+            assertNull(error)
+            assertNotNull(this.downloadStatusModelResponse)
+            this.downloadStatusModelResponse?.apply {
+                assertEquals(this.downloadId, DOWNLOAD_STATUS_RESPONSE.downloadId)
+                assertEquals(this.rewindId, DOWNLOAD_STATUS_RESPONSE.rewindId)
+                assertEquals(this.backupPoint, DOWNLOAD_STATUS_RESPONSE.backupPoint)
+                assertEquals(this.startedAt, DOWNLOAD_STATUS_RESPONSE.startedAt)
+                assertEquals(this.downloadCount, DOWNLOAD_STATUS_RESPONSE.downloadCount)
+                assertEquals(this.validUntil, DOWNLOAD_STATUS_RESPONSE.validUntil)
+                assertEquals(this.url, DOWNLOAD_STATUS_RESPONSE.url)
+                assertEquals(this.progress, progress)
+            }
+        }
+    }
+
     private suspend fun initFetchActivity(
         data: ActivitiesResponse = mock(),
         error: WPComGsonNetworkError? = null
@@ -483,6 +530,23 @@ class ActivityLogRestClientTest {
                         "types" to requestTypes)),
                 eq(DownloadResponse::class.java)
         )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initFetchDownloadStatus(
+        data: DownloadStatusResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ): Response<DownloadStatusResponse> {
+        val response = if (error != null) Response.Error<DownloadStatusResponse>(error) else Success(data)
+        whenever(wpComGsonRequestBuilder.syncGetRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                paramsCaptor.capture(),
+                eq(DownloadStatusResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
     }
