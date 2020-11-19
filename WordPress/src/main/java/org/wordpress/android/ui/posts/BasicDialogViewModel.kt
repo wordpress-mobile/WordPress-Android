@@ -10,18 +10,16 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dis
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.viewmodel.Event
+import javax.inject.Inject
 
-class BasicDialogViewModel : ViewModel() {
-    private val _showDialog = MutableLiveData<Event<((FragmentManager) -> Unit)>>()
+class BasicDialogViewModel
+@Inject constructor() : ViewModel() {
     private val _onInteraction = MutableLiveData<Event<DialogInteraction>>()
-    val showDialog = _showDialog as LiveData<Event<((FragmentManager) -> Unit)>>
     val onInteraction = _onInteraction as LiveData<Event<DialogInteraction>>
-    fun showDialog(model: BasicDialogModel) {
-        _showDialog.value = Event { manager ->
-            val dialog = BasicDialog()
-            dialog.initialize(model)
-            dialog.show(manager, model.tag)
-        }
+    fun showDialog(manager: FragmentManager, model: BasicDialogModel) {
+        val dialog = BasicDialog()
+        dialog.initialize(model)
+        dialog.show(manager, model.tag)
     }
 
     fun onPositiveClicked(tag: String) {
@@ -47,8 +45,8 @@ class BasicDialogViewModel : ViewModel() {
     ) : Parcelable
 
     sealed class DialogInteraction(open val tag: String) {
-        data class Positive(override val tag: String): DialogInteraction(tag)
-        data class Negative(override val tag: String): DialogInteraction(tag)
-        data class Dismissed(override val tag: String): DialogInteraction(tag)
+        data class Positive(override val tag: String) : DialogInteraction(tag)
+        data class Negative(override val tag: String) : DialogInteraction(tag)
+        data class Dismissed(override val tag: String) : DialogInteraction(tag)
     }
 }
