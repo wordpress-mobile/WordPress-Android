@@ -709,7 +709,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (mBrowserType.isBrowser() && !isLongClick
                 || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media);
-        } else if ((mBrowserType.isSingleImagePicker() || mBrowserType.isSingleMediaPicker()) && !isLongClick) {
+        } else if ((mBrowserType.isSingleImagePicker() || mBrowserType.isSingleMediaPicker() || mBrowserType
+                .isSingleFilePicker()) && !isLongClick) {
             // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();

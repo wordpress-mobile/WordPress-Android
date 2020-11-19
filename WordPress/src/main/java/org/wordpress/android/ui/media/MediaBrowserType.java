@@ -79,8 +79,12 @@ public enum MediaBrowserType {
         return this == WP_STORIES_MEDIA_PICKER;
     }
 
+    public boolean isSingleFilePicker() {
+        return this == GUTENBERG_SINGLE_FILE_PICKER;
+    }
+
     public boolean isSingleMediaPicker() {
-        return this == GUTENBERG_SINGLE_MEDIA_PICKER || this == GUTENBERG_SINGLE_FILE_PICKER;
+        return this == GUTENBERG_SINGLE_MEDIA_PICKER;
     }
 
     public boolean canMultiselect() {
