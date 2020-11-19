@@ -54,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-257"
+            versionName "alpha-258"
         }
-        versionCode 955
+        versionCode 958
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -96,9 +96,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.1"
+                versionName "16.2-rc-1"
             }
-            versionCode 956
+            versionCode 957
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -188,6 +188,7 @@ androidExtensions {
 
 dependencies {
     implementation project(path:':libs:stories-android:stories')
+    testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
@@ -229,7 +230,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.5'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
-    implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'org.greenrobot:eventbus:3.1.1'

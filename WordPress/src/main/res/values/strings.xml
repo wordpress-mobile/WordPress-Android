@@ -113,7 +113,6 @@
 
     <string name="button_not_now">Not now</string>
 
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="at_username">\@%s</string>
 
     <string name="me">Me</string>
@@ -209,6 +208,7 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try editing your Story.</string>
     <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
@@ -1407,12 +1407,6 @@
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
-
-    <!-- location -->
-    <string name="post_settings_location">Location</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Can\'t open the Location Picker, Google Play Services is not available</string>
-    <string name="remove_location">Remove Location</string>
-    <string name="change_location">Change Location</string>
 
     <!-- Post Status -->
     <string name="post_status_publish_post">Publish</string>
@@ -2942,6 +2936,15 @@
     <string name="hpp_retry_error">Please Check your internet connection and retry.</string>
     <string name="hpp_choose_error">There was an error while selecting the design.</string>
 
+    <!-- Stories -->
+    <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
+    <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
+    <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
+    <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
+    <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
+    <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>
@@ -3269,4 +3272,12 @@ translators: sample content for "Services" page template -->
     <string name="typeface_label_pacifico">Playful</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_shrikhand">Bold</string>
+    <string name="delete_button_alt">Delete</string>
+    <string name="label_next_button">Next</string>
+    <string name="label_done_button">Done</string>
+    <string name="dialog_discard_story_title_edit">Discard changes?</string>
+    <string name="dialog_discard_story_message_edit">Any changes made will not be saved.</string>
+    <string name="dialog_discard_story_ok_button_edit">Discard</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="color_picker_label_background">Background</string>
 </resources>
