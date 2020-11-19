@@ -205,15 +205,18 @@ public class UploadService extends Service {
             // if this media belongs to some post, register such Post
             registerPostModelsForMedia(mediaList, intent.getBooleanExtra(KEY_SHOULD_RETRY, false));
 
-            ArrayList<MediaModel> toBeUploadedMediaList = new ArrayList<>(mediaList);
+            ArrayList<MediaModel> toBeUploadedMediaList = new ArrayList<>();
             for (MediaModel media : mediaList) {
-                // Reload media and if already uploaded, remove it from the media list to be uploaded
                 MediaModel localMedia = mMediaStore.getMediaWithLocalId(media.getId());
-                if (localMedia != null
-                    && MediaUploadState.fromString(localMedia.getUploadState()) == MediaUploadState.UPLOADED) {
-                    toBeUploadedMediaList.remove(media);
-                    continue;
+                boolean notUploadedYet = localMedia != null
+                                         && MediaUploadState.fromString(localMedia.getUploadState())
+                                            != MediaUploadState.UPLOADED;
+                if (notUploadedYet) {
+                    toBeUploadedMediaList.add(localMedia);
                 }
+            }
+
+            for (MediaModel media : toBeUploadedMediaList) {
                 mMediaUploadHandler.upload(media);
             }
 
