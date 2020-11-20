@@ -192,18 +192,18 @@ public class ReleaseNetworkModule {
                                                               @Named("regular") RequestQueue requestQueue,
                                                               AccessToken token, UserAgent userAgent,
                                                               WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
+        return new ActivityLogRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                token, userAgent);
     }
 
     @Singleton
     @Provides
     public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
-                                                       @Named("regular") RequestQueue requestQueue,
-                                                       AccessToken token, UserAgent userAgent,
-                                                       WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
-                userAgent);
+                                                @Named("regular") RequestQueue requestQueue,
+                                                AccessToken token, UserAgent userAgent,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                token, userAgent);
     }
 
     @Singleton
