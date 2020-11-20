@@ -35,7 +35,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         viewModel.start()
 
-        assertThat((viewModel.uiState.value as Content).items[0]).isInstanceOf(ListItemUiState.SectionHeader::class.java)
+        assertThat((viewModel.uiState.value as Content).items[0])
+                .isInstanceOf(ListItemUiState.SectionHeader::class.java)
     }
 
     private fun initObservers(): Observers {
