@@ -56,10 +56,20 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                     }
             Content(
                     activityTypeListItems,
-                    primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply)),
+                    primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
+                            .apply { action = ::onApplyClicked },
                     secondaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_clear))
+                            .apply { action = ::onClearClicked }
             )
         }
+    }
+
+    private fun onApplyClicked() {
+        // TODO malinjir save and dismiss
+    }
+
+    private fun onClearClicked() {
+        // TODO malinjir uncheck all items
     }
 
     sealed class UiState {
