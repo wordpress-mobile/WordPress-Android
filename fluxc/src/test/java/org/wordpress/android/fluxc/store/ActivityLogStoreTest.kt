@@ -19,18 +19,18 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.model.activity.DownloadStatusModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
-import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadPayload
-import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadRequestTypes
-import org.wordpress.android.fluxc.store.ActivityLogStore.DownloadResultPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
-import org.wordpress.android.fluxc.store.ActivityLogStore.FetchDownloadStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
-import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedDownloadStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedBackupDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
@@ -304,9 +304,9 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onDownloadActionCallRestClient() = test {
-        whenever(activityLogRestClient.download(eq(siteModel), any(), any())).thenReturn(
-                DownloadResultPayload(
+    fun onBackupDownloadActionCallRestClient() = test {
+        whenever(activityLogRestClient.backupDownload(eq(siteModel), any(), any())).thenReturn(
+                BackupDownloadResultPayload(
                         "rewindId",
                         10L,
                         "backupPoint",
@@ -316,96 +316,99 @@ class ActivityLogStoreTest {
                 )
         )
 
-        val types = DownloadRequestTypes(themes = true,
+        val types = BackupDownloadRequestTypes(themes = true,
                 plugins = true,
                 uploads = true,
                 sqls = true,
                 roots = true,
                 contents = true)
         val rewindId = "rewindId"
-        val payload = DownloadPayload(siteModel, rewindId, types)
-        val action = ActivityLogActionBuilder.newDownloadAction(payload)
+        val payload = BackupDownloadPayload(siteModel, rewindId, types)
+        val action = ActivityLogActionBuilder.newBackupDownloadAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).download(siteModel, rewindId, types)
+        verify(activityLogRestClient).backupDownload(siteModel, rewindId, types)
     }
 
     @Test
-    fun emitsDownloadResult() = test {
+    fun emitsBackupDownloadResult() = test {
         val rewindId = "rewindId"
         val downloadId = 10L
         val backupPoint = "backup_point"
         val startedAt = "started_at"
         val progress = 50
-        val types = DownloadRequestTypes(themes = true,
+        val types = BackupDownloadRequestTypes(themes = true,
                 plugins = true,
                 uploads = true,
                 sqls = true,
                 roots = true,
                 contents = true)
 
-        val payload = DownloadResultPayload(
+        val payload = BackupDownloadResultPayload(
                 rewindId,
                 downloadId,
                 backupPoint,
                 startedAt,
                 progress,
                 siteModel)
-        whenever(activityLogRestClient.download(siteModel, rewindId, types)).thenReturn(payload)
+        whenever(activityLogRestClient.backupDownload(siteModel, rewindId, types)).thenReturn(payload)
 
-        activityLogStore.onAction(ActivityLogActionBuilder.newDownloadAction(DownloadPayload(
+        activityLogStore.onAction(ActivityLogActionBuilder.newBackupDownloadAction(BackupDownloadPayload(
                 siteModel,
                 rewindId,
                 types)))
 
-        val expectedChangeEvent = ActivityLogStore.OnDownload(
+        val expectedChangeEvent = ActivityLogStore.OnBackupDownload(
                 rewindId,
                 downloadId,
                 backupPoint,
                 startedAt,
                 progress,
-                ActivityLogAction.DOWNLOAD)
+                ActivityLogAction.BACKUP_DOWNLOAD)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     @Test
-    fun onFetchDownloadStatusActionCallRestClient() = test {
-        val payload = FetchDownloadStatePayload(siteModel)
-        whenever(activityLogRestClient.fetchActivityDownload(siteModel)).thenReturn(
-                FetchedDownloadStatePayload(
+    fun onFetchBackupDownloadStatusActionCallRestClient() = test {
+        val payload = FetchBackupDownloadStatePayload(siteModel)
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel)).thenReturn(
+                FetchedBackupDownloadStatePayload(
                         null,
                         siteModel
                 )
         )
-        val action = ActivityLogActionBuilder.newFetchDownloadStateAction(payload)
+        val action = ActivityLogActionBuilder.newFetchBackupDownloadStateAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivityDownload(siteModel)
+        verify(activityLogRestClient).fetchBackupDownloadState(siteModel)
     }
 
     @Test
-    fun storeFetchedDownloadStatusToDb() = test {
-        val downloadStatusModel = mock<DownloadStatusModel>()
-        val payload = FetchedDownloadStatePayload(downloadStatusModel, siteModel)
-        whenever(activityLogRestClient.fetchActivityDownload(siteModel)).thenReturn(payload)
+    fun storeFetchedBackupDownloadStatusToDb() = test {
+        val backupDownloadStatusModel = mock<BackupDownloadStatusModel>()
+        val payload = FetchedBackupDownloadStatePayload(backupDownloadStatusModel, siteModel)
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel)).thenReturn(payload)
 
-        val fetchAction = ActivityLogActionBuilder.newFetchDownloadStateAction(FetchDownloadStatePayload(siteModel))
+        val fetchAction =
+                ActivityLogActionBuilder.newFetchBackupDownloadStateAction(FetchBackupDownloadStatePayload(siteModel))
         activityLogStore.onAction(fetchAction)
 
-        verify(activityLogSqlUtils).replaceDownloadStatus(siteModel, downloadStatusModel)
-        val expectedChangeEvent = ActivityLogStore.OnDownloadStatusFetched(ActivityLogAction.FETCH_DOWNLOAD_STATE)
+        verify(activityLogSqlUtils).replaceBackupDownloadStatus(siteModel, backupDownloadStatusModel)
+        val expectedChangeEvent =
+                ActivityLogStore.OnBackupDownloadStatusFetched(ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     @Test
-    fun returnDownloadStatusFromDb() {
-        val downloadStatusModel = mock<DownloadStatusModel>()
-        whenever(activityLogSqlUtils.getDownloadStatusForSite(siteModel))
-                .thenReturn(downloadStatusModel)
+    fun returnBackupDownloadStatusFromDb() {
+        val backupDownloadStatusModel = mock<BackupDownloadStatusModel>()
+        whenever(activityLogSqlUtils.getBackupDownloadStatusForSite(siteModel))
+                .thenReturn(backupDownloadStatusModel)
 
-        val downloadStatusFromDb = activityLogStore.getDownloadStatusForSite(siteModel)
+        val backDownloadStatusFromDb = activityLogStore.getBackupDownloadStatusForSite(siteModel)
 
-        verify(activityLogSqlUtils).getDownloadStatusForSite(siteModel)
+        verify(activityLogSqlUtils).getBackupDownloadStatusForSite(siteModel)
+        assertEquals(backupDownloadStatusModel, backDownloadStatusFromDb)
     }
 
     private suspend fun initRestClient(
