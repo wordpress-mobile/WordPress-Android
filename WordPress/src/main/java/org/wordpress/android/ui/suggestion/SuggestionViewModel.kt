@@ -65,11 +65,15 @@ class SuggestionViewModel @Inject constructor(
         val hasSuggestions = suggestions.value?.isNotEmpty() == true
 
         val text = when {
-            hasSuggestions -> resourceProvider.getString(
-                    R.string.suggestion_no_matching,
-                    suggestionTypeString
-            )
-            networkUtils.isNetworkAvailable() -> resourceProvider.getString(R.string.loading)
+            hasSuggestions -> resourceProvider.getString(R.string.suggestion_no_matching, suggestionTypeString)
+            networkUtils.isNetworkAvailable() -> {
+                val hasSuggestionUpdate = suggestions.value != null
+                if (hasSuggestionUpdate) {
+                    resourceProvider.getString(R.string.suggestion_none, suggestionTypeString)
+                } else {
+                    resourceProvider.getString(R.string.loading)
+                }
+            }
             else -> resourceProvider.getString(R.string.suggestion_no_connection)
         }
 

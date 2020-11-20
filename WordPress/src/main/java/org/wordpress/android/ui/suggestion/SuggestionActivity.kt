@@ -79,7 +79,8 @@ class SuggestionActivity : LocaleAwareActivity() {
             setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_UP) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                        return@setOnKeyListener exitIfOnlyOneMatchingUser()
+                        exitIfOnlyOneMatchingUser()
+                        return@setOnKeyListener true
                     }
                 }
                 false
@@ -88,6 +89,7 @@ class SuggestionActivity : LocaleAwareActivity() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     exitIfOnlyOneMatchingUser()
+                    true
                 } else {
                     false
                 }
@@ -138,15 +140,7 @@ class SuggestionActivity : LocaleAwareActivity() {
             showDropdownOnTouch()
         }
 
-        viewModel.suggestions.observe(this, Observer { suggestions ->
-            if (suggestions.isEmpty()) {
-                // Notify user that there are no suggestions and exit the suggestions activity because
-                // there is nothing the user can do here if there aren't any suggestions
-                val message = getString(string.suggestion_none, viewModel.suggestionTypeString)
-                ToastUtils.showToast(this@SuggestionActivity, message)
-                finish()
-            }
-
+        viewModel.suggestions.observe(this, { suggestions ->
             suggestionAdapter?.suggestionList = suggestions
 
             // Calling forceFiltering is needed to force the suggestions list to always
@@ -165,18 +159,16 @@ class SuggestionActivity : LocaleAwareActivity() {
         })
     }
 
-    private fun exitIfOnlyOneMatchingUser(): Boolean {
-        return when (val finishAttempt = viewModel.onAttemptToFinish(
+    private fun exitIfOnlyOneMatchingUser() {
+        when (val finishAttempt = viewModel.onAttemptToFinish(
                 suggestionAdapter?.filteredSuggestions,
                 autocompleteText.text.toString()
         )) {
             is OnlyOneAvailable -> {
                 finishWithValue(finishAttempt.onlySelectedValue)
-                true
             }
             is NotExactlyOneAvailable -> {
                 ToastUtils.showToast(this@SuggestionActivity, finishAttempt.errorMessage)
-                false
             }
         }
     }

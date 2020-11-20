@@ -83,7 +83,7 @@ class SuggestionViewModelTest {
     }
 
     @Test
-    fun `getEmptyViewState visibility gone`() {
+    fun `getEmptyViewState visibility gone if displaying any suggestions`() {
         initViewModel()
         stubEmptyViewStateText()
 
@@ -93,9 +93,8 @@ class SuggestionViewModelTest {
     }
 
     @Test
-    fun `getEmptyViewState visibility visible`() {
+    fun `getEmptyViewState visibility visible if not displaying any suggestions`() {
         initViewModel()
-        whenever(mockLiveData.value).thenReturn(emptyList())
         stubEmptyViewStateText()
 
         val actual = viewModel.getEmptyViewState(emptyList())
@@ -121,10 +120,23 @@ class SuggestionViewModelTest {
     }
 
     @Test
-    fun `getEmptyViewState text loading if no suggestions available but network available`() {
+    fun `getEmptyViewState text no suggestions of type if has network and suggestions list empty`() {
         initViewModel()
-        whenever(mockLiveData.value).thenReturn(emptyList())
         whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(true)
+        whenever(mockLiveData.value).thenReturn(emptyList())
+        val expectedText = "expected_text"
+        whenever(mockResourceProvider.getString(R.string.suggestion_none, viewModel.suggestionTypeString))
+                .thenReturn(expectedText)
+
+        val actual = viewModel.getEmptyViewState(emptyList())
+        assertEquals(expectedText, actual.string)
+    }
+
+    @Test
+    fun `getEmptyViewState text loading if has network and suggestions have never been received`() {
+        initViewModel()
+        whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(true)
+        whenever(mockLiveData.value).thenReturn(null)
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.loading))
                 .thenReturn(expectedText)
