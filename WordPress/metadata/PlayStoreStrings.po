@@ -11,6 +11,15 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_162"
+msgid ""
+"16.2:\n"
+"Block editor enhancements: We’ve improved the overall performance and speed, which you might notice when you open the editor to create a new post. We’ve also improved the Image block, with better support for uploading multiple images.\n"
+"\n"
+"Other updates and fixes: Your app now uses a new Media Picker when you select files for posts, your site icon, Gravatar, and other places. We also fixed a bug on pure self-hosted sites on HTTP that prevented featured images from displaying in the Posts List.\n"
+"\n"
+msgstr ""
+
 msgctxt "release_note_161"
 msgid ""
 "16.1:\n"
@@ -18,12 +27,16 @@ msgid ""
 "\n"
 msgstr ""
 
-msgctxt "release_note_160"
+msgctxt "release_note_short_162"
 msgid ""
-"16.0:\n"
-"Block editor updates: There’s now full-width and wide alignment support for the Video, Gallery, and more blocks. We fixed an issue affecting the Classic block on Jetpack sites and resolved an issue involving unsupported blocks on rotated devices.\n"
+"16.2:\n"
+"Block editor: We’ve improved the overall performance, which you may notice when you start a new post. The Image block now has better support for uploading multiple images.\n"
 "\n"
-"Reader updates: Enjoy a cleaner reading experience and beautiful images in the redesigned Reader. You can access it even if you don’t follow any topics.\n"
+"More updates: Your app uses a new Media Picker when you select files. We also fixed a bug on pure self-hosted sites on HTTP that affected featured images in the Posts List.\n"
+msgstr ""
+
+msgctxt "release_note_short_161"
+msgid ""
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

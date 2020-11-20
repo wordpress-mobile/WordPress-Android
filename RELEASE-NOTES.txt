@@ -1,3 +1,7 @@
+16.3
+-----
+* [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
+
 16.2
 -----
 * [***] Block Editor: Faster editor start and overall operation. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2780]
