@@ -4,14 +4,13 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.home_page_picker_item.view.*
 import org.wordpress.android.R
+import org.wordpress.android.networking.MShot
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
-import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.setVisible
 
 class HomePagePickerViewHolder(view: View, val parent: ViewGroup) : RecyclerView.ViewHolder(view) {
@@ -23,15 +22,13 @@ class HomePagePickerViewHolder(view: View, val parent: ViewGroup) : RecyclerView
         uiState: LayoutGridItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.loadWithResultListener(preview, ImageType.THEME, uiState.preview, FIT_CENTER, null,
-                object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: Exception?, model: Any?) {
-                    }
+        imageManager.loadWithResultListener(preview, MShot(uiState.preview), object : RequestListener<Drawable> {
+            override fun onLoadFailed(e: Exception?, model: Any?) {}
 
-                    override fun onResourceReady(resource: Drawable, model: Any?) {
-                        uiState.onThumbnailReady()
-                    }
-                })
+            override fun onResourceReady(resource: Drawable, model: Any?) {
+                uiState.onThumbnailReady()
+            }
+        })
 
         selected.setVisible(uiState.selectedOverlayVisible)
         preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
