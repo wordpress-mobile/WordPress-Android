@@ -45,16 +45,16 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             _uiState.value = FullscreenLoading
             val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(siteId)
             if (response.isError) {
-                _uiState.value = UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
+                _uiState.value = buildErrorUiState()
             } else {
-                onActivityTypesFetched(response.activityTypes)
+                _uiState.value = buildContentUiState(response.activityTypes)
             }
         }
     }
 
-    private suspend fun onActivityTypesFetched(activityTypes: List<DummyActivityType>) {
-        _uiState.value = buildContentUiState(activityTypes)
-    }
+    private fun buildErrorUiState() =
+        UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
+
 
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
