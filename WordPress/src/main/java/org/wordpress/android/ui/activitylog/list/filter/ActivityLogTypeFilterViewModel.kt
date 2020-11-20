@@ -3,14 +3,24 @@ package org.wordpress.android.ui.activitylog.list.filter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.internal.immutableListOf
+import org.wordpress.android.R
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Action
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -23,6 +33,33 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         isStarted = true
 
         _uiState.value = FullscreenLoading
+        fetchAvailableActivityTypes()
+    }
+
+    private fun fetchAvailableActivityTypes() {
+        launch {
+            // TODO malinjir initiate the fetch
+            onActivityTypesFetched(immutableListOf(DummyActivityType, DummyActivityType, DummyActivityType))
+        }
+    }
+
+    private suspend fun onActivityTypesFetched(activityTypes: List<DummyActivityType>) {
+        _uiState.value = buildContentUiState(activityTypes)
+    }
+
+    private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
+        return withContext(bgDispatcher) {
+            // TODO malinjir replace "it.toString()" with activity type name
+            val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
+                    .map {
+                        ListItemUiState.ActivityType(title = UiStringText(it.toString()))
+                    }
+            Content(
+                    activityTypeListItems,
+                    primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply)),
+                    secondaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_clear))
+            )
+        }
     }
 
     sealed class UiState {
@@ -56,4 +93,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val checked: Boolean = false
         ) : ListItemUiState()
     }
+
+    object DummyActivityType
 }
