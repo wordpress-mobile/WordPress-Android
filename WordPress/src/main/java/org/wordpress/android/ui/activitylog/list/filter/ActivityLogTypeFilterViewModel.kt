@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.internal.immutableListOf
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -13,6 +12,7 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Action
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
+import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -22,6 +22,7 @@ import javax.inject.Named
 import kotlin.properties.Delegates
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
+    private val dummyActivityTypesProvider: DummyActivityTypesProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -42,8 +43,12 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
     private fun fetchAvailableActivityTypes() {
         launch {
-            // TODO malinjir initiate the fetch
-            onActivityTypesFetched(immutableListOf(DummyActivityType, DummyActivityType, DummyActivityType))
+            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(siteId)
+            if (response.isError) {
+                // TODO malinjir implement error handling
+            } else {
+                onActivityTypesFetched(response.activityTypes)
+            }
         }
     }
 
