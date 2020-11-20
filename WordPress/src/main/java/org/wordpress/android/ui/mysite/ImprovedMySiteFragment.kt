@@ -5,11 +5,14 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
@@ -59,6 +62,33 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        appbar_main?.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val maxOffset = appBarLayout.totalScrollRange
+            val currentOffset = maxOffset + verticalOffset
+
+            val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+            avatar?.let {
+                val minSize = avatar.minimumHeight
+                val maxSize = avatar.maxHeight
+                val modifierPx = (minSize.toFloat() - maxSize.toFloat()) * (percentage.toFloat() / 100) * -1
+                val modifierPercentage = modifierPx / minSize
+                val newScale = 1 + modifierPercentage
+
+                avatar.scaleX = newScale
+                avatar.scaleY = newScale
+            }
+        })
+
+        toolbar_main?.let { toolbar ->
+            toolbar.inflateMenu(R.menu.my_site_menu)
+            toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
+                meMenu.actionView?.let { actionView ->
+                    actionView.setOnClickListener { ActivityLauncher.viewMeActivityForResult(activity) }
+                    TooltipCompat.setTooltipText(actionView, meMenu.title)
+                }
+            }
+        }
 
         val layoutManager = LinearLayoutManager(activity)
 
