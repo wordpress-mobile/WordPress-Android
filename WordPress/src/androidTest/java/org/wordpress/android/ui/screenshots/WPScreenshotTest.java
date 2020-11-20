@@ -198,8 +198,6 @@ public class WPScreenshotTest extends BaseTest {
         swipeDownOnView(R.id.scroll_view);
         moveToStats();
 
-        idleFor(2000);
-
         swipeToAvoidGrayOverlay(R.id.statsPager);
 
         setNightModeAndWait(true);
