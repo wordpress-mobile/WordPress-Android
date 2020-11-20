@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
 import com.nhaarman.mockitokotlin2.anyOrNull
-import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -38,7 +38,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fetchAvailableActivityTypes called, when screen initialized`() = test {
+    fun `available activity types fetched, when screen initialized`() = test {
         init()
 
         viewModel.start(0L)
@@ -76,19 +76,17 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fetchAvailableActivityTypes called, when error retry action invoked`() = test {
+    fun `available activity types fetched, when error retry action invoked`() = test {
         init(successResponse = false)
         viewModel.start(0L)
-        reset(dummyActivityTypesProvider)
 
         (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
 
-        verify(dummyActivityTypesProvider).fetchAvailableActivityTypes(anyOrNull())
-        verifyNoMoreInteractions(dummyActivityTypesProvider)
+        verify(dummyActivityTypesProvider, times(2)).fetchAvailableActivityTypes(anyOrNull())
     }
 
     @Test
-    fun `content shown, when retry action succeeds`() = test {
+    fun `content shown, when retry succeeds`() = test {
         init(successResponse = false)
         viewModel.start(0L)
         init(successResponse = true)
@@ -98,7 +96,17 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value).isInstanceOf(UiState.Content::class.java)
     }
 
-    private suspend fun init(successResponse: Boolean = true): Observers {
+    @Test
+    fun `content contains all fetched activity types`() = test {
+        val activityTypeCount = 17 // random number
+        init(activityTypeCount = activityTypeCount)
+
+        viewModel.start(0L)
+
+        assertThat((viewModel.uiState.value as UiState.Content).items.size).isEqualTo(1 + activityTypeCount)
+    }
+
+    private suspend fun init(successResponse: Boolean = true, activityTypeCount: Int = 5): Observers {
         val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
@@ -107,12 +115,16 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         whenever(dummyActivityTypesProvider.fetchAvailableActivityTypes(anyOrNull()))
                 .thenReturn(
                         if (successResponse) {
-                            DummyAvailableActivityTypesResponse(false, listOf(DummyActivityType("Test 1")))
+                            DummyAvailableActivityTypesResponse(false, generateActivityTypes(activityTypeCount))
                         } else {
                             DummyAvailableActivityTypesResponse(true, listOf())
                         }
                 )
         return Observers((uiStates))
+    }
+
+    private fun generateActivityTypes(count: Int): List<DummyActivityType> {
+        return (1..count).asSequence().map { DummyActivityType(it.toString()) }.toList()
     }
 
     private data class Observers(val uiStates: List<UiState>)
