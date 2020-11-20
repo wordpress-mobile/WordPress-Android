@@ -1925,7 +1925,6 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
-    <string name="my_site_select_domains_page_title">Site Address</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
@@ -2844,7 +2843,7 @@
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
-    <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
+    <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
     <string name="site_creation_domain_finish_button">Create site</string>
