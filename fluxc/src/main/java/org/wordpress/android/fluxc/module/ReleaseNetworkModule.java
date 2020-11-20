@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.network.RetryOnRedirectBasicNetwork;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
@@ -77,9 +78,18 @@ public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
 
+    private RequestQueue newRetryOnRedirectRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
+        Network network = new RetryOnRedirectBasicNetwork(new OkHttpStack(okHttpClientBuilder));
+        return createRequestQueue(network, appContext);
+    }
+
     private RequestQueue newRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
-        File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
         Network network = new BasicNetwork(new OkHttpStack(okHttpClientBuilder));
+        return createRequestQueue(network, appContext);
+    }
+
+    private RequestQueue createRequestQueue(Network network, Context appContext) {
+        File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
         RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network, NETWORK_THREAD_POOL_SIZE);
         queue.start();
         return queue;
@@ -91,6 +101,14 @@ public class ReleaseNetworkModule {
     public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClientBuilder,
                                             Context appContext) {
         return newRequestQueue(okHttpClientBuilder, appContext);
+    }
+
+    @Singleton
+    @Named("no-redirects")
+    @Provides
+    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient.Builder okHttpClientBuilder,
+                                                       Context appContext) {
+        return newRetryOnRedirectRequestQueue(okHttpClientBuilder, appContext);
     }
 
     @Singleton
