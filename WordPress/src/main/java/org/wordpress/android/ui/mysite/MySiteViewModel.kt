@@ -8,6 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -128,6 +129,10 @@ class MySiteViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    fun onAvatarPressed() {
+        _onNavigation.value = Event(OpenMeScreen)
+    }
+
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
         @StringRes val title: Int,
@@ -138,6 +143,7 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class NavigationAction {
+        object OpenMeScreen : NavigationAction()
         data class OpenSite(val site: SiteModel) : NavigationAction()
         data class OpenSitePicker(val site: SiteModel) : NavigationAction()
     }

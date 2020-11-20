@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -84,7 +85,7 @@ class ImprovedMySiteFragment : Fragment(),
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
                 meMenu.actionView?.let { actionView ->
-                    actionView.setOnClickListener { ActivityLauncher.viewMeActivityForResult(activity) }
+                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
             }
@@ -133,6 +134,9 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.onNavigation.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { action ->
                 when (action) {
+                    is OpenMeScreen -> {
+                        ActivityLauncher.viewMeActivityForResult(activity)
+                    }
                     is OpenSitePicker -> {
                         ActivityLauncher.showSitePickerForResult(activity, action.site)
                     }
