@@ -52,6 +52,16 @@ public abstract class DebugOkHttpClientModule {
     }
 
     @Provides
+    @Named("no-redirects")
+    public static OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder(
+            @Named("interceptors") Set<Interceptor> interceptors,
+            @Named("network-interceptors") Set<Interceptor> networkInterceptors) {
+        OkHttpClient.Builder builder = provideOkHttpClientBuilder(interceptors, networkInterceptors);
+        builder.followRedirects(false);
+        return builder;
+    }
+
+    @Provides
     @Named("custom-ssl")
     public static OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(
             MemorizingTrustManager memorizingTrustManager,
