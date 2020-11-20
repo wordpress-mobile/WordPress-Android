@@ -26,8 +26,10 @@ class FileBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProcess
         val id = jsonAttributes?.get(ID_ATTRIBUTE)
 
         return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
-            jsonAttributes.addProperty(ID_ATTRIBUTE, Integer.parseInt(mRemoteId))
-            jsonAttributes.addProperty(HREF_ATTRIBUTE, mRemoteUrl)
+            jsonAttributes.apply {
+                addProperty(ID_ATTRIBUTE, Integer.parseInt(mRemoteId))
+                addProperty(HREF_ATTRIBUTE, mRemoteUrl)
+            }
             true
         } else {
             false
