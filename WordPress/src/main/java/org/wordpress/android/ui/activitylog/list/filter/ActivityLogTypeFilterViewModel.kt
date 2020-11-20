@@ -17,6 +17,27 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         isStarted = true
     }
 
+    sealed class UiState {
+        open val loadingVisibility = false
+        open val items: List<ListItemUiState>? = null
+        open val primaryAction: Action? = null
+        open val secondaryAction: Action? = null
+
+        object FullscreenLoading : UiState() {
+            override val loadingVisibility: Boolean = true
+        }
+
+        data class Content(
+            override val items: List<ListItemUiState>,
+            override val primaryAction: Action,
+            override val secondaryAction: Action
+        ) : UiState()
+
+        data class Action(val label: UiString) {
+            var action: (() -> Unit)? = null
+        }
+    }
+
     sealed class ListItemUiState {
         data class SectionHeader(
             val title: UiString
