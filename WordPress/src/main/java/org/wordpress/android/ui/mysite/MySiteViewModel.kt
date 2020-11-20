@@ -5,15 +5,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
+import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
+import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
+import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
@@ -28,10 +33,9 @@ class MySiteViewModel @Inject constructor(
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteInfoBlockBuilder: SiteInfoBlockBuilder
+    private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val selectedSiteRepository: SelectedSiteRepository
 ) : ScopedViewModel(mainDispatcher) {
-    private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
-    private val _selectedSite = MutableLiveData<SiteModel>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -42,8 +46,8 @@ class MySiteViewModel @Inject constructor(
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
     val uiModel: LiveData<List<MySiteItem>> = merge(
-            _selectedSite,
-            _showSiteIconProgressBar
+            selectedSiteRepository.selectedSiteChange,
+            selectedSiteRepository.showSiteIconProgressBar
     ) { site, showSiteIconProgressBar ->
         if (site != null) {
             val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
@@ -112,10 +116,6 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.value = Event(OpenSitePicker(site))
     }
 
-    fun updateSite(selectedSite: SiteModel?) {
-        _selectedSite.value = selectedSite
-    }
-
     fun onSiteNameChosen(input: String?) {
         TODO("Not yet implemented")
     }
@@ -125,7 +125,20 @@ class MySiteViewModel @Inject constructor(
     }
 
     fun onDialogInteraction(interaction: DialogInteraction) {
-        TODO("Not yet implemented")
+        when (interaction) {
+            is Positive -> when (interaction.tag) {
+                TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
+                    _onNavigation.postValue(Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite()))))
+                }
+            }
+            is Negative -> when (interaction.tag) {
+                TAG_CHANGE_SITE_ICON_DIALOG -> {
+                    analyticsTrackerWrapper.track(MY_SITE_ICON_REMOVED)
+                    selectedSiteRepository.updateSiteIconMediaId(0)
+                }
+            }
+            is Dismissed -> TODO()
+        }
     }
 
     data class TextInputDialogModel(
@@ -140,6 +153,7 @@ class MySiteViewModel @Inject constructor(
     sealed class NavigationAction {
         data class OpenSite(val site: SiteModel) : NavigationAction()
         data class OpenSitePicker(val site: SiteModel) : NavigationAction()
+        data class OpenMediaPicker(val site: SiteModel) : NavigationAction()
     }
 
     companion object {

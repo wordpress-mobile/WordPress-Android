@@ -17,9 +17,11 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.util.SnackbarItem
@@ -34,6 +36,8 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
 
@@ -109,6 +113,12 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenSite -> {
                         ActivityLauncher.viewCurrentSite(activity, action.site, true)
                     }
+                    is OpenMediaPicker -> {
+                        mediaPickerLauncher.showSiteIconPicker(
+                                requireActivity(),
+                                action.site
+                        )
+                    }
                 }
             }
         })
@@ -117,7 +127,7 @@ class ImprovedMySiteFragment : Fragment(),
                 showSnackbar(messageHolder)
             }
         })
-        viewModel.updateSite((activity as? WPMainActivity)?.selectedSite)
+        selectedSiteRepository.updateSite((activity as? WPMainActivity)?.selectedSite)
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
@@ -125,7 +135,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        viewModel.updateSite((activity as? WPMainActivity)?.selectedSite)
+        selectedSiteRepository.updateSite((activity as? WPMainActivity)?.selectedSite)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
