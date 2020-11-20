@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
@@ -29,8 +30,10 @@ class MySiteViewModel @Inject constructor(
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteInfoBlockBuilder: SiteInfoBlockBuilder
+    private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
+    private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     private val _selectedSite = MutableLiveData<SiteModel>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -59,6 +62,14 @@ class MySiteViewModel @Inject constructor(
         } else {
             listOf()
         }
+    }
+
+    init {
+        updateAccountAvatarUrl()
+    }
+
+    private fun updateAccountAvatarUrl() {
+        _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
     private fun titleClick(selectedSite: SiteModel) {
