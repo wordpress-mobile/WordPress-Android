@@ -69,7 +69,19 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onClearClicked() {
-        // TODO malinjir uncheck all items
+        (_uiState.value as? Content)?.let { it ->
+            _uiState.value = it.copy(items = uncheckAllActivityTypeItems(it))
+        }
+    }
+
+    private fun uncheckAllActivityTypeItems(it: Content): List<ListItemUiState> {
+        return it.items.map { item ->
+            if (item is ListItemUiState.ActivityType) {
+                item.copy(checked = false)
+            } else {
+                item
+            }
+        }
     }
 
     sealed class UiState {
