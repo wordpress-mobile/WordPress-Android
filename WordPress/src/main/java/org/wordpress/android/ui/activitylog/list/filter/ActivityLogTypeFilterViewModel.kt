@@ -9,6 +9,7 @@ import okhttp3.internal.immutableListOf
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Action
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
@@ -49,13 +50,15 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
+            // TODO malinjir replace the hardcoded header title
+            val headerListItem = SectionHeader(UiStringText("Test"))
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
                         ListItemUiState.ActivityType(title = UiStringText(it.toString()))
                     }
             Content(
-                    activityTypeListItems,
+                    listOf(headerListItem) + activityTypeListItems,
                     primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
                             .apply { action = ::onApplyClicked },
                     secondaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_clear))
