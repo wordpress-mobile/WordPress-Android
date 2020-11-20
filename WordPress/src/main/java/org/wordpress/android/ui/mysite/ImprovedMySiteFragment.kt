@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
@@ -31,6 +32,7 @@ import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.USER
 import javax.inject.Inject
 
 class ImprovedMySiteFragment : Fragment(),
@@ -38,6 +40,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
 
@@ -171,7 +174,14 @@ class ImprovedMySiteFragment : Fragment(),
     }
 
     private fun loadGravatar(avatarUrl: String) = avatar?.let {
-        TODO("Not yet implemented")
+        meGravatarLoader.load(
+                false,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                null,
+                it,
+                USER,
+                null
+        )
     }
 
     private fun loadData(items: List<MySiteItem>) {
