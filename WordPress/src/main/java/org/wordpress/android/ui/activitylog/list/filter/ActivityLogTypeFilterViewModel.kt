@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -12,9 +15,14 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
+
     fun start() {
         if (isStarted) return
         isStarted = true
+
+        _uiState.value = FullscreenLoading
     }
 
     sealed class UiState {
