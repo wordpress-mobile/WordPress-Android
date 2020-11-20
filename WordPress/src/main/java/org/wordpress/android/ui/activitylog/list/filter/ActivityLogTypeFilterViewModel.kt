@@ -118,6 +118,4 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val checked: Boolean = false
         ) : ListItemUiState()
     }
-
-    object DummyActivityType
 }
