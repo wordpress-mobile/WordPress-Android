@@ -21,6 +21,9 @@ class DummyActivityTypesProvider @Inject constructor() {
         )
     }
 
-    data class DummyAvailableActivityTypesResponse(val isError: Boolean, val activityTypes: List<DummyActivityType>)
+    data class DummyAvailableActivityTypesResponse(
+        val isError: Boolean,
+        val activityTypes: List<DummyActivityType> = listOf()
+    )
     data class DummyActivityType(val name: String)
 }
