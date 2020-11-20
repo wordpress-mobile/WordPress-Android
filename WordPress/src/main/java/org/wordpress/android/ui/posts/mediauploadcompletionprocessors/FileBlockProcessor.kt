@@ -6,11 +6,16 @@ import org.wordpress.android.util.helpers.MediaFile
 
 class FileBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProcessor(localId, mediaFile) {
     override fun processBlockContentDocument(document: Document?): Boolean {
-        val hyperLinkTarget = document?.select(HYPERLINK_TAG)?.first() ?: return false
+        val hyperLinkTargets = document?.select(HYPERLINK_TAG)
 
-        // replaces the href attribute's local url with the remote counterpart.
-        hyperLinkTarget.attr(HREF_ATTRIBUTE, mRemoteUrl)
-        return true
+        hyperLinkTargets?.let {
+            for (target in hyperLinkTargets) {
+                // replaces the href attribute's local url with the remote counterpart.
+                target.attr(HREF_ATTRIBUTE, mRemoteUrl)
+            }
+            return true
+        }
+        return false
     }
 
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
