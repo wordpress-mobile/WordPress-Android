@@ -37,15 +37,15 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         isStarted = true
         this.siteId = siteId
 
-        _uiState.value = FullscreenLoading
         fetchAvailableActivityTypes()
     }
 
     private fun fetchAvailableActivityTypes() {
         launch {
+            _uiState.value = FullscreenLoading
             val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(siteId)
             if (response.isError) {
-                // TODO malinjir implement error handling
+                _uiState.value = UiState.Error(Action(UiStringRes(R.string.retry)).apply { ::onRetryClicked })
             } else {
                 onActivityTypesFetched(response.activityTypes)
             }
@@ -76,7 +76,10 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onApplyClicked() {
-        // TODO malinjir save and dismiss
+    }
+
+    private fun onRetryClicked() {
+        fetchAvailableActivityTypes()
     }
 
     private fun onClearClicked() {
@@ -98,9 +101,14 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     sealed class UiState {
         open val contentVisibility = false
         open val loadingVisibility = false
+        open val errorVisibility = false
 
         object FullscreenLoading : UiState() {
             override val loadingVisibility: Boolean = true
+        }
+
+        data class Error(val retryAction: Action) : UiState() {
+            override val errorVisibility = true
         }
 
         data class Content(
