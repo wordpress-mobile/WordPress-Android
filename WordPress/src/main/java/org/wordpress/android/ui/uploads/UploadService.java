@@ -205,10 +205,24 @@ public class UploadService extends Service {
             // if this media belongs to some post, register such Post
             registerPostModelsForMedia(mediaList, intent.getBooleanExtra(KEY_SHOULD_RETRY, false));
 
+            ArrayList<MediaModel> toBeUploadedMediaList = new ArrayList<>();
             for (MediaModel media : mediaList) {
+                MediaModel localMedia = mMediaStore.getMediaWithLocalId(media.getId());
+                boolean notUploadedYet = localMedia != null
+                                         && MediaUploadState.fromString(localMedia.getUploadState())
+                                            != MediaUploadState.UPLOADED;
+                if (notUploadedYet) {
+                    toBeUploadedMediaList.add(localMedia);
+                }
+            }
+
+            for (MediaModel media : toBeUploadedMediaList) {
                 mMediaUploadHandler.upload(media);
             }
-            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
+
+            if (!toBeUploadedMediaList.isEmpty()) {
+                mPostUploadNotifier.addMediaInfoToForegroundNotification(toBeUploadedMediaList);
+            }
         }
     }
 

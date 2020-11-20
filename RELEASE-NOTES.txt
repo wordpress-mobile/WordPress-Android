@@ -1,6 +1,7 @@
 16.3
 -----
 * [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
+* [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
 
 16.2
 -----
