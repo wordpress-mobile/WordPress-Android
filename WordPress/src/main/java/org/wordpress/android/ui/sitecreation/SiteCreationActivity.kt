@@ -4,10 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.site_creation_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
@@ -57,6 +60,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.site_creation_activity)
+        initBottomSheetBehavior()
+
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteCreationMainVM::class.java)
         hppViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         mainViewModel.start(savedInstanceState)
@@ -193,5 +198,22 @@ class SiteCreationActivity : LocaleAwareActivity(),
 
     override fun onBackPressed() {
         mainViewModel.onBackPressed()
+    }
+
+    private fun initBottomSheetBehavior() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(fragment_container)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        bottomSheetBehavior.skipCollapsed = true
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    finish()
+                    overridePendingTransition(0, 0)
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
     }
 }

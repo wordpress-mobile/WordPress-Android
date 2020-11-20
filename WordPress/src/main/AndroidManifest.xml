@@ -135,7 +135,7 @@
 
         <activity
             android:name=".ui.sitecreation.SiteCreationActivity"
-            android:theme="@style/WordPress.NoActionBar"
+            android:theme="@style/WordPress.Modal"
             android:windowSoftInputMode="adjustResize" />
 
         <activity

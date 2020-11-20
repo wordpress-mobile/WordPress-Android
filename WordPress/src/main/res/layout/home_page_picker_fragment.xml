@@ -14,6 +14,13 @@
         android:background="?attr/categoriesBackground"
         android:fitsSystemWindows="false">
 
+        <include
+            layout="@layout/bottom_sheet_handle_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_marginEnd="@dimen/margin_extra_large" />
+
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
