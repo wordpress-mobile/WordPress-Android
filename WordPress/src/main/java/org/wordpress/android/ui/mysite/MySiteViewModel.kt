@@ -45,11 +45,12 @@ class MySiteViewModel @Inject constructor(
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
-    val uiModel: LiveData<List<MySiteItem>> = merge(
+    val uiModel: LiveData<UiModel> = merge(
+            _currentAccountAvatarUrl,
             _selectedSite,
             _showSiteIconProgressBar
-    ) { site, showSiteIconProgressBar ->
-        if (site != null) {
+    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+        val items = if (site != null) {
             val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
                     site,
                     showSiteIconProgressBar ?: false,
@@ -62,6 +63,7 @@ class MySiteViewModel @Inject constructor(
         } else {
             listOf()
         }
+        UiModel(currentAvatarUrl.orEmpty(), items)
     }
 
     init {
@@ -143,6 +145,11 @@ class MySiteViewModel @Inject constructor(
     fun onAvatarPressed() {
         _onNavigation.value = Event(OpenMeScreen)
     }
+
+    data class UiModel(
+        val accountAvatarUrl: String,
+        val items: List<MySiteItem>
+    )
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,

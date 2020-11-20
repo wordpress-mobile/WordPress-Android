@@ -100,8 +100,9 @@ class ImprovedMySiteFragment : Fragment(),
         recycler_view.layoutManager = layoutManager
 
         viewModel.uiModel.observe(viewLifecycleOwner, {
-            it?.let { items ->
-                loadData(items)
+            it?.let { uiModel ->
+                loadGravatar(uiModel.accountAvatarUrl)
+                loadData(uiModel.items)
             }
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
@@ -167,6 +168,10 @@ class ImprovedMySiteFragment : Fragment(),
         recycler_view.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
+    }
+
+    private fun loadGravatar(avatarUrl: String) = avatar?.let {
+        TODO("Not yet implemented")
     }
 
     private fun loadData(items: List<MySiteItem>) {
