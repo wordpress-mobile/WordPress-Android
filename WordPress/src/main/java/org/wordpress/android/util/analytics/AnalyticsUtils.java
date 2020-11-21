@@ -75,6 +75,7 @@ public class AnalyticsUtils {
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
     private static final String NEWS_CARD_ORIGIN = "origin";
     private static final String NEWS_CARD_VERSION = "version";
+    private static final String SITE_TYPE_KEY = "site_type";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -250,6 +251,7 @@ public class AnalyticsUtils {
             }
             properties.put(BLOG_ID_KEY, site.getSiteId());
             properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+            properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         }
 
         if (properties == null) {
@@ -287,6 +289,7 @@ public class AnalyticsUtils {
         if (site != null) {
             properties.put(BLOG_ID_KEY, site.getSiteId());
             properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+            properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         }
 
         if (comment != null) {
@@ -321,6 +324,7 @@ public class AnalyticsUtils {
         properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
         properties.put(POST_ID_KEY, comment.getRemotePostId());
         properties.put(COMMENT_ID_KEY, comment.getRemoteCommentId());
+        properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
 
         AnalyticsTracker.track(stat, properties);
     }
@@ -621,5 +625,31 @@ public class AnalyticsUtils {
         Map<String, Integer> properties = new HashMap<>();
         properties.put("page_number", page);
         AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
+    }
+
+    @VisibleForTesting
+    protected enum AnalyticsSiteType {
+        BLOG {
+            public String toString() {
+                return "blog";
+            }
+        },
+        P2 {
+            public String toString() {
+                return "p2";
+            }
+        };
+
+        static AnalyticsSiteType fromSiteModel(SiteModel siteModel) {
+            if (siteModel.isWpForTeamsSite()) {
+                return P2;
+            }
+
+            return BLOG;
+        }
+
+        static String toStringFromSiteModel(SiteModel siteModel) {
+            return fromSiteModel(siteModel).toString();
+        }
     }
 }
