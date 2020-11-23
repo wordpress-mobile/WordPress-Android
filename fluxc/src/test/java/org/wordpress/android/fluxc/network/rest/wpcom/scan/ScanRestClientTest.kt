@@ -127,11 +127,12 @@ class ScanRestClientTest {
                         assertEquals(this.description, scanResponse?.threats?.get(index)?.description)
                         assertEquals(this.status, scanResponse?.threats?.get(index)?.status)
                         assertEquals(this.firstDetected, scanResponse?.threats?.get(index)?.firstDetected)
-                        this.fixable.apply {
+                        assertEquals(this.fixedOn, scanResponse?.threats?.get(index)?.fixedOn)
+                        this.fixable?.apply {
                             assertEquals(this.fixer, scanResponse?.threats?.get(index)?.fixable?.fixer)
                             assertEquals(this.target, scanResponse?.threats?.get(index)?.fixable?.target)
                         }
-                        this.extension.apply {
+                        this.extension?.apply {
                             assertEquals(this.type, scanResponse?.threats?.get(index)?.extension?.type)
                             assertEquals(this.slug, scanResponse?.threats?.get(index)?.extension?.slug)
                             assertEquals(this.name, scanResponse?.threats?.get(index)?.extension?.name)
