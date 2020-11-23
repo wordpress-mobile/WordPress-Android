@@ -35,10 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        app:aevButton="@string/retry"
         app:aevImage="@drawable/img_illustration_cloud_off_152dp"
-        app:aevSubtitle="@string/hpp_retry_error"
+        app:aevButton="@string/retry"
         app:aevTitle="@string/error"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

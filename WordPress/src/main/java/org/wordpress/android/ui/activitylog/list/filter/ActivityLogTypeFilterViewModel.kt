@@ -105,6 +105,10 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
         data class Error(val retryAction: Action) : UiState() {
             override val errorVisibility = true
+            // TODO malinjir replace strings according to design
+            val errorTitle: UiString = UiStringRes(R.string.error)
+            val errorSubtitle: UiString = UiStringRes(R.string.hpp_retry_error)
+            val errorButtonText: UiString = UiStringRes(R.string.retry)
         }
 
         data class Content(

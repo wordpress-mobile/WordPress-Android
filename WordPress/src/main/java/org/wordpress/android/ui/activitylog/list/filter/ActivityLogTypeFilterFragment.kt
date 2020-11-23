@@ -84,7 +84,10 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun refreshErrorScreen(uiState: Error) {
-        TODO("Not yet implemented")
+        uiHelpers.setTextOrHide(actionable_empty_view.title, uiState.errorTitle)
+        uiHelpers.setTextOrHide(actionable_empty_view.subtitle, uiState.errorSubtitle)
+        uiHelpers.setTextOrHide(actionable_empty_view.button, uiState.errorButtonText)
+        actionable_empty_view.button.setOnClickListener { uiState.retryAction.action.invoke() }
     }
 
     private fun refreshContentScreen(uiState: Content) {
