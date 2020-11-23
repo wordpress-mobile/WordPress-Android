@@ -1,0 +1,49 @@
+package org.wordpress.android.ui.mysite
+
+import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
+import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.ResourceProvider
+import javax.inject.Inject
+
+class SiteInfoBlockBuilder
+@Inject constructor(private val resourceProvider: ResourceProvider) {
+    fun buildSiteInfoBlock(
+        site: SiteModel,
+        showSiteIconProgressBar: Boolean,
+        titleClick: (SiteModel) -> Unit,
+        iconClick: (SiteModel) -> Unit,
+        urlClick: (SiteModel) -> Unit,
+        switchSiteClick: (SiteModel) -> Unit
+    ): SiteInfoBlock {
+        val homeUrl = SiteUtils.getHomeURLOrHostName(site)
+        val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
+        val siteIcon = if (!showSiteIconProgressBar && !site.iconUrl.isNullOrEmpty()) {
+            SiteUtils.getSiteIconUrl(
+                    site,
+                    resourceProvider.getDimensionPixelSize(R.dimen.blavatar_sz_small)
+            )
+        } else {
+            null
+        }
+        return SiteInfoBlock(
+                blogTitle,
+                homeUrl,
+                siteIcon,
+                buildTitleClick(site, titleClick),
+                ListItemInteraction.create(site, iconClick),
+                ListItemInteraction.create(site, urlClick),
+                ListItemInteraction.create(site, switchSiteClick)
+        )
+    }
+
+    private fun buildTitleClick(site: SiteModel, titleClick: (SiteModel) -> Unit): ListItemInteraction? {
+        return if (SiteUtils.isAccessedViaWPComRest(site)) {
+            ListItemInteraction.create(site, titleClick)
+        } else {
+            null
+        }
+    }
+}
