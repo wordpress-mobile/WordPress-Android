@@ -21,6 +21,9 @@ class SelectedSiteRepository
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel>
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
     fun updateSite(selectedSite: SiteModel?) {
+        if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
+            _showSiteIconProgressBar.value = false
+        }
         _selectedSiteChange.value = selectedSite
     }
 

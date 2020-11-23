@@ -127,6 +127,33 @@ class SelectedSiteRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `updateSite hides progress bar if icon has changed`() {
+        siteModel.iconUrl = "originalIcon.jpg"
+        initializeSiteAndSiteSettings()
+        val updatedSite = SiteModel()
+        updatedSite.iconUrl = "updatedIcon.jpg"
+        selectedSiteRepository.showSiteIconProgressBar(true)
+
+        selectedSiteRepository.updateSite(updatedSite)
+
+        assertThat(siteIconProgressBarVisible).isFalse()
+    }
+
+    @Test
+    fun `updateSite does not hide progress bar if icon has not changed`() {
+        val iconName = "originalIcon.jpg"
+        siteModel.iconUrl = iconName
+        initializeSiteAndSiteSettings()
+        val updatedSite = SiteModel()
+        updatedSite.iconUrl = iconName
+        selectedSiteRepository.showSiteIconProgressBar(true)
+
+        selectedSiteRepository.updateSite(updatedSite)
+
+        assertThat(siteIconProgressBarVisible).isTrue()
+    }
+
+    @Test
     fun `site settings onSaveError hides icon progress bar`() {
         initializeSiteAndSiteSettings()
         selectedSiteRepository.showSiteIconProgressBar(true)
