@@ -96,6 +96,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -119,8 +120,22 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
 
     private static final int INTENT_COMMENT_EDITOR = 1010;
-    private static final int FROM_BLOG_COMMENT = 1;
-    private static final int FROM_NOTE = 2;
+
+    enum CommentSource {
+        NOTIFICATION,
+        SITE_COMMENTS;
+
+         AnalyticsCommentActionSource toAnalyticsCommentActionSource() {
+            switch (this) {
+                case NOTIFICATION:
+                    return AnalyticsCommentActionSource.NOTIFICATIONS;
+                case SITE_COMMENTS:
+                    return AnalyticsCommentActionSource.SITE_COMMENTS;
+            }
+             throw new IllegalArgumentException(
+                     this + " CommentSource is not mapped to corresponding AnalyticsCommentActionSource");
+        }
+    }
 
     private CommentModel mComment;
     private SiteModel mSite;
@@ -167,6 +182,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private OnCommentActionListener mOnCommentActionListener;
     private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
+    private CommentSource mCommentSource;
+
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
      * for this comment - all actions are enabled when opened from the comment list, only
@@ -180,7 +197,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     static CommentDetailFragment newInstance(SiteModel site, CommentModel commentModel) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_MODE, FROM_BLOG_COMMENT);
+        args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS);
         args.putInt(KEY_SITE_LOCAL_ID, site.getId());
         args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
         fragment.setArguments(args);
@@ -193,7 +210,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
         CommentDetailFragment fragment = new CommentDetailFragment();
         Bundle args = new Bundle();
-        args.putInt(KEY_MODE, FROM_NOTE);
+        args.putSerializable(KEY_MODE, CommentSource.NOTIFICATION);
         args.putString(KEY_NOTE_ID, noteId);
         args.putString(KEY_REPLY_TEXT, replyText);
         fragment.setArguments(args);
@@ -205,11 +222,13 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        switch (getArguments().getInt(KEY_MODE)) {
-            case FROM_BLOG_COMMENT:
+        mCommentSource = (CommentSource) getArguments().getSerializable(KEY_MODE);
+
+        switch (mCommentSource) {
+            case SITE_COMMENTS:
                 setComment(getArguments().getLong(KEY_COMMENT_ID), getArguments().getInt(KEY_SITE_LOCAL_ID));
                 break;
-            case FROM_NOTE:
+            case NOTIFICATION:
                 setNote(getArguments().getString(KEY_NOTE_ID));
                 setReplyText(getArguments().getString(KEY_REPLY_TEXT));
                 break;
@@ -589,6 +608,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
             reloadComment();
+            AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
+                    mCommentSource.toAnalyticsCommentActionSource(), mSite);
         }
     }
 
@@ -721,6 +742,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             }
         }
 
+        AnalyticsUtils.trackCommentActionWithSiteDetails(
+                Stat.COMMENT_VIEWED, mCommentSource.toAnalyticsCommentActionSource(), mSite);
+
         getActivity().invalidateOptionsMenu();
     }
 
@@ -841,16 +865,46 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void trackModerationFromNotification(final CommentStatus newStatus) {
         switch (newStatus) {
             case APPROVED:
-                AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_APPROVED);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_APPROVED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
             case UNAPPROVED:
-                AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_UNAPPROVED);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_UNAPPROVED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
             case SPAM:
-                AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_SPAMMED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case UNSPAM:
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_UNSPAMMED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
                 break;
             case TRASH:
-                AnalyticsTracker.track(Stat.NOTIFICATION_TRASHED);
+                if (mCommentSource == CommentSource.NOTIFICATION) {
+                    AnalyticsTracker.track(Stat.NOTIFICATION_TRASHED);
+                }
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_TRASHED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case UNTRASH:
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_UNTRASHED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case DELETED:
+                AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_DELETED,
+                        mCommentSource.toAnalyticsCommentActionSource(), mSite);
+                break;
+            case ALL:
                 break;
         }
     }
@@ -920,7 +974,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mIsSubmittingReply = true;
 
-        AnalyticsUtils.trackCommentReplyWithDetails(false, mSite, mComment);
+        AnalyticsUtils.trackCommentReplyWithDetails(
+                false, mSite, mComment, mCommentSource.toAnalyticsCommentActionSource());
 
         // Pseudo comment reply
         CommentModel reply = new CommentModel();
@@ -1167,7 +1222,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
 
         // Bump analytics
-        AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED);
+        if (mCommentSource == CommentSource.NOTIFICATION) {
+            AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED);
+        }
+        AnalyticsUtils.trackCommentActionWithSiteDetails(
+                mBtnLikeComment.isActivated() ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
+                mCommentSource.toAnalyticsCommentActionSource(), mSite);
 
         if (mNotificationsDetailListFragment != null && mComment != null) {
             // Optimistically set comment to approved when liking an unapproved comment
