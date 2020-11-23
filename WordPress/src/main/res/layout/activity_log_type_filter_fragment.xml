@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/toolbar_height" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
         style="@style/WordPress.AppBarLayout"
@@ -20,11 +26,5 @@
             android:layout_height="wrap_content" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
