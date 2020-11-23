@@ -209,10 +209,11 @@ public class UploadService extends Service {
             for (MediaModel media : mediaList) {
                 MediaModel localMedia = mMediaStore.getMediaWithLocalId(media.getId());
                 boolean notUploadedYet = localMedia != null
-                                         && MediaUploadState.fromString(localMedia.getUploadState())
-                                            != MediaUploadState.UPLOADED;
+                                         && (localMedia.getUploadState() == null
+                                             || MediaUploadState.fromString(localMedia.getUploadState())
+                                                != MediaUploadState.UPLOADED);
                 if (notUploadedYet) {
-                    toBeUploadedMediaList.add(localMedia);
+                    toBeUploadedMediaList.add(media);
                 }
             }
 
