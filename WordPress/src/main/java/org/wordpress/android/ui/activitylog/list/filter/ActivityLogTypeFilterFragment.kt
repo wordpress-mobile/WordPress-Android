@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
