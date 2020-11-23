@@ -58,7 +58,6 @@ class SiteSettingsInterfaceWrapper(private val siteSettingsInterface: SiteSettin
                         override fun onCredentialsValidated(error: Exception?) {
                             onCredentialsValidated?.invoke(error)
                         }
-
                     })
             return siteSettingsInterface?.let {
                 SiteSettingsInterfaceWrapper(
