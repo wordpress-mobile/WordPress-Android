@@ -1060,12 +1060,14 @@ public abstract class SiteSettingsInterface {
             String quotaAvailableSentence;
             if (mSite.getPlanId() == PlansConstants.BUSINESS_PLAN_ID) {
                 String usedSpace = FormatUtils.formatFileSize(mSite.getSpaceUsed(), units);
-                quotaAvailableSentence = String.format(mResourceProvider.getString(R.string.site_settings_quota_space_unlimited),
-                        usedSpace);
+                quotaAvailableSentence =
+                        String.format(mResourceProvider.getString(R.string.site_settings_quota_space_unlimited),
+                                usedSpace);
             } else {
                 String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
-                quotaAvailableSentence = String.format(mResourceProvider.getString(R.string.site_settings_quota_space_value),
-                        percentage, spaceAllowed);
+                quotaAvailableSentence =
+                        String.format(mResourceProvider.getString(R.string.site_settings_quota_space_value),
+                                percentage, spaceAllowed);
             }
             setQuotaDiskSpace(quotaAvailableSentence);
         }
