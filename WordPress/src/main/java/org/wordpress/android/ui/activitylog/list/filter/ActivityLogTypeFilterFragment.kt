@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
+import kotlinx.android.synthetic.main.progress_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
@@ -67,13 +68,28 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
                 .get(ActivityLogTypeFilterViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisibility)
+            uiHelpers.updateVisibility(recycler_view, uiState.contentVisibility)
+            uiHelpers.updateVisibility(progress_layout, uiState.loadingVisibility)
             when (uiState) {
-                FullscreenLoading -> TODO()
-                is Error -> TODO()
-                is Content -> TODO()
+                FullscreenLoading -> refreshLoadingScreen()
+                is Error -> refreshErrorScreen()
+                is Content -> refreshContentScreen()
             }
         })
         viewModel.start(remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)))
+    }
+
+    private fun refreshLoadingScreen() {
+        TODO("Not yet implemented")
+    }
+
+    private fun refreshErrorScreen() {
+        TODO("Not yet implemented")
+    }
+
+    private fun refreshContentScreen() {
+        TODO("Not yet implemented")
     }
 
     private fun initAdapter() {

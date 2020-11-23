@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,5 +27,18 @@
             android:layout_height="wrap_content" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <include layout="@layout/progress_layout" />
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevButton="@string/retry"
+        app:aevImage="@drawable/img_illustration_cloud_off_152dp"
+        app:aevSubtitle="@string/hpp_retry_error"
+        app:aevTitle="@string/error"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

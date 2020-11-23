@@ -127,6 +127,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     data class Action(val label: UiString) {
-        var action: (() -> Unit)? = null
+        lateinit var action: (() -> Unit)
     }
 }
