@@ -89,7 +89,7 @@ class ScanRestClient(
                 },
                 hasCloud = response.hasCloud,
                 credentials = response.credentials?.map {
-                    Credentials(it.type, it.role, it.stillValid)
+                    Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
                 },
                 mostRecentStatus = response.mostRecentStatus?.let {
                     ScanProgressStatus(
