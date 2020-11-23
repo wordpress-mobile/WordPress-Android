@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ItemUiState
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
 import org.wordpress.android.ui.utils.UiHelpers
 
 class ActivityLogTypeFilterViewHolder(
@@ -13,6 +13,6 @@ class ActivityLogTypeFilterViewHolder(
 ) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.activity_log_type_filter_item, parent, false)
 ) {
-    fun onBind(uiState: ItemUiState) {
+    fun onBind(uiState: ListItemUiState) {
     }
 }
