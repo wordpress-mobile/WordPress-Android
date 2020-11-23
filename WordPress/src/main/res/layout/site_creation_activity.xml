@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:baselineAligned="true"
                 android:orientation="vertical"
-                android:background="?attr/categoriesBackground">
+                android:background="?attr/layoutPickerBackground">
 
     <FrameLayout
         android:id="@+id/fragment_container"

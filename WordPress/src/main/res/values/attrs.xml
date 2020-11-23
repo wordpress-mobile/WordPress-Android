@@ -21,7 +21,7 @@
     <attr name="colorGutenbergBackground" format="reference|color" />
 
     <!-- Modal layout picker colors-->
-    <attr name="categoriesBackground" format="reference|color" />
+    <attr name="layoutPickerBackground" format="reference|color" />
     <attr name="categoriesButtonBackground" format="reference|color" />
     <attr name="categoriesButtonBackgroundSelected" format="reference|color" />
     <attr name="mlpDividerColor" format="reference|color" />
