@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import com.android.volley.RequestQueue
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
-import com.nhaarman.mockitokotlin2.after
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
@@ -21,7 +20,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -30,13 +28,19 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.BackupDownloadResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.BackupDownloadStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedBackupDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.FormattableContent
@@ -63,8 +67,9 @@ class ActivityLogRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        activityRestClient = ActivityLogRestClient(dispatcher,
+        activityRestClient = ActivityLogRestClient(
                 wpComGsonRequestBuilder,
+                dispatcher,
                 null,
                 requestQueue,
                 accessToken,
@@ -193,7 +198,7 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivity_dispatchesErrorOnFailure() = test {
-        initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(GenericErrorType.NETWORK_ERROR)))
+        initFetchActivity(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
@@ -289,6 +294,234 @@ class ActivityLogRestClientTest {
         assertTrue(payload.isError)
     }
 
+    @Test
+    fun postRewindOperationWithTypes() = test {
+        val restoreId = 10L
+        val response = RewindResponse(restoreId, true, null)
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(data = response, requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertEquals(restoreId, payload.restoreId)
+    }
+
+    @Test
+    fun postRewindOperationErrorWithTypes() = test {
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)), requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertTrue(payload.isError)
+    }
+
+    @Test
+    fun postRewindApiErrorWithTypes() = test {
+        val restoreId = 10L
+        val types = RewindRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostRewindWithTypes(data = RewindResponse(restoreId, false, "error"), requestTypes = types)
+
+        val payload = activityRestClient.rewind(site, "rewindId", types)
+
+        assertTrue(payload.isError)
+    }
+
+    @Test
+    fun postBackupDownloadOperation() = test {
+        val downloadId = 10L
+        val rewindId = "rewind_id"
+        val backupPoint = "backup_point"
+        val startedAt = "started_at"
+        val progress = 0
+        val response = BackupDownloadResponse(downloadId, rewindId, backupPoint, startedAt, progress)
+        val types = BackupDownloadRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostBackupDownload(rewindId = rewindId, data = response, requestTypes = types)
+
+        val payload = activityRestClient.backupDownload(site, rewindId, types)
+
+        assertEquals(downloadId, payload.downloadId)
+    }
+
+    @Test
+    fun postBackupDownloadOperationError() = test {
+        val rewindId = "rewind_id"
+        val types = BackupDownloadRequestTypes(themes = true,
+                plugins = true,
+                uploads = true,
+                sqls = true,
+                roots = true,
+                contents = true)
+        initPostBackupDownload(rewindId = rewindId, error =
+            WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)), requestTypes = types)
+
+        val payload = activityRestClient.backupDownload(site, rewindId, types)
+
+        assertTrue(payload.isError)
+    }
+
+    @Test
+    fun fetchActivityDownload_dispatchesGenericErrorOnFailure() = test {
+        initFetchBackupDownloadStatus(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+
+        val payload = activityRestClient.fetchBackupDownloadState(site)
+
+        assertEmittedDownloadStatusError(payload, BackupDownloadStatusErrorType.GENERIC_ERROR)
+    }
+
+    @Test
+    fun fetchActivityBackupDownload_dispatchesResponseOnSuccess() = test {
+        val progress = 55
+        val downloadResponse = BACKUP_DOWNLOAD_STATUS_RESPONSE.copy(progress = progress)
+        initFetchBackupDownloadStatus(downloadResponse)
+
+        val payload = activityRestClient.fetchBackupDownloadState(site)
+
+        with(payload) {
+            assertEquals(site, site)
+            assertNull(error)
+            assertNotNull(this.backupDownloadStatusModelResponse)
+            this.backupDownloadStatusModelResponse?.apply {
+                assertEquals(this.downloadId, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadId)
+                assertEquals(this.rewindId, BACKUP_DOWNLOAD_STATUS_RESPONSE.rewindId)
+                assertEquals(this.backupPoint, BACKUP_DOWNLOAD_STATUS_RESPONSE.backupPoint)
+                assertEquals(this.startedAt, BACKUP_DOWNLOAD_STATUS_RESPONSE.startedAt)
+                assertEquals(this.downloadCount, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadCount)
+                assertEquals(this.validUntil, BACKUP_DOWNLOAD_STATUS_RESPONSE.validUntil)
+                assertEquals(this.url, BACKUP_DOWNLOAD_STATUS_RESPONSE.url)
+                assertEquals(this.progress, progress)
+            }
+        }
+    }
+
+    private suspend fun initFetchActivity(
+        data: ActivitiesResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ): Response<ActivitiesResponse> {
+        val response = if (error != null) Response.Error<ActivitiesResponse>(error) else Success(data)
+        whenever(wpComGsonRequestBuilder.syncGetRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                paramsCaptor.capture(),
+                eq(ActivitiesResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))
+        ).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initFetchRewindStatus(
+        data: RewindStatusResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ):
+            Response<RewindStatusResponse> {
+        val response = if (error != null) Response.Error<RewindStatusResponse>(error) else Success(data)
+        whenever(wpComGsonRequestBuilder.syncGetRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                paramsCaptor.capture(),
+                eq(RewindStatusResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initPostRewind(
+        data: RewindResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ): Response<RewindResponse> {
+        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(data)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf()),
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initPostRewindWithTypes(
+        data: RewindResponse = mock(),
+        error: WPComGsonNetworkError? = null,
+        requestTypes: RewindRequestTypes
+    ): Response<RewindResponse> {
+        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(data)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf("types" to requestTypes)),
+                eq(RewindResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initPostBackupDownload(
+        data: BackupDownloadResponse = mock(),
+        error: WPComGsonNetworkError? = null,
+        requestTypes: BackupDownloadRequestTypes,
+        rewindId: String
+    ): Response<BackupDownloadResponse> {
+        val response = if (error != null) Response.Error<BackupDownloadResponse>(error) else Success(data)
+
+        whenever(wpComGsonRequestBuilder.syncPostRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                eq(null),
+                eq(mapOf("rewindId" to rewindId,
+                        "types" to requestTypes)),
+                eq(BackupDownloadResponse::class.java)
+        )).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initFetchBackupDownloadStatus(
+        data: BackupDownloadStatusResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ): Response<BackupDownloadStatusResponse> {
+        val response = if (error != null) Response.Error<BackupDownloadStatusResponse>(error) else Success(data)
+        whenever(wpComGsonRequestBuilder.syncGetRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                paramsCaptor.capture(),
+                eq(BackupDownloadStatusResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
     private fun assertEmittedActivityError(payload: FetchedActivityLogPayload, errorType: ActivityLogErrorType) {
         with(payload) {
             assertEquals(this.number, number)
@@ -307,59 +540,14 @@ class ActivityLogRestClientTest {
         }
     }
 
-    private suspend fun initFetchActivity(
-        data: ActivitiesResponse? = null,
-        error: WPComGsonNetworkError? = null
-    ): Response<ActivitiesResponse> {
-        val nonNullData = data ?: mock()
-        val response = if (error != null) Response.Error<ActivitiesResponse>(error) else Success(nonNullData)
-        whenever(wpComGsonRequestBuilder.syncGetRequest(
-                eq(activityRestClient),
-                urlCaptor.capture(),
-                paramsCaptor.capture(),
-                eq(ActivitiesResponse::class.java),
-                eq(false),
-                any(),
-                eq(false))
-        ).thenReturn(response)
-        whenever(site.siteId).thenReturn(siteId)
-        return response
-    }
-
-    private suspend fun initFetchRewindStatus(
-        data: RewindStatusResponse? = null,
-        error: WPComGsonNetworkError? = null
-    ):
-            Response<RewindStatusResponse> {
-        val nonNullData = data ?: mock()
-        val response = if (error != null) Response.Error<RewindStatusResponse>(error) else Success(nonNullData)
-        whenever(wpComGsonRequestBuilder.syncGetRequest(
-                eq(activityRestClient),
-                urlCaptor.capture(),
-                paramsCaptor.capture(),
-                eq(RewindStatusResponse::class.java),
-                eq(false),
-                any(),
-                eq(false))).thenReturn(response)
-        whenever(site.siteId).thenReturn(siteId)
-        return response
-    }
-
-    private suspend fun initPostRewind(
-        data: RewindResponse? = null,
-        error: WPComGsonNetworkError? = null
-    ): Response<RewindResponse> {
-        val nonNullData = data ?: mock()
-        val response = if (error != null) Response.Error<RewindResponse>(error) else Success(nonNullData)
-
-        whenever(wpComGsonRequestBuilder.syncPostRequest(
-                eq(activityRestClient),
-                urlCaptor.capture(),
-                eq(null),
-                eq(mapOf()),
-                eq(RewindResponse::class.java)
-        )).thenReturn(response)
-        whenever(site.siteId).thenReturn(siteId)
-        return response
+    private fun assertEmittedDownloadStatusError(
+        payload: FetchedBackupDownloadStatePayload,
+        errorType: BackupDownloadStatusErrorType
+    ) {
+        with(payload) {
+            assertEquals(site, site)
+            assertTrue(isError)
+            assertEquals(errorType, error.type)
+        }
     }
 }

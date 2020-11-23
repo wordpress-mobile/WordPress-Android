@@ -13,5 +13,9 @@ public enum ActivityLogAction implements IAction {
     @Action(payloadType = ActivityLogStore.FetchRewindStatePayload.class)
     FETCH_REWIND_STATE,
     @Action(payloadType = ActivityLogStore.RewindPayload.class)
-    REWIND
+    REWIND,
+    @Action(payloadType = ActivityLogStore.BackupDownloadPayload.class)
+    BACKUP_DOWNLOAD,
+    @Action(payloadType = ActivityLogStore.FetchBackupDownloadStatePayload.class)
+    FETCH_BACKUP_DOWNLOAD_STATE
 }
