@@ -39,6 +39,10 @@ data class ScanStateResponse(
     data class Credentials(
         @SerializedName("type") val type: String,
         @SerializedName("role") val role: String,
+        @SerializedName("host") val host: String?,
+        @SerializedName("port") val port: Int?,
+        @SerializedName("user") val user: String?,
+        @SerializedName("path") val path: String?,
         @SerializedName("still_valid") val stillValid: Boolean
     )
 
