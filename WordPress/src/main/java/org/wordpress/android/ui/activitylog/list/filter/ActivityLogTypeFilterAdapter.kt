@@ -12,11 +12,11 @@ class ActivityLogTypeFilterAdapter(private val uiHelpers: UiHelpers) : Adapter<A
         return ActivityLogTypeFilterViewHolder(parent, uiHelpers)
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: ActivityLogTypeFilterViewHolder, position: Int) {
         holder.onBind(items[position])
     }
+
+    override fun getItemCount(): Int = items.size
 
     fun update(newItems: List<ItemUiState>) {
         items.clear()
