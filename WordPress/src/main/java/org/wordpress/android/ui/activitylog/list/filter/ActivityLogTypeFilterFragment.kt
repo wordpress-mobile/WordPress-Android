@@ -51,13 +51,12 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun initToolbar(view: View) {
-        val toolbar = view.findViewById(R.id.toolbar_main) as MaterialToolbar
-        toolbar.navigationIcon = ColorUtils.applyTintToDrawable(
-                toolbar.context, R.drawable.ic_close_white_24dp,
-                toolbar.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+        toolbar_main.navigationIcon = ColorUtils.applyTintToDrawable(
+                toolbar_main.context, R.drawable.ic_close_white_24dp,
+                toolbar_main.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
         )
-        toolbar.setNavigationContentDescription(R.string.close_dialog_button_desc)
-        toolbar.setNavigationOnClickListener { dismiss() }
+        toolbar_main.setNavigationContentDescription(R.string.close_dialog_button_desc)
+        toolbar_main.setNavigationOnClickListener { dismiss() }
     }
 
     private fun initRecyclerView() {
