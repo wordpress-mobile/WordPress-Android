@@ -53,9 +53,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val headerListItem = SectionHeader(UiStringText("Test"))
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
-                    .map {
-                        ListItemUiState.ActivityType(title = UiStringText(it.toString()))
-                    }
+                    .map { ListItemUiState.ActivityType(title = UiStringText(it.toString())) }
             Content(
                     listOf(headerListItem) + activityTypeListItems,
                     primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
@@ -72,19 +70,18 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
     private fun onClearClicked() {
         (_uiState.value as? Content)?.let { it ->
-            _uiState.value = it.copy(items = uncheckAllActivityTypeItems(it))
+            _uiState.value = it.copy(items = getAllActivityTypeItemsUnchecked(it.items))
         }
     }
 
-    private fun uncheckAllActivityTypeItems(it: Content): List<ListItemUiState> {
-        return it.items.map { item ->
-            if (item is ListItemUiState.ActivityType) {
-                item.copy(checked = false)
-            } else {
-                item
+    private fun getAllActivityTypeItemsUnchecked(listItemUiStates: List<ListItemUiState>): List<ListItemUiState> =
+            listItemUiStates.map { item ->
+                if (item is ListItemUiState.ActivityType) {
+                    item.copy(checked = false)
+                } else {
+                    item
+                }
             }
-        }
-    }
 
     sealed class UiState {
         open val contentVisibility = false
