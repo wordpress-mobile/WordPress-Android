@@ -57,7 +57,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `content shown, when fetch available activity types completes successfully`() = test {
-        val uiStates = init(successResponse = true).uiStates
+        init(successResponse = true)
 
         viewModel.start(0L)
 
