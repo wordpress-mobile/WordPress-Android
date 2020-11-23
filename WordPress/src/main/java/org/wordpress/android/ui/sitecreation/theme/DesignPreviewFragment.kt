@@ -67,7 +67,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
             when (state) {
                 is Loading -> {
                     progressBar.setVisible(true)
-                    webView.setVisible(true)
+                    webView.setVisible(false)
                     errorView.setVisible(false)
                     webView.loadUrl(url)
                 }
