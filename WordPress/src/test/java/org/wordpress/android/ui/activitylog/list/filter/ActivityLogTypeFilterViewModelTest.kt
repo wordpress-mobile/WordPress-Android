@@ -46,7 +46,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `section header gets added as first item in the list`() = test {
+    fun `section header gets added as first item in the list, when content shown`() = test {
         init()
 
         viewModel.start(0L)
@@ -95,7 +95,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `content contains all fetched activity types`() = test {
+    fun `content contains all fetched activity types, when fetch activity types completes`() = test {
         val activityTypeCount = 17 // random number
         init(activityTypeCount = activityTypeCount)
 
