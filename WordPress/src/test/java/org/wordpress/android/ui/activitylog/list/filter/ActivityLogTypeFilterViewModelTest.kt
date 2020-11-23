@@ -3,7 +3,6 @@ package org.wordpress.android.ui.activitylog.list.filter
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -44,7 +43,6 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         viewModel.start(0L)
 
         verify(dummyActivityTypesProvider).fetchAvailableActivityTypes(anyOrNull())
-        verifyNoMoreInteractions(dummyActivityTypesProvider)
     }
 
     @Test
