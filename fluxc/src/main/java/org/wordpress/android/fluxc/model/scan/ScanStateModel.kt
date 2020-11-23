@@ -4,12 +4,12 @@ import java.util.Date
 
 data class ScanStateModel(
     val state: State,
-    val reason: String?,
-    val threats: List<ThreatModel>?,
-    val credentials: List<Credentials>?,
+    val reason: String? = null,
+    val threats: List<ThreatModel>? = null,
+    val credentials: List<Credentials>? = null,
     val hasCloud: Boolean,
-    val mostRecentStatus: ScanProgressStatus?,
-    val currentStatus: ScanProgressStatus?
+    val mostRecentStatus: ScanProgressStatus? = null,
+    val currentStatus: ScanProgressStatus? = null
 ) {
     enum class State(val value: String) {
         IDLE("idle"),

@@ -36,6 +36,10 @@ class ScanStore @Inject constructor(
         }
     }
 
+    fun getScanStateForSite(site: SiteModel): ScanStateModel? {
+        return scanSqlUtils.getScanStateForSite(site)
+    }
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
@@ -50,7 +54,7 @@ class ScanStore @Inject constructor(
             OnScanStateFetched(payload.error, FETCH_SCAN_STATE)
         } else {
             if (payload.scanStateModel != null) {
-                // TODO: ashiagr save data to DB
+                scanSqlUtils.replaceScanState(payload.site, payload.scanStateModel)
             }
             OnScanStateFetched(FETCH_SCAN_STATE)
         }
