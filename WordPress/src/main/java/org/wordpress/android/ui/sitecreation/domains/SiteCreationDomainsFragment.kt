@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewMode
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.DisplayUtilsWrapper
 import javax.inject.Inject
 
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
@@ -29,6 +31,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
+    @Inject internal lateinit var displayUtils: DisplayUtilsWrapper
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -100,6 +103,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
                 searchInputWithHeader?.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
                 uiHelpers.updateVisibility(create_site_button_container, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(create_site_button_shaddow, uiState.createSiteButtonContainerVisibility)
+                updateTitleVisibility(uiState.headerUiState == null)
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
@@ -122,11 +127,12 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         (recycler_view.adapter as SiteCreationDomainsAdapter).update(contentState.items)
     }
 
-    private fun getSegmentIdFromArguments(): Long {
-        return requireNotNull(arguments?.getLong(EXTRA_SEGMENT_ID)) {
-            "SegmentId is missing. Have you created the fragment using SiteCreationDomainsFragment.newInstance(..)?"
-        }
+    private fun updateTitleVisibility(visible: Boolean) {
+        val actionBar = (requireActivity() as? AppCompatActivity)?.supportActionBar
+        actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscape() || visible) // Always visible in landscape
     }
+
+    private fun getSegmentIdFromArguments(): Long? = arguments?.getLong(EXTRA_SEGMENT_ID)
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -137,11 +143,13 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         const val TAG = "site_creation_domains_fragment_tag"
         private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(screenTitle: String, segmentId: Long): SiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String, segmentId: Long?): SiteCreationDomainsFragment {
             val fragment = SiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
-            bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
+            if (segmentId != null) {
+                bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
+            }
             fragment.arguments = bundle
             return fragment
         }

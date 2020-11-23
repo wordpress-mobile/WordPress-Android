@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +28,6 @@ import androidx.core.provider.FontRequest;
 import androidx.emoji.text.EmojiCompat;
 import androidx.emoji.text.EmojiCompat.InitCallback;
 import androidx.emoji.text.FontRequestEmojiCompatConfig;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -115,6 +113,7 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
@@ -132,14 +131,12 @@ import javax.inject.Named;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasServiceInjector;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
 import kotlinx.coroutines.CoroutineScope;
 
 import static org.wordpress.android.modules.ThreadModuleKt.DEFAULT_SCOPE;
 
-public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
-        LifecycleObserver {
+public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
     public static String versionName;
@@ -163,8 +160,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     private static GoogleApiClient mCredentialsClient;
 
-    @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
-    @Inject DispatchingAndroidInjector<Fragment> mSupportFragmentInjector;
+    @Inject DispatchingAndroidInjector<Object> mDispatchingAndroidInjector;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -854,13 +850,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mStoryNotificationTrackerProvider;
     }
 
-    @Override
-    public AndroidInjector<Service> serviceInjector() {
-        return mServiceDispatchingAndroidInjector;
-    }
-
-    @Override public AndroidInjector<Fragment> supportFragmentInjector() {
-        return mSupportFragmentInjector;
+    @Override public AndroidInjector<Object> androidInjector() {
+        return mDispatchingAndroidInjector;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
@@ -928,6 +919,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             properties.putAll(mReaderTracker.getAnalyticsData());
 
             mReaderTracker.onAppGoesToBackground();
+
+            // Ensure that the deeplinking activity is re-enabled.
+            WPActivityUtils.enableReaderDeeplinks(getContext());
 
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
             AnalyticsTracker.endSession(false);

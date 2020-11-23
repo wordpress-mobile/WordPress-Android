@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts
 
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -22,6 +24,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingScreen.ADD_CATEGORY
+import org.wordpress.android.ui.posts.PrepublishingScreen.CATEGORIES
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
@@ -80,7 +84,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 if (event.action != KeyEvent.ACTION_DOWN) {
                     true
                 } else {
-                    onBackClicked()
+                    viewModel.onDeviceBackPressed()
                     true
                 }
             } else {
@@ -105,11 +109,26 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         }
         setupMinimumHeightForFragmentContainer()
+        addWindowInsetToFragmentContainer()
     }
 
     override fun onDismiss(dialog: DialogInterface) {
         analyticsTrackerWrapper.track(Stat.PREPUBLISHING_BOTTOM_SHEET_DISMISSED)
         super.onDismiss(dialog)
+    }
+
+    /**
+     * On Android 10, the bottom sheet is not above the window inset so that leads to the publish button being cut
+     * off. To fix this, we add the bottom inset as the margin bottom of the fragment container.
+     */
+    private fun addWindowInsetToFragmentContainer() {
+        if (VERSION.SDK_INT == VERSION_CODES.Q) {
+            activity?.window?.decorView?.rootWindowInsets?.systemWindowInsetBottom?.let { bottomInset ->
+                val param = prepublishing_content_fragment.layoutParams as ViewGroup.MarginLayoutParams
+                param.setMargins(0, 0, 0, bottomInset)
+                prepublishing_content_fragment.layoutParams = param
+            }
+        }
     }
 
     private fun setupMinimumHeightForFragmentContainer() {
@@ -152,7 +171,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
-        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
+        val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
+                KEY_SCREEN_STATE
+        )
         val site = arguments?.getSerializable(SITE) as SiteModel
 
         viewModel.start(site, prepublishingScreenState)
@@ -178,8 +199,34 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     "arguments can't be null."
                 }
                 Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
                         PrepublishingTagsFragment.TAG
+                )
+            }
+            CATEGORIES -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingCategoriesFragment.newInstance(
+                                navigationTarget.site,
+                                isStoryPost,
+                                navigationTarget.bundle
+                        ),
+                        PrepublishingCategoriesFragment.TAG
+                )
+            }
+            ADD_CATEGORY -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingAddCategoryFragment.newInstance(
+                                navigationTarget.site,
+                                isStoryPost,
+                                navigationTarget.bundle
+                        ),
+                        PrepublishingAddCategoryFragment.TAG
                 )
             }
         }
@@ -192,8 +239,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             val fragmentTransaction = fragmentManager.beginTransaction()
             fragmentManager.findFragmentById(R.id.prepublishing_content_fragment)?.run {
                 fragmentTransaction.addToBackStack(null).setCustomAnimations(
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out,
-                        R.anim.prepublishing_fragment_fade_in, R.anim.prepublishing_fragment_fade_out
+                        R.anim.prepublishing_fragment_fade_in,
+                        R.anim.prepublishing_fragment_fade_out,
+                        R.anim.prepublishing_fragment_fade_in,
+                        R.anim.prepublishing_fragment_fade_out
                 )
             }
             fragmentTransaction.replace(R.id.prepublishing_content_fragment, fragment, tag)
@@ -206,12 +255,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    override fun onBackClicked() {
-        viewModel.onBackClicked()
+    override fun onBackClicked(bundle: Bundle?) {
+        viewModel.onBackClicked(bundle)
     }
 
-    override fun onActionClicked(actionType: ActionType) {
-        viewModel.onActionClicked(actionType)
+    override fun onActionClicked(actionType: ActionType, bundle: Bundle?) {
+        viewModel.onActionClicked(actionType, bundle)
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {

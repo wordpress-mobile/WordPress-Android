@@ -2,8 +2,8 @@ package org.wordpress.android.ui.reader.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
 import org.junit.Before
@@ -15,11 +15,11 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
@@ -48,7 +48,6 @@ class ReaderDiscoverDataProviderTest {
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var dataProvider: ReaderDiscoverDataProvider
-    private lateinit var readerTag: ReaderTag
 
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
@@ -60,6 +59,7 @@ class ReaderDiscoverDataProviderTest {
     fun setUp() {
         dataProvider = ReaderDiscoverDataProvider(
                 TEST_DISPATCHER,
+                TEST_DISPATCHER,
                 eventBusWrapper,
                 readerTagWrapper,
                 getDiscoverCardsUseCase,
@@ -68,7 +68,6 @@ class ReaderDiscoverDataProviderTest {
         )
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when refreshCards is requested started gets posted on comm channel`() = test {
         whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)).thenReturn(Started(REQUEST_FIRST_PAGE))
@@ -81,7 +80,6 @@ class ReaderDiscoverDataProviderTest {
                 .isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when fetch request fails then failure gets posted to comm channel`() = test {
         // Arrange
@@ -95,7 +93,6 @@ class ReaderDiscoverDataProviderTest {
                 .isEqualTo(RemoteRequestFailure(REQUEST_FIRST_PAGE))
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when fetch request succeeds success gets posted to comm channel`() = test {
         // Arrange
@@ -109,7 +106,6 @@ class ReaderDiscoverDataProviderTest {
                 .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when fetch request unchanged success gets posted to comm channel`() = test {
         // Arrange
@@ -123,25 +119,46 @@ class ReaderDiscoverDataProviderTest {
                 .isEqualTo(Success(REQUEST_FIRST_PAGE))
     }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `on cards updated has new the data gets posted to discover feed`() = test {
-        // Arrange
+    fun `when new observer added and db is empty, does NOT post anything to discover feed`() = test {
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
+        val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
+        dataProvider.discoverFeed.observeForever { }
+
+        Assertions.assertThat(dataProvider.discoverFeed.value).isNull()
+    }
+
+    @Test
+    fun `when new observer added and db is NOT empty, the data gets posted to discover feed`() = test {
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
+        dataProvider.discoverFeed.observeForever { }
+
+        Assertions.assertThat(dataProvider.discoverFeed.value).isNotNull
+    }
+
+    @Test
+    fun `when request first page finishes, the data gets posted to discover feed`() = test {
+        // Make sure the provider doesn't emit any values when a new observer is added
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
+        whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
+        dataProvider.discoverFeed.observeForever { }
+        // Make sure the db returns some data
+        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.onCardsUpdated(event)
 
         Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value))
                 .isInstanceOf(ReaderDiscoverCards::class.java)
-
         Assertions.assertThat(requireNotNull(dataProvider.discoverFeed.value).cards.size)
                 .isEqualTo(NUMBER_OF_ITEMS)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when loadMoreRequest in progress another started not posted to comm channel`() = test {
         whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)).thenReturn(Started(REQUEST_MORE))
@@ -166,7 +183,6 @@ class ReaderDiscoverDataProviderTest {
     }
 
     // The following test the loadData(), which is kicked off when discoverFeed obtains observers
-    @ExperimentalCoroutinesApi
     @Test
     fun `when loadData with refresh request is started and posted to comm channel`() = test {
         whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)).thenReturn(Started(REQUEST_FIRST_PAGE))
@@ -180,7 +196,6 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(requireNotNull(started)).isEqualTo(Started(REQUEST_FIRST_PAGE))
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when loadData without refresh no start message posted to comm channel`() = test {
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
@@ -193,7 +208,6 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(started).isNull()
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when loadData with forceReload true data posted to discover channel`() = test {
         whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
@@ -209,7 +223,6 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(data).isNotNull
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `when loadData with existsInMemory data posted to discover feed`() = test {
         val discoverFeedObserver = Observer<ReaderDiscoverCards> { }
@@ -236,6 +249,14 @@ class ReaderDiscoverDataProviderTest {
         Assertions.assertThat(data).isNotNull
 
         Assertions.assertThat(data?.cards?.size).isEqualTo(NUMBER_OF_ITEMS)
+    }
+
+    @Test
+    fun `when followed tags change the discover feed gets refreshed`() = test {
+        // Act
+        dataProvider.onFollowedTagsChanged(FollowedTagsChanged(true))
+        // Assert
+        verify(fetchDiscoverCardsUseCase).fetch(REQUEST_FIRST_PAGE)
     }
 
     // Helper functions lifted from ReaderDiscoverViewModelTest because why reinvent the wheel

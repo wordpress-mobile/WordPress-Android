@@ -1,6 +1,7 @@
 package org.wordpress.android.support;
 
 import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Checkable;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
@@ -16,7 +18,9 @@ import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
 import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
 import androidx.test.espresso.action.Tap;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
@@ -39,7 +43,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
-import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeDown;
 import static androidx.test.espresso.action.ViewActions.swipeLeft;
 import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
@@ -49,8 +53,10 @@ import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static androidx.test.runner.lifecycle.Stage.RESUMED;
@@ -58,6 +64,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
+import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 
 
 public class WPSupportUtils {
@@ -109,6 +116,10 @@ public class WPSupportUtils {
         idleFor(2000); // allow for transitions
         viewInteraction.perform(click(closeSoftKeyboard())); // attempt to close the soft keyboard as the rollback
         idleFor(500); // allow for transitions
+    }
+
+    public static void clickOnViewWithTag(String tag) {
+        clickOn(onView(withTagValue(is(tag))));
     }
 
     /**
@@ -208,6 +219,14 @@ public class WPSupportUtils {
         );
         waitForElementToBeDisplayed(childElement);
         clickOn(childElement);
+    }
+
+    public static void swipeLeftOnViewPager(int viewPagerID) {
+        onView(withId(viewPagerID)).perform(swipeLeft());
+    }
+
+    public static void swipeRightOnViewPager(int viewPagerID) {
+        onView(withId(viewPagerID)).perform(swipeRight());
     }
 
     public static void clickOnSpinnerItemAtIndex(int index) {
@@ -357,6 +376,39 @@ public class WPSupportUtils {
         }
 
         clickOn(tabItemInTabLayoutWithTitle(elementID, string));
+    }
+
+    private static ViewAction swipeFromBottomToTop(float yFactor) {
+        return new GeneralSwipeAction(Swipe.SLOW,
+                view -> {
+                    float[] coordinates = GeneralLocation.CENTER.calculateCoordinates(view);
+                    coordinates[1] *= yFactor;
+                    return coordinates;
+                }, GeneralLocation.TOP_CENTER, Press.FINGER);
+    }
+
+    private static ViewAction swipeFromTopToBottom(float yFactor) {
+        return new GeneralSwipeAction(Swipe.SLOW,
+                GeneralLocation.TOP_CENTER,
+                view -> {
+                    float[] coordinates = GeneralLocation.CENTER.calculateCoordinates(view);
+                    coordinates[1] *= yFactor;
+                    return coordinates;
+                }, Press.FINGER);
+    }
+
+    public static void swipeUpOnView(Integer elementID, float yFactor) {
+        onView(withId(elementID)).perform(withCustomConstraints(swipeFromBottomToTop(yFactor),
+                isDisplayingAtLeast(10)));
+    }
+
+    public static void swipeDownOnView(Integer elementID, float yFactor) {
+        onView(withId(elementID)).perform(withCustomConstraints(swipeFromTopToBottom(yFactor),
+                isDisplayingAtLeast(10)));
+    }
+
+    public static void swipeDownOnView(Integer elementID) {
+        onView(withId(elementID)).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)));
     }
 
     private static Boolean tabLayoutHasTextDisplayed(Integer elementID, String text) {
@@ -678,5 +730,45 @@ public class WPSupportUtils {
 
     public static String getTranslatedString(Integer resourceID) {
         return getCurrentActivity().getResources().getString(resourceID);
+    }
+
+    public static void setNightMode(boolean isNightMode) {
+        getCurrentActivity().runOnUiThread(new Runnable() {
+            @Override public void run() {
+                AppCompatDelegate.setDefaultNightMode(
+                        isNightMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        });
+
+        idleFor(1000);
+    }
+
+    // Checks for screen having both width and height greater than 600dp
+    public static boolean isTabletScreen() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float widthDp = displayMetrics.widthPixels / displayMetrics.density;
+        float heightDp = displayMetrics.heightPixels / displayMetrics.density;
+        float screenSw = Math.min(widthDp, heightDp);
+        return screenSw >= 600;
+    }
+
+    private static ViewAction withCustomConstraints(final ViewAction action, final Matcher<View> constraints) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return constraints;
+            }
+
+            @Override
+            public String getDescription() {
+                return action.getDescription();
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                action.perform(uiController, view);
+            }
+        };
     }
 }

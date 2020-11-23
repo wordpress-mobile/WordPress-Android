@@ -218,6 +218,13 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         mLoginListener = null;
     }
 
+    @Override 
+    public void onDestroyView() {
+        mEmailInput = null;
+
+        super.onDestroyView();
+    }
+
     private String getCleanedEmail() {
         return EditTextUtils.getText(mEmailInput.getEditText()).trim();
     }

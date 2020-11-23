@@ -47,7 +47,6 @@ public class ReaderConstants {
     static final String ARG_POST_LIST_TYPE = "post_list_type";
     static final String ARG_CONTENT = "content";
     static final String ARG_IS_SINGLE_POST = "is_single_post";
-    static final String ARG_IS_RELATED_POST = "is_related_post";
     static final String ARG_SEARCH_QUERY = "search_query";
     static final String ARG_VIDEO_URL = "video_url";
     static final String ARG_IS_TOP_LEVEL = "is_top_level";
@@ -81,6 +80,7 @@ public class ReaderConstants {
     public static final String JSON_CARD_INTERESTS_YOU_MAY_LIKE = "interests_you_may_like";
     public static final String JSON_CARD_POST = "post";
     public static final String JSON_CARD_DATA = "data";
+    public static final String JSON_CARD_RECOMMENDED_BLOGS = "recommended_blogs";
     public static final String JSON_NEXT_PAGE_HANDLE = "next_page_handle";
 
     // JSON Post key names
@@ -92,4 +92,8 @@ public class ReaderConstants {
     public static final String KEY_DISCOVER = "discover";
     public static final String KEY_LIKES = "likes";
     public static final String KEY_SAVED = "saved";
+
+    // JSON Recommended blog key names
+    public static final String RECOMMENDED_BLOG_ID = "ID";
+    public static final String RECOMMENDED_FEED_ID = "feed_ID";
 }

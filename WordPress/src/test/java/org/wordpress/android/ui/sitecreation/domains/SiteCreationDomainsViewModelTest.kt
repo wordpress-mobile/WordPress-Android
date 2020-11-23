@@ -88,6 +88,12 @@ class SiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
+            whenever(mSiteCreationDomainSanitizer.getName(any())).thenReturn(
+                    "${MULTI_RESULT_DOMAIN_FETCH_QUERY.first}-1"
+            )
+            whenever(mSiteCreationDomainSanitizer.getDomain(any())).thenReturn(
+                    ".wordpress.com"
+            )
             whenever(mSiteCreationDomainSanitizer.sanitizeDomainQuery(any())).thenReturn(
                     createSanitizedDomainResult(isDomainAvailableInSuggestions)
             )

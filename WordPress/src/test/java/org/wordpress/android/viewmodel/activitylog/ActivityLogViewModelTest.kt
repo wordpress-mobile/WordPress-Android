@@ -36,6 +36,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
+import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
@@ -48,6 +49,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
@@ -96,7 +98,13 @@ class ActivityLogViewModelTest {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        viewModel = ActivityLogViewModel(store, rewindStatusService, resourceProvider, Dispatchers.Unconfined)
+        viewModel = ActivityLogViewModel(
+                store,
+                rewindStatusService,
+                resourceProvider,
+                activityLogFiltersFeatureConfig,
+                Dispatchers.Unconfined
+        )
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
@@ -316,6 +324,31 @@ class ActivityLogViewModelTest {
         viewModel.onScrolledToBottom()
 
         assertFetchEvents(true)
+    }
+
+    @Test
+    fun filtersAreNotVisibleWhenFiltersFeatureFlagIsDisabled() = runBlocking {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.start(site)
+
+        assertEquals(false, viewModel.filtersVisibility.value)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenFiltersFeatureFlagIsEnabled() = runBlocking {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersVisibility.value)
+    }
+
+    @Test
+    fun onActivityTypeFilterClickShowsActivityTypeFilter() {
+        viewModel.onActivityTypeFilterClicked()
+
+        assertEquals(Unit, viewModel.showActivityTypeFilterDialog.value)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

@@ -616,4 +616,10 @@ public class AnalyticsUtils {
         properties.put(NEWS_CARD_VERSION, String.valueOf(version));
         return properties;
     }
+
+    public static void trackLoginProloguePages(int page) {
+        Map<String, Integer> properties = new HashMap<>();
+        properties.put("page_number", page);
+        AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
+    }
 }

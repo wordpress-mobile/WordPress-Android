@@ -1,0 +1,3 @@
+16.1:
+* Elige entre una variedad de plantillas de página prediseñadas cuando crees una nueva página en un sitio con Gutenberg activo.
+

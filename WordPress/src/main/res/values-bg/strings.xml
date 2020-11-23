@@ -270,9 +270,7 @@ Language: bg
     <string name="reader_toast_err_already_liked">Вече сте харесали този коментар</string>
     <string name="reader_toast_err_comment_not_found">Коментарът не е открит.</string>
     <string name="reader_toast_err_cannot_like_post">Неуспешно харесване на публикацията.</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com публикация</string>
     <string name="error_notif_q_action_reply">Неуспешен отговор на коментара. Моля, опитайте по-късно.</string>
-    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="error_notif_q_action_approve">Неуспешно одобряване на коментара. Моля, опитайте по-късно.</string>
     <string name="error_notif_q_action_like">Неуспешно харесване на коментара. Моля, опитайте по-късно.</string>
     <string name="notifications_label_new_notifications_subtitle">Натиснете, за да ги покажете</string>
@@ -346,7 +344,6 @@ Language: bg
     <string name="send_link">Изпращане на връзка</string>
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
-    <string name="reader_title_related_post_detail">Свързана публикация</string>
     <string name="preview_screen_links_disabled">Връзките на екрана за преглед са деактивирани</string>
     <string name="send">Изпращане</string>
     <string name="person_removed">%1$s бе успешно премахнат</string>
@@ -666,7 +663,6 @@ Language: bg
     <string name="reader_label_new_posts">Нови публикации</string>
     <string name="post_uploading">Качване</string>
     <string name="error_copy_to_clipboard">Възникна грешка при копиране на текста в clipboard-а</string>
-    <string name="reader_page_recommended_blogs">Блогове които бихте харесали</string>
     <string name="logs_copied_to_clipboard">Логовете на приложението бяха копирани в буфера за обмен на данни</string>
     <string name="stats_view_videos">Видеа</string>
     <string name="stats_followers_a_day">Ден</string>
@@ -692,9 +688,7 @@ Language: bg
     <string name="ssl_certificate_details">Информация</string>
     <string name="cab_selected">%d избрани</string>
     <string name="older_two_days">По-стари от 2 дена</string>
-    <string name="reader_label_liked_by">Харесано от</string>
     <string name="reader_empty_comments">Все още няма коментари</string>
-    <string name="reader_empty_posts_in_tag">Няма публикации с този таг</string>
     <string name="older_last_week">По-стари от седмица</string>
     <string name="signing_out">Излизане…</string>
     <string name="older_month">По-стари от месец</string>
@@ -716,9 +710,7 @@ Language: bg
     <string name="reader_toast_err_generic">Действието беше неуспешно</string>
     <string name="update_verb">Актуализиране</string>
     <string name="schedule_verb">Планиране</string>
-    <string name="reader_page_followed_tags">Следени етикети</string>
     <string name="reader_page_followed_blogs">Следени сайтове</string>
-    <string name="reader_hint_add_tag_or_url">Въведете етикет или адрес за следване</string>
     <string name="help">Помощ</string>
     <string name="ssl_certificate_error">Невалиден SSL сертификат</string>
     <string name="forgot_password">Изгубена парола?</string>
@@ -792,8 +784,6 @@ Language: bg
     <string name="privacy_policy">Политика за поверителност</string>
     <string name="wordpress_blog">Блог от вида WordPress</string>
     <string name="reader_title_applog">Дневник на приложението</string>
-    <string name="reader_toast_err_add_tag">Етикетът не може да бъде добавен</string>
-    <string name="reader_toast_err_remove_tag">Етикетът не може да бъде махнат</string>
     <string name="notifications_empty_all">Все още няма известявания.</string>
     <string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
     <string name="share_link">Споделяне на връзка</string>
@@ -811,7 +801,6 @@ Language: bg
     <string name="reader_likes_one">Едно лице хареса това</string>
     <string name="reader_toast_err_url_intent">%s не може да се отвори</string>
     <string name="reader_untitled_post">(Неозаглавен)</string>
-    <string name="reader_toast_err_tag_invalid">Това не е валиден етикет</string>
     <string name="reader_hint_comment_on_comment">Отговор на коментар…</string>
     <string name="empty_list_default">Списъкът е празен</string>
     <string name="reader_btn_share">Споделяне</string>
@@ -820,7 +809,6 @@ Language: bg
     <string name="reader_label_added_tag">%s е добавен</string>
     <string name="reader_label_removed_tag">%s е премахнат</string>
     <string name="reader_toast_err_comment_failed">Коментарът не беше публикуван</string>
-    <string name="reader_toast_err_tag_exists">Вече следвате този етикет</string>
     <string name="reader_toast_err_share_intent">Споделянето е неуспешно</string>
     <string name="reader_toast_err_view_image">Преглеждането на изображението е неуспешно</string>
     <string name="comments_empty_list">Все още няма коментари</string>

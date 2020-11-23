@@ -20,6 +20,7 @@ import androidx.appcompat.widget.TooltipCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
 import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
@@ -27,7 +28,6 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryRepository.getStoryAtIndex
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
-import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -37,8 +37,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.R.attr
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -103,7 +103,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -125,7 +124,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.getPromptDetailsForTask
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isTargetingBottomNavBar
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
-import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler.Companion.handleMediaPickerResultForStories
+import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
@@ -152,16 +151,19 @@ import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQu
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.requestEmailValidation
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.widgets.WPDialogSnackbar
 import org.wordpress.android.widgets.WPSnackbar
 import java.io.File
@@ -195,6 +197,10 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
+    @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
+    @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
+    @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -230,11 +236,13 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
+            updateScanMenuVisibility()
+
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
                     site
             ) && !site.isJetpackConnected
-            if (isNotAdmin || isSelfHostedWithoutJetpack) {
+            if (isNotAdmin || isSelfHostedWithoutJetpack || site.isWpForTeamsSite) {
                 row_activity_log.visibility = View.GONE
             } else {
                 row_activity_log.visibility = View.VISIBLE
@@ -247,6 +255,10 @@ class MySiteFragment : Fragment(),
             showQuickStartDialogMigration()
         }
         showQuickStartNoticeIfNecessary()
+    }
+
+    private fun updateScanMenuVisibility() {
+        row_scan.setVisible(scanFeatureConfig.isEnabled())
     }
 
     private fun showQuickStartNoticeIfNecessary() {
@@ -772,7 +784,7 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!handleMediaPickerResultForStories(data, activity, selectedSite)) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
@@ -811,6 +823,13 @@ class MySiteFragment : Fragment(),
                         }
                     }
                 }
+            }
+            RequestCodes.STORIES_PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
+                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                        data,
+                        activity,
+                        selectedSite
+                )
             }
             UCrop.REQUEST_CROP -> if (resultCode == Activity.RESULT_OK) {
                 AnalyticsTracker.track(MY_SITE_ICON_CROPPED)
@@ -1000,7 +1019,7 @@ class MySiteFragment : Fragment(),
 
         // Hide the Plan item if the Plans feature is not available for this blog
         val planShortName = site.planShortName
-        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions) {
+        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions && !site.isWpForTeamsSite) {
             if (site.isWPCom || site.isAutomatedTransfer) {
                 my_site_current_plan_text_view.text = planShortName
                 row_plan.visibility = View.VISIBLE
@@ -1016,11 +1035,7 @@ class MySiteFragment : Fragment(),
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
         row_pages.visibility = pageVisibility
         quick_action_pages_container.visibility = pageVisibility
-        if (pageVisibility == View.VISIBLE) {
-            quick_action_buttons_container.weightSum = 100f
-        } else {
-            quick_action_buttons_container.weightSum = 75f
-        }
+        middle_quick_action_spacing.visibility = pageVisibility
     }
 
     private fun toggleAdminVisibility(site: SiteModel?) {
@@ -1216,9 +1231,9 @@ class MySiteFragment : Fragment(),
 
     override fun onPositiveClicked(instanceTag: String) {
         when (instanceTag) {
-            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showPhotoPickerForResult(
+            TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> mediaPickerLauncher.showSiteIconPicker(
                     requireActivity(),
-                    SITE_ICON_PICKER, selectedSite, null
+                    selectedSite
             )
             TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG -> {
             }

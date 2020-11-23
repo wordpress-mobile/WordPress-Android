@@ -6,7 +6,6 @@
     <string name="send_link">Send link</string>
     <string name="send_link_by_email">Send link by email</string>
     <string name="create_account">Create account</string>
-    <string name="send_verification_email">Send verification email</string>
     <string name="enter_your_password_instead">Enter your password instead</string>
     <string name="or_type_your_password">Or type your password</string>
     <string name="username">Username</string>
@@ -55,6 +54,7 @@
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
     <string name="login_find_your_site_adress">Find your site address</string>
+    <string name="login_find_your_connected_email">Find your connected email</string>
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
@@ -67,6 +67,7 @@
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="continue_google_button_suffix">Continue with Google</string>
+    <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_or">or</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
@@ -92,7 +93,7 @@
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
     <string name="continue_with_wpcom">Continue with WordPress.com</string>
-    <string name="enter_your_site_address">Enter your site address</string>
+    <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 

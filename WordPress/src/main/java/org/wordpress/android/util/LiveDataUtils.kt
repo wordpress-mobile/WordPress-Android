@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.viewmodel.SingleMediatorLiveEvent
 
@@ -217,6 +219,67 @@ fun <S, T, U, V, W> merge(
 }
 
 /**
+ * Merges five LiveData sources using a given function. The function returns an object of a new type.
+ * @param sourceA first source
+ * @param sourceB second source
+ * @param sourceC third source
+ * @param sourceD fourth source
+ * @param sourceE fifth source
+ * @return new data source
+ */
+fun <S, T, U, V, W, X> merge(
+    sourceA: LiveData<S>,
+    sourceB: LiveData<T>,
+    sourceC: LiveData<U>,
+    sourceD: LiveData<V>,
+    sourceE: LiveData<W>,
+    distinct: Boolean = false,
+    merger: (S?, T?, U?, V?, W?) -> X?
+): LiveData<X> {
+    data class FiveItemContainer(
+        val first: S? = null,
+        val second: T? = null,
+        val third: U? = null,
+        val fourth: V? = null,
+        val fifth: W? = null
+    )
+
+    val mediator = MediatorLiveData<FiveItemContainer>()
+    mediator.value = FiveItemContainer()
+    mediator.addSource(sourceA) {
+        val container = mediator.value
+        if (container?.first != it || !distinct) {
+            mediator.value = container?.copy(first = it)
+        }
+    }
+    mediator.addSource(sourceB) {
+        val container = mediator.value
+        if (container?.second != it || !distinct) {
+            mediator.value = container?.copy(second = it)
+        }
+    }
+    mediator.addSource(sourceC) {
+        val container = mediator.value
+        if (container?.third != it || !distinct) {
+            mediator.value = container?.copy(third = it)
+        }
+    }
+    mediator.addSource(sourceD) {
+        val container = mediator.value
+        if (container?.fourth != it || !distinct) {
+            mediator.value = container?.copy(fourth = it)
+        }
+    }
+    mediator.addSource(sourceE) {
+        val container = mediator.value
+        if (container?.fifth != it || !distinct) {
+            mediator.value = container?.copy(fifth = it)
+        }
+    }
+    return mediator.map { (first, second, third, fourth, fifth) -> merger(first, second, third, fourth, fifth) }
+}
+
+/**
  * Combines all the LiveData values in the given Map into one LiveData with the map of values.
  * @param sources is a map of all the live data sources in a map by a given key
  * @return one livedata instance that combines all the values into one map
@@ -315,9 +378,16 @@ fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveDa
 fun <T> LiveData<T>.throttle(
     coroutineScope: CoroutineScope,
     distinct: Boolean = false,
-    offset: Long = 100
+    offset: Long = 100,
+    backgroundDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): ThrottleLiveData<T> {
-    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(coroutineScope = coroutineScope, offset = offset)
+    val mediatorLiveData: ThrottleLiveData<T> = ThrottleLiveData(
+            coroutineScope = coroutineScope,
+            offset = offset,
+            backgroundDispatcher = backgroundDispatcher,
+            mainDispatcher = mainDispatcher
+    )
     mediatorLiveData.addSource(this) {
         if ((it != mediatorLiveData.value || !distinct) && it != null) {
             mediatorLiveData.postValue(it)

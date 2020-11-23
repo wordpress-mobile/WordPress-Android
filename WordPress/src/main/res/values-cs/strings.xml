@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-28 18:36:11+0000
+Translation-Revision-Date: 2020-10-20 08:20:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -419,7 +419,6 @@ Language: cs_CZ
     <string name="edit_photo_screen_title">Upravit fotku</string>
     <string name="share_intent_screen_title">Vybrat stránku</string>
     <string name="signup_epilogue_screen_title">Nový účet</string>
-    <string name="login_prologue_screen_title">Přihlášení</string>
     <string name="login_epilogue_screen_title">Přihlášen jako</string>
     <string name="person_detail_screen_title">Osobní profil</string>
     <string name="media_settings_screen_title">Detail souboru</string>
@@ -433,7 +432,6 @@ Language: cs_CZ
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Poznámky k vydání</string>
     <string name="signup_epilogue_error_avatar_view">Váš avatar byl nahrán a bude brzy k dispozici.</string>
-    <string name="email_not_registered_wpcom">Hmm, nemůžeme najít WordPress.com účet spojený s tímto emailem. Vyzkoušejte níže uvedený odkaz a přihlaste se pomocí adresy vašeho webu.</string>
     <string name="permissions_denied_message">Vypadá to že jste si deaktivoval práva pro tuto funkci. &lt;br/>&lt;br/>Pokud to chcete změnit, ověřte si že máte povolená práva na funkci &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">Oprávnění</string>
     <string name="plugin_caption_featured">Doporučené</string>
@@ -499,7 +497,7 @@ Language: cs_CZ
     <string name="signup_magic_link_error_button_negative">Zavřít</string>
     <string name="signup_magic_link_error">Při odesílání emailu došlo k určitým potížím. Můžete zkusit znovu nebo zavřít a zkusit to později.</string>
     <string name="signup_epilogue_hint_username">Uživatelské jméno</string>
-    <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí magického odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
+    <string name="signup_epilogue_hint_password_detail">Vždy se můžete přihlásit pomocí odkazu, jako je ten, který jste právě používali, ale pokud chcete, můžete také nastavit heslo.</string>
     <string name="signup_epilogue_hint_password">Heslo (volitelné)</string>
     <string name="signup_epilogue_hint_display">Zobrazované jméno</string>
     <string name="signup_epilogue_error_button_positive">Opakovat</string>
@@ -934,8 +932,6 @@ Language: cs_CZ
     <string name="reader_toast_err_already_liked">Již jste tento komentář označili \"to se mi líbí\"</string>
     <string name="reader_toast_err_comment_not_found">Komentář nebyl nalezen!</string>
     <string name="reader_toast_err_cannot_like_post">Selhalo označení příspěvku \"to se mi líbí\"</string>
-    <string name="reader_title_post_detail_wpcom">WordPress.com příspěvek</string>
-    <string name="reader_title_deeplink">WordPress čtečka</string>
     <string name="error_notif_q_action_reply">Nepodařilo se odpovědět na komentář. Zkuste to znovu později.</string>
     <string name="error_notif_q_action_approve">Nepodařilo se schválit komentář. Zkuste to znovu později.</string>
     <string name="error_notif_q_action_like">Nepodařilo se označit komentář to se mi líbí. Zkuste to znovu později.</string>
@@ -1012,7 +1008,6 @@ Language: cs_CZ
     <string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
     <string name="reader_empty_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
     <string name="reader_hint_post_search">Prohledat WordPress.com</string>
-    <string name="reader_title_related_post_detail">Související příspěvky </string>
     <string name="preview_screen_links_disabled">Odkazy jsou zakázány v náhledu na obrazovce</string>
     <string name="send">Poslat</string>
     <string name="person_removed">%1$s úspěšně odstraněno</string>
@@ -1352,7 +1347,6 @@ Language: cs_CZ
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="reader_empty_posts_in_blog">Tento web je prázdný</string>
     <string name="reader_label_new_posts">Nové příspěvky</string>
-    <string name="reader_page_recommended_blogs">Stránky které by se vám mohly líbit</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
     <string name="stats_followers_years">%1$d roky</string>
@@ -1381,7 +1375,6 @@ Language: cs_CZ
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
     <string name="reader_empty_comments">Žádné komentáře</string>
     <string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
-    <string name="reader_label_liked_by">To se líbí</string>
     <string name="reader_label_like">To se mi líbí</string>
     <string name="reader_label_view_original">Zobrazit původní článek</string>
     <string name="reader_label_comments_closed">Komentáře jsou uzavřené</string>

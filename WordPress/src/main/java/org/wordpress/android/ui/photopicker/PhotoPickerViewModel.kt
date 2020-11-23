@@ -4,6 +4,8 @@ import android.Manifest.permission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -21,6 +23,7 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
+import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ProgressDialogUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
@@ -37,6 +40,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiMode
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PopupMenuUiModel.PopupMenuItem
+import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -58,8 +62,10 @@ import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.MediaPickerViewModel}")
+@Deprecated(
+        "This class is being refactored, if you implement any change, please also update " +
+                "{@link org.wordpress.android.ui.mediapicker.MediaPickerViewModel}"
+)
 class PhotoPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -68,7 +74,8 @@ class PhotoPickerViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
     private val tenorFeatureConfig: TenorFeatureConfig,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
@@ -78,6 +85,7 @@ class PhotoPickerViewModel @Inject constructor(
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskRequest = MutableLiveData<SoftAskRequest>()
+    private val _showProgressDialog = MutableLiveData<ProgressDialogUiModel>()
 
     val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
@@ -91,8 +99,9 @@ class PhotoPickerViewModel @Inject constructor(
     val uiState: LiveData<PhotoPickerUiState> = merge(
             _photoPickerItems.distinct(),
             _selectedIds.distinct(),
-            _softAskRequest
-    ) { photoPickerItems, selectedIds, softAskRequest ->
+            _softAskRequest,
+            _showProgressDialog
+    ) { photoPickerItems, selectedIds, softAskRequest, progressDialogModel ->
         PhotoPickerUiState(
                 buildPhotoPickerUiModel(photoPickerItems, selectedIds),
                 buildBottomBar(
@@ -101,10 +110,11 @@ class PhotoPickerViewModel @Inject constructor(
                         softAskRequest?.show == true
                 ),
                 buildSoftAskView(softAskRequest),
-                FabUiModel(browserType.isWPStoriesPicker) {
+                FabUiModel(browserType.isWPStoriesPicker && selectedIds.isNullOrEmpty()) {
                     clickIcon(WP_STORIES_CAPTURE)
                 },
-                buildActionModeUiModel(selectedIds)
+                buildActionModeUiModel(selectedIds),
+                progressDialogModel ?: ProgressDialogUiModel.Hidden
         )
     }
 
@@ -220,7 +230,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun refreshData(forceReload: Boolean) {
-        if (!permissionsHandler.hasStoragePermission()) {
+        if (!permissionsHandler.hasWriteStoragePermission()) {
             return
         }
         launch(bgDispatcher) {
@@ -426,7 +436,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun checkStoragePermission(isAlwaysDenied: Boolean) {
-        if (permissionsHandler.hasStoragePermission()) {
+        if (permissionsHandler.hasWriteStoragePermission()) {
             _softAskRequest.value = SoftAskRequest(show = false, isAlwaysDenied = isAlwaysDenied)
             if (_photoPickerItems.value.isNullOrEmpty()) {
                 refreshData(false)
@@ -440,10 +450,12 @@ class PhotoPickerViewModel @Inject constructor(
         if (softAskRequest != null && softAskRequest.show) {
             val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (softAskRequest.isAlwaysDenied) {
-                val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
-                        resourceProvider,
-                        permission.WRITE_EXTERNAL_STORAGE
-                )}</strong>")
+                val permissionName = ("<strong>${
+                    WPPermissionUtils.getPermissionName(
+                            resourceProvider,
+                            permission.WRITE_EXTERNAL_STORAGE
+                    )
+                }</strong>")
                 String.format(
                         resourceProvider.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
                         permissionName
@@ -465,12 +477,27 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
+    fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
+        launch {
+            _showProgressDialog.value = ProgressDialogUiModel.Visible(R.string.uploading_title) {
+                _showProgressDialog.postValue(ProgressDialogUiModel.Hidden)
+                cancel()
+            }
+            val localUris = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uris.map { it.uri })
+            _showProgressDialog.postValue(ProgressDialogUiModel.Hidden)
+            if (isActive) {
+                _onInsert.value = Event(localUris.permanentlyAccessibleUris.map { UriWrapper(it) })
+            }
+        }
+    }
+
     data class PhotoPickerUiState(
         val photoListUiModel: PhotoListUiModel,
         val bottomBarUiModel: BottomBarUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
         val fabUiModel: FabUiModel,
-        val actionModeUiModel: ActionModeUiModel
+        val actionModeUiModel: ActionModeUiModel,
+        val progressDialogUiModel: ProgressDialogUiModel
     )
 
     sealed class PhotoListUiModel {

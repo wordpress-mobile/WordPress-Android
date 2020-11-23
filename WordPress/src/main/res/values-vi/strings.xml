@@ -59,7 +59,6 @@ Language: vi_VN
     <string name="retry">Thử lại</string>
     <string name="confirm">Xác nhận</string>
     <string name="reader_toast_err_already_liked">Bạn đã thích bình luận đó rồi</string>
-    <string name="reader_title_post_detail_wpcom">Bài viết trên WordPress.com</string>
     <string name="notifications_label_new_notifications_subtitle">Chạm để hiện chúng</string>
     <string name="notifications_label_new_notifications">Thông báo mới</string>
     <string name="comment_q_action_replying">Đang trả lời…</string>
@@ -109,7 +108,6 @@ Language: vi_VN
     <string name="dlg_confirm_clear_search_history">Xóa lịch sử tìm kiếm?</string>
     <string name="reader_empty_search_description">Không tìm thấy kết quả cho %s với ngôn ngữ của bạn</string>
     <string name="reader_hint_post_search">Tìm trong WordPress</string>
-    <string name="reader_title_related_post_detail">Bài viết có liên quan</string>
     <string name="preview_screen_links_disabled">Các liên kết bị vô hiệu trên màn hình xem trước</string>
     <string name="send">Gửi</string>
     <string name="user_remove_confirmation_message">Nếu bạn loại bỏ %1$s, người dùng đó sẽ không còn có thể truy cập site này, nhưng bất kì nội dung nào được tạo bởi %1$s sẽ còn lại trên site.\n\nBạn vẫn muốn loại bỏ người dùng này?</string>
@@ -368,7 +366,6 @@ Language: vi_VN
     <string name="reader_short_like_count_multi">%s thích</string>
     <string name="reader_short_like_count_one">1 thích</string>
     <string name="reader_short_like_count_none">Thích</string>
-    <string name="reader_menu_tags">Sửa các tag và site</string>
     <string name="reader_title_post_detail">Người đọc bài viết</string>
     <string name="notifications_push_summary">Thiết đặt thông báo xuất hiện trên thiết bị của bạn.</string>
     <string name="notifications_email_summary">Cài đặt cho các thông báo được gửi đến email gắn với tài khoản của bạn.</string>
@@ -438,7 +435,6 @@ Language: vi_VN
     <string name="publisher">Người xuất bản:</string>
     <string name="stats_search_terms_unknown_search_terms">Không biết Điều kiện tìm kiếm</string>
     <string name="error_copy_to_clipboard">Một lỗi đã xảy ra trong khi sao chép văn bản vào bộ nhớ tạm</string>
-    <string name="reader_page_recommended_blogs">Các site bạn có thể thích</string>
     <string name="reader_label_new_posts">Bài viết mới</string>
     <string name="logs_copied_to_clipboard">Bản ghi ứng dụng đã được sao chép vào clipboard</string>
     <string name="reader_empty_posts_in_blog">Site này không có gì</string>
@@ -467,7 +463,6 @@ Language: vi_VN
     <string name="ssl_certificate_details">Chi tiết</string>
     <string name="cab_selected">%d đã chọn</string>
     <string name="reader_empty_comments">Chưa có bình luận</string>
-    <string name="reader_empty_posts_in_tag">Không có bài viết với thẻ này</string>
     <string name="reader_label_view_original">Xem bài viết gốc</string>
     <string name="reader_label_like">Thích</string>
     <string name="reader_label_comments_closed">Bình luận đã được đóng</string>
@@ -490,9 +485,7 @@ Language: vi_VN
     <string name="reader_toast_err_generic">khong lam duoc</string>
     <string name="update_verb">Cập nhật</string>
     <string name="schedule_verb">Lich trinh</string>
-    <string name="reader_page_followed_tags">Thẻ được theo dõi</string>
     <string name="reader_page_followed_blogs">Site được theo dõi</string>
-    <string name="reader_hint_add_tag_or_url">Nhập một URL hoặc thẻ để theo dõi</string>
     <string name="reader_toast_err_already_follow_blog">Bạn đã theo dõi site này</string>
     <string name="forgot_password">Quên mật khẩu?</string>
     <string name="help">Trợ giúp</string>
@@ -544,8 +537,6 @@ Language: vi_VN
     <string name="error_blog_hidden">Blog này bị ẩn và không thể tải được. Bật nó lên trong thiết đặt và thử lại.</string>
     <string name="fatal_db_error">Một lỗi đã xảy ra trong khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="reader_title_applog">Nhật kí ứng dụng</string>
-    <string name="reader_toast_err_add_tag">Không thể thêm thẻ này</string>
-    <string name="reader_toast_err_remove_tag">Không thể loại bỏ thẻ này</string>
     <string name="add_new_category">Thêm danh mục mới</string>
     <string name="category_name">Tên danh mục</string>
     <string name="file_error_create">Không thể tạo tập tin tạm cho tải lên media. Hãy chắc chắn có đủ không gian trống trên thiết bị của bạn.</string>
@@ -597,9 +588,7 @@ Language: vi_VN
     <string name="reader_likes_one">Một người thích điều này</string>
     <string name="reader_likes_only_you">Bạn thích điều này</string>
     <string name="reader_toast_err_comment_failed">Không thể đăng bình luận của bạn</string>
-    <string name="reader_toast_err_tag_invalid">Đó không phải một thẻ hợp lệ</string>
     <string name="reader_toast_err_share_intent">Không thể chia sẻ</string>
-    <string name="reader_toast_err_tag_exists">Bạn đã theo dõi thẻ này rồi</string>
     <string name="empty_list_default">Danh sách này trống rỗng</string>
     <string name="reader_untitled_post">(Chưa có tiêu đề)</string>
     <string name="comments_empty_list">Chưa có bình luận</string>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent">
 
     <TextView
+        android:id="@+id/description"
         style="@style/ModalLayoutPickerSubtitle"
         android:text="@string/mlp_choose_layout_subtitle" />
 

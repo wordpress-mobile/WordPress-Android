@@ -11,19 +11,32 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_157"
+msgctxt "release_note_162"
 msgid ""
-"15.7:\n"
-"Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.\n"
+"16.2:\n"
+"Block editor enhancements: We’ve improved the overall performance and speed, which you might notice when you open the editor to create a new post. We’ve also improved the Image block, with better support for uploading multiple images.\n"
 "\n"
-"Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.\n"
+"Other updates and fixes: Your app now uses a new Media Picker when you select files for posts, your site icon, Gravatar, and other places. We also fixed a bug on pure self-hosted sites on HTTP that prevented featured images from displaying in the Posts List.\n"
 "\n"
 msgstr ""
 
-msgctxt "release_note_156"
+msgctxt "release_note_161"
 msgid ""
-"15.6:\n"
-"Block Editor improvements: Added settings for changing column widths to the Column block, added media editing support in the Gallery block, and improved the logic for undo/redo while drafting — enjoy smarter undoing in chunks, instead of undoing a few letters or tiny changes at a time.\n"
+"16.1:\n"
+"* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.\n"
+"\n"
+msgstr ""
+
+msgctxt "release_note_short_162"
+msgid ""
+"16.2:\n"
+"Block editor: We’ve improved the overall performance, which you may notice when you start a new post. The Image block now has better support for uploading multiple images.\n"
+"\n"
+"More updates: Your app uses a new Media Picker when you select files. We also fixed a bug on pure self-hosted sites on HTTP that affected featured images in the Posts List.\n"
+msgstr ""
+
+msgctxt "release_note_short_161"
+msgid ""
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
@@ -111,41 +124,43 @@ msgstr ""
 #. translators: This is a promo message that will be attached on top of the first screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_1"
-msgid ""
-"Enjoy your\n"
-"favorite sites\n"
+msgid "The world’s most popular website builder"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the second screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_2"
-msgid ""
-"Share your ideas\n"
-"with the world\n"
+msgid "Create a site or start a blog"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the third screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_3"
-msgid ""
-"Manage your site\n"
-"everywhere you go\n"
+msgid "Discover new reads"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fourth screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_4"
-msgid ""
-"Get notified\n"
-"in real-time\n"
+msgid "Build an audience"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
 #. No specified characters limit here, but try to keep as short as the source one.
 msgctxt "play_store_screenshot_5"
-msgid ""
-"All the stats\n"
-"in your hand\n"
+msgid "Keep tabs on your site"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_6"
+msgid "Reply in real time"
+msgstr ""
+
+#. translators: This is a promo message that will be attached on top of the fifth screenshot in the Play Store.
+#. No specified characters limit here, but try to keep as short as the source one.
+msgctxt "play_store_screenshot_7"
+msgid "Upload on the go"
 msgstr ""
 
 #. translators: This is a promo message that will be attached on top of an enhanced screenshot in the App Store.
