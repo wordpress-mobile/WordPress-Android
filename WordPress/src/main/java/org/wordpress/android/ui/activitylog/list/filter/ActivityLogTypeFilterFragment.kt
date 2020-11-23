@@ -26,6 +26,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
 
+    override fun getTheme(): Int = R.style.WordPress_FullscreenDialog
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
@@ -40,10 +42,6 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
-    }
-
-    override fun getTheme(): Int {
-        return R.style.WordPress_FullscreenDialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
