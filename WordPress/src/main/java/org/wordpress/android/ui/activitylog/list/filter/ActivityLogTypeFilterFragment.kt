@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -72,23 +71,23 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
             uiHelpers.updateVisibility(recycler_view, uiState.contentVisibility)
             uiHelpers.updateVisibility(progress_layout, uiState.loadingVisibility)
             when (uiState) {
-                FullscreenLoading -> refreshLoadingScreen()
-                is Error -> refreshErrorScreen()
-                is Content -> refreshContentScreen()
+                is FullscreenLoading -> refreshLoadingScreen(uiState)
+                is Error -> refreshErrorScreen(uiState)
+                is Content -> refreshContentScreen(uiState)
             }
         })
         viewModel.start(remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)))
     }
 
-    private fun refreshLoadingScreen() {
+    private fun refreshLoadingScreen(uiState: FullscreenLoading) {
+        uiHelpers.setTextOrHide(progress_text, uiState.loadingText)
+    }
+
+    private fun refreshErrorScreen(uiState: Error) {
         TODO("Not yet implemented")
     }
 
-    private fun refreshErrorScreen() {
-        TODO("Not yet implemented")
-    }
-
-    private fun refreshContentScreen() {
+    private fun refreshContentScreen(uiState: Content) {
         TODO("Not yet implemented")
     }
 

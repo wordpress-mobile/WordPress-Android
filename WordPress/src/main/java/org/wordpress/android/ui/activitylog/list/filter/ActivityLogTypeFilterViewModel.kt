@@ -100,6 +100,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
         object FullscreenLoading : UiState() {
             override val loadingVisibility: Boolean = true
+            val loadingText: UiString = UiStringRes(R.string.loading)
         }
 
         data class Error(val retryAction: Action) : UiState() {
