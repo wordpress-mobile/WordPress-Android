@@ -53,20 +53,20 @@ class ScanRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         scanRestClient = ScanRestClient(
-                wpComGsonRequestBuilder,
-                dispatcher,
-                null,
-                requestQueue,
-                accessToken,
-                userAgent
+            wpComGsonRequestBuilder,
+            dispatcher,
+            null,
+            requestQueue,
+            accessToken,
+            userAgent
         )
     }
 
     @Test
     fun fetchScanState_buildsCorrectRequestUrl() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-daily-scan-with-threat.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-daily-scan-with-threat.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -79,8 +79,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesResponseOnSuccess() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-daily-scan-with-threat.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-daily-scan-with-threat.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -143,8 +143,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesMostRecentStatusForIdleState() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-complete-scan-idle.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-complete-scan-idle.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -160,8 +160,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesEmptyCredentialsWhenServerCredentialsNotSetupForSiteWithScanCapability() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-daily-scan-with-threat-without-server-creds.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-daily-scan-with-threat-without-server-creds.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -177,8 +177,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesEmptyThreatsWhenNoThreatsFoundForSiteWithScanCapability() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-complete-scan-idle.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-complete-scan-idle.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -194,8 +194,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesCurrentProgressStatusForScanningState() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-complete-scanning.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-complete-scanning.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -211,8 +211,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesReasonForScanUnavailableState() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -228,8 +228,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesNullThreatsForScanUnavailableState() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -245,8 +245,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesNullCredentialsForScanUnavailableState() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -271,8 +271,8 @@ class ScanRestClientTest {
     @Test
     fun fetchScanState_dispatchesErrorOnWrongState() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-                this.javaClass,
-                "wp/jetpack/scan/jp-complete-scan-idle.json"
+            this.javaClass,
+            "wp/jetpack/scan/jp-complete-scan-idle.json"
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
 
@@ -303,15 +303,15 @@ class ScanRestClientTest {
         val nonNullData = data ?: mock()
         val response = if (error != null) Response.Error<ScanStateResponse>(error) else Success(nonNullData)
         whenever(
-                wpComGsonRequestBuilder.syncGetRequest(
-                        eq(scanRestClient),
-                        urlCaptor.capture(),
-                        eq(mapOf()),
-                        eq(ScanStateResponse::class.java),
-                        eq(false),
-                        any(),
-                        eq(false)
-                )
+            wpComGsonRequestBuilder.syncGetRequest(
+                eq(scanRestClient),
+                urlCaptor.capture(),
+                eq(mapOf()),
+                eq(ScanStateResponse::class.java),
+                eq(false),
+                any(),
+                eq(false)
+            )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
