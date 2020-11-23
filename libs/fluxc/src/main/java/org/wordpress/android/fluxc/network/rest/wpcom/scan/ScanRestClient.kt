@@ -74,17 +74,18 @@ class ScanRestClient(
                             description = it.description,
                             status = it.status,
                             fixable = Fixable(
-                                    fixer = it.fixable.fixer,
-                                    target = it.fixable.target
+                                    fixer = it.fixable?.fixer,
+                                    target = it.fixable?.target
                             ),
                             extension = Extension(
-                                    type = it.extension.type,
-                                    slug = it.extension.slug,
-                                    name = it.extension.name,
-                                    version = it.extension.version,
-                                    isPremium = it.extension.isPremium
+                                    type = it.extension?.type,
+                                    slug = it.extension?.slug,
+                                    name = it.extension?.name,
+                                    version = it.extension?.version,
+                                    isPremium = it.extension?.isPremium ?: false
                             ),
-                            firstDetected = it.firstDetected
+                            firstDetected = it.firstDetected,
+                            fixedOn = it.fixedOn
                     )
                 },
                 hasCloud = response.hasCloud,
