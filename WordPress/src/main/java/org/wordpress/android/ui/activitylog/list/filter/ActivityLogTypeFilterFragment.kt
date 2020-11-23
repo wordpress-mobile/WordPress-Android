@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,9 @@ import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Error
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
@@ -33,13 +37,6 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(ActivityLogTypeFilterViewModel::class.java)
-        return dialog
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
     }
@@ -48,7 +45,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
         initRecyclerView()
-        viewModel.start(remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)))
+        initViewModel()
     }
 
     private fun initToolbar(view: View) {
@@ -63,6 +60,20 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     private fun initRecyclerView() {
         recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         initAdapter()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(ActivityLogTypeFilterViewModel::class.java)
+
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            when (uiState) {
+                FullscreenLoading -> TODO()
+                is Error -> TODO()
+                is Content -> TODO()
+            }
+        })
+        viewModel.start(remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)))
     }
 
     private fun initAdapter() {
