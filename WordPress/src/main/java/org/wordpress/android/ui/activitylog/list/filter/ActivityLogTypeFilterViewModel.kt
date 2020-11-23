@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.internal.immutableListOf
 import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -40,7 +39,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private fun fetchAvailableActivityTypes() {
         launch {
             // TODO malinjir initiate the fetch
-            onActivityTypesFetched(immutableListOf(DummyActivityType, DummyActivityType, DummyActivityType))
+            onActivityTypesFetched(listOf(DummyActivityType, DummyActivityType, DummyActivityType))
         }
     }
 
