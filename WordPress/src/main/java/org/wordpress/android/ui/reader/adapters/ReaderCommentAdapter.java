@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -43,6 +44,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -414,6 +416,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
                 ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
                 : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
+        AnalyticsUtils.trackCommentActionWithReaderPostDetails(
+                isAskingToLike ? Stat.COMMENT_LIKED : Stat.COMMENT_UNLIKED,
+                AnalyticsCommentActionSource.READER, mPost);
     }
 
     public boolean refreshComment(long commentId) {
