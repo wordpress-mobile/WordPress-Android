@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -25,6 +24,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     @Inject lateinit var uiHelpers: UiHelpers
 
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
+
+    override fun getTheme(): Int = R.style.WordPress_FullscreenDialog
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,10 +43,6 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         return inflater.inflate(R.layout.activity_log_type_filter_fragment, container, false)
     }
 
-    override fun getTheme(): Int {
-        return R.style.WordPress_FullscreenDialog
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
@@ -53,13 +50,12 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun initToolbar(view: View) {
-        val toolbar = view.findViewById(R.id.toolbar_main) as MaterialToolbar
-        toolbar.navigationIcon = ColorUtils.applyTintToDrawable(
-                toolbar.context, R.drawable.ic_close_white_24dp,
-                toolbar.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+        toolbar_main.navigationIcon = ColorUtils.applyTintToDrawable(
+                toolbar_main.context, R.drawable.ic_close_white_24dp,
+                toolbar_main.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
         )
-        toolbar.setNavigationContentDescription(R.string.close_dialog_button_desc)
-        toolbar.setNavigationOnClickListener { dismiss() }
+        toolbar_main.setNavigationContentDescription(R.string.close_dialog_button_desc)
+        toolbar_main.setNavigationOnClickListener { dismiss() }
     }
 
     private fun initRecyclerView() {

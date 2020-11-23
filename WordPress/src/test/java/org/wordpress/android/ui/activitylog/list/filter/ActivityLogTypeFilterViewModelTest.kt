@@ -38,7 +38,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `available activity types fetched, when screen initialized`() = test {
+    fun `available activity types fetched, when screen initialized, when content shown`() = test {
         init()
 
         viewModel.start(0L)
