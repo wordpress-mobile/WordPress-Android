@@ -20,7 +20,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.properties.Delegates
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
     private val dummyActivityTypesProvider: DummyActivityTypesProvider,
