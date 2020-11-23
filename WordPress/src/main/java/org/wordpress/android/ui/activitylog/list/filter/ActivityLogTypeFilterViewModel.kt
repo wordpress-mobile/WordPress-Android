@@ -9,7 +9,6 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
-import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Action
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiString
@@ -99,9 +98,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             override val contentVisibility = true
         }
 
-        data class Action(val label: UiString) {
-            var action: (() -> Unit)? = null
-        }
     }
 
     sealed class ListItemUiState {
@@ -113,6 +109,10 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val title: UiString,
             val checked: Boolean = false
         ) : ListItemUiState()
+    }
+
+    data class Action(val label: UiString) {
+        var action: (() -> Unit)? = null
     }
 
     object DummyActivityType
