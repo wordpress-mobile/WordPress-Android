@@ -109,14 +109,18 @@ class ScanRestClientTest {
                     assertEquals(this.startDate, scanResponse?.mostRecentStatus?.startDate)
                     assertEquals(this.isInitial, scanResponse?.mostRecentStatus?.isInitial)
                 }
-                requireNotNull(this.credentials).forEachIndexed { index, creds ->
+                this.credentials?.forEachIndexed { index, creds ->
                     creds.apply {
                         assertEquals(this.type, scanResponse?.credentials?.get(index)?.type)
                         assertEquals(this.role, scanResponse?.credentials?.get(index)?.role)
+                        assertEquals(this.host, scanResponse?.credentials?.get(index)?.host)
+                        assertEquals(this.port, scanResponse?.credentials?.get(index)?.port)
+                        assertEquals(this.user, scanResponse?.credentials?.get(index)?.user)
+                        assertEquals(this.path, scanResponse?.credentials?.get(index)?.path)
                         assertEquals(this.stillValid, scanResponse?.credentials?.get(index)?.stillValid)
                     }
                 }
-                requireNotNull(this.threats).forEachIndexed { index, threat ->
+                this.threats?.forEachIndexed { index, threat ->
                     threat.apply {
                         assertEquals(this.id, scanResponse?.threats?.get(index)?.id)
                         assertEquals(this.signature, scanResponse?.threats?.get(index)?.signature)
