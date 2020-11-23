@@ -48,7 +48,7 @@
         "key":"pa_size",
         "value":"medium",
         "display_key":"size",
-        "display_value":"Medium"
+        "display_value":"medium"
       }
     ],
     "sku":"blabla",
@@ -79,7 +79,7 @@
         "key":"pa_size",
         "value":"medium",
         "display_key":"size",
-        "display_value":"Medium"
+        "display_value":"medium"
       },
       {
         "id":45560,
@@ -94,6 +94,20 @@
         "value": "1",
         "display_key": "_reduced_stock",
         "display_value": "1"
+      },
+      {
+        "id": 6413,
+        "key": "_other_attribute",
+        "value": "2",
+        "display_key": "_other_attribute",
+        "display_value": "2"
+      },
+      {
+        "display_key": "emptyArray",
+        "display_value": []
+      },
+      {
+        "display_value": []
       }
     ],
     "sku":"woo-vneck-tee",

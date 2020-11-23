@@ -37,6 +37,14 @@ public class ReleaseOkHttpClientModule {
     }
 
     @Provides
+    @Named("no-redirects")
+    public OkHttpClient.Builder provideNoRedirectsOkHttpClientBuilder() {
+        OkHttpClient.Builder builder = provideOkHttpClientBuilder();
+        builder.followRedirects(false);
+        return builder;
+    }
+
+    @Provides
     @Named("custom-ssl")
     public OkHttpClient.Builder provideOkHttpClientBuilderCustomSSL(MemorizingTrustManager memorizingTrustManager) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
