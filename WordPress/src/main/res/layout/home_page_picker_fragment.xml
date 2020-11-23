@@ -39,6 +39,7 @@
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_height"
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:orientation="vertical">
 
                     <include
