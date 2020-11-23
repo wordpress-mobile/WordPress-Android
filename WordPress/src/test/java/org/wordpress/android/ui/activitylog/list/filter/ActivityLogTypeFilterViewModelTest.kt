@@ -33,7 +33,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     fun `fullscreen loading shown, when screen initialized`() = test {
         val uiStates = init().uiStates
 
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         assertThat(uiStates[0]).isInstanceOf(UiState.FullscreenLoading::class.java)
     }
@@ -42,7 +42,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     fun `available activity types fetched, when screen initialized`() = test {
         init()
 
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         verify(dummyActivityTypesProvider).fetchAvailableActivityTypes(anyOrNull())
         verifyNoMoreInteractions(dummyActivityTypesProvider)
@@ -52,7 +52,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     fun `section header gets added as first item in the list`() = test {
         init()
 
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         assertThat((viewModel.uiState.value as UiState.Content).items[0])
                 .isInstanceOf(ListItemUiState.SectionHeader::class.java)
@@ -62,7 +62,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     fun `content shown, when fetch available activity types completes successfully`() = test {
         val uiStates = init(successResponse = true).uiStates
 
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         assertThat(viewModel.uiState.value).isInstanceOf(UiState.Content::class.java)
     }
@@ -71,7 +71,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     fun `fullscreen error shown, when fetch available activity types completes with error`() = test {
         init(successResponse = false)
 
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         assertThat(viewModel.uiState.value).isInstanceOf(UiState.Error::class.java)
     }
@@ -79,7 +79,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Test
     fun `available activity types fetched, when error retry action invoked`() = test {
         init(successResponse = false)
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
 
@@ -89,7 +89,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Test
     fun `content shown, when retry succeeds`() = test {
         init(successResponse = false)
-        viewModel.start(RemoteId(0L))
+        startVM()
         init(successResponse = true)
 
         (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
@@ -102,7 +102,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         val activityTypeCount = 17 // random number
         init(activityTypeCount = activityTypeCount)
 
-        viewModel.start(RemoteId(0L))
+        startVM()
 
         assertThat((viewModel.uiState.value as UiState.Content).items.size).isEqualTo(1 + activityTypeCount)
     }
@@ -122,6 +122,10 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
                         }
                 )
         return Observers((uiStates))
+    }
+
+    private fun startVM() {
+        viewModel.start(RemoteId(0L))
     }
 
     private fun generateActivityTypes(count: Int): List<DummyActivityType> {
