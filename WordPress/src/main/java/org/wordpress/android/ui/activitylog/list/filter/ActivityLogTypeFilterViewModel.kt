@@ -97,7 +97,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : UiState() {
             override val contentVisibility = true
         }
-
     }
 
     sealed class ListItemUiState {
