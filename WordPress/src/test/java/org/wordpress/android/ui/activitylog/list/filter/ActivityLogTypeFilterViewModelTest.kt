@@ -30,8 +30,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `section header gets added as first item in the list`() {
-        val uiStates = initObservers().uiStates
+    fun `section header gets added as first item in the list, when content shown`() {
+        initObservers()
 
         viewModel.start()
 
