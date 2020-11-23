@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
-import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Action
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
@@ -61,9 +60,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val headerListItem = SectionHeader(UiStringText("Test"))
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
-                    .map {
-                        ListItemUiState.ActivityType(title = UiStringText(it.toString()))
-                    }
+                    .map { ListItemUiState.ActivityType(title = UiStringText(it.toString())) }
             Content(
                     listOf(headerListItem) + activityTypeListItems,
                     primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
@@ -83,19 +80,18 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
     private fun onClearClicked() {
         (_uiState.value as? Content)?.let { it ->
-            _uiState.value = it.copy(items = uncheckAllActivityTypeItems(it))
+            _uiState.value = it.copy(items = getAllActivityTypeItemsUnchecked(it.items))
         }
     }
 
-    private fun uncheckAllActivityTypeItems(it: Content): List<ListItemUiState> {
-        return it.items.map { item ->
-            if (item is ListItemUiState.ActivityType) {
-                item.copy(checked = false)
-            } else {
-                item
+    private fun getAllActivityTypeItemsUnchecked(listItemUiStates: List<ListItemUiState>): List<ListItemUiState> =
+            listItemUiStates.map { item ->
+                if (item is ListItemUiState.ActivityType) {
+                    item.copy(checked = false)
+                } else {
+                    item
+                }
             }
-        }
-    }
 
     sealed class UiState {
         open val contentVisibility = false
@@ -117,10 +113,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : UiState() {
             override val contentVisibility = true
         }
-
-        data class Action(val label: UiString) {
-            var action: (() -> Unit)? = null
-        }
     }
 
     sealed class ListItemUiState {
@@ -132,5 +124,9 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val title: UiString,
             val checked: Boolean = false
         ) : ListItemUiState()
+    }
+
+    data class Action(val label: UiString) {
+        var action: (() -> Unit)? = null
     }
 }

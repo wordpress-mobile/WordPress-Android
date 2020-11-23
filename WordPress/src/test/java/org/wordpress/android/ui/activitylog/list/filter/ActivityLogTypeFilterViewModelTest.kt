@@ -3,7 +3,6 @@ package org.wordpress.android.ui.activitylog.list.filter
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -39,17 +38,16 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `available activity types fetched, when screen initialized`() = test {
+    fun `available activity types fetched, when screen initialized, when content shown`() = test {
         init()
 
         startVM()
 
         verify(dummyActivityTypesProvider).fetchAvailableActivityTypes(anyOrNull())
-        verifyNoMoreInteractions(dummyActivityTypesProvider)
     }
 
     @Test
-    fun `section header gets added as first item in the list`() = test {
+    fun `section header gets added as first item in the list, when content shown`() = test {
         init()
 
         startVM()
@@ -60,7 +58,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `content shown, when fetch available activity types completes successfully`() = test {
-        val uiStates = init(successResponse = true).uiStates
+        init(successResponse = true)
 
         startVM()
 
@@ -98,7 +96,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `content contains all fetched activity types`() = test {
+    fun `content contains all fetched activity types, when fetch activity types completes`() = test {
         val activityTypeCount = 17 // random number
         init(activityTypeCount = activityTypeCount)
 
