@@ -64,7 +64,9 @@ class MySiteViewModel @Inject constructor(
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
         } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
-            _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint)))
+            _onSnackbarMessage.value = Event(
+                    SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
+            )
         } else {
             _onTechInputDialogShown.value = Event(
                     TextInputDialogModel(
