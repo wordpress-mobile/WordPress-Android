@@ -37,7 +37,7 @@ class BasicDialogViewModel
     @Parcelize
     data class BasicDialogModel(
         val tag: String,
-        val title: String?,
+        val title: String? = null,
         val message: String,
         val positiveButtonLabel: String,
         val negativeButtonLabel: String? = null,
