@@ -91,7 +91,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun refreshContentScreen(uiState: Content) {
-        TODO("Not yet implemented")
+        (recycler_view.adapter as ActivityLogTypeFilterAdapter).update(uiState.items)
+        // TODO malinjir implement primary and secondary actions
     }
 
     private fun initAdapter() {
