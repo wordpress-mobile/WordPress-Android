@@ -63,11 +63,9 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_buildsCorrectRequestUrl() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-daily-scan-with-threat.json"
-        )
+    fun `fetch scan state builds correct request url`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
 
@@ -77,11 +75,9 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesResponseOnSuccess() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-daily-scan-with-threat.json"
-        )
+    fun `fetch scan state dispatches response on success`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
 
@@ -146,11 +142,8 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesMostRecentStatusForIdleState() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-complete-scan-idle.json"
-        )
+    fun `fetch scan state dispatches most recent status for idle state`() = test {
+        val successResponseJson = UnitTestUtils.getStringFromResourceFile(javaClass, JP_COMPLETE_SCAN_IDLE_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
 
@@ -163,10 +156,10 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesEmptyCredentialsWhenServerCredentialsNotSetupForSiteWithScanCapability() = test {
+    fun `fetch scan state dispatches empty creds when server creds not setup for site with scan capability`() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-daily-scan-with-threat-without-server-creds.json"
+            javaClass,
+            JP_SCAN_DAILY_SCAN_IDLE_WITH_THREAT_WITHOUT_SERVER_CREDS_JSON
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -180,11 +173,9 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesEmptyThreatsWhenNoThreatsFoundForSiteWithScanCapability() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-complete-scan-idle.json"
-        )
+    fun `fetch scan state dispatches empty threats if no threats found for site with scan capability`() = test {
+        val successResponseJson = UnitTestUtils.getStringFromResourceFile(javaClass, JP_COMPLETE_SCAN_IDLE_JSON)
+
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
 
@@ -197,11 +188,8 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesCurrentProgressStatusForScanningState() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-complete-scanning.json"
-        )
+    fun `fetch scan state dispatches current progress status for scanning state`() = test {
+        val successResponseJson = UnitTestUtils.getStringFromResourceFile(javaClass, JP_COMPLETE_SCAN_SCANNING_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
 
@@ -214,44 +202,10 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesReasonForScanUnavailableState() = test {
+    fun `fetch scan state dispatches reason, null threats and creds for scan unavailable state`() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
-        )
-        val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
-        initFetchScanState(scanResponse)
-
-        val payload = scanRestClient.fetchScanState(site)
-
-        with(payload) {
-            assertNotNull(scanStateModel?.reason)
-            assertEquals(scanStateModel?.state, State.UNAVAILABLE)
-        }
-    }
-
-    @Test
-    fun fetchScanState_dispatchesNullThreatsForScanUnavailableState() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
-        )
-        val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
-        initFetchScanState(scanResponse)
-
-        val payload = scanRestClient.fetchScanState(site)
-
-        with(payload) {
-            assertNull(scanStateModel?.threats)
-            assertEquals(scanStateModel?.state, State.UNAVAILABLE)
-        }
-    }
-
-    @Test
-    fun fetchScanState_dispatchesNullCredentialsForScanUnavailableState() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-daily-backup-scan-unavailable.json"
+            javaClass,
+            JP_BACKUP_DAILY_SCAN_UNAVAILABLE_JSON
         )
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
         initFetchScanState(scanResponse)
@@ -260,12 +214,14 @@ class ScanRestClientTest {
 
         with(payload) {
             assertNull(scanStateModel?.credentials)
+            assertNull(scanStateModel?.threats)
+            assertNotNull(scanStateModel?.reason)
             assertEquals(scanStateModel?.state, State.UNAVAILABLE)
         }
     }
 
     @Test
-    fun fetchScanState_dispatchesGenericErrorOnFailure() = test {
+    fun `fetch scan state dispatches generic error on failure`() = test {
         initFetchScanState(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
         val payload = scanRestClient.fetchScanState(site)
@@ -274,11 +230,8 @@ class ScanRestClientTest {
     }
 
     @Test
-    fun fetchScanState_dispatchesErrorOnWrongState() = test {
-        val successResponseJson = UnitTestUtils.getStringFromResourceFile(
-            this.javaClass,
-            "wp/jetpack/scan/jp-complete-scan-idle.json"
-        )
+    fun `fetch scan state dispatches error on wrong state`() = test {
+        val successResponseJson = UnitTestUtils.getStringFromResourceFile(javaClass, JP_COMPLETE_SCAN_IDLE_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
 
         initFetchScanState(scanResponse?.copy(state = "wrong"))
@@ -306,7 +259,7 @@ class ScanRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<ScanStateResponse> {
         val nonNullData = data ?: mock()
-        val response = if (error != null) Response.Error<ScanStateResponse>(error) else Success(nonNullData)
+        val response = if (error != null) Response.Error(error) else Success(nonNullData)
         whenever(
             wpComGsonRequestBuilder.syncGetRequest(
                 eq(scanRestClient),
@@ -320,5 +273,16 @@ class ScanRestClientTest {
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
+    }
+
+    companion object {
+        private const val JP_COMPLETE_SCAN_IDLE_JSON = "wp/jetpack/scan/jp-complete-scan-idle.json"
+        private const val JP_COMPLETE_SCAN_SCANNING_JSON = "wp/jetpack/scan/jp-complete-scan-scanning.json"
+        private const val JP_BACKUP_DAILY_SCAN_UNAVAILABLE_JSON =
+            "wp/jetpack/scan/jp-backup-daily-scan-unavailable.json"
+        private const val JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON =
+            "wp/jetpack/scan/jp-scan-daily-scan-idle-with-threat.json"
+        private const val JP_SCAN_DAILY_SCAN_IDLE_WITH_THREAT_WITHOUT_SERVER_CREDS_JSON =
+            "wp/jetpack/scan/jp-scan-daily-scan-idle-with-threat-without-server-creds.json"
     }
 }
