@@ -11,6 +11,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
+import org.wordpress.android.ui.posts.BasicDialogViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.PrepublishingAddCategoryViewModel;
@@ -425,6 +426,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MySiteViewModel.class)
     abstract ViewModel mySiteViewModel(MySiteViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BasicDialogViewModel.class)
+    abstract ViewModel basicDialogViewModel(BasicDialogViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

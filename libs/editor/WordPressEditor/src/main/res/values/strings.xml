@@ -20,6 +20,10 @@
     <string name="stop_upload_dialog_title">Stop uploading?</string>
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
+    <string name="stop_save_dialog_title">Files saving</string>
+    <string name="stop_save_dialog_message">Please wait until all files have been saved</string>
+    <string name="stop_save_dialog_ok_button">OK</string>
+
     <string name="format_bar_tag_bold" translatable="false">bold</string>
     <string name="format_bar_tag_italic" translatable="false">italic</string>
     <string name="format_bar_tag_blockquote" translatable="false">blockquote</string>

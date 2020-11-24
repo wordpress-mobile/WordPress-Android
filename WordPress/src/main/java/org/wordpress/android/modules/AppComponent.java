@@ -169,6 +169,7 @@ import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsFragment;
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService;
+import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.refresh.StatsActivity;
@@ -190,6 +191,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
+import org.wordpress.android.ui.uploads.MediaUploadReadyProcessor;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
@@ -540,6 +542,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(HomePagePickerFragment object);
 
+    void inject(DesignPreviewFragment object);
+
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
@@ -599,6 +603,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaPickerActivity object);
 
     void inject(MediaPickerFragment object);
+
+    void inject(MediaUploadReadyProcessor object);
 
     void inject(PrepublishingCategoriesFragment object);
 

@@ -199,6 +199,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
         void onAddGifClicked(boolean allowMultipleSelection);
+        void onAddFileClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
@@ -207,6 +208,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
         String getErrorMessageFromMedia(int mediaId);
         void showJetpackSettings();
+        void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId);
+        void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles);
+        void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles);
+        void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
     }
 
     /**
