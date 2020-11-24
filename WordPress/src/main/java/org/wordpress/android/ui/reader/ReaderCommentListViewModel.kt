@@ -22,7 +22,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.NoNetwork
-import org.wordpress.android.ui.reader.views.ReaderFollowButton
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.filter
@@ -47,7 +46,8 @@ class ReaderCommentListViewModel
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateFollowStatus = MediatorLiveData<FollowCommentsState>()
-    val updateFollowUiState: LiveData<FollowCommentsUiState> = _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }.filter { it != Nop }
+    val updateFollowUiState: LiveData<FollowCommentsUiState> =
+            _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }.filter { it != Nop }
 
     private val _scrollTo = MutableLiveData<Event<ScrollPosition>>()
     val scrollTo: LiveData<Event<ScrollPosition>> = _scrollTo.distinct()
@@ -83,9 +83,9 @@ class ReaderCommentListViewModel
             _snackbarEvents.value = event
         }
 
-         _updateFollowStatus.addSource(followCommentsHandler.followStatusUpdate) { event ->
-             _updateFollowStatus.value = event
-         }
+        _updateFollowStatus.addSource(followCommentsHandler.followStatusUpdate) { event ->
+            _updateFollowStatus.value = event
+        }
 
         getFollowConversationStatus(blogId, postId, true)
     }
@@ -106,13 +106,13 @@ class ReaderCommentListViewModel
         }
     }
 
-    private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState) : FollowCommentsUiState {
+    private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowCommentsUiState {
         return if ((followCommentsState is NoNetwork && !followCommentsState.isGetStatus) ||
                 (followCommentsState is Failure && !followCommentsState.isGetStatus)) {
             Nop
         } else {
             UpdateFollowCommentsUiState(
-                    type = when(followCommentsState) {
+                    type = when (followCommentsState) {
                         Loading -> LOADING
                         is FollowStateChanged -> VISIBLE_WITH_STATE
                         is NoNetwork -> DISABLED
@@ -120,9 +120,15 @@ class ReaderCommentListViewModel
                         FollowCommentsNotAllowed -> GONE
                     },
                     showFollowButton = followCommentsState !is FollowCommentsNotAllowed,
-                    isFollowing = if (followCommentsState is FollowStateChanged) followCommentsState.isFollowing else false,
+                    isFollowing = if (followCommentsState is FollowStateChanged)
+                        followCommentsState.isFollowing
+                    else
+                        false,
                     animate = if (followCommentsState is FollowStateChanged) !followCommentsState.isInit else false,
-                    onFollowButtonClick = if (followCommentsState !is FollowCommentsNotAllowed) ::onFollowConversationClicked else null
+                    onFollowButtonClick = if (followCommentsState !is FollowCommentsNotAllowed)
+                        ::onFollowConversationClicked
+                    else
+                        null
             )
         }
     }

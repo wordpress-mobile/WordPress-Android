@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader
 
-import org.wordpress.android.ui.reader.views.ReaderFollowButton
-
 sealed class FollowCommentsUiState {
     data class UpdateFollowCommentsUiState(
         val type: FollowCommentsUiStateType,

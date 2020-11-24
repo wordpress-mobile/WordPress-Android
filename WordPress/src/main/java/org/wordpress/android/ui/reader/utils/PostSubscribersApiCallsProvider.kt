@@ -114,18 +114,24 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         )
     }
 
-    private fun getErrorStringAndLog(functionName: String, blogId: Long, postId: Long, volleyError: VolleyError?): String {
+    private fun getErrorStringAndLog(
+        functionName: String,
+        blogId: Long,
+        postId: Long,
+        volleyError: VolleyError?
+    ): String {
         var error = VolleyUtils.errStringFromVolleyError(volleyError)
         return if (error.isNullOrEmpty()) {
             AppLog.d(
                     T.READER,
-                    "functionName > Failed with empty string [blogId=$blogId - postId=$postId - volleyError = $volleyError]"
+                    "$functionName > Failed with empty string " +
+                            "[blogId=$blogId - postId=$postId - volleyError = $volleyError]"
             )
             contextProvider.getContext().getString(R.string.reader_follow_comments_get_status_error, postId)
         } else {
             AppLog.d(
                     T.READER,
-                    "functionName > Failed [blogId=$blogId - postId=$postId - error = $error]"
+                    "$functionName > Failed [blogId=$blogId - postId=$postId - error = $error]"
             )
             error
         }
@@ -143,7 +149,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
 
     private fun canFollowComments(blogId: Long, json: JSONObject?): PostSubscribersCallResult {
         return json?.let {
-            if (it.has("ID") && it.optLong( "ID", -1) == blogId) {
+            if (it.has("ID") && it.optLong("ID", -1) == blogId) {
                 Success(false)
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))

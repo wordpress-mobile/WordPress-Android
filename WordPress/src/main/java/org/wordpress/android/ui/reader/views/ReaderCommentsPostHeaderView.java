@@ -18,7 +18,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.FollowCommentsUiState.UpdateFollowCommentsUiState;
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;

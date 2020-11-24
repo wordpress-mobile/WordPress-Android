@@ -16,7 +16,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class ReaderCommentsFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider,
+    private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider
 ) {
     suspend fun getMySubscriptionToPost(blogId: Long, postId: Long, isInit: Boolean) = flow {
         emit(FollowCommentsState.Loading)
@@ -35,7 +35,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                     postSubscribersApiCallsProvider.getMySubscriptionToPost(blogId, postId, continuation)
                 }
 
-                when(status) {
+                when (status) {
                     is Success -> {
                         emit(
                                 FollowCommentsState.FollowStateChanged(
@@ -54,7 +54,11 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         }
     }
 
-    suspend fun setMySubscriptionToPost(blogId: Long, postId: Long, subscribe: Boolean) : Flow<FollowCommentsState> = flow {
+    suspend fun setMySubscriptionToPost(
+        blogId: Long,
+        postId: Long,
+        subscribe: Boolean
+    ): Flow<FollowCommentsState> = flow {
         emit(FollowCommentsState.Loading)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -68,7 +72,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                 }
             }
 
-            when(status) {
+            when (status) {
                 is Success -> {
                     emit(
                             FollowCommentsState.FollowStateChanged(

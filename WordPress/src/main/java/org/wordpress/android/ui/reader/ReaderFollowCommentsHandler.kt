@@ -17,18 +17,16 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.NoNetwork
-import org.wordpress.android.ui.reader.views.ReaderFollowButton
 
 class ReaderFollowCommentsHandler @Inject constructor(
     private val readerCommentsFollowUseCase: ReaderCommentsFollowUseCase,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _followStatusUpdate = MediatorLiveData<FollowCommentsState>()
     val followStatusUpdate: LiveData<FollowCommentsState> = _followStatusUpdate
-
 
     suspend fun handleFollowCommentsClicked(blogId: Long, postId: Long, askSubscribe: Boolean) {
         withContext(bgDispatcher) {
@@ -47,7 +45,7 @@ class ReaderFollowCommentsHandler @Inject constructor(
     }
 
     private fun manageState(state: FollowCommentsState) {
-        when(state) {
+        when (state) {
             is FollowStateChanged -> {
                 _followStatusUpdate.postValue(state)
                 state.userMessage?.let {
