@@ -88,56 +88,56 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertEquals(this.site, site)
-            assertNull(this.error)
-            assertNotNull(this.scanStateModel)
-            requireNotNull(this.scanStateModel).apply {
-                assertEquals(this.state, State.fromValue(requireNotNull(scanResponse?.state)))
-                assertEquals(this.hasCloud, requireNotNull(scanResponse?.hasCloud))
-                assertNull(this.reason)
-                assertNotNull(this.credentials)
-                assertNotNull(this.threats)
-                this.mostRecentStatus?.apply {
-                    assertEquals(this.progress, scanResponse?.mostRecentStatus?.progress)
-                    assertEquals(this.startDate, scanResponse?.mostRecentStatus?.startDate)
-                    assertEquals(this.duration, scanResponse?.mostRecentStatus?.duration)
-                    assertEquals(this.error, scanResponse?.mostRecentStatus?.error)
-                    assertEquals(this.isInitial, scanResponse?.mostRecentStatus?.isInitial)
+            assertEquals(site, this@ScanRestClientTest.site)
+            assertNull(error)
+            assertNotNull(scanStateModel)
+            requireNotNull(scanStateModel).apply {
+                assertEquals(state, State.fromValue(requireNotNull(scanResponse?.state)))
+                assertEquals(hasCloud, requireNotNull(scanResponse?.hasCloud))
+                assertNull(reason)
+                assertNotNull(credentials)
+                assertNotNull(threats)
+                mostRecentStatus?.apply {
+                    assertEquals(progress, scanResponse?.mostRecentStatus?.progress)
+                    assertEquals(startDate, scanResponse?.mostRecentStatus?.startDate)
+                    assertEquals(duration, scanResponse?.mostRecentStatus?.duration)
+                    assertEquals(error, scanResponse?.mostRecentStatus?.error)
+                    assertEquals(isInitial, scanResponse?.mostRecentStatus?.isInitial)
                 }
-                this.currentStatus?.apply {
-                    assertEquals(this.progress, scanResponse?.mostRecentStatus?.progress)
-                    assertEquals(this.startDate, scanResponse?.mostRecentStatus?.startDate)
-                    assertEquals(this.isInitial, scanResponse?.mostRecentStatus?.isInitial)
+                currentStatus?.apply {
+                    assertEquals(progress, scanResponse?.mostRecentStatus?.progress)
+                    assertEquals(startDate, scanResponse?.mostRecentStatus?.startDate)
+                    assertEquals(isInitial, scanResponse?.mostRecentStatus?.isInitial)
                 }
-                this.credentials?.forEachIndexed { index, creds ->
+                credentials?.forEachIndexed { index, creds ->
                     creds.apply {
-                        assertEquals(this.type, scanResponse?.credentials?.get(index)?.type)
-                        assertEquals(this.role, scanResponse?.credentials?.get(index)?.role)
-                        assertEquals(this.host, scanResponse?.credentials?.get(index)?.host)
-                        assertEquals(this.port, scanResponse?.credentials?.get(index)?.port)
-                        assertEquals(this.user, scanResponse?.credentials?.get(index)?.user)
-                        assertEquals(this.path, scanResponse?.credentials?.get(index)?.path)
-                        assertEquals(this.stillValid, scanResponse?.credentials?.get(index)?.stillValid)
+                        assertEquals(type, scanResponse?.credentials?.get(index)?.type)
+                        assertEquals(role, scanResponse?.credentials?.get(index)?.role)
+                        assertEquals(host, scanResponse?.credentials?.get(index)?.host)
+                        assertEquals(port, scanResponse?.credentials?.get(index)?.port)
+                        assertEquals(user, scanResponse?.credentials?.get(index)?.user)
+                        assertEquals(path, scanResponse?.credentials?.get(index)?.path)
+                        assertEquals(stillValid, scanResponse?.credentials?.get(index)?.stillValid)
                     }
                 }
-                this.threats?.forEachIndexed { index, threat ->
+                threats?.forEachIndexed { index, threat ->
                     threat.apply {
-                        assertEquals(this.id, scanResponse?.threats?.get(index)?.id)
-                        assertEquals(this.signature, scanResponse?.threats?.get(index)?.signature)
-                        assertEquals(this.description, scanResponse?.threats?.get(index)?.description)
-                        assertEquals(this.status, scanResponse?.threats?.get(index)?.status)
-                        assertEquals(this.firstDetected, scanResponse?.threats?.get(index)?.firstDetected)
-                        assertEquals(this.fixedOn, scanResponse?.threats?.get(index)?.fixedOn)
-                        this.fixable?.apply {
-                            assertEquals(this.fixer, scanResponse?.threats?.get(index)?.fixable?.fixer)
-                            assertEquals(this.target, scanResponse?.threats?.get(index)?.fixable?.target)
+                        assertEquals(id, scanResponse?.threats?.get(index)?.id)
+                        assertEquals(signature, scanResponse?.threats?.get(index)?.signature)
+                        assertEquals(description, scanResponse?.threats?.get(index)?.description)
+                        assertEquals(status, scanResponse?.threats?.get(index)?.status)
+                        assertEquals(firstDetected, scanResponse?.threats?.get(index)?.firstDetected)
+                        assertEquals(fixedOn, scanResponse?.threats?.get(index)?.fixedOn)
+                        fixable?.apply {
+                            assertEquals(fixer, scanResponse?.threats?.get(index)?.fixable?.fixer)
+                            assertEquals(target, scanResponse?.threats?.get(index)?.fixable?.target)
                         }
-                        this.extension?.apply {
-                            assertEquals(this.type, scanResponse?.threats?.get(index)?.extension?.type)
-                            assertEquals(this.slug, scanResponse?.threats?.get(index)?.extension?.slug)
-                            assertEquals(this.name, scanResponse?.threats?.get(index)?.extension?.name)
-                            assertEquals(this.version, scanResponse?.threats?.get(index)?.extension?.version)
-                            assertEquals(this.isPremium, scanResponse?.threats?.get(index)?.extension?.isPremium)
+                        extension?.apply {
+                            assertEquals(type, scanResponse?.threats?.get(index)?.extension?.type)
+                            assertEquals(slug, scanResponse?.threats?.get(index)?.extension?.slug)
+                            assertEquals(name, scanResponse?.threats?.get(index)?.extension?.name)
+                            assertEquals(version, scanResponse?.threats?.get(index)?.extension?.version)
+                            assertEquals(isPremium, scanResponse?.threats?.get(index)?.extension?.isPremium)
                         }
                     }
                 }
@@ -157,8 +157,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertNotNull(this.scanStateModel?.mostRecentStatus)
-            assertEquals(this.scanStateModel?.state, State.IDLE)
+            assertNotNull(scanStateModel?.mostRecentStatus)
+            assertEquals(scanStateModel?.state, State.IDLE)
         }
     }
 
@@ -174,8 +174,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertEquals(this.scanStateModel?.credentials, emptyList<Credentials>())
-            assertEquals(this.scanStateModel?.state, State.IDLE)
+            assertEquals(scanStateModel?.credentials, emptyList<Credentials>())
+            assertEquals(scanStateModel?.state, State.IDLE)
         }
     }
 
@@ -191,8 +191,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertEquals(this.scanStateModel?.threats, emptyList<Threat>())
-            assertEquals(this.scanStateModel?.state, State.IDLE)
+            assertEquals(scanStateModel?.threats, emptyList<Threat>())
+            assertEquals(scanStateModel?.state, State.IDLE)
         }
     }
 
@@ -208,8 +208,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertNotNull(this.scanStateModel?.currentStatus)
-            assertEquals(this.scanStateModel?.state, State.SCANNING)
+            assertNotNull(scanStateModel?.currentStatus)
+            assertEquals(scanStateModel?.state, State.SCANNING)
         }
     }
 
@@ -225,8 +225,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertNotNull(this.scanStateModel?.reason)
-            assertEquals(this.scanStateModel?.state, State.UNAVAILABLE)
+            assertNotNull(scanStateModel?.reason)
+            assertEquals(scanStateModel?.state, State.UNAVAILABLE)
         }
     }
 
@@ -242,8 +242,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertNull(this.scanStateModel?.threats)
-            assertEquals(this.scanStateModel?.state, State.UNAVAILABLE)
+            assertNull(scanStateModel?.threats)
+            assertEquals(scanStateModel?.state, State.UNAVAILABLE)
         }
     }
 
@@ -259,8 +259,8 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchScanState(site)
 
         with(payload) {
-            assertNull(this.scanStateModel?.credentials)
-            assertEquals(this.scanStateModel?.state, State.UNAVAILABLE)
+            assertNull(scanStateModel?.credentials)
+            assertEquals(scanStateModel?.state, State.UNAVAILABLE)
         }
     }
 
@@ -290,9 +290,9 @@ class ScanRestClientTest {
 
     private fun assertEmittedScanStatusError(payload: FetchedScanStatePayload, errorType: ScanStateErrorType) {
         with(payload) {
-            assertEquals(this.site, site)
-            assertTrue(this.isError)
-            assertEquals(errorType, this.error.type)
+            assertEquals(site, this@ScanRestClientTest.site)
+            assertTrue(isError)
+            assertEquals(errorType, error.type)
         }
     }
 
