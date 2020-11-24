@@ -33,7 +33,7 @@ class FileBlockProcessorTest {
     }
 
     @Test
-    fun `processBlock replaces id and url in matching block when id is not first`() {
+    fun `processBlock replaces id and href in matching block when id is not first`() {
         val processedBlock = processor.processBlock(TestContent.oldFileBlockIdNotFirst)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newFileBlockIdNotFirst)
     }
