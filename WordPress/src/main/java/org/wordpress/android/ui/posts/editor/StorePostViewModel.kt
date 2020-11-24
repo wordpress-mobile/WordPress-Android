@@ -7,13 +7,17 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.Subscribe
 import org.wordpress.android.editor.gutenberg.DialogVisibility
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
@@ -37,13 +41,14 @@ private const val MAX_UNSAVED_POSTS = 50
 
 class StorePostViewModel
 @Inject constructor(
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val uiCoroutineDispatcher: CoroutineDispatcher,
     private val siteStore: SiteStore,
     private val postUtils: PostUtilsWrapper,
     private val uploadService: UploadServiceFacade,
     private val savePostToDbUseCase: SavePostToDbUseCase,
-    private val networkUtils: NetworkUtilsWrapper
-) : ScopedViewModel(mainDispatcher), DialogVisibilityProvider {
+    private val networkUtils: NetworkUtilsWrapper,
+    private val dispatcher: Dispatcher
+) : ScopedViewModel(uiCoroutineDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
     private val _onSavePostTriggered = MutableLiveData<Event<Unit>>()
@@ -56,6 +61,15 @@ class StorePostViewModel
         postValue(Hidden)
     }
     override val savingInProgressDialogVisibility: LiveData<DialogVisibility> = _savingProgressDialogVisibility
+
+    init {
+        dispatcher.register(this)
+    }
+
+    override fun onCleared() {
+        dispatcher.unregister(this)
+        super.onCleared()
+    }
 
     fun savePostOnline(
         isFirstTimePublish: Boolean,
@@ -160,17 +174,29 @@ class StorePostViewModel
         return titleChanged || contentChanged
     }
 
-    fun showSaveProgressDialog() {
+    fun showSavingProgressDialog() {
         _savingProgressDialogVisibility.postValue(Showing)
     }
 
-    fun finish(state: ActivityFinishState) {
+    fun hideSavingProgressDialog() {
         _savingProgressDialogVisibility.postValue(Hidden)
+    }
+
+    fun finish(state: ActivityFinishState) {
+        hideSavingProgressDialog()
         _onFinish.postValue(Event(state))
     }
 
-    fun hideSavingDialog() {
-        _savingProgressDialogVisibility.postValue(Hidden)
+    @SuppressWarnings("unused")
+    @Subscribe
+    fun onPostUploaded(event: OnPostUploaded) {
+        hideSavingProgressDialog()
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    fun onPostChanged(event: OnPostChanged) {
+        hideSavingProgressDialog()
     }
 
     sealed class UpdateResult {
