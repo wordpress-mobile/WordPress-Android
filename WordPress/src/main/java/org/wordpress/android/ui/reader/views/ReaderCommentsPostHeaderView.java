@@ -32,7 +32,6 @@ import javax.inject.Inject;
  * topmost view in reader comment adapter - show info about the post
  */
 public class ReaderCommentsPostHeaderView extends LinearLayout {
-    @Inject UiHelpers mUiHelpers;
     @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
 
     public ReaderCommentsPostHeaderView(Context context) {
@@ -47,11 +46,11 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
 
     public ReaderCommentsPostHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
     private void initView(Context context) {
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         inflate(context, R.layout.reader_comments_post_header_view, this);
 
         setBackgroundColor(ColorUtils
