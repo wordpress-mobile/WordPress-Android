@@ -15,7 +15,7 @@ import javax.inject.Inject
 /**
  * Basic dialog fragment with support for 1,2 or 3 buttons.
  */
-internal class BasicDialog : AppCompatDialogFragment() {
+class BasicDialog : AppCompatDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: BasicDialogViewModel
     private lateinit var model: BasicDialogModel

@@ -35,6 +35,7 @@ import com.bumptech.glide.signature.ObjectKey
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
+import org.wordpress.android.networking.MShot
 import org.wordpress.android.util.AppLog
 import java.io.File
 import javax.inject.Inject
@@ -238,6 +239,25 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .applyScaleType(scaleType)
                 .attachRequestListener(requestListener)
                 .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads an [MShot] into an [ImageView] and attaches a [RequestListener].
+     *
+     * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
+     * The loading is handled by [org.wordpress.android.networking.GlideMShotsLoader]
+     */
+    fun loadWithResultListener(view: ImageView, design: MShot, requestListener: RequestListener<Drawable>) {
+        val context = view.context
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .load(design)
+                .addFallback(ImageType.THEME)
+                .addPlaceholder(ImageType.THEME)
+                .applyScaleType(FIT_CENTER)
+                .attachRequestListener(requestListener)
+                .into(view)
                 .clearOnDetach()
     }
 

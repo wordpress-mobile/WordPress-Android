@@ -30,34 +30,52 @@
                             "date": "2016-02-09 16:07:34",
                             "title": "Home",
                             "type": "page",
-                            "views": 12,
-                            "video_play": false
-                        },
-                        {
-                            "id": 0,
-                            "href": "http://infocusphotographers.com/",
-                            "date": null,
-                            "title": "Home page / Archives",
-                            "type": "homepage",
-                            "views": 2,
+                            "views": 403,
                             "video_play": false
                         },
                         {
                             "id": 22,
                             "href": "http://infocusphotographers.com/our-story/",
                             "date": "2016-02-09 17:32:50",
-                            "title": "Our Story",
+                            "title": "Our Services",
                             "type": "page",
-                            "views": 1,
+                            "views": 306,
                             "video_play": false
                         },
                         {
                             "id": 24,
                             "href": "http://infocusphotographers.com/portfolio/",
                             "date": "2016-02-09 17:33:03",
-                            "title": "Portfolio",
+                            "title": "About Us",
                             "type": "page",
-                            "views": 1,
+                            "views": 288,
+                            "video_play": false
+                        },
+                        {
+                            "id": 24,
+                            "href": "http://infocusphotographers.com/portfolio/",
+                            "date": "2016-02-09 17:33:03",
+                            "title": "Contact Us",
+                            "type": "page",
+                            "views": 145,
+                            "video_play": false
+                        },
+                        {
+                            "id": 24,
+                            "href": "http://infocusphotographers.com/portfolio/",
+                            "date": "2016-02-09 17:33:03",
+                            "title": "What to know buying your first home",
+                            "type": "page",
+                            "views": 52,
+                            "video_play": false
+                        },
+                        {
+                            "id": 24,
+                            "href": "http://infocusphotographers.com/portfolio/",
+                            "date": "2016-02-09 17:33:03",
+                            "title": "Staging tips and tricks",
+                            "type": "page",
+                            "views": 39,
                             "video_play": false
                         }
                     ],

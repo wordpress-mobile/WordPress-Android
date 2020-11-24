@@ -11,7 +11,10 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.widgets.MySiteTitleAndSubtitleLabelView
 
-class MySiteInfoViewHolder(parent: ViewGroup, private val imageManager: ImageManager) : MySiteItemViewHolder(parent, R.layout.my_site_info_block) {
+class MySiteInfoViewHolder(parent: ViewGroup, private val imageManager: ImageManager) : MySiteItemViewHolder(
+        parent,
+        R.layout.my_site_info_block
+) {
     private val mySiteBlavatar = itemView.findViewById<ImageView>(R.id.my_site_blavatar)
     private val mySiteIconProgress = itemView.findViewById<ProgressBar>(R.id.my_site_icon_progress)
     private val siteInfoContainer = itemView.findViewById<MySiteTitleAndSubtitleLabelView>(R.id.site_info_container)

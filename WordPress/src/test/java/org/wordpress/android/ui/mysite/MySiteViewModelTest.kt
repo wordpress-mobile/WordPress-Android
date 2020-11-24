@@ -121,7 +121,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+        )
     }
 
     @Test
@@ -132,7 +134,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint)))
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(
+                UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
+        )
     }
 
     @Test
@@ -143,7 +147,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint)))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
+        )
     }
 
     @Test
@@ -198,7 +204,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_change_requires_jetpack_message)))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_change_requires_jetpack_message))
+        )
     }
 
     @Test
@@ -211,7 +219,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_change_requires_permission_message)))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_change_requires_permission_message))
+        )
     }
 
     @Test
@@ -224,7 +234,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(ICON_CLICK)
 
         assertThat(dialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_add_requires_permission_message)))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_add_requires_permission_message))
+        )
     }
 
     @Test
