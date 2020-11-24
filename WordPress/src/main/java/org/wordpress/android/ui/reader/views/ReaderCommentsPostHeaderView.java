@@ -2,26 +2,39 @@ package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.core.graphics.ColorUtils;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.FollowCommentsUiState.UpdateFollowCommentsUiState;
+import org.wordpress.android.ui.reader.FollowCommentsUiStateType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
+
+import javax.inject.Inject;
 
 /**
  * topmost view in reader comment adapter - show info about the post
  */
 public class ReaderCommentsPostHeaderView extends LinearLayout {
+    @Inject UiHelpers mUiHelpers;
+    @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
+
     public ReaderCommentsPostHeaderView(Context context) {
         super(context);
         initView(context);
@@ -34,6 +47,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
 
     public ReaderCommentsPostHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
@@ -45,7 +59,10 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
                         getResources().getInteger(R.integer.selected_list_item_opacity)));
     }
 
-    public void setPost(final ReaderPost post) {
+    public void setPost(
+            final ReaderPost post,
+            final UpdateFollowCommentsUiState followButtonState
+    ) {
         if (post == null) {
             return;
         }
@@ -80,6 +97,55 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         } else {
             avatarUrl = post.getPostAvatarForDisplay(avatarSz);
             ImageManager.getInstance().loadIntoCircle(imgAvatar, ImageType.AVATAR, avatarUrl);
+        }
+
+        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+            setFollowButtonState(followButtonState);
+        }
+    }
+
+    public void setFollowButtonState(@Nullable final UpdateFollowCommentsUiState followButtonState) {
+        if (null == followButtonState) return;
+
+        ReaderFollowButton followCommentsButton = findViewById(R.id.button_follow_comments);
+        ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
+        View skeleton = (View) findViewById(R.id.button_skeleton);
+
+        followCommentsButton.setEnabled(followButtonState.getType() != FollowCommentsUiStateType.DISABLED
+                                        && followButtonState.getType() != FollowCommentsUiStateType.LOADING);
+        followCommentsButton.setSelected(followButtonState.getType() != FollowCommentsUiStateType.DISABLED
+                                        && followButtonState.getType() != FollowCommentsUiStateType.LOADING);
+
+        boolean isContainerVisible = container.getVisibility() == View.VISIBLE;
+        if (isContainerVisible != followButtonState.getShowFollowButton()) {
+            container.setVisibility(followButtonState.getShowFollowButton() ? View.VISIBLE : View.GONE);
+        }
+
+        if (followButtonState.getType() == FollowCommentsUiStateType.LOADING) {
+            if (skeleton.getVisibility() != View.VISIBLE) {
+                skeleton.setVisibility(View.VISIBLE);
+                followCommentsButton.setVisibility(View.GONE);
+                container.showShimmer(true);
+            }
+        } else {
+            skeleton.setVisibility(View.GONE);
+            followCommentsButton.setVisibility(View.VISIBLE);
+            container.hideShimmer();
+        }
+
+        if (followButtonState.getType() == FollowCommentsUiStateType.VISIBLE_WITH_STATE) {
+            if (followButtonState.getAnimate()) {
+                followCommentsButton.setIsFollowedAnimated(followButtonState.isFollowing());
+            } else {
+                followCommentsButton.setIsFollowed(followButtonState.isFollowing());
+            }
+        }
+
+        if (followButtonState.getOnFollowButtonClick() != null) {
+            followCommentsButton.setOnClickListener(
+                    v -> followButtonState.getOnFollowButtonClick().invoke(!followButtonState.isFollowing()));
+        } else {
+            followCommentsButton.setOnClickListener(null);
         }
     }
 }
