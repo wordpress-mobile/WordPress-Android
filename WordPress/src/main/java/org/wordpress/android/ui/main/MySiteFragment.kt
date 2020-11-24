@@ -1025,14 +1025,10 @@ class MySiteFragment : Fragment(),
         }
 
         if (site.isJetpackConnected) {
+            row_label_jetpack.visibility = View.VISIBLE
             row_jetpack_settings.visibility = View.VISIBLE
         } else {
             row_jetpack_settings.visibility = View.GONE
-        }
-
-        if (site.isUsingWpComRestApi) {
-            row_label_jetpack.visibility = View.VISIBLE
-        } else {
             row_label_jetpack.visibility = View.GONE
         }
 
