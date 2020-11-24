@@ -1346,7 +1346,6 @@
     <string name="reader_discover_no_posts_button_text">Follow topics</string>
     <string name="reader_follow_comments_null_response">Null response received</string>
     <string name="reader_follow_comments_bad_format_response">Bad format response received</string>
-    <string name="reader_follow_comments_site_not_found">Could not retrieve site. Follow comments disabled</string>
     <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post: %d</string>
