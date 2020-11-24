@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
@@ -35,8 +36,38 @@ class ActivityLogTypeFilterAdapter(private val uiHelpers: UiHelpers) : Adapter<A
     override fun getItemCount(): Int = items.size
 
     fun update(newItems: List<ListItemUiState>) {
+        val diffResult = DiffUtil.calculateDiff(TypeFilterDiffUtil(items, newItems))
         items.clear()
         items.addAll(newItems)
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    private class TypeFilterDiffUtil(
+        val oldItems: List<ListItemUiState>,
+        val newItems: List<ListItemUiState>
+    ) : DiffUtil.Callback() {
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldItems[oldItemPosition]
+            val newItem = newItems[newItemPosition]
+            if (oldItem::class != newItem::class) {
+                return false
+            }
+            return when (oldItem) {
+                is SectionHeader -> true
+                is ActivityType -> oldItem.title == (newItem as ActivityType).title
+            }
+        }
+
+        override fun getOldListSize(): Int {
+            return oldItems.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newItems.size
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldItems[oldItemPosition] == newItems[newItemPosition]
+        }
     }
 }
