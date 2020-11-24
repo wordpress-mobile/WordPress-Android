@@ -38,3 +38,4 @@ class FileBlockProcessorTest {
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newFileBlockIdNotFirst)
     }
 }
+
