@@ -1032,12 +1032,14 @@ public class ActivityLauncher {
     }
 
     public static void viewJetpackSecuritySettings(Activity activity, SiteModel site) {
+        AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
         Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
     }
 
     public static void viewJetpackSecuritySettingsForResult(Activity activity, SiteModel site) {
+        AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
         Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
