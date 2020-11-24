@@ -42,12 +42,8 @@ class ScanStoreTest {
     @Test
     fun `fetch scan state triggers rest client`() = test {
         val payload = FetchScanStatePayload(siteModel)
-        whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(
-            FetchedScanStatePayload(
-                null,
-                siteModel
-            )
-        )
+        whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(FetchedScanStatePayload(null, siteModel))
+
         val action = ScanActionBuilder.newFetchScanStateAction(payload)
         scanStore.onAction(action)
 
