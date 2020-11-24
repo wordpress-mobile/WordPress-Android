@@ -100,6 +100,23 @@ class FeaturedImageHelper @Inject constructor(
         return EnqueueFeaturedImageResult.SUCCESS
     }
 
+    fun queueFeaturedImageForUpload(
+        localPostId: Int,
+        media: MediaModel
+    ): EnqueueFeaturedImageResult {
+        if (localPostId != EMPTY_LOCAL_POST_ID) {
+            media.localPostId = localPostId
+        } else {
+            AppLog.e(T.MEDIA, "Upload featured image can't be invoked without a valid local post id.")
+            return EnqueueFeaturedImageResult.INVALID_POST_ID
+        }
+        media.markedLocallyAsFeatured = true
+
+        dispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media))
+        startUploadService(media)
+        return EnqueueFeaturedImageResult.SUCCESS
+    }
+
     fun cancelFeaturedImageUpload(
         site: SiteModel,
         post: PostImmutableModel,
@@ -152,8 +169,7 @@ class FeaturedImageHelper @Inject constructor(
                 mediaUri,
                 maxDimen,
                 maxDimen,
-                !siteUtilsWrapper.isPhotonCapable(site),
-                site.isPrivateWPComAtomic
+                siteUtilsWrapper.getAccessibilityInfoFromSite(site)
         )
         return FeaturedImageData(FeaturedImageState.REMOTE_IMAGE_LOADING, photonUrl)
     }

@@ -125,6 +125,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Override
     public void onResume() {
         super.onResume();
+        mAnalyticsListener.emailPasswordFormScreenResumed();
         updatePrimaryButtonEnabledStatus();
 
         // connect to the Service. We'll receive updates via EventBus.

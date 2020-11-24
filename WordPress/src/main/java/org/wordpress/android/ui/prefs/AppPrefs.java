@@ -154,7 +154,8 @@ public class AppPrefs {
         // Need to be done just once for a logged out user
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
 
-        READER_DISCOVER_WELCOME_BANNER_SHOWN
+        READER_DISCOVER_WELCOME_BANNER_SHOWN,
+        MANUAL_FEATURE_CONFIG
     }
 
     /**
@@ -242,6 +243,9 @@ public class AppPrefs {
 
         // used to indicate that we do not need to show the Post List FAB tooltip
         IS_POST_LIST_FAB_TOOLTIP_DISABLED,
+
+        // Used to indicate whether or not the stories intro screen must be shown
+        SHOULD_SHOW_STORIES_INTRO,
     }
 
     private static SharedPreferences prefs() {
@@ -1193,6 +1197,14 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.READER_DISCOVER_WELCOME_BANNER_SHOWN, shown);
     }
 
+    public static void setShouldShowStoriesIntro(boolean shouldShow) {
+        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
+    }
+
+    public static boolean shouldShowStoriesIntro() {
+        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
+    }
+
     public static QuickStartTask getLastSkippedQuickStartTask() {
         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
         if (TextUtils.isEmpty(taskName)) {
@@ -1207,6 +1219,22 @@ public class AppPrefs {
             return;
         }
         setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
+    }
+
+    public static void setManualFeatureConfig(boolean isEnabled, String featureKey) {
+        prefs().edit().putBoolean(getManualFeatureConfigKey(featureKey), isEnabled).apply();
+    }
+
+    public static boolean getManualFeatureConfig(String featureKey) {
+        return prefs().getBoolean(getManualFeatureConfigKey(featureKey), false);
+    }
+
+    public static boolean hasManualFeatureConfig(String featureKey) {
+        return prefs().contains(getManualFeatureConfigKey(featureKey));
+    }
+
+    @NonNull private static String getManualFeatureConfigKey(String featureKey) {
+        return DeletablePrefKey.MANUAL_FEATURE_CONFIG.name() + featureKey;
     }
 
     /*

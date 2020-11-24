@@ -17,4 +17,5 @@ public class StatsConstants {
 
     public static final String ITEM_TYPE_POST = "post";
     public static final String ITEM_TYPE_HOME_PAGE = "homepage";
+    public static final String ITEM_TYPE_ATTACHMENT = "attachment";
 }

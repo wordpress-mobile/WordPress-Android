@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-18 08:54:08+0000
+Translation-Revision-Date: 2020-11-02 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Kami berusaha keras untuk menambahkan banyak blok setiap rilis.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' tidak sepenuhnya didukung</string>
+    <string name="gutenberg_native_help_button">Tombol Bantuan</string>
+    <string name="gutenberg_native_edit_using_web_editor">Edit menggunakan editor web</string>
+    <string name="gutenberg_native_choose_images">Pilih gambar</string>
+    <string name="stories_intro_create_story_post_label">Buat Pos Cerita</string>
+    <string name="stories_intro_description_second">Pos tersebut diterbitkan sebagai pos blog baru pada situs agar audiens Anda tidak ketinggalan hal-hal baru.</string>
+    <string name="stories_intro_title_second">Pos Cerita tidak menghilang</string>
+    <string name="stories_intro_description_first">Kombinasikan foto, video, dan teks untuk membuat pos cerita, yang menarik dan memancing pengunjung Anda untuk mengetuk, yang pasti disukai pengunjung Anda.</string>
+    <string name="stories_intro_title_first">Sekarang cerita tersedia untuk semua orang</string>
+    <string name="stories_intro_image_caption_second">Contoh judul cerita</string>
+    <string name="stories_intro_image_caption_first">Cara membuat pos cerita</string>
+    <string name="stories_intro_main_subtitle">Anda memiliki akses awal e Pos Cerita dan kami ingin Anda mencobanya.</string>
+    <string name="stories_intro_main_title">Memperkenalkan Pos Cerita</string>
+    <string name="mlp_notice_blank_page_created">Halaman kosong dibuat</string>
+    <string name="mlp_notice_page_created">Halaman dibuat</string>
+    <string name="mlp_preview_title">Pratinjau Tata Letak</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s ditolak untuk mengakses foto Anda. Untuk memperbaiki ini, edit perizinan Anda dan aktifkan %2$s dan %3$s.</string>
+    <string name="media_insert_failed">Penyisipan media gagal.</string>
+    <string name="media_insert_failed_with_reason">Penyisipan media gagal: %s</string>
+    <string name="photo_picker_wordpress_media_library">Pilih dari Pustaka Media WordPress</string>
+    <string name="reader_label_toolbar_back">Kembali</string>
+    <string name="reader_discover_empty_button_text">Memulai</string>
+    <string name="reader_discover_empty_title">Ikuti topik untuk menemukan blog baru</string>
+    <string name="reader_post_details_header_by_author_name">Oleh</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">Perujuk ini tidak dapat ditandai sebagai spam</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Hilangkan tanda sebagai Spam</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Tandai sebagai Spam</string>
+    <string name="stats_referrer_popup_menu_open_website">Buka Situs Web</string>
+    <string name="media_uploading_gif_library_photo">Mengunggah media gif</string>
+    <string name="media_uploading_stock_library_photo">Mengunggah media stok</string>
+    <string name="media_uploading_default">Mengunggah media</string>
+    <string name="gutenberg_native_select_item">Pilih item</string>
+    <string name="gutenberg_native_search_or_type_url">Cari atau ketik URL</string>
+    <string name="gutenberg_native_add_this_telephone_link">Tambahkan link telepon ini</string>
+    <string name="gutenberg_native_add_this_link">Tambahkan link ini</string>
+    <string name="gutenberg_native_add_this_email_link">Tambahkan link email ini</string>
+    <string name="suggestion_no_connection">\"Tidak ada koneksi internet.\nSaran tidak tersedia.\"</string>
+    <string name="typeface_label_shrikhand">Tebal</string>
+    <string name="typeface_label_space_mono">Modern</string>
+    <string name="typeface_label_pacifico">Riang</string>
+    <string name="typeface_label_oswald">Kuat</string>
+    <string name="typeface_label_libre_baskerville">Klasik</string>
+    <string name="typeface_label_nunito">Kasual</string>
+    <string name="toast_capture_operation_permission_needed">Anda perlu memberi aplikasi izin untuk merekam audio agar dapat merekam video</string>
+    <string name="mlp_selected_description">%s dipilih</string>
+    <string name="login_get_link_by_email">Dapatkan tautan login lewat email</string>
+    <string name="email_not_registered_wpcom">Hmm, kami tidak dapat menemukan akun WordPress.com yang terhubung dengan alamat email ini.</string>
+    <string name="permission_microphone">Mikrofon</string>
+    <string name="comment_unable_to_show_error">Tidak dapat menampilkan komentar ini</string>
+    <string name="media_browse_for_items">Telusuri item</string>
+    <string name="reader_menu_report_post">Melaporkan Pos Ini</string>
     <string name="gutenberg_native_angle">Sudut</string>
-    <string name="mlp_layout_selected">%s dipilih</string>
     <string name="reader_welcome_banner">Selamat datang di Pembaca. Temukan jutaan blog dengan ujung jari Anda.</string>
     <string name="error_media_xmlrcp_server_error">Terjadi kesalahan server internal</string>
     <string name="error_media_xmlrpc_not_allowed">Tindakan Anda tidak diizinkan</string>
@@ -87,11 +138,11 @@ Language: id
     <string name="mlp_create_page">Buat halaman</string>
     <string name="mlp_create_blank_page">Buat halaman kosong</string>
     <string name="mlp_choose_layout_subtitle">Mulai dengan memilih satu tata letak halaman yang siap digunakan. Atau mulai dengan halaman kosong.</string>
-    <string name="mlp_choose_layout_title">Pilih Tata Letak</string>
     <string name="prepublishing_nudges_story_title_hint">Beri judul pada cerita Anda</string>
     <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Buat pos atau cerita</string>
     <string name="create_post_page_fab_tooltip_stories_enabled">Buat pos, halaman, atau cerita</string>
     <string name="quick_start_dialog_create_new_post_message_short">Ketuk %1$s Buat. %2$s Lalu pilih &lt;b>Pos blog&lt;/b></string>
+    <string name="mlp_choose_layout_title">Pilih tata letak</string>
     <string name="photo_picker_choose_file">Pilih dari perangkat</string>
     <string name="my_site_bottom_sheet_add_story">Pos cerita</string>
     <string name="my_site_icon_dialog_change_requires_jetpack_message">Penyuntingan ikon situs pada situs WordPress hosting sendiri memerlukan plugin Jetpack.</string>
@@ -105,15 +156,13 @@ Language: id
     <string name="gutenberg_native_choose_image_or_video">Pilih gambar atau video</string>
     <string name="gutenberg_native_choose_image">Pilih gambar</string>
     <string name="gutenberg_native_block_removed">Blok dihapus</string>
-    <string name="content_description_logo">Logo WordPress</string>
-    <string name="enter_your_site_address">Masukkan alamat situs Anda</string>
     <string name="continue_with_wpcom">Lanjutkan dengan WordPress.com</string>
     <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
     <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
-    <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi Magic Link untuk membuat akun WordPress.com baru.</string>
+    <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi tautan pendaftaran untuk membuat akun WordPress.com baru.</string>
     <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
-    <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi Magic Link untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
+    <string name="signup_magic_link_message">Kami telah mengirimi Anda email berisi tautan masuk untuk membuat akun WordPress.com baru. Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
     <string name="enter_account_info_for_site">Masukkan informasi akun Anda untuk %1$s.</string>
     <string name="login_or">atau</string>
     <string name="continue_google_button_suffix">Lanjutkan dengan Google</string>
@@ -121,15 +170,13 @@ Language: id
     <string name="login_done">Selesai</string>
     <string name="magic_link_not_seeing_email_message">Tidak melihat emailnya? Periksa folder Email Spam atau Sampah.</string>
     <string name="login_magic_links_sent_label">Periksa email Anda di perangkat ini, dan ketuk tautan dalam email yang Anda terima dari WordPress.com</string>
-    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan ajaib yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi.</string>
+    <string name="login_magic_links_label">Kami akan mengirimkan email berisi tautan yang bisa Anda gunakan untuk login dalam sekejap, tanpa kata sandi.</string>
     <string name="check_email">Periksa email</string>
     <string name="get_started">Memulai</string>
     <string name="enter_email_to_continue_wordpress_com">Masukkan alamat email Anda untuk login atau membuat akun WordPress.com.</string>
     <string name="or_type_your_password">Atau ketik kata sandi Anda</string>
     <string name="create_account">Buat akun</string>
     <string name="send_link_by_email">Kirim tautan lewat email</string>
-    <string name="login_promo_text_unlock_the_power">Kenali kekuatan dari pembuat situs web yang paling andal.</string>
-    <string name="login_promo_title_37_percent">37\% dari situs web dikembangkan dari WordPress.</string>
     <string name="reset_your_password">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
     <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda. Kesan pertama sangat berarti!</string>
@@ -137,7 +184,6 @@ Language: id
     <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b>%1$s&lt;/b> untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
     <string name="gutenberg_native_s_block_options">%s pilihan blok</string>
-    <string name="gutenberg_native_remove_block">Hapus blok</string>
     <string name="gutenberg_native_duplicate_block">Duplikasi blok</string>
     <string name="gutenberg_native_copy_block">Salin blok</string>
     <string name="gutenberg_native_copied_block">Blok disalin</string>
@@ -152,11 +198,9 @@ Language: id
     <string name="error_update_site_title_network">Tidak dapat memperbarui judul situs. Periksa koneksi jaringan Anda dan coba lagi.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Perubahan yang belum disimpan</string>
     <string name="gutenberg_native_open_link_in_a_browser">Buka tautan pada perambah</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigasi ke halaman konten sebelumnya</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigasi untuk mengustomisasi gradien</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Navigasi untuk mengustomisasi pemilih warna</string>
     <string name="gutenberg_native_gradient_type">Jenis Gradasi</string>
-    <string name="gutenberg_native_go_back">Kembali</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ketuk dua kali untuk memilih opsi</string>
     <string name="gutenberg_native_customize_gradient">Kustomisasi Gradasi</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -166,8 +210,6 @@ Language: id
     <string name="menu_content_info">Struktur konten</string>
     <string name="everyone">Setiap Orang</string>
     <string name="me">Saya</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat mengedit blok ini menggunakan web browser perangkat Anda.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">Edit blok di browser web</string>
     <string name="gutenberg_native_dismiss">Tutup</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
     <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
@@ -185,7 +227,6 @@ Language: id
     <string name="prepublishing_nudges_toolbar_title_publish">Tanggal Publikasi</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Pindahkan pos ke Konsep?</string>
     <string name="reader_label_choose_your_interests">Pilih minat Anda</string>
-    <string name="reader_label_discover_follow_tags">Temukan dan ikuti tag yang Anda suka</string>
     <string name="reader_choose_interests_content_description">Pilih minat Anda</string>
     <string name="reader_btn_done">Selesai</string>
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
@@ -385,20 +426,20 @@ Language: id
     <string name="reader_btn_selected_filter_tick_content_description">Terpilih</string>
     <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
-    <string name="reader_title_subs">Kelola Tag &amp; Situs</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Login ke WordPress.com untuk melihat pos terbaru dari tag yang Anda ikuti</string>
+    <string name="reader_title_subs">Kelola Topik &amp; Situs</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Login ke WordPress.com untuk melihat pos terbaru dari situs yang Anda ikuti</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Masuk ke WordPress.com untuk melihat pos terbaru dari topik yang Anda ikuti</string>
     <string name="gutenberg_native_template_preview">Pratinjau Template</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>
     <string name="gutenberg_native_add_to_beginning">Tambahkan ke Awal</string>
     <string name="gutenberg_native_add_block_before">Tambahkan Blok Sebelum</string>
     <string name="gutenberg_native_add_block_after">Tambahkan Blok Setelah</string>
-    <string name="reader_filter_empty_tags_action">Tambahkan tag</string>
     <string name="reader_filter_empty_sites_action">Ikuti situs</string>
-    <string name="reader_filter_empty_tags_list">Anda dapat mengikuti pos dengan subjek tertentu dengan menambahkan tag</string>
     <string name="reader_filter_empty_sites_list">Lihat pos terbaru dari situs yang Anda ikuti</string>
+    <string name="reader_filter_empty_tags_action">Tambahkan topik</string>
+    <string name="reader_filter_empty_tags_list">Anda dapat mengikuti pos dengan subjek tertentu dengan menambahkan topik</string>
     <string name="reader_filter_main_title">Mengikuti</string>
     <string name="reader_filter_cta">Penyaring</string>
     <string name="gutenberg_native_video_caption_s">Keterangan video. %s</string>
@@ -440,7 +481,6 @@ Language: id
     <string name="dialog_confirm_scheduled_post_sync_message">Pos ini akan segera disinkronisasi.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Siap Mensinkronkan?</string>
     <string name="new_site_creation_unavailable_domain">Domain ini tidak tersedia</string>
-    <string name="login_promo_viewpager_content_description">Perkenalan</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">Kami tidak dapat mengakses situs Anda. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
     <string name="login_discovery_error_ssl">Kami tidak dapat mengakses situs Anda karena ada masalah dengan &lt;b>Sertifikat SSL&lt;/b>. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
@@ -460,13 +500,12 @@ Language: id
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="reader_filter_sites_title">Situs</string>
-    <string name="reader_filter_tags_title">Tag</string>
     <string name="reader_save_for_later_display_name">Disimpan</string>
     <string name="reader_discover_display_name">Temukan</string>
     <string name="reader_my_likes_display_name">Suka</string>
     <string name="site_cannot_be_loaded">Kami saat ini tidak dapat memuat data untuk situs Anda. Harap coba lagi nanti</string>
+    <string name="reader_filter_tags_title">Topik</string>
     <string name="gutenberg_native_wordpress_media_library">Pustaka Media WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat menyunting pos ini di web.</string>
     <string name="gutenberg_native_ungroup">Batalkan pengelompokan</string>
     <string name="gutenberg_native_translate">Terjemahan</string>
     <string name="gutenberg_native_title">Judul:</string>
@@ -479,8 +518,6 @@ Language: id
     <string name="gutenberg_native_size">Ukuran</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin judul bilah sisi</string>
     <string name="gutenberg_native_show_section">Tampilkan bagian</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' belum didukung di WordPress untuk iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' belum didukung di WordPress untuk Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Blok ini memiliki konten yang tidak valid</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Kosong</string>
     <string name="gutenberg_native_reset_block">Reset Blok</string>
@@ -503,8 +540,6 @@ Language: id
     <string name="gutenberg_native_move_block_up">Naikkan blok</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Pindahkan balok ke bawah dari baris %1$s ke baris %2$s</string>
     <string name="gutenberg_native_move_block_down">Turunkan blok</string>
-    <string name="gutenberg_native_link_text">Teks tautan</string>
-    <string name="gutenberg_native_link_inserted">Tautan disisipkan</string>
     <string name="gutenberg_native_image_caption_s">Keterangan gambar. %s</string>
     <string name="gutenberg_native_hide_keyboard">Sembunyikan keyboard</string>
     <string name="gutenberg_native_here_is_the_panel_content">Di sini adalah konten panel!</string>
@@ -529,7 +564,6 @@ Language: id
     <string name="gutenberg_native_alt_text">Teks Alt</string>
     <string name="gutenberg_native_add_video">TAMBAHKAN VIDEO</string>
     <string name="gutenberg_native_add_url">Tambahkan URL</string>
-    <string name="gutenberg_native_add_link_text">Tambahkan teks tautan</string>
     <string name="gutenberg_native_add_image_or_video">TAMBAHKAN GAMBAR ATAU VIDEO</string>
     <string name="gutenberg_native_add_image">TAMBAHKAN GAMBAR</string>
     <string name="gutenberg_native_add_block_here">TAMBAHKAN BLOK DI SINI</string>
@@ -1048,10 +1082,10 @@ Language: id
     <string name="quick_start_button_negative_short">Batal</string>
     <string name="quick_start_button_negative">Jangan sekarang</string>
     <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
-    <string name="reader_empty_followed_tags_title">Tidak ada tag yang diikuti</string>
-    <string name="reader_empty_followed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
     <string name="content_description_more">Lainnya</string>
     <string name="quick_start_dialog_browse_themes_message_short">Ketuk %1$s Tema %2$s untuk menemukan tema baru</string>
+    <string name="reader_empty_followed_tags_title">Tidak ada topi yang diikuti</string>
+    <string name="reader_empty_followed_tags_subtitle">Tambahkan topik di sini untuk menemukan pos tentang topik favorit Anda.</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="install_jetpack_retry">Coba lagi</string>
     <string name="jetpack_installation_problem">Ada masalah</string>
@@ -1272,7 +1306,6 @@ Language: id
     <string name="edit_photo_screen_title">Edit Foto</string>
     <string name="share_intent_screen_title">Pilih situs</string>
     <string name="signup_epilogue_screen_title">Akun baru</string>
-    <string name="login_prologue_screen_title">Login</string>
     <string name="login_epilogue_screen_title">Sudah login sebagai</string>
     <string name="person_detail_screen_title">Detail orang</string>
     <string name="media_settings_screen_title">Detail file</string>
@@ -1280,13 +1313,12 @@ Language: id
     <string name="notifications_screen_title">Pemberitahuan</string>
     <string name="reader_screen_title">Pembaca</string>
     <string name="me_section_screen_title">Saya</string>
-    <string name="my_site_section_screen_title">Situs saya</string>
     <string name="notif_settings_screen_title">Pengaturan pemberitahuan</string>
     <string name="help_screen_title">Bantuan dan Dukungan</string>
     <string name="license_screen_title">Lisensi</string>
     <string name="release_notes_screen_title">Catatan rilis</string>
+    <string name="my_site_section_screen_title">Situs Saya</string>
     <string name="signup_epilogue_error_avatar_view">Avatar Anda telah diunggah dan akan tersedia sesaat lagi.</string>
-    <string name="email_not_registered_wpcom">Hmm, kami tidak dapat menemukan akun WordPress.com yang terhubung dengan alamat email ini. Coba tautan di bawah ini untuk login menggunakan alamat situs Anda.</string>
     <string name="permissions_denied_message">Tampaknya Anda mematikan izin wajib untuk fitur ini.&lt;br/>&lt;br/>Untuk mengubahnya, edit izin Anda dan pastikan &lt;strong>%s&lt;/strong> telah aktif.</string>
     <string name="permissions_denied_title">Izin</string>
     <string name="plugin_caption_featured">Andalan</string>
@@ -1351,7 +1383,6 @@ Language: id
     <string name="signup_magic_link_error_button_positive">Coba lagi</string>
     <string name="signup_magic_link_error_button_negative">Tutup</string>
     <string name="signup_epilogue_hint_username">Nama pengguna</string>
-    <string name="signup_epilogue_hint_password_detail">Anda dapat login dengan tautan tanpa kata sandi kapan saja seperti yang Anda lakukan sebelumnya, tetapi Anda juga dapat menyiapkan kata sandi jika ingin.</string>
     <string name="signup_epilogue_hint_password">Kata Sandi (opsional)</string>
     <string name="signup_epilogue_hint_display">Nama Tampilan</string>
     <string name="signup_epilogue_error_button_positive">Coba lagi</string>
@@ -1792,8 +1823,6 @@ Language: id
     <string name="reader_toast_err_already_liked">Anda sudah menyukai komentar itu</string>
     <string name="reader_toast_err_comment_not_found">Komentar tidak ditemukan!</string>
     <string name="reader_toast_err_cannot_like_post">Gagal menyukai pos ini</string>
-    <string name="reader_title_post_detail_wpcom">Pos WordPress.com</string>
-    <string name="reader_title_deeplink">Pembaca WordPress</string>
     <string name="error_notif_q_action_reply">Tak bisa membalas komentar. Silakan coba lagi nanti.</string>
     <string name="error_notif_q_action_approve">Tidak bisa menyetujui komentar. Silakan coba lagi nanti.</string>
     <string name="error_notif_q_action_like">Tidak bisa menyukai komentar. Silakan coba lagi nanti.</string>
@@ -1870,7 +1899,6 @@ Language: id
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
     <string name="reader_empty_search_description">Tidak ada hasil untuk %s dalam bahasa Anda</string>
     <string name="reader_hint_post_search">Cari di WordPress</string>
-    <string name="reader_title_related_post_detail">Pos Terkait</string>
     <string name="preview_screen_links_disabled">Tautan dinonaktifkan pada laman pratinjau</string>
     <string name="send">Kirim</string>
     <string name="user_remove_confirmation_message">Jika Anda menghapus %1$s, pengguna tsb tak bisa mengakses situs ini lagi, tetapi semua konten yang telah dibuat oleh %1$s akan tetap ada di situs ini.\n\nApakah Anda masih ingin menghapus pengguna ini?</string>
@@ -2138,7 +2166,7 @@ Language: id
     <string name="reader_short_like_count_one">1 Suka</string>
     <string name="reader_label_follow_count">%,d pengikut</string>
     <string name="reader_short_like_count_none">Suka</string>
-    <string name="reader_menu_tags">Sunting tag dan situs</string>
+    <string name="reader_menu_tags">Edit topik dan situs</string>
     <string name="reader_title_post_detail">Pos Pembaca</string>
     <string name="notifications_push_summary">Pengaturan pemberitahuan yang muncul di perangkat Anda.</string>
     <string name="notifications_email_summary">Pengaturan pemberitahuan yang dikirim melalui email yang terhubung dengan akun Anda.</string>
@@ -2210,7 +2238,6 @@ Language: id
     <string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
     <string name="error_copy_to_clipboard">Terjadi kesalahan saat menyalin teks ke clipboard</string>
     <string name="reader_label_new_posts">Pos baru</string>
-    <string name="reader_page_recommended_blogs">Situs yang mungkin Anda sukai</string>
     <string name="post_uploading">Mengunggah pos</string>
     <string name="reader_empty_posts_in_blog">Situs ini kosong</string>
     <string name="stats_followers_months">%1$d bulan</string>
@@ -2238,10 +2265,8 @@ Language: id
     <string name="cab_selected">%d terpilih</string>
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
-    <string name="reader_empty_posts_in_tag">Belum ada pos dengan tag ini</string>
     <string name="reader_label_view_original">Lihat artikel asli</string>
     <string name="reader_label_like">Suka</string>
-    <string name="reader_label_liked_by">Disukai oleh</string>
     <string name="reader_label_comments_closed">Komentar ditutup</string>
     <string name="reader_title_photo_viewer">%1$d dari %2$d</string>
     <string name="error_publish_empty_post">Tidak dapat menerbitkan pos kosong</string>
@@ -2258,15 +2283,14 @@ Language: id
     <string name="posts_empty_list">Belum ada pos. Mengapa tidak membuatnya?</string>
     <string name="comment_reply_to_user">Balas ke %s</string>
     <string name="signing_out">Log out…</string>
+    <string name="reader_empty_posts_in_tag">Tidak ada pos dengan topik ini</string>
     <string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
     <string name="reader_toast_err_block_blog">Tidak bisa memblokir situs ini</string>
     <string name="reader_menu_block_blog">Blokir situs ini</string>
     <string name="reader_toast_blog_blocked">Pos dari situs ini tidak akan ditampilkan lagi</string>
     <string name="update_verb">Mutakhirkan</string>
     <string name="schedule_verb">Jadwalkan</string>
-    <string name="reader_page_followed_tags">Tag yang diikuti</string>
     <string name="reader_page_followed_blogs">Situs yang diikuti</string>
-    <string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
     <string name="reader_label_followed_blog">Situs diikuti</string>
     <string name="reader_toast_err_get_blog_info">Tidak dapat menampilkan situs ini</string>
     <string name="reader_toast_err_already_follow_blog">Anda sudah mengikuti situs ini</string>
@@ -2274,6 +2298,8 @@ Language: id
     <string name="reader_toast_err_unfollow_blog">Tidak dapat berhenti mengikuti situs ini</string>
     <string name="reader_empty_recommended_blogs">Tidak ada situs yang disarankan</string>
     <string name="reader_title_blog_preview">Situs Pembaca</string>
+    <string name="reader_page_followed_tags">Topik yang diikuti</string>
+    <string name="reader_hint_add_tag_or_url">Masukkan URL atau topik yang ingin Anda follow</string>
     <string name="help">Bantuan</string>
     <string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
@@ -2345,8 +2371,6 @@ Language: id
     <string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
     <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
     <string name="reader_title_applog">Log aplikasi</string>
-    <string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
-    <string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
     <string name="remove_account">Hapus situs</string>
     <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang.</string>
@@ -2356,6 +2380,8 @@ Language: id
     <string name="file_not_found">Tidak dapat menemukan file yang akan diunggah. Apakah file dihapus atau dipindahkan?</string>
     <string name="delete_post">Hapus pos?</string>
     <string name="delete_page">Hapus halaman?</string>
+    <string name="reader_toast_err_add_tag">Tidak dapat menambahkan topik ini</string>
+    <string name="reader_toast_err_remove_tag">Tidak dapat menghapus topik ini</string>
     <string name="share_link">Bagikan tautan</string>
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
@@ -2377,8 +2403,6 @@ Language: id
     <string name="reader_likes_one">Satu orang menyukai ini</string>
     <string name="reader_likes_only_you">Anda menyukai ini</string>
     <string name="reader_toast_err_comment_failed">Tidak bisa menambahkan komentar anda</string>
-    <string name="reader_toast_err_tag_exists">Anda telah mengikuti tag ini</string>
-    <string name="reader_toast_err_tag_invalid">Tag ini tidak valid</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
@@ -2386,6 +2410,8 @@ Language: id
     <string name="reader_hint_comment_on_comment">Balas komentar…</string>
     <string name="comments_empty_list">Belum ada komentar</string>
     <string name="reader_view_reblog">Reblog</string>
+    <string name="reader_toast_err_tag_exists">Anda telah mengikuti topik ini</string>
+    <string name="reader_toast_err_tag_invalid">Topik tersebut tidak valid</string>
     <string name="themes">Tema</string>
     <string name="media_edit_title_text">Judul</string>
     <string name="media_edit_caption_text">Subjudul</string>

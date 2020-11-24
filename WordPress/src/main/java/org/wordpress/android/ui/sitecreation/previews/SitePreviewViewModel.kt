@@ -134,6 +134,7 @@ class SitePreviewViewModel @Inject constructor(
             siteCreationState.apply {
                 val serviceData = SiteCreationServiceData(
                         segmentId,
+                        siteDesign,
                         urlWithoutScheme
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)

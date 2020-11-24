@@ -26,6 +26,8 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.List;
 
 public class WPActivityUtils {
+    public static final String READER_DEEPLINK_ACTIVITY_ALIAS = "org.wordpress.android.WPComPostReaderActivity";
+
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
 
@@ -151,15 +153,15 @@ public class WPActivityUtils {
         context.startActivity(intent);
     }
 
-    public static void disableComponent(Context context, Class<?> klass) {
+    public static void disableReaderDeeplinks(Context context) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+        pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
-    public static void enableComponent(Context context, Class<?> klass) {
+    public static void enableReaderDeeplinks(Context context) {
         PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(context, klass),
+        pm.setComponentEnabledSetting(new ComponentName(context, READER_DEEPLINK_ACTIVITY_ALIAS),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

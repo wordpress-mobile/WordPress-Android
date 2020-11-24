@@ -26,6 +26,7 @@
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
+        <item name="wpColorLoginPrologueBg">?attr/colorSurface</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
@@ -78,6 +79,11 @@
         <item name="categoriesButtonBackgroundSelected">@color/mlp_categories_button_background_selected_dark</item>
         <item name="mlpDividerColor">@color/mlp_divider_dark</item>
         <item name="categoriesBackground">@color/mlp_categories_background_dark</item>
+
+        <!-- Material Date Range Picker -->
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
+        <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">

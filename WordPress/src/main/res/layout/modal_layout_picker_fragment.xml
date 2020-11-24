@@ -36,28 +36,34 @@
                 android:elevation="0dp"
                 app:layout_collapseMode="pin">
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
+                    android:layout_height="@dimen/toolbar_height"
                     android:orientation="vertical">
 
                     <include
                         layout="@layout/bottom_sheet_handle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/mlp_layouts_handle_margin_bottom" />
+                        android:layout_marginEnd="@dimen/margin_extra_large"
+                        android:layout_gravity="top" />
 
                     <include
                         layout="@layout/modal_layout_picker_titlebar"
                         android:layout_width="match_parent"
+                        android:layout_gravity="center_vertical"
                         android:layout_height="wrap_content" />
 
-                </LinearLayout>
+                </FrameLayout>
 
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <include
+            layout="@layout/modal_layout_picker_categories_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categoriesRecyclerView"
@@ -73,22 +79,33 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <include
+        layout="@layout/modal_layout_picker_layouts_skeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/layoutsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/categoriesBackground"
-        android:layout_marginBottom="@dimen/mlp_layouts_margin_bottom"
+        android:layout_marginBottom="@dimen/toolbar_content_offset"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include
+        layout="@layout/modal_layout_picker_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="?attr/categoriesBackground"
         android:orientation="vertical">
 
         <View

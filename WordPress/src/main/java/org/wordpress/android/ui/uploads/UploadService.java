@@ -205,10 +205,25 @@ public class UploadService extends Service {
             // if this media belongs to some post, register such Post
             registerPostModelsForMedia(mediaList, intent.getBooleanExtra(KEY_SHOULD_RETRY, false));
 
+            ArrayList<MediaModel> toBeUploadedMediaList = new ArrayList<>();
             for (MediaModel media : mediaList) {
+                MediaModel localMedia = mMediaStore.getMediaWithLocalId(media.getId());
+                boolean notUploadedYet = localMedia != null
+                                         && (localMedia.getUploadState() == null
+                                             || MediaUploadState.fromString(localMedia.getUploadState())
+                                                != MediaUploadState.UPLOADED);
+                if (notUploadedYet) {
+                    toBeUploadedMediaList.add(media);
+                }
+            }
+
+            for (MediaModel media : toBeUploadedMediaList) {
                 mMediaUploadHandler.upload(media);
             }
-            mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
+
+            if (!toBeUploadedMediaList.isEmpty()) {
+                mPostUploadNotifier.addMediaInfoToForegroundNotification(toBeUploadedMediaList);
+            }
         }
     }
 
@@ -1055,17 +1070,16 @@ public class UploadService extends Service {
 
     private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
         // get all retriable media ? To retry or not to retry, that is the question
-        List<MediaModel> failedMedia = null;
         List<MediaModel> failedStandAloneMedia = new ArrayList<>();
         if (selectedSite != null) {
-            failedMedia = mMediaStore.getSiteMediaWithState(
+            List<MediaModel> failedMedia = mMediaStore.getSiteMediaWithState(
                     selectedSite, MediaUploadState.FAILED);
-        }
 
-        // only take into account those media items that do not belong to any Post
-        for (MediaModel media : failedMedia) {
-            if (media.getLocalPostId() == 0) {
-                failedStandAloneMedia.add(media);
+            // only take into account those media items that do not belong to any Post
+            for (MediaModel media : failedMedia) {
+                if (media.getLocalPostId() == 0) {
+                    failedStandAloneMedia.add(media);
+                }
             }
         }
 

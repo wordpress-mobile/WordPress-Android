@@ -1,13 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-09-16 14:54:08+0000
+Translation-Revision-Date: 2020-10-29 10:54:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">אנחנו מקדישים מאמץ רב כדי להוסיף עוד בלוקים בכל גרסה.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' לא נתמך באופן מלא</string>
+    <string name="gutenberg_native_help_button">כפתור עזרה</string>
+    <string name="gutenberg_native_edit_using_web_editor">לערוך באמצעות עורך אינטרנט</string>
+    <string name="gutenberg_native_choose_images">לבחור תמונות</string>
+    <string name="stories_intro_create_story_post_label">ליצור פוסט של סטורי</string>
+    <string name="stories_intro_description_second">הם מתפרסמים באתר שלך כפוסט חדש בבלוג, כדי שהקהל שלך אף פעם לא יחמיץ דבר.</string>
+    <string name="stories_intro_title_second">פוסטים של סטורי לא נעלמים לעולם</string>
+    <string name="stories_intro_description_first">אפשר לשלב תמונות, סרטוני וידאו וטקסטים כדי ליצור פוסטים מעניינים של סטורי לתצוגה באמצעות הקשה ולהרשים את הקוראים הסקרנים.</string>
+    <string name="stories_intro_title_first">הסטוריז החדשים מיועדים לכולם</string>
+    <string name="stories_intro_image_caption_second">כותרת סטורי לדוגמה</string>
+    <string name="stories_intro_image_caption_first">כיצד ליצור פוסט של סטורי</string>
+    <string name="stories_intro_main_subtitle">אנו מעניקים לך גישה מוקדמת אל \'פוסטים של סטורי\' ונשמח לראות אותך מתנסה בהם.</string>
+    <string name="stories_intro_main_title">אנו שמחים להציג את האפשרות \'פוסטים של סטורי\'</string>
+    <string name="mlp_notice_blank_page_created">נוצר עמוד ריק</string>
+    <string name="mlp_notice_page_created">העמוד נוצר</string>
+    <string name="mlp_preview_title">תצוגה מקדימה של הפריסה</string>
+    <string name="media_picker_soft_ask_permissions_denied">הגישה של ⁦%1$s⁩ אל תמונות שלך נדחתה. כדי לתקן זאת, יש לערוך את ההרשאות ולהפעיל את ⁦%2$s⁩ ואת ⁦%3$s⁩.</string>
+    <string name="media_insert_failed">הכנסת המדיה נכשלה.</string>
+    <string name="media_insert_failed_with_reason">הכנסת המדיה נכשלה: %s</string>
+    <string name="photo_picker_wordpress_media_library">לבחור מתוך ספריית המדיה של WordPress</string>
+    <string name="reader_label_toolbar_back">חזרה</string>
+    <string name="reader_discover_empty_button_text">מתחילים כאן</string>
+    <string name="reader_discover_empty_title">לעקוב אחר נושאים כדי לגלות בלוגים חדשים</string>
+    <string name="reader_post_details_header_by_author_name">לפי</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">לא ניתן לסמן את מקור ההפניה כזבל</string>
+    <string name="stats_referrer_popup_unmark_as_spam">לבטל את הסימון כתגובת זבל</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">לסמן כתגובת זבל</string>
+    <string name="stats_referrer_popup_menu_open_website">לפתוח אתר אינטרנט</string>
+    <string name="media_uploading_gif_library_photo">מעלה מדיית gif</string>
+    <string name="media_uploading_stock_library_photo">מעלה מדיה ממאגר</string>
+    <string name="media_uploading_default">מעלה מדיה</string>
+    <string name="gutenberg_native_select_item">לבחור פריט</string>
+    <string name="gutenberg_native_search_or_type_url">לחפש או להקליד כתובת URL</string>
+    <string name="gutenberg_native_add_this_telephone_link">להוסיף קישור למספר הטלפון</string>
+    <string name="gutenberg_native_add_this_link">להוסיף את הקישור</string>
+    <string name="gutenberg_native_add_this_email_link">להוסיף את הקישור לאימייל</string>
+    <string name="suggestion_no_connection">\"אין חיבור לאינטרנט.\nההצעות לא זמינות.\"</string>
+    <string name="typeface_label_shrikhand">מודגש</string>
+    <string name="typeface_label_space_mono">מודרני</string>
+    <string name="typeface_label_pacifico">משעשע</string>
+    <string name="typeface_label_oswald">חזק</string>
+    <string name="typeface_label_libre_baskerville">קלאסי</string>
+    <string name="typeface_label_nunito">יומיומי</string>
+    <string name="toast_capture_operation_permission_needed">עליך לתת לאפליקציה הרשאה להקליט אודיו כדי להקליט וידאו</string>
+    <string name="mlp_selected_description">%s נבחר</string>
+    <string name="login_get_link_by_email">לקבל קישור לכניסה באימייל</string>
+    <string name="email_not_registered_wpcom">מצטערים, לא הצלחנו לאתר את חשבון ה-WordPress.com שמקושר לכתובת האימייל הזו.</string>
+    <string name="permission_microphone">מיקרופון</string>
+    <string name="comment_unable_to_show_error">לא ניתן להציג תגובה זו</string>
+    <string name="media_browse_for_items">לחפש פריטים</string>
+    <string name="reader_menu_report_post">דיווח על פוסט זה</string>
     <string name="gutenberg_native_angle">זווית</string>
-    <string name="mlp_layout_selected">%s נבחר</string>
     <string name="reader_welcome_banner">ברוכים הבאים ל-Reader. גישה מהירה למיליוני בלוגים.</string>
     <string name="error_media_xmlrcp_server_error">אירעה שגיאת שרת פנימית</string>
     <string name="error_media_xmlrpc_not_allowed">הפעולה שביצעת לא מותרת</string>
@@ -87,7 +138,7 @@ Language: he_IL
     <string name="mlp_create_page">ליצור עמוד</string>
     <string name="mlp_create_blank_page">ליצור עמוד ריק</string>
     <string name="mlp_choose_layout_subtitle">ניתן להתחיל באמצעות בחירה ממגוון רחב של פריסות עמוד שהוכנו מראש. או פשוט להתחיל מעמוד ריק.</string>
-    <string name="mlp_choose_layout_title">לבחור את הפריסה</string>
+    <string name="mlp_choose_layout_title">יש לבחור פריסה</string>
     <string name="prepublishing_nudges_story_title_hint">להגדיר שם לסטורי</string>
     <string name="quick_start_dialog_create_new_post_message_short">יש להקיש על ⁦%1$s⁩ כדי ליצור. ⁦%2$s⁩ לאחר מכן, יש לבחור &lt;b>פוסט בבלוג&lt;/b></string>
     <string name="photo_picker_choose_file">לבחור מהמכשיר</string>
@@ -103,15 +154,13 @@ Language: he_IL
     <string name="gutenberg_native_choose_image_or_video">לבחור תמונה או וידאו</string>
     <string name="gutenberg_native_choose_image">לבחור תמונה</string>
     <string name="gutenberg_native_block_removed">הבלוק הוסר</string>
-    <string name="content_description_logo">הלוגו של WordPress</string>
-    <string name="enter_your_site_address">יש להזין את כתובת האתר שלך</string>
     <string name="continue_with_wpcom">להמשיך עם WordPress.com</string>
     <string name="signup_confirmation_title">אישור הרשמה</string>
     <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
     <string name="continue_terms_of_service_text">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
-    <string name="signup_confirmation_magic_link_message">נשלח אליך אימייל עם קישור ישיר כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
+    <string name="signup_confirmation_magic_link_message">נשלח אליך אימייל עם קישור להרשמה כדי ליצור את חשבון חדש ב-WordPress.com.</string>
     <string name="signup_confirmation_message">אנחנו נשתמש בכתובת האימייל הזאת כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
-    <string name="signup_magic_link_message">שלחנו אליך אימייל עם קישור ישיר כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
+    <string name="signup_magic_link_message">שלחנו אליך אימייל עם קישור להרשמה כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
     <string name="enter_account_info_for_site">להזין את פרטי החשבון שלך ב-⁦%1$s⁩.</string>
     <string name="login_or">או</string>
     <string name="continue_google_button_suffix">להמשיך עם Google</string>
@@ -119,22 +168,19 @@ Language: he_IL
     <string name="login_done">בוצע</string>
     <string name="magic_link_not_seeing_email_message">לא רואה את האימייל? כדאי לבדוק בתיבת הספאם או דואר הזבל.</string>
     <string name="login_magic_links_sent_label">עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
-    <string name="login_magic_links_label">נשלח לך קישור מיוחד להתחברות מיידית, ללא צורך בסיסמה.</string>
+    <string name="login_magic_links_label">נשלח לך קישור להתחברות מיידית, ללא צורך בסיסמה.</string>
     <string name="check_email">יש לבדוק את האימייל</string>
     <string name="get_started">מתחילים כאן</string>
     <string name="enter_email_to_continue_wordpress_com">יש להזין את כתובת האימייל שלך כדי להתחבר או ליצור חשבון ב-WordPress.com.</string>
     <string name="or_type_your_password">או להקליד את הסיסמה שלך</string>
     <string name="create_account">ליצור חשבון</string>
     <string name="send_link_by_email">לשלוח את הקישור באימייל</string>
-    <string name="login_promo_text_unlock_the_power">לעבוד עם בונה האתרים הכי הגמיש שיש.</string>
-    <string name="login_promo_title_37_percent">37\% מהאתרים ברשת בנויים על הפלטפורמה של WordPress.</string>
     <string name="reset_your_password">יש לאפס את הסיסמה שלך</string>
     <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו. הרושם הראשוני חשוב!</string>
     <string name="quick_start_list_update_site_title_title">להגדיר את שם האתר שלך</string>
     <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b>⁦%1$s⁩&lt;/b> כדי להגדיר שם חדש</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
     <string name="gutenberg_native_s_block_options">%s אפשרויות הבלוק</string>
-    <string name="gutenberg_native_remove_block">להסיר בלוק</string>
     <string name="gutenberg_native_duplicate_block">לשכפל בלוק</string>
     <string name="gutenberg_native_copy_block">להעתיק בלוק</string>
     <string name="gutenberg_native_copied_block">הבלוק הועתק</string>
@@ -149,11 +195,9 @@ Language: he_IL
     <string name="error_update_site_title_network">לא ניתן היה לעדכן את שם האתר. יש לבדוק את החיבור לרשת ולנסות שוב.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">שינויים שלא נשמרו</string>
     <string name="gutenberg_native_open_link_in_a_browser">לפתוח את הקישור בדפדפן</string>
-    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">הפעולה מנווטת אל גיליון התוכן הקודם</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">הפעולה מנווטת אל האפשרות להתאים את מעבר הצבע</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">הפעולה מנווטת אל בורר הצבע המותאם</string>
     <string name="gutenberg_native_gradient_type">סוג מעבר צבע</string>
-    <string name="gutenberg_native_go_back">חזרה</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">יש להקיש פעמיים כדי לבחור את האפשרות</string>
     <string name="gutenberg_native_customize_gradient">להתאים אישית את מעבר הצבע</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
@@ -163,8 +207,6 @@ Language: he_IL
     <string name="menu_content_info">מבנה התוכן</string>
     <string name="everyone">כולם</string>
     <string name="me">אני</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">אנחנו משתדלים להוסיף עוד בלוקים בכל גרסה שמתפרסמת. בינתיים, אפשר גם לערוך את הבלוק הזה באמצעות הדפדפן במכשיר שלך.</string>
-    <string name="gutenberg_native_edit_block_in_web_browser">לערוך את הבלוק בדפדפן הרשת</string>
     <string name="gutenberg_native_dismiss">ביטול</string>
     <string name="prepublishing_nudges_home_tags_not_set">לא הוגדר</string>
     <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט.</string>
@@ -182,7 +224,6 @@ Language: he_IL
     <string name="post_list_move_trashed_post_to_draft_dialog_message">לא ניתן לערוך פוסטים שהועברו לפח. האם ברצונך לשנות את המצב של הפוסט ל\'טיוטה\' כדי לערוך אותו?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">האם להעביר את הפוסט ל\'טיוטות\'?</string>
     <string name="reader_label_choose_your_interests">לבחור את תחומי העניין שלך</string>
-    <string name="reader_label_discover_follow_tags">לגלות תגיות שימצאו חן בעינייך ולעקוב אחריהן</string>
     <string name="reader_choose_interests_content_description">לבחור את תחומי העניין שלך</string>
     <string name="reader_btn_done">סיימתי</string>
     <string name="reader_btn_select_few_interests">יש לבחור מספר אפשרויות כדי להמשיך</string>
@@ -382,9 +423,9 @@ Language: he_IL
     <string name="reader_btn_selected_filter_tick_content_description">נבחר</string>
     <string name="reader_btn_select_filter_content_description">לבחור אתר או תגית כדי לסנן את הפוסטים</string>
     <string name="reader_btn_remove_filter_content_description">להסיר את המסנן הנוכחי</string>
-    <string name="reader_title_subs">לנהל תגיות ואתרים</string>
+    <string name="reader_title_subs">לנהל נושאים ואתרים</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">התחברות ל-WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים מתגיות שבמעקב אצלך</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים בנושאים שבחרת לעקוב אחריהם</string>
     <string name="reader_filter_self_hosted_empty_sites_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים מאתרים שבמעקב אצלך</string>
     <string name="gutenberg_native_template_preview">תצוגה מקדימה של תבנית</string>
     <string name="gutenberg_native_replace_current_block">יש להחליף את הבלוק הנוכחי</string>
@@ -392,9 +433,9 @@ Language: he_IL
     <string name="gutenberg_native_add_to_beginning">הוספה להתחלה</string>
     <string name="gutenberg_native_add_block_before">הוספת בלוק לפני</string>
     <string name="gutenberg_native_add_block_after">הוספת בלוק לאחר</string>
-    <string name="reader_filter_empty_tags_action">הוספת תגית</string>
+    <string name="reader_filter_empty_tags_action">להוסיף נושא</string>
     <string name="reader_filter_empty_sites_action">מעקב אחר אתר</string>
-    <string name="reader_filter_empty_tags_list">אפשר לעקוב אחר פוסטים לגבי נושא מסוים על ידי הוספת תגית</string>
+    <string name="reader_filter_empty_tags_list">אפשר לעקוב אחר פוסטים בנושא מסוים על ידי הוספת נושא</string>
     <string name="reader_filter_empty_sites_list">ניתן לראות את הפוסטים החדשים ביותר מהאתרים שבחרת לעקוב אחריהם</string>
     <string name="reader_filter_main_title">מעקב</string>
     <string name="reader_filter_cta">מסנן</string>
@@ -437,7 +478,6 @@ Language: he_IL
     <string name="dialog_confirm_scheduled_post_sync_message">הפוסט הנוכחי יסונכרן באופן מיידי.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">הכול מוכן לסנכרון?</string>
     <string name="new_site_creation_unavailable_domain">הדומיין לא זמין</string>
-    <string name="login_promo_viewpager_content_description">הקדמה</string>
     <string name="negative_prefix">-%s</string>
     <string name="login_discovery_error_generic">לא הייתה לנו אפשרות לגשת לאתר שלך. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
     <string name="login_discovery_error_ssl">לא הייתה לנו אפשרות לגשת לאתר שלך עקב בעיה &lt;b>בתעודת SSL&lt;/b>. עליך ליצור קשר עם חברת האחסון שלך כדי לפתור את הבעיה.</string>
@@ -452,7 +492,7 @@ Language: he_IL
     <string name="reader_my_likes_display_name">לייקים</string>
     <string name="reader_discover_display_name">היכרות</string>
     <string name="reader_save_for_later_display_name">נשמר</string>
-    <string name="reader_filter_tags_title">תגיות</string>
+    <string name="reader_filter_tags_title">נושאים</string>
     <string name="reader_filter_sites_title">אתרים</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -475,8 +515,6 @@ Language: he_IL
     <string name="gutenberg_native_size">גודל</string>
     <string name="gutenberg_native_sidebar_title_plugin">תוסף לכותרת הסרגל הצדי</string>
     <string name="gutenberg_native_show_section">להציג את המקטע</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">הפריט \'%s\' עדיין לא נתמך ב-WordPress למערכת iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">הפריט \'%s\' עדיין לא נתמך ב-WordPress למערכת Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">הבלוק %s. בלוק זה כולל תוכן לא חוקי</string>
     <string name="gutenberg_native_s_block_empty">הבלוק %s. ריק</string>
     <string name="gutenberg_native_cut_block">לחתוך את הבלוק</string>
@@ -499,8 +537,6 @@ Language: he_IL
     <string name="gutenberg_native_move_block_up">להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">להזיז את הבלוק למטה משורה %1$s לשורה %2$s</string>
     <string name="gutenberg_native_move_block_down">להזיז את הבלוק למטה</string>
-    <string name="gutenberg_native_link_text">טקסט לקישור</string>
-    <string name="gutenberg_native_link_inserted">הקישור הוכנס</string>
     <string name="gutenberg_native_image_caption_s">כיתוב התמונה. %s</string>
     <string name="gutenberg_native_hide_keyboard">הסתרת מקלדת</string>
     <string name="gutenberg_native_here_is_the_panel_content">זהו התוכן של החלונית!</string>
@@ -525,7 +561,6 @@ Language: he_IL
     <string name="gutenberg_native_alt_text">טקסט חלופי</string>
     <string name="gutenberg_native_add_video">להוסיף וידאו</string>
     <string name="gutenberg_native_add_url">הוספת כתובת URL</string>
-    <string name="gutenberg_native_add_link_text">להוסיף טקסט לקישור</string>
     <string name="gutenberg_native_add_image_or_video">להוסיף תמונה או וידאו</string>
     <string name="gutenberg_native_add_image">להוסיף תמונה</string>
     <string name="gutenberg_native_add_block_here">להוסיף בלוק כאן</string>
@@ -1043,8 +1078,8 @@ Language: he_IL
     <string name="quick_start_button_negative">לא עכשיו</string>
     <string name="content_description_more">עוד</string>
     <string name="my_site_create_new_site_title">אין לך עוד אתרים</string>
-    <string name="reader_empty_followed_tags_title">אין תגיות במעקב</string>
-    <string name="reader_empty_followed_tags_subtitle">ניתן להוסיף כאן תגיות כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
+    <string name="reader_empty_followed_tags_title">אין נושאים במעקב</string>
+    <string name="reader_empty_followed_tags_subtitle">אפשר להוסיף כאן נושאים כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="install_jetpack_retry">יש לנסות שנית</string>
     <string name="install_jetpack_continue">הגדר</string>
@@ -1265,7 +1300,6 @@ Language: he_IL
     <string name="edit_photo_screen_title">עריכת תמונה</string>
     <string name="share_intent_screen_title">בחר אתר</string>
     <string name="signup_epilogue_screen_title">חשבון חדש</string>
-    <string name="login_prologue_screen_title">כניסה</string>
     <string name="login_epilogue_screen_title">מחובר בתור</string>
     <string name="person_detail_screen_title">פרטי המשתמש</string>
     <string name="media_settings_screen_title">פרטי הקובץ</string>
@@ -1273,13 +1307,11 @@ Language: he_IL
     <string name="notifications_screen_title">הודעות</string>
     <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">אני</string>
-    <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
     <string name="help_screen_title">עזרה ותמיכה</string>
     <string name="license_screen_title">רישיון</string>
     <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
     <string name="signup_epilogue_error_avatar_view">תמונת הפרופיל שלך הועלתה ותהיה זמינה בקרוב.</string>
-    <string name="email_not_registered_wpcom">מצטערים, לא הצלחנו לאתר את חשבון ה-WordPress.com שמקושר לכתובת האימייל הזו. מומלץ לנסות את הקישור למטה כדי להתחבר באמצעות כתובת האתר שלך.</string>
     <string name="permissions_denied_message">נראה שהשבתת את פעילות ההרשאות שנדרשות לתכונה זו.&lt;br/>&lt;br/>כדי לשנות זאת, יש לערוך את ההרשאות שלך ולוודא שהפעלת את &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">הרשאות</string>
     <string name="plugin_caption_featured">תוספים מרכזיים</string>
@@ -1345,7 +1377,7 @@ Language: he_IL
     <string name="signup_magic_link_error_button_negative">סגור</string>
     <string name="signup_magic_link_error">אירעה תקלה בשליחת האימייל. אפשר לנסות שוב עכשיו או לסגור ולנסות שוב מאוחר יותר.</string>
     <string name="signup_epilogue_hint_username">שם משתמש</string>
-    <string name="signup_epilogue_hint_password_detail">אפשר תמיד להתחבר באמצעות קישור ישיר, כמו הקישור שבו השתמשת כעת, אבל באפשרותך גם להגדיר סיסמה לבחירתך.</string>
+    <string name="signup_epilogue_hint_password_detail">אפשר תמיד להתחבר באמצעות קישור, כמו הקישור שבו השתמשת כעת, אבל באפשרותך גם להגדיר סיסמה לבחירתך.</string>
     <string name="signup_epilogue_hint_password">סיסמה (לא חובה)</string>
     <string name="signup_epilogue_hint_display">שם תצוגה</string>
     <string name="signup_epilogue_error_button_positive">יש לנסות שנית</string>
@@ -1784,8 +1816,6 @@ Language: he_IL
     <string name="reader_toast_err_already_liked">כבר סימנת לייק לתגובה הזו</string>
     <string name="reader_toast_err_comment_not_found">תגובה לא נמצאה!</string>
     <string name="reader_toast_err_cannot_like_post">אי אפשר לסמן לייק לפוסט זה</string>
-    <string name="reader_title_post_detail_wpcom">פוסט ב-WordPress.com</string>
-    <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="error_notif_q_action_reply">לא ניתן להגיב לתגובה. נא לנסות שנית מאוחר יותר.</string>
     <string name="error_notif_q_action_approve">לא ניתן לאשר תגובה. נא לנסות שנית מאוחר יותר.</string>
     <string name="error_notif_q_action_like">אי אפשר היה לסמן לייק לתגובה. יש לנסות שוב מאוחר יותר.</string>
@@ -1862,7 +1892,6 @@ Language: he_IL
     <string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
     <string name="reader_empty_search_description">לא נמצאו תוצאות עבור %s בשפה שבחרת</string>
     <string name="reader_hint_post_search">חיפוש ב-WordPress.com</string>
-    <string name="reader_title_related_post_detail">באותו נושא</string>
     <string name="preview_screen_links_disabled">קישורים מושבתים במסך התצוגה המקדימה</string>
     <string name="send">שלח</string>
     <string name="person_removed">הסרת בהצלחה את @%1$s</string>
@@ -2129,7 +2158,7 @@ Language: he_IL
     <string name="reader_short_like_count_multi">%s לייקים</string>
     <string name="reader_short_like_count_one">לייק אחד</string>
     <string name="reader_short_like_count_none">לייק</string>
-    <string name="reader_menu_tags">עריכת תגיות ואתרים</string>
+    <string name="reader_menu_tags">לערוך נושאים ואתרים</string>
     <string name="reader_title_post_detail">פוסט</string>
     <string name="notifications_push_summary">הגדרת התראות יוצגו במכשיר שלך. </string>
     <string name="notifications_email_summary">הגדרת התראות שישלחו לאימייל של בעל האתר.</string>
@@ -2201,7 +2230,6 @@ Language: he_IL
     <string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה-clipboard</string>
     <string name="reader_empty_posts_in_blog">האתר הזה ריק</string>
     <string name="reader_label_new_posts">פוסטים חדשים</string>
-    <string name="reader_page_recommended_blogs">אתרים מומלצים עבורך </string>
     <string name="error_copy_to_clipboard">אירעה שגיאה בעת העתקת הטקסט אל ה-clipboard</string>
     <string name="post_uploading">מעלה פוסט</string>
     <string name="stats_followers_years">%1$d שנים</string>
@@ -2229,8 +2257,7 @@ Language: he_IL
     <string name="cab_selected">%d נבחרו</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_empty_comments">אין תגובות עדיין</string>
-    <string name="reader_empty_posts_in_tag">אין פוסטים עם התגית הזו</string>
-    <string name="reader_label_liked_by">קיבל לייקים מאת</string>
+    <string name="reader_empty_posts_in_tag">אין פוסטים עם נושא זה</string>
     <string name="reader_label_like">לייק</string>
     <string name="reader_label_view_original">לצפות בפוסט המקורי</string>
     <string name="reader_label_comments_closed">תגובות לא מופעלות</string>
@@ -2261,9 +2288,9 @@ Language: he_IL
     <string name="reader_toast_err_already_follow_blog">אתר זה כבר במעקב שלך</string>
     <string name="reader_toast_err_get_blog_info">לא ניתן להציג אתר זה</string>
     <string name="reader_label_followed_blog">האתר נעקב</string>
-    <string name="reader_hint_add_tag_or_url">הזן תגית או כתובת אתר למעקב</string>
+    <string name="reader_hint_add_tag_or_url">יש להזין כתובת URL או נושא למעקב</string>
     <string name="reader_page_followed_blogs">אתרים במעקב</string>
-    <string name="reader_page_followed_tags">תגיות במעקב</string>
+    <string name="reader_page_followed_tags">נושאים במעקב</string>
     <string name="reader_title_blog_preview">אתר</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>
@@ -2291,8 +2318,8 @@ Language: he_IL
     <string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
     <string name="gallery_error">לא ניתן היה לאחזר את פריט המדיה</string>
     <string name="no_network_message">אין רשת זמינה</string>
-    <string name="reader_toast_err_remove_tag">לא ניתן להסיר תגית זו</string>
-    <string name="reader_toast_err_add_tag">לא ניתן להוסיף תגית זו</string>
+    <string name="reader_toast_err_remove_tag">לא ניתן להסיר נושא זה</string>
+    <string name="reader_toast_err_add_tag">לא ניתן להוסיף נושא זה</string>
     <string name="reader_title_applog">יומן יישום</string>
     <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
     <string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>
@@ -2362,8 +2389,8 @@ Language: he_IL
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_share_intent">לא ניתן לשתף</string>
-    <string name="reader_toast_err_tag_invalid">זו לא תגית תקפה</string>
-    <string name="reader_toast_err_tag_exists">אתה כבר עוקב אחר תגית זו</string>
+    <string name="reader_toast_err_tag_invalid">נושא זה אינו תקף</string>
+    <string name="reader_toast_err_tag_exists">כבר בחרת לעקוב אחר נושא זה</string>
     <string name="reader_toast_err_comment_failed">לא ניתן לפרסם את תגובתך</string>
     <string name="reader_likes_only_you">אתה אוהב את זה</string>
     <string name="reader_likes_one">אדם אחד אוהב את זה</string>

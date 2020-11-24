@@ -1,34 +1,51 @@
 package org.wordpress.android.ui.stories
 
 import com.google.gson.Gson
+import com.wordpress.stories.compose.frame.FrameIndex
+import com.wordpress.stories.compose.story.StoryFrameItem
+import com.wordpress.stories.compose.story.StoryIndex
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
-class SaveStoryGutenbergBlockUseCase @Inject constructor() {
+class SaveStoryGutenbergBlockUseCase @Inject constructor(
+    private val storiesPrefs: StoriesPrefs
+) {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
-        mediaFiles: Map<String, MediaFile>
+        mediaFiles: ArrayList<MediaFile>
     ) {
-        val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
-        for (entry in mediaFiles.entries) {
-            jsonArrayMediaFiles.add(buildMediaFileData(entry.value))
-        }
-
-        val storyBlock = StoryBlockData(mediaFiles = jsonArrayMediaFiles)
-
         editPostRepository.update { postModel: PostModel ->
-            postModel.setContent(createGBStoryBlockStringFromJson(storyBlock))
+            postModel.setContent(buildJetpackStoryBlockString(mediaFiles))
             true
         }
+    }
+
+    private fun buildJetpackStoryBlockString(
+        mediaFiles: List<MediaFile>
+    ): String {
+        val jsonArrayMediaFiles = ArrayList<StoryMediaFileData>() // holds media files
+        for (mediaFile in mediaFiles) {
+            jsonArrayMediaFiles.add(buildMediaFileData(mediaFile))
+        }
+        return buildJetpackStoryBlockStringFromStoryMediaFileData(jsonArrayMediaFiles)
+    }
+
+    fun buildJetpackStoryBlockStringFromStoryMediaFileData(
+        storyMediaFileDataList: ArrayList<StoryMediaFileData>
+    ): String {
+        return createGBStoryBlockStringFromJson(StoryBlockData(mediaFiles = storyMediaFileDataList))
     }
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
         return StoryMediaFileData(
                 alt = "",
-                id = mediaFile.id,
+                id = mediaFile.id.toString(),
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
                 mime = StringUtils.notNullStr(mediaFile.mimeType),
@@ -37,28 +54,120 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         )
     }
 
-    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(post: PostModel, mediaFile: MediaFile) {
-        // here we're going to first find the block header, obtain the JSON object, re-parse it, and re-build the block
-        // WARNING note we're assuming to have only one Story block here so, beware of that!! this will find
-        // the first match only, always. (shouldn't be a problem because we're always creating a new Post in the
-        // app, but this won't make the cut if we decide to allow editing. Which we'll do by integrating with
-        // the gutenberg parser / validator anyway.
-        val content = post.content
-        val jsonString: String = content.substring(
-                content.indexOf(HEADING_START) + HEADING_START.length,
-                content.indexOf(HEADING_END)
+    fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
+        return StoryMediaFileData(
+                alt = "",
+                id = temporaryId, // mediaFile.id,
+                link = StringUtils.notNullStr(mediaFile.fileURL),
+                type = if (mediaFile.isVideo) "video" else "image",
+                mime = StringUtils.notNullStr(mediaFile.mimeType),
+                caption = "",
+                url = StringUtils.notNullStr(mediaFile.fileURL)
         )
-        val gson = Gson()
-        val storyBlockData: StoryBlockData? = gson.fromJson(jsonString, StoryBlockData::class.java)
+    }
 
-        val localMediaId = mediaFile.id
-        // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
-        storyBlockData?.mediaFiles?.filter { it.id == localMediaId }?.get(0)?.apply {
-            id = mediaFile.mediaId.toInt()
-            link = mediaFile.fileURL
-            url = mediaFile.fileURL
+    fun buildMediaFileDataWithTemporaryIdNoMediaFile(
+        temporaryId: String,
+        url: String,
+        isVideo: Boolean
+    ): StoryMediaFileData {
+        return StoryMediaFileData(
+                alt = "",
+                id = temporaryId, // mediaFile.id,
+                link = url,
+                type = if (isVideo) "video" else "image",
+                mime = "",
+                caption = "",
+                url = url
+        )
+    }
+
+    fun getTempIdForStoryFrame(tempIdBase: Long, storyIndex: StoryIndex, frameIndex: FrameIndex): String {
+        return TEMPORARY_ID_PREFIX + "$tempIdBase-$storyIndex-$frameIndex"
+    }
+
+    fun findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
+        postModel: PostModel,
+        listener: DoWithMediaFilesListener
+    ) {
+        var content = postModel.content
+        // val contentMutable = StringBuilder(postModel.content)
+
+        // find next Story Block
+        // evaluate if this has a temporary id mediafile
+        // --> remove mediaFiles entirely
+        // set start index and go up.
+        var storyBlockStartIndex = 0
+        while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length) {
+            storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
+            if (storyBlockStartIndex > -1) {
+                val jsonString: String = content.substring(
+                        storyBlockStartIndex + HEADING_START.length,
+                        content.indexOf(HEADING_END))
+                content = listener.doWithMediaFilesJson(content, jsonString)
+                storyBlockStartIndex += HEADING_START.length
+            }
         }
-        post.setContent(createGBStoryBlockStringFromJson(requireNotNull(storyBlockData)))
+
+        postModel.setContent(content)
+    }
+
+    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
+        val gson = Gson()
+        findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
+                postModel,
+                object : DoWithMediaFilesListener {
+                    override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
+                        var processedContent = content
+                        val storyBlockData: StoryBlockData? =
+                                gson.fromJson(mediaFilesJsonString, StoryBlockData::class.java)
+                        storyBlockData?.let { storyBlockDataNonNull ->
+                            val localMediaId = mediaFile.id.toString()
+                            // now replace matching localMediaId with remoteMediaId in the mediaFileObjects, obtain the URLs and replace
+                            val mediaFiles = storyBlockDataNonNull.mediaFiles.filter { it.id == localMediaId }
+                            if (mediaFiles.isNotEmpty()) {
+                                mediaFiles[0].apply {
+                                    id = mediaFile.mediaId
+                                    link = mediaFile.fileURL
+                                    url = mediaFile.fileURL
+
+                                    // look for the slide saved with the local id key (mediaFile.id), and re-convert to
+                                    // mediaId.
+                                    storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
+                                            mediaFile.id,
+                                            mediaFile.mediaId.toLong(),
+                                            postModel.localSiteId.toLong()
+                                    )
+                                }
+                            }
+                            processedContent = content.replace(mediaFilesJsonString, gson.toJson(storyBlockDataNonNull))
+                        }
+                        return processedContent
+                    }
+                }
+        )
+    }
+
+    fun saveNewLocalFilesToStoriesPrefsTempSlides(
+        site: SiteModel,
+        storyIndex: StoryIndex,
+        frames: ArrayList<StoryFrameItem>
+    ) {
+        for ((frameIndex, frame) in frames.withIndex()) {
+            if (frame.id == null) {
+                val assignedTempId = getTempIdForStoryFrame(
+                        storiesPrefs.getNewIncrementalTempId(),
+                        storyIndex,
+                        frameIndex
+                )
+                frame.id = assignedTempId
+            }
+            storiesPrefs.saveSlideWithTempId(
+                    site.id.toLong(),
+                    TempId(requireNotNull(frame.id)), // should not be null at this point
+                    frame
+            )
+        }
     }
 
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {
@@ -66,13 +175,17 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
         return HEADING_START + gson.toJson(storyBlock) + HEADING_END + DIV_PART + CLOSING_TAG
     }
 
+    interface DoWithMediaFilesListener {
+        fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String
+    }
+
     data class StoryBlockData(
         val mediaFiles: List<StoryMediaFileData>
     )
 
     data class StoryMediaFileData(
-        val alt: String,
-        var id: Int,
+        var alt: String,
+        var id: String,
         var link: String,
         val type: String,
         val mime: String,
@@ -81,6 +194,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor() {
     )
 
     companion object {
+        const val TEMPORARY_ID_PREFIX = "tempid-"
         const val HEADING_START = "<!-- wp:jetpack/story "
         const val HEADING_END = " -->\n"
         const val DIV_PART = "<div class=\"wp-story wp-block-jetpack-story\"></div>\n"

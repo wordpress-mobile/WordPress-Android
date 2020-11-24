@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.ATTACHMENT
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.OTHER
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
@@ -16,9 +17,12 @@ import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
+import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_ATTACHMENT
 import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.lists.BLOCK_ITEM_COUNT
+import org.wordpress.android.ui.stats.refresh.lists.VIEW_ALL_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -26,7 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
+import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
@@ -40,9 +44,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
-
-private const val BLOCK_ITEM_COUNT = 6
-private const val VIEW_ALL_ITEM_COUNT = 1000
 
 class PostsAndPagesUseCase
 constructor(
@@ -115,7 +116,7 @@ constructor(
             items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_white_24dp
-                    OTHER, HOMEPAGE, PAGE -> R.drawable.ic_pages_white_24dp
+                    OTHER, HOMEPAGE, PAGE, ATTACHMENT -> R.drawable.ic_pages_white_24dp
                 }
                 ListItemWithIcon(
                         icon = icon,
@@ -160,6 +161,7 @@ constructor(
         val type = when (params.postType) {
             POST -> ITEM_TYPE_POST
             OTHER, PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
+            ATTACHMENT -> ITEM_TYPE_ATTACHMENT
         }
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(

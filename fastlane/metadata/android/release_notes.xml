@@ -1,98 +1,78 @@
-<en-US>
-15.7:
-Improvements in the Reader: A new Discover tab you can tailor to your interests and an “(un)follow” button to the site and topic detail screens.
+<ar>
+16.1:
+* اختر من بين مجموعة متنوعة من قوالب الصفحات المصممة سابقًا عند إنشاء صفحة جديدة على موقع يدعم Gutenberg.
 
-Block Editor enhancements: A new Pullquote block that lets you add emphasis to a chosen piece of text. Any changes made in menu sliders are now also immediately reflected in block settings.
+</ar>
+<de-DE>
+16.1:
+* Wähle bei der Erstellung einer neuen Seite auf einer Website, für die Gutenberg aktiviert ist, aus einer Vielfalt an Seitenvorlagen.
+
+</de-DE>
+<en-US>
+16.1:
+* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
 
 </en-US>
 <es-ES>
-15.7:
-Mejoras en el lector: Una nueva pestaña «Descubrir» que puedes adaptar a tus intereses y un botón «(No) Seguir» a las pantallas de detalles del sitio y del tema.
-
-Mejoras en el editor de bloques: Un nuevo bloque de «Cita» que te permite añadir énfasis a una pieza de texto elegida. Ahora, cualquier cambio realizado en los carruseles del menú también se refleja inmediatamente en los ajustes del bloque.
+16.1:
+* Elige entre una variedad de plantillas de página prediseñadas cuando crees una nueva página en un sitio con Gutenberg activo.
 
 </es-ES>
 <fr-CA>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
+16.1 :
+* Choisissez parmi une variété de modèles de pages prédéfinis lors de la création d’une nouvelle page sur un site conçu avec Gutenberg.
 </fr-CA>
 <fr-FR>
-15.7 :
-Améliorations dans le Lecteur : un nouvel onglet Découvrir que vous pouvez adapter à vos centres d’intérêts et un bouton « (Ne plus) Suivre » sur les écrans de détails du site et du sujet.
-
-Améliorations de l’éditeur de blocs : un nouveau bloc Citation en exergue qui vous permet de mettre en avant une partie de texte. Toute modification apportée dans les diaporamas de menu est maintenant immédiatement répercutée dans les réglages de bloc.
+16.1 :
+* Choisissez parmi une variété de modèles de pages prédéfinis lors de la création d’une nouvelle page sur un site conçu avec Gutenberg.
 </fr-FR>
 <iw-IL>
-15.7:
-שיפורים ב-Reader: לשונית חדשה של 'לגלות' שניתנת להתאמה לפי תחומי העניין וכפתורי מעקב או ביטול מעקב במסכי הפרטים של האתרים והנושאים.
-
-שיפורים בעורך הבלוקים: בלוק ציטוט חדש מאפשר לך להוסיף הדגשות לחלק מסוים מהטקסט. כל שינוי שמבוצע בסליידר של התפריט יחול כעת באופן מיידי בהגדרות הבלוק.
+16.1: 
+* מבחר תבניות עמודים מעוצבות מראש עומד לרשותך ביצירת עמוד חדש באתר שמופעל בו Gutenberg.
 
 </iw-IL>
 <in>
-15.7:
-Peningkatan pada Pembaca: Tab Jelajah baru yang dapat disesuaikan dengan minat Anda dan tombol “(berhenti) mengikuti” pada layar detail situs dan topik.
-
-Peningkatan Penyunting Blok: Blok Kutipan Besar baru yang memungkinkan Anda menambahkan penekanan pada bagian teks yang dipilih. Semua perubahan pada slider menu kini juga langsung ditampilkan di pengaturan blok.
+16.1:
+* Pilih dari beragam templat desain halaman saat Anda membuat halaman baru pada situs yang fungsi Gutenberg-nya diaktifkan.
 
 </in>
 <it-IT>
-15.7:
-Miglioramenti nel Reader: una nuova scheda Discover può essere adattata ai tuoi interessi e un pulsante per seguire/non seguire i un sito e le schermate dei dettagli dell'argomento.
-
-Miglioramenti all'editor a blocchi: un nuovo blocco Citazione evidenziata che ti aiuta ad aggiungere enfasi a una parte del testo scelta. Qualsiasi modifica effettuata negli slider del menu ora viene anche immediatamente riflessa nelle impostazioni del blocco.
+16.1:
+* Scegli tra svariati modelli di pagina predefiniti quando crei una nuova pagina su un sito abilitato Gutenberg.
 
 </it-IT>
-<ja-JP>
-15.7:
- Reader の改善 : 新しいディスカバータブで、サイトやトピックの詳細画面における、興味や「フォロー (解除)」ボタンをカスタマイズできます。
-
-ブロックエディターの改善 : 新しいプルクオートブロックで選択したテキストを強調できるようになりました。 メニューのスライダーの変更もすぐにブロック設定に反映されるようになりました。
-
-</ja-JP>
 <ko-KR>
-15.7:
-리더의 개선: 관심에 따라 재단할 수 있는 새 발견 탭과 사이트와 주제 세부 화면에서 “(언)팔로우” 가 있습니다.
-
-블록 편집기 개선: 본문의 일부를 선택하여 강조할 수 있게 하는 새 내부인용이 있습니다. 또한 메뉴 슬라이더에서 만든 어떤 변경사항이든 이제 블록 설정에 즉각 볬영합니다.
+16.1:
+* 구텐베르그를 사용할 수 있는 사이트에서 새 페이지를 만들 때 다양한 사전 디자인한 페이지 템플릿에서 선택하세요.
 
 </ko-KR>
 <nl-NL>
-15.7:
-Verbeteringen in de Reader: een nieuw tabblad Ontdekken dat je kan afstemmen op je interesses en een knop "(ont) volgen" voor de detailschermen van de site en het onderwerp.
-
-Verbeteringen in blok-editor:een nieuw Pullquote-blok waarmee je de nadruk kunt leggen op een gekozen stuk tekst. Eventuele wijzigingen in menu sliders worden nu ook onmiddellijk weerspiegeld in de blok instellingen.
+16.1:
+* Kies uit een aantal voorontworpen paginasjablonen op het moment dat je een nieuwe pagina maakt op een website met Gutenberg.
 
 </nl-NL>
-<pt-BR>
-15.7:
-Melhorias no Leitor: Uma nova aba Explorar que você pode personalizar com seus interesses e botão Seguir (ou parar de seguir) sites e assuntos na tela de informações.
-
-Melhorias no editor de blocos: Um novo bloco de Citação que permite adicionar ênfase em uma parte do texto. Qualquer alteração feita no menu deslizante agora é refletida nas configurações do bloco imediatamente.
-
-
-</pt-BR>
 <ru-RU>
-15.7:
-Улучшения "Чтива": Новая вкладка поиска позволяет вам найти и подписаться (или отписаться) на сайты по интересам (на экране подробностей).
-
-Улучшения редактора блоков: Новый блок выдержки, позволяет акцентировать выделенный фрагмент текста. Изменения внесенные слайдерами в меню будут применены немедленно к настройкам блоков.
-
+16.1:
+* Выбор из множества подготовленных макетов страниц, доступных для создания новых страниц и записей в редакторе блоков.
 
 </ru-RU>
 <sv-SE>
-15.7:
-Förbättringar i läsaren: Ny flik Upptäck du kan anpassa till dina intressen och knapp för att följa/sluta följa webbplatsen och sidor med ämnesinformation.
-
-Förbättringar i blockredigeraren: Ett nytt block för utdragscitat låter dig framhäva ett valt textstycke. Eventuella ändringar i menyreglagen återspeglas nu direkt i blockinställningarna.
+16.1:
+* Välj bland ett urval fördesignade sidmallar när du skapar en ny sida på en webbplats där tillägget Gutenberg är installerat och aktiverat.
 
 </sv-SE>
-<zh-TW>
-15.7：
-閱讀器改善功能：你可以依自己的興趣量身打造全新「探索」分頁，並在網站和主題詳細資料畫面點選「關注/取消關注」按鈕。
+<tr-TR>
+16.1:
+* Gutenberg özellikli bir sitede yeni bir sayfa oluştururken, önceden tasarlanmış çeşitli sayfa şablonlarından seçim yapın.
 
-區塊編輯器增強功能：推出可突顯所選文字段落的全新「重要引述」區塊。 選單投影片中的任何變更現在也會隨即反映在區塊設定中。
+</tr-TR>
+<zh-CN>
+16.1：
+* 在支持 Gutenberg 的站点上创建新页面时，可从各种预先设计的页面模板中进行选择。
+
+</zh-CN>
+<zh-TW>
+16.1：
+* 當你在啟用 Gutenberg 的網站上建立新頁面時，可從多種預先設計的頁面範本中挑選。
 
 </zh-TW>

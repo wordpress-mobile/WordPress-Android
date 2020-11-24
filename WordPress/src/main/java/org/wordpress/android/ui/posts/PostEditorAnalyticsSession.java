@@ -34,6 +34,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     private String mBlogType;
     private String mContentType;
     private boolean mStarted = false;
+    private boolean mIsPreview = false;
     private Editor mCurrentEditor;
     private boolean mHasUnsupportedBlocks = false;
     private Outcome mOutcome = null;
@@ -94,6 +95,10 @@ public class PostEditorAnalyticsSession implements Serializable {
         return new PostEditorAnalyticsSession(editor, post, site, isNewPost);
     }
 
+    public void setPreview(boolean preview) {
+        mIsPreview = preview;
+    }
+
     public void start(ArrayList<Object> unsupportedBlocksList) {
         if (!mStarted) {
             mHasUnsupportedBlocks = unsupportedBlocksList != null && unsupportedBlocksList.size() > 0;
@@ -108,7 +113,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             // difference to be significant enough, and doing that would add more complexity to how we are initializing
             // the session.
             properties.put(KEY_STARTUP_TIME, System.currentTimeMillis() - mStartTime);
-            AnalyticsTracker.track(Stat.EDITOR_SESSION_START, properties);
+            track(Stat.EDITOR_SESSION_START, properties);
             mStarted = true;
         } else {
             AppLog.w(T.EDITOR, "An editor session cannot be attempted to be started more than once, "
@@ -119,7 +124,7 @@ public class PostEditorAnalyticsSession implements Serializable {
     public void switchEditor(Editor editor) {
         mCurrentEditor = editor;
         Map<String, Object> properties = getCommonProperties();
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_SWITCH_EDITOR, properties);
+        track(Stat.EDITOR_SESSION_SWITCH_EDITOR, properties);
     }
 
     public void setOutcome(Outcome newOutcome) {
@@ -134,14 +139,14 @@ public class PostEditorAnalyticsSession implements Serializable {
     public void previewTemplate(String template) {
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_PREVIEW, properties);
+        track(Stat.EDITOR_SESSION_TEMPLATE_PREVIEW, properties);
     }
 
     public void applyTemplate(String template) {
         mTemplate = template;
         final Map<String, Object> properties = getCommonProperties();
         properties.put(KEY_TEMPLATE, template);
-        AnalyticsTracker.track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
+        track(Stat.EDITOR_SESSION_TEMPLATE_APPLY, properties);
     }
 
     public void end() {
@@ -154,7 +159,7 @@ public class PostEditorAnalyticsSession implements Serializable {
             }
             Map<String, Object> properties = getCommonProperties();
             properties.put(KEY_OUTCOME, mOutcome.toString().toLowerCase(Locale.ROOT));
-            AnalyticsTracker.track(Stat.EDITOR_SESSION_END, properties);
+            track(Stat.EDITOR_SESSION_END, properties);
         } else {
             AppLog.e(T.EDITOR, "A non-started editor session cannot be attempted to be ended");
         }
@@ -175,5 +180,13 @@ public class PostEditorAnalyticsSession implements Serializable {
         }
 
         return properties;
+    }
+
+    private void track(Stat stat, Map<String, ?> properties) {
+        if (mIsPreview && stat != Stat.EDITOR_SESSION_TEMPLATE_PREVIEW) {
+            // In Preview mode we only track editor_session_template_preview
+            return;
+        }
+        AnalyticsTracker.track(stat, properties);
     }
 }

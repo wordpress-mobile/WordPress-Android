@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source "https://rubygems.org" do
-  gem 'fastlane', "~> 2.158"
+  gem 'fastlane', "~> 2"
   gem 'nokogiri'
 end
 

@@ -33,4 +33,5 @@ sealed class ReaderNavigationEvents {
     data class ShowVideoViewer(val videoUrl: String) : ReaderNavigationEvents()
     data class ShowBlogPreview(val siteId: Long, val feedId: Long) : ReaderNavigationEvents()
     data class ShowReportPost(val url: String) : ReaderNavigationEvents()
+    object ShowReaderSubs : ReaderNavigationEvents()
 }

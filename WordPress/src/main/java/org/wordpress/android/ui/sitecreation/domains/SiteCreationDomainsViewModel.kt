@@ -59,7 +59,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
     private var isStarted = false
-    private var segmentId by Delegates.notNull<Long>()
+    private var segmentId: Long? = null
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -90,7 +90,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start(segmentId: Long) {
+    fun start(segmentId: Long?) {
         if (isStarted) {
             return
         }
@@ -253,7 +253,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
             data.forEach { domainName ->
                 val itemUiState = DomainsModelAvailableUiState(
-                        domainName,
+                        domainSanitizer.getName(domainName),
+                        domainSanitizer.getDomain(domainName),
                         checked = domainName == selectedDomain
                 )
                 itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
@@ -279,7 +280,8 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         return if (isDomainUnavailable) {
             DomainsModelUnavailabilityUiState(
-                    "$sanitizedQuery.wordpress.com",
+                    sanitizedQuery,
+                    ".wordpress.com",
                     UiStringRes(R.string.new_site_creation_unavailable_domain)
             )
         } else {
@@ -352,6 +354,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
 
         sealed class DomainsModelUiState(
             open val name: String,
+            open val domain: String,
             open val checked: Boolean,
             val radioButtonVisibility: Boolean,
             open val subTitle: UiString? = null,
@@ -359,13 +362,15 @@ class SiteCreationDomainsViewModel @Inject constructor(
         ) : DomainsListItemUiState() {
             data class DomainsModelAvailableUiState(
                 override val name: String,
+                override val domain: String,
                 override val checked: Boolean
-            ) : DomainsModelUiState(name, checked, true, clickable = true)
+            ) : DomainsModelUiState(name, domain, checked, true, clickable = true)
 
             data class DomainsModelUnavailabilityUiState(
                 override val name: String,
+                override val domain: String,
                 override val subTitle: UiString
-            ) : DomainsModelUiState(name, false, false, subTitle, false)
+            ) : DomainsModelUiState(name, domain, false, false, subTitle, false)
         }
 
         data class DomainsFetchSuggestionsErrorUiState(

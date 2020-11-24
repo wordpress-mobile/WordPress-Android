@@ -284,8 +284,6 @@ Language: es_CL
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">No ahora</string>
     <string name="my_site_create_new_site_title">No tienes ningún sitio</string>
-    <string name="reader_empty_followed_tags_title">No sigues etiquetas</string>
-    <string name="reader_empty_followed_tags_subtitle">Agrega etiquetas aquí para encontrar mensajes sobre tus temas favoritos</string>
     <string name="quick_start_dialog_browse_themes_message_short">Toca %1$s Temas %2$s para descubrir nuevos temas</string>
     <string name="content_description_more">Más</string>
     <string name="login_to_to_connect_jetpack">Inicia sesión en la cuenta WordPress.com que usaste para conectar jetpack.</string>
@@ -487,7 +485,6 @@ Language: es_CL
     <string name="comment_unspam_talkback">Comentario marcado como no spam</string>
     <string name="comment_spam_talkback">Comentario marcado como spam</string>
     <string name="signup_epilogue_screen_title">Cuenta nueva</string>
-    <string name="login_prologue_screen_title">Iniciar Sesión</string>
     <string name="comment_approved_talkback">Comentario aprobado</string>
     <string name="comment_delete_talkback">Comentario eliminado</string>
     <string name="comment_liked_talkback">Me gusta el comentario</string>
@@ -508,7 +505,6 @@ Language: es_CL
     <string name="help_screen_title">Ayuda y Soporte</string>
     <string name="me_section_screen_title">Yo</string>
     <string name="media_settings_screen_title">Detalles del archivo</string>
-    <string name="my_site_section_screen_title">Mi sitio</string>
     <string name="notif_settings_screen_title">Configuración de notificaciones</string>
     <string name="notifications_screen_title">Notificaciones</string>
     <string name="person_detail_screen_title">Detalle de la persona</string>
@@ -520,7 +516,6 @@ Language: es_CL
     <string name="plugin_caption_featured">Destacado</string>
     <string name="version_with_name_param">Versión %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
-    <string name="email_not_registered_wpcom">Hmm, no podemos encontrar una cuenta WordPress.com conectada a esta dirección de correo electrónico. Intenta el enlace de abajo para iniciar sesión usando tu dirección del sitio.</string>
     <string name="permissions_denied_message">Parece que ha desactivado los permisos requeridos para esta función. &lt;br/>&lt;br/>Para cambiar esto, edita tus permisos y asegúrate de que &lt;strong>%s&lt;/strong> está habilitado.</string>
     <string name="sharing_disabled">Módulo de uso inhabilitado</string>
     <string name="sharing_disabled_description">No puedes acceder a tu configuración de uso compartido porque tu módulo compartido de Jetpack está deshabilitado.</string>
@@ -589,7 +584,6 @@ Language: es_CL
     <string name="signup_epilogue_error_generic">Hubo algunos problemas al actualizar tu cuenta. Puedes reintentar o revertir los cambios para continuar.</string>
     <string name="signup_epilogue_hint_display">Nombre para Mostrar</string>
     <string name="signup_epilogue_hint_password">Contraseña (opcional)</string>
-    <string name="signup_epilogue_hint_password_detail">Siempre puedes iniciar sesión con un enlace mágico como el que acabas de usar, pero también puedes configurar una contraseña si lo prefieres.</string>
     <string name="signup_magic_link_error">Hubo algunos problemas para enviar el correo electrónico. Puedes reintentar ahora o cerrar y volver a intentarlo más tarde.</string>
     <string name="enter_site_address_instead">Inicia sesión ingresando la dirección de tu sitio.</string>
     <string name="enter_username_instead">Inicia sesión con tu nombre de usuario.</string>
@@ -1014,8 +1008,6 @@ Language: es_CL
     <string name="reader_toast_err_already_liked">Ya te ha gustado ese comentario</string>
     <string name="reader_toast_err_comment_not_found">¡Comentario no encontrado!</string>
     <string name="reader_toast_err_cannot_like_post">Falló al darle me gusta a esta entrada</string>
-    <string name="reader_title_post_detail_wpcom">Entrada WordPress.com</string>
-    <string name="reader_title_deeplink">Lector WordPress</string>
     <string name="error_notif_q_action_reply">No puedes responder al comentario. Por favor Inténtalo más tarde.</string>
     <string name="error_notif_q_action_approve">No se pudo aprobar el comentario. Por favor Inténtalo más tarde.</string>
     <string name="error_notif_q_action_like">No se puede dar me gusta al comentario. Por favor Inténtalo más tarde.</string>
@@ -1092,7 +1084,6 @@ Language: es_CL
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_search_description">No se encontraron resultados para %s para tu idioma</string>
     <string name="reader_hint_post_search">Buscar en WordPress</string>
-    <string name="reader_title_related_post_detail">Entradas Relacionadas</string>
     <string name="preview_screen_links_disabled">Los vínculos se desactivan en la pantalla de vista previa</string>
     <string name="send">Enviar</string>
     <string name="person_removed">Eliminado con éxito %1$s</string>
@@ -1358,7 +1349,6 @@ Language: es_CL
     <string name="reader_short_like_count_multi">%s Me gusta</string>
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_short_like_count_none">Me gusta</string>
-    <string name="reader_menu_tags">Editar etiquetas y sitios</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
     <string name="notifications_push_summary">Opciones para las notificaciones que aparecen en tu dispositivo.</string>
     <string name="notifications_email_summary">Opciones para las notificaciones que se envían al correo electrónico ligado a tu cuenta.</string>
@@ -1430,7 +1420,6 @@ Language: es_CL
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
-    <string name="reader_page_recommended_blogs">Sitios que te podrían gustar</string>
     <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="themes_fetching">Obteniendo temas…</string>
@@ -1457,7 +1446,6 @@ Language: es_CL
     <string name="ssl_certificate_details">Detalles</string>
     <string name="cab_selected">%d seleccionados</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
-    <string name="reader_empty_posts_in_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_label_view_original">Ver artículo original</string>
     <string name="reader_label_like">Me gusta</string>
     <string name="reader_label_comments_closed">Los comentarios están cerrados</string>
@@ -1477,16 +1465,13 @@ Language: es_CL
     <string name="error_refresh_unauthorized_posts">No tienes permiso para ver o editar entradas</string>
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía</string>
     <string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes</string>
-    <string name="reader_label_liked_by">Gustado por</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="reader_toast_blog_blocked">Los mensajes de este sitio ya no se mostrarán</string>
     <string name="reader_toast_err_block_blog">No se pudo bloquear este sitio</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
-    <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
     <string name="reader_empty_recommended_blogs">No hay sitios recomendados</string>
     <string name="reader_toast_err_unfollow_blog">No se puede dejar de seguir a este sitio</string>
     <string name="reader_toast_err_follow_blog">No se puede seguir este sitio</string>
@@ -1565,8 +1550,6 @@ Language: es_CL
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
-    <string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
-    <string name="reader_toast_err_remove_tag">No se pudo quitar esta etiqueta</string>
     <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app.</string>
     <string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde.</string>
     <string name="error_refresh_media">No se puede actualizar Media en este momento</string>
@@ -1594,9 +1577,7 @@ Language: es_CL
     <string name="reader_label_removed_tag">Eliminado %s</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>
     <string name="reader_likes_only_you">Te gusta esto</string>
-    <string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
     <string name="reader_label_added_tag">Agregado %s</string>
-    <string name="reader_toast_err_tag_invalid">Esa no es una etiqueta válida</string>
     <string name="reader_toast_err_share_intent">No se pudo compartir</string>
     <string name="reader_toast_err_view_image">No se pudo ver la imágen</string>
     <string name="reader_toast_err_url_intent">No se pudo abrir %s</string>

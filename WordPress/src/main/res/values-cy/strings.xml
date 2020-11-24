@@ -34,8 +34,6 @@ Language: cy_GB
     <string name="reader_toast_err_already_liked">Rydych eisoes wedi hoffi\'r sylw hwnnw</string>
     <string name="reader_toast_err_comment_not_found">Heb ganfod y sylw!</string>
     <string name="reader_toast_err_cannot_like_post">Methwyd hoffi\'r cofnod hwn</string>
-    <string name="reader_title_post_detail_wpcom">Cofnod WordPress.com</string>
-    <string name="reader_title_deeplink">Darllenydd WordPress</string>
     <string name="error_notif_q_action_reply">Methu ateb sylw. Ceisiwch eto.</string>
     <string name="error_notif_q_action_approve">Methu cymeradwyo sylw. Ceisiwch eto.</string>
     <string name="error_notif_q_action_like">Methu hoffi sylw. Ceisiwch eto.</string>
@@ -110,7 +108,6 @@ Language: cy_GB
     <string name="invite_people">Gwahodd Pobl</string>
     <string name="label_clear_search_history">Clirio hanes chwilio</string>
     <string name="dlg_confirm_clear_search_history">Clirio hanes chwilio?</string>
-    <string name="reader_title_related_post_detail">Cofnodion Perthnasol</string>
     <string name="preview_screen_links_disabled">Mae dolenni wedi eu hanalluogi ar y sgrin rhagolwg</string>
     <string name="send">Anfon</string>
     <string name="user_remove_confirmation_message">Os ydych am dynnu %1$s, ni fydd y defnyddiwr yn gallu cael mynediad at y wefan, ond bydd unrhyw gynnwys crëwyd gan %1$s yn aros ar y wefan.\n\nYdych chi dal eisiau tynnu\'r defnyddiwr yma?</string>
@@ -425,7 +422,6 @@ Language: cy_GB
     <string name="logs_copied_to_clipboard">Cofnodion y rhaglen wedi\'u copïo i\'r clipfwrdd</string>
     <string name="reader_label_new_posts">Cofnodion newydd</string>
     <string name="error_copy_to_clipboard">Digwyddodd gwall wrth gopïo testun i\'r clipfwrdd</string>
-    <string name="reader_page_recommended_blogs">Gwefannau fyddech chi\'n eu hoffi</string>
     <string name="stats_followers_months">%1$d mis</string>
     <string name="stats_followers_a_year">Blwyddyn</string>
     <string name="stats_followers_years">%1$d blwyddyn</string>
@@ -468,15 +464,11 @@ Language: cy_GB
     <string name="comment_trashed">Gosod y sylw yn y sbwriel</string>
     <string name="posts_empty_list">Dim cofnod eto. Beth am greu un?</string>
     <string name="comment_reply_to_user">Ateb %s</string>
-    <string name="reader_empty_posts_in_tag">Dim cofnod gyda\'r tag hwn</string>
     <string name="signing_out">Allgofnodi…</string>
-    <string name="reader_label_liked_by">Hoffwyd gan</string>
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
-    <string name="reader_page_followed_tags">Tagiau sy\'n cael eu dilyn</string>
     <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
-    <string name="reader_hint_add_tag_or_url">Rhowch URL neu dag i\'w ddilyn</string>
     <string name="help">Cymorth</string>
     <string name="forgot_password">Wedi colli eich cyfrinair?</string>
     <string name="ssl_certificate_error">Tystysgrif SSL annilys</string>
@@ -549,8 +541,6 @@ Language: cy_GB
     <string name="error_blog_hidden">Mae\'r blog hwn yn gudd ac nid oes modd ei lwytho. Galluogwch y blog eto o fewn y gosodiadau a cheisiwch eto.</string>
     <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
-    <string name="reader_toast_err_add_tag">Methu ychwanegu\'r tag hwn</string>
-    <string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
     <string name="notifications_empty_all">Dim hysbysiadau…eto.</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_link">Rhannu dolen</string>
@@ -574,8 +564,6 @@ Language: cy_GB
     <string name="reader_likes_one">Mae un person yn hoffi hwn</string>
     <string name="reader_likes_only_you">Rydych chi\'n hoffi hwn</string>
     <string name="reader_toast_err_comment_failed">Methu cofnodi\'ch sylw</string>
-    <string name="reader_toast_err_tag_exists">Rydych eisoes yn dilyn y tag hwn</string>
-    <string name="reader_toast_err_tag_invalid">Nid yw\'n dag dilys</string>
     <string name="reader_toast_err_share_intent">Methu â rhannu</string>
     <string name="reader_toast_err_view_image">Methu â gweld delwedd</string>
     <string name="reader_toast_err_url_intent">Methu agor %s</string>

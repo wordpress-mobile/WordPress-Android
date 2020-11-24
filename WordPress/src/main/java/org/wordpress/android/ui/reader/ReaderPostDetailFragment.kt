@@ -3,17 +3,17 @@ package org.wordpress.android.ui.reader
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DownloadManager
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -22,63 +22,63 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.WebView
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
+import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_LIKED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_UNLIKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_DETAILS
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
-import org.wordpress.android.datasets.ReaderBlogTable
-import org.wordpress.android.datasets.ReaderLikeTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.AccountActionBuilder
-import org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
-import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
-import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.media.MediaPreviewActivity
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption.IS_PRIVATE_IMAGE
-import org.wordpress.android.ui.reader.ReaderInterfaces.AutoHideToolbarListener
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_JUMP
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.COMMENT_LIKE
@@ -87,27 +87,33 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation.P
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.models.ReaderSimplePostList
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
-import org.wordpress.android.ui.reader.views.ReaderBookmarkButton
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
-import org.wordpress.android.ui.reader.views.ReaderLikingUsersView
-import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
-import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
-import org.wordpress.android.ui.reader.views.ReaderSimplePostView
-import org.wordpress.android.ui.reader.views.ReaderTagStrip
+import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderWebView
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
@@ -118,10 +124,14 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.PHOTO
+import org.wordpress.android.util.isDarkTheme
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.WPScrollView
-import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
 import java.util.EnumSet
@@ -129,13 +139,11 @@ import javax.inject.Inject
 
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
-        ScrollDirectionListener,
         ReaderCustomViewListener,
-        ReaderInterfaces.OnFollowListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener,
+        ReaderInterfaces.AutoHideToolbarListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -148,35 +156,30 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private val postHistory = ReaderPostHistory()
 
+    private var bookmarksSavedLocallyDialog: AlertDialog? = null
+    private var moreMenuPopup: ListPopupWindow? = null
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var scrollView: WPScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var readerWebView: ReaderWebView
-    private lateinit var likingUsersView: ReaderLikingUsersView
-    private lateinit var likingUsersDivider: View
-    private lateinit var likingUsersLabel: View
-    private lateinit var signInButton: WPTextView
-    private lateinit var readerBookmarkButton: ReaderBookmarkButton
 
-    private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
-    private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
+    private lateinit var signInButton: WPTextView
+    private lateinit var readerBookmarkButton: ImageView
+    private lateinit var featuredImageView: ImageView
+
+    private lateinit var appBar: AppBarLayout
+    private lateinit var toolBar: Toolbar
 
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
     private var hasAlreadyRequestedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
-    private var isRelatedPost: Boolean = false
 
-    private var hasTrackedGlobalRelatedPosts: Boolean = false
-    private var hasTrackedLocalRelatedPosts: Boolean = false
-
-    private var toolbarHeight: Int = 0
     private var errorMessage: String? = null
 
-    private var isToolbarShowing = true
-    private var autoHideToolbarListener: AutoHideToolbarListener? = null
-
     private var fileForDownload: String? = null
+
+    private lateinit var viewModel: ReaderPostDetailViewModel
 
     @Inject internal lateinit var accountStore: AccountStore
     @Inject internal lateinit var siteStore: SiteStore
@@ -185,6 +188,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
+    @Inject internal lateinit var imageManager: ImageManager
+    @Inject lateinit var postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject lateinit var viewModelFactory: Factory
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -199,15 +207,40 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val actionBar: ActionBar?
-        get() {
-            return if (isAdded && activity is AppCompatActivity) {
-                (activity as AppCompatActivity).supportActionBar
+    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
+        appBarLayout, verticalOffset ->
+        val collapsingToolbarLayout = appBarLayout
+                .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
+        val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
+
+        context?.let { context ->
+            val menu: Menu = toolbar.menu
+            val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
+            val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
+            val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
+
+            val collapsingToolbarHeight = collapsingToolbarLayout.height
+            val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
+                    collapsingToolbarLayout.scrimVisibleHeightTrigger
+            val isDarkTheme = context.resources.configuration.isDarkTheme()
+
+            val colorAttr = if (isCollapsed || isDarkTheme) {
+                R.attr.colorOnSurface
             } else {
-                AppLog.w(T.READER, "reader post detail > getActionBar returned null")
-                null
+                R.attr.colorSurface
             }
+            val color = context.getColorFromAttribute(colorAttr)
+            val colorFilter = BlendModeColorFilterCompat
+                    .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
+
+            toolbar.setTitleTextColor(color)
+            toolbar.navigationIcon?.colorFilter = colorFilter
+
+            menuBrowse?.icon?.colorFilter = colorFilter
+            menuShare?.icon?.colorFilter = colorFilter
+            menuMore?.icon?.colorFilter = colorFilter
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -225,7 +258,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postId = args.getLong(ReaderConstants.ARG_POST_ID)
             directOperation = args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
             commentId = args.getInt(ReaderConstants.ARG_COMMENT_ID)
-            isRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 this.postListType = args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType
@@ -236,14 +268,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return scrollView
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is AutoHideToolbarListener) {
-            autoHideToolbarListener = context
-        }
-        toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.toolbar_height)
     }
 
     override fun onCreateView(
@@ -269,7 +293,30 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         scrollView = view.findViewById(R.id.scroll_view_reader)
-        scrollView.setScrollDirectionListener(this)
+
+        appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
+        toolBar = appBar.findViewById(R.id.toolbar_main)
+
+        toolBar.setVisible(true)
+        appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
+
+        // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
+        ViewCompat.setOnApplyWindowInsetsListener(appBar) { v: View, insets: WindowInsetsCompat ->
+            val insetTop = insets.systemWindowInsetTop
+            if (insetTop > 0) {
+                toolBar.setPadding(0, insetTop, 0, 0)
+            }
+            insets.consumeSystemWindowInsets()
+        }
+
+        // Fixes viewpager not displaying menu items for first fragment
+        toolBar.inflateMenu(R.menu.reader_detail)
+
+        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+        toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+
+        featuredImageView = appBar.findViewById(R.id.featured_image)
+        featuredImageView.setOnClickListener { showFullScreen() }
 
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
@@ -279,10 +326,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 appbarElevation
         )
         layoutFooter.setBackgroundColor(elevatedSurfaceColor)
-
-        likingUsersView = view.findViewById(R.id.layout_liking_users_view)
-        likingUsersDivider = view.findViewById(R.id.layout_liking_users_divider)
-        likingUsersLabel = view.findViewById(R.id.text_liking_users_label)
 
         // setup the ReaderWebView
         readerWebView = view.findViewById(R.id.reader_webview)
@@ -294,16 +337,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         layoutFooter.visibility = View.INVISIBLE
         scrollView.visibility = View.INVISIBLE
 
-        val relatedPostsContainer = view.findViewById<View>(R.id.container_related_posts)
-        globalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global)
-        globalRelatedPostsView.setOnFollowListener(this)
-        localRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local)
-        localRelatedPostsView.setOnFollowListener(this)
-
         signInButton = view.findViewById(R.id.nux_sign_in_button)
         signInButton.setOnClickListener(mSignInClickListener)
 
-        readerBookmarkButton = view.findViewById(R.id.bookmark_button)
+        readerBookmarkButton = view.findViewById(R.id.bookmark)
 
         val progress = view.findViewById<ProgressBar>(R.id.progress_loading)
         if (postSlugsResolutionUnderway) {
@@ -315,11 +352,184 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (isVisible) {
+            replaceActivityToolbarWithCollapsingToolbar()
+        }
+    }
+
+    private fun replaceActivityToolbarWithCollapsingToolbar() {
+        val activity = activity as? AppCompatActivity
+        activity?.supportActionBar?.hide()
+
+        toolBar.setVisible(true)
+        activity?.setSupportActionBar(toolBar)
+
+        activity?.supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViewModel()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
+
+        viewModel.uiState.observe(
+                viewLifecycleOwner,
+                Observer<ReaderPostDetailsUiState> { state ->
+                    header_view.updatePost(state.headerUiState)
+                    showOrHideMoreMenu(state)
+
+                    updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
+                    updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+                    updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
+                    updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+                }
+        )
+
+        viewModel.refreshPost.observe(viewLifecycleOwner, Observer { // Do nothing
+        }
+        )
+
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                showSnackbar()
+            }
+        }
+        )
+
+        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ReaderNavigationEvents.ShowPostsByTag -> {
+                        ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+                    }
+                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                            context,
+                            this.siteId,
+                            this.feedId
+                    )
+                    is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+                    is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+                    is ReaderNavigationEvents.ShowReportPost -> {
+                        ReaderActivityLauncher.openUrl(
+                                context,
+                                readerUtilsWrapper.getReportPostUrl(url),
+                                OpenUrlType.INTERNAL
+                        )
+                    }
+                    is ReaderNavigationEvents.ShowReaderComments -> {
+                        ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+                    }
+                    is ReaderNavigationEvents.ShowNoSitesToReblog -> {
+                        ReaderActivityLauncher.showNoSiteToReblog(activity)
+                    }
+                    is ReaderNavigationEvents.ShowSitePickerForResult -> {
+                        ActivityLauncher
+                                .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
+                    }
+                    is OpenEditorForReblog -> {
+                        ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
+                    }
+                    is ShowBookmarkedTab -> {
+                        ActivityLauncher.viewSavedPostsListInReader(activity)
+                    }
+                    is ShowBookmarkedSavedOnlyLocallyDialog -> {
+                        showBookmarkSavedLocallyDialog(this)
+                    }
+                }
+            }
+        })
+        viewModel.start()
+    }
+
+    private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
+        if (view is ReaderIconCountView) {
+            view.setCount(state.count)
+        }
+        view.isEnabled = state.isEnabled
+        view.isSelected = state.isSelected
+        view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
+        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
+    }
+
+    private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
+        if (bookmarksSavedLocallyDialog == null) {
+            MaterialAlertDialogBuilder(requireActivity())
+                    .setTitle(getString(bookmarkDialog.title))
+                    .setMessage(getString(bookmarkDialog.message))
+                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                        bookmarkDialog.okButtonAction.invoke()
+                    }
+                    .setOnDismissListener {
+                        bookmarksSavedLocallyDialog = null
+                    }
+                    .setCancelable(false)
+                    .create()
+                    .let {
+                        bookmarksSavedLocallyDialog = it
+                        it.show()
+                    }
+        }
+    }
+
+    private fun showOrHideMoreMenu(
+        state: ReaderPostDetailsUiState
+    ) {
+        val moreMenu: View? = toolBar.findViewById(R.id.menu_more)
+        moreMenu?.let {
+            state.moreMenuItems?.let {
+                if (moreMenuPopup == null) {
+                    createMoreMenuPopup(it, moreMenu)
+                }
+                moreMenuPopup?.show()
+            } ?: moreMenuPopup?.dismiss()
+        }
+    }
+
+    private fun createMoreMenuPopup(actions: List<SecondaryAction>, v: View) {
+        AnalyticsTracker.track(Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
+        moreMenuPopup = ListPopupWindow(v.context)
+        moreMenuPopup?.let {
+            it.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+            it.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
+            it.setDropDownGravity(Gravity.END)
+            it.anchorView = v
+            it.isModal = true
+            it.setOnItemClickListener { _, _, position, _ ->
+                viewModel.onMoreMenuItemClicked(actions[position].type)
+            }
+            it.setOnDismissListener {
+                viewModel.onMoreMenuDismissed()
+                moreMenuPopup = null
+            }
+        }
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(
+                layout_post_detail_container,
+                uiHelpers.getTextOfUiString(requireContext(), this.message),
+                Snackbar.LENGTH_LONG
+        )
+        if (this.buttonTitle != null) {
+            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), this.buttonTitle)) {
+                this.buttonAction.invoke()
+            }
+        }
+        snackbar.show()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (view != null) {
             readerWebView.destroy()
         }
+        bookmarksSavedLocallyDialog?.dismiss()
+        moreMenuPopup?.dismiss()
     }
 
     private fun hasPost(): Boolean {
@@ -351,7 +561,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         when (item.itemId) {
             R.id.menu_browse -> {
                 if (hasPost()) {
-                    ReaderActivityLauncher.openUrl(activity, post!!.url, OpenUrlType.EXTERNAL)
+                    AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED)
+                    ReaderActivityLauncher.openPost(context, post)
                 } else if (interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(
                             DEEP_LINKED_FALLBACK,
@@ -364,7 +575,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
             R.id.menu_share -> {
                 AnalyticsTracker.track(SHARED_ITEM)
-                sharePage()
+                ReaderActivityLauncher.sharePost(context, post)
+                return true
+            }
+            R.id.menu_more -> {
+                viewModel.onMoreButtonClicked()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -378,7 +593,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, commentId)
 
-        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
         outState.putBoolean(
                 ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
@@ -386,15 +600,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, hasAlreadyUpdatedPost)
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, hasAlreadyRequestedPost)
-
-        outState.putBoolean(
-                ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS,
-                hasTrackedGlobalRelatedPosts
-        )
-        outState.putBoolean(
-                ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS,
-                hasTrackedLocalRelatedPosts
-        )
 
         outState.putSerializable(
                 ReaderConstants.ARG_POST_LIST_TYPE,
@@ -424,13 +629,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             directOperation = it
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
             commentId = it.getInt(ReaderConstants.ARG_COMMENT_ID)
-            isRelatedPost = it.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = it.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             postSlugsResolutionUnderway = it.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             hasAlreadyUpdatedPost = it.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
             hasAlreadyRequestedPost = it.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
-            hasTrackedGlobalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS)
-            hasTrackedLocalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS)
             if (it.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 this.postListType = it.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType
             }
@@ -465,218 +667,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return goBackInPostHistory()
     }
 
-    override fun onFollowTapped(view: View, blogName: String, blogId: Long) {
-        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-
-        if (isAdded) {
-            val blog = if (TextUtils.isEmpty(blogName))
-                getString(R.string.reader_followed_blog_notifications_this)
-            else
-                blogName
-
-            if (blogId > 0) {
-                WPSnackbar.make(
-                        view, Html.fromHtml(
-                        getString(
-                                R.string.reader_followed_blog_notifications,
-                                "<b>", blog, "</b>"
-                        )
-                ), Snackbar.LENGTH_LONG
-                )
-                        .setAction(
-                                getString(R.string.reader_followed_blog_notifications_action)
-                        ) {
-                            AnalyticsUtils.trackWithSiteId(
-                                    Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED,
-                                    blogId
-                            )
-                            val payload = AddOrDeleteSubscriptionPayload(
-                                    blogId.toString(), SubscriptionAction.NEW
-                            )
-                            dispatcher.dispatch(newUpdateSubscriptionNotificationPostAction(payload))
-                            ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, true)
-                        }
-                        .show()
-            }
-        }
-    }
-
-    override fun onFollowingTapped() {
-        dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSubscriptionUpdated(event: OnSubscriptionUpdated) {
-        if (event.isError) {
-            AppLog.e(
-                    T.API,
-                    "${ReaderPostDetailFragment::class.java.simpleName}.onSubscriptionUpdated: " +
-                            "${event.error.type} - ${event.error.message}"
-            )
-        } else {
-            dispatcher.dispatch(AccountActionBuilder.newFetchSubscriptionsAction())
-        }
-    }
-
-    /*
-     * changes the like on the passed post
-     */
-    private fun togglePostLike() {
-        if (hasPost()) {
-            setPostLike(post?.isLikedByCurrentUser == false)
-        }
-    }
-
-    private fun initBookmarkButton() {
-        if (!canShowFooter()) {
-            return
-        }
-
-        updateBookmarkView()
-        readerBookmarkButton.setOnClickListener { toggleBookmark() }
-    }
-
-    private fun updateBookmarkView() {
-        if (!isAdded || !hasPost()) {
-            return
-        }
-
-        if (!canShowBookmarkButton()) {
-            readerBookmarkButton.visibility = View.GONE
-        } else {
-            readerBookmarkButton.visibility = View.VISIBLE
-            readerBookmarkButton.updateIsBookmarkedState(post!!.isBookmarked)
-        }
-    }
-
-    /*
-     * triggered when user taps the bookmark post button
-     */
-    private fun toggleBookmark() {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        if (post.isBookmarked) {
-            ReaderPostActions.removeFromBookmarked(post)
-            AnalyticsTracker.track(READER_POST_UNSAVED_FROM_DETAILS)
-        } else {
-            ReaderPostActions.addToBookmarked(post)
-            AnalyticsTracker.track(READER_POST_SAVED_FROM_DETAILS)
-            if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
-                AppPrefs.setBookmarksSavedLocallyDialogShown()
-                showBookmarksSavedLocallyDialog()
-            } else {
-                // show snackbar when not in saved posts list
-                showBookmarkSnackbar()
-            }
-        }
-
-        this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-
-        updateBookmarkView()
-    }
-
-    private fun showBookmarksSavedLocallyDialog() {
-        val basicFragmentDialog = BasicFragmentDialog()
-        basicFragmentDialog.initialize(
-                BOOKMARKS_SAVED_LOCALLY_DIALOG,
-                getString(R.string.reader_save_posts_locally_dialog_title),
-                getString(R.string.reader_save_posts_locally_dialog_message),
-                getString(R.string.dialog_button_ok), null, null
-        )
-        fragmentManager?.let {
-            basicFragmentDialog.show(it, BOOKMARKS_SAVED_LOCALLY_DIALOG)
-        }
-    }
-
-    override fun onPositiveClicked(instanceTag: String) {
-        when (instanceTag) {
-            BOOKMARKS_SAVED_LOCALLY_DIALOG -> showBookmarkSnackbar()
-        }
-    }
-
-    private fun showBookmarkSnackbar() {
-        if (!isAdded) {
-            return
-        }
-
-        WPSnackbar.make(requireView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                .setAction(
-                        R.string.reader_bookmark_snack_btn
-                ) {
-                    AnalyticsTracker
-                            .track(READER_SAVED_LIST_SHOWN, mapOf("source" to "post_details_saved_post_notice"))
-                    ActivityLauncher.viewSavedPostsListInReader(activity)
-                }
-                .show()
-    }
-
-    /*
-     * changes the like on the passed post
-     */
-    private fun setPostLike(isAskingToLike: Boolean) {
-        val post = this.post
-        if (!isAdded || post == null || !NetworkUtils.checkConnection(activity)) {
-            return
-        }
-
-        if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(post)) {
-            val likeCount = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
-            likeCount.isSelected = isAskingToLike
-            ReaderAnim.animateLikeButton(likeCount.imageView, isAskingToLike)
-
-            val success = ReaderPostActions.performLikeAction(
-                    post, isAskingToLike,
-                    accountStore.account.userId
-            )
-            if (!success) {
-                likeCount.isSelected = !isAskingToLike
-                return
-            }
-
-            // get the post again since it has changed, then refresh to show changes
-            this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-            refreshLikes()
-            refreshIconCounts()
-        }
-
-        if (isAskingToLike) {
-            AnalyticsUtils.trackWithReaderPostDetails(
-                    READER_ARTICLE_DETAIL_LIKED,
-                    post
-            )
-        } else {
-            AnalyticsUtils.trackWithReaderPostDetails(
-                    READER_ARTICLE_DETAIL_UNLIKED,
-                    post
-            )
-        }
-    }
-
-    /**
-     * display the standard Android share chooser to share this post
-     */
-    private fun sharePage() {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        val url = if (post.hasShortUrl()) post.shortUrl else post.url
-
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, url)
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.title)
-        try {
-            startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
-        } catch (ex: android.content.ActivityNotFoundException) {
-            ToastUtils.showToast(activity, R.string.reader_toast_err_share_intent)
-        }
-    }
-
     /*
      * replace the current post with the passed one
      */
@@ -692,141 +682,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         hasAlreadyRequestedPost = false
         hasAlreadyUpdatedPost = false
-        hasTrackedGlobalRelatedPosts = false
-        hasTrackedLocalRelatedPosts = false
-
-        // hide views that would show info for the previous post - these will be re-displayed
-        // with the correct info once the new post loads
-        globalRelatedPostsView.visibility = View.GONE
-        localRelatedPostsView.visibility = View.GONE
-
-        likingUsersView.visibility = View.GONE
-        likingUsersDivider.visibility = View.GONE
-        likingUsersLabel.visibility = View.GONE
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         readerWebView.clearContent()
 
-        // make sure the toolbar and footer are showing
-        showToolbar(true)
-        showFooter(true)
-
         // now show the passed post
         showPost()
-    }
-
-    /*
-     * request posts related to the current one - only available for wp.com
-     */
-    private fun requestRelatedPosts() {
-        if (hasPost() && post?.isWP == true) {
-            ReaderPostActions.requestRelatedPosts(post)
-        }
-    }
-
-    /*
-     * related posts were retrieved
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.RelatedPostsUpdated) {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        // make sure this event is for the current post
-        if (event.sourcePostId == post.postId && event.sourceSiteId == post.blogId) {
-            if (event.hasLocalRelatedPosts()) {
-                showRelatedPosts(event.localRelatedPosts, false)
-            }
-            if (event.hasGlobalRelatedPosts()) {
-                showRelatedPosts(event.globalRelatedPosts, true)
-            }
-        }
-    }
-
-    /*
-     * show the passed list of related posts - can be either global (related posts from
-     * across wp.com) or local (related posts from the same site as the current post)
-     */
-    private fun showRelatedPosts(relatedPosts: ReaderSimplePostList, isGlobal: Boolean) {
-        // tapping a related post should open the related post detail
-        val listener = ReaderSimplePostView.OnSimplePostClickListener { _, siteId, postId ->
-            showRelatedPostDetail(
-                    siteId,
-                    postId,
-                    isGlobal
-            )
-        }
-
-        // different container views for global/local related posts
-        val relatedPostsView = if (isGlobal) globalRelatedPostsView else localRelatedPostsView
-        relatedPostsView.showPosts(relatedPosts, post!!.blogName, isGlobal, listener)
-
-        // fade in this related posts view
-        if (relatedPostsView.visibility != View.VISIBLE) {
-            AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM)
-        }
-
-        trackRelatedPostsIfShowing()
-    }
-
-    /*
-     * track that related posts have loaded and are scrolled into view if we haven't
-     * already tracked it
-     */
-    private fun trackRelatedPostsIfShowing() {
-        if (!hasTrackedGlobalRelatedPosts && isVisibleAndScrolledIntoView(globalRelatedPostsView)) {
-            hasTrackedGlobalRelatedPosts = true
-            AppLog.d(T.READER, "reader post detail > global related posts rendered")
-            globalRelatedPostsView.trackRailcarRender()
-        }
-
-        if (!hasTrackedLocalRelatedPosts && isVisibleAndScrolledIntoView(localRelatedPostsView)) {
-            hasTrackedLocalRelatedPosts = true
-            AppLog.d(T.READER, "reader post detail > local related posts rendered")
-            localRelatedPostsView.trackRailcarRender()
-        }
-    }
-
-    /*
-     * returns True if the passed view is visible and has been scrolled into view - assumes
-     * that the view is a child of mScrollView
-     */
-    private fun isVisibleAndScrolledIntoView(view: View?): Boolean {
-        if (view != null && view.visibility == View.VISIBLE) {
-            val scrollBounds = Rect()
-            scrollView.getHitRect(scrollBounds)
-            return view.getLocalVisibleRect(scrollBounds)
-        }
-        return false
-    }
-
-    /*
-     * user clicked a single related post - if we're already viewing a related post, add it to the
-     * history stack so the user can back-button through the history - otherwise start a new detail
-     * activity for this related post
-     */
-    private fun showRelatedPostDetail(blogId: Long, postId: Long, isGlobal: Boolean) {
-        val stat = if (isGlobal)
-            Stat.READER_GLOBAL_RELATED_POST_CLICKED
-        else
-            Stat.READER_LOCAL_RELATED_POST_CLICKED
-        AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId)
-
-        if (isRelatedPost) {
-            postHistory.push(ReaderBlogIdPostId(post!!.blogId, post!!.postId))
-            replacePost(blogId, postId, true)
-        } else {
-            ReaderActivityLauncher.showReaderPostDetail(
-                    activity,
-                    false,
-                    blogId,
-                    postId, null,
-                    0,
-                    true, null
-            )
-        }
     }
 
     /*
@@ -851,113 +712,25 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        val numLikesBefore = ReaderLikeTable.getNumLikesForPost(post)
-
         val resultListener = ReaderActions.UpdateResultListener { result ->
             val post = this.post
             if (isAdded && post != null) {
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
                     this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
-                    refreshIconCounts()
-                }
-                // refresh likes if necessary - done regardless of whether the post has changed
-                // since it's possible likes weren't stored until the post was updated
-                if (result != ReaderActions.UpdateResult.FAILED && numLikesBefore != ReaderLikeTable.getNumLikesForPost(
-                                post
-                        )) {
-                    refreshLikes()
+                    this.post?.let {
+                        viewModel.onUpdatePost(it)
+                    }
                 }
 
                 setRefreshing(false)
 
-                if (directOperation != null && directOperation == DirectOperation.POST_LIKE) {
+                if (directOperation != null && directOperation == POST_LIKE) {
                     doLikePost()
                 }
             }
         }
         ReaderPostActions.updatePost(post!!, resultListener)
-    }
-
-    private fun refreshIconCounts() {
-        val post = this.post
-        if (!isAdded || post == null || !canShowFooter()) {
-            return
-        }
-
-        val countLikes = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
-        val countComments = requireView().findViewById<ReaderIconCountView>(R.id.count_comments)
-        val reblogButton = requireView().findViewById<ReaderIconCountView>(R.id.reblog)
-
-        if (canBeReblogged()) {
-            reblogButton.setCount(0)
-            reblogButton.visibility = View.VISIBLE
-            reblogButton.setOnClickListener {
-                val sites = siteStore.visibleSitesAccessedViaWPCom
-                when (sites.count()) {
-                    0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    1 -> {
-                        sites.firstOrNull()?.let {
-                            ActivityLauncher.openEditorForReblog(
-                                    activity,
-                                    it,
-                                    this.post,
-                                    PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
-                            )
-                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
-                    }
-                    else -> {
-                        sites.firstOrNull()?.let {
-                            ActivityLauncher.showSitePickerForResult(this, it, REBLOG_SELECT_MODE)
-                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
-                    }
-                }
-            }
-        } else {
-            reblogButton.visibility = View.GONE
-            reblogButton.setOnClickListener(null)
-        }
-
-        if (canShowCommentCount()) {
-            countComments.setCount(post.numReplies)
-            countComments.visibility = View.VISIBLE
-            countComments.setOnClickListener {
-                ReaderActivityLauncher.showReaderComments(
-                        activity,
-                        post.blogId,
-                        post.postId
-                )
-            }
-        } else {
-            countComments.visibility = View.GONE
-            countComments.setOnClickListener(null)
-        }
-
-        if (canShowLikeCount()) {
-            countLikes.setCount(post.numLikes)
-            countLikes.contentDescription = ReaderUtils.getLongLikeLabelText(
-                    activity,
-                    post.numLikes,
-                    post.isLikedByCurrentUser
-            )
-            countLikes.visibility = View.VISIBLE
-            countLikes.isSelected = post.isLikedByCurrentUser
-            if (!accountStore.hasAccessToken()) {
-                countLikes.isEnabled = false
-            } else if (post.canLikePost()) {
-                countLikes.setOnClickListener { togglePostLike() }
-            }
-            // if we know refreshLikes() is going to show the liking users, force liking user
-            // views to take up space right now
-            if (post.numLikes > 0 && likingUsersView.visibility == View.GONE) {
-                likingUsersView.visibility = View.INVISIBLE
-                likingUsersDivider.visibility = View.INVISIBLE
-                likingUsersLabel.visibility = View.INVISIBLE
-            }
-        } else {
-            countLikes.visibility = View.GONE
-            countLikes.setOnClickListener(null)
-        }
     }
 
     private fun doLikePost() {
@@ -973,12 +746,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             return
         }
 
-        if (post?.canLikePost() == false) {
-            ToastUtils.showToast(activity, R.string.reader_toast_err_cannot_like_post)
-            return
-        }
+        post?.let {
+            if (!it.canLikePost()) {
+                ToastUtils.showToast(activity, R.string.reader_toast_err_cannot_like_post)
+                return
+            }
 
-        setPostLike(true)
+            if (!it.isLikedByCurrentUser) {
+                viewModel.onButtonClicked(it.postId, it.blogId, ReaderPostCardActionType.LIKE)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -987,48 +764,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
-                    val site = siteStore.getSiteByLocalId(siteLocalId)
-                    ActivityLauncher.openEditorForReblog(
-                            activity,
-                            site,
-                            this.post,
-                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
-                    )
+                    viewModel.onReblogSiteSelected(siteLocalId)
                 }
             }
         }
-    }
-
-    /*
-     * show latest likes for this post
-     */
-    private fun refreshLikes() {
-        val post = this.post
-        if (!isAdded || post == null || !post.canLikePost()) {
-            return
-        }
-
-        // nothing more to do if no likes
-        if (post.numLikes == 0) {
-            likingUsersView.visibility = View.GONE
-            likingUsersDivider.visibility = View.GONE
-            likingUsersLabel.visibility = View.GONE
-            return
-        }
-
-        // clicking likes view shows activity displaying all liking users
-        likingUsersView.setOnClickListener {
-            ReaderActivityLauncher.showReaderLikingUsers(
-                    activity,
-                    post.blogId,
-                    post.postId
-            )
-        }
-
-        likingUsersDivider.visibility = View.VISIBLE
-        likingUsersLabel.visibility = View.VISIBLE
-        likingUsersView.visibility = View.VISIBLE
-        likingUsersView.showLikingUsers(post, accountStore.account.userId)
     }
 
     private fun showPhotoViewer(
@@ -1217,7 +956,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             )
             WPSnackbar.make(
                     requireView(),
-                    string.media_accessing_failed,
+                    R.string.media_accessing_failed,
                     Snackbar.LENGTH_LONG
             ).show()
         } else {
@@ -1239,7 +978,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         WPSnackbar.make(
                 requireView(),
-                string.media_accessing_failed,
+                R.string.media_accessing_failed,
                 Snackbar.LENGTH_LONG
         ).show()
         if (renderer != null) {
@@ -1339,24 +1078,32 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView.setIsPrivatePost(post!!.isPrivate)
             readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(post!!.blogUrl))
 
-            val txtTitle = view!!.findViewById<TextView>(R.id.text_title)
-            val txtDateline = view!!.findViewById<TextView>(R.id.text_dateline)
-
-            val tagStrip = view!!.findViewById<ReaderTagStrip>(R.id.tag_strip)
-            val headerView = view!!.findViewById<ReaderPostDetailHeaderView>(R.id.header_view)
-            headerView.setOnFollowListener(this@ReaderPostDetailFragment)
-            if (!canShowFooter()) {
-                layoutFooter.visibility = View.GONE
-            }
-
-            // add padding to the scrollView to make room for the top and bottom toolbars - this also
-            // ensures the scrollbar matches the content so it doesn't disappear behind the toolbars
-            val topPadding = if (autoHideToolbarListener != null) toolbarHeight else 0
-            val bottomPadding = if (canShowFooter()) layoutFooter.height else 0
-            scrollView.setPadding(0, topPadding, 0, bottomPadding)
-
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
+
+            post?.let {
+                if (featuredImageUtils.shouldAddFeaturedImage(it)) {
+                    val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+                    val imageUrl = ReaderUtils.getResizedImageUrl(
+                            it.featuredImage,
+                            displayWidth,
+                            0,
+                            it.isPrivate,
+                            it.isPrivateAtomic
+                    )
+
+                    val displayHeight = DisplayUtils.getDisplayPixelHeight(requireContext())
+                    val imageHeight = (displayHeight * FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
+                    featuredImageView.layoutParams.height = imageHeight
+
+                    imageManager.load(
+                            featuredImageView,
+                            PHOTO,
+                            imageUrl,
+                            CENTER_CROP
+                    )
+                }
+            }
 
             // render the post in the webView
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils, readerCssProvider)
@@ -1404,23 +1151,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
             }
 
-            txtTitle.text = if (post!!.hasTitle()) post!!.title else getString(R.string.reader_untitled_post)
-
-            val timestamp = DateTimeUtils.javaDateToTimeSpan(
-                    post!!.displayDate,
-                    WordPress.getContext()
-            )
-            txtDateline.text = timestamp
-
-            headerView.setPost(post!!, accountStore.hasAccessToken())
-            tagStrip.setPost(post!!)
-
-            if (canShowFooter() && layoutFooter.visibility != View.VISIBLE) {
-                AniUtils.fadeIn(layoutFooter, AniUtils.Duration.LONG)
+            post?.let {
+                viewModel.onShowPost(it)
             }
 
-            refreshIconCounts()
-            initBookmarkButton()
+            layoutFooter.visibility = View.VISIBLE
         }
     }
 
@@ -1439,12 +1174,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (!isAdded) {
                     return@Runnable
                 }
-                refreshLikes()
                 if (!hasAlreadyUpdatedPost) {
                     hasAlreadyUpdatedPost = true
                     updatePost()
                 }
-                requestRelatedPosts()
             }, 300)
         } else {
             AppLog.w(T.READER, "reader post detail > page finished - " + url!!)
@@ -1474,15 +1207,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onCustomViewShown() {
-        // full screen video has just been shown so hide the ActionBar
-        val actionBar = actionBar
-        actionBar?.hide()
+        // full screen video has just been shown so hide the AppBar
+        onShowHideToolbar(false)
     }
 
     override fun onCustomViewHidden() {
-        // user returned from full screen video so re-display the ActionBar
-        val actionBar = actionBar
-        actionBar?.show()
+        // user returned from full screen video so re-display the AppBar
+        onShowHideToolbar(true)
     }
 
     fun hideCustomView() {
@@ -1537,6 +1268,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun shouldOpenExternal(url: String): Boolean {
         // open YouTube videos in external app so they launch the YouTube player
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
+            return true
+        }
+
+        // Open Stories links in external browser so they have more fullscreen play real estate
+        if (Uri.parse(url).queryParameterNames.any { it.contains("wp-story") }) {
             return true
         }
 
@@ -1608,99 +1344,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onScrollUp(distanceY: Float) {
-        if (!isToolbarShowing && -distanceY >= MIN_SCROLL_DISTANCE_Y) {
-            showToolbar(true)
-            showFooter(true)
-        }
-    }
-
-    override fun onScrollDown(distanceY: Float) {
-        if (isToolbarShowing &&
-                distanceY >= MIN_SCROLL_DISTANCE_Y &&
-                scrollView.canScrollDown() &&
-                scrollView.canScrollUp() &&
-                scrollView.scrollY > toolbarHeight) {
-            showToolbar(false)
-            showFooter(false)
-        }
-    }
-
-    override fun onScrollCompleted() {
-        if (!isToolbarShowing && (!scrollView.canScrollDown() || !scrollView.canScrollUp())) {
-            showToolbar(true)
-            showFooter(true)
-        }
-
-        trackRelatedPostsIfShowing()
-    }
-
-    private fun showToolbar(show: Boolean) {
-        isToolbarShowing = show
-        if (autoHideToolbarListener != null) {
-            autoHideToolbarListener!!.onShowHideToolbar(show)
-        }
-    }
-
-    private fun showFooter(show: Boolean) {
-        if (isAdded && canShowFooter()) {
-            AniUtils.animateBottomBar(layoutFooter, show)
-        }
-    }
-
-    /*
-     * can we show the footer bar which contains the like & comment counts?
-     */
-    private fun canShowFooter(): Boolean {
-        return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
-    }
-
-    /**
-     * Returns true if the blog post can be reblogged
-     */
-    private fun canBeReblogged(): Boolean {
-        this.post?.let {
-            if (!it.isPrivate && accountStore.hasAccessToken()) {
-                return true
-            }
-        }
-        return false
-    }
-
-    private fun canShowCommentCount(): Boolean {
-        val post = this.post ?: return false
-        return if (!accountStore.hasAccessToken()) {
-            post.numReplies > 0
-        } else post.isWP &&
-                !post.isDiscoverPost &&
-                (post.isCommentsOpen || post.numReplies > 0)
-    }
-
-    private fun canShowBookmarkButton(): Boolean {
-        return hasPost() && !post!!.isDiscoverPost
-    }
-
-    private fun canShowLikeCount(): Boolean {
-        if (post == null) {
-            return false
-        }
-        return if (!accountStore.hasAccessToken()) {
-            post!!.numLikes > 0
-        } else post!!.canLikePost() || post!!.numLikes > 0
-    }
-
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper.isRefreshing = refreshing
     }
 
-    companion object {
-        private const val BOOKMARKS_SAVED_LOCALLY_DIALOG = "bookmarks_saved_locally_dialog"
+    override fun onShowHideToolbar(show: Boolean) {
+        if (isAdded) {
+            AniUtils.animateTopBar(appBar, show)
+        }
+    }
 
-        // min scroll distance before toggling toolbar
-        private const val MIN_SCROLL_DISTANCE_Y = 10f
+    private fun showFullScreen() {
+        post?.let {
+            val site = siteStore.getSiteBySiteId(it.blogId)
+            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
+        }
+    }
+
+    companion object {
+        private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
-            return newInstance(false, blogId, postId, null, 0, false, null, null, false)
+            return newInstance(false, blogId, postId, null, 0, null, null, false)
         }
 
         fun newInstance(
@@ -1709,7 +1374,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postId: Long,
             directOperation: DirectOperation?,
             commentId: Int,
-            isRelatedPost: Boolean,
             interceptedUri: String?,
             postListType: ReaderPostListType?,
             postSlugsResolutionUnderway: Boolean
@@ -1720,7 +1384,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             args.putBoolean(ReaderConstants.ARG_IS_FEED, isFeed)
             args.putLong(ReaderConstants.ARG_BLOG_ID, blogId)
             args.putLong(ReaderConstants.ARG_POST_ID, postId)
-            args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
             args.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
             args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId)
             args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)

@@ -8,5 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationServiceData(
     val segmentId: Long?,
+    val siteDesign: String?,
     val domain: String
 ) : Parcelable

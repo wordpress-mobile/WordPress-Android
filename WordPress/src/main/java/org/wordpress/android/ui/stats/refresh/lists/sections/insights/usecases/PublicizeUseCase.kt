@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPublicizeStats
+import org.wordpress.android.ui.stats.refresh.lists.BLOCK_ITEM_COUNT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.BLOCK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
@@ -18,7 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
@@ -28,7 +29,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val BLOCK_ITEM_COUNT = 6
 private const val VIEW_ALL_ITEM_COUNT = 100
 
 class PublicizeUseCase
@@ -94,7 +94,7 @@ class PublicizeUseCase
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
-                                navigateAction = NavigationAction.create(this::onLinkClick)
+                                navigateAction = ListItemInteraction.create(this::onLinkClick)
                         )
                 )
             }

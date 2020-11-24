@@ -75,13 +75,13 @@ class PromoDialog : AppCompatDialogFragment() {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState != null) {
-            fragmentTag = savedInstanceState.getString(STATE_KEY_TAG)
-            title = savedInstanceState.getString(STATE_KEY_TITLE)
-            message = savedInstanceState.getString(STATE_KEY_MESSAGE)
-            positiveButtonLabel = savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL)
-            negativeButtonLabel = savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL)
-            neutralButtonLabel = savedInstanceState.getString(STATE_KEY_NEUTRAL_BUTTON_LABEL)
-            linkLabel = savedInstanceState.getString(STATE_KEY_LINK_LABEL)
+            fragmentTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
+            title = requireNotNull(savedInstanceState.getString(STATE_KEY_TITLE))
+            message = requireNotNull(savedInstanceState.getString(STATE_KEY_MESSAGE))
+            positiveButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL))
+            negativeButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL))
+            neutralButtonLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_NEUTRAL_BUTTON_LABEL))
+            linkLabel = requireNotNull(savedInstanceState.getString(STATE_KEY_LINK_LABEL))
             drawableResId = savedInstanceState.getInt(STATE_KEY_DRAWABLE_RES_ID)
         }
     }
