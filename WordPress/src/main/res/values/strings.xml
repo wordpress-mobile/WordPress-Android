@@ -1342,6 +1342,12 @@
     <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
     <string name="reader_discover_no_posts_button_text">Follow topics</string>
+    <string name="reader_follow_comments_null_response">Null response received</string>
+    <string name="reader_follow_comments_bad_format_response">Bad format response received</string>
+    <string name="reader_follow_comments_site_not_found">Could not retrieve site. Follow comments disabled</string>
+    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
+    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
+    <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post: %d</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1742,7 +1748,8 @@
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
     <string name="reader_btn_done">Done</string>
-
+    <string name="reader_btn_follow_comments">Follow conversation</string>
+    <string name="reader_btn_following_comments">Following conversation</string>
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
