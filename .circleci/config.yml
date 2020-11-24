@@ -21,7 +21,7 @@ commands:
     steps:
       - run:
           name: Setup gradle.properties
-          command: cp gradle.properties-example gradle.properties && cp libs/utils/WordPressUtils/gradle.properties-example libs/utils/WordPressUtils/gradle.properties
+          command: cp gradle.properties-example gradle.properties 
   update-gradle-memory:
       parameters:
         jvmargs:
