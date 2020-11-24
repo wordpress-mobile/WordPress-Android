@@ -113,7 +113,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM()
 
         ((uiStates.last() as Content).items[1] as ActivityType).let {
-            it.onClick.invoke(it)
+            it.onClick.invoke()
         }
 
         assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isTrue()
@@ -125,10 +125,10 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM()
 
         ((uiStates.last() as Content).items[1] as ActivityType).let {
-            it.onClick.invoke(it)
+            it.onClick.invoke()
         }
         ((uiStates.last() as Content).items[1] as ActivityType).let {
-            it.onClick.invoke(it)
+            it.onClick.invoke()
         }
 
         assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isFalse()
@@ -156,7 +156,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     private fun generateActivityTypes(count: Int): List<DummyActivityType> {
-        return (1..count).asSequence().map { DummyActivityType(it.toString()) }.toList()
+        return (1..count).asSequence().map { DummyActivityType(it, it.toString()) }.toList()
     }
 
     private data class Observers(val uiStates: List<UiState>)

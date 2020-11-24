@@ -60,8 +60,8 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
-                        ListItemUiState.ActivityType(title = UiStringText(it.toString()))
-                                .apply { onClick = ::onItemClicked }
+                        ListItemUiState.ActivityType(id=it.id, title = UiStringText(it.toString()))
+                                .apply { onClick = { onItemClicked(it.id) } }
                     }
             Content(
                     listOf(headerListItem) + activityTypeListItems,
@@ -73,14 +73,11 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         }
     }
 
-    // TODO malinjir pass an id instead of the UiState
-    private fun onItemClicked(activityType: ListItemUiState.ActivityType) {
+    private fun onItemClicked(itemId: Int) {
         (_uiState.value as? Content)?.let { it ->
             val updatedList = it.items.map {
-                if (it == activityType) {
-                    activityType
-                            .copy(checked = !activityType.checked)
-                            .apply { onClick = activityType.onClick }
+                if (it is ListItemUiState.ActivityType && it.id == itemId) {
+                    it.copy(checked = !it.checked).apply { onClick = it.onClick }
                 } else {
                     it
                 }
@@ -145,10 +142,11 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : ListItemUiState()
 
         data class ActivityType(
+            val id: Int,
             val title: UiString,
             val checked: Boolean = false
         ) : ListItemUiState() {
-            lateinit var onClick: ((ActivityType) -> Unit)
+            lateinit var onClick: (() -> Unit)
         }
     }
 

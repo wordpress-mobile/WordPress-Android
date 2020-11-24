@@ -29,7 +29,7 @@ sealed class ActivityLogTypeFilterViewHolder(internal val parent: ViewGroup, @La
             uiHelpers.setTextOrHide(activityType, uiState.title)
             checkbox.isChecked = uiState.checked
             container.setOnClickListener {
-                uiState.onClick.invoke(uiState)
+                uiState.onClick.invoke()
             }
 
         }
