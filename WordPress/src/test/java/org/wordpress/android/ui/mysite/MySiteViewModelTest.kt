@@ -14,11 +14,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
@@ -34,8 +36,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var accountStore: AccountStore
     private lateinit var viewModel: MySiteViewModel
-    private lateinit var uiModels: MutableList<List<MySiteItem>>
+    private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
@@ -49,7 +52,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel = MySiteViewModel(TEST_DISPATCHER, networkUtilsWrapper, analyticsTrackerWrapper, siteInfoBlockBuilder)
+        viewModel = MySiteViewModel(
+                TEST_DISPATCHER,
+                networkUtilsWrapper,
+                analyticsTrackerWrapper,
+                siteInfoBlockBuilder,
+                accountStore
+        )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
         textInputDialogModels = mutableListOf()
@@ -101,17 +110,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model is empty with no selected site`() {
         viewModel.updateSite(null)
 
-        assertThat(uiModels).hasSize(1)
-        assertThat(uiModels.last()).isEmpty()
+        assertThat(uiModels).hasSize(2)
+        assertThat(uiModels.last().items).isEmpty()
     }
 
     @Test
     fun `model is contains header of selected site`() {
         viewModel.updateSite(site)
 
-        assertThat(uiModels).hasSize(1)
-        assertThat(uiModels.last()).hasSize(1)
-        assertThat(uiModels.last().first() as SiteInfoBlock).isEqualTo(uiModels.last()[0] as SiteInfoBlock)
+        assertThat(uiModels).hasSize(2)
+        assertThat(uiModels.last().items).hasSize(1)
+        assertThat(uiModels.last().items.first() as SiteInfoBlock).isEqualTo(uiModels.last().items[0] as SiteInfoBlock)
     }
 
     @Test
