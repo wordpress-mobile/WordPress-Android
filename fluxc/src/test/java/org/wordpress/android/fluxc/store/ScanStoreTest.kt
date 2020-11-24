@@ -60,6 +60,6 @@ class ScanStoreTest {
         scanStore.onAction(fetchAction)
 
         val expectedEventWithError = ScanStore.OnScanStateFetched(payload.error, ScanAction.FETCH_SCAN_STATE)
-        verify(dispatcher).emitChange(eq(expectedEventWithError))
+        verify(dispatcher).emitChange(expectedEventWithError)
     }
 }
