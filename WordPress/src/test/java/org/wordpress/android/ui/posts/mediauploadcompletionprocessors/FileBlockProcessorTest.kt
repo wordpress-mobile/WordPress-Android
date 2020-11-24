@@ -27,8 +27,8 @@ class FileBlockProcessorTest {
     @Test
     fun `processBlock leaves non-matching block unchanged`() {
         val nonMatchingId = "123"
-        val imageBlockProcessor = FileBlockProcessor(nonMatchingId, mediaFile)
-        val processedBlock = imageBlockProcessor.processBlock(TestContent.oldFileBlock)
+        val fileBlockProcessor = FileBlockProcessor(nonMatchingId, mediaFile)
+        val processedBlock = fileBlockProcessor.processBlock(TestContent.oldFileBlock)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.oldFileBlock)
     }
 
