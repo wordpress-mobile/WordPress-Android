@@ -1015,10 +1015,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.CREATE_SITE:
-                MySiteFragment mySiteFragment = getMySiteFragment();
-                if (mySiteFragment != null) {
-                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
-                }
+                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
                 AppPrefs.setLastSkippedQuickStartTask(null);
@@ -1050,9 +1047,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.SITE_PICKER:
+                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 if (getMySiteFragment() != null) {
-                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
-
                     boolean isSameSiteSelected = data != null
                             && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
 
@@ -1087,16 +1083,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
-                Fragment fragment = mBottomNav.getActiveFragment();
-                // TODO move this logic directly to the fragment
-                if (fragment instanceof MySiteFragment) {
-                    fragment.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
+            case RequestCodes.SITE_ICON_PICKER:
             case RequestCodes.DOMAIN_REGISTRATION:
-                if (getMySiteFragment() != null) {
-                    getMySiteFragment().onActivityResult(requestCode, resultCode, data);
-                }
+                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
         }
     }
@@ -1153,6 +1142,13 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // TODO consider the new my site fragment
         return null;
+    }
+
+    private void passOnActivityResultToMySiteFragment(int requestCode, int resultCode, Intent data) {
+        Fragment fragment = mBottomNav.getFragment(PageType.MY_SITE);
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private NotificationsListFragment getNotificationsListFragment() {
