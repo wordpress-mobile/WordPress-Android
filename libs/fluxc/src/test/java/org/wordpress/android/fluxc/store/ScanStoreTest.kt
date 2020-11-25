@@ -19,6 +19,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartPayload
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.test
@@ -89,5 +93,29 @@ class ScanStoreTest {
 
         verify(scanSqlUtils).getScanStateForSite(siteModel)
         Assert.assertEquals(scanStateModel, scanStateFromDb)
+    }
+
+    @Test
+    fun `start scan triggers rest client`() = test {
+        val payload = ScanStartPayload(siteModel)
+        whenever(scanRestClient.startScan(siteModel)).thenReturn(ScanStartResultPayload(siteModel))
+
+        val action = ScanActionBuilder.newStartScanAction(payload)
+        scanStore.onAction(action)
+
+        verify(scanRestClient).startScan(siteModel)
+    }
+
+    @Test
+    fun `error on start scan returns the error`() = test {
+        val error = ScanStartError(GENERIC_ERROR, "error")
+        val payload = ScanStartResultPayload(error, siteModel)
+        whenever(scanRestClient.startScan(siteModel)).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newStartScanAction(ScanStartPayload(siteModel))
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnScanStarted(payload.error, ScanAction.START_SCAN)
+        verify(dispatcher).emitChange(expectedEventWithError)
     }
 }

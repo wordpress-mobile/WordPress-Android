@@ -1,0 +1,11 @@
+{
+	"success": false,
+	"error": {
+		"errors": {
+			"vp_api_error": [
+				"Site does not have scan capability."
+			]
+		},
+		"error_data": []
+	}
+}
