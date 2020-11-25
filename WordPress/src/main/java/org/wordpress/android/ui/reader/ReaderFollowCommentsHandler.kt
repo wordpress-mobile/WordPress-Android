@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase

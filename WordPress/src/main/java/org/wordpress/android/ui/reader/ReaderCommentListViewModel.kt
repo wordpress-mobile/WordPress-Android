@@ -123,7 +123,6 @@ class ReaderCommentListViewModel
         )
     }
 
-
     override fun onCleared() {
         super.onCleared()
         followStatusGetJob?.cancel()
