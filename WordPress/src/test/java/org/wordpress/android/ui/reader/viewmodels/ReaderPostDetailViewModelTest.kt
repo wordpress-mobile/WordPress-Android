@@ -327,6 +327,8 @@ class ReaderPostDetailViewModelTest {
                             blogName = mock(),
                             blogUrl = "",
                             avatarOrBlavatarUrl = "",
+                            authorAvatarUrl = "",
+                            isAuthorAvatarVisible = false,
                             blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
                         ),
                         FollowButtonUiState(
