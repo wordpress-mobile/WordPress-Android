@@ -11,40 +11,48 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
+import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.properties.Delegates
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
+    private val dummyActivityTypesProvider: DummyActivityTypesProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
+    private var siteId by Delegates.notNull<Long>()
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start() {
+    fun start(siteId: Long) {
         if (isStarted) return
         isStarted = true
+        this.siteId = siteId
 
-        _uiState.value = FullscreenLoading
         fetchAvailableActivityTypes()
     }
 
     private fun fetchAvailableActivityTypes() {
         launch {
-            // TODO malinjir initiate the fetch
-            onActivityTypesFetched(listOf(DummyActivityType, DummyActivityType, DummyActivityType))
+            _uiState.value = FullscreenLoading
+            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(siteId)
+            if (response.isError) {
+                _uiState.value = buildErrorUiState()
+            } else {
+                _uiState.value = buildContentUiState(response.activityTypes)
+            }
         }
     }
 
-    private suspend fun onActivityTypesFetched(activityTypes: List<DummyActivityType>) {
-        _uiState.value = buildContentUiState(activityTypes)
-    }
+    private fun buildErrorUiState() =
+        UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
@@ -64,7 +72,10 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onApplyClicked() {
-        // TODO malinjir save and dismiss
+    }
+
+    private fun onRetryClicked() {
+        fetchAvailableActivityTypes()
     }
 
     private fun onClearClicked() {
@@ -85,9 +96,14 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     sealed class UiState {
         open val contentVisibility = false
         open val loadingVisibility = false
+        open val errorVisibility = false
 
         object FullscreenLoading : UiState() {
             override val loadingVisibility: Boolean = true
+        }
+
+        data class Error(val retryAction: Action) : UiState() {
+            override val errorVisibility = true
         }
 
         data class Content(
@@ -113,6 +129,4 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     data class Action(val label: UiString) {
         var action: (() -> Unit)? = null
     }
-
-    object DummyActivityType
 }
