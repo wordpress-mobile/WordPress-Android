@@ -1344,6 +1344,7 @@
     <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
     <string name="reader_discover_no_posts_button_text">Follow topics</string>
+    <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>

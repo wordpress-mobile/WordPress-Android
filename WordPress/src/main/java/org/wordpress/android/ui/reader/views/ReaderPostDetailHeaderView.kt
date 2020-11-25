@@ -86,6 +86,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                     BLAVATAR_CIRCULAR, state.avatarOrBlavatarUrl
             )
         }
+        // we don't show the p2 style of header in post details yet
+        uiHelpers.updateVisibility(authors_avatar, state.isAuthorAvatarVisible)
     }
 
     private fun updateFollowButton(followButtonUiState: FollowButtonUiState) {
