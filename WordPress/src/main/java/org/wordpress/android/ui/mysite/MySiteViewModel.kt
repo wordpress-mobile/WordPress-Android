@@ -155,7 +155,9 @@ class MySiteViewModel
         when (interaction) {
             is Positive -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
-                    _onNavigation.postValue(Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite()))))
+                    _onNavigation.postValue(
+                            Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite())))
+                    )
                 }
             }
             is Negative -> when (interaction.tag) {

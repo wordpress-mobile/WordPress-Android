@@ -18,8 +18,8 @@ sealed class MySiteItem(val type: Type) {
         val onSwitchSiteClick: ListItemInteraction
     ) : MySiteItem(SITE_INFO_BLOCK) {
         sealed class IconState {
-            object Progress: IconState()
-            data class Visible(val url: String? = null): IconState()
+            object Progress : IconState()
+            data class Visible(val url: String? = null) : IconState()
         }
     }
 }

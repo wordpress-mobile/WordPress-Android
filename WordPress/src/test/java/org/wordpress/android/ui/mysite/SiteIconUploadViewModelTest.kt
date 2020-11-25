@@ -113,7 +113,7 @@ class SiteIconUploadViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on media upload success removes event, updates site icon media ID if media not empty and icon upload in progress`() {
+    fun `on media upload success removes event, updates icon ID if media not empty and icon upload in progress`() {
         val message = "success message"
         val event = UploadMediaSuccessEvent(listOf(mediaModel), message)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
