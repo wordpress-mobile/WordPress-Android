@@ -1026,7 +1026,7 @@ class MySiteFragment : Fragment(),
             row_plan.visibility = View.GONE
         }
 
-        val jetpackSectionVisible = site.isJetpackConnected &&  // jetpack is installed and connected
+        val jetpackSectionVisible = site.isJetpackConnected && // jetpack is installed and connected
                 !site.isWPComAtomic // isn't atomic site
 
         val jetpackSettingsVisible = jetpackSectionVisible &&
