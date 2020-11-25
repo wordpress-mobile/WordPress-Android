@@ -67,7 +67,7 @@ class ImprovedMySiteFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        appbar_main?.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        appbar_main.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxOffset = appBarLayout.totalScrollRange
             val currentOffset = maxOffset + verticalOffset
 
@@ -84,10 +84,10 @@ class ImprovedMySiteFragment : Fragment(),
             }
         })
 
-        toolbar_main?.let { toolbar ->
+        toolbar_main.let { toolbar ->
             toolbar.inflateMenu(R.menu.my_site_menu)
             toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
-                meMenu.actionView?.let { actionView ->
+                meMenu.actionView.let { actionView ->
                     actionView.setOnClickListener { viewModel.onAvatarPressed() }
                     TooltipCompat.setTooltipText(actionView, meMenu.title)
                 }
