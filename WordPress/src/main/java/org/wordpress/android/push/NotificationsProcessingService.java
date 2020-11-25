@@ -632,8 +632,8 @@ public class NotificationsProcessingService extends Service {
                 mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(payload));
 
                 // Bump analytics
-                AnalyticsUtils
-                        .trackCommentReplyWithDetails(true, site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
+                AnalyticsUtils.trackCommentReplyWithDetails(true,
+                        site, comment, AnalyticsCommentActionSource.NOTIFICATIONS);
                 AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
             } else {
                 // cancel the current notification

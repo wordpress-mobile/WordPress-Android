@@ -986,9 +986,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         CommentModel reply = new CommentModel();
         reply.setContent(replyText);
 
-        AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
-                mCommentSource.toAnalyticsCommentActionSource(), mSite);
-
         mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
                 mComment,
                 reply)));
