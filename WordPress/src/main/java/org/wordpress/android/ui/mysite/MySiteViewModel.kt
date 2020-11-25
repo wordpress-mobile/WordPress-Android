@@ -66,10 +66,6 @@ class MySiteViewModel @Inject constructor(
         UiModel(currentAvatarUrl.orEmpty(), items)
     }
 
-    init {
-        refreshAccountAvatarUrl()
-    }
-
     private fun titleClick(selectedSite: SiteModel) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
