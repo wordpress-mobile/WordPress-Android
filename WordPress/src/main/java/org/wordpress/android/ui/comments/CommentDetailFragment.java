@@ -440,6 +440,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
+        AnalyticsUtils.trackCommentActionWithSiteDetails(
+                Stat.COMMENT_VIEWED, mCommentSource.toAnalyticsCommentActionSource(), mSite);
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
@@ -742,9 +744,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             }
         }
 
-        AnalyticsUtils.trackCommentActionWithSiteDetails(
-                Stat.COMMENT_VIEWED, mCommentSource.toAnalyticsCommentActionSource(), mSite);
-
         getActivity().invalidateOptionsMenu();
     }
 
@@ -863,7 +862,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
-    private void trackModerationFromNotification(final CommentStatus newStatus) {
+    private void trackModerationEvent(final CommentStatus newStatus) {
         switch (newStatus) {
             case APPROVED:
                 if (mCommentSource == CommentSource.NOTIFICATION) {
@@ -923,10 +922,15 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mPreviousStatus = mComment.getStatus();
 
+        // On backend unspamming works by approving comment, but we want to track UNSPAM as a separate event
+        CommentStatus statusToTrack =
+                (CommentStatus.fromString(mPreviousStatus) == CommentStatus.SPAM && newStatus == CommentStatus.APPROVED)
+                        ? CommentStatus.UNSPAM : newStatus;
+        trackModerationEvent(statusToTrack);
+
         // Fire the appropriate listener if we have one
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
-            trackModerationFromNotification(newStatus);
             dispatchModerationAction(newStatus);
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mSite, mComment, newStatus);

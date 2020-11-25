@@ -262,8 +262,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         AnalyticsUtils.trackWithReaderPostDetails(AnalyticsTracker.Stat.READER_ARTICLE_COMMENTS_OPENED, mPost);
-        AnalyticsUtils.trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat.COMMENT_VIEWED,
-                AnalyticsCommentActionSource.READER, mPost);
 
         mSite = mSiteStore.getSiteBySiteId(mBlogId);
 
@@ -783,8 +781,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                     getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
-                    AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
-                            AnalyticsCommentActionSource.READER, mSite);
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_REPLIED_TO,
+                            AnalyticsCommentActionSource.READER, mPost);
                 } else {
                     mEditComment.setText(commentText);
                     mSubmitReplyBtn.setEnabled(true);
