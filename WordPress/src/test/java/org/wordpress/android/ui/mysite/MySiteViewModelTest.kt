@@ -66,9 +66,9 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         viewModel = MySiteViewModel(
-                TEST_DISPATCHER,
-                TEST_DISPATCHER,
                 networkUtilsWrapper,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER,
                 analyticsTrackerWrapper,
                 siteInfoBlockBuilder,
                 selectedSiteRepository,
