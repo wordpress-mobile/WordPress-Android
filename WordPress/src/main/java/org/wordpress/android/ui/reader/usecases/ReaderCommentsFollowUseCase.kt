@@ -22,7 +22,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         emit(FollowCommentsState.Loading)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(FollowCommentsState.NoNetwork(true, UiStringRes(R.string.error_network_connection)))
+            emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
         } else {
             val canFollowComments: Boolean = suspendCoroutine { continuation ->
                 postSubscribersApiCallsProvider.getCanFollowComments(blogId, continuation)
@@ -47,7 +47,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                         )
                     }
                     is Failure -> {
-                        emit(FollowCommentsState.Failure(blogId, postId, true, UiStringText(status.error)))
+                        emit(FollowCommentsState.Failure(blogId, postId, UiStringText(status.error)))
                     }
                 }
             }
@@ -62,7 +62,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         emit(FollowCommentsState.Loading)
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(FollowCommentsState.NoNetwork(false, UiStringRes(R.string.error_network_connection)))
+            emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
         } else {
             val status: PostSubscribersCallResult = suspendCoroutine { continuation ->
                 if (subscribe) {
@@ -90,7 +90,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
                     )
                 }
                 is Failure -> {
-                    emit(FollowCommentsState.Failure(blogId, postId, false, UiStringText(status.error)))
+                    emit(FollowCommentsState.Failure(blogId, postId, UiStringText(status.error)))
                 }
             }
         }
@@ -107,15 +107,9 @@ class ReaderCommentsFollowUseCase @Inject constructor(
             val userMessage: UiString? = null
         ) : FollowCommentsState()
 
-        data class NoNetwork(
-            val isGetStatus: Boolean,
-            val error: UiString
-        ) : FollowCommentsState()
-
         data class Failure(
             val blogId: Long,
             val postId: Long,
-            val isGetStatus: Boolean,
             val error: UiString
         ) : FollowCommentsState()
 

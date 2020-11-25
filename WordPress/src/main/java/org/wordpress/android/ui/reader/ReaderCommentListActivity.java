@@ -56,7 +56,6 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListen
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.reader.FollowCommentsUiState.UpdateFollowCommentsUiState;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel.ScrollPosition;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.actions.ReaderActions;

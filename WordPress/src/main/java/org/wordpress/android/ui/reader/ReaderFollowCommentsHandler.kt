@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.NoNetwork
 
 class ReaderFollowCommentsHandler @Inject constructor(
     private val readerCommentsFollowUseCase: ReaderCommentsFollowUseCase,
@@ -51,10 +50,6 @@ class ReaderFollowCommentsHandler @Inject constructor(
                 state.userMessage?.let {
                     _snackbarEvents.postValue(Event(SnackbarMessageHolder(it)))
                 }
-            }
-            is NoNetwork -> {
-                _followStatusUpdate.postValue(state)
-                _snackbarEvents.postValue(Event(SnackbarMessageHolder(state.error)))
             }
             is Failure -> {
                 _followStatusUpdate.postValue(state)

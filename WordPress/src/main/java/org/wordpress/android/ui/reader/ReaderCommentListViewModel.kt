@@ -10,8 +10,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.FollowCommentsUiState.Nop
-import org.wordpress.android.ui.reader.FollowCommentsUiState.UpdateFollowCommentsUiState
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.DISABLED
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.GONE
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType.LOADING
@@ -21,10 +19,8 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.NoNetwork
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig
 import org.wordpress.android.util.distinct
-import org.wordpress.android.util.filter
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -46,8 +42,8 @@ class ReaderCommentListViewModel
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateFollowStatus = MediatorLiveData<FollowCommentsState>()
-    val updateFollowUiState: LiveData<FollowCommentsUiState> =
-            _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }.filter { it != Nop }
+    val updateFollowUiState: LiveData<UpdateFollowCommentsUiState> =
+            _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }
 
     private val _scrollTo = MutableLiveData<Event<ScrollPosition>>()
     val scrollTo: LiveData<Event<ScrollPosition>> = _scrollTo.distinct()
@@ -106,16 +102,11 @@ class ReaderCommentListViewModel
         }
     }
 
-    private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowCommentsUiState {
-        return if ((followCommentsState is NoNetwork && !followCommentsState.isGetStatus) ||
-                (followCommentsState is Failure && !followCommentsState.isGetStatus)) {
-            Nop
-        } else {
-            UpdateFollowCommentsUiState(
+    private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): UpdateFollowCommentsUiState {
+        return UpdateFollowCommentsUiState(
                     type = when (followCommentsState) {
                         Loading -> LOADING
                         is FollowStateChanged -> VISIBLE_WITH_STATE
-                        is NoNetwork -> DISABLED
                         is Failure -> DISABLED
                         FollowCommentsNotAllowed -> GONE
                     },
@@ -129,9 +120,9 @@ class ReaderCommentListViewModel
                         ::onFollowConversationClicked
                     else
                         null
-            )
-        }
+        )
     }
+
 
     override fun onCleared() {
         super.onCleared()
