@@ -252,6 +252,7 @@ public class AnalyticsUtils {
             }
             properties.put(BLOG_ID_KEY, site.getSiteId());
             properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+            properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         }
 
         if (properties == null) {
@@ -289,6 +290,7 @@ public class AnalyticsUtils {
         if (site != null) {
             properties.put(BLOG_ID_KEY, site.getSiteId());
             properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+            properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         }
 
         if (comment != null) {
