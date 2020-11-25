@@ -862,6 +862,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
+    // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
     private void trackModerationFromNotification(final CommentStatus newStatus) {
         switch (newStatus) {
             case APPROVED:
@@ -1222,6 +1223,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
 
         // Bump analytics
+        // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
         if (mCommentSource == CommentSource.NOTIFICATION) {
             AnalyticsTracker.track(mBtnLikeComment.isActivated() ? Stat.NOTIFICATION_LIKED : Stat.NOTIFICATION_UNLIKED);
         }

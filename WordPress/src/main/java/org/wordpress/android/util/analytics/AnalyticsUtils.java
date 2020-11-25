@@ -306,6 +306,7 @@ public class AnalyticsUtils {
      * @param isQuickReply Whether is a quick reply or not
      * @param site The site object
      * @param comment The comment object
+     * @param source The source of the comment action
      */
     public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
                                                     CommentModel comment, AnalyticsCommentActionSource source) {
@@ -321,6 +322,10 @@ public class AnalyticsUtils {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
             AnalyticsTracker.track(stat);
+
+            if (legacyTracker != null) {
+                AnalyticsTracker.track(legacyTracker);
+            }
             return;
         }
 
@@ -370,11 +375,12 @@ public class AnalyticsUtils {
             return;
         }
 
-        // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
-        // RSS pass should pass: feed_id, feed_item_id, is_jetpack
         if (properties == null) {
             properties = new HashMap<>();
         }
+
+        // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
+        // RSS pass should pass: feed_id, feed_item_id, is_jetpack
         if (post.isWP() || post.isJetpack) {
             properties.put(BLOG_ID_KEY, post.blogId);
             properties.put(POST_ID_KEY, post.postId);
@@ -382,6 +388,7 @@ public class AnalyticsUtils {
         properties.put(FEED_ID_KEY, post.feedId);
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
+        properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromReaderPost(post));
 
         AnalyticsTracker.track(stat, properties);
 
@@ -644,6 +651,44 @@ public class AnalyticsUtils {
         AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
     }
 
+    @VisibleForTesting
+    protected enum AnalyticsSiteType {
+        BLOG {
+            public String toString() {
+                return "blog";
+            }
+        },
+        P2 {
+            public String toString() {
+                return "p2";
+            }
+        };
+
+        static AnalyticsSiteType fromSiteModel(SiteModel siteModel) {
+            if (siteModel.isWpForTeamsSite()) {
+                return P2;
+            }
+
+            return BLOG;
+        }
+
+        static AnalyticsSiteType fromReaderPost(ReaderPost readerPost) {
+            if (readerPost.isWpForTeams) {
+                return P2;
+            }
+
+            return BLOG;
+        }
+
+        static String toStringFromSiteModel(SiteModel siteModel) {
+            return fromSiteModel(siteModel).toString();
+        }
+
+        static String toStringFromReaderPost(ReaderPost readerPost) {
+            return fromReaderPost(readerPost).toString();
+        }
+    }
+
     public enum AnalyticsCommentActionSource {
         NOTIFICATIONS {
             public String toString() {
@@ -677,31 +722,5 @@ public class AnalyticsUtils {
         properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
 
         AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
-    }
-
-    @VisibleForTesting
-    protected enum AnalyticsSiteType {
-        BLOG {
-            public String toString() {
-                return "blog";
-            }
-        },
-        P2 {
-            public String toString() {
-                return "p2";
-            }
-        };
-
-        static AnalyticsSiteType fromSiteModel(SiteModel siteModel) {
-            if (siteModel.isWpForTeamsSite()) {
-                return P2;
-            }
-
-            return BLOG;
-        }
-
-        static String toStringFromSiteModel(SiteModel siteModel) {
-            return fromSiteModel(siteModel).toString();
-        }
     }
 }

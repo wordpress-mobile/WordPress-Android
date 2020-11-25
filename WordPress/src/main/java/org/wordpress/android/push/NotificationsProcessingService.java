@@ -547,6 +547,7 @@ public class NotificationsProcessingService extends Service {
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
 
             // Bump analytics
+            // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
             AnalyticsUtils.trackWithBlogPostDetails(
                     AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED, mNote.getSiteId(), mNote.getPostId());
             AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_QUICK_ACTION_LIKED,
@@ -574,6 +575,7 @@ public class NotificationsProcessingService extends Service {
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
 
             // Bump analytics
+            // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
             AnalyticsUtils.trackWithBlogPostDetails(
                     AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED, mNote.getSiteId(), mNote.getPostId());
             AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_QUICK_ACTION_APPROVED,
