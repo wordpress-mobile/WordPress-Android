@@ -1024,7 +1024,7 @@ class MySiteFragment : Fragment(),
             row_plan.visibility = View.GONE
         }
 
-        if (site.isJetpackConnected && !site.isWPComAtomic) {
+        if (SiteUtils.isAccessedViaWPComRest(site) && site.isJetpackConnected && !site.isWPComAtomic) {
             row_label_jetpack.visibility = View.VISIBLE
             row_jetpack_settings.visibility = View.VISIBLE
         } else {
