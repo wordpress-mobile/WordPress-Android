@@ -1027,7 +1027,7 @@ class MySiteFragment : Fragment(),
         }
 
         val jetpackSectionVisible = site.isJetpackConnected &&  // jetpack is installed and connected
-                !site.isWPCom // isn't a .com site
+                !site.isWPComAtomic // isn't atomic site
 
         val jetpackSettingsVisible = jetpackSectionVisible &&
                 SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
