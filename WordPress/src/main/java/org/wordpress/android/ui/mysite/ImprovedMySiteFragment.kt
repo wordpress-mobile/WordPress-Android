@@ -164,6 +164,7 @@ class ImprovedMySiteFragment : Fragment(),
     override fun onResume() {
         super.onResume()
         viewModel.updateSite((activity as? WPMainActivity)?.selectedSite)
+        viewModel.refreshAccountAvatarUrl()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
