@@ -224,7 +224,10 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void afterTextChanged(Editable s) {
-        mLoginSiteAddressValidator.setAddress(EditTextUtils.getText(mSiteAddressInput.getEditText()));
+        if (mSiteAddressInput != null) {
+            mLoginSiteAddressValidator
+                    .setAddress(EditTextUtils.getText(mSiteAddressInput.getEditText()));
+        }
     }
 
     @Override
@@ -233,7 +236,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        mSiteAddressInput.setError(null);
+        if (mSiteAddressInput != null) {
+            mSiteAddressInput.setError(null);
+        }
     }
 
     private void showError(int messageId) {
