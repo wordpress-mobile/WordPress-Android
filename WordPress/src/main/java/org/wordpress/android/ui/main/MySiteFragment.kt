@@ -1026,11 +1026,11 @@ class MySiteFragment : Fragment(),
             row_plan.visibility = View.GONE
         }
 
-        val jetpackSectionVisible = SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
-                site.isJetpackConnected &&  // jetpack is installed and connected
-                !site.isWPComAtomic // isn't an atomic site
+        val jetpackSectionVisible = site.isJetpackConnected &&  // jetpack is installed and connected
+                !site.isWPCom // isn't a .com site
 
         val jetpackSettingsVisible = jetpackSectionVisible &&
+                SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
                 site.hasCapabilityManageOptions // has permissions to manage the site
 
         uiHelpers.updateVisibility(row_label_jetpack, jetpackSectionVisible)
