@@ -131,6 +131,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils.getSnackbarDuration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
@@ -198,6 +199,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var uiHelpers: UiHelpers
 
     private val selectedSite: SiteModel?
         get() {
@@ -1024,19 +1026,15 @@ class MySiteFragment : Fragment(),
             row_plan.visibility = View.GONE
         }
 
-
-
-        if (site.hasCapabilityManageOptions && // has permissions to manage the site
-                SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
+        val jetpackSectionVisible = SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
                 site.isJetpackConnected &&  // jetpack is installed and connected
                 !site.isWPComAtomic // isn't an atomic site
-        ) {
-            row_label_jetpack.visibility = View.VISIBLE
-            row_jetpack_settings.visibility = View.VISIBLE
-        } else {
-            row_jetpack_settings.visibility = View.GONE
-            row_label_jetpack.visibility = View.GONE
-        }
+
+        val jetpackSettingsVisible = jetpackSectionVisible &&
+                site.hasCapabilityManageOptions // has permissions to manage the site
+
+        uiHelpers.updateVisibility(row_label_jetpack, jetpackSectionVisible)
+        uiHelpers.updateVisibility(row_jetpack_settings, jetpackSettingsVisible)
 
         // Do not show pages menu item to Collaborators.
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
