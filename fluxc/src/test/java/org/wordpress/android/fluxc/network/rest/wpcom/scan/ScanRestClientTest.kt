@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -33,6 +34,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanStateResponse.Threat
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.test
 
@@ -71,7 +73,7 @@ class ScanRestClientTest {
 
         scanRestClient.fetchScanState(site)
 
-        assertEquals(urlCaptor.firstValue, "https://public-api.wordpress.com/wpcom/v2/sites/${site.siteId}/scan/")
+        assertEquals(urlCaptor.firstValue, "$API_BASE_PATH/sites/${site.siteId}/scan/")
     }
 
     @Test
@@ -241,6 +243,45 @@ class ScanRestClientTest {
         assertEmittedScanStatusError(payload, ScanStateErrorType.INVALID_RESPONSE)
     }
 
+    @Test
+    fun `start scan builds correct request url`() = test {
+        val scanStartResponse = ScanStartResponse(success = true)
+        initStartScan(scanStartResponse)
+
+        scanRestClient.startScan(site)
+
+        assertEquals(urlCaptor.firstValue, "$API_BASE_PATH/sites/${site.siteId}/scan/enqueue/")
+    }
+
+    @Test
+    fun `start scan dispatches response on success`() = test {
+        val scanStartResponse = ScanStartResponse(success = true)
+        initStartScan(scanStartResponse)
+
+        val payload = scanRestClient.startScan(site)
+
+        with(payload) {
+            assertEquals(site, this@ScanRestClientTest.site)
+            assertNull(error)
+        }
+    }
+
+    @Test
+    fun `start scan dispatches api error on failure from api`() = test {
+        val errorResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, JP_BACKUP_DAILY_START_SCAN_ERROR_JSON)
+        val startScanResponse = getStartScanResponseFromJsonString(errorResponseJson)
+        initStartScan(startScanResponse)
+
+        val payload = scanRestClient.startScan(site)
+
+        with(payload) {
+            assertEquals(site, this@ScanRestClientTest.site)
+            assertTrue(isError)
+            assertEquals(ScanStartErrorType.API_ERROR, error.type)
+        }
+    }
+
     private fun assertEmittedScanStatusError(payload: FetchedScanStatePayload, errorType: ScanStateErrorType) {
         with(payload) {
             assertEquals(site, this@ScanRestClientTest.site)
@@ -252,6 +293,11 @@ class ScanRestClientTest {
     private fun getScanStateResponseFromJsonString(json: String): ScanStateResponse? {
         val responseType = object : TypeToken<ScanStateResponse>() {}.type
         return Gson().fromJson(json, responseType) as? ScanStateResponse
+    }
+
+    private fun getStartScanResponseFromJsonString(json: String): ScanStartResponse? {
+        val responseType = object : TypeToken<ScanStartResponse>() {}.type
+        return Gson().fromJson(json, responseType) as? ScanStartResponse
     }
 
     private suspend fun initFetchScanState(
@@ -275,7 +321,27 @@ class ScanRestClientTest {
         return response
     }
 
+    private suspend fun initStartScan(
+        data: ScanStartResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<ScanStartResponse> {
+        val nonNullData = data ?: mock()
+        val response = if (error != null) Response.Error(error) else Success(nonNullData)
+        whenever(
+            wpComGsonRequestBuilder.syncPostRequest(
+                eq(scanRestClient),
+                urlCaptor.capture(),
+                eq(mapOf()),
+                anyOrNull(),
+                eq(ScanStartResponse::class.java)
+            )
+        ).thenReturn(response)
+        whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
     companion object {
+        private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v2"
         private const val JP_COMPLETE_SCAN_IDLE_JSON = "wp/jetpack/scan/jp-complete-scan-idle.json"
         private const val JP_COMPLETE_SCAN_SCANNING_JSON = "wp/jetpack/scan/jp-complete-scan-scanning.json"
         private const val JP_BACKUP_DAILY_SCAN_UNAVAILABLE_JSON =
@@ -284,5 +350,7 @@ class ScanRestClientTest {
             "wp/jetpack/scan/jp-scan-daily-scan-idle-with-threat.json"
         private const val JP_SCAN_DAILY_SCAN_IDLE_WITH_THREAT_WITHOUT_SERVER_CREDS_JSON =
             "wp/jetpack/scan/jp-scan-daily-scan-idle-with-threat-without-server-creds.json"
+        private const val JP_BACKUP_DAILY_START_SCAN_ERROR_JSON =
+            "wp/jetpack/scan/jp-backup-daily-start-scan-error.json"
     }
 }
