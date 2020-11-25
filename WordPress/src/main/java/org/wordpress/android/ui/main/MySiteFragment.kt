@@ -1024,7 +1024,13 @@ class MySiteFragment : Fragment(),
             row_plan.visibility = View.GONE
         }
 
-        if (SiteUtils.isAccessedViaWPComRest(site) && site.isJetpackConnected && !site.isWPComAtomic) {
+
+
+        if (site.hasCapabilityManageOptions && // has permissions to manage the site
+                SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
+                site.isJetpackConnected &&  // jetpack is installed and connected
+                !site.isWPComAtomic // isn't an atomic site
+        ) {
             row_label_jetpack.visibility = View.VISIBLE
             row_jetpack_settings.visibility = View.VISIBLE
         } else {
