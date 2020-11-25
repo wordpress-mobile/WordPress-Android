@@ -12,6 +12,7 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Failure
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
@@ -28,18 +29,16 @@ class ReaderFollowCommentsHandler @Inject constructor(
     val followStatusUpdate: LiveData<FollowCommentsState> = _followStatusUpdate
 
     suspend fun handleFollowCommentsClicked(blogId: Long, postId: Long, askSubscribe: Boolean) {
-        withContext(bgDispatcher) {
-            readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe).collect { state ->
-                manageState(state)
-            }
+        readerCommentsFollowUseCase.setMySubscriptionToPost(blogId, postId, askSubscribe)
+                .flowOn(bgDispatcher).collect { state ->
+            manageState(state)
         }
     }
 
     suspend fun handleFollowCommentsStatusRequest(blogId: Long, postId: Long, isInit: Boolean) {
-        withContext(bgDispatcher) {
-            readerCommentsFollowUseCase.getMySubscriptionToPost(blogId, postId, isInit).collect { state ->
-                manageState(state)
-            }
+        readerCommentsFollowUseCase.getMySubscriptionToPost(blogId, postId, isInit)
+                .flowOn(bgDispatcher).collect { state ->
+            manageState(state)
         }
     }
 
