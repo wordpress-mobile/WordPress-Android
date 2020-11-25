@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
@@ -112,7 +113,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         siteInfoBlock = SiteInfoBlock(
                 siteName,
                 siteUrl,
-                siteIcon,
+                IconState.Visible(siteIcon),
                 null,
                 mock(),
                 mock(),
