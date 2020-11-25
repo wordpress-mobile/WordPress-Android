@@ -14,7 +14,7 @@ class DummyActivityTypesProvider @Inject constructor() {
         return DummyAvailableActivityTypesResponse(
                 false, listOf(
                 DummyActivityType(1, "Dummy Users"),
-                DummyActivityType(2,"Dummy Backup"),
+                DummyActivityType(2, "Dummy Backup"),
                 DummyActivityType(3, "Dummy Comments"),
                 DummyActivityType(4, "Dummy Posts")
         )

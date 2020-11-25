@@ -60,7 +60,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
-                        ListItemUiState.ActivityType(id=it.id, title = UiStringText(it.toString()))
+                        ListItemUiState.ActivityType(id = it.id, title = UiStringText(it.toString()))
                                 .apply { onClick = { onItemClicked(it.id) } }
                     }
             Content(
@@ -84,7 +84,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             }
             _uiState.postValue(it.copy(items = updatedList))
         }
-
     }
 
     private fun onApplyClicked() {

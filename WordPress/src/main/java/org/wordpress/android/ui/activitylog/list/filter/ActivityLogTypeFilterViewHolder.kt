@@ -31,7 +31,6 @@ sealed class ActivityLogTypeFilterViewHolder(internal val parent: ViewGroup, @La
             container.setOnClickListener {
                 uiState.onClick.invoke()
             }
-
         }
     }
 
