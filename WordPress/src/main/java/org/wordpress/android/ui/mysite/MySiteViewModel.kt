@@ -67,11 +67,7 @@ class MySiteViewModel @Inject constructor(
     }
 
     init {
-        updateAccountAvatarUrl()
-    }
-
-    private fun updateAccountAvatarUrl() {
-        _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
+        refreshAccountAvatarUrl()
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -130,6 +126,10 @@ class MySiteViewModel @Inject constructor(
 
     fun updateSite(selectedSite: SiteModel?) {
         _selectedSite.value = selectedSite
+    }
+
+    fun refreshAccountAvatarUrl() {
+        _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
     fun onSiteNameChosen(input: String?) {
