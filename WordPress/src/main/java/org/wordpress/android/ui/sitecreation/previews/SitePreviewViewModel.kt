@@ -224,7 +224,7 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreLoadingWebView() {
-        tracker.trackPreviewLoading()
+        tracker.trackSiteDesignPreviewViewed(siteCreationState.siteDesign)
         launch {
             /**
              * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
@@ -237,7 +237,7 @@ class SitePreviewViewModel @Inject constructor(
              */
             withContext(mainDispatcher) {
                 if (uiState.value !is SitePreviewContentUiState) {
-                    tracker.trackPreviewWebviewShown()
+                    tracker.trackSiteDesignPreviewLoading(siteCreationState.siteDesign)
                     updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
                 }
             }
@@ -255,10 +255,10 @@ class SitePreviewViewModel @Inject constructor(
         _hideGetStartedBar.call()
         if (!webviewFullyLoadedTracked) {
             webviewFullyLoadedTracked = true
-            tracker.trackPreviewWebviewFullyLoaded()
+            tracker.trackSiteDesignPreviewLoaded(siteCreationState.siteDesign)
         }
         if (uiState.value is SitePreviewFullscreenProgressUiState) {
-            tracker.trackPreviewWebviewShown()
+            tracker.trackSiteDesignPreviewLoading(siteCreationState.siteDesign)
         }
         /**
          * Update the ui state if the loading or error screen is being shown.
