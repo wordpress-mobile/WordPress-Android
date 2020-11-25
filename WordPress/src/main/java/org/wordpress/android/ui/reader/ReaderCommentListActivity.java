@@ -783,6 +783,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                     getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
+                    AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITED,
+                            AnalyticsCommentActionSource.READER, mSite);
                 } else {
                     mEditComment.setText(commentText);
                     mSubmitReplyBtn.setEnabled(true);
