@@ -9,6 +9,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
+import org.wordpress.android.ui.mysite.SiteIconUploadViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
@@ -426,6 +427,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MySiteViewModel.class)
     abstract ViewModel mySiteViewModel(MySiteViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SiteIconUploadViewModel.class)
+    abstract ViewModel siteIconUploadViewModel(SiteIconUploadViewModel viewModel);
 
     @Binds
     @IntoMap
