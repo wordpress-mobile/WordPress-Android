@@ -75,6 +75,7 @@ public class AnalyticsUtils {
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
     private static final String NEWS_CARD_ORIGIN = "origin";
     private static final String NEWS_CARD_VERSION = "version";
+    private static final String SITE_TYPE_KEY = "site_type";
     private static final String COMMENT_ACTION_SOURCE = "source";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
@@ -314,17 +315,12 @@ public class AnalyticsUtils {
                     : AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
         }
 
-        AnalyticsTracker.Stat stat = isQuickReply ? Stat.COMMENT_QUICK_ACTION_REPLIED_TO
-                : Stat.COMMENT_REPLIED_TO;
+        AnalyticsTracker.Stat stat = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO
+                : AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
             AnalyticsTracker.track(stat);
-
-            if (legacyTracker != null) {
-                AnalyticsTracker.track(legacyTracker);
-            }
-
             return;
         }
 
@@ -333,6 +329,7 @@ public class AnalyticsUtils {
         properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
         properties.put(POST_ID_KEY, comment.getRemotePostId());
         properties.put(COMMENT_ID_KEY, comment.getRemoteCommentId());
+        properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         properties.put(COMMENT_ACTION_SOURCE, source.toString());
 
         AnalyticsTracker.track(stat, properties);
@@ -680,5 +677,31 @@ public class AnalyticsUtils {
         properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
 
         AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
+    }
+
+    @VisibleForTesting
+    protected enum AnalyticsSiteType {
+        BLOG {
+            public String toString() {
+                return "blog";
+            }
+        },
+        P2 {
+            public String toString() {
+                return "p2";
+            }
+        };
+
+        static AnalyticsSiteType fromSiteModel(SiteModel siteModel) {
+            if (siteModel.isWpForTeamsSite()) {
+                return P2;
+            }
+
+            return BLOG;
+        }
+
+        static String toStringFromSiteModel(SiteModel siteModel) {
+            return fromSiteModel(siteModel).toString();
+        }
     }
 }
