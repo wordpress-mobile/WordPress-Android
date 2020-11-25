@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
+import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -31,6 +32,11 @@ class ScanStore @Inject constructor(
             FETCH_SCAN_STATE -> {
                 coroutineEngine.launch(AppLog.T.API, this, "Scan: On FETCH_SCAN_STATE") {
                     emitChange(fetchScanState(action.payload as FetchScanStatePayload))
+                }
+            }
+            START_SCAN -> {
+                coroutineEngine.launch(AppLog.T.API, this, "Scan: On START_STATE") {
+                    emitChange(startScan(action.payload as ScanStartPayload))
                 }
             }
         }
@@ -60,9 +66,28 @@ class ScanStore @Inject constructor(
         }
     }
 
+    suspend fun startScan(scanStartPayload: ScanStartPayload): OnScanStarted {
+        val payload = scanRestClient.startScan(scanStartPayload.site)
+        return emitScanStartResult(payload)
+    }
+
+    private fun emitScanStartResult(payload: ScanStartResultPayload): OnScanStarted {
+        return if (payload.error != null) {
+            OnScanStarted(payload.error, START_SCAN)
+        } else {
+            OnScanStarted(START_SCAN)
+        }
+    }
+
     // Actions
     data class OnScanStateFetched(var causeOfChange: ScanAction) : Store.OnChanged<ScanStateError>() {
         constructor(error: ScanStateError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnScanStarted(var causeOfChange: ScanAction) : Store.OnChanged<ScanStartError>() {
+        constructor(error: ScanStartError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -84,6 +109,14 @@ class ScanStore @Inject constructor(
         }
     }
 
+    class ScanStartPayload(val site: SiteModel) : Payload<BaseNetworkError>()
+
+    class ScanStartResultPayload(val site: SiteModel) : Payload<ScanStartError>() {
+        constructor(error: ScanStartError, site: SiteModel) : this(site = site) {
+            this.error = error
+        }
+    }
+
     // Errors
     enum class ScanStateErrorType {
         GENERIC_ERROR,
@@ -92,4 +125,13 @@ class ScanStore @Inject constructor(
     }
 
     class ScanStateError(var type: ScanStateErrorType, var message: String? = null) : OnChangedError
+
+    enum class ScanStartErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE,
+        API_ERROR
+    }
+
+    class ScanStartError(var type: ScanStartErrorType, var message: String? = null) : OnChangedError
 }
