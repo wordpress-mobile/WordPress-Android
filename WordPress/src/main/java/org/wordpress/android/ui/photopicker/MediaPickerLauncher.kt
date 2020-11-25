@@ -76,7 +76,8 @@ class MediaPickerLauncher @Inject constructor(
 
     fun showSiteIconPicker(
         activity: Activity,
-        site: SiteModel?
+        site: SiteModel?,
+        requestCode: Int = RequestCodes.PHOTO_PICKER
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
@@ -98,7 +99,7 @@ class MediaPickerLauncher @Inject constructor(
                     site,
                     null
             )
-            activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
+            activity.startActivityForResult(intent, requestCode)
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, SITE_ICON_PICKER, site, null)
         }
