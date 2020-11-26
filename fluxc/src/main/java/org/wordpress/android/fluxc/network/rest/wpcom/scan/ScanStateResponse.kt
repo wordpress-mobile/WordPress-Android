@@ -18,27 +18,32 @@ data class ScanStateResponse(
         @SerializedName("signature") val signature: String,
         @SerializedName("description") val description: String,
         @SerializedName("status") val status: String,
-        @SerializedName("fixable") val fixable: Fixable,
-        @SerializedName("extension") val extension: Extension,
-        @SerializedName("first_detected") val firstDetected: String
+        @SerializedName("fixable") val fixable: Fixable?,
+        @SerializedName("extension") val extension: Extension?,
+        @SerializedName("first_detected") val firstDetected: Date,
+        @SerializedName("fixed_on") val fixedOn: Date?
     ) {
         data class Fixable(
-            @SerializedName("fixer") val fixer: String,
-            @SerializedName("target") val target: String
+            @SerializedName("fixer") val fixer: String?,
+            @SerializedName("target") val target: String?
         )
 
         data class Extension(
-            @SerializedName("type") val type: String,
-            @SerializedName("slug") val slug: String,
-            @SerializedName("name") val name: String,
-            @SerializedName("version") val version: String,
-            @SerializedName("isPremium") val isPremium: Boolean
+            @SerializedName("type") val type: String?,
+            @SerializedName("slug") val slug: String?,
+            @SerializedName("name") val name: String?,
+            @SerializedName("version") val version: String?,
+            @SerializedName("isPremium") val isPremium: Boolean?
         )
     }
 
     data class Credentials(
         @SerializedName("type") val type: String,
         @SerializedName("role") val role: String,
+        @SerializedName("host") val host: String?,
+        @SerializedName("port") val port: Int?,
+        @SerializedName("user") val user: String?,
+        @SerializedName("path") val path: String?,
         @SerializedName("still_valid") val stillValid: Boolean
     )
 

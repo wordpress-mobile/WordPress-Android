@@ -1,0 +1,32 @@
+{
+	"state": "idle",
+	"threats": [
+		{
+			"id": 35246622,
+			"signature": "Vulnerable.WP.Extension",
+			"description": "The plugin Calendar (version 1.3.1) has a known vulnerability",
+			"first_detected": "2020-11-16T09:56:20.000Z",
+			"status": "current",
+			"fixable": {
+				"fixer": "update",
+				"target": "1.3.14"
+			},
+			"extension": {
+				"type": "plugin",
+				"slug": "calendar",
+				"name": "Calendar",
+				"version": "1.3.1",
+				"isPremium": false
+			}
+		}
+	],
+	"has_cloud": true,
+	"credentials": [],
+	"most_recent": {
+		"is_initial": false,
+		"timestamp": "2020-11-16T09:55:58+00:00",
+		"duration": 23,
+		"progress": 100,
+		"error": false
+	}
+}

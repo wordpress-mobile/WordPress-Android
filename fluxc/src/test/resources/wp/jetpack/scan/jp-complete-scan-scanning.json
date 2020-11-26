@@ -1,0 +1,17 @@
+{
+	"state": "scanning",
+	"threats": [],
+	"has_cloud": false,
+	"credentials": [
+		{
+			"still_valid": true,
+			"type": "managed",
+			"role": "main"
+		}
+	],
+	"current": {
+		"is_initial": false,
+		"timestamp": "2020-11-16T08:02:31+00:00",
+		"progress": 80
+	}
+}
