@@ -1513,6 +1513,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_error";
             case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
                 return "site_settings_optimize_images_changed";
+            case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
+                return "jetpack_settings_viewed";
             case JETPACK_SECURITY_SETTINGS_WHITELISTED_IPS_VIEWED:
                 return "jetpack_security_settings_whitelisted_ips_viewed";
             case JETPACK_SECURITY_SETTINGS_WHITELISTED_IPS_CHANGED:
