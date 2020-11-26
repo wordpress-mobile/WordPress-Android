@@ -43,7 +43,7 @@ class ReaderCommentListViewModel
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _updateFollowStatus = MediatorLiveData<FollowCommentsState>()
-    val updateFollowUiState: LiveData<UpdateFollowCommentsUiState> =
+    val updateFollowUiState: LiveData<FollowCommentsUiState> =
             _updateFollowStatus.map { state -> buildFollowCommentsUiState(state) }
 
     private val _scrollTo = MutableLiveData<Event<ScrollPosition>>()
@@ -109,8 +109,8 @@ class ReaderCommentListViewModel
         }
     }
 
-    private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): UpdateFollowCommentsUiState {
-        return UpdateFollowCommentsUiState(
+    private fun buildFollowCommentsUiState(followCommentsState: FollowCommentsState): FollowCommentsUiState {
+        return FollowCommentsUiState(
                     type = when (followCommentsState) {
                         Loading -> LOADING
                         is FollowStateChanged -> VISIBLE_WITH_STATE

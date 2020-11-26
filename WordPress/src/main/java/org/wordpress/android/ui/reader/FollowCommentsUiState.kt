@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.reader
 
-data class UpdateFollowCommentsUiState(
+data class FollowCommentsUiState(
     val type: FollowCommentsUiStateType,
     val showFollowButton: Boolean = false,
     val isFollowing: Boolean = false,

@@ -24,10 +24,10 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
+import org.wordpress.android.ui.reader.FollowCommentsUiState;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
-import org.wordpress.android.ui.reader.UpdateFollowCommentsUiState;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
@@ -92,7 +92,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private PostHeaderHolder mHeaderHolder;
-    private UpdateFollowCommentsUiState mFollowButtonState;
+    private FollowCommentsUiState mFollowButtonState;
 
     class CommentHolder extends RecyclerView.ViewHolder {
         private final ViewGroup mContainer;
@@ -180,7 +180,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         mIsHeaderClickEnabled = true;
     }
 
-    public void updateFollowingState(UpdateFollowCommentsUiState followButtonState) {
+    public void updateFollowingState(FollowCommentsUiState followButtonState) {
         if (!mFollowUnfollowCommentsFeatureConfig.isEnabled()) return;
         mFollowButtonState = followButtonState;
         if (mHeaderHolder != null && mHeaderHolder.mHeaderView != null) {

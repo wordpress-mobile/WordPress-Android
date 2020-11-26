@@ -15,8 +15,8 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.FollowCommentsUiState;
 import org.wordpress.android.ui.reader.FollowCommentsUiStateType;
-import org.wordpress.android.ui.reader.UpdateFollowCommentsUiState;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
@@ -59,7 +59,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
 
     public void setPost(
             final ReaderPost post,
-            final UpdateFollowCommentsUiState followButtonState
+            final FollowCommentsUiState followButtonState
     ) {
         if (post == null) {
             return;
@@ -102,7 +102,7 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         }
     }
 
-    public void setFollowButtonState(@Nullable final UpdateFollowCommentsUiState followButtonState) {
+    public void setFollowButtonState(@Nullable final FollowCommentsUiState followButtonState) {
         if (null == followButtonState) return;
 
         ReaderFollowButton followCommentsButton = findViewById(R.id.button_follow_comments);
