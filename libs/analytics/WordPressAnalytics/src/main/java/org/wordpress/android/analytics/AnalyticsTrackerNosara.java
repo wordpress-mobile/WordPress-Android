@@ -1516,9 +1516,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
                 return "jetpack_settings_viewed";
             case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED:
-                return "jetpack_settings_whitelisted_ips_viewed";
+                return "jetpack_whitelisted_ips_viewed";
             case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED:
-                return "jetpack_settings_whitelisted_ips_changed";
+                return "jetpack_whitelisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:
