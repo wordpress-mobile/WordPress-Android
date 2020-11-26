@@ -106,13 +106,13 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         if (null == followButtonState) return;
 
         ReaderFollowButton followCommentsButton = findViewById(R.id.button_follow_comments);
-        ShimmerFrameLayout container = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
-        View skeleton = (View) findViewById(R.id.button_skeleton);
+        ShimmerFrameLayout container = findViewById(R.id.shimmer_view_container);
+        View skeleton = findViewById(R.id.button_skeleton);
 
-        followCommentsButton.setEnabled(followButtonState.getType() != FollowCommentsUiStateType.DISABLED
-                                        && followButtonState.getType() != FollowCommentsUiStateType.LOADING);
-        followCommentsButton.setSelected(followButtonState.getType() != FollowCommentsUiStateType.DISABLED
-                                        && followButtonState.getType() != FollowCommentsUiStateType.LOADING);
+        boolean isButtonEnabled = followButtonState.getType() != FollowCommentsUiStateType.DISABLED
+                                  && followButtonState.getType() != FollowCommentsUiStateType.LOADING;
+
+        followCommentsButton.setEnabled(isButtonEnabled);
 
         boolean isContainerVisible = container.getVisibility() == View.VISIBLE;
         if (isContainerVisible != followButtonState.getShowFollowButton()) {
