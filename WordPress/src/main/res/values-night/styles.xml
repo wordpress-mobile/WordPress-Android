@@ -78,7 +78,7 @@
         <item name="categoriesButtonBackground">@color/mlp_categories_button_background_dark</item>
         <item name="categoriesButtonBackgroundSelected">@color/mlp_categories_button_background_selected_dark</item>
         <item name="mlpDividerColor">@color/mlp_divider_dark</item>
-        <item name="categoriesBackground">@color/mlp_categories_background_dark</item>
+        <item name="layoutPickerBackground">@color/mlp_categories_background_dark</item>
 
         <!-- Material Date Range Picker -->
         <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>

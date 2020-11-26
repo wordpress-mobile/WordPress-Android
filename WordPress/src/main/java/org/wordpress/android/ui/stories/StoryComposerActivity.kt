@@ -525,6 +525,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             setResult(Activity.RESULT_OK, savedContentIntent)
 
+            viewModel.onStorySaved()
+
             // TODO add tracks
             processStorySaving()
 

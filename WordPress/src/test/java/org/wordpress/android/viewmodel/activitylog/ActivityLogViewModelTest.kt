@@ -13,6 +13,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -22,6 +23,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -348,7 +350,14 @@ class ActivityLogViewModelTest {
     fun onActivityTypeFilterClickShowsActivityTypeFilter() {
         viewModel.onActivityTypeFilterClicked()
 
-        assertEquals(Unit, viewModel.showActivityTypeFilterDialog.value)
+        assertNotNull(viewModel.showActivityTypeFilterDialog.value)
+    }
+
+    @Test
+    fun onActivityTypeFilterClickRemoteSiteIdIsPassed() {
+        viewModel.onActivityTypeFilterClicked()
+
+        assertEquals(RemoteId(site.siteId), viewModel.showActivityTypeFilterDialog.value)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

@@ -87,7 +87,8 @@ public class ReaderPostTable {
             + "use_excerpt," // 45
             + "is_bookmarked," // 46
             + "is_private_atomic," // 47
-            + "tags"; // 48
+            + "tags," // 48
+            + "is_wpforteams_site"; // 49
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -137,7 +138,8 @@ public class ReaderPostTable {
             + "use_excerpt," // 44
             + "is_bookmarked," // 45
             + "is_private_atomic," // 46
-            + "tags"; // 47
+            + "tags," // 47
+            + "is_wpforteams_site"; // 48
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -189,6 +191,7 @@ public class ReaderPostTable {
                    + " is_bookmarked INTEGER DEFAULT 0,"
                    + " is_private_atomic INTEGER DEFAULT 0,"
                    + " tags TEXT,"
+                   + " is_wpforteams_site INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -831,7 +834,7 @@ public class ReaderPostTable {
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
                 + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47,"
-                + "?48)");
+                + "?48,?49)");
 
         db.beginTransaction();
         try {
@@ -892,6 +895,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
                 stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
                 stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
+                stmtPosts.bindLong(49, SqlUtils.boolToSql(post.isWpForTeams));
                 stmtPosts.execute();
             }
 
@@ -1144,6 +1148,8 @@ public class ReaderPostTable {
         if (commaSeparatedTags != null) {
             post.setTags(ReaderUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
         }
+
+        post.isWpForTeams = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_wpforteams_site")));
 
         return post;
     }
