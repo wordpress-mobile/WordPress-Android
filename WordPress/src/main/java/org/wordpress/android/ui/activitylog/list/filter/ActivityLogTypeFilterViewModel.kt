@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
@@ -18,7 +19,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.properties.Delegates
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
     private val dummyActivityTypesProvider: DummyActivityTypesProvider,
@@ -26,15 +26,15 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
-    private var siteId by Delegates.notNull<Long>()
+    private lateinit var remoteSiteId: RemoteId
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start(siteId: Long) {
+    fun start(remoteSiteId: RemoteId) {
         if (isStarted) return
         isStarted = true
-        this.siteId = siteId
+        this.remoteSiteId = remoteSiteId
 
         fetchAvailableActivityTypes()
     }
@@ -42,7 +42,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private fun fetchAvailableActivityTypes() {
         launch {
             _uiState.value = FullscreenLoading
-            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(siteId)
+            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(remoteSiteId.value)
             if (response.isError) {
                 _uiState.value = buildErrorUiState()
             } else {
@@ -52,7 +52,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun buildErrorUiState() =
-        UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
+            UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {

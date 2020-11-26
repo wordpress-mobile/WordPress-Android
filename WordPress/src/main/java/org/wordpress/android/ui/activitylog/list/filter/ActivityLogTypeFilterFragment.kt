@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
@@ -47,6 +48,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolbar(view)
         initRecyclerView()
+        viewModel.start(remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)))
     }
 
     private fun initToolbar(view: View) {
@@ -65,5 +67,14 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     private fun initAdapter() {
         recycler_view.adapter = ActivityLogTypeFilterAdapter(uiHelpers)
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(remoteSiteId: RemoteId): ActivityLogTypeFilterFragment {
+            val args = Bundle()
+            args.putLong(WordPress.REMOTE_SITE_ID, remoteSiteId.value)
+            return ActivityLogTypeFilterFragment().apply { arguments = args }
+        }
     }
 }
