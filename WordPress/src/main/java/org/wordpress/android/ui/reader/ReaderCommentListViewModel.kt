@@ -118,15 +118,21 @@ class ReaderCommentListViewModel
                         UserNotAuthenticated -> GONE
                     },
                     showFollowButton = followCommentsState !is UserNotAuthenticated,
-                    isFollowing = if (followCommentsState is FollowStateChanged)
+                    isFollowing = if (followCommentsState is FollowStateChanged) {
                         followCommentsState.isFollowing
-                    else
-                        false,
-                    animate = if (followCommentsState is FollowStateChanged) !followCommentsState.isInit else false,
-                    onFollowButtonClick = if (followCommentsState !is UserNotAuthenticated)
+                    } else {
+                        false
+                    },
+                    animate = if (followCommentsState is FollowStateChanged) {
+                        !followCommentsState.isInit
+                    } else {
+                        false
+                    },
+                    onFollowButtonClick = if (followCommentsState !is UserNotAuthenticated) {
                         ::onFollowConversationClicked
-                    else
+                    } else {
                         null
+                    }
         )
     }
 
