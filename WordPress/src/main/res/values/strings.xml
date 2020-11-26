@@ -1349,7 +1349,7 @@
     <string name="reader_follow_comments_bad_format_response">Bad format response received</string>
     <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
     <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
-    <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post: %d</string>
+    <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>

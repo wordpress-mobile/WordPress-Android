@@ -127,7 +127,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                     "$functionName > Failed with empty string " +
                             "[blogId=$blogId - postId=$postId - volleyError = $volleyError]"
             )
-            contextProvider.getContext().getString(R.string.reader_follow_comments_get_status_error, postId)
+            contextProvider.getContext().getString(R.string.reader_follow_comments_get_status_error)
         } else {
             AppLog.d(
                     T.READER,
