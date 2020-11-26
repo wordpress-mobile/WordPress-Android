@@ -793,6 +793,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_video_added";
             case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
                 return "editor_photo_added";
+            case EDITOR_ADDED_FILE_VIA_LIBRARY:
+                return "editor_file_added";
             case MEDIA_PHOTO_OPTIMIZED:
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
@@ -829,8 +831,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_post_slug_changed";
             case EDITOR_POST_EXCERPT_CHANGED:
                 return "editor_post_excerpt_changed";
-            case EDITOR_POST_LOCATION_CHANGED:
-                return "editor_post_location_changed";
             case EDITOR_TAPPED_BLOCKQUOTE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
@@ -1513,6 +1513,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_error";
             case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
                 return "site_settings_optimize_images_changed";
+            case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
+                return "jetpack_settings_viewed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:
@@ -1839,6 +1841,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_intro_dismissed";
             case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
                 return "story_intro_create_story_button_tapped";
+            case STORY_BLOCK_ADD_MEDIA_TAPPED:
+                return "story_block_add_media_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";

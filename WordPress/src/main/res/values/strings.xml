@@ -113,7 +113,6 @@
 
     <string name="button_not_now">Not now</string>
 
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="at_username">\@%s</string>
 
     <string name="me">Me</string>
@@ -1345,6 +1344,7 @@
     <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
     <string name="reader_discover_no_posts_button_text">Follow topics</string>
+    <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1410,12 +1410,6 @@
     <string name="notification_post_will_be_published_in_ten_minutes">\"%s\" will be published in 10 minutes</string>
     <string name="calendar_scheduled_post_title">WordPress Scheduled Post: \"%s\"</string>
     <string name="calendar_scheduled_post_description">\"%s\" scheduled for publishing on \"%s\" in your WordPress app \n %s</string>
-
-    <!-- location -->
-    <string name="post_settings_location">Location</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Can\'t open the Location Picker, Google Play Services is not available</string>
-    <string name="remove_location">Remove Location</string>
-    <string name="change_location">Change Location</string>
 
     <!-- Post Status -->
     <string name="post_status_publish_post">Publish</string>
@@ -1921,7 +1915,9 @@
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
@@ -1934,7 +1930,6 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
-    <string name="my_site_select_domains_page_title">Site Address</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
@@ -1956,6 +1951,7 @@
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
+    <string name="my_site_bottom_sheet_story_tag_new">New</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2853,7 +2849,7 @@
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
-    <string name="new_site_creation_domain_header_title">Choose a domain name for your site</string>
+    <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
     <string name="site_creation_domain_finish_button">Create site</string>

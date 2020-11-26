@@ -1,0 +1,36 @@
+{
+    "request": {
+        "urlPath": "/rest/v1.2/read/liked",
+        "method": "GET",
+        "queryParameters": {
+            "locale": {
+                "matches": "(.*)"
+            },
+            "meta": {
+                "matches": "(.*)"
+            },
+            "number": {
+                "equalTo": "20"
+            },
+            "order": {
+                "equalTo": "DESC"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "date_range": {
+                "before": "2020-10-07T17:33:58+00:00",
+                "after": "2020-08-21T21:07:01+00:00"
+            },
+            "number": 20,
+            "posts": []
+        },
+        "headers": {
+            "Content-Type": "application/json",
+            "Connection": "keep-alive",
+            "Cache-Control": "no-cache, must-revalidate, max-age=0"
+        }
+    }
+}
