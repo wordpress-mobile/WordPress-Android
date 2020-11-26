@@ -3,6 +3,8 @@ package org.wordpress.android.ui.activitylog.list.filter
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
@@ -23,6 +25,19 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
 import javax.inject.Inject
+
+private const val ACTIONS_MENU_GROUP = 1
+
+/**
+ * Show the primary action closer to user's finger.
+ */
+private const val PRIMARY_ACTION_ORDER = 2
+private const val SECONDARY_ACTION_ORDER = 1
+/**
+ * Always show the primary action no matter the screen size.
+ */
+private const val PRIMARY_ACTION_SHOW_ALWAYS = true
+private const val SECONDARY_ACTION_SHOW_ALWAYS = false
 
 class ActivityLogTypeFilterFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -70,6 +85,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
             uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisibility)
             uiHelpers.updateVisibility(recycler_view, uiState.contentVisibility)
             uiHelpers.updateVisibility(progress_layout, uiState.loadingVisibility)
+            refreshMenuItems(uiState)
             when (uiState) {
                 is FullscreenLoading -> refreshLoadingScreen(uiState)
                 is Error -> refreshErrorScreen(uiState)
@@ -92,7 +108,31 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     private fun refreshContentScreen(uiState: Content) {
         (recycler_view.adapter as ActivityLogTypeFilterAdapter).update(uiState.items)
-        // TODO malinjir implement primary and secondary actions
+    }
+
+    private fun refreshMenuItems(uiState: ActivityLogTypeFilterViewModel.UiState) {
+        val menu = toolbar_main.menu
+        menu.removeGroup(ACTIONS_MENU_GROUP)
+
+        if (uiState is Content) {
+            addMenuItem(uiState.primaryAction, PRIMARY_ACTION_ORDER, showAlways = PRIMARY_ACTION_SHOW_ALWAYS)
+            addMenuItem(uiState.secondaryAction, SECONDARY_ACTION_ORDER, showAlways = SECONDARY_ACTION_SHOW_ALWAYS)
+        }
+    }
+
+    private fun addMenuItem(action: ActivityLogTypeFilterViewModel.Action, order: Int, showAlways: Boolean) {
+        val actionLabel = uiHelpers.getTextOfUiString(requireContext(), action.label)
+        toolbar_main.menu.add(ACTIONS_MENU_GROUP, Menu.NONE, order, actionLabel).let {
+            if (showAlways) {
+                it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            } else {
+                it.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
+            }
+            it.setOnMenuItemClickListener {
+                action.action.invoke()
+                true
+            }
+        }
     }
 
     private fun initAdapter() {
