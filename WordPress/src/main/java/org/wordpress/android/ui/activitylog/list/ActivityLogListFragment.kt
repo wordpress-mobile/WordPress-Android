@@ -182,7 +182,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId) {
-        ActivityLogTypeFilterFragment.newInstance(remoteSiteId).show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId).show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
