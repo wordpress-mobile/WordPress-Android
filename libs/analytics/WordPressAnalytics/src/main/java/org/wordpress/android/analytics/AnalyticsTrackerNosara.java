@@ -1515,10 +1515,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
                 return "jetpack_settings_viewed";
-            case JETPACK_SECURITY_SETTINGS_WHITELISTED_IPS_VIEWED:
-                return "jetpack_security_settings_whitelisted_ips_viewed";
-            case JETPACK_SECURITY_SETTINGS_WHITELISTED_IPS_CHANGED:
-                return "jetpack_security_settings_whitelisted_ips_changed";
+            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED:
+                return "jetpack_settings_whitelisted_ips_viewed";
+            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED:
+                return "jetpack_settings_whitelisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:

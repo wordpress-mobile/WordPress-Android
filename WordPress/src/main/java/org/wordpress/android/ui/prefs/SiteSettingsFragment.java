@@ -562,7 +562,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             showListEditorDialog(R.string.site_settings_blacklist_title,
                     R.string.site_settings_blacklist_description);
         } else if (preference == mJpWhitelistPref) {
-            AnalyticsTracker.track(Stat.JETPACK_SECURITY_SETTINGS_WHITELISTED_IPS_VIEWED);
+            AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED);
             mEditingList = mSiteSettings.getJetpackWhitelistKeys();
             showListEditorDialog(R.string.jetpack_brute_force_whitelist_title,
                     R.string.site_settings_jetpack_whitelist_description);
@@ -617,7 +617,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         if (preference == mJpWhitelistPref) {
             if (mJpWhitelistPref.getSummary() != mSiteSettings.getJetpackProtectWhitelistSummary()) {
-                AnalyticsTracker.track(Stat.JETPACK_SECURITY_SETTINGS_WHITELISTED_IPS_CHANGED);
+                AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED);
             }
             mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         } else if (preference == mJpMonitorActivePref) {
