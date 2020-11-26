@@ -7,7 +7,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
@@ -28,8 +30,10 @@ class MySiteViewModel @Inject constructor(
     @param:Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val siteInfoBlockBuilder: SiteInfoBlockBuilder
+    private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
+    private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     private val _selectedSite = MutableLiveData<SiteModel>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -41,11 +45,12 @@ class MySiteViewModel @Inject constructor(
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
-    val uiModel: LiveData<List<MySiteItem>> = merge(
+    val uiModel: LiveData<UiModel> = merge(
+            _currentAccountAvatarUrl,
             _selectedSite,
             _showSiteIconProgressBar
-    ) { site, showSiteIconProgressBar ->
-        if (site != null) {
+    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+        val items = if (site != null) {
             val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
                     site,
                     showSiteIconProgressBar ?: false,
@@ -58,6 +63,7 @@ class MySiteViewModel @Inject constructor(
         } else {
             listOf()
         }
+        UiModel(currentAvatarUrl.orEmpty(), items)
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -118,6 +124,10 @@ class MySiteViewModel @Inject constructor(
         _selectedSite.value = selectedSite
     }
 
+    fun refreshAccountAvatarUrl() {
+        _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
+    }
+
     fun onSiteNameChosen(input: String?) {
         TODO("Not yet implemented")
     }
@@ -130,6 +140,15 @@ class MySiteViewModel @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    fun onAvatarPressed() {
+        _onNavigation.value = Event(OpenMeScreen)
+    }
+
+    data class UiModel(
+        val accountAvatarUrl: String,
+        val items: List<MySiteItem>
+    )
+
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
         @StringRes val title: Int,
@@ -140,6 +159,7 @@ class MySiteViewModel @Inject constructor(
     )
 
     sealed class NavigationAction {
+        object OpenMeScreen : NavigationAction()
         data class OpenSite(val site: SiteModel) : NavigationAction()
         data class OpenSitePicker(val site: SiteModel) : NavigationAction()
     }

@@ -48,7 +48,8 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         site: SiteModel,
         freshlyTaken: Boolean,
         editorMediaListener: EditorMediaListener,
-        doUploadAfterAdding: Boolean = true
+        doUploadAfterAdding: Boolean = true,
+        trackEvent: Boolean = true
     ): Boolean {
         // Copy files to apps storage to make sure they are permanently accessible.
         val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
@@ -58,7 +59,8 @@ class AddLocalMediaToPostUseCase @Inject constructor(
                 .optimizeMediaIfSupportedAsync(
                         site,
                         freshlyTaken,
-                        copyFilesResult.permanentlyAccessibleUris
+                        copyFilesResult.permanentlyAccessibleUris,
+                        trackEvent
                 )
 
         // Transform Uris to MediaModels

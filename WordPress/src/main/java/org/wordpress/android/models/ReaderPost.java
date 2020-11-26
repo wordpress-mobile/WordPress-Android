@@ -65,6 +65,7 @@ public class ReaderPost {
     public boolean isPrivateAtomic;
     public boolean isVideoPress;
     public boolean isJetpack;
+    public boolean isWpForTeams;
     public boolean useExcerpt;
 
     private String mAttachmentsJson;
@@ -168,6 +169,11 @@ public class ReaderPost {
             }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
+
+            JSONObject jsonSiteOptions = JSONUtils.getJSONChild(jsonSite, "options");
+            if (jsonSiteOptions != null) {
+                post.isWpForTeams = JSONUtils.getBool(jsonSiteOptions, "is_wpforteams_site");
+            }
         }
 
         // "discover" posts

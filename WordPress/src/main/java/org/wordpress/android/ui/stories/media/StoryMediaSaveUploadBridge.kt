@@ -184,7 +184,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     site,
                     freshlyTaken = false, // we don't care about this
                     editorMediaListener = localEditorMediaListener,
-                    doUploadAfterAdding = true
+                    doUploadAfterAdding = true,
+                    trackEvent = false // Already tracked event when media were first added to the story
             )
 
             // only save this post if we're not currently in edit mode

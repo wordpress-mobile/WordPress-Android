@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
@@ -66,8 +67,8 @@ class ActivityLogViewModel @Inject constructor(
     val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
 
-    private val _showActivityTypeFilterDialog = SingleLiveEvent<Unit>()
-    val showActivityTypeFilterDialog: LiveData<Unit>
+    private val _showActivityTypeFilterDialog = SingleLiveEvent<RemoteId>()
+    val showActivityTypeFilterDialog: LiveData<RemoteId>
         get() = _showActivityTypeFilterDialog
 
     private val _showDateRangePicker = SingleLiveEvent<ShowDateRangePicker>()
@@ -173,7 +174,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
-        _showActivityTypeFilterDialog.value = Unit
+        _showActivityTypeFilterDialog.value = RemoteId(site.siteId)
     }
 
     fun onRewindConfirmed(rewindId: String) {
