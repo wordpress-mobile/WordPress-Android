@@ -33,12 +33,6 @@
             android:key="@string/pref_key_jetpack_prevent_brute_force"
             android:title="@string/jetpack_prevent_brute_force_title" />
 
-        <org.wordpress.android.ui.prefs.WPPreference
-            android:id="@+id/pref_brute_force_whitelist"
-            android:dependency="@string/pref_key_jetpack_prevent_brute_force"
-            android:key="@string/pref_key_jetpack_brute_force_whitelist"
-            android:title="@string/jetpack_brute_force_whitelist_title" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
