@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.recyclerview.widget.DiffUtil
 import org.apache.commons.lang3.NotImplementedException
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 
 class MySiteAdapterDiffCallback(
@@ -17,6 +18,7 @@ class MySiteAdapterDiffCallback(
         val updatedItem = updatedItems[newItemPosition]
         return oldItem.type == updatedItem.type && when {
             oldItem is SiteInfoBlock && updatedItem is SiteInfoBlock -> true
+            oldItem is QuickActionsBlock && updatedItem is QuickActionsBlock -> true
             else -> throw NotImplementedException("Diff not implemented yet")
         }
     }
