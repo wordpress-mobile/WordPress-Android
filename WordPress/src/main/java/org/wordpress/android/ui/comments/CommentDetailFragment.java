@@ -440,8 +440,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
-        AnalyticsUtils.trackCommentActionWithSiteDetails(
-                Stat.COMMENT_VIEWED, mCommentSource.toAnalyticsCommentActionSource(), mSite);
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(mRestoredNoteId)) {
@@ -922,10 +920,18 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
         mPreviousStatus = mComment.getStatus();
 
-        // On backend unspamming works by approving comment, but we want to track UNSPAM as a separate event
-        CommentStatus statusToTrack =
-                (CommentStatus.fromString(mPreviousStatus) == CommentStatus.SPAM && newStatus == CommentStatus.APPROVED)
-                        ? CommentStatus.UNSPAM : newStatus;
+        // Restoring comment from trash or spam works by approving it, but we want to track the actual action
+        // instead of generic Approve action
+        CommentStatus statusToTrack;
+        if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.SPAM && newStatus == CommentStatus.APPROVED) {
+            statusToTrack = CommentStatus.UNSPAM;
+        } else if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.TRASH
+                   && newStatus == CommentStatus.APPROVED) {
+            statusToTrack = CommentStatus.UNTRASH;
+        } else {
+            statusToTrack = newStatus;
+        }
+
         trackModerationEvent(statusToTrack);
 
         // Fire the appropriate listener if we have one
@@ -1097,7 +1103,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         announceCommentStatusChangeForAccessibility(
                 currentStatus == CommentStatus.TRASH ? CommentStatus.UNTRASH : newStatus);
 
-        mComment.setStatus(newStatus.toString());
         setModerateButtonForStatus(newStatus);
         AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
         moderateComment(newStatus);
