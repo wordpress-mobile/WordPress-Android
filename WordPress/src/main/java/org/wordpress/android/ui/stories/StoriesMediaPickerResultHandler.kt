@@ -18,13 +18,14 @@ class StoriesMediaPickerResultHandler
     fun handleMediaPickerResultForStories(
         data: Intent,
         activity: Activity?,
-        selectedSite: SiteModel?
+        selectedSite: SiteModel?,
+        source: PagePostCreationSourcesDetail
     ): Boolean {
         if (data.getBooleanExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
             ActivityLauncher.addNewStoryForResult(
                     activity,
                     selectedSite,
-                    PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+                    source
             )
             return true
         } else if (isWPStoriesMediaBrowserTypeResult(data)) {
@@ -32,7 +33,7 @@ class StoriesMediaPickerResultHandler
                 ActivityLauncher.addNewStoryWithMediaIdsForResult(
                         activity,
                         selectedSite,
-                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                        source,
                         data.getLongArrayExtra(
                                 MediaBrowserActivity.RESULT_IDS
                         )
@@ -52,7 +53,7 @@ class StoriesMediaPickerResultHandler
                 ActivityLauncher.addNewStoryWithMediaUrisForResult(
                         activity,
                         selectedSite,
-                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                        source,
                         mediaUriStringsArray
                 )
                 return true
