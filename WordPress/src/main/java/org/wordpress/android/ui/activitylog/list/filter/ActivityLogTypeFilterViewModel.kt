@@ -16,6 +16,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,14 +27,16 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var remoteSiteId: RemoteId
+    private lateinit var parentViewModel: ActivityLogViewModel
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start(remoteSiteId: RemoteId) {
+    fun start(remoteSiteId: RemoteId, parentViewModel: ActivityLogViewModel) {
         if (isStarted) return
         isStarted = true
         this.remoteSiteId = remoteSiteId
+        this.parentViewModel = parentViewModel
 
         fetchAvailableActivityTypes()
     }

@@ -24,6 +24,7 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
 private const val ACTIONS_MENU_GROUP = 1
@@ -81,6 +82,9 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(ActivityLogTypeFilterViewModel::class.java)
 
+        val parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+                .get(ActivityLogViewModel::class.java)
+
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisibility)
             uiHelpers.updateVisibility(recycler_view, uiState.contentVisibility)
@@ -92,7 +96,10 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
                 is Content -> refreshContentScreen(uiState)
             }
         })
-        viewModel.start(remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)))
+        viewModel.start(
+                remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
+                parentViewModel = parentViewModel
+        )
     }
 
     private fun refreshLoadingScreen(uiState: FullscreenLoading) {
