@@ -136,7 +136,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model is empty with no selected site`() {
         onSiteChange.postValue(null)
 
-        assertThat(uiModels).hasSize(3)
+        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().items).isEmpty()
     }
 
@@ -144,9 +144,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model is contains header of selected site`() {
         onSiteChange.postValue(site)
 
-        assertThat(uiModels).hasSize(3)
+        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().items).hasSize(1)
-        assertThat(uiModels.last().items.first() as SiteInfoBlock).isEqualTo(uiModels.last()[0] as SiteInfoBlock)
+        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
     }
 
     @Test

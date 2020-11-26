@@ -18,8 +18,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
@@ -40,6 +40,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -63,7 +64,6 @@ class MySiteViewModel
     private val contextProvider: ContextProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
-    private val _selectedSite = MutableLiveData<SiteModel>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -74,10 +74,11 @@ class MySiteViewModel
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
+    val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar
+            selectedSiteRepository.showSiteIconProgressBar.distinct()
     ) { currentAvatarUrl, site, showSiteIconProgressBar ->
         val items = if (site != null) {
             val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
