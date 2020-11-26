@@ -268,6 +268,7 @@ public class CommentsActivity extends LocaleAwareActivity
         } else {
             // Actual moderation (push the modified comment).
             comment.setStatus(newStatus.toString());
+            mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         }
     }

@@ -38,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -76,6 +77,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -604,6 +606,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
                                 AnalyticsUtils.trackWithReaderPostDetails(
                                         AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
+                                AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_LIKED,
+                                        AnalyticsCommentActionSource.READER, mPost);
                             } else {
                                 ToastUtils.showToast(ReaderCommentListActivity.this,
                                                      R.string.reader_toast_err_generic);
@@ -777,6 +781,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                     getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_REPLIED_TO,
+                            AnalyticsCommentActionSource.READER, mPost);
                 } else {
                     mEditComment.setText(commentText);
                     mSubmitReplyBtn.setEnabled(true);

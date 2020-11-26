@@ -229,6 +229,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
             case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+            case COMMENT_QUICK_ACTION_LIKED:
+            case COMMENT_QUICK_ACTION_REPLIED_TO:
+            case COMMENT_QUICK_ACTION_APPROVED:
                 predefinedEventProperties.put("is_quick_action", true);
                 break;
             case SIGNUP_EMAIL_EPILOGUE_UNCHANGED:
@@ -1899,6 +1902,33 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_failed";
             case READER_POST_REPORTED:
                 return "reader_post_reported";
+            case COMMENT_APPROVED:
+            case COMMENT_QUICK_ACTION_APPROVED:
+                return "comment_approved";
+            case COMMENT_UNAPPROVED:
+                return "comment_unapproved";
+            case COMMENT_SPAMMED:
+                return "comment_spammed";
+            case COMMENT_UNSPAMMED:
+                return "comment_unspammed";
+            case COMMENT_LIKED:
+            case COMMENT_QUICK_ACTION_LIKED:
+                return "comment_liked";
+            case COMMENT_UNLIKED:
+                return "comment_unliked";
+            case COMMENT_TRASHED:
+                return "comment_trashed";
+            case COMMENT_UNTRASHED:
+                return "comment_untrashed";
+            case COMMENT_REPLIED_TO:
+            case COMMENT_QUICK_ACTION_REPLIED_TO:
+                return "comment_replied_to";
+            case COMMENT_EDITED:
+                return "comment_edited";
+            case COMMENT_VIEWED:
+                return "comment_viewed";
+            case COMMENT_DELETED:
+                return "comment_deleted";
         }
         return null;
     }
