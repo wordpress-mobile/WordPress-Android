@@ -60,8 +60,11 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
-                        ListItemUiState.ActivityType(id = it.id, title = UiStringText(it.toString()))
-                                .apply { onClick = { onItemClicked(it.id) } }
+                        ListItemUiState.ActivityType(
+                                id = it.id,
+                                title = UiStringText(it.toString()),
+                                onClick = { onItemClicked(it.id) }
+                        )
                     }
             Content(
                     listOf(headerListItem) + activityTypeListItems,
@@ -77,7 +80,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         (_uiState.value as? Content)?.let { it ->
             val updatedList = it.items.map {
                 if (it is ListItemUiState.ActivityType && it.id == itemId) {
-                    it.copy(checked = !it.checked).apply { onClick = it.onClick }
+                    it.copy(checked = !it.checked)
                 } else {
                     it
                 }
@@ -120,6 +123,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
         data class Error(val retryAction: Action) : UiState() {
             override val errorVisibility = true
+
             // TODO malinjir replace strings according to design
             val errorTitle: UiString = UiStringRes(R.string.error)
             val errorSubtitle: UiString = UiStringRes(R.string.hpp_retry_error)
@@ -143,10 +147,9 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         data class ActivityType(
             val id: Int,
             val title: UiString,
-            val checked: Boolean = false
-        ) : ListItemUiState() {
-            lateinit var onClick: (() -> Unit)
-        }
+            val checked: Boolean = false,
+            val onClick: (() -> Unit)
+        ) : ListItemUiState()
     }
 
     data class Action(val label: UiString) {
