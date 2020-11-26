@@ -1,7 +1,10 @@
 package org.wordpress.android.fluxc.store
 
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,6 +14,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.generated.ScanActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
@@ -60,5 +64,30 @@ class ScanStoreTest {
 
         val expectedEventWithError = ScanStore.OnScanStateFetched(payload.error, ScanAction.FETCH_SCAN_STATE)
         verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `fetch scan state stores state in the db on success`() = test {
+        val scanStateModel = mock<ScanStateModel>()
+        val payload = FetchedScanStatePayload(scanStateModel, siteModel)
+        whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newFetchScanStateAction(FetchScanStatePayload(siteModel))
+        scanStore.onAction(fetchAction)
+
+        verify(scanSqlUtils).replaceScanState(siteModel, scanStateModel)
+        val expectedChangeEvent = ScanStore.OnScanStateFetched(ScanAction.FETCH_SCAN_STATE)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun `get scan state returns state from the db`() {
+        val scanStateModel = mock<ScanStateModel>()
+        whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
+
+        val scanStateFromDb = scanStore.getScanStateForSite(siteModel)
+
+        verify(scanSqlUtils).getScanStateForSite(siteModel)
+        Assert.assertEquals(scanStateModel, scanStateFromDb)
     }
 }
