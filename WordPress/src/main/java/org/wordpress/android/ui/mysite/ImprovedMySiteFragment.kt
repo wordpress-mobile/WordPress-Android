@@ -29,11 +29,14 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
@@ -184,6 +187,15 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenCropActivity -> {
                         startCropActivity(action.imageUri)
                     }
+                    is OpenStatsScreen -> {
+                        ActivityLauncher.viewBlogStats(activity, action.site)
+                    }
+                    is OpenConnectJetpackForStatsScreen -> {
+                        ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+                    }
+                    is StartLoginForJetpackStats -> {
+                        ActivityLauncher.loginForJetpackStats(this)
+                    }
                 }
             }
         })
@@ -268,6 +280,9 @@ class ImprovedMySiteFragment : Fragment(),
             return
         }
         when (requestCode) {
+            RequestCodes.DO_LOGIN -> if (resultCode == Activity.RESULT_OK) {
+                viewModel.handleSuccessfulLoginResult()
+            }
             RequestCodes.SITE_ICON_PICKER -> {
                 if (resultCode != Activity.RESULT_OK) {
                     return

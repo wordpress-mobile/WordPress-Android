@@ -1200,6 +1200,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
+    public static void loginForJetpackStats(Fragment fragment) {
+        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
+        LoginMode.JETPACK_STATS.putInto(intent);
+        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
     /*
      * open the passed url in the device's external browser
      */

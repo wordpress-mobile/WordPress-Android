@@ -13,17 +13,21 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_GALLER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -160,7 +164,17 @@ class MySiteViewModel
     }
 
     private fun statsClick(site: SiteModel, isFromQuickActions: Boolean) {
-        TODO()
+        if (isFromQuickActions) {
+            analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
+        }
+        if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
+            // If the user is not connected to WordPress.com, ask him to connect first.
+            _onNavigation.value = Event(StartLoginForJetpackStats)
+        } else if (site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected) {
+            _onNavigation.value = Event(OpenStatsScreen(site))
+        } else {
+            _onNavigation.value = Event(OpenConnectJetpackForStatsScreen(site))
+        }
     }
 
     private fun pagesClick(site: SiteModel, isFromQuickActions: Boolean) {
@@ -247,6 +261,10 @@ class MySiteViewModel
         }
     }
 
+    fun handleSuccessfulLoginResult() {
+        selectedSiteRepository.getSelectedSite()?.let { site -> _onNavigation.value = Event(OpenStatsScreen(site)) }
+    }
+
     private fun startSiteIconUpload(filePath: String) {
         if (TextUtils.isEmpty(filePath)) {
             _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_locating_image))))
@@ -300,6 +318,9 @@ class MySiteViewModel
         data class OpenSitePicker(val site: SiteModel) : NavigationAction()
         data class OpenMediaPicker(val site: SiteModel) : NavigationAction()
         data class OpenCropActivity(val imageUri: UriWrapper) : NavigationAction()
+        data class OpenStatsScreen(val site: SiteModel) : NavigationAction()
+        data class OpenConnectJetpackForStatsScreen(val site: SiteModel) : NavigationAction()
+        object StartLoginForJetpackStats : NavigationAction()
     }
 
     companion object {
