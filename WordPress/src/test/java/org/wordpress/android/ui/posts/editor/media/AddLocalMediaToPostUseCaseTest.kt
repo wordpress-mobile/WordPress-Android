@@ -153,7 +153,8 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
         verify(optimizeMediaUseCase).optimizeMediaIfSupportedAsync(
                 any(),
                 eq(FRESHLY_TAKEN),
-                eq(urisOfCopiedFiles)
+                eq(urisOfCopiedFiles),
+                any()
         )
     }
 
@@ -221,7 +222,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
 
         // Assert
         inOrder.verify(copyMediaToAppStorageUseCase).copyFilesToAppStorageIfNecessary(localUris)
-        inOrder.verify(optimizeMediaUseCase).optimizeMediaIfSupportedAsync(any(), any(), any())
+        inOrder.verify(optimizeMediaUseCase).optimizeMediaIfSupportedAsync(any(), any(), any(), any())
         inOrder.verify(getMediaModelUseCase)
                 .createMediaModelFromUri(eq(LOCAL_SITE_ID), any<List<Uri>>())
         inOrder.verify(updateMediaModelUseCase)
@@ -303,6 +304,7 @@ class AddLocalMediaToPostUseCaseTest : BaseUnitTest() {
                         optimizeMediaIfSupportedAsync(
                                 any(),
                                 eq(FRESHLY_TAKEN),
+                                any(),
                                 any()
                         )
                     }.thenReturn(optimizeMediaResult)
