@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
@@ -74,6 +75,12 @@ class ReaderCommentListViewModel
         init()
     }
 
+    fun onSwipeToRefresh() {
+        if (!followUnfollowCommentsFeatureConfig.isEnabled()) return
+
+        getFollowConversationStatus(blogId, postId, false)
+    }
+
     private fun init() {
         _snackbarEvents.addSource(followCommentsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
@@ -107,16 +114,16 @@ class ReaderCommentListViewModel
                     type = when (followCommentsState) {
                         Loading -> LOADING
                         is FollowStateChanged -> VISIBLE_WITH_STATE
-                        is Failure -> DISABLED
-                        FollowCommentsNotAllowed -> GONE
+                        is Failure, FollowCommentsNotAllowed -> DISABLED
+                        UserNotAuthenticated -> GONE
                     },
-                    showFollowButton = followCommentsState !is FollowCommentsNotAllowed,
+                    showFollowButton = followCommentsState !is UserNotAuthenticated,
                     isFollowing = if (followCommentsState is FollowStateChanged)
                         followCommentsState.isFollowing
                     else
                         false,
                     animate = if (followCommentsState is FollowStateChanged) !followCommentsState.isInit else false,
-                    onFollowButtonClick = if (followCommentsState !is FollowCommentsNotAllowed)
+                    onFollowButtonClick = if (followCommentsState !is UserNotAuthenticated)
                         ::onFollowConversationClicked
                     else
                         null

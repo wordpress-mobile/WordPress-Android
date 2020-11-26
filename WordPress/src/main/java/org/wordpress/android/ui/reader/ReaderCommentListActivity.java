@@ -185,8 +185,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             );
 
             mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
-                        if (mCommentAdapter != null && uiState instanceof UpdateFollowCommentsUiState) {
-                            mCommentAdapter.updateFollowingState((UpdateFollowCommentsUiState) uiState);
+                        if (mCommentAdapter != null) {
+                            mCommentAdapter.updateFollowingState(uiState);
                         }
                     }
             );
@@ -224,6 +224,9 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
+                        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+                            mViewModel.onSwipeToRefresh();
+                        }
                         updatePostAndComments();
                     }
                 }
