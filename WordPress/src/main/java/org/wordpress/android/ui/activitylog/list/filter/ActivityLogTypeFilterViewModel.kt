@@ -100,10 +100,15 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
         object FullscreenLoading : UiState() {
             override val loadingVisibility: Boolean = true
+            val loadingText: UiString = UiStringRes(R.string.loading)
         }
 
         data class Error(val retryAction: Action) : UiState() {
             override val errorVisibility = true
+            // TODO malinjir replace strings according to design
+            val errorTitle: UiString = UiStringRes(R.string.error)
+            val errorSubtitle: UiString = UiStringRes(R.string.hpp_retry_error)
+            val errorButtonText: UiString = UiStringRes(R.string.retry)
         }
 
         data class Content(
@@ -127,6 +132,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     data class Action(val label: UiString) {
-        var action: (() -> Unit)? = null
+        lateinit var action: (() -> Unit)
     }
 }
