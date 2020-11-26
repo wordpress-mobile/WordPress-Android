@@ -28,6 +28,10 @@ data class ScanStateModel(
     data class Credentials(
         val type: String,
         val role: String,
+        val host: String?,
+        val port: Int?,
+        val user: String?,
+        val path: String?,
         val stillValid: Boolean
     )
 
