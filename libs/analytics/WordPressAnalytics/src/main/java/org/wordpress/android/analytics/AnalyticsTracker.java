@@ -694,8 +694,6 @@ public final class AnalyticsTracker {
         COMMENT_UNAPPROVED,
         COMMENT_SPAMMED,
         COMMENT_UNSPAMMED,
-        COMMENT_FOLLOWED,
-        COMMENT_UNFOLLOWED,
         COMMENT_LIKED,
         COMMENT_UNLIKED,
         COMMENT_TRASHED,

@@ -1903,10 +1903,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_spammed";
             case COMMENT_UNSPAMMED:
                 return "comment_unspammed";
-            case COMMENT_FOLLOWED:
-                return "comment_followed";
-            case COMMENT_UNFOLLOWED:
-                return "comment_unfollowed";
             case COMMENT_LIKED:
             case COMMENT_QUICK_ACTION_LIKED:
                 return "comment_liked";
