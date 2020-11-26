@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -274,6 +276,27 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(snackbars).containsOnly(
                 SnackbarMessageHolder(UiStringRes(R.string.my_site_icon_dialog_add_requires_permission_message))
         )
+    }
+
+    @Test
+    fun `on site name chosen updates title if network available `() {
+        val title = "updated site name"
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        viewModel.onSiteNameChosen(title)
+
+        verify(selectedSiteRepository).updateTitle(title)
+    }
+
+    @Test
+    fun `on site name chosen shows snackbar if network not available `() {
+        val title = "updated site name"
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onSiteNameChosen(title)
+
+        verify(selectedSiteRepository, never()).updateTitle(any())
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.error_update_site_title_network)))
     }
 
     @Test
