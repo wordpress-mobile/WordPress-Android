@@ -1507,6 +1507,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_error";
             case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
                 return "site_settings_optimize_images_changed";
+            case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
+                return "jetpack_settings_viewed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:
@@ -1833,6 +1835,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_intro_dismissed";
             case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
                 return "story_intro_create_story_button_tapped";
+            case STORY_BLOCK_ADD_MEDIA_TAPPED:
+                return "story_block_add_media_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";

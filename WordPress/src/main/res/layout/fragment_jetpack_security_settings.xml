@@ -16,12 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/status_bar_color"
-            app:titleTextColor="@color/white"
-            app:contentInsetEnd="@dimen/toolbar_content_offset_end"
-            app:contentInsetLeft="@dimen/toolbar_content_offset"
-            app:contentInsetRight="@dimen/toolbar_content_offset_end"
-            app:contentInsetStart="@dimen/toolbar_content_offset" />
+            app:theme="@style/WordPress.ActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

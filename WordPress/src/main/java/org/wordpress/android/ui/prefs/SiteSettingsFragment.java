@@ -507,6 +507,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
             return setupMorePreferenceScreen();
         } else if (preference == mJpSecuritySettings) {
+            AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
             setupJetpackSecurityScreen();
         } else if (preference == mSiteAcceleratorSettings) {
             setupSiteAcceleratorScreen();
