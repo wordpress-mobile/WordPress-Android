@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -89,7 +91,14 @@ class MySiteViewModel
                     this::urlClick,
                     this::switchSiteClick
             )
-            listOf<MySiteItem>(siteInfoBlock)
+            val quickActionsBlock = QuickActionsBlock(
+                    ListItemInteraction.create(site) { statsClick(site, true) },
+                    ListItemInteraction.create(site) { pagesClick(site, true) },
+                    ListItemInteraction.create(site) { postsClick(site, true) },
+                    ListItemInteraction.create(site) { mediaClick(site, true) },
+                    site.isSelfHostedAdmin || site.hasCapabilityEditPages
+            )
+            listOf(siteInfoBlock, quickActionsBlock)
         } else {
             listOf()
         }
@@ -148,6 +157,22 @@ class MySiteViewModel
 
     private fun switchSiteClick(site: SiteModel) {
         _onNavigation.value = Event(OpenSitePicker(site))
+    }
+
+    private fun statsClick(site: SiteModel, isFromQuickActions: Boolean) {
+        TODO()
+    }
+
+    private fun pagesClick(site: SiteModel, isFromQuickActions: Boolean) {
+        TODO()
+    }
+
+    private fun postsClick(site: SiteModel, isFromQuickActions: Boolean) {
+        TODO()
+    }
+
+    private fun mediaClick(site: SiteModel, isFromQuickActions: Boolean) {
+        TODO()
     }
 
     fun refreshAccountAvatarUrl() {
