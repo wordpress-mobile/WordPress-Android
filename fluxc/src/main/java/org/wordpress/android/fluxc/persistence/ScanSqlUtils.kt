@@ -11,7 +11,10 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.IDLE
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.PROVISIONING
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.SCANNING
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.UNAVAILABLE
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.UNKNOWN
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -44,39 +47,21 @@ class ScanSqlUtils @Inject constructor() {
 
     private fun ScanStateModel.toBuilder(site: SiteModel): ScanStateBuilder {
         val startDate = when (state) {
-            IDLE -> {
-                mostRecentStatus?.startDate?.time ?: 0
-            }
-            SCANNING -> {
-                currentStatus?.startDate?.time ?: 0
-            }
-            else -> {
-                0
-            }
+            IDLE -> mostRecentStatus?.startDate?.time ?: 0
+            SCANNING -> currentStatus?.startDate?.time ?: 0
+            PROVISIONING, UNAVAILABLE, UNKNOWN -> 0
         }
 
         val progress = when (state) {
-            IDLE -> {
-                mostRecentStatus?.progress ?: 0
-            }
-            SCANNING -> {
-                currentStatus?.progress ?: 0
-            }
-            else -> {
-                0
-            }
+            IDLE -> mostRecentStatus?.progress ?: 0
+            SCANNING -> currentStatus?.progress ?: 0
+            PROVISIONING, UNAVAILABLE, UNKNOWN -> 0
         }
 
         val isInitial = when (state) {
-            IDLE -> {
-                mostRecentStatus?.isInitial ?: false
-            }
-            SCANNING -> {
-                currentStatus?.isInitial ?: false
-            }
-            else -> {
-                false
-            }
+            IDLE -> mostRecentStatus?.isInitial ?: false
+            SCANNING -> currentStatus?.isInitial ?: false
+            PROVISIONING, UNAVAILABLE, UNKNOWN -> false
         }
 
         return ScanStateBuilder(
