@@ -15,9 +15,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_N
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
@@ -38,6 +40,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.distinct
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -53,12 +56,14 @@ class MySiteViewModel
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val contextProvider: ContextProvider
 ) : ScopedViewModel(mainDispatcher) {
+    private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -70,11 +75,12 @@ class MySiteViewModel
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
-    val uiModel: LiveData<List<MySiteItem>> = merge(
+    val uiModel: LiveData<UiModel> = merge(
+            _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar
-    ) { site, showSiteIconProgressBar ->
-        if (site != null) {
+            selectedSiteRepository.showSiteIconProgressBar.distinct()
+    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+        val items = if (site != null) {
             val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
                     site,
                     showSiteIconProgressBar ?: false,
@@ -87,6 +93,7 @@ class MySiteViewModel
         } else {
             listOf()
         }
+        UiModel(currentAvatarUrl.orEmpty(), items)
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -141,6 +148,10 @@ class MySiteViewModel
 
     private fun switchSiteClick(site: SiteModel) {
         _onNavigation.value = Event(OpenSitePicker(site))
+    }
+
+    fun refreshAccountAvatarUrl() {
+        _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
     fun onSiteNameChosen(input: String) {
@@ -240,6 +251,15 @@ class MySiteViewModel
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
     }
 
+    fun onAvatarPressed() {
+        _onNavigation.value = Event(OpenMeScreen)
+    }
+
+    data class UiModel(
+        val accountAvatarUrl: String,
+        val items: List<MySiteItem>
+    )
+
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
         @StringRes val title: Int,
@@ -250,6 +270,7 @@ class MySiteViewModel
     )
 
     sealed class NavigationAction {
+        object OpenMeScreen : NavigationAction()
         data class OpenSite(val site: SiteModel) : NavigationAction()
         data class OpenSitePicker(val site: SiteModel) : NavigationAction()
         data class OpenMediaPicker(val site: SiteModel) : NavigationAction()

@@ -37,6 +37,7 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -448,7 +449,7 @@ class PostsListActivity : LocaleAwareActivity(),
         } else if (requestCode == RequestCodes.PHOTO_PICKER &&
                 resultCode == Activity.RESULT_OK &&
                 data != null) {
-            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
+            storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site, STORY_FROM_POSTS_LIST)
         }
     }
 

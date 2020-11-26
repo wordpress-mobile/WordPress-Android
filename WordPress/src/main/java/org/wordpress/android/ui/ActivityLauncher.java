@@ -783,6 +783,7 @@ public class ActivityLauncher {
             return;
         }
 
+        AnalyticsTracker.track(Stat.STORY_BLOCK_ADD_MEDIA_TAPPED);
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, true);

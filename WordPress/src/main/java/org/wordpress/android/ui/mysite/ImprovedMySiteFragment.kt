@@ -8,14 +8,17 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.media_picker_fragment.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
@@ -25,8 +28,10 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
@@ -48,6 +53,7 @@ import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.USER
 import java.io.File
 import javax.inject.Inject
 
@@ -56,6 +62,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
@@ -87,6 +94,33 @@ class ImprovedMySiteFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        appbar_main.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val maxOffset = appBarLayout.totalScrollRange
+            val currentOffset = maxOffset + verticalOffset
+
+            val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+            avatar?.let {
+                val minSize = avatar.minimumHeight
+                val maxSize = avatar.maxHeight
+                val modifierPx = (minSize.toFloat() - maxSize.toFloat()) * (percentage.toFloat() / 100) * -1
+                val modifierPercentage = modifierPx / minSize
+                val newScale = 1 + modifierPercentage
+
+                avatar.scaleX = newScale
+                avatar.scaleY = newScale
+            }
+        })
+
+        toolbar_main.let { toolbar ->
+            toolbar.inflateMenu(R.menu.my_site_menu)
+            toolbar.menu.findItem(R.id.me_item)?.let { meMenu ->
+                meMenu.actionView.let { actionView ->
+                    actionView.setOnClickListener { viewModel.onAvatarPressed() }
+                    TooltipCompat.setTooltipText(actionView, meMenu.title)
+                }
+            }
+        }
+
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -96,8 +130,9 @@ class ImprovedMySiteFragment : Fragment(),
         recycler_view.layoutManager = layoutManager
 
         viewModel.uiModel.observe(viewLifecycleOwner, {
-            it?.let { items ->
-                loadData(items)
+            it?.let { uiModel ->
+                loadGravatar(uiModel.accountAvatarUrl)
+                loadData(uiModel.items)
             }
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
@@ -130,6 +165,9 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.onNavigation.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { action ->
                 when (action) {
+                    is OpenMeScreen -> {
+                        ActivityLauncher.viewMeActivityForResult(activity)
+                    }
                     is OpenSitePicker -> {
                         ActivityLauncher.showSitePickerForResult(activity, action.site)
                     }
@@ -203,6 +241,7 @@ class ImprovedMySiteFragment : Fragment(),
         super.onResume()
         selectedSiteRepository.updateSite((activity as? WPMainActivity)?.selectedSite)
         selectedSiteRepository.updateSiteSettingsIfNecessary()
+        viewModel.refreshAccountAvatarUrl()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -210,6 +249,17 @@ class ImprovedMySiteFragment : Fragment(),
         recycler_view.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
+    }
+
+    private fun loadGravatar(avatarUrl: String) = avatar?.let {
+        meGravatarLoader.load(
+                false,
+                meGravatarLoader.constructGravatarUrl(avatarUrl),
+                null,
+                it,
+                USER,
+                null
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
