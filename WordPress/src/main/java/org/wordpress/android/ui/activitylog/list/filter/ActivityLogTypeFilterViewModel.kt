@@ -9,12 +9,14 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
@@ -31,6 +33,9 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _dismissDialog = MutableLiveData<Event<Unit>>()
+    val dismissDialog: LiveData<Event<Unit>> = _dismissDialog
 
     fun start(remoteSiteId: RemoteId, parentViewModel: ActivityLogViewModel) {
         if (isStarted) return
@@ -93,6 +98,8 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onApplyClicked() {
+        parentViewModel.onActivityTypesSelected(getSelectedActivityTypeIds())
+        _dismissDialog.value = Event(Unit)
     }
 
     private fun onRetryClicked() {
@@ -113,6 +120,12 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                     item
                 }
             }
+
+    private fun getSelectedActivityTypeIds(): List<Int> =
+            (_uiState.value as Content).items
+                    .filterIsInstance(ActivityType::class.java)
+                    .filter { it.checked }
+                    .map { it.id }
 
     sealed class UiState {
         open val contentVisibility = false

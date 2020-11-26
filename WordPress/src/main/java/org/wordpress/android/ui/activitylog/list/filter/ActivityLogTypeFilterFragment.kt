@@ -96,6 +96,9 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
                 is Content -> refreshContentScreen(uiState)
             }
         })
+        viewModel.dismissDialog.observe(viewLifecycleOwner, Observer {
+            it.applyIfNotHandled { dismiss() }
+        })
         viewModel.start(
                 remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
                 parentViewModel = parentViewModel
