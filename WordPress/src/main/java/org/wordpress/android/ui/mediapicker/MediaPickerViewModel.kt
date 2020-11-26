@@ -354,7 +354,7 @@ class MediaPickerViewModel @Inject constructor(
                     _domainModel.value = domainModel
                 }
             }
-            if (permissionsHandler.hasStoragePermission()) {
+            if (!mediaPickerSetup.requiresStoragePermissions || permissionsHandler.hasStoragePermission()) {
                 launch(bgDispatcher) {
                     loadActions.send(LoadAction.Start())
                 }

@@ -58,12 +58,12 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolbar(view)
+        initToolbar()
         initRecyclerView()
         initViewModel()
     }
 
-    private fun initToolbar(view: View) {
+    private fun initToolbar() {
         toolbar_main.navigationIcon = ColorUtils.applyTintToDrawable(
                 toolbar_main.context, R.drawable.ic_close_white_24dp,
                 toolbar_main.context.getColorResIdFromAttribute(R.attr.colorOnSurface)

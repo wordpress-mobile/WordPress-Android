@@ -20,7 +20,16 @@
                     "URL": "{{request.requestLine.baseUrl}}/rest/v1.2/read/liked"
                 }
             },
-            "subscribed": [],
+            "subscribed": {
+                "436": {
+                    "ID": "436",
+                    "title": "Photography",
+                    "URL": "{{request.requestLine.baseUrl}}\/rest\/v1.2\/read\/tags\/photography\/posts",
+                    "slug": "photography",
+                    "display_name": "photography",
+                    "type": "tag"
+                }
+            },
             "recommended": {
                 "116": {
                     "ID": 116,

@@ -47,6 +47,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
@@ -116,6 +117,20 @@ class ReaderPostUiStateBuilderTest {
             assertThat(uiState.blogSection.blogSectionClickData).isNotNull
         }
     }
+
+    @Test
+    fun `p2 posts in the feed show author's avatar alongside site icon`() = test {
+        // Arrange
+        val p2post = createPost(isp2Post = true)
+        val nonP2Post = createPost(isp2Post = false)
+        // Act
+        val p2UiState = mapPostToUiState(p2post)
+        val nonP2UiState = mapPostToUiState(nonP2Post)
+        // Assert
+        assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue()
+        assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse()
+    }
+
     // endregion
 
     // region BLOG URL
@@ -498,6 +513,38 @@ class ReaderPostUiStateBuilderTest {
         val uiState = mapPostToUiState(post)
         // Assert
         assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
+    }
+
+    @Test
+    fun `p2 posts in the feed show author's first name (or full name) alongside the blog name`() = test {
+        // Arrange
+        val postWithFirstName = createPost(
+                isp2Post = true,
+                blogName = "Fancy Blog",
+                authorFirstName = "John",
+                authorName = "John Smith"
+        )
+        val postWithoutFirstName = createPost(
+                isp2Post = true,
+                blogName = "Fancy Blog",
+                authorFirstName = "",
+                authorName = "John Smith"
+        )
+        // Act
+        val firstNameUiState = mapPostToUiState(postWithFirstName)
+        val fullNameUiState = mapPostToUiState(postWithoutFirstName)
+        // Assert
+        val firstNameBlog = firstNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(firstNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(firstNameBlog.params.size).isEqualTo(2)
+        assertThat((firstNameBlog.params[0] as UiStringText).text).isEqualTo("John")
+        assertThat((firstNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
+
+        val fullNameBlog = fullNameUiState.blogSection.blogName as UiStringResWithParams
+        assertThat(fullNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
+        assertThat(fullNameBlog.params.size).isEqualTo(2)
+        assertThat((fullNameBlog.params[0] as UiStringText).text).isEqualTo("John Smith")
+        assertThat((fullNameBlog.params[1] as UiStringText).text).isEqualTo("Fancy Blog")
     }
     // endregion
 
@@ -894,7 +941,11 @@ class ReaderPostUiStateBuilderTest {
         isCanLikePost: Boolean = true,
         hasFeaturedImage: Boolean = false,
         featuredImageUrlForDisplay: String? = null,
-        hasFeaturedVideo: Boolean = false
+        hasFeaturedVideo: Boolean = false,
+        isp2Post: Boolean = false,
+        blogName: String = "",
+        authorFirstName: String = "",
+        authorName: String = ""
     ): ReaderPost {
         val post = spy(ReaderPost().apply {
             this.blogUrl = blogUrl
@@ -924,6 +975,10 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.getFeaturedImageForDisplay(anyInt(), anyInt())).thenReturn(featuredImageUrlForDisplay)
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
+        post.isWpForTeams = isp2Post
+        post.blogName = blogName
+        post.authorFirstName = authorFirstName
+        post.authorName = authorName
         return post
     }
 

@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
@@ -27,10 +29,12 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
+private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -78,10 +82,23 @@ class ActivityLogListFragment : Fragment() {
         })
 
         activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
+        date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
 
         setupObservers()
 
         viewModel.start(site)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        restoreDateRangePickerListeners()
+    }
+
+    private fun restoreDateRangePickerListeners() {
+        (childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Pair<Long, Long>>)
+                ?.let { picker ->
+                    initDateRangePickerButtonClickListener(picker)
+                }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -109,6 +126,10 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
             showActivityTypeFilterDialog(remoteSiteId)
+        })
+
+        viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
+            showDateRangePicker(event.initialSelection)
         })
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
@@ -145,6 +166,19 @@ class ActivityLogListFragment : Fragment() {
                     getString(R.string.cancel))
             dialog.show(requireFragmentManager(), it)
         }
+    }
+
+    private fun showDateRangePicker(initialDateRange: DateRange?) {
+        val picker = MaterialDatePicker.Builder
+                .dateRangePicker()
+                .setSelection(initialDateRange)
+                .build()
+        initDateRangePickerButtonClickListener(picker)
+        picker.show(childFragmentManager, DATE_PICKER_TAG)
+    }
+
+    private fun initDateRangePickerButtonClickListener(picker: MaterialDatePicker<Pair<Long, Long>>) {
+        picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
     private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId) {
