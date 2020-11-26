@@ -17,6 +17,7 @@ sealed class MainActionListItem {
         override val actionType: ActionType,
         @DrawableRes val iconRes: Int,
         @StringRes val labelRes: Int,
+        @StringRes val tagRes: Int = 0,
         val onClickAction: ((actionType: ActionType) -> Unit)?,
         val showQuickStartFocusPoint: Boolean = false
     ) : MainActionListItem()

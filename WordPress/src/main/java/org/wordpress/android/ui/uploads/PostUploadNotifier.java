@@ -127,6 +127,11 @@ class PostUploadNotifier {
     }
 
     private synchronized void startOrUpdateForegroundNotification(@Nullable PostImmutableModel post) {
+        boolean isTotalPostsAndMediaItemsCountZero = sNotificationData.mTotalPostItems == 0
+                                                     && sNotificationData.mTotalMediaItems == 0;
+        if (isTotalPostsAndMediaItemsCountZero) {
+            return;
+        }
         updateNotificationBuilder(post);
         if (sNotificationData.mNotificationId == 0) {
             sNotificationData.mNotificationId = (new Random()).nextInt();
