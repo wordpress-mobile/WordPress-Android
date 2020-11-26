@@ -13,10 +13,12 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -43,6 +45,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<NavigationAction>
+    private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
@@ -261,6 +264,67 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
     }
+
+    @Test
+    fun `account avatar url initial value is empty`() {
+        assertThat(uiModels).hasSize(1)
+        assertThat(uiModels.last().accountAvatarUrl).isEmpty()
+    }
+
+    @Test
+    fun `account avatar url value is emitted after refresh`() {
+        setupAccount(buildAccountWithAvatarUrl(avatarUrl))
+
+        viewModel.refreshAccountAvatarUrl()
+
+        assertThat(uiModels).hasSize(2)
+        assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
+    }
+
+    @Test
+    fun `account avatar url value is emitted after refresh even if new value is the same`() {
+        setupAccount(buildAccountWithAvatarUrl(avatarUrl))
+
+        viewModel.refreshAccountAvatarUrl()
+        viewModel.refreshAccountAvatarUrl()
+
+        assertThat(uiModels).hasSize(3)
+    }
+
+    @Test
+    fun `account avatar url value is emitted after refresh even if new value is empty`() {
+        setupAccount(buildAccountWithAvatarUrl(avatarUrl))
+
+        viewModel.refreshAccountAvatarUrl()
+
+        setupAccount(buildAccountWithAvatarUrl(null))
+
+        viewModel.refreshAccountAvatarUrl()
+
+        assertThat(uiModels).hasSize(3)
+        assertThat(uiModels.last().accountAvatarUrl).isEmpty()
+    }
+
+    @Test
+    fun `account avatar url value is emitted after refresh even if account is null`() {
+        setupAccount(null)
+
+        viewModel.refreshAccountAvatarUrl()
+
+        assertThat(uiModels).hasSize(2)
+        assertThat(uiModels.last().accountAvatarUrl).isEmpty()
+    }
+
+    @Test
+    fun `avatar press opens me screen`() {
+        viewModel.onAvatarPressed()
+
+        assertThat(navigationActions).containsOnly(OpenMeScreen)
+    }
+
+    private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
+
+    private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {
