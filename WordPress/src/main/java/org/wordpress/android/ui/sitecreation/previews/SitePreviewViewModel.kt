@@ -253,12 +253,12 @@ class SitePreviewViewModel @Inject constructor(
 
     fun onUrlLoaded() {
         _hideGetStartedBar.call()
+        if (uiState.value is SitePreviewFullscreenProgressUiState) {
+            tracker.trackSiteDesignPreviewLoading(siteCreationState.siteDesign)
+        }
         if (!webviewFullyLoadedTracked) {
             webviewFullyLoadedTracked = true
             tracker.trackSiteDesignPreviewLoaded(siteCreationState.siteDesign)
-        }
-        if (uiState.value is SitePreviewFullscreenProgressUiState) {
-            tracker.trackSiteDesignPreviewLoading(siteCreationState.siteDesign)
         }
         /**
          * Update the ui state if the loading or error screen is being shown.
