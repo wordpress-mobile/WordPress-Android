@@ -16,6 +16,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Foll
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowCommentsNotAllowed
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.FollowStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.Loading
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
 
 class ReaderFollowCommentsHandler @Inject constructor(
     private val readerCommentsFollowUseCase: ReaderCommentsFollowUseCase,
@@ -57,6 +58,9 @@ class ReaderFollowCommentsHandler @Inject constructor(
                 _followStatusUpdate.postValue(state)
             }
             FollowCommentsNotAllowed -> {
+                _followStatusUpdate.postValue(state)
+            }
+            UserNotAuthenticated -> {
                 _followStatusUpdate.postValue(state)
             }
         }

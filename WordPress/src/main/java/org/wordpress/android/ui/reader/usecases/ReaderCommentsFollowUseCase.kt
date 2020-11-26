@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.usecases
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult.Failure
@@ -16,38 +18,43 @@ import kotlin.coroutines.suspendCoroutine
 
 class ReaderCommentsFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider
+    private val postSubscribersApiCallsProvider: PostSubscribersApiCallsProvider,
+    private val accountStore: AccountStore
 ) {
     suspend fun getMySubscriptionToPost(blogId: Long, postId: Long, isInit: Boolean) = flow {
-        emit(FollowCommentsState.Loading)
-
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
+        if (!accountStore.hasAccessToken()) {
+            emit(UserNotAuthenticated)
         } else {
-            val canFollowComments: Boolean = suspendCoroutine { continuation ->
-                postSubscribersApiCallsProvider.getCanFollowComments(blogId, continuation)
-            }
+            emit(FollowCommentsState.Loading)
 
-            if (!(canFollowComments)) {
-                emit(FollowCommentsState.FollowCommentsNotAllowed)
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
             } else {
-                val status: PostSubscribersCallResult = suspendCoroutine { continuation ->
-                    postSubscribersApiCallsProvider.getMySubscriptionToPost(blogId, postId, continuation)
+                val canFollowComments: Boolean = suspendCoroutine { continuation ->
+                    postSubscribersApiCallsProvider.getCanFollowComments(blogId, continuation)
                 }
 
-                when (status) {
-                    is Success -> {
-                        emit(
-                                FollowCommentsState.FollowStateChanged(
-                                        blogId,
-                                        postId,
-                                        status.isFollowing,
-                                        isInit
-                                )
-                        )
+                if (!canFollowComments) {
+                    emit(FollowCommentsState.FollowCommentsNotAllowed)
+                } else {
+                    val status: PostSubscribersCallResult = suspendCoroutine { continuation ->
+                        postSubscribersApiCallsProvider.getMySubscriptionToPost(blogId, postId, continuation)
                     }
-                    is Failure -> {
-                        emit(FollowCommentsState.Failure(blogId, postId, UiStringText(status.error)))
+
+                    when (status) {
+                        is Success -> {
+                            emit(
+                                    FollowCommentsState.FollowStateChanged(
+                                            blogId,
+                                            postId,
+                                            status.isFollowing,
+                                            isInit
+                                    )
+                            )
+                        }
+                        is Failure -> {
+                            emit(FollowCommentsState.Failure(blogId, postId, UiStringText(status.error)))
+                        }
                     }
                 }
             }
@@ -114,5 +121,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         ) : FollowCommentsState()
 
         object FollowCommentsNotAllowed : FollowCommentsState()
+
+        object UserNotAuthenticated : FollowCommentsState()
     }
 }
