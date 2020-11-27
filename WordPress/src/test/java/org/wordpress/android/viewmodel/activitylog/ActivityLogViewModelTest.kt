@@ -363,6 +363,16 @@ class ActivityLogViewModelTest {
         assertEquals(RemoteId(site.siteId), viewModel.showActivityTypeFilterDialog.value!!.siteId)
     }
 
+    @Test
+    fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
+        val selectedItems = listOf(1,4)
+        viewModel.onActivityTypesSelected(selectedItems)
+
+        viewModel.onActivityTypeFilterClicked()
+
+        assertEquals(selectedItems, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
+    }
+
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
         verify(store).fetchActivities(fetchActivityLogCaptor.capture())
 
