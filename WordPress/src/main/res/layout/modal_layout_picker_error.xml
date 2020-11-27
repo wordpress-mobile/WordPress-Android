@@ -4,7 +4,7 @@
     android:id="@+id/errorLayout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/mlp_layouts_row_height"
-    android:background="?attr/categoriesBackground">
+    android:background="?attr/layoutPickerBackground">
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionableEmptyView"
