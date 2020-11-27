@@ -229,6 +229,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_REPLIED_TO:
             case NOTIFICATION_QUICK_ACTIONS_APPROVED:
+            case COMMENT_QUICK_ACTION_LIKED:
+            case COMMENT_QUICK_ACTION_REPLIED_TO:
+            case COMMENT_QUICK_ACTION_APPROVED:
                 predefinedEventProperties.put("is_quick_action", true);
                 break;
             case SIGNUP_EMAIL_EPILOGUE_UNCHANGED:
@@ -1513,6 +1516,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_delete_site_response_error";
             case SITE_SETTINGS_OPTIMIZE_IMAGES_CHANGED:
                 return "site_settings_optimize_images_changed";
+            case SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED:
+                return "jetpack_settings_viewed";
+            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_VIEWED:
+                return "jetpack_whitelisted_ips_viewed";
+            case SITE_SETTINGS_JETPACK_WHITELISTED_IPS_CHANGED:
+                return "jetpack_whitelisted_ips_changed";
             case ABTEST_START:
                 return "abtest_start";
             case FEATURE_FLAG_SET:
@@ -1839,6 +1848,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_intro_dismissed";
             case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
                 return "story_intro_create_story_button_tapped";
+            case STORY_BLOCK_ADD_MEDIA_TAPPED:
+                return "story_block_add_media_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
@@ -1891,6 +1902,33 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_failed";
             case READER_POST_REPORTED:
                 return "reader_post_reported";
+            case COMMENT_APPROVED:
+            case COMMENT_QUICK_ACTION_APPROVED:
+                return "comment_approved";
+            case COMMENT_UNAPPROVED:
+                return "comment_unapproved";
+            case COMMENT_SPAMMED:
+                return "comment_spammed";
+            case COMMENT_UNSPAMMED:
+                return "comment_unspammed";
+            case COMMENT_LIKED:
+            case COMMENT_QUICK_ACTION_LIKED:
+                return "comment_liked";
+            case COMMENT_UNLIKED:
+                return "comment_unliked";
+            case COMMENT_TRASHED:
+                return "comment_trashed";
+            case COMMENT_UNTRASHED:
+                return "comment_untrashed";
+            case COMMENT_REPLIED_TO:
+            case COMMENT_QUICK_ACTION_REPLIED_TO:
+                return "comment_replied_to";
+            case COMMENT_EDITED:
+                return "comment_edited";
+            case COMMENT_VIEWED:
+                return "comment_viewed";
+            case COMMENT_DELETED:
+                return "comment_deleted";
         }
         return null;
     }
