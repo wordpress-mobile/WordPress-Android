@@ -6,11 +6,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
+import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -19,32 +21,38 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
+    private val dummyActivityTypesProvider: DummyActivityTypesProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
+    private lateinit var remoteSiteId: RemoteId
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start() {
+    fun start(remoteSiteId: RemoteId) {
         if (isStarted) return
         isStarted = true
+        this.remoteSiteId = remoteSiteId
 
-        _uiState.value = FullscreenLoading
         fetchAvailableActivityTypes()
     }
 
     private fun fetchAvailableActivityTypes() {
         launch {
-            // TODO malinjir initiate the fetch
-            onActivityTypesFetched(listOf(DummyActivityType, DummyActivityType, DummyActivityType))
+            _uiState.value = FullscreenLoading
+            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(remoteSiteId.value)
+            if (response.isError) {
+                _uiState.value = buildErrorUiState()
+            } else {
+                _uiState.value = buildContentUiState(response.activityTypes)
+            }
         }
     }
 
-    private suspend fun onActivityTypesFetched(activityTypes: List<DummyActivityType>) {
-        _uiState.value = buildContentUiState(activityTypes)
-    }
+    private fun buildErrorUiState() =
+            UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
@@ -64,7 +72,10 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onApplyClicked() {
-        // TODO malinjir save and dismiss
+    }
+
+    private fun onRetryClicked() {
+        fetchAvailableActivityTypes()
     }
 
     private fun onClearClicked() {
@@ -85,9 +96,19 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     sealed class UiState {
         open val contentVisibility = false
         open val loadingVisibility = false
+        open val errorVisibility = false
 
         object FullscreenLoading : UiState() {
             override val loadingVisibility: Boolean = true
+            val loadingText: UiString = UiStringRes(R.string.loading)
+        }
+
+        data class Error(val retryAction: Action) : UiState() {
+            override val errorVisibility = true
+            // TODO malinjir replace strings according to design
+            val errorTitle: UiString = UiStringRes(R.string.error)
+            val errorSubtitle: UiString = UiStringRes(R.string.hpp_retry_error)
+            val errorButtonText: UiString = UiStringRes(R.string.retry)
         }
 
         data class Content(
@@ -111,8 +132,6 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     data class Action(val label: UiString) {
-        var action: (() -> Unit)? = null
+        lateinit var action: (() -> Unit)
     }
-
-    object DummyActivityType
 }

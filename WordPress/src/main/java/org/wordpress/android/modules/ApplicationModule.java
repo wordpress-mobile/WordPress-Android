@@ -16,6 +16,7 @@ import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogF
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
 import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
+import org.wordpress.android.ui.posts.BasicDialog;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
 import org.wordpress.android.ui.reader.subfilter.SubfilterPageFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
@@ -101,6 +102,9 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract ManualFeatureConfigFragment contributeManualFeatureConfigFragment();
+
+    @ContributesAndroidInjector
+    abstract BasicDialog contributeBasicDialog();
 
     @Provides
     public static WizardManager<SiteCreationStep> provideWizardManager(

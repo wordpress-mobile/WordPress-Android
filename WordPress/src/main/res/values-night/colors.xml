@@ -19,6 +19,7 @@
 
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
+    <color name="p2_author_bg_stroke">#1E1E1E</color>
 
     <!-- Stats -->
 

@@ -15,7 +15,8 @@
             android:id="@+id/collapsing_toolbar"
             style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:title="@string/my_site_section_screen_title">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar_main"
