@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -55,6 +56,8 @@ import org.wordpress.android.util.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -145,6 +148,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         if (!getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false)) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
+        // track initial comment note view
+        if (savedInstanceState == null) {
+            trackCommentNote(note);
+        }
     }
 
     private void updateUIAndNote(boolean doRefresh) {
@@ -225,6 +232,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         setActionBarTitleForNote(currentNote);
                         markNoteAsRead(currentNote);
                         NotificationsActions.updateSeenTimestamp(currentNote);
+                        // track subsequent comment note views
+                        trackCommentNote(currentNote);
                     }
                 }
 
@@ -234,6 +243,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             };
         }
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
+    }
+
+    private void trackCommentNote(Note note) {
+        if (note.isCommentType()) {
+            SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                    Stat.COMMENT_VIEWED, AnalyticsCommentActionSource.NOTIFICATIONS, site);
+        }
     }
 
     public void showHideToolbar(boolean hide) {

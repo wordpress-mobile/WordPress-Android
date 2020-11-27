@@ -16,6 +16,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
+import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
 
 public class MySitesPage {
@@ -49,6 +50,10 @@ public class MySitesPage {
 
     public void startNewPost() {
         clickOn(R.id.fab_button);
+        if (isElementDisplayed(R.id.design_bottom_sheet)) {
+            // If Stories are enabled, FAB opens a bottom sheet with options - select the 'Blog post' option
+            clickOn(onView(withText(R.string.my_site_bottom_sheet_add_post)));
+        }
     }
 
     public void gotoSiteSettings() {
