@@ -305,6 +305,12 @@ public class UrlUtils {
         }
         return false;
     }
+
+    public static @Nullable String appendToPath(@Nullable String url, @Nullable String path) {
+        if (url == null) return null;
+        return Uri.parse(url).buildUpon().appendPath(path).toString();
+    }
+
     /**
      * Extracts the subdomain from a domain string.
      * @param domain A domain is expected. Protocol is optional

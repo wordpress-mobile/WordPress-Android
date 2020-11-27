@@ -38,4 +38,19 @@ public class UrlUtilsTest extends InstrumentationTestCase {
     public void testIsHomePage2() {
         assertEquals(true, UrlUtils.isHomePage("https://a.com?param1=true"));
     }
+
+    public void testAppendToPath1() {
+        String result = UrlUtils.appendToPath("https://a.com?param1=true", "slug");
+        assertEquals("https://a.com/slug?param1=true", result);
+    }
+
+    public void testAppendToPath2() {
+        String result = UrlUtils.appendToPath("https://a.com/?param1=true", "slug");
+        assertEquals("https://a.com/slug?param1=true", result);
+    }
+
+    public void testAppendToPath3() {
+        String result = UrlUtils.appendToPath("https://a.com/path/?param1=true", "slug");
+        assertEquals("https://a.com/path/slug?param1=true", result);
+    }
 }
