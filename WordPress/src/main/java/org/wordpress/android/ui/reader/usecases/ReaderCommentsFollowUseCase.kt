@@ -179,7 +179,10 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         return this
     }
 
-    private fun MutableMap<String, Any?>.addFollowActionResult(result: AnalyticsFollowCommentsActionResult, errorMessage: String? = null): MutableMap<String, Any?> {
+    private fun MutableMap<String, Any?>.addFollowActionResult(
+        result: AnalyticsFollowCommentsActionResult,
+        errorMessage: String? = null
+    ): MutableMap<String, Any?> {
         this[FOLLOW_COMMENT_ACTION_RESULT] = result.actionResult
         errorMessage?.also {
             this[FOLLOW_COMMENT_ACTION_ERROR] = errorMessage
