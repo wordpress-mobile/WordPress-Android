@@ -124,8 +124,8 @@ class ActivityLogListFragment : Fragment() {
             uiHelpers.updateVisibility(activity_type_filter, visibility)
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
-            showActivityTypeFilterDialog(remoteSiteId)
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { event ->
+            showActivityTypeFilterDialog(event.siteId, event.initialSelection)
         })
 
         viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
@@ -181,8 +181,9 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId) {
-        ActivityLogTypeFilterFragment.newInstance(remoteSiteId).show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<Int>) {
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection)
+                .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
