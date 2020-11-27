@@ -14,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCrop
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
@@ -187,7 +189,10 @@ class MySiteViewModel
     }
 
     private fun postsClick(site: SiteModel, isFromQuickActions: Boolean) {
-        TODO()
+        if (isFromQuickActions) {
+            analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
+        }
+        _onNavigation.value = Event(OpenPostsScreen(site))
     }
 
     private fun mediaClick(site: SiteModel, isFromQuickActions: Boolean) {
@@ -327,6 +332,7 @@ class MySiteViewModel
         data class OpenConnectJetpackForStatsScreen(val site: SiteModel) : NavigationAction()
         object StartLoginForJetpackStats : NavigationAction()
         data class OpenPagesScreen(val site: SiteModel) : NavigationAction()
+        data class OpenPostsScreen(val site: SiteModel) : NavigationAction()
     }
 
     companion object {
