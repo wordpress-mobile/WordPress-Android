@@ -10,7 +10,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Anal
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsAction.UNFOLLOW_COMMENTS
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsActionResult.ERROR
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsActionResult.SUCCEEDED
-import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsGenericErrors.NO_NETWORK
+import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsGenericError.NO_NETWORK
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult
@@ -88,7 +88,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
 
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
-            properties.addFollowActionResult(ERROR, NO_NETWORK.actionError)
+            properties.addFollowActionResult(ERROR, NO_NETWORK.errorMessage)
         } else {
             val status: PostSubscribersCallResult = suspendCoroutine { continuation ->
                 if (subscribe) {
@@ -166,7 +166,7 @@ class ReaderCommentsFollowUseCase @Inject constructor(
         ERROR("error")
     }
 
-    private enum class AnalyticsFollowCommentsGenericErrors(val actionError: String) {
+    private enum class AnalyticsFollowCommentsGenericError(val errorMessage: String) {
         NO_NETWORK("no_network")
     }
 
