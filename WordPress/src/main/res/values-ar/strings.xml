@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-13 13:54:08+0000
+Translation-Revision-Date: 2020-11-23 18:00:56+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">لم تتم إضافة شريحة واحدة أو أكثر إلى قصتك لأن القصص لا تدعم ملفات GIF في الوقت الحالي. الرجاء اختيار صورة ثابتة أو خلفية فيديو بدلاً من ذلك.</string>
+    <string name="dialog_edit_story_unrecoverable_title">لا يمكن تحرير القصة</string>
+    <string name="dialog_edit_story_unavailable_title">لا يمكن تحرير القصة</string>
+    <string name="dialog_edit_story_unsupported_format_title">ملفات GIF غير مدعومة</string>
+    <string name="dialog_edit_story_limited_message">تم تحرير هذه القصة على جهاز مختلف وقد تكون القدرة محدودة على تحرير كائنات معينة.</string>
+    <string name="dialog_edit_story_unavailable_message">تعذر تحميل الوسائط لهذه القصة. تحقق من اتصالك بالإنترنت وحاول مرة أخرى بعد لحظات.</string>
+    <string name="dialog_edit_story_unrecoverable_message">لم نتمكن من العثور على ملفات وسائط لهذه القصة على الموقع.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">تمت إزالة الوسائط. حاول تحرير قصتك.</string>
+    <string name="dialog_edit_story_limited_title">تحرير قصة محدودة</string>
+    <string name="hpp_error_title">التخطيطات غير متوفرة دون اتصال انترنت</string>
+    <string name="hpp_retry_error">يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.</string>
+    <string name="delete_button_alt">حذف</string>
+    <string name="label_next_button">التالي</string>
+    <string name="label_done_button">تمّ</string>
+    <string name="dialog_discard_story_title_edit">تجاهل التغييرات؟</string>
+    <string name="dialog_discard_story_message_edit">لن يتم حفظ أي تغييرات تم إجراؤها.</string>
+    <string name="dialog_discard_story_ok_button_edit">تجاهل</string>
+    <string name="color_picker_label_text">النص</string>
+    <string name="color_picker_label_background">الخلفية</string>
+    <string name="hpp_error_subtitle">اضغط على إعادة المحاولة عند معاودة الاتصال بالإنترنت.</string>
+    <string name="hpp_choose_error">حدث خطأ أثناء تحديد التصميم.</string>
+    <string name="scan">فحص</string>
+    <string name="reader_discover_empty_title">مرحبًا!</string>
+    <string name="reader_discover_no_posts_title">لا توجد مقالات حديثة</string>
+    <string name="login_find_your_connected_email">العثور على بريدك الإلكتروني المتصل</string>
+    <string name="continue_site_credentials">الاستمرار في تخزين بيانات الاعتماد</string>
+    <string name="reader_discover_no_posts_subtitle">حاول متابعة المزيد من المواضيع لتوسيع البحث</string>
+    <string name="reader_discover_no_posts_button_text">متابعة المواضيع</string>
+    <string name="login_prologue_third_subtitle_one">أُعجب &lt;b>Madison Ruiz&lt;/b> بمقالتك</string>
+    <string name="login_prologue_third_subtitle_two">لقد تلقيت &lt;b>50 إعجاب&lt;/b> على موقعك اليوم</string>
+    <string name="login_prologue_third_subtitle_three">قام &lt;b>Johan Brandt&lt;/b> بالردّ على مقالتك</string>
     <string name="hpp_skip_button">تخطي</string>
     <string name="hpp_choose_button">اختيار</string>
     <string name="hpp_subtitle">اختر تخطيط الصفحة الرئيسية المفضَّل لديك. يمكنك تخصيصه أو تغييره لاحقًا.</string>
@@ -66,7 +97,7 @@ Language: ar
     <string name="reader_label_toolbar_back">رجوع</string>
     <string name="reader_discover_empty_button_text">البدء</string>
     <string name="reader_post_details_header_by_author_name">بواسطة</string>
-    <string name="reader_discover_empty_title">اتباع الموضوعات لاكتشاف مدونات جديدة</string>
+    <string name="reader_discover_empty_subtitle">متابعة المواضيع لاكتشاف مدونات جديدة</string>
     <string name="stats_referrer_popup_menu_open_website">فتح الموقع الإلكتروني</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">يتعر وسم هذا المرجع بأنه بريد مزعج</string>
     <string name="stats_referrer_popup_unmark_as_spam">عدم الوسم بأنه بريد مزعج</string>
@@ -95,7 +126,6 @@ Language: ar
     <string name="login_get_link_by_email">الحصول على رابط تسجيل الدخول عن طريق البريد الإلكتروني</string>
     <string name="email_not_registered_wpcom">حسناً، لا يمكننا العثور على حساب WordPress.com متصلاً بعنوان البريد الإلكتروني هذا.</string>
     <string name="reader_menu_report_post">الإبلاغ عن هذه المقالة</string>
-    <string name="gutenberg_native_angle">زاوية</string>
     <string name="reader_welcome_banner">مرحبًا بك في القارئ. اكتشف ملايين المدونات في متناول يديك.</string>
     <string name="error_media_xmlrcp_server_error">حدث خطأ داخلي في الخادم</string>
     <string name="error_media_xmlrpc_not_allowed">إجراؤك غير مسموح به</string>
@@ -141,7 +171,6 @@ Language: ar
     <string name="label_frame_errored">خطأ</string>
     <string name="label_text_alignment_button">تغيير محاذاة النص</string>
     <string name="label_text_color_button">تغيير لون النص</string>
-    <string name="menu_delete_page">حذف الشريحة</string>
     <string name="dialog_discard_page_title">حذف شريحة القصة؟</string>
     <string name="dialog_discard_story_ok_button">تجاهل</string>
     <string name="story_saving_untitled">بدون عنوان</string>
@@ -155,13 +184,10 @@ Language: ar
     <string name="mlp_preview_page">معاينة</string>
     <string name="capture_button_alt">إلتقاط</string>
     <string name="stickers_button_alt">الملصقات</string>
-    <string name="more_button_alt">المزيد</string>
     <string name="sound_button_alt">صوت</string>
     <string name="text_button_alt">نصّ</string>
     <string name="label_control_saved">تم الحفظ</string>
     <string name="label_control_saving">جاري الحفظ</string>
-    <string name="label_done">تمّ</string>
-    <string name="label_control_publish">التالي</string>
     <string name="label_close_button">إغلاق</string>
     <string name="label_saved_icon">تم الحفظ</string>
     <string name="label_retry_icon">إعادة المحاولة</string>
@@ -400,10 +426,10 @@ Language: ar
     <string name="gutenberg_native_what_people_say">ماذا يقول الناس</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">نوفِّر مجموعة من الخدمات لمساعدتك على تحقيق النتائج التي تسعى إليها. ألستَ متأكِّدًا مما تحتاج إليه؟، أو كم تبلغ تكلفته؟ يمكننا توضيح الخدمات المناسبة لك، وإبلاغك بالمزيد عن الرسوم التي نطلبها. ابق على اتصال من خلال المعلومات الواردة ادناه.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">نحن فريق صغير من الاحترافيين الموهوبين الذين يتمتعون بمجموعة كبيرة من المهارات والخبرات. نحب ما نفعله ونقوم به بشغف. نتطلع إلى العمل معك.</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">سيرغب الزائرون في معرفة الموجودين على الجانب الآخر من الصفحة. استخدم هذه المساحة للكتابة عن نفسك أو موقعك أو شركتك أو أي شيء تريده. استعن بالتوصيات الواردة أدناه للاقتباس من الآخرين الذين يتحدثون حول الأمر نفسه بأسلوبهم الخاص.</string>
     <string name="gutenberg_native_walt_disney">والت ديزني</string>
     <string name="gutenberg_native_want_to_work_with_us">ترغب بالعمل معنا؟</string>
     <string name="gutenberg_native_warning_message">رسالة التحذير</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">سيرغب الزائرون في معرفة الموجودين على الجانب الآخر من الصفحة. استخدم هذه المساحة للكتابة عن نفسك أو موقعك أو شركتك أو أي شيء تريده. استعن بالتوصيات الواردة أدناه للاقتباس من الآخرين الذين يتحدثون حول الأمر نفسه بأسلوبهم الخاص.</string>
     <string name="gutenberg_native_position_or_job_title">المنصب أو المسمى الوظيفي</string>
     <string name="gutenberg_native_project_name">اسم المشروع</string>
     <string name="gutenberg_native_sally_smith">سالي سميث</string>
@@ -526,7 +552,6 @@ Language: ar
     <string name="login_discovery_error_xmlrpc">تعذر علينا الوصول إلى &lt;b>ملف XMLRPC&lt;/b> على موقعك. سيتعين عليك الوصول إلى مضيفك لحل هذا الأمر.</string>
     <string name="login_site_credentials_magic_link_label">تقريبًا هناك! يتعين علينا فقط التحقق من صحة عنوان بريدك الإلكتروني المتصل بـ Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_credentials_for_site">تسجيل الدخول باستخدام بيانات اعتماد الموقع %1$s الخاصة بك</string>
-    <string name="send_verification_email">إرسال رسالة تحقق عبر البريد الإلكتروني</string>
     <string name="reader_following_display_name">المتابعة</string>
     <string name="my_site_bottom_sheet_add_page">صفحة الموقع</string>
     <string name="enter_site_credentials_instead">تسجيل الدخول باستخدام بيانات اعتماد الموقع.</string>
@@ -553,7 +578,6 @@ Language: ar
     <string name="gutenberg_native_ungroup">فكّ التجميع</string>
     <string name="gutenberg_native_tap_here_to_show_help">أنقر هنا لإظهار المساعدة</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">أنقر لإخفاء لوحة المفاتيح</string>
-    <string name="gutenberg_native_size">الحجم</string>
     <string name="gutenberg_native_sidebar_title_plugin">إضافة عنوان الشريط الجانبي</string>
     <string name="gutenberg_native_show_section">إظهار القسم</string>
     <string name="gutenberg_native_reset_block">إعادة تعيين المكوِّن</string>

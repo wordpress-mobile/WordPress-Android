@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-29 10:54:38+0000
+Translation-Revision-Date: 2020-11-25 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="color_picker_label_background">רקע</string>
+    <string name="color_picker_label_text">טקסט</string>
+    <string name="dialog_discard_story_ok_button_edit">ביטול</string>
+    <string name="dialog_discard_story_message_edit">השינויים לא יישמרו.</string>
+    <string name="dialog_discard_story_title_edit">לבטל את השינויים?</string>
+    <string name="label_done_button">בוצע</string>
+    <string name="label_next_button">הבא</string>
+    <string name="delete_button_alt">למחוק</string>
+    <string name="hpp_choose_error">אירעה שגיאה בעת בחירת העיצוב.</string>
+    <string name="hpp_retry_error">יש לבדוק את החיבור לאינטרנט ולנסות שוב.</string>
+    <string name="hpp_error_subtitle">יש להקיש כדי לנסות שוב במצב מקוון.</string>
+    <string name="hpp_error_title">הפריסות אינן זמינות במצב לא מקוון</string>
+    <string name="continue_site_credentials">להמשיך עם פרטי הכניסה של החנות</string>
+    <string name="login_find_your_connected_email">למצוא את כתובת האימייל המחוברת שלך</string>
+    <string name="reader_discover_no_posts_button_text">לעקוב אחר נושאים</string>
+    <string name="reader_discover_no_posts_subtitle">כדאי לעקוב אחרי נושאים נוספים כדי להרחיב את החיפוש</string>
+    <string name="reader_discover_no_posts_title">אין פוסטים אחרונים</string>
+    <string name="reader_discover_empty_title">ברוך בואך!</string>
+    <string name="scan">לסרוק</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>ישראל ישראלי&lt;/b> הגיב לפוסט שלך</string>
+    <string name="login_prologue_third_subtitle_two">קיבלת &lt;b>‏50 ליקיים&lt;/b> באתר שלך היום</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>ישראלה ישראלה&lt;/b> סימנה לייק בפוסט שלך</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">תפריט בלוק לגלילה פתוח. יש לבחור בלוק.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">תפריט בלוק לגלילה סגור.</string>
+    <string name="hpp_skip_button">לדלג</string>
+    <string name="hpp_choose_button">לבחור</string>
+    <string name="hpp_subtitle">יש לבחור את הפריסה המועדפת עליך לעמוד הבית. אפשר להתאים אישית או לשנות אותה מאוחר יותר.</string>
+    <string name="hpp_title">לבחור עיצוב</string>
+    <string name="mlp_network_error_subtitle">יש להקיש כדי לנסות שוב במצב מקוון או ליצור עמוד ריק בעזרת הכפתור למטה.</string>
+    <string name="mlp_network_error_title">הפריסות אינן זמינות במצב לא מקוון</string>
+    <string name="mlp_error_subtitle">יש להקיש כדי לנסות שוב או ליצור עמוד ריק בעזרת הכפתור למטה.</string>
+    <string name="mlp_error_title">הפריסות אינן זמינות בשל שגיאה</string>
+    <string name="prepublishing_nudges_add_category_button">להוסיף קטגוריה</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">קטגוריה חדשה</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">קטגוריות</string>
+    <string name="prepublishing_nudges_home_categories_not_set">לא הוגדר</string>
+    <string name="prepublishing_nudges_categories_action">קטגוריות</string>
+    <string name="login_prologue_fifth_caption_three">מוזיאונים בלונדון</string>
+    <string name="login_prologue_fifth_caption_two">המעריצים הכי נאמנים בעולם</string>
+    <string name="login_prologue_fifth_caption_one">העשירייה הפותחת של בתי הקפה שלי</string>
+    <string name="login_prologue_fifth_tag_six">פוליטיקה</string>
+    <string name="login_prologue_fifth_tag_five">מוזיקה</string>
+    <string name="login_prologue_fifth_tag_four">גינון</string>
+    <string name="login_prologue_fifth_tag_three">פוטבול</string>
+    <string name="login_prologue_fifth_tag_two">בישול</string>
+    <string name="login_prologue_fifth_tag_one">אומנות</string>
+    <string name="login_prologue_fifth_subtitle_three">רוקנרול שבועי</string>
+    <string name="login_prologue_fifth_subtitle_two">חדשות באינטרנט</string>
+    <string name="login_prologue_fifth_subtitle_one">פמלה גואן</string>
+    <string name="login_prologue_second_subtitle_two">העבודות של הצלם קמרון קרסטן הן השראה עצומה עבורי. את הטכניקות האלה אביא לידי ביטוי בפעם הבאה שאצור</string>
+    <string name="login_prologue_second_subtitle_one">לקבל השראה</string>
+    <string name="login_prologue_title_fifth">כדאי לעקוב אחר האתרים המועדפים שלך ולגלות חומרי קריאה חדשים.</string>
+    <string name="login_prologue_title_fourth">באמצעות ניתוחי עומק ניתן לעקוב אחר הצמיחה של קהל המבקרים.</string>
+    <string name="login_prologue_title_third">להציג תגובות והודעות בזמן אמת.</string>
+    <string name="login_prologue_title_second">העורך העוצמתי הזה מאפשר לפרסם מכל מקום.</string>
+    <string name="login_prologue_title_first">ברוך בואך לכלי הפופולרי ביותר בעולם לבניית אתרי אינטרנט.</string>
+    <string name="media_loading_failed">העלאת מדיה נכשלה</string>
+    <string name="reader_discover_recommended_blogs_header">אתרים למעקב</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">אנחנו מקדישים מאמץ רב כדי להוסיף עוד בלוקים בכל גרסה.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' לא נתמך באופן מלא</string>
     <string name="gutenberg_native_help_button">כפתור עזרה</string>
@@ -29,7 +87,6 @@ Language: he_IL
     <string name="photo_picker_wordpress_media_library">לבחור מתוך ספריית המדיה של WordPress</string>
     <string name="reader_label_toolbar_back">חזרה</string>
     <string name="reader_discover_empty_button_text">מתחילים כאן</string>
-    <string name="reader_discover_empty_title">לעקוב אחר נושאים כדי לגלות בלוגים חדשים</string>
     <string name="reader_post_details_header_by_author_name">לפי</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">לא ניתן לסמן את מקור ההפניה כזבל</string>
     <string name="stats_referrer_popup_unmark_as_spam">לבטל את הסימון כתגובת זבל</string>
@@ -58,7 +115,6 @@ Language: he_IL
     <string name="comment_unable_to_show_error">לא ניתן להציג תגובה זו</string>
     <string name="media_browse_for_items">לחפש פריטים</string>
     <string name="reader_menu_report_post">דיווח על פוסט זה</string>
-    <string name="gutenberg_native_angle">זווית</string>
     <string name="reader_welcome_banner">ברוכים הבאים ל-Reader. גישה מהירה למיליוני בלוגים.</string>
     <string name="error_media_xmlrcp_server_error">אירעה שגיאת שרת פנימית</string>
     <string name="error_media_xmlrpc_not_allowed">הפעולה שביצעת לא מותרת</string>
@@ -107,7 +163,6 @@ Language: he_IL
     <string name="dialog_discard_errored_page_message">השקופית הזאת טרם נשמרה. אם השקופית תימחק, כל העריכות שביצעת יאבדו.</string>
     <string name="dialog_discard_page_message">השקופית תוסר מהסטורי שלך.</string>
     <string name="dialog_discard_page_title">האם למחוק את השקופית?</string>
-    <string name="menu_delete_page">למחוק את השקופית</string>
     <string name="label_text_color_button">לשנות את צבע הטקסט</string>
     <string name="label_text_alignment_button">לשנות את היישור של הטקסט</string>
     <string name="label_frame_errored">אירעה שגיאה</string>
@@ -117,8 +172,6 @@ Language: he_IL
     <string name="label_retry_icon">יש לנסות שוב</string>
     <string name="label_saved_icon">נשמר</string>
     <string name="label_close_button">לסגור</string>
-    <string name="label_control_publish">הבא</string>
-    <string name="label_done">בוצע</string>
     <string name="label_share_to">לשתף אל</string>
     <string name="label_snackbar_share">שיתוף</string>
     <string name="label_snackbar_loop_frame_saved">נשמר בתמונות</string>
@@ -129,7 +182,6 @@ Language: he_IL
     <string name="label_control_flip_camera">לשנות כיוון</string>
     <string name="sound_button_alt">שמע</string>
     <string name="text_button_alt">טקסט</string>
-    <string name="more_button_alt">עוד</string>
     <string name="stickers_button_alt">מדבקות</string>
     <string name="flash_button_alt">מבזק</string>
     <string name="flip_button_alt">לשנות את כיוון המצלמה</string>
@@ -154,6 +206,7 @@ Language: he_IL
     <string name="gutenberg_native_choose_image_or_video">לבחור תמונה או וידאו</string>
     <string name="gutenberg_native_choose_image">לבחור תמונה</string>
     <string name="gutenberg_native_block_removed">הבלוק הוסר</string>
+    <string name="enter_your_site_address">יש להזין את כתובת האתר החדש שלך</string>
     <string name="continue_with_wpcom">להמשיך עם WordPress.com</string>
     <string name="signup_confirmation_title">אישור הרשמה</string>
     <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
@@ -486,7 +539,6 @@ Language: he_IL
     <string name="login_site_credentials_magic_link_label">כמעט סיימת! אנחנו רק צריכים לאמת שהשירות של Jetpack מחובר לכתובת האימייל שלך &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">יש להתחבר עם פרטי הכניסה של האתר.</string>
     <string name="enter_credentials_for_site">יש להתחבר עם פרטי הכניסה שלך לאתר %1$s</string>
-    <string name="send_verification_email">לשלוח את הודעת האימייל לאישור</string>
     <string name="my_site_bottom_sheet_add_page">עמוד האתר</string>
     <string name="reader_following_display_name">מעקב</string>
     <string name="reader_my_likes_display_name">לייקים</string>
@@ -512,7 +564,6 @@ Language: he_IL
     <string name="gutenberg_native_take_a_photo_or_video">לצלם תמונה או וידאו</string>
     <string name="gutenberg_native_take_a_photo">לצלם תמונה</string>
     <string name="gutenberg_native_start_writing">להתחיל לכתוב…</string>
-    <string name="gutenberg_native_size">גודל</string>
     <string name="gutenberg_native_sidebar_title_plugin">תוסף לכותרת הסרגל הצדי</string>
     <string name="gutenberg_native_show_section">להציג את המקטע</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">הבלוק %s. בלוק זה כולל תוכן לא חוקי</string>
