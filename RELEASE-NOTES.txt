@@ -2,6 +2,7 @@
 -----
 * [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
 * [***] Stories: New feature for WordPress.com and Jetpack sites: Use photos and videos to create engaging and tappable fullscreen slideshows. [https://github.com/wordpress-mobile/WordPress-Android/pull/13459]
+* [**] Reader: introduced a Follow/Unfollow button in comments screen to follow a post conversation and get notified by e-mail. Not supported for self-hosted sites not Jetpack connected. [https://github.com/wordpress-mobile/WordPress-Android/pull/13473]
 
 16.2
 -----
