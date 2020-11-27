@@ -19,6 +19,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.utils.NetworkErrorMapper
@@ -49,6 +52,32 @@ class ScanRestClient(
                 )
                 val error = ScanStateError(errorType, response.error.message)
                 FetchedScanStatePayload(error, site)
+            }
+        }
+    }
+
+    suspend fun startScan(site: SiteModel): ScanStartResultPayload {
+        val url = WPCOMV2.sites.site(site.siteId).scan.enqueue.url
+
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, mapOf(), null, ScanStartResponse::class.java)
+        return when (response) {
+            is Success -> {
+                if (response.data.success == false && response.data.error != null) {
+                    val error = ScanStartError(ScanStartErrorType.API_ERROR)
+                    ScanStartResultPayload(error, site)
+                } else {
+                    ScanStartResultPayload(site)
+                }
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                    response.error,
+                    ScanStartErrorType.GENERIC_ERROR,
+                    ScanStartErrorType.INVALID_RESPONSE,
+                    ScanStartErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = ScanStartError(errorType, response.error.message)
+                ScanStartResultPayload(error, site)
             }
         }
     }
