@@ -22,4 +22,20 @@ public class UrlUtilsTest extends InstrumentationTestCase {
     public void testGetHost5() {
         assertEquals("", UrlUtils.getHost("a.com"));
     }
+
+    public void testIsNotHomePage() {
+        assertEquals(false, UrlUtils.isHomePage("https://a.com/slug/?param1=true"));
+    }
+
+    public void testIsNotHomePage2() {
+        assertEquals(false, UrlUtils.isHomePage(null));
+    }
+
+    public void testIsHomePage1() {
+        assertEquals(true, UrlUtils.isHomePage("https://a.com/?param1=true"));
+    }
+
+    public void testIsHomePage2() {
+        assertEquals(true, UrlUtils.isHomePage("https://a.com?param1=true"));
+    }
 }

@@ -292,6 +292,20 @@ public class UrlUtils {
     }
 
     /**
+     * Checks if the url point to the home page of the site
+     *
+     * @param urlString the string url
+     * @return true for home page
+     */
+    public static boolean isHomePage(@Nullable String urlString) {
+        if (urlString != null) {
+            Uri uri = Uri.parse(urlString);
+            String path = uri.getPath();
+            return path != null && (path.equals("") || path.equals("/"));
+        }
+        return false;
+    }
+    /**
      * Extracts the subdomain from a domain string.
      * @param domain A domain is expected. Protocol is optional
      * @return The subdomain or an empty string.
