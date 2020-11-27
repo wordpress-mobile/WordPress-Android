@@ -5,6 +5,7 @@
 * [**] Block Editor: Fix gradient picker causing crash in some themes (like Spearhead) [https://github.com/WordPress/gutenberg/pull/27307]
 * [***] Block Editor: Adding support for selecting different unit of value in Cover and Columns blocks [https://github.com/WordPress/gutenberg/pull/26161]
 * [*] Block Editor: Fix theme colors syncing with the editor [https://github.com/WordPress/gutenberg/pull/26821]
+* [***] Stories: New feature for WordPress.com and Jetpack sites: Use photos and videos to create engaging and tappable fullscreen slideshows. [https://github.com/wordpress-mobile/WordPress-Android/pull/13459]
 
 16.2
 -----
