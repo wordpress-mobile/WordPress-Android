@@ -1,6 +1,10 @@
 16.3
 -----
 * [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
+* [**] Block Editor: Button block - Add link picker to the block settings [https://github.com/WordPress/gutenberg/pull/26206]
+* [**] Block Editor: Fix gradient picker causing crash in some themes (like Spearhead) [https://github.com/WordPress/gutenberg/pull/27307]
+* [***] Block Editor: Adding support for selecting different unit of value in Cover and Columns blocks [https://github.com/WordPress/gutenberg/pull/26161]
+* [*] Block Editor: Fix theme colors syncing with the editor [https://github.com/WordPress/gutenberg/pull/26821]
 
 16.2
 -----
