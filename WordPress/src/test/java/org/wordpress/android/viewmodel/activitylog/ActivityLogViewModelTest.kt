@@ -72,7 +72,8 @@ class ActivityLogViewModelTest {
             Date(),
             true,
             null,
-            null)
+            null
+    )
 
     val event = ActivityLogListItem.Event(
             "activityId",
@@ -97,7 +98,7 @@ class ActivityLogViewModelTest {
             null,
             Date(),
             null
-            )
+    )
 
     @Before
     fun setUp() = runBlocking<Unit> {
@@ -365,7 +366,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
-        val selectedItems = listOf(1,4)
+        val selectedItems = listOf(1, 4)
         viewModel.onActivityTypesSelected(selectedItems)
 
         viewModel.onActivityTypeFilterClicked()
@@ -387,8 +388,10 @@ class ActivityLogViewModelTest {
         birthday.set(1985, 8, 27)
 
         val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel("", "", null, "", "", "",
-                "", true, "", birthday.time)
+        val activity = ActivityLogModel(
+                "", "", null, "", "", "",
+                "", true, "", birthday.time
+        )
         list.add(activity)
         list.add(activity.copy())
 

@@ -178,7 +178,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Test
     fun `items are checked, when the user opens the screen with active activity type filter`() = test {
         val uiStates = init().uiStates
-        val initialSelection = listOf(1,4)
+        val initialSelection = listOf(1, 4)
 
         startVM(initialSelection = initialSelection)
 
