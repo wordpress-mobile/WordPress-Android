@@ -8,5 +8,7 @@ import org.wordpress.android.fluxc.store.ScanStore
 @ActionEnum
 enum class ScanAction : IAction {
     @Action(payloadType = ScanStore.FetchScanStatePayload::class)
-    FETCH_SCAN_STATE
+    FETCH_SCAN_STATE,
+    @Action(payloadType = ScanStore.ScanStartPayload::class)
+    START_SCAN
 }
