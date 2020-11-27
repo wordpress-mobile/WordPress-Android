@@ -545,6 +545,9 @@ public class PostUtils {
                 break;
             case REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE:
                 previewUrl = post.getAutoSavePreviewUrl();
+                if (UrlUtils.isHomePage(previewUrl)) {
+                    previewUrl = UrlUtils.appendToPath(previewUrl, post.getSlug());
+                }
                 break;
             default:
                 throw new IllegalArgumentException(
