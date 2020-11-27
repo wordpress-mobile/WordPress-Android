@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_GALLER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConn
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
@@ -196,7 +198,10 @@ class MySiteViewModel
     }
 
     private fun mediaClick(site: SiteModel, isFromQuickActions: Boolean) {
-        TODO()
+        if (isFromQuickActions) {
+            analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
+        }
+        _onNavigation.value = Event(OpenMediaScreen(site))
     }
 
     fun refreshAccountAvatarUrl() {
@@ -333,6 +338,7 @@ class MySiteViewModel
         object StartLoginForJetpackStats : NavigationAction()
         data class OpenPagesScreen(val site: SiteModel) : NavigationAction()
         data class OpenPostsScreen(val site: SiteModel) : NavigationAction()
+        data class OpenMediaScreen(val site: SiteModel) : NavigationAction()
     }
 
     companion object {

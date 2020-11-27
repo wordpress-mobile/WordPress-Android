@@ -33,6 +33,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConn
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
@@ -203,6 +204,9 @@ class ImprovedMySiteFragment : Fragment(),
                     }
                     is OpenPostsScreen -> {
                         ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
+                    }
+                    is OpenMediaScreen -> {
+                        ActivityLauncher.viewCurrentBlogMedia(requireActivity(), action.site)
                     }
                 }
             }
