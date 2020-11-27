@@ -59,9 +59,9 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _filtersVisibility = MutableLiveData<Boolean>()
-    val filtersVisibility: LiveData<Boolean>
-        get() = _filtersVisibility
+    private val _filtersUiState = MutableLiveData<Boolean>()
+    val filtersUiState: LiveData<Boolean>
+        get() = _filtersUiState
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
     val showRewindDialog: LiveData<ActivityLogListItem>
@@ -135,7 +135,7 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        _filtersVisibility.value = activityLogFiltersFeatureConfig.isEnabled()
+        _filtersUiState.value = activityLogFiltersFeatureConfig.isEnabled()
 
         isStarted = true
     }

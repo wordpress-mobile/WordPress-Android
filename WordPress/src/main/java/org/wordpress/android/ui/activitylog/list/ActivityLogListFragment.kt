@@ -119,7 +119,7 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
+        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { visibility ->
             uiHelpers.updateVisibility(filters_bar, visibility)
         })
 
