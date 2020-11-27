@@ -67,7 +67,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private fun buildErrorUiState() =
             UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
-    private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>, ): Content {
+    private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
             // TODO malinjir replace the hardcoded header title
             val headerListItem = ListItemUiState.SectionHeader(UiStringText("Test"))
