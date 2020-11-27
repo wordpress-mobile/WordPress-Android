@@ -1027,6 +1027,8 @@
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
+    <string name="activity_log_date_range_filter_label">Date range</string>
+    <string name="activity_log_activity_type_filter_label">Activity type</string>
 
     <!-- scan -->
     <string name="scan">Scan</string>

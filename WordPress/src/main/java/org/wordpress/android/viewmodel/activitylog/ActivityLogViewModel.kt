@@ -22,6 +22,8 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -29,6 +31,8 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.DONE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -59,8 +63,8 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _filtersUiState = MutableLiveData<Boolean>()
-    val filtersUiState: LiveData<Boolean>
+    private val _filtersUiState = MutableLiveData<FiltersUiState>()
+    val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
@@ -135,7 +139,7 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        _filtersUiState.value = activityLogFiltersFeatureConfig.isEnabled()
+        refreshFiltersUiState()
 
         isStarted = true
     }
@@ -146,6 +150,17 @@ class ActivityLogViewModel @Inject constructor(
         rewindStatusService.stop()
 
         super.onCleared()
+    }
+
+    private fun refreshFiltersUiState() {
+        _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
+            FiltersShown(
+                    UiStringRes(R.string.activity_log_date_range_filter_label),
+                    UiStringRes(R.string.activity_log_activity_type_filter_label)
+            )
+        } else {
+            FiltersHidden
+        }
     }
 
     fun onPullToRefresh() {
@@ -321,4 +336,13 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
+
+    sealed class FiltersUiState(val visibility: Boolean) {
+        object FiltersHidden : FiltersUiState(visibility = false)
+
+        data class FiltersShown(
+            val dateRangeLabel: UiString,
+            val activityTypeLabel: UiString
+        ) : FiltersUiState(visibility = true)
+    }
 }

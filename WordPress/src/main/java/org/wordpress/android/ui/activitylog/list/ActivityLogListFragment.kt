@@ -29,6 +29,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -119,8 +120,12 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { visibility ->
-            uiHelpers.updateVisibility(filters_bar, visibility)
+        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { uiState ->
+            uiHelpers.updateVisibility(filters_bar, uiState.visibility)
+            if (uiState is FiltersShown) {
+                date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+                activity_type_filter.text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            }
         })
 
         viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
