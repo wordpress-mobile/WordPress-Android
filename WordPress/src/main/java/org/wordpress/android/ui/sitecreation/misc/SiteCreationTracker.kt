@@ -46,6 +46,18 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
+    fun trackPreviewLoading() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+    }
+
+    fun trackPreviewWebviewShown() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+    }
+
+    fun trackPreviewWebviewFullyLoaded() {
+        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+    }
+
     fun trackPreviewOkButtonTapped() {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_PREVIEW_OK_BUTTON_TAPPED)
     }
