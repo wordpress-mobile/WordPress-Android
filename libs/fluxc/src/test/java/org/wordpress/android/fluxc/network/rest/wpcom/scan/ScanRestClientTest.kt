@@ -290,14 +290,14 @@ class ScanRestClientTest {
         }
     }
 
-    private fun getScanStateResponseFromJsonString(json: String): ScanStateResponse? {
+    private fun getScanStateResponseFromJsonString(json: String): ScanStateResponse {
         val responseType = object : TypeToken<ScanStateResponse>() {}.type
-        return Gson().fromJson(json, responseType) as? ScanStateResponse
+        return Gson().fromJson(json, responseType) as ScanStateResponse
     }
 
-    private fun getStartScanResponseFromJsonString(json: String): ScanStartResponse? {
+    private fun getStartScanResponseFromJsonString(json: String): ScanStartResponse {
         val responseType = object : TypeToken<ScanStartResponse>() {}.type
-        return Gson().fromJson(json, responseType) as? ScanStartResponse
+        return Gson().fromJson(json, responseType) as ScanStartResponse
     }
 
     private suspend fun initFetchScanState(
