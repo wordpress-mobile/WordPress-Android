@@ -120,8 +120,7 @@ class ActivityLogListFragment : Fragment() {
         })
 
         viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
-            uiHelpers.updateVisibility(date_range_picker, visibility)
-            uiHelpers.updateVisibility(activity_type_filter, visibility)
+            uiHelpers.updateVisibility(filters_bar, visibility)
         })
 
         viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
