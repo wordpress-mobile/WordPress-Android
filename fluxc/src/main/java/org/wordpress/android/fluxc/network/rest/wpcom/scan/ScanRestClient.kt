@@ -62,7 +62,7 @@ class ScanRestClient(
         val response = wpComGsonRequestBuilder.syncPostRequest(this, url, mapOf(), null, ScanStartResponse::class.java)
         return when (response) {
             is Success -> {
-                if (!response.data.success && response.data.error != null) {
+                if (response.data.success == false && response.data.error != null) {
                     val error = ScanStartError(ScanStartErrorType.API_ERROR)
                     ScanStartResultPayload(error, site)
                 } else {
