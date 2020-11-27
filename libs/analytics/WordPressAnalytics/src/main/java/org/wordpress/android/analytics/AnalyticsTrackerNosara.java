@@ -1929,6 +1929,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_viewed";
             case COMMENT_DELETED:
                 return "comment_deleted";
+            case COMMENT_FOLLOW_CONVERSATION:
+                return "comment_follow_conversation";
         }
         return null;
     }

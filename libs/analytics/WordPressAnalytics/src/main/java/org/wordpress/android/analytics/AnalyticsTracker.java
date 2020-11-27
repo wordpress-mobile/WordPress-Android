@@ -709,6 +709,7 @@ public final class AnalyticsTracker {
         COMMENT_QUICK_ACTION_APPROVED,
         COMMENT_QUICK_ACTION_LIKED,
         COMMENT_QUICK_ACTION_REPLIED_TO,
+        COMMENT_FOLLOW_CONVERSATION
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
