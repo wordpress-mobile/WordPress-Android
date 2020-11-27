@@ -21,6 +21,8 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.PUBLISH
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.SAVE
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
@@ -114,9 +116,15 @@ class StoryComposerViewModel @Inject constructor(
         outState.putSerializable(StoryComposerActivity.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
     }
 
-    fun onStoryDiscarded() {
-        // delete empty post from database
-        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
+    fun onStorySaved() {
+        postEditorAnalyticsSession.setOutcome(SAVE)
+    }
+
+    fun onStoryDiscarded(deleteDiscardedPost: Boolean) {
+        if (deleteDiscardedPost) {
+            // delete empty post from database
+            dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
+        }
         postEditorAnalyticsSession.setOutcome(CANCEL)
     }
 
@@ -146,6 +154,7 @@ class StoryComposerViewModel @Inject constructor(
 
     fun onSubmitButtonClicked() {
         setUntitledStoryTitleIfTitleEmptyUseCase.setUntitledStoryTitleIfTitleEmpty(editPostRepository)
+        postEditorAnalyticsSession.setOutcome(PUBLISH)
         _submitButtonClicked.postValue(Event(Unit))
     }
 

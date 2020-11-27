@@ -95,6 +95,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
@@ -103,6 +104,7 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -116,8 +118,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.posts.PromoDialog
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.prefs.SiteSettingsInterface
-import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
@@ -132,6 +132,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils.getSnackbarDuration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
@@ -172,7 +173,6 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 class MySiteFragment : Fragment(),
-        SiteSettingsListener,
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
@@ -181,7 +181,6 @@ class MySiteFragment : Fragment(),
         OnConfirmListener,
         OnDismissListener,
         TextInputDialogFragment.Callback {
-    private var siteSettings: SiteSettingsInterface? = null
     private var activeTutorialPrompt: QuickStartMySitePrompts? = null
     private val quickStartSnackBarHandler = Handler()
     private var blavatarSz = 0
@@ -200,10 +199,12 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var uiHelpers: UiHelpers
 
-    val selectedSite: SiteModel?
+    private val selectedSite: SiteModel?
         get() {
-            return (activity as? WPMainActivity)?.selectedSite
+            return selectedSiteRepository.getSelectedSite()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -225,7 +226,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onDestroy() {
-        siteSettings?.clear()
+        selectedSiteRepository.clear()
         super.onDestroy()
     }
 
@@ -315,18 +316,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateSiteSettingsIfNecessary() {
-        // If the selected site is null, we can't update its site settings
-        val selectedSite = selectedSite ?: return
-        if (siteSettings != null && siteSettings!!.localSiteId != selectedSite.id) {
-            // The site has changed, we can't use the previous site settings, force a refresh
-            siteSettings = null
-        }
-        if (siteSettings == null) {
-            siteSettings = SiteSettingsInterface.getInterface(activity, selectedSite, this)
-            if (siteSettings != null) {
-                siteSettings!!.init(true)
-            }
-        }
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
     }
 
     override fun onPause() {
@@ -363,6 +353,7 @@ class MySiteFragment : Fragment(),
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
+        row_jetpack_settings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
         quick_action_posts_button.setOnClickListener {
             AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
             viewPosts()
@@ -582,6 +573,12 @@ class MySiteFragment : Fragment(),
         if (activeTutorialPrompt != null) {
             showQuickStartFocusPoint()
         }
+        selectedSiteRepository.selectedSiteChange.observe(viewLifecycleOwner, {
+            onSiteChanged(it)
+        })
+        selectedSiteRepository.showSiteIconProgressBar.observe(viewLifecycleOwner, {
+            showSiteIconProgressBar(it == true)
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -784,11 +781,11 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
+                                data, activity, selectedSite, STORY_FROM_MY_SITE)) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
-                        showSiteIconProgressBar(true)
-                        updateSiteIconMediaId(mediaId)
+                        updateSiteIconMediaId(mediaId, true)
                     } else {
                         val mediaUriStringsArray = data.getStringArrayExtra(
                                 MediaPickerConstants.EXTRA_MEDIA_URIS
@@ -811,7 +808,7 @@ class MySiteFragment : Fragment(),
                             val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
                                     activity, imageUri
                             ) { uri: Uri ->
-                                showSiteIconProgressBar(true)
+                                selectedSiteRepository.showSiteIconProgressBar(true)
                                 startCropActivity(uri)
                             }
                             if (!didGoWell) {
@@ -828,7 +825,8 @@ class MySiteFragment : Fragment(),
                 storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
                         data,
                         activity,
-                        selectedSite
+                        selectedSite,
+                        STORY_FROM_MY_SITE
                 )
             }
             UCrop.REQUEST_CROP -> if (resultCode == Activity.RESULT_OK) {
@@ -1031,6 +1029,16 @@ class MySiteFragment : Fragment(),
             row_plan.visibility = View.GONE
         }
 
+        val jetpackSectionVisible = site.isJetpackConnected && // jetpack is installed and connected
+                !site.isWPComAtomic // isn't atomic site
+
+        val jetpackSettingsVisible = jetpackSectionVisible &&
+                SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
+                site.hasCapabilityManageOptions // has permissions to manage the site
+
+        uiHelpers.updateVisibility(row_label_jetpack, jetpackSectionVisible)
+        uiHelpers.updateVisibility(row_jetpack_settings, jetpackSettingsVisible)
+
         // Do not show pages menu item to Collaborators.
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
         row_pages.visibility = pageVisibility
@@ -1092,11 +1100,10 @@ class MySiteFragment : Fragment(),
      * method might return an out of date SiteModel, if the OnSiteChanged event handler in the WPMainActivity wasn't
      * called yet.
      */
-    fun onSiteChanged(site: SiteModel?) {
+    private fun onSiteChanged(site: SiteModel?) {
         // whenever site changes we hide CTA and check for credit in refreshSelectedSiteDetails()
         isDomainCreditChecked = false
         refreshSelectedSiteDetails(site)
-        showSiteIconProgressBar(false)
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -1104,7 +1111,7 @@ class MySiteFragment : Fragment(),
         AnalyticsTracker.track(MY_SITE_ICON_UPLOAD_UNSUCCESSFUL)
         EventBus.getDefault().removeStickyEvent(event)
         if (isMediaUploadInProgress) {
-            showSiteIconProgressBar(false)
+            selectedSiteRepository.showSiteIconProgressBar(false)
         }
         val site = selectedSite
         if (site != null && event.post != null) {
@@ -1145,14 +1152,14 @@ class MySiteFragment : Fragment(),
                                             site.isPrivateWPComAtomic
                                     )
                     )
-                    updateSiteIconMediaId(media.mediaId.toInt())
+                    updateSiteIconMediaId(media.mediaId.toInt(), false)
                 } else {
                     AppLog.w(
                             MAIN,
                             "Site icon upload completed, but mediaList is empty."
                     )
                 }
-                showSiteIconProgressBar(false)
+                selectedSiteRepository.showSiteIconProgressBar(false)
             } else {
                 if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
                     uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
@@ -1290,8 +1297,7 @@ class MySiteFragment : Fragment(),
             TAG_ADD_SITE_ICON_DIALOG -> showQuickStartNoticeIfNecessary()
             TAG_CHANGE_SITE_ICON_DIALOG -> {
                 AnalyticsTracker.track(MY_SITE_ICON_REMOVED)
-                showSiteIconProgressBar(true)
-                updateSiteIconMediaId(0)
+                updateSiteIconMediaId(0, true)
             }
             TAG_QUICK_START_DIALOG -> AnalyticsTracker.track(QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
             TAG_REMOVE_NEXT_STEPS_DIALOG -> AnalyticsTracker.track(QUICK_START_REMOVE_DIALOG_NEGATIVE_TAPPED)
@@ -1338,24 +1344,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onLinkClicked(instanceTag: String) {}
-    override fun onSettingsSaved() {
-        // refresh the site after site icon change
-        val site = selectedSite
-        if (site != null) {
-            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
-        }
-    }
 
-    override fun onSaveError(error: Exception) {
-        showSiteIconProgressBar(false)
-    }
-
-    override fun onFetchError(error: Exception) {
-        showSiteIconProgressBar(false)
-    }
-
-    override fun onSettingsUpdated() {}
-    override fun onCredentialsValidated(error: Exception?) {}
     private fun fetchSitePlans(site: SiteModel?) {
         dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
     }
@@ -1554,11 +1543,8 @@ class MySiteFragment : Fragment(),
         }
     }
 
-    private fun updateSiteIconMediaId(mediaId: Int) {
-        siteSettings?.let {
-            it.setSiteIconMediaId(mediaId)
-            it.saveSettings()
-        }
+    private fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
+        selectedSiteRepository.updateSiteIconMediaId(mediaId, showProgressBar)
     }
 
     companion object {
@@ -1593,14 +1579,8 @@ class MySiteFragment : Fragment(),
             }
 
             site_info_container.title.text = input
-            selectedSite?.name = input
-            // save the site locally with updated title
-            dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(selectedSite))
 
-            siteSettings?.let {
-                it.title = input
-                it.saveSettings()
-            }
+            selectedSiteRepository.updateTitle(input)
         }
     }
 

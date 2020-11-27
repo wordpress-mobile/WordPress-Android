@@ -547,12 +547,30 @@ object TestContent {
 <!-- /wp:gallery -->
 """
     const val storyMediaFileMimeTypeImage = "image/jpeg"
-    const val storyBlockWithLocalIdsAndUrls = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":$localMediaId,"link":"$localImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl"},{"alt":"","id":$localMediaId2,"link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
+    const val storyBlockWithLocalIdsAndUrls = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$localMediaId","link":"$localImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
 <div class="wp-story wp-block-jetpack-story"></div>
 <!-- /wp:jetpack/story -->"""
-    const val storyBlockWithFirstRemoteIdsAndUrlsReplaced = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":$remoteMediaId,"link":"$remoteImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$remoteImageUrl"},{"alt":"","id":$localMediaId2,"link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
+    const val storyBlockWithFirstRemoteIdsAndUrlsReplaced = """<!-- wp:jetpack/story {"mediaFiles":[{"alt":"","id":"$remoteMediaId","link":"$remoteImageUrl","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$remoteImageUrl"},{"alt":"","id":"$localMediaId2","link":"$localImageUrl2","type":"image","mime":"$storyMediaFileMimeTypeImage","caption":"","url":"$localImageUrl2"}]} -->
 <div class="wp-story wp-block-jetpack-story"></div>
 <!-- /wp:jetpack/story -->"""
+
+    const val oldFileBlock = """<!-- wp:file {"id":${localMediaId},"href":"$localImageUrl"} -->
+<div class="wp-block-file"><a href="$localImageUrl">Test image</a><a href="$localImageUrl" class="wp-block-file__button" download>Download</a></div>
+<!-- /wp:file -->
+    """
+    const val newFileBlock = """<!-- wp:file {"id":${remoteMediaId},"href":"$remoteImageUrl"} -->
+<div class="wp-block-file"><a href="$remoteImageUrl">Test image</a><a href="$remoteImageUrl" class="wp-block-file__button" download>Download</a></div>
+<!-- /wp:file -->
+    """
+
+    const val oldFileBlockIdNotFirst = """<!-- wp:file {"href":"$localImageUrl","id":${localMediaId}} -->
+<div class="wp-block-file"><a href="$localImageUrl">Test image</a><a href="$localImageUrl" class="wp-block-file__button" download>Download</a></div>
+<!-- /wp:file -->
+    """
+    const val newFileBlockIdNotFirst = """<!-- wp:file {"href":"$remoteImageUrl","id":${remoteMediaId}} -->
+<div class="wp-block-file"><a href="$remoteImageUrl">Test image</a><a href="$remoteImageUrl" class="wp-block-file__button" download>Download</a></div>
+<!-- /wp:file -->
+    """
 
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock

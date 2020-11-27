@@ -75,6 +75,8 @@ public class AnalyticsUtils {
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
     private static final String NEWS_CARD_ORIGIN = "origin";
     private static final String NEWS_CARD_VERSION = "version";
+    private static final String SITE_TYPE_KEY = "site_type";
+    private static final String COMMENT_ACTION_SOURCE = "source";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
     public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
@@ -250,6 +252,7 @@ public class AnalyticsUtils {
             }
             properties.put(BLOG_ID_KEY, site.getSiteId());
             properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+            properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         }
 
         if (properties == null) {
@@ -287,6 +290,7 @@ public class AnalyticsUtils {
         if (site != null) {
             properties.put(BLOG_ID_KEY, site.getSiteId());
             properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+            properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
         }
 
         if (comment != null) {
@@ -304,15 +308,26 @@ public class AnalyticsUtils {
      * @param isQuickReply Whether is a quick reply or not
      * @param site The site object
      * @param comment The comment object
+     * @param source The source of the comment action
      */
     public static void trackCommentReplyWithDetails(boolean isQuickReply, SiteModel site,
-                                                    CommentModel comment) {
-        AnalyticsTracker.Stat stat = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO
-                : AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
+                                                    CommentModel comment, AnalyticsCommentActionSource source) {
+        AnalyticsTracker.Stat legacyTracker = null;
+        if (source == AnalyticsCommentActionSource.NOTIFICATIONS) {
+            legacyTracker = isQuickReply ? AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_REPLIED_TO
+                    : AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO;
+        }
+
+        AnalyticsTracker.Stat stat = isQuickReply ? Stat.COMMENT_QUICK_ACTION_REPLIED_TO
+                : Stat.COMMENT_REPLIED_TO;
         if (site == null || !SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.w(AppLog.T.STATS, "The passed blog obj is null or it's not a wpcom or Jetpack."
                                      + " Tracking analytics without blog info");
             AnalyticsTracker.track(stat);
+
+            if (legacyTracker != null) {
+                AnalyticsTracker.track(legacyTracker);
+            }
             return;
         }
 
@@ -321,8 +336,14 @@ public class AnalyticsUtils {
         properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
         properties.put(POST_ID_KEY, comment.getRemotePostId());
         properties.put(COMMENT_ID_KEY, comment.getRemoteCommentId());
+        properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromSiteModel(site));
+        properties.put(COMMENT_ACTION_SOURCE, source.toString());
 
         AnalyticsTracker.track(stat, properties);
+
+        if (legacyTracker != null) {
+            AnalyticsTracker.track(legacyTracker, properties);
+        }
     }
 
 
@@ -347,13 +368,21 @@ public class AnalyticsUtils {
      * @param post The reader post to track
      */
     public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post) {
+        trackWithReaderPostDetails(stat, post, null);
+    }
+
+    public static void trackWithReaderPostDetails(AnalyticsTracker.Stat stat, ReaderPost post,
+                                                  Map<String, Object> properties) {
         if (post == null) {
             return;
         }
 
+        if (properties == null) {
+            properties = new HashMap<>();
+        }
+
         // wpcom/jetpack posts should pass: feed_id, feed_item_id, blog_id, post_id, is_jetpack
         // RSS pass should pass: feed_id, feed_item_id, is_jetpack
-        Map<String, Object> properties = new HashMap<>();
         if (post.isWP() || post.isJetpack) {
             properties.put(BLOG_ID_KEY, post.blogId);
             properties.put(POST_ID_KEY, post.postId);
@@ -361,6 +390,7 @@ public class AnalyticsUtils {
         properties.put(FEED_ID_KEY, post.feedId);
         properties.put(FEED_ITEM_ID_KEY, post.feedItemId);
         properties.put(IS_JETPACK_KEY, post.isJetpack);
+        properties.put(SITE_TYPE_KEY, AnalyticsSiteType.toStringFromReaderPost(post));
 
         AnalyticsTracker.track(stat, properties);
 
@@ -621,5 +651,78 @@ public class AnalyticsUtils {
         Map<String, Integer> properties = new HashMap<>();
         properties.put("page_number", page);
         AnalyticsTracker.track(Stat.LOGIN_PROLOGUE_PAGED, properties);
+    }
+
+    @VisibleForTesting
+    protected enum AnalyticsSiteType {
+        BLOG {
+            public String toString() {
+                return "blog";
+            }
+        },
+        P2 {
+            public String toString() {
+                return "p2";
+            }
+        };
+
+        static AnalyticsSiteType fromSiteModel(SiteModel siteModel) {
+            if (siteModel.isWpForTeamsSite()) {
+                return P2;
+            }
+
+            return BLOG;
+        }
+
+        static AnalyticsSiteType fromReaderPost(ReaderPost readerPost) {
+            if (readerPost.isWpForTeams) {
+                return P2;
+            }
+
+            return BLOG;
+        }
+
+        static String toStringFromSiteModel(SiteModel siteModel) {
+            return fromSiteModel(siteModel).toString();
+        }
+
+        static String toStringFromReaderPost(ReaderPost readerPost) {
+            return fromReaderPost(readerPost).toString();
+        }
+    }
+
+    public enum AnalyticsCommentActionSource {
+        NOTIFICATIONS {
+            public String toString() {
+                return "notifications";
+            }
+        },
+        SITE_COMMENTS {
+            public String toString() {
+                return "site_comments";
+            }
+        },
+        READER {
+            public String toString() {
+                return "reader";
+            }
+        }
+    }
+
+    public static void trackCommentActionWithSiteDetails(AnalyticsTracker.Stat stat,
+                                                         AnalyticsCommentActionSource actionSource, SiteModel site) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
+
+        AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
+    }
+
+
+    public static void trackCommentActionWithReaderPostDetails(AnalyticsTracker.Stat stat,
+                                                         AnalyticsCommentActionSource actionSource, ReaderPost post) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(COMMENT_ACTION_SOURCE, actionSource.toString());
+
+        AnalyticsUtils.trackWithReaderPostDetails(stat, post, properties);
     }
 }
