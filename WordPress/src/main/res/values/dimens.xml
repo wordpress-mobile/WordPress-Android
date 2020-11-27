@@ -166,6 +166,7 @@
         @dimen/emphasis_extra_low
     </item>
 
+    <dimen name="text_sz_extra_extra_small">7sp</dimen>
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>

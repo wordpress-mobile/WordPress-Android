@@ -1,5 +1,6 @@
 16.3
 -----
+* [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
 * [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
 * [***] Stories: New feature for WordPress.com and Jetpack sites: Use photos and videos to create engaging and tappable fullscreen slideshows. [https://github.com/wordpress-mobile/WordPress-Android/pull/13459]
 
