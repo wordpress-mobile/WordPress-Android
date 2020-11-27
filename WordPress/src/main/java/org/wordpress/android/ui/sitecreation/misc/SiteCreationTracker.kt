@@ -46,16 +46,37 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    fun trackPreviewLoading() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+    fun trackPreviewLoading(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING,
+                    mapOf("template" to template)
+            )
+        }
     }
 
-    fun trackPreviewWebviewShown() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+    fun trackPreviewWebviewShown(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
+                    mapOf("template" to template)
+            )
+        }
     }
 
-    fun trackPreviewWebviewFullyLoaded() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+    fun trackPreviewWebviewFullyLoaded(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
+                    mapOf("template" to template)
+            )
+        }
     }
 
     fun trackPreviewOkButtonTapped() {
@@ -103,36 +124,24 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED, mapOf("template" to template))
     }
 
-    fun trackSiteDesignPreviewViewed(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
-            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED)
-        } else {
-            tracker.track(
-                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
-                    mapOf("template" to template)
-            )
-        }
+    fun trackSiteDesignPreviewViewed(template: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
+                mapOf("template" to template)
+        )
     }
 
-    fun trackSiteDesignPreviewLoading(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
-            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING)
-        } else {
-            tracker.track(
-                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
-                    mapOf("template" to template)
-            )
-        }
+    fun trackSiteDesignPreviewLoading(template: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
+                mapOf("template" to template)
+        )
     }
 
-    fun trackSiteDesignPreviewLoaded(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
-            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED)
-        } else {
-            tracker.track(
-                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
-                    mapOf("template" to template)
-            )
-        }
+    fun trackSiteDesignPreviewLoaded(template: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
+                mapOf("template" to template)
+        )
     }
 }
