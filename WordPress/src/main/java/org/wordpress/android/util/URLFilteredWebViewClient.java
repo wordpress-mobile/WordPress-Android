@@ -43,6 +43,12 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
         return mAllowedURLs.size() == 0;
     }
 
+    private boolean isHttpUrlAllowed(String url) {
+        return mAllowedURLs.contains(url.replace("https://", "http://"))
+               || mAllowedURLs.contains(StringUtils.removeTrailingSlash(url)
+                                                   .replace("https://", "http://"));
+    }
+
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
         // Found a bug on some pages where there is an incorrect
@@ -52,6 +58,7 @@ public class URLFilteredWebViewClient extends ErrorManagedWebViewClient {
         }
 
         if (isAllURLsAllowed() || mAllowedURLs.contains(url)
+            || isHttpUrlAllowed(url) // Allow https redirection
             // If a url is allowed without the trailing `/`, it should be allowed with it as well
             || mAllowedURLs.contains(StringUtils.removeTrailingSlash(url))) {
             boolean isComingFromLoginUrl =

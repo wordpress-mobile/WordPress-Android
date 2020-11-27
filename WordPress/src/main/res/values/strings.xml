@@ -1344,6 +1344,12 @@
     <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
     <string name="reader_discover_no_posts_button_text">Follow topics</string>
+    <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
+    <string name="reader_follow_comments_null_response">No response received</string>
+    <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
+    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
+    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
+    <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1738,7 +1744,8 @@
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
     <string name="reader_btn_done">Done</string>
-
+    <string name="reader_btn_follow_comments">Follow conversation</string>
+    <string name="reader_btn_following_comments">Following conversation</string>
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
@@ -1914,7 +1921,9 @@
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
@@ -1948,6 +1957,7 @@
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
+    <string name="my_site_bottom_sheet_story_tag_new">New</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
