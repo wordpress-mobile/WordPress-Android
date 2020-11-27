@@ -81,6 +81,7 @@ android {
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BACKUP_AVAILABLE", "false"
+        buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -123,6 +124,7 @@ android {
             buildConfigField "boolean", "HOME_PAGE_PICKER", "true"
             // Enable this for testing consolidated media picker
             // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
+            buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
