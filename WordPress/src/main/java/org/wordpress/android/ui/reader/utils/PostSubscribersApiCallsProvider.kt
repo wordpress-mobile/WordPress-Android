@@ -166,7 +166,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 if (subscribed) {
                     Success(true)
                 } else {
-                    Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_could_not_subscribe_error))
+                    Failure(contextProvider.getContext().getString(
+                            R.string.reader_follow_comments_could_not_subscribe_error
+                    ))
                 }
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
@@ -183,7 +185,9 @@ class PostSubscribersApiCallsProvider @Inject constructor(
                 if (!subscribed) {
                     Success(false)
                 } else {
-                    Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_could_not_unsubscribe_error))
+                    Failure(contextProvider.getContext().getString(
+                            R.string.reader_follow_comments_could_not_unsubscribe_error
+                    ))
                 }
             } else {
                 Failure(contextProvider.getContext().getString(R.string.reader_follow_comments_bad_format_response))
