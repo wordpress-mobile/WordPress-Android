@@ -32,6 +32,6 @@ sealed class MySiteItem(val type: Type) {
         val onPagesClick: ListItemInteraction,
         val onPostsClick: ListItemInteraction,
         val onMediaClick: ListItemInteraction,
-        val showPages: Boolean = true,
+        val showPages: Boolean = true
     ) : MySiteItem(QUICK_ACTIONS_BLOCK)
 }
