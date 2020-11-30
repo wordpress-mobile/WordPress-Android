@@ -32,6 +32,7 @@ import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewData
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
@@ -78,6 +79,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     override fun onResume() {
         super.onResume()
         serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
     }
 
     override fun onPause() {
@@ -152,8 +158,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
         })
-
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState)
     }
 
     private fun initRetryButton() {
@@ -290,6 +294,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         super.onActivityCreated(savedInstanceState)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
     }
 
     override fun onWebViewPageLoaded() {
