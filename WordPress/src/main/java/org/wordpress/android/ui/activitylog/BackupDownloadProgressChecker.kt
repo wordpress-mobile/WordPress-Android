@@ -21,8 +21,8 @@ class BackupDownloadProgressChecker @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     @param:Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
-    suspend fun startNow(site: SiteModel, restoreId: Long): OnBackupDownloadStatusFetched? {
-        return start(site, restoreId, true)
+    suspend fun startNow(site: SiteModel, downloadId: Long): OnBackupDownloadStatusFetched? {
+        return start(site, downloadId, true)
     }
 
     suspend fun start(

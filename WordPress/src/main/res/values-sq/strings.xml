@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-13 09:16:25+0000
+Translation-Revision-Date: 2020-11-25 16:26:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">Një ose disa diapozitiva nuk janë shtuar te Artikulli juaj, ngaqë Artikujt nuk mbulojnë kartela GIF, hëpërhë. Ju lutemi, në vend të tyre, zgjidhni një figurë statike ose një sfond video.</string>
+    <string name="dialog_edit_story_unsupported_format_title">Kartelat GIF nuk mbulohen</string>
+    <string name="dialog_edit_story_unrecoverable_message">S’gjetëm dot te sajti median për këtë artikull.</string>
+    <string name="dialog_edit_story_unrecoverable_title">S’përpunohet dot Artikulli</string>
+    <string name="dialog_edit_story_unavailable_message">S’arrihet të ngarkohet media për këtë artikull. Kontrolloni lidhjen tuaj në internet dhe riprovoni pas një çasti.</string>
+    <string name="dialog_edit_story_unavailable_title">S’përpunohet dot Artikulli</string>
+    <string name="dialog_edit_story_limited_message">Ky artikull u përpunua në një pajisje tjetër dhe aftësia për të përpunuar disa elemente të dhënë mund të jetë e kufizuar.</string>
+    <string name="dialog_edit_story_limited_title">Përpunim Artikulli i Kufizuar</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media është hequr. Provoni të përpunoni Artikullin tuaj.</string>
+    <string name="color_picker_label_background">Sfond</string>
+    <string name="color_picker_label_text">Tekst</string>
+    <string name="dialog_discard_story_ok_button_edit">Hidhe tej</string>
+    <string name="dialog_discard_story_message_edit">Çfarëdo ndryshimesh të bëra, s’do të ruhen.</string>
+    <string name="dialog_discard_story_title_edit">Të hidhen tej ndryshimet?</string>
+    <string name="label_done_button">U bë</string>
+    <string name="label_next_button">Pasuesi</string>
+    <string name="delete_button_alt">Fshije</string>
+    <string name="hpp_choose_error">Pati një gabim gjatë përzgjedhjes së skemës.</string>
+    <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
+    <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
+    <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
+    <string name="continue_site_credentials">Vazhdo me kredenciale shitoreje</string>
+    <string name="login_find_your_connected_email">Gjeni email-in tuaj të lidhur</string>
+    <string name="reader_discover_no_posts_button_text">Ndiqni tema</string>
+    <string name="reader_discover_no_posts_subtitle">Provoni të ndiqni më tepër tema që të zgjerohet kërkimi</string>
+    <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
+    <string name="reader_discover_empty_title">Mirë se vini!</string>
+    <string name="scan">Skanoje</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>Durim Cerova&lt;/b> iu përgjigj postimit tuaj</string>
     <string name="login_prologue_third_subtitle_two">Sot në sajtin tuaj patët &lt;b>50 pëlqeim&lt;/b></string>
     <string name="login_prologue_third_subtitle_one">&lt;b>Maqo Senko&lt;/b> pëlqeu postimin tuaj</string>
@@ -68,7 +96,7 @@ Language: sq_AL
     <string name="photo_picker_wordpress_media_library">Zgjidhni prej Mediatekës WordPress</string>
     <string name="reader_label_toolbar_back">Mbrapsht</string>
     <string name="reader_discover_empty_button_text">Fillojani</string>
-    <string name="reader_discover_empty_title">Ndiqni tema, që të zbuloni blogje të rinj</string>
+    <string name="reader_discover_empty_subtitle">Ndiqni tema, që të zbuloni blogje të rinj</string>
     <string name="reader_post_details_header_by_author_name">Nga</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Këtij referuesi s’mund t’i vihet shenjë si i padëshiruar</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hiqja Shenjën Si i Padëshiruar</string>
@@ -97,7 +125,6 @@ Language: sq_AL
     <string name="comment_unable_to_show_error">S’arrihet të shfaqet ky koment</string>
     <string name="media_browse_for_items">Shfletoni për objekte</string>
     <string name="reader_menu_report_post">Njoftoni për këtë postim</string>
-    <string name="gutenberg_native_angle">Kënd</string>
     <string name="reader_welcome_banner">Mirë se vini te Reader. Zbuloni në pëllëmbë të dorës miliona blogje.</string>
     <string name="error_media_xmlrcp_server_error">Ndodhi një gabim i brendshëm shërbyesi</string>
     <string name="error_media_xmlrpc_not_allowed">Veprimi juaj s’lejohet</string>
@@ -146,7 +173,6 @@ Language: sq_AL
     <string name="dialog_discard_errored_page_message">Ky diapozitiv s’është ruajtur ende. Nëse e fshini këtë diapozitiv, do të humbni çfarëdo përpunimesh që keni bërë.</string>
     <string name="dialog_discard_page_message">Ky diapozitiv do të hiqet prej sajtit tuaj.</string>
     <string name="dialog_discard_page_title">Të fshihet diapozitivi i shkrimit?</string>
-    <string name="menu_delete_page">Fshije diapozitivin</string>
     <string name="label_text_color_button">Ndryshoni ngjyrë teksti</string>
     <string name="label_text_alignment_button">Ndryshoni drejtim teksti</string>
     <string name="label_frame_errored">me gabim</string>
@@ -156,8 +182,6 @@ Language: sq_AL
     <string name="label_retry_icon">Riprovo</string>
     <string name="label_saved_icon">U ruajt</string>
     <string name="label_close_button">Mbylle</string>
-    <string name="label_control_publish">Pasuesi</string>
-    <string name="label_done">U bë</string>
     <string name="label_share_to">Ndajeni me të tjerët në</string>
     <string name="label_snackbar_share">NDAJENI ME TË TJERË</string>
     <string name="label_snackbar_loop_frame_saved">U ruajt te fotot</string>
@@ -168,7 +192,6 @@ Language: sq_AL
     <string name="label_control_flip_camera">Ktheje në anë tjetër</string>
     <string name="sound_button_alt">Tingull</string>
     <string name="text_button_alt">Tekst</string>
-    <string name="more_button_alt">Më tepër</string>
     <string name="stickers_button_alt">Ngjitës</string>
     <string name="flash_button_alt">Blic</string>
     <string name="flip_button_alt">Rrotulloni kamerën</string>
@@ -529,7 +552,6 @@ Language: sq_AL
     <string name="login_site_credentials_magic_link_label">Thuajse mbërritëm! Na duhet vetëm të verifikojmë adresën tuaj email të lidhur me Jetpack-un &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Hyni me kredenciale sajti.</string>
     <string name="enter_credentials_for_site">Hyni me kredencialet tuaja për sajtin %1$s</string>
-    <string name="send_verification_email">Dërgo email verifikimi</string>
     <string name="my_site_bottom_sheet_add_page">Faqe sajti</string>
     <string name="reader_following_display_name">Ndjekur prej jush</string>
     <string name="reader_my_likes_display_name">Pëlqime</string>
@@ -555,7 +577,6 @@ Language: sq_AL
     <string name="gutenberg_native_take_a_photo_or_video">Bëni Foto ose Video</string>
     <string name="gutenberg_native_take_a_photo">Bëni një Foto</string>
     <string name="gutenberg_native_start_writing">Nisni të shkruani…</string>
-    <string name="gutenberg_native_size">Madhësi</string>
     <string name="gutenberg_native_sidebar_title_plugin">Shtojcë titulli anështylle</string>
     <string name="gutenberg_native_show_section">Shfaq ndarje</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bllok %s. Ky bllok ka lëndë të pavlefshme</string>

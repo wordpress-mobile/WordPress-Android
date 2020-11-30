@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-11 22:25:09+0000
+Translation-Revision-Date: 2020-11-27 08:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="color_picker_label_background">Arrière-plan</string>
+    <string name="color_picker_label_text">Texte</string>
+    <string name="dialog_discard_story_ok_button_edit">Rejeter</string>
+    <string name="dialog_discard_story_message_edit">Aucune modification effectuée n’a été enregistrée.</string>
+    <string name="dialog_discard_story_title_edit">Annuler les modifications ?</string>
+    <string name="label_done_button">Terminé</string>
+    <string name="label_next_button">Suivant</string>
+    <string name="delete_button_alt">Supprimer</string>
+    <string name="hpp_choose_error">Une erreur s’est produite lors de la sélection du design.</string>
+    <string name="hpp_retry_error">Veuillez vérifier votre connexion internet, puis réessayez.</string>
+    <string name="hpp_error_subtitle">Appuyez sur Réessayer lorsque vous êtes de nouveau en ligne.</string>
+    <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
+    <string name="continue_site_credentials">Continuer avec les identifiants de connexion de la boutique</string>
+    <string name="login_find_your_connected_email">Trouver votre e-mail connecté</string>
+    <string name="reader_discover_no_posts_button_text">Suivre des sujets</string>
+    <string name="reader_discover_no_posts_title">Pas d’articles récents.</string>
+    <string name="reader_discover_empty_title">Bienvenue !</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> a répondu à votre article</string>
     <string name="login_prologue_third_subtitle_two">Vous avez reçu &lt;b>50 « J’aime »&lt;/b> sur votre site aujourd\'hui</string>
     <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> a aimé votre article</string>
@@ -68,7 +85,6 @@ Language: fr
     <string name="photo_picker_wordpress_media_library">Choisir dans la bibliothèque des médias WordPress</string>
     <string name="reader_label_toolbar_back">Retour</string>
     <string name="reader_discover_empty_button_text">Premiers pas</string>
-    <string name="reader_discover_empty_title">Suivre des thèmes pour découvrir de nouveaux blogs</string>
     <string name="reader_post_details_header_by_author_name">Par</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ce référent ne peut pas être marqué comme indésirable</string>
     <string name="stats_referrer_popup_unmark_as_spam">Marquer comme sain</string>
@@ -98,7 +114,6 @@ Language: fr
     <string name="comment_unable_to_show_error">Impossible d’afficher ce commentaire</string>
     <string name="media_browse_for_items">Parcourir les éléments.</string>
     <string name="reader_menu_report_post">Signaler cet article</string>
-    <string name="gutenberg_native_angle">Angle</string>
     <string name="reader_welcome_banner">Bienvenue sur le Lecteur. Découvrez des millions de blogs à portée de main.</string>
     <string name="error_media_xmlrcp_server_error">Une erreur interne du serveur s’est produite</string>
     <string name="error_media_xmlrpc_not_allowed">Votre action n’est pas autorisée</string>
@@ -147,7 +162,6 @@ Language: fr
     <string name="dialog_discard_errored_page_message">Cette diapositive n’a pas encore été enregistrée. Si vous supprimez cette diapositive, vous perdrez toutes les modifications que vous avez apportées.</string>
     <string name="dialog_discard_page_message">Cette diapositive sera supprimée de votre story.</string>
     <string name="dialog_discard_page_title">Supprimer la diapositive de la story ?</string>
-    <string name="menu_delete_page">Supprimer la diapositive</string>
     <string name="label_text_color_button">Modifier la couleur du texte</string>
     <string name="label_text_alignment_button">Modifier l’alignement du texte</string>
     <string name="label_frame_errored">erroné</string>
@@ -157,8 +171,6 @@ Language: fr
     <string name="label_retry_icon">Réessayer</string>
     <string name="label_saved_icon">Enregistrée</string>
     <string name="label_close_button">Fermer</string>
-    <string name="label_control_publish">Suivante</string>
-    <string name="label_done">Terminé</string>
     <string name="label_share_to">Partager vers</string>
     <string name="label_snackbar_share">PARTAGER</string>
     <string name="label_snackbar_loop_frame_saved">Enregistré dans les photos</string>
@@ -169,7 +181,6 @@ Language: fr
     <string name="label_control_flip_camera">Retourner</string>
     <string name="sound_button_alt">Son</string>
     <string name="text_button_alt">Texte</string>
-    <string name="more_button_alt">Plus</string>
     <string name="stickers_button_alt">Autocollants</string>
     <string name="flash_button_alt">Flash</string>
     <string name="flip_button_alt">Retourner l’appareil photo</string>
@@ -530,7 +541,6 @@ Language: fr
     <string name="login_site_credentials_magic_link_label">Vous y êtes presque ! Nous devons juste vérifier votre adresse e-mail connectée à Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Connectez-vous avec vos identifiants au site.</string>
     <string name="enter_credentials_for_site">Connexion avec vos identifiants au site %1$s</string>
-    <string name="send_verification_email">Envoyer l’e-mail de vérification</string>
     <string name="my_site_bottom_sheet_add_page">Page du site</string>
     <string name="reader_following_display_name">Abonné</string>
     <string name="reader_my_likes_display_name">J’aime</string>
@@ -556,7 +566,6 @@ Language: fr
     <string name="gutenberg_native_take_a_photo_or_video">Prendre une photo ou une vidéo</string>
     <string name="gutenberg_native_take_a_photo">Prendre une photo</string>
     <string name="gutenberg_native_start_writing">Commencez à écrire…</string>
-    <string name="gutenberg_native_size">Taille</string>
     <string name="gutenberg_native_sidebar_title_plugin">Extension du titre de la colonne latérale</string>
     <string name="gutenberg_native_show_section">Afficher la section</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Le contenu de ce bloc n’est pas valide</string>
