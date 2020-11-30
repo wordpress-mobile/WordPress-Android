@@ -11,22 +11,9 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="1.7">
+    <bytecodeTargetLevel>
       <module name="fluxc-annotations" target="1.7" />
       <module name="fluxc-processor" target="1.7" />
-      <module name="WordPress-Android-submodule.@wordpress_react-native-aztec" target="1.8" />
-      <module name="WordPress-Android-submodule.@wordpress_react-native-bridge" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.analytics.WordPressAnalytics" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.editor.WordPressEditor" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.image-editor.ImageEditor" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.login.WordPressLoginFlow" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.networking.WordPressNetworking" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.stories-android.stories" target="1.8" />
-      <module name="WordPress-Android-submodule.libs.utils.WordPressUtils" target="1.8" />
-      <module name="WordPress-Android-submodule.mp4compose" target="1.8" />
-      <module name="WordPress-Android-submodule.photoeditor" target="1.8" />
-      <module name="WordPress-Android-submodule.WordPress" target="1.8" />
-      <module name="WordPress-Android-submodule.WordPressMocks" target="1.8" />
       <module name="WordPressAnnotations" target="1.7" />
       <module name="WordPressProcessors" target="1.7" />
     </bytecodeTargetLevel>
